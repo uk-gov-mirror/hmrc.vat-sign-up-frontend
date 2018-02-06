@@ -11,7 +11,7 @@ object FrontendBuild extends Build with MicroService {
 
   override lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 
-  private val playWhitelistFilterVersion = "1.1.0"
+  private val playWhitelistFilterVersion = "2.0.0"
 
   private val hmrcTestVersion = "3.0.0"
   private val scalaTestVersion = "3.0.1"
