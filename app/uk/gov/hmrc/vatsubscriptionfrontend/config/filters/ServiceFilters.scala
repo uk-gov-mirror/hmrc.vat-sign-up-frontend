@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.filters.FrontendFilters
 
 class ServiceFilters @Inject()(configuration: Configuration,
                                defaultFilters: FrontendFilters,
-                               whitelistFilter: WhitelistFilter
+                               whitelistFilter: WhiteListFilter
                               ) extends DefaultHttpFilters({
 
   val coreFilters = defaultFilters.filters

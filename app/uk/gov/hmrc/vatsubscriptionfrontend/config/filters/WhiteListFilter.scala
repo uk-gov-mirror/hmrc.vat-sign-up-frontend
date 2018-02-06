@@ -23,11 +23,45 @@ import akka.stream.Materializer
 import play.api.mvc.Call
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
+import akka.stream.Materializer
+import play.api.Play
+import play.api.mvc.Results.{Forbidden, NotImplemented, Redirect}
+import play.api.mvc.{Call, RequestHeader, Result}
+import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
+
+import scala.concurrent.Future
 
 @Singleton
-class WhitelistFilter @Inject()(appConfig: AppConfig,
+class WhiteListFilter @Inject()(appConfig: AppConfig,
                                 val mat: Materializer
                                ) extends AkamaiWhitelistFilter {
+  // START of crazy section
+  // this code is copied exactly as they are from AkamaiWhitelistFilter,
+  // for some reason if we do not do this then the unit test fails
+  private def isCircularDestination(requestHeader: RequestHeader): Boolean =
+  requestHeader.uri == destination.url
+
+  private def toCall(rh: RequestHeader): Call =
+    Call(rh.method, rh.uri)
+
+  override def apply
+  (f: (RequestHeader) => Future[Result])
+  (rh: RequestHeader): Future[Result] =
+    if (excludedPaths contains toCall(rh)) {
+      f(rh)
+    } else {
+      rh.headers.get(trueClient) map {
+        ip =>
+          if (whitelist.contains(ip))
+            f(rh)
+          else if (isCircularDestination(rh))
+            Future.successful(Forbidden)
+          else
+            Future.successful(Redirect(destination))
+      } getOrElse Future.successful(Redirect(destination))
+    }
+
+  // END of crazy section
 
 
   override lazy val whitelist: Seq[String] = appConfig.whitelistIps

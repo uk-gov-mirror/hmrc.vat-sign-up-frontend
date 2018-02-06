@@ -40,7 +40,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val shutterPage: String = loadConfig("shutter-page.url")
 
-  private def whitelistConfig(key: String): Seq[String] = runModeConfiguration.getString(key).fold(Seq[String]())(ips => ips.split(",").toSeq)
+  private def whitelistConfig(key: String): Seq[String] =
+    runModeConfiguration.getString(key).getOrElse("").split(",").toSeq
 
   lazy val whitelistIps: Seq[String] = whitelistConfig("ip-whitelist.urls")
   lazy val ipExclusionList: Seq[Call] = whitelistConfig("ip-whitelist.excludeCalls").map(ip => Call("GET", ip))
