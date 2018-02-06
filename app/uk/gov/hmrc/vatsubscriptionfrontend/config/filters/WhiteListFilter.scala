@@ -20,13 +20,9 @@ package uk.gov.hmrc.vatsubscriptionfrontend.config.filters
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
-import play.api.mvc.Call
-import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
-import akka.stream.Materializer
-import play.api.Play
-import play.api.mvc.Results.{Forbidden, NotImplemented, Redirect}
+import play.api.mvc.Results.{Forbidden, Redirect}
 import play.api.mvc.{Call, RequestHeader, Result}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
 import scala.concurrent.Future
