@@ -12,3 +12,8 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.12")
 
 resolvers += Resolver.bintrayRepo("hmrc", "releases")
 
+resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
+
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
+
+addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
