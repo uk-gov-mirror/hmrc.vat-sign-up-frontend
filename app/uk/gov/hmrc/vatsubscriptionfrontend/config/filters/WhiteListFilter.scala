@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.config
+package uk.gov.hmrc.vatsubscriptionfrontend.config.filters
+
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.MessagesApi
-import play.api.mvc.Request
-import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
-import uk.gov.hmrc.vatsubscriptionfrontend.views
+import akka.stream.Materializer
+import play.api.mvc.Call
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
 @Singleton
-class ErrorHandler @Inject()(val messagesApi: MessagesApi, implicit val appConfig: AppConfig) extends FrontendErrorHandler {
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    views.html.error_template(pageTitle, heading, message)
+class WhiteListFilter @Inject()(appConfig: AppConfig,
+                                val mat: Materializer
+                               ) extends AkamaiWhitelistFilter {
+
+  override lazy val whitelist: Seq[String] = appConfig.whitelistIps
+
+  override lazy val destination: Call = Call("GET", appConfig.shutterPage)
+
+  override lazy val excludedPaths: Seq[Call] = appConfig.ipExclusionList
+
 }
+
