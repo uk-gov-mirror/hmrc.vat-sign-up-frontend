@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /vat-subscription-frontend              app.Routes
+->         /report-quarterly/vat/sign-up             app.Routes
 ->         /                          health.Routes
 ->     	   /template                  template.Routes
 
