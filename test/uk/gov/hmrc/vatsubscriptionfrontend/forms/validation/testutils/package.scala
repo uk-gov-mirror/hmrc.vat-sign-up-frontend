@@ -51,11 +51,6 @@ package object testutils {
       validated.hasGlobalErrors shouldBe false
     }
 
-    def isValidFor(request: FakeRequest[_]): Unit = {
-      val validated = testForm.bindFromRequest()(request)
-      validated.hasErrors shouldBe false
-      validated.hasGlobalErrors shouldBe false
-    }
   }
 
   implicit class InvalidUtil(invalid: Invalid) {

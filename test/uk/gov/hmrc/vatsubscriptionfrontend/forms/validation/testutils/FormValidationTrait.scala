@@ -86,7 +86,7 @@ trait FormValidationTrait[T] {
     }
   }
 
-  def doesNotHavSummaryError(invalid: Invalid)(implicit messages: Messages): Unit = {
+  def doesNotHaveSummaryError(invalid: Invalid)(implicit messages: Messages): Unit = {
     withClue(s"\nThe summary errors contained the specified error for $fieldName:\n") {
       withClue(s"getSummaryErrors failed, form.errors:\n${form.errors}\n") {
         Try {
@@ -107,7 +107,7 @@ trait FormValidationTrait[T] {
 
   def doesNotHaveSpecifiedErrors(invalid: Invalid)(implicit messages: Messages): Unit = {
     doesNotHaveSpecifiedFieldError(invalid)
-    doesNotHavSummaryError(invalid)
+    doesNotHaveSummaryError(invalid)
   }
 
 }
