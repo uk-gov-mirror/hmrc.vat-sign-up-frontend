@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.models.CompanyNumber
 object CompanyNumberForm {
 
   val crn = "crn"
-  val crnRegex = "[0-9][A-Z]{8}"
+  val crnRegex = "^([SC]{2}[0-9]{6}|[0-9]{8})$"
 
   private def crnValidFormat(crn: String) = crn matches crnRegex
 
