@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.models
 
 import play.api.libs.json.Json
 
-case class CaptureCrnNumberModel(vrn: String)
+case class CaptureCrnNumberModel(crn: String)
 
 object CaptureCrnNumberModel{
   implicit val formats = Json.format[CaptureCrnNumberModel]

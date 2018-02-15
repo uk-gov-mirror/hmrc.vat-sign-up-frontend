@@ -30,4 +30,8 @@ object MessageLookup {
 
   }
 
+  object ErrorMessage {
+    val invalidCrn = "Please enter a valid CRN"
+  }
+
 }

@@ -18,26 +18,19 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 import uk.gov.hmrc.vatsubscriptionfrontend.models.CaptureCrnNumberModel
 
 object CaptureCrnNumberForm {
 
-  val crn = "crn"
+  val crn = "vrn"
+  val crnRegex = "[0-9]{9}"
 
-  val crnValidFormat: String => Boolean = { crn => {
-    val crnRegex = "[0-9]{8}"
-    if (crn.matches(crnRegex)) true else false
-  }
-  }
+  private def crnValidFormat(crn: String) = crn matches crnRegex
 
   val captureCrnNumberForm = Form(
     mapping(
-      crn -> text.verifying(Messages("error.invalid_crn"), crnValidFormat)
+      crn -> text.verifying("error.invalid_crn", crnValidFormat _)
     )(CaptureCrnNumberModel.apply)(CaptureCrnNumberModel.unapply)
   )
-
 
 }
