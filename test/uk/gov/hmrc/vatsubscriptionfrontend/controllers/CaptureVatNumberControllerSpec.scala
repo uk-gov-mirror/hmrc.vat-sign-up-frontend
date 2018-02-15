@@ -22,9 +22,7 @@ import play.api.http.Status
 import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
 class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
