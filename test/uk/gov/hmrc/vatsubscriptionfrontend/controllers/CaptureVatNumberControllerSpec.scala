@@ -23,6 +23,8 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+
 
 class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
@@ -35,8 +37,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   val testGetRequest = FakeRequest("GET", "/vat-number")
 
-  def testPostRequest(value: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/vat-number").withFormUrlEncodedBody("vrn" -> value)
+  def testPostRequest(vrnVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(vrn -> vrnVal)
 
   "Calling the show action of the Capture Vat Number controller" should {
     "go to the Capture Vat number page" in {
@@ -49,17 +51,17 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
   }
 
 
-  "Calling the submit action of the Capture Vat Number controller" should {
+  "Calling the submit action of the Capture Vat Number controller" when {
     //todo update when next page played
-    "go to a new page" when {
-      "form successfully submitted" in {
+    "form successfully submitted" should {
+      "go to the new page" in {
         val result = TestBusinessNameController.submit(testPostRequest("123456789"))
         status(result) shouldBe Status.NOT_IMPLEMENTED
       }
     }
 
-    "reload the page with erros" when {
-      "form unsuccessfully submitted" in {
+    "form unsuccessfully submitted" should {
+      "reload the page with errors" in {
         val result = TestBusinessNameController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
       }
