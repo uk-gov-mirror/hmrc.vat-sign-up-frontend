@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package assets
+package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
+import uk.gov.hmrc.vatsubscriptionfrontend.models.VatNumber
 
-object MessageLookup {
+object VatNumberForm {
 
-  object Base {
-    val continue = "Continue"
-    val continueToSignUp = "Continue to sign up"
-    val submit = "Submit"
-    val update = "Update"
-    val signOut = "Sign out"
-    val signUp = "Sign up"
-    val goBack = "Go back"
-  }
+  val vrn = "vrn"
+  val vrnRegex = "[0-9]{9}"
 
-  object ErrorMessage {
-    val invalidVrn = "Please enter a valid VRN"
-    val invalidCrn = "Please enter a valid CRN"
-  }
+  private def vrnValidFormat(vrn: String) = vrn matches vrnRegex
 
+  val vatNumberForm = Form(
+    mapping(
+      vrn -> text.verifying("error.invalid_vrn", vrnValidFormat _)
+    )(VatNumber.apply)(VatNumber.unapply)
+  )
 
 }

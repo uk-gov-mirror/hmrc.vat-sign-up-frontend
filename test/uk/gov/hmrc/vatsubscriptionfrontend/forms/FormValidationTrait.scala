@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.testutils
+package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import org.scalatest.Matchers._
 import play.api.data.Form
