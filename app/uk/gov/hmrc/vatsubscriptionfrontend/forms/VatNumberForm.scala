@@ -28,12 +28,11 @@ object VatNumberForm {
   val vrn = "vrn"
   val vrnRegex = "[0-9]{9}"
 
-  val vrnValidFormat: (String => Boolean) =
-    vrn => if (vrn.matches(vrnRegex)) true else false
+  private def vrnValidFormat(vrn: String) = vrn matches vrnRegex
 
   val vatNumberForm = Form(
     mapping(
-      vrn -> text.verifying(Messages("error.invalid_vrn"), vrnValidFormat)
+      vrn -> text.verifying(Messages("error.invalid_vrn"), vrnValidFormat _)
     )(VatNumber.apply)(VatNumber.unapply)
   )
 

@@ -20,6 +20,8 @@ import org.scalatest.Matchers._
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.vatsubscriptionfrontend.models.VatNumber
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.data.FormError
+
 
 class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite{
 
@@ -28,39 +30,32 @@ class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite{
 
   "The vatNumberForm" should {
 
-    def errorMessage(value: String): String = {
-      val formWithError = vatNumberForm.bind(Map(vrn -> value))
-      formWithError.error(vrn).get.message
-    }
-
-    "transform the data to the case class" in {
+    "validate that data containing 9 digits passes" in {
       val testVrn = "123456789"
-      val testInput = Map(vrn -> testVrn)
       val expected = VatNumber(testVrn)
-      val actual = vatNumberForm.bind(testInput).value
+      val actual = vatNumberForm.bind(Map(vrn -> testVrn)).value
       actual shouldBe Some(expected)
     }
 
     "validate that data has been entered" in {
-      errorMessage("") shouldBe invalidVrn
+      val formWithError = vatNumberForm.bind(Map(vrn -> ""))
+      formWithError.errors should contain(FormError(vrn, invalidVrn))
     }
 
     "validate that data containing any non numeric data fails" in {
-      errorMessage("12345678A") shouldBe invalidVrn
+      val formWithError = vatNumberForm.bind(Map(vrn -> "12345678A"))
+      formWithError.errors should contain(FormError(vrn, invalidVrn))
     }
 
     "validate that data containing more than 9 digits fails" in {
-      errorMessage("12345678910") shouldBe invalidVrn
+      val formWithError = vatNumberForm.bind(Map(vrn -> "1234567890"))
+      formWithError.errors should contain (FormError(vrn, invalidVrn))
     }
 
     "validate that data containing less than 9 digits fails" in {
-      errorMessage("12345678") shouldBe invalidVrn
+      val formWithError = vatNumberForm.bind(Map(vrn -> "12345678"))
+      formWithError.errors should contain(FormError(vrn, invalidVrn))
     }
-
-    "validate that data containing 9 digits passes" in {
-      vatNumberForm.bind(Map(vrn -> "123456789")).hasErrors shouldBe false
-    }
-
   }
 
 }
