@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.forms.validation
+package uk.gov.hmrc.vatsubscriptionfrontend
 
 import org.scalatest.Matchers._
 import play.api.data.Form
@@ -23,7 +23,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.models.{FieldError, SummaryError}
 
-package object testutils {
+package object forms {
 
   implicit class prefixUtil(prefix: String) {
     def `*`(name: String): String = prefix match {
@@ -55,7 +55,7 @@ package object testutils {
 
   implicit class InvalidUtil(invalid: Invalid) {
 
-    import ErrorMessageFactory._
+    import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.ErrorMessageFactory._
 
     def fieldErrorIs(expectedText: String)(implicit messages: Messages): Unit =
       invalid.errors.head.args(FieldErrorLoc).asInstanceOf[FieldError].toText shouldBe expectedText
