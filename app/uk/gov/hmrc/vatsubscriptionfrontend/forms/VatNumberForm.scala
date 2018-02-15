@@ -32,7 +32,7 @@ object VatNumberForm {
 
   val vatNumberForm = Form(
     mapping(
-      vrn -> text.verifying(Messages("error.invalid_vrn"), vrnValidFormat _)
+      vrn -> text.verifying("error.invalid_vrn", vrnValidFormat _)
     )(VatNumber.apply)(VatNumber.unapply)
   )
 
