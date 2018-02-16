@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import uk.gov.hmrc.vatsubscriptionfrontend.models.CompanyNumber
 
 object CompanyNumberForm {
 
