@@ -41,13 +41,15 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         element.getElementsByTag("p").text() should include(paragraph)
       }
 
+    def shouldHaveHint(hint: String): Unit =
+      s"$name should have the hint text '$hint'" in {
+        element.getElementsByTag("span").hasClass("form-hint") shouldBe true
+        element.getElementsByTag("span").text() should include(hint)
+      }
+
+
     def shouldHaveTextField(name: String,
-                          label: String,
-                          showLabel: Boolean = true,
-                          maxLength: Option[Int] = None,
-                          pattern: Option[String] = None,
-                          inputMode: Option[String] = None,
-                          hint: Option[String] = None
+                          label: String
                          ): Unit = {
 
       s"${this.name} should have an input field '$name'" which {
@@ -59,28 +61,18 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
           if (eles.size() > 1) fail(s"$name have multiple input fields with name=$name")
           val ele = eles.head
           ele.attr("type") shouldBe "text"
-          maxLength.map {
-            l => ele.attr("maxLength") shouldBe l.toString
-          }
-          pattern.map {
-            p => ele.attr("pattern") shouldBe p
-          }
-          inputMode.map {
-            m => ele.attr("inputMode") shouldBe m
-          }
         }
 
         lazy val labelField = element.select(s"label[for=$name]")
 
-        s"with the expected label label '$label'" in {
-          labelField.text() shouldBe (label + hint.fold("")(" " + _))
+        s"with the expected label '$label'" in {
+          labelField.text() shouldBe label
         }
 
-        if (!showLabel)
-          s"and the label should be visuallyhidden" in
-            withClue(s"$name does not have the class 'visuallyhidden'\n") {
-              labelField.hasClass("visuallyhidden") shouldBe true
-            }
+        s"and the label should be visuallyhidden" in
+          withClue(s"$name does not have the class 'visuallyhidden'\n") {
+            labelField.hasClass("visuallyhidden") shouldBe true
+          }
 
       }
 
@@ -95,13 +87,32 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         submitButtons.head.text() shouldBe text
       }
 
-    val shouldHaveContinueButton = shouldHaveSubmitButton(common.continue)
+    def shouldHaveContinueButton = shouldHaveSubmitButton(common.continue)
 
-    val shouldHaveContinueToSignUpButton = shouldHaveSubmitButton(common.continueToSignUp)
+    def shouldHaveContinueToSignUpButton = shouldHaveSubmitButton(common.continueToSignUp)
 
-    val shouldHaveUpdateButton = shouldHaveSubmitButton(common.update)
+    def shouldHaveUpdateButton = shouldHaveSubmitButton(common.update)
 
-    val shouldHaveGoBackButton = shouldHaveSubmitButton(common.goBack)
+    def shouldHaveGoBackButton = shouldHaveSubmitButton(common.goBack)
+
+
+    def shouldHaveForm(formName: String, id: Option[String] = None)(actionCall: => Call): Unit = {
+      val selector =
+        id match {
+          case Some(i) => s"#$i"
+          case _ => "form"
+        }
+
+      lazy val method = actionCall.method
+      lazy val url = actionCall.url
+      // this test is put in here because it doesn't make sense for it to be called on anything
+      // other than a form
+      s"$formName in $name must have a $method action to '$url'" in {
+        val formSelector = element.select(selector)
+        formSelector.attr("method") shouldBe method.toUpperCase
+        formSelector.attr("action") shouldBe url
+      }
+    }
   }
 
 

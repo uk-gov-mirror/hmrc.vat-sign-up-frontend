@@ -18,22 +18,18 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-import uk.gov.hmrc.vatsubscriptionfrontend.models.VatNumber
 
 object VatNumberForm {
 
-  val vrn = "vrn"
-  val vrnRegex = "[0-9]{9}"
+  val vatNumber = "vatNumber"
+  val vatNumberRegex = "[0-9]{9}"
 
-  private def vrnValidFormat(vrn: String) = vrn matches vrnRegex
+  private def vatNumberValidFormat(vatNumber: String) = vatNumber matches vatNumberRegex
 
   val vatNumberForm = Form(
-    mapping(
-      vrn -> text.verifying("error.invalid_vrn", vrnValidFormat _)
-    )(VatNumber.apply)(VatNumber.unapply)
+    single(
+      vatNumber -> text.verifying("error.invalid_vat_number", vatNumberValidFormat _)
+    )
   )
 
 }

@@ -1,15 +1,15 @@
 ## Base
-base.continue                                                   = Continue
-base.error_heading                                              = There''s a problem
-
+base.continue                                                          = Continue
+base.error_heading                                                     = There''s a problem
 
 ## Errors
-error.invalid_vrn                                               = Please enter a valid VRN
 error.invalid_crn                                               = Please enter a valid CRN
+error.invalid_vat_number.field                                  = Please enter a valid VRN
+error.invalid_vat_number.summary                                = Please enter a valid VRN
 
-## Agent Capture VAT Number page
-agent.capture_vrn.title                                         = What is your client''s VAT number?
-agent.capture_vrn.heading                                       = What is your client''s VAT number?
-agent.capture_vrn.line_1                                        = This is the 9-digit number they received when they registered for VAT.
-agent.capture_vrn.hint                                          = For example, 123456789
+## Agent Capture Vat Number page
+agent.capture_vat_number.title                                         = What is your client''s VAT number?
+agent.capture_vat_number.heading                                       = What is your client''s VAT number?
+agent.capture_vat_number.line_1                                        = This is the 9-digit number they received when they registered for VAT.
+agent.capture_vat_number.hint                                          = For example, 123456789
 
