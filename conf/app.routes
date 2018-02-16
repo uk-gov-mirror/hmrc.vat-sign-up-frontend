@@ -1,3 +1,8 @@
 # microservice specific routes
 
 GET        /hello-world             @uk.gov.hmrc.vatsubscriptionfrontend.controllers.HelloWorld.helloWorld
+
+
+# Capture VRN
+GET        /vat-number              @uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
+POST       /vat-number              @uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
