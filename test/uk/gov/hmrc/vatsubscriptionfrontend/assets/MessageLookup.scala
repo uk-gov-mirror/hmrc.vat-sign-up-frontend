@@ -40,4 +40,11 @@ object MessageLookup {
     val hint = "For example, 123456789"
   }
 
+  object CaptureCompanyNumber {
+    val title = "What is your client's VAT number?"
+    val heading = "What is your client's VAT number?"
+    val description = "This is the 9-digit number they received when they registered for VAT."
+    val hint = "For example, 123456789"
+  }
+
 }

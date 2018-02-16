@@ -6,14 +6,13 @@ base.error_heading                                                     = There''
 error.invalid_vat_number.field                                         = Please enter a valid VRN
 error.invalid_vat_number.summary                                       = Please enter a valid VRN
 
-<<<<<<< HEAD
-## Agent Capture VAT Number page
-agent.capture_vrn.title                                         = What is your client''s VAT number?
-agent.capture_vrn.heading                                       = What is your client''s VAT number?
-agent.capture_vrn.line_1                                        = This is the 9-digit number they received when they registered for VAT.
-agent.capture_vrn.hint                                          = For example, 123456789
+## Agent Capture Vat Number page
+agent.capture_vat_number.title                                         = What is your client''s VAT number?
+agent.capture_vat_number.heading                                       = What is your client''s VAT number?
+agent.capture_vat_number.line_1                                        = This is the 9-digit number they received when they registered for VAT.
+agent.capture_vat_number.hint                                          = For example, 123456789
 
 ## Agent Capture Company Number page
-agent.capture_crn.title                                         = What is your client''s company registration number?
-agent.capture_crn.heading                                       = What is your client''s company registration number?
+agent.capture_crn.title                                                = What is your client''s company registration number?
+agent.capture_crn.heading                                              = What is your client''s company registration number?
 
