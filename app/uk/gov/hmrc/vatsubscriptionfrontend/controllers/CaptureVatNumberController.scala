@@ -21,19 +21,23 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Action
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number
 
 @Singleton
-class CaptureVatNumberController @Inject()(val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+class CaptureVatNumberController @Inject()(val messagesApi: MessagesApi,
+                                           implicit val appConfig: AppConfig)
+                                           extends FrontendController with I18nSupport {
 
-  //TODO Update when view available
-  val show = Action { implicit request => NotImplemented }
+  val show = Action { implicit request =>
+    Ok(capture_vat_number(vatNumberForm, routes.CaptureVatNumberController.submit()))
+  }
 
-  //TODO Update when view is available
   val submit = Action { implicit request =>
     vatNumberForm.bindFromRequest.fold(
-      formWithErrors => BadRequest,
-      vatNumber => //TODO store VRN
+      formWithErrors => BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit())),
+      vatNumber => //TODO store VAT Number
         NotImplemented
     )
   }
