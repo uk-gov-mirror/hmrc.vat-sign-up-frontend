@@ -20,29 +20,27 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.{Configuration, Environment}
 import play.api.http.Status
 import play.api.i18n.MessagesApi
-import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
 
-class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
+class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  object TestCaptureVatNumberController extends CaptureVatNumberController(messagesApi)
+  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(messagesApi)
 
-  val testGetRequest = FakeRequest("GET", "/vat-number")
+  val testGetRequest = FakeRequest("GET", "/company-number")
 
-  def testPostRequest(vrnVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(vrn -> vrnVal)
+  val testPostRequest = FakeRequest("POST", "/company-number")
 
-  "Calling the show action of the Capture Vat Number controller" should {
-    "go to the Capture Vat number page" in {
-      val result = TestCaptureVatNumberController.show(testGetRequest)
+
+  "Calling the show action of the Capture Company Number controller" should {
+    "return not implemented" in {
+      val result = TestCaptureCompanyNumberController.show(testGetRequest)
       status(result) shouldBe Status.NOT_IMPLEMENTED
       // TODO introduce when view in place
       // contentType(result) shouldBe Some("text/html")
@@ -51,20 +49,11 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
   }
 
 
-  "Calling the submit action of the Capture Vat Number controller" when {
+  "Calling the submit action of the Capture Company Number controller" should {
     //todo update when next page played
-    "form successfully submitted" should {
-      "go to the new page" in {
-        val result = TestCaptureVatNumberController.submit(testPostRequest("123456789"))
+      "return not implemented" in {
+        val result = TestCaptureCompanyNumberController.submit(testPostRequest)
         status(result) shouldBe Status.NOT_IMPLEMENTED
-      }
-    }
-
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
-        val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
-        status(result) shouldBe Status.BAD_REQUEST
-      }
     }
   }
 }
