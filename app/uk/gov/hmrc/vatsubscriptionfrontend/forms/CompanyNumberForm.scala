@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.models
+package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
-import play.api.libs.json.Json
+import play.api.data.Form
+import play.api.data.Forms._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.CompanyNumber
 
-case class CaptureCrnNumberModel(crn: String)
+object CompanyNumberForm {
 
-object CaptureCrnNumberModel{
-  implicit val formats = Json.format[CaptureCrnNumberModel]
+  val crn = "crn"
+  val crnRegex = "^([SC]{2}[0-9]{6}|[0-9]{8})$"
+
+  private def crnValidFormat(crn: String) = crn matches crnRegex
+
+  val companyNumberForm = Form(
+    mapping(
+      crn -> text.verifying("error.invalid_crn", crnValidFormat _)
+    )(CompanyNumber.apply)(CompanyNumber.unapply)
+  )
+
 }
