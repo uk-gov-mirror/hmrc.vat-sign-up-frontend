@@ -24,7 +24,8 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
-
+import play.api.test.Helpers._
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
 class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
@@ -33,20 +34,19 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  object TestCaptureVatNumberController extends CaptureVatNumberController(messagesApi)
+  object TestCaptureVatNumberController extends CaptureVatNumberController(messagesApi, new AppConfig(configuration, env))
 
   val testGetRequest = FakeRequest("GET", "/vat-number")
 
-  def testPostRequest(vrnVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(vrn -> vrnVal)
+  def testPostRequest(vatNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(vatNumber -> vatNumberVal)
 
   "Calling the show action of the Capture Vat Number controller" should {
     "go to the Capture Vat number page" in {
       val result = TestCaptureVatNumberController.show(testGetRequest)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-      // TODO introduce when view in place
-      // contentType(result) shouldBe Some("text/html")
-      //charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 
@@ -64,6 +64,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
       "reload the page with errors" in {
         val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
   }
