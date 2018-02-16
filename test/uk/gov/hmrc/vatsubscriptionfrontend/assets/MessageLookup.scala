@@ -30,8 +30,8 @@ object MessageLookup {
   }
 
   object ErrorMessage {
-    val invalidVrn = "Please enter a valid VRN"
-    val invalidCrn = "Please enter a valid CRN"
+    val invalidVatNumber = "Please enter a valid vat registration number"
+    val invalidCompanyNumber  = "Please enter a valid company registration number"
   }
 
   object CaptureVatNumber {

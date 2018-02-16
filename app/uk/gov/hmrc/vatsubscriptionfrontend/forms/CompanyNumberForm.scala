@@ -22,15 +22,15 @@ import uk.gov.hmrc.vatsubscriptionfrontend.models.CompanyNumber
 
 object CompanyNumberForm {
 
-  val crn = "crn"
-  val crnRegex = "^([SC]{2}[0-9]{6}|[0-9]{8})$"
+  val companyNumber = "companyNumber"
+  val companyNumberRegex = "^([SC]{2}[0-9]{6}|[0-9]{8})$"
 
-  private def crnValidFormat(crn: String) = crn matches crnRegex
+  private def companyNumberValidFormat(companyNumber: String) = companyNumber matches companyNumberRegex
 
   val companyNumberForm = Form(
-    mapping(
-      crn -> text.verifying("error.invalid_crn", crnValidFormat _)
-    )(CompanyNumber.apply)(CompanyNumber.unapply)
+    single(
+      companyNumber -> text.verifying("error.invalid_company_number", companyNumberValidFormat _)
+    )
   )
 
 }
