@@ -21,7 +21,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
-class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite{
+class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "The vatNumberForm" should {
 
@@ -45,13 +45,13 @@ class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite{
 
     "validate that data containing more than 9 digits fails" in {
       val formWithError = vatNumberForm.bind(Map(vatNumber -> "1234567890"))
-      formWithError.errors should contain (FormError(vatNumber, error_key))
+      formWithError.errors should contain(FormError(vatNumber, error_key))
     }
 
     "validate that data containing less than 9 digits fails" in {
       val formWithError = vatNumberForm.bind(Map(vatNumber -> "12345678"))
       formWithError.errors should contain(FormError(vatNumber, error_key))
     }
-  }
 
+  }
 }
