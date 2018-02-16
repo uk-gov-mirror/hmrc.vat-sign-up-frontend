@@ -15,6 +15,6 @@ agent.capture_vat_number.line_1                                        = This is
 agent.capture_vat_number.hint                                          = For example, 123456789
 
 ## Agent Capture Company Number page
-agent.capture_crn.title                                                = What is your client''s company registration number?
-agent.capture_crn.heading                                              = What is your client''s company registration number?
+agent.capture_company_number.title                                     = What is your client''s company registration number?
+agent.capture_company_number.heading                                   = What is your client''s company registration number?
 

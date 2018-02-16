@@ -17,28 +17,27 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import helpers.{inputHelper, summaryErrorHelper}
-@import uk.gov.hmrc.vatsubscriptionfrontend.models.COmpanyNumber
 @import uk.gov.hmrc.play.views.html.helpers.form
 
-@(companyNumberForm: Form[CompanyNumber], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(companyNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.capture_vrn.title"), bodyClasses = None) {
+@main_template(title = Messages("agent.capture_company_number.title"), bodyClasses = None) {
 
-<h1 class="heading-large">@Messages("agent.capture_crn.heading")</h1>
+<h1 class="heading-large">@Messages("agent.capture_company_number.heading")</h1>
 
-@summaryErrorHelper(companyNumberForm)
+    @summaryErrorHelper(companyNumberForm)
 
-@form(action = postAction) {
+    @form(action = postAction) {
 
-<div class="form-group">
-    @inputHelper(
-    field = companyNumberForm(crn),
-    label = Messages("agent.capture_crn.heading"),
-    parentForm = companyNumberForm
-    )
-</div>
+    <div class="form-group">
+        @inputHelper(
+        field = companyNumberForm(companyNumber),
+        label = Messages("agent.capture_company_number.heading"),
+        parentForm = companyNumberForm
+        )
+    </div>
 
-<button class="button" type="submit" id="continue-button">@Messages("base.continue")</button>
+    <button class="button" type="submit" id="continue-button">@Messages("base.continue")</button>
 
-}
+    }
 }

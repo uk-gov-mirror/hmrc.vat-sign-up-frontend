@@ -22,7 +22,6 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
 class CaptureVatNumberSpec extends ViewSpec {
@@ -59,7 +58,7 @@ class CaptureVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(VatNumberForm.vatNumber, messages.heading)
+    testPage.shouldHaveTextField(vatNumber, messages.heading)
 
     testPage.shouldHaveContinueButton
   }

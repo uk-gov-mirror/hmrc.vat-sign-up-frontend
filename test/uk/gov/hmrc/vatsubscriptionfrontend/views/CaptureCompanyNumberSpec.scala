@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{CaptureVatNumber => messages}
+import assets.MessageLookup.{CaptureCompanyNumber => messages}
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
+
 
 class CaptureCompanyNumberSpec extends ViewSpec {
 
@@ -33,33 +33,25 @@ class CaptureCompanyNumberSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_company_number(
-    vatNumberForm = vatNumberForm,
+    companyNumberForm = companyNumberForm,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Vat Number view" should {
+  "The Capture Company Number view" should {
 
     val testPage = TestView(
-      name = "Capture Vat Number View",
+      name = "Capture Company Number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHavePara(
-      messages.description
-    )
+    testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveHint(
-      messages.hint
-    )
-
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
-
-    testPage.shouldHaveTextField(VatNumberForm.vatNumber, messages.heading)
+    testPage.shouldHaveTextField(companyNumber, messages.heading)
 
     testPage.shouldHaveContinueButton
   }
