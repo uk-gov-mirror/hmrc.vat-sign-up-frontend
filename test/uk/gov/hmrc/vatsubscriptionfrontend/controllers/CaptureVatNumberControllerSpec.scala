@@ -27,6 +27,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
 import scala.concurrent.Future
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents{
   object TestCaptureVatNumberController extends CaptureVatNumberController(mockControllerComponents)
@@ -54,7 +55,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       "go to the new page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestCaptureVatNumberController.submit(testPostRequest("123456789"))
+        val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
         status(result) shouldBe Status.NOT_IMPLEMENTED
       }
     }
