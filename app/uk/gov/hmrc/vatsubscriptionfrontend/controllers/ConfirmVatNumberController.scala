@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
 
@@ -30,10 +31,16 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      //TODO pull the vat number out from storage
-      Future.successful(
-        Ok(confirm_vat_number("", routes.ConfirmVatNumberController.submit()))
-      )
+      request.session.get(SessionKeys.vrn) match {
+        case Some(vrn) =>
+          Future.successful(
+            Ok(confirm_vat_number(vrn, routes.ConfirmVatNumberController.submit()))
+          )
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
+          )
+      }
     }
   }
 

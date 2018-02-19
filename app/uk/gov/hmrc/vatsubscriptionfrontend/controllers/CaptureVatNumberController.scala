@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number
@@ -44,8 +45,10 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           Future.successful(
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
           ),
-        vatNumber => //TODO store VAT Number
-          Future.successful(NotImplemented)
+        vatNumber =>
+          Future.successful(
+            Redirect(routes.ConfirmVatNumberController.show()).addingToSession(SessionKeys.vrn -> vatNumber)
+          )
       )
     }
   }

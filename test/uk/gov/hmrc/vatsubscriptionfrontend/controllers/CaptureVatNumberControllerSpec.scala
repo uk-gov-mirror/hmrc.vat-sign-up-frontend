@@ -23,13 +23,15 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
-class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents{
+class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+
   object TestCaptureVatNumberController extends CaptureVatNumberController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/vat-number")
@@ -50,13 +52,17 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
 
   "Calling the submit action of the Capture Vat Number controller" when {
-    //todo update when next page played
     "form successfully submitted" should {
       "go to the new page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        val request = testPostRequest(testVatNumber)
+
+        val result = TestCaptureVatNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmVatNumberController.show().url)
+
+        result.session(request).get(SessionKeys.vrn) shouldBe Some(testVatNumber)
       }
     }
 

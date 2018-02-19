@@ -23,7 +23,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
@@ -36,17 +38,29 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-vat-number")
 
-  "Calling the show action of the Confirm Vat Number controller" should {
-    "go to the Confirm Vat number page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+  "Calling the show action of the Confirm Vat Number controller" when {
+    "there is a vrn in the session" should {
+      "go to the Confirm Vat number page" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        val request = testGetRequest.withSession(SessionKeys.vrn -> testVatNumber)
 
-      val result = TestConfirmVatNumberController.show(testGetRequest)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+        val result = TestConfirmVatNumberController.show(request)
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+
+    "there isn't a vrn in the session" should {
+      "go to the Confirm Vat number page" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        val result = TestConfirmVatNumberController.show(testGetRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
+      }
     }
   }
-
 
   "Calling the submit action of the Confirm Vat Number controller" should {
     // TODO
