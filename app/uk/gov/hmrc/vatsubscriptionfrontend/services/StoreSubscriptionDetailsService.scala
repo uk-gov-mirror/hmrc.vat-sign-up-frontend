@@ -18,28 +18,16 @@ package uk.gov.hmrc.vatsubscriptionfrontend.services
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.http.Status.NO_CONTENT
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsubscriptionfrontend.connectors.StoreSubscriptionDetailsConnector
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreSubscriptionDetailsHttpParser.StoreSubscriptionDetailsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StoreSubscriptionDetailsService @Inject()(val storeSubscriptionDetailsConnector: StoreSubscriptionDetailsConnector) {
 
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext):
-                                        Future[Either[StoreSubscriptionDetailsFailure.type, StoreSubscriptionDetailsSuccess.type]] = {
-    storeSubscriptionDetailsConnector.storeVatNumber(vatNumber) map { response =>
-      response.status match {
-        case NO_CONTENT =>
-          Right(StoreSubscriptionDetailsSuccess)
-        case _ =>
-          Left(StoreSubscriptionDetailsFailure)
-      }
-    }
-  }
+  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreSubscriptionDetailsResponse] =
+    storeSubscriptionDetailsConnector.storeVatNumber(vatNumber)
+
 }
-
-object StoreSubscriptionDetailsSuccess
-
-object StoreSubscriptionDetailsFailure
