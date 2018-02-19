@@ -53,7 +53,7 @@ class CaptureCompanyNumberSpec extends ViewSpec {
 
     testPage.shouldHaveTextField(companyNumber, messages.heading)
 
-    testPage.shouldHaveContinueButton
+    testPage.shouldHaveContinueButton()
   }
 
 }

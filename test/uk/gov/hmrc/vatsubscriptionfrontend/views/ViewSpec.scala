@@ -41,16 +41,38 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         element.getElementsByTag("p").text() should include(paragraph)
       }
 
+    def shouldHaveH2(text: String): Unit =
+      s"$name have a Heading 2 (H2) for '$text'" in {
+        element.getElementsByTag("h2").text() should include(text)
+      }
+
     def shouldHaveHint(hint: String): Unit =
       s"$name should have the hint text '$hint'" in {
         element.getElementsByTag("span").hasClass("form-hint") shouldBe true
         element.getElementsByTag("span").text() should include(hint)
       }
 
+    def shouldHaveALink(text: String, href: => String): Unit =
+      s"$name have a link with text '$text' pointed to '$href'" in {
+        val link = element.select("a")
+        if (link == null) fail(s"Unable to locate any links in $name\n$element\n")
+        if (link.size() > 1) fail(s"Multiple links located in $name, please specify an id")
+        link.attr("href") shouldBe href
+        link.text() shouldBe text
+      }
+
+    def shouldHaveALink(id: String, text: String, href: => String): Unit =
+      s"$name have a link with text '$text' pointed to '$href'" in {
+        val link = element.getElementById(id)
+        if (link == null) fail(s"Unable to locate $id")
+        if (!link.tagName().equals("a")) fail(s"The element with id=$id is not a link")
+        link.attr("href") shouldBe href
+        link.text() shouldBe text
+      }
 
     def shouldHaveTextField(name: String,
-                          label: String
-                         ): Unit = {
+                            label: String
+                           ): Unit = {
 
       s"${this.name} should have an input field '$name'" which {
 
@@ -73,28 +95,23 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
           withClue(s"$name does not have the class 'visuallyhidden'\n") {
             labelField.hasClass("visuallyhidden") shouldBe true
           }
-
       }
-
     }
-
 
     private def shouldHaveSubmitButton(text: String): Unit =
       s"$name should have the a submit button (Button) '$text'" in {
         import collection.JavaConversions._
-        val submitButtons = element.select("button").filter(_.attr("type") == "submit")
+        val submitButtons = element.getElementsByTag("input").filter(_.attr("type") == "submit")
         submitButtons.size shouldBe 1
-        submitButtons.head.text() shouldBe text
+        submitButtons.head.attr("class") should include("button")
+        submitButtons.head.attr("value") shouldBe text
       }
 
-    def shouldHaveContinueButton = shouldHaveSubmitButton(common.continue)
+    def shouldHaveContinueButton() = shouldHaveSubmitButton(common.continue)
 
-    def shouldHaveContinueToSignUpButton = shouldHaveSubmitButton(common.continueToSignUp)
+    def shouldHaveConfirmAndContinueButton() = shouldHaveSubmitButton(common.confirmAndContinue)
 
-    def shouldHaveUpdateButton = shouldHaveSubmitButton(common.update)
-
-    def shouldHaveGoBackButton = shouldHaveSubmitButton(common.goBack)
-
+    def shouldHaveContinueToSignUpButton() = shouldHaveSubmitButton(common.continueToSignUp)
 
     def shouldHaveForm(formName: String, id: Option[String] = None)(actionCall: => Call): Unit = {
       val selector =
@@ -142,4 +159,5 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
               heading: String,
               page: => Html): TestView = new TestView(name, title, heading, page)
   }
+
 }

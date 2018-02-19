@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@import helpers.{inputHelper, summaryErrorHelper}
+@import helpers.{inputHelper, summaryErrorHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
 
 @(vatNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -30,20 +30,16 @@
     <p>@Messages("agent.capture_vat_number.line_1")</p>
 
     @form(action = postAction) {
+        <div class="form-group">
+            <span class="form-hint">@Messages("agent.capture_vat_number.hint")</span>
+            @inputHelper(
+                field = vatNumberForm(vatNumber),
+                label = Messages("agent.capture_vat_number.heading"),
+                parentForm = vatNumberForm
+            )
+        </div>
 
-    <div class="form-group">
-        <span class="form-hint">@Messages("agent.capture_vat_number.hint")</span>
-        @inputHelper(
-        field = vatNumberForm(vatNumber),
-        label = Messages("agent.capture_vat_number.heading"),
-        parentForm = vatNumberForm
-        )
-    </div>
-
-    <button class="button" type="submit" id="continue-button">@Messages("base.continue")</button>
-
+        @continueButton()
     }
-
-    <a href="href">@Messages("agent.confirm_vat_number.link")</a>
 
 }

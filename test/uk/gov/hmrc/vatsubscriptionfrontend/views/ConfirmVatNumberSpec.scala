@@ -16,23 +16,23 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{CaptureVatNumber => messages}
+import assets.MessageLookup.{ConfirmVatNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
 class ConfirmVatNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
+  val testVrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number(
-    vatNumberForm = vatNumberForm,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number(
+    vatNumber = testVrn,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
@@ -48,19 +48,19 @@ class ConfirmVatNumberSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHavePara(
-      messages.description
-    )
+    testPage.shouldHaveH2(messages.vatNumberHeading)
 
-    testPage.shouldHaveHint(
-      messages.hint
-    )
+    testPage.shouldHavePara(testVrn)
 
     testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(vatNumber, messages.heading)
+    testPage.shouldHaveConfirmAndContinueButton()
 
-    testPage.shouldHaveContinueButton
+    testPage.shouldHaveALink(
+      id = "changeLink",
+      text = messages.link,
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url
+    )
   }
 
 }

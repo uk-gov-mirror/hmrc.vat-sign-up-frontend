@@ -14,9 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(alternativeText: Option[String] = None)(implicit messages: Messages)
 
-@main_template(title = "Hello from vat-subscription-frontend", bodyClasses = None) {
-    <h1>Hello from vat-subscription-frontend !</h1>
-}
+<input class="button" type="submit" value="@alternativeText.getOrElse(Messages("base.continue"))">
