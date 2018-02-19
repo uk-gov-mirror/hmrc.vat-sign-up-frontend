@@ -17,24 +17,19 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Configuration, Environment}
 import play.api.http.Status
-import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import play.api.test.Helpers._
-import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
+import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 
-class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
+import scala.concurrent.Future
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  object TestCaptureVatNumberController extends CaptureVatNumberController(messagesApi, new AppConfig(configuration, env))
+class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents{
+  object TestCaptureVatNumberController extends CaptureVatNumberController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/vat-number")
 
@@ -43,6 +38,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   "Calling the show action of the Capture Vat Number controller" should {
     "go to the Capture Vat number page" in {
+      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
       val result = TestCaptureVatNumberController.show(testGetRequest)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
@@ -55,6 +52,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
     //todo update when next page played
     "form successfully submitted" should {
       "go to the new page" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
         val result = TestCaptureVatNumberController.submit(testPostRequest("123456789"))
         status(result) shouldBe Status.NOT_IMPLEMENTED
       }
@@ -62,6 +61,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
         val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")

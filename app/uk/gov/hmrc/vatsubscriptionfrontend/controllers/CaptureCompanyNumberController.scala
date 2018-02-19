@@ -18,16 +18,32 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Action
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+
+import scala.concurrent.Future
 
 @Singleton
-class CaptureCompanyNumberController @Inject()(val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+class CaptureCompanyNumberController @Inject()(val controllerComponents: ControllerComponents)
+  extends AuthenticatedController {
 
   //TODO Update when view available
-  val show = Action { implicit request => NotImplemented }
+  val show: Action[AnyContent] = Action.async {
+    implicit request =>
+      authorised() {
+        Future.successful(
+          NotImplemented
+        )
+      }
+  }
 
   //TODO Update when view is available
-  val submit = Action { implicit request => NotImplemented }
+  val submit: Action[AnyContent] = Action.async {
+    implicit request =>
+      authorised() {
+        Future.successful(
+          NotImplemented
+        )
+      }
+  }
 }

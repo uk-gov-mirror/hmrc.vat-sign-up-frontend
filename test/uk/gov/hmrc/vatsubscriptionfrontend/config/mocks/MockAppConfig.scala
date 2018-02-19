@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.controllers
+package uk.gov.hmrc.vatsubscriptionfrontend.config.mocks
 
-import javax.inject.{Inject, Singleton}
-
-import play.api.mvc._
-
-import scala.concurrent.Future
-import play.api.i18n.{I18nSupport, MessagesApi}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{BeforeAndAfterEach, TestSuite}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.views
 
-@Singleton
-class HelloWorld @Inject()(val messagesApi: MessagesApi, implicit val appConfig: AppConfig) extends FrontendController with I18nSupport {
+trait MockAppConfig extends MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
+  this: TestSuite =>
 
-  val helloWorld = Action.async { implicit request =>
-    Future.successful(Ok(views.html.hello_world()))
-  }
+  //TODO: Replace with mock config
+  val mockAppConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
 }

@@ -17,21 +17,17 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Configuration, Environment}
 import play.api.http.Status
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+
+import scala.concurrent.Future
 
 
-class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
-
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(messagesApi)
+class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/company-number")
 
@@ -40,6 +36,8 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the show action of the Capture Company Number controller" should {
     "return not implemented" in {
+      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
       val result = TestCaptureCompanyNumberController.show(testGetRequest)
       status(result) shouldBe Status.NOT_IMPLEMENTED
       // TODO introduce when view in place
@@ -52,6 +50,8 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
   "Calling the submit action of the Capture Company Number controller" should {
     //todo update when next page played
       "return not implemented" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
         val result = TestCaptureCompanyNumberController.submit(testPostRequest)
         status(result) shouldBe Status.NOT_IMPLEMENTED
     }
