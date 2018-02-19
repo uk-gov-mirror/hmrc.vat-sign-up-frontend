@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.config.filters
 
-import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject._
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -25,10 +24,11 @@ import play.api.mvc.{Action, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration}
+import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
-class WhiteListFilterSpec extends PlaySpec with GuiceOneServerPerSuite {
+class WhiteListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
 
   val testString = "success"
 
@@ -46,7 +46,7 @@ class WhiteListFilterSpec extends PlaySpec with GuiceOneServerPerSuite {
   "WhiteListFilter" should {
 
     "redirects none white listed ip" in {
-      app.configuration.getBoolean("feature-switch.enable-ip-whitelisting") mustBe Some(true)
+      app.configuration.getBoolean("feature-switch.enable-ip-whitelisting") shouldBe Some(true)
 
       val fr = FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.2"
@@ -54,18 +54,18 @@ class WhiteListFilterSpec extends PlaySpec with GuiceOneServerPerSuite {
       Call(fr.method, fr.uri)
       val Some(result) = route(app, fr)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(appConfig.shutterPage)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(appConfig.shutterPage)
     }
 
     "not block white listed ip" in {
-      app.configuration.getBoolean("feature-switch.enable-ip-whitelisting") mustBe Some(true)
+      app.configuration.getBoolean("feature-switch.enable-ip-whitelisting") shouldBe Some(true)
       val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.1"
       ))
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe testString
+      status(result) shouldBe OK
+      contentAsString(result) shouldBe testString
     }
   }
 
