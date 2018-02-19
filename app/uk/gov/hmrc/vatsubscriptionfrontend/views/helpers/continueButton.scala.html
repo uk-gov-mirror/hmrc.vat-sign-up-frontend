@@ -16,4 +16,4 @@
 
 @(alternativeText: Option[String] = None)(implicit messages: Messages)
 
-<input class="button" type="submit" value="@alternativeText.getOrElse(Messages("base.continue"))">
+<input id="continue-button" class="button" type="submit" value="@alternativeText.getOrElse(Messages("base.continue"))">
