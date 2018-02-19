@@ -21,14 +21,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreSubscriptionDetailsService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           val storeSubscriptionDetailsService: StoreSubscriptionDetailsService)
+class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -47,10 +45,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
           ),
         vatNumber => //TODO store VAT Number
-          storeSubscriptionDetailsService.storeVatNumber(vatNumber) map {
-            case Right(_) => Ok("Success")
-            case Left(_) => NotImplemented("Failure")
-          }
+          Future.successful(NotImplemented)
       )
     }
   }
