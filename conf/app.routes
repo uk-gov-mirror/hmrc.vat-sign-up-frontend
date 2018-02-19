@@ -1,12 +1,9 @@
 # microservice specific routes
 
-GET        /hello-world             @uk.gov.hmrc.vatsubscriptionfrontend.controllers.HelloWorld.helloWorld
-
-
 # Capture VRN
-GET        /vat-number              @uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
-POST       /vat-number              @uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
+GET        /vat-number              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
+POST       /vat-number              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
 
 # Capture Company Number
-GET        /company-number          @uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
-POST       /company-number          @uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
+GET        /company-number          uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
+POST       /company-number          uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
