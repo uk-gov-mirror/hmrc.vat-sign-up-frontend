@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(alternativeText: Option[String] = None)(implicit messages: Messages)
+package uk.gov.hmrc.vatsubscriptionfrontend.models
 
-<input id="continue-button" class="button" type="submit" value="@alternativeText.getOrElse(Messages("base.continue"))">
+sealed trait StoreSubscriptionDetailsResponse
+
+case object StoreSubscriptionDetailsSuccess extends StoreSubscriptionDetailsResponse
+
+case class StoreSubscriptionDetailsFailure(status: Int) extends StoreSubscriptionDetailsResponse
