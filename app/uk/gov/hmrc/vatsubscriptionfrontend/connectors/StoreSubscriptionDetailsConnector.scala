@@ -18,9 +18,11 @@ package uk.gov.hmrc.vatsubscriptionfrontend.connectors
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreSubscriptionDetailsHttpParser._
 
@@ -30,12 +32,14 @@ class StoreSubscriptionDetailsConnector @Inject()(val http: HttpClient,
 
   import StoreSubscriptionDetailsConnector._
 
+  val vatNumberKey = "vatNumber"
+
   def storeSubscriptionDetailsUrl(detail: String): String =
     applicationConfig.storeSubscriptionDetailsUrl + appendDetailToUrl(detail)
 
   def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreSubscriptionDetailsResponse] = {
     val detail = "vat-number"
-    http.POST[String, StoreSubscriptionDetailsResponse](storeSubscriptionDetailsUrl(detail), vatNumber)
+    http.PUT[JsObject, StoreSubscriptionDetailsResponse](storeSubscriptionDetailsUrl(detail), Json.obj(vatNumberKey -> vatNumber))
   }
 }
 

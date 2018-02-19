@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreSubscriptionDetailsH
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreSubscriptionDetailsFailure, StoreSubscriptionDetailsSuccess}
 
 class StoreSubscriptionDetailsHttpParserSpec extends UnitSpec{
-  val testHttpVerb = "POST"
+  val testHttpVerb = "PUT"
   val testUri = "/"
 
   "StoreSubscriptionDetailsHttpReads" when {
