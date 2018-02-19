@@ -18,27 +18,35 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Action
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number
 
-@Singleton
-class CaptureVatNumberController @Inject()(val messagesApi: MessagesApi,
-                                           implicit val appConfig: AppConfig)
-                                           extends FrontendController with I18nSupport {
+import scala.concurrent.Future
 
-  val show = Action { implicit request =>
-    Ok(capture_vat_number(vatNumberForm, routes.CaptureVatNumberController.submit()))
+@Singleton
+class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents)
+  extends AuthenticatedController {
+
+  val show: Action[AnyContent] = Action.async { implicit request =>
+    authorised() {
+      Future.successful(
+        Ok(capture_vat_number(vatNumberForm, routes.CaptureVatNumberController.submit()))
+      )
+    }
   }
 
-  val submit = Action { implicit request =>
-    vatNumberForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit())),
-      vatNumber => //TODO store VAT Number
-        NotImplemented
-    )
+  val submit: Action[AnyContent] = Action.async { implicit request =>
+    authorised() {
+      vatNumberForm.bindFromRequest.fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
+          ),
+        vatNumber => //TODO store VAT Number
+          Future.successful(NotImplemented)
+      )
+    }
   }
 }
