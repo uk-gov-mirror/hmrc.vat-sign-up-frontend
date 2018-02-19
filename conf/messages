@@ -1,5 +1,6 @@
 ## Base
 base.continue                                                          = Continue
+base.confirmAndContinue                                                = Confirm and continue
 base.error_heading                                                     = There''s a problem
 
 ## Errors
@@ -13,6 +14,12 @@ agent.capture_vat_number.title                                         = What is
 agent.capture_vat_number.heading                                       = What is your client''s VAT number?
 agent.capture_vat_number.line_1                                        = This is the 9-digit number they received when they registered for VAT.
 agent.capture_vat_number.hint                                          = For example, 123456789
+
+## Agent Confirm Vat Number page
+agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
+agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
+agent.confirm_vat_number.vatNumber.heading                             = VAT number
+agent.confirm_vat_number.link                                          = Change VAT number
 
 ## Agent Capture Company Number page
 agent.capture_company_number.title                                     = What is your client''s company registration number?

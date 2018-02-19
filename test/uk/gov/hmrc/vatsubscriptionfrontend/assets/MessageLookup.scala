@@ -22,6 +22,7 @@ object MessageLookup {
   object Base {
     val continue = "Continue"
     val continueToSignUp = "Continue to sign up"
+    val confirmAndContinue = "Confirm and continue"
     val submit = "Submit"
     val update = "Update"
     val signOut = "Sign out"
@@ -39,6 +40,13 @@ object MessageLookup {
     val heading: String = title
     val description = "This is the 9-digit number they received when they registered for VAT."
     val hint = "For example, 123456789"
+  }
+
+  object ConfirmVatNumber {
+    val title = "Confirm your client's VAT number"
+    val heading: String = title
+    val vatNumberHeading = "VAT number"
+    val link = "Change VAT number"
   }
 
   object CaptureCompanyNumber {

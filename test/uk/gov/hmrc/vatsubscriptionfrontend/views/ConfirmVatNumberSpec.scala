@@ -16,44 +16,51 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{CaptureCompanyNumber => messages}
-import play.api.{Configuration, Environment}
+import assets.MessageLookup.{ConfirmVatNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
 
-
-class CaptureCompanyNumberSpec extends ViewSpec {
+class ConfirmVatNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
+  val testVrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_company_number(
-    companyNumberForm = companyNumberForm,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number(
+    vatNumber = testVrn,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Company Number view" should {
+  "The Confirm Vat Number view" should {
 
     val testPage = TestView(
-      name = "Capture Company Number View",
+      name = "Confirm Vat Number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
+    testPage.shouldHaveH2(messages.vatNumberHeading)
 
-    testPage.shouldHaveTextField(companyNumber, messages.heading)
+    testPage.shouldHavePara(testVrn)
 
-    testPage.shouldHaveContinueButton()
+    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+
+    testPage.shouldHaveConfirmAndContinueButton()
+
+    testPage.shouldHaveALink(
+      id = "changeLink",
+      text = messages.link,
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url
+    )
   }
 
 }
