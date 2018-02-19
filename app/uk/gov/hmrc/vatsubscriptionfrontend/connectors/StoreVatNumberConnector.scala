@@ -24,25 +24,15 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreSubscriptionDetailsHttpParser._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
 
 @Singleton
-class StoreSubscriptionDetailsConnector @Inject()(val http: HttpClient,
+class StoreVatNumberConnector @Inject()(val http: HttpClient,
                                                   val applicationConfig: AppConfig) {
-
-  import StoreSubscriptionDetailsConnector._
 
   val vatNumberKey = "vatNumber"
 
-  def storeSubscriptionDetailsUrl(detail: String): String =
-    applicationConfig.storeSubscriptionDetailsUrl + appendDetailToUrl(detail)
-
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreSubscriptionDetailsResponse] = {
-    val detail = "vat-number"
-    http.PUT[JsObject, StoreSubscriptionDetailsResponse](storeSubscriptionDetailsUrl(detail), Json.obj(vatNumberKey -> vatNumber))
+  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] = {
+    http.PUT[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
   }
-}
-
-object StoreSubscriptionDetailsConnector {
-  private def appendDetailToUrl(detail: String) = "/" + detail
 }
