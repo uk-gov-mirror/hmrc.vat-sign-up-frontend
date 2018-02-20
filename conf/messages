@@ -25,3 +25,8 @@ agent.confirm_vat_number.link                                          = Change 
 agent.capture_company_number.title                                     = What is your client''s company registration number?
 agent.capture_company_number.heading                                   = What is your client''s company registration number?
 
+## Agent Capture Entity Type page
+agent.capture_entity_type.title                                        = What type of business is your client registered as?
+agent.capture_entity_type.heading                                      = What type of business is your client registered as?
+agent.capture_entity_type.soleTrader                                   = Sole trader
+agent.capture_entity_type.limitedCompany                               = Limited company
