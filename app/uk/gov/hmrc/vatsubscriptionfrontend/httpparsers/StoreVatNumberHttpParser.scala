@@ -18,16 +18,16 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreSubscriptionDetailsFailure, StoreSubscriptionDetailsSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailure, StoreVatNumberSuccess}
 
-object StoreSubscriptionDetailsHttpParser {
-  type StoreSubscriptionDetailsResponse = Either[StoreSubscriptionDetailsFailure , StoreSubscriptionDetailsSuccess.type ]
+object StoreVatNumberHttpParser {
+  type StoreVatNumberResponse = Either[StoreVatNumberFailure , StoreVatNumberSuccess.type ]
 
-  implicit object StoreSubscriptionDetailsHttpReads extends HttpReads[StoreSubscriptionDetailsResponse] {
-    override def read(method: String, url: String, response: HttpResponse): StoreSubscriptionDetailsResponse = {
+  implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
+    override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
       response.status match {
-        case NO_CONTENT => Right(StoreSubscriptionDetailsSuccess)
-        case status => Left(StoreSubscriptionDetailsFailure(status))
+        case NO_CONTENT => Right(StoreVatNumberSuccess)
+        case status => Left(StoreVatNumberFailure(status))
       }
     }
   }

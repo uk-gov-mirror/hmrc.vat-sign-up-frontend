@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.models
+package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 
-sealed trait StoreVatNumberResponse
-
-case object StoreVatNumberSuccess extends StoreVatNumberResponse
-
-case class StoreVatNumberFailure(status: Int) extends StoreVatNumberResponse
+object TestConstants {
+  val testVatNumber: String = TestConstantsGenerator.randomVatNumber
+  val testCompanyNumber: String = TestConstantsGenerator.randomCrn
+}
