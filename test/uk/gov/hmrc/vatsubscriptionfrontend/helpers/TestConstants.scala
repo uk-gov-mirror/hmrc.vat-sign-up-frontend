@@ -18,5 +18,5 @@ package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
-  val testCompanyNumber: String = TestConstantsGenerator.randomCrn
+  val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
 }

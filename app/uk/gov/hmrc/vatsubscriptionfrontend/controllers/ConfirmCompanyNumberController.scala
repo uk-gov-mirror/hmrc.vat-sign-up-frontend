@@ -19,14 +19,16 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
+import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreCompanyNumberService
 
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmCompanyNumberController @Inject()(val controllerComponents: ControllerComponents)
+class ConfirmCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
+                                               val storeCompanyNumberService: StoreCompanyNumberService)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -46,7 +48,20 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(NotImplemented)
+      request.session.get(SessionKeys.companyNumberKey) match {
+        case Some(companyNumber) if companyNumber.nonEmpty =>
+          storeCompanyNumberService.storeCompanyNumber(companyNumber) map {
+            // TODO goto email
+            case Right(_) =>
+              NotImplemented
+            case Left(errResponse) =>
+              throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+          }
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureCompanyNumberController.show())
+          )
+      }
     }
   }
 }
