@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_business_entity
 
 import scala.concurrent.Future
 
@@ -31,7 +32,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        NotImplemented
+        Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit()))
       )
     }
   }
@@ -41,7 +42,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
       businessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest
+            BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
           ),
         businessEntity => //TODO redirect
           Future.successful(NotImplemented)

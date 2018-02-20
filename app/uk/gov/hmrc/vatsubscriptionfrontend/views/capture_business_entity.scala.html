@@ -14,13 +14,14 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import helpers.{inputHelper, summaryErrorHelper, radioHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.html.helpers._
 
-@(BusinessEntityForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(BusinessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None) {
 

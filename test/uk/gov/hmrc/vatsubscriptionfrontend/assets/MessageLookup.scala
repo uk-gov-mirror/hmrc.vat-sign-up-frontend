@@ -54,4 +54,11 @@ object MessageLookup {
     val heading: String = title
   }
 
+  object CaptureBusinessEntity {
+    val title = "What type of business is your client registered as?"
+    val heading: String = title
+    val radioSoleTrader: String = "Sole trader"
+    val radioLimitedCompany: String = "Limited company"
+  }
+
 }
