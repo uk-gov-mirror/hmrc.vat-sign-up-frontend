@@ -22,16 +22,19 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreCompanyNumberService
 
 import scala.concurrent.Future
 
-class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+  with MockStoreCompanyNumberService {
 
-  object TestConfirmCompanyNumberController extends ConfirmCompanyNumberController(mockControllerComponents)
+  object TestConfirmCompanyNumberController extends ConfirmCompanyNumberController(mockControllerComponents, mockStoreCompanyNumberService)
 
   val testGetRequest = FakeRequest("GET", "/confirm-company-number")
 
@@ -62,14 +65,36 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
     }
   }
 
-  "Calling the submit action of the Confirm Company Number controller" should {
-    // TODO
-    "return not implemented" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-      val result = TestConfirmCompanyNumberController.submit(testPostRequest)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
+  "Calling the submit action of the Confirm Company Number controller" when {
+    "vat number is in session and store vat is successful" should {
+      // todo goto email
+      "return not implemented" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockStoreCompanyNumberSuccess(vatNumber = testCompanyNumber)
+
+        val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber))
+        status(result) shouldBe Status.NOT_IMPLEMENTED
+      }
+    }
+    "vat number is in session but store vat is unsuccessful" should {
+      "throw internal server exception" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockStoreCompanyNumberFailure(vatNumber = testCompanyNumber)
+
+        intercept[InternalServerException] {
+          await(TestConfirmCompanyNumberController.submit(testPostRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber)))
+        }
+      }
+    }
+    "vat number is not in session" should {
+      "redirect to capture vat number" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        val result = TestConfirmCompanyNumberController.submit(testPostRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
+      }
     }
   }
-
 }
