@@ -18,42 +18,63 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
 
 import scala.concurrent.Future
-
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+
   object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/company-number")
 
-  val testPostRequest = FakeRequest("POST", "/company-number")
-
+  def testPostRequest(companyNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest("POST", "/company-number").withFormUrlEncodedBody(companyNumber -> companyNumberVal)
 
   "Calling the show action of the Capture Company Number controller" should {
-    "return not implemented" in {
+    "go to the Capture Company number page" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
       val result = TestCaptureCompanyNumberController.show(testGetRequest)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-      // TODO introduce when view in place
-      // contentType(result) shouldBe Some("text/html")
-      //charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 
 
-  "Calling the submit action of the Capture Company Number controller" should {
-    //todo update when next page played
-      "return not implemented" in {
+  "Calling the submit action of the Capture Company Number controller" when {
+    "form successfully submitted" should {
+      "go to the new page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestCaptureCompanyNumberController.submit(testPostRequest)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmCompanyNumberController.show().url)
+
+        result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
+      }
+    }
+
+    "form unsuccessfully submitted" should {
+      "reload the page with errors" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        val result = TestCaptureCompanyNumberController.submit(testPostRequest("invalid"))
+        status(result) shouldBe Status.BAD_REQUEST
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
     }
   }
 }
