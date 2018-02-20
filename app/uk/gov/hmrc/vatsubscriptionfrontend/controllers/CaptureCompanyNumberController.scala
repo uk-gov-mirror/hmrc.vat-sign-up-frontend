@@ -19,7 +19,10 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_company_number
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
 
 import scala.concurrent.Future
 
@@ -27,22 +30,27 @@ import scala.concurrent.Future
 class CaptureCompanyNumberController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
-  //TODO Update when view available
   val show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         Future.successful(
-          NotImplemented
+          Ok(capture_company_number(companyNumberForm, routes.CaptureCompanyNumberController.submit()))
         )
       }
   }
 
-  //TODO Update when view is available
   val submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        Future.successful(
-          NotImplemented
+        companyNumberForm.bindFromRequest.fold(
+          formWithErrors =>
+            Future.successful(
+              BadRequest(capture_company_number(formWithErrors, routes.CaptureCompanyNumberController.submit()))
+            ),
+          companyNumber =>
+            Future.successful(
+              Redirect(routes.ConfirmCompanyNumberController.show()).addingToSession(SessionKeys.companyNumberKey -> companyNumber)
+            )
         )
       }
   }
