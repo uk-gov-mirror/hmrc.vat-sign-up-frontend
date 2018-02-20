@@ -25,6 +25,6 @@ trait MockAppConfig extends MockitoSugar with BeforeAndAfterEach with GuiceOneAp
   this: TestSuite =>
 
   //TODO: Replace with mock config
-  val mockAppConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val mockAppConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
 }

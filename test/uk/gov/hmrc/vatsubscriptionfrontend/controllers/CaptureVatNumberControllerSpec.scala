@@ -34,7 +34,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   object TestCaptureVatNumberController extends CaptureVatNumberController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/vat-number")
+  lazy val testGetRequest = FakeRequest("GET", "/vat-number")
 
   def testPostRequest(vatNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(vatNumber -> vatNumberVal)

@@ -19,20 +19,23 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
 
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerComponents)
+class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerComponents,
+                                           val storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) =>
+        case Some(vatNumber) if vatNumber.nonEmpty =>
           Future.successful(
             Ok(confirm_vat_number(vatNumber, routes.ConfirmVatNumberController.submit()))
           )
@@ -46,7 +49,21 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(NotImplemented)
+      request.session.get(SessionKeys.vatNumberKey) match {
+        case Some(vatNumber) if vatNumber.nonEmpty =>
+          storeVatNumberService.storeVatNumber(vatNumber) map {
+            // TODO goto entity type
+            case Right(_) =>
+              NotImplemented
+            case Left(errResponse) =>
+              throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
+          }
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
+          )
+      }
     }
   }
+
 }

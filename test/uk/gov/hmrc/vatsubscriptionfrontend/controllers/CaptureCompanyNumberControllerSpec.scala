@@ -29,10 +29,9 @@ import scala.concurrent.Future
 class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
   object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/company-number")
+  lazy val testGetRequest = FakeRequest("GET", "/company-number")
 
-  val testPostRequest = FakeRequest("POST", "/company-number")
-
+  lazy val testPostRequest = FakeRequest("POST", "/company-number")
 
   "Calling the show action of the Capture Company Number controller" should {
     "return not implemented" in {
