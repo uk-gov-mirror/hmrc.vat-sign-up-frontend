@@ -25,12 +25,14 @@
 
     <h1 class="heading-large">@Messages("agent.confirm_vat_number.heading")</h1>
 
-    <h2 class="heading-medium">@Messages("agent.confirm_vat_number.vatNumber.heading")</h2>
+    <h3 class="heading-medium">@Messages("agent.confirm_vat_number.vatNumber.heading")</h3>
 
     <p>@vatNumber</p>
 
     @form(action = postAction) {
-        @continueButton(Some(Messages("base.confirmAndContinue")))
+        <div class="form-group">
+            @continueButton(Some(Messages("base.confirmAndContinue")))
+        </div>
     }
 
     <p><a id="changeLink" href="@uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url">@Messages("agent.confirm_vat_number.link")</a></p>

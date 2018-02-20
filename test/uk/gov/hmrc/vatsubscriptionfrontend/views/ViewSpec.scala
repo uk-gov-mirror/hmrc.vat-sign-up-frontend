@@ -46,6 +46,11 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         element.getElementsByTag("h2").text() should include(text)
       }
 
+    def shouldHaveH3(text: String): Unit =
+      s"$name have a Heading 3 (H3) for '$text'" in {
+        element.getElementsByTag("h3").text() should include(text)
+      }
+
     def shouldHaveHint(hint: String): Unit =
       s"$name should have the hint text '$hint'" in {
         element.getElementsByTag("span").hasClass("form-hint") shouldBe true
