@@ -25,3 +25,8 @@ agent.confirm_vat_number.link                                          = Change 
 agent.capture_company_number.title                                     = What is your client''s company registration number?
 agent.capture_company_number.heading                                   = What is your client''s company registration number?
 
+## Agent Confirm Company Number page
+agent.confirm_company_number.title                                     = Confirm your client''s company registration number
+agent.confirm_company_number.heading                                   = Confirm your client''s company registration number
+agent.confirm_company_number.companyNumber.heading                     = Company registration number
+agent.confirm_company_number.link                                      = Change company registration number

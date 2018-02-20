@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_company_number
 
 import scala.concurrent.Future
 
@@ -34,7 +34,7 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
       request.session.get(SessionKeys.companyNumberKey) match {
         case Some(companyNumber) =>
           Future.successful(
-            NotImplemented
+            Ok(confirm_company_number(companyNumber, routes.ConfirmCompanyNumberController.submit()))
           )
         case _ =>
           Future.successful(
