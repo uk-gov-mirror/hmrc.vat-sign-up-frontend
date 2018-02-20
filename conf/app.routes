@@ -7,3 +7,7 @@ POST       /vat-number              uk.gov.hmrc.vatsubscriptionfrontend.controll
 # Capture Company Number
 GET        /company-number          uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
 POST       /company-number          uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
+
+# Capture Entity Type
+GET        /business-entity         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.show
+POST       /business-entity         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.submit
