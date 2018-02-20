@@ -19,36 +19,32 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_vat_number(vatNumberForm, routes.CaptureVatNumberController.submit()))
+        NotImplemented
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      vatNumberForm.bindFromRequest.fold(
+      businessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
+            BadRequest
           ),
-        vatNumber =>
-          Future.successful(
-            Redirect(routes.ConfirmVatNumberController.show()).addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-          )
+        businessEntity => //TODO redirect
+          Future.successful(NotImplemented)
       )
     }
   }

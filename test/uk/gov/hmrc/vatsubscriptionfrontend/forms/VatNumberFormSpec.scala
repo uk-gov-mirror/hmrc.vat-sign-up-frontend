@@ -15,11 +15,13 @@
  */
 
 package uk.gov.hmrc.vatsubscriptionfrontend.forms
+
 import org.scalatest.Matchers._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
 
 class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
@@ -28,9 +30,8 @@ class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     val error_key = "error.invalid_vat_number"
 
     "validate that data containing 9 digits passes" in {
-      val successVatNumber = "123456789"
-      val actual = vatNumberForm.bind(Map(vatNumber -> successVatNumber)).value
-      actual shouldBe Some(successVatNumber)
+      val actual = vatNumberForm.bind(Map(vatNumber -> testVatNumber)).value
+      actual shouldBe Some(testVatNumber)
     }
 
     "validate that data has been entered" in {
@@ -39,17 +40,17 @@ class VatNumberFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "validate that data containing any non numeric data fails" in {
-      val formWithError = vatNumberForm.bind(Map(vatNumber -> "12345678A"))
+      val formWithError = vatNumberForm.bind(Map(vatNumber -> (testVatNumber.drop(1) + "A")))
       formWithError.errors should contain(FormError(vatNumber, error_key))
     }
 
     "validate that data containing more than 9 digits fails" in {
-      val formWithError = vatNumberForm.bind(Map(vatNumber -> "1234567890"))
+      val formWithError = vatNumberForm.bind(Map(vatNumber -> (testVatNumber + "1")))
       formWithError.errors should contain(FormError(vatNumber, error_key))
     }
 
     "validate that data containing less than 9 digits fails" in {
-      val formWithError = vatNumberForm.bind(Map(vatNumber -> "12345678"))
+      val formWithError = vatNumberForm.bind(Map(vatNumber -> testVatNumber.drop(1)))
       formWithError.errors should contain(FormError(vatNumber, error_key))
     }
 

@@ -1,9 +1,21 @@
 # microservice specific routes
 
 # Capture VRN
-GET        /vat-number              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
-POST       /vat-number              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
+GET         /vat-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
+POST        /vat-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
+
+# Confirm VRN
+GET         /confirm-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmVatNumberController.show
+POST        /confirm-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmVatNumberController.submit
 
 # Capture Company Number
-GET        /company-number          uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
-POST       /company-number          uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
+GET        /company-number             uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
+POST       /company-number             uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
+
+# Confirm Company Number
+GET        /confirm-company-number     uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmCompanyNumberController.show
+POST       /confirm-company-number     uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmCompanyNumberController.submit
+
+#Capture Business Entity
+GET        /business-entity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.show
+POST       /business-entity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.submit

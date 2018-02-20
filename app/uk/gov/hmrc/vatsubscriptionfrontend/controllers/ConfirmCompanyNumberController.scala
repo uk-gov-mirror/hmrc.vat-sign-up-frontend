@@ -21,35 +21,32 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents)
+class ConfirmCompanyNumberController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(capture_vat_number(vatNumberForm, routes.CaptureVatNumberController.submit()))
-      )
+      request.session.get(SessionKeys.companyNumberKey) match {
+        case Some(companyNumber) =>
+          Future.successful(
+            NotImplemented
+          )
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureCompanyNumberController.show())
+          )
+      }
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      vatNumberForm.bindFromRequest.fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
-          ),
-        vatNumber =>
-          Future.successful(
-            Redirect(routes.ConfirmVatNumberController.show()).addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-          )
-      )
+      Future.successful(NotImplemented)
     }
   }
 }
