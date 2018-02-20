@@ -51,4 +51,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   protected lazy val protectedMicroServiceUrl = baseUrl("subscription-service")
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number"
 
+  lazy val storeCompanyNumberUrl = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/company-number"
+
 }

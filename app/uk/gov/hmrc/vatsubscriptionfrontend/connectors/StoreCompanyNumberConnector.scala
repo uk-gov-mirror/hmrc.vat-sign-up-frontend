@@ -22,17 +22,18 @@ import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreCompanyNumberHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreVatNumberConnector @Inject()(val http: HttpClient,
-                                        val applicationConfig: AppConfig) {
+class StoreCompanyNumberConnector @Inject()(val http: HttpClient,
+                                            val applicationConfig: AppConfig) {
 
-  val vatNumberKey = "vatNumber"
+  val companyNumberKey = "companyNumber"
 
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] = {
-    http.PUT[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
+  def storeCompanyNumber(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] = {
+    http.PUT[JsObject, StoreCompanyNumberResponse](applicationConfig.storeCompanyNumberUrl, Json.obj(companyNumberKey -> companyNumber))
   }
+
 }
