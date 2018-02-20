@@ -34,7 +34,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/company-number")
+  lazy val testGetRequest = FakeRequest("GET", "/company-number")
 
   def testPostRequest(companyNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/company-number").withFormUrlEncodedBody(companyNumber -> companyNumberVal)

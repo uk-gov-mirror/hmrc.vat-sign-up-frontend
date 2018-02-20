@@ -61,4 +61,11 @@ object MessageLookup {
     val radioLimitedCompany: String = "Limited company"
   }
 
+  object ConfirmCompanyNumber {
+    val title = "Confirm your client's company registration number"
+    val heading: String = title
+    val companyNumberHeading = "Company registration number"
+    val link = "Change company registration number"
+  }
+
 }

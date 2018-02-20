@@ -16,50 +16,50 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{ConfirmVatNumber => messages}
+import assets.MessageLookup.{ConfirmCompanyNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
-class ConfirmVatNumberSpec extends ViewSpec {
+class ConfirmCompanyNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val testVrn = ""
+  val testCrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number(
-    vatNumber = testVrn,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_company_number(
+    companyNumber = testCrn,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Vat Number view" should {
+  "The Confirm Company Number view" should {
 
     val testPage = TestView(
-      name = "Confirm Vat Number View",
+      name = "Confirm Company Number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH3(messages.vatNumberHeading)
+    testPage.shouldHaveH3(messages.companyNumberHeading)
 
-    testPage.shouldHavePara(testVrn)
+    testPage.shouldHavePara(testCrn)
 
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
 
     testPage.shouldHaveConfirmAndContinueButton()
 
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.ConfirmCompanyNumberController.show().url
     )
   }
 

@@ -14,26 +14,26 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+@import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import helpers.continueButton
 @import uk.gov.hmrc.play.views.html.helpers.form
 
-@(vatNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(companyNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.confirm_vat_number.title"), bodyClasses = None) {
+@main_template(title = Messages("agent.confirm_company_number.title"), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("agent.confirm_vat_number.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.confirm_company_number.heading")</h1>
 
-    <h3 class="heading-medium">@Messages("agent.confirm_vat_number.vatNumber.heading")</h3>
+    <h3 class="heading-medium">@Messages("agent.confirm_company_number.companyNumber.heading")</h3>
 
-    <p>@vatNumber</p>
+    <p>@companyNumber</p>
 
     @form(action = postAction) {
         <div class="form-group">
-            @continueButton(Some(Messages("base.confirmAndContinue")))
+             @continueButton(Some(Messages("base.confirmAndContinue")))
         </div>
     }
 
-    <p><a id="changeLink" href="@uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url">@Messages("agent.confirm_vat_number.link")</a></p>
+    <p><a id="changeLink" href="@uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.ConfirmCompanyNumberController.show().url">@Messages("agent.confirm_company_number.link")</a></p>
 }
