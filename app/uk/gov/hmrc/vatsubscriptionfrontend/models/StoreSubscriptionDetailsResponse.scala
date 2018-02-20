@@ -21,3 +21,10 @@ sealed trait StoreVatNumberResponse
 case object StoreVatNumberSuccess extends StoreVatNumberResponse
 
 case class StoreVatNumberFailure(status: Int) extends StoreVatNumberResponse
+
+
+sealed trait StoreCompanyNumberResponse
+
+case object StoreCompanyNumberSuccess extends StoreCompanyNumberResponse
+
+case class StoreCompanyNumberFailure(status: Int) extends StoreCompanyNumberResponse

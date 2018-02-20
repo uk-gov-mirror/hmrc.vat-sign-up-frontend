@@ -25,7 +25,7 @@ trait MockControllerComponents extends MockitoSugar
   with MockAuthConnector with MockMessagesApi with MockAppConfig {
   self: TestSuite =>
 
-  val mockControllerComponents = new ControllerComponents(
+  lazy val mockControllerComponents = new ControllerComponents(
     mockMessagesApi,
     mockAppConfig,
     mockAuthConnector
