@@ -19,15 +19,15 @@ package uk.gov.hmrc.vatsubscriptionfrontend.services
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsubscriptionfrontend.connectors.StoreSubscriptionDetailsConnector
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreSubscriptionDetailsHttpParser.StoreSubscriptionDetailsResponse
+import uk.gov.hmrc.vatsubscriptionfrontend.connectors.StoreVatNumberConnector
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreSubscriptionDetailsService @Inject()(val storeSubscriptionDetailsConnector: StoreSubscriptionDetailsConnector) {
+class StoreVatNumberService @Inject()(val storeVatNumberConnector: StoreVatNumberConnector) {
 
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreSubscriptionDetailsResponse] =
-    storeSubscriptionDetailsConnector.storeVatNumber(vatNumber)
+  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber)
 
 }

@@ -22,24 +22,23 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
-class StoreSubscriptionDetailsConnectorSpec extends UnitSpec with MockitoSugar{
+class StoreVatNumberConnectorSpec extends UnitSpec with MockitoSugar{
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
 
-  object TestStoreSubscriptionDetailsConnector extends StoreSubscriptionDetailsConnector(
+  object TestStoreVatNumberConnector extends StoreVatNumberConnector(
     mock[HttpClient],
     new AppConfig(configuration, env)
   )
 
-  "The StoreSubscriptionDetailsConnector" should {
+  "The StoreVatNumberConnector" should {
 
     "use the correct url" when {
 
       "storing the vat number" in {
-        val testDetail = "vat-number"
-        TestStoreSubscriptionDetailsConnector.storeSubscriptionDetailsUrl(testDetail) should endWith(s"/vat-subscription/subscription-request/$testDetail")
+        TestStoreVatNumberConnector.applicationConfig.storeVatNumberUrl should endWith(s"/vat-subscription/subscription-request/vat-number")
       }
 
     }
