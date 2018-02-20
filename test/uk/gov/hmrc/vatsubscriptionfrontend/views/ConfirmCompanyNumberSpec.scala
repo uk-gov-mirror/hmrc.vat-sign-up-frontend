@@ -48,7 +48,7 @@ class ConfirmCompanyNumberSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH2(messages.companyNumberHeading)
+    testPage.shouldHaveH3(messages.companyNumberHeading)
 
     testPage.shouldHavePara(testCrn)
 

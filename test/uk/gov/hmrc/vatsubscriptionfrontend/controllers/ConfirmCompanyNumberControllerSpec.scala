@@ -45,10 +45,9 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         val request = testGetRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber)
 
         val result = TestConfirmCompanyNumberController.show(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        //TODO update when view available
-//        contentType(result) shouldBe Some("text/html")
-//        charset(result) shouldBe Some("utf-8")
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
 
