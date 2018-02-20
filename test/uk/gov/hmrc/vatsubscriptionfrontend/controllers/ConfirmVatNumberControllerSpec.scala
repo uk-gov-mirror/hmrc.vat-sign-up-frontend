@@ -42,7 +42,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "there is a vrn in the session" should {
       "go to the Confirm Vat number page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
-        val request = testGetRequest.withSession(SessionKeys.vrn -> testVatNumber)
+        val request = testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
         val result = TestConfirmVatNumberController.show(request)
         status(result) shouldBe Status.OK

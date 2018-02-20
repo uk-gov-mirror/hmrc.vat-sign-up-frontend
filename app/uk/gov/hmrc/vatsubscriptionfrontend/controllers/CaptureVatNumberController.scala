@@ -47,7 +47,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           ),
         vatNumber =>
           Future.successful(
-            Redirect(routes.ConfirmVatNumberController.show()).addingToSession(SessionKeys.vrn -> vatNumber)
+            Redirect(routes.ConfirmVatNumberController.show()).addingToSession(SessionKeys.vatNumberKey -> vatNumber)
           )
       )
     }

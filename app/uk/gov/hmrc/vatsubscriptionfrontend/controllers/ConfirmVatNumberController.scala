@@ -31,10 +31,10 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.vrn) match {
-        case Some(vrn) =>
+      request.session.get(SessionKeys.vatNumberKey) match {
+        case Some(vatNumber) =>
           Future.successful(
-            Ok(confirm_vat_number(vrn, routes.ConfirmVatNumberController.submit()))
+            Ok(confirm_vat_number(vatNumber, routes.ConfirmVatNumberController.submit()))
           )
         case _ =>
           Future.successful(

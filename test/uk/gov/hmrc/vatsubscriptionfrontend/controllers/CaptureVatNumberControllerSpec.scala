@@ -62,7 +62,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmVatNumberController.show().url)
 
-        result.session(request).get(SessionKeys.vrn) shouldBe Some(testVatNumber)
+        result.session(request).get(SessionKeys.vatNumberKey) shouldBe Some(testVatNumber)
       }
     }
 
