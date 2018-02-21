@@ -33,7 +33,7 @@ class CaptureCompanyNumberSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_company_number(
-    companyNumberForm = companyNumberForm,
+    companyNumberForm = companyNumberForm.form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

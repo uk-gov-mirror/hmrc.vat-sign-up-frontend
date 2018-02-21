@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns.emailRegex
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
 
 object EmailForm {
 
@@ -26,10 +27,12 @@ object EmailForm {
 
   private def vatNumberValidFormat(vatNumber: String) = vatNumber matches emailRegex
 
-  val emailForm = Form(
+  private val emailValidationForm = Form(
     single(
       email -> text.verifying("error.invalid_email", vatNumberValidFormat _)
     )
   )
+
+  val emailForm = PreprocessedForm(emailValidationForm)
 
 }
