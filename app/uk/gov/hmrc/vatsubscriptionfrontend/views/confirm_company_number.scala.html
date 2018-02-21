@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import helpers.continueButton
-@import uk.gov.hmrc.play.views.html.helpers.form
 
 @(companyNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -35,5 +34,5 @@
         </div>
     }
 
-    <p><a id="changeLink" href="@uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.ConfirmCompanyNumberController.show().url">@Messages("agent.confirm_company_number.link")</a></p>
+    <p><a id="changeLink" href="@uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureCompanyNumberController.show().url">@Messages("agent.confirm_company_number.link")</a></p>
 }

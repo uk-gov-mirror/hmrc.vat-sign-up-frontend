@@ -34,7 +34,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(capture_company_number(companyNumberForm, routes.CaptureCompanyNumberController.submit()))
+          Ok(capture_company_number(companyNumberForm.form, routes.CaptureCompanyNumberController.submit()))
         )
       }
   }

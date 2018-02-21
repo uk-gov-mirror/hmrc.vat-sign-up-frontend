@@ -33,7 +33,7 @@ class CaptureEmailController @Inject()(val controllerComponents: ControllerCompo
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_email(emailForm, routes.CaptureEmailController.submit()))
+        Ok(capture_email(emailForm.form, routes.CaptureEmailController.submit()))
       )
     }
   }

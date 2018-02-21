@@ -33,7 +33,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_vat_number(vatNumberForm, routes.CaptureVatNumberController.submit()))
+        Ok(capture_vat_number(vatNumberForm.form, routes.CaptureVatNumberController.submit()))
       )
     }
   }

@@ -59,7 +59,7 @@ class ConfirmCompanyNumberSpec extends ViewSpec {
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.ConfirmCompanyNumberController.show().url
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureCompanyNumberController.show().url
     )
   }
 

@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
 
 object CompanyNumberForm {
 
@@ -26,10 +27,19 @@ object CompanyNumberForm {
 
   private def companyNumberValidFormat(companyNumber: String) = companyNumber matches companyNumberRegex
 
-  val companyNumberForm = Form(
+  private val companyNumberValidationForm = Form(
     single(
       companyNumber -> text.verifying("error.invalid_company_number", companyNumberValidFormat _)
     )
+  )
+
+  import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.CaseOption._
+  import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.TrimOption._
+
+  val companyNumberForm = PreprocessedForm(
+    validation = companyNumberValidationForm,
+    trimRules = Map(companyNumber -> all),
+    caseRules = Map(companyNumber -> upper)
   )
 
 }
