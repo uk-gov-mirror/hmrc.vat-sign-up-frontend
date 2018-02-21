@@ -18,10 +18,12 @@ package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.play.test.UnitSpec
+import SessionCookieBaker._
 
 trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with WiremockHelper with BeforeAndAfterAll {
   lazy val ws = app.injector.instanceOf[WSClient]
@@ -37,7 +39,9 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
   def config: Map[String, String] = Map(
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
     "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort
+    "microservice.services.auth.port" -> mockPort,
+    "microservice.services.subscription-service.host" -> mockHost,
+    "microservice.services.subscription-service.port" -> mockPort
   )
 
   override def beforeAll(): Unit = {
@@ -50,18 +54,18 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
     super.afterAll()
   }
 
-  def get[T](uri: String): WSResponse = {
+  def get(uri: String, cookies: Map[String, String] = Map.empty): WSResponse =
     await(
       buildClient(uri)
+        .withHeaders(HeaderNames.COOKIE -> cookieValue(cookies))
         .get()
     )
-  }
 
-  def post[T](uri: String)(form: (String, String)*): WSResponse = {
+  def post(uri: String, cookies: Map[String, String] = Map.empty)(form: (String, String)*): WSResponse = {
     val formBody = (form map { case (k, v) => (k, Seq(v)) }).toMap
     await(
       buildClient(uri)
-        .withHeaders("Csrf-Token" -> "nocheck")
+        .withHeaders(HeaderNames.COOKIE -> cookieValue(cookies), "Csrf-Token" -> "nocheck")
         .post(formBody)
     )
   }
