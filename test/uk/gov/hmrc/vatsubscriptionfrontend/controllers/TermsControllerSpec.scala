@@ -54,7 +54,8 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockCon
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
       val result = TestTermsController.submit(testPostRequest)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.ConfirmationController.show().url)
     }
   }
 

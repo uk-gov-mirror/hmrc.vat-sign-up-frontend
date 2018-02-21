@@ -38,8 +38,9 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents)
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      // TODO
       Future.successful(
-        NotImplemented
+        Redirect(routes.ConfirmationController.show())
       )
     }
   }
