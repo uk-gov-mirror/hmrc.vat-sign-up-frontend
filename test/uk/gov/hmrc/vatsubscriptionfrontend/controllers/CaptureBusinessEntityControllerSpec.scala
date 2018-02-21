@@ -49,14 +49,27 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
   }
 
 
-  "Calling the submit action of the Capture Business Entitycontroller" when {
+  "Calling the submit action of the Capture Business Entity controller" when {
     //todo update when next page played
     "form successfully submitted" should {
-      "go to the new page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+      "go to the capture company number" when {
+        "the business entity is limited company" in {
+          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedCompany))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
+        }
+      }
+
+      "return not implemented" when {
+        "the business entity is sole trader" in {
+          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
+          status(result) shouldBe Status.NOT_IMPLEMENTED
+        }
       }
     }
 
