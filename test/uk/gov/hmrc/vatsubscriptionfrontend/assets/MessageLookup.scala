@@ -100,4 +100,28 @@ object MessageLookup {
     val line2 = "These terms aren't contractual and your client can leave the trial at any time."
   }
 
+  object Confirmation {
+    val title = "We've received your client's information"
+    val heading: String = title
+
+    object Section1 {
+      val heading = "What happens next"
+      val line1 = "We'll contact your client within 24 hours to tell them if they can use software to submit their VAT Returns."
+    }
+
+    object Section2 {
+      val heading = "When your client's information is approved"
+      val line1 = "Either you or your client need to complete the steps below. It's important for your client to choose a software package that can interact with yours."
+      val bullet1 = "Choose accounting software if you haven't already."
+      val bullet2 = "Sign in to the software with your Government Gateway details and authorise it to interact with HMRC."
+      val bullet3 = "Add any purchases and sales that your client has already received or paid out."
+      val bullet4 = "Record your client's future purchases and sales using the software, then to submit their VAT Returns."
+      val line2 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
+    }
+
+    val addAnother = "Sign up another client"
+
+  }
+
+
 }
