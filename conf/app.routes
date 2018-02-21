@@ -28,6 +28,10 @@ POST       /receive-emails             uk.gov.hmrc.vatsubscriptionfrontend.contr
 GET        /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.show
 POST       /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.submit
 
+#Confirm Email
+GET        /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.show
+POST       /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.submit
+
 #Terms
 GET       /terms-of-participation      uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.show
 POST      /terms-of-participation      uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.submit

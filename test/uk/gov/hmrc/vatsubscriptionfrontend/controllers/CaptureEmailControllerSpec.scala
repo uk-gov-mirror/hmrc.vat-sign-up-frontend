@@ -53,15 +53,15 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
 
   "Calling the submit action of the Capture Email controller" when {
-    //todo update when next page played
     "form successfully submitted" should {
-      "go to the new page" in {
+      "go to the Confirm Email page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
         val request = testPostRequest(testEmail)
 
         val result = TestCaptureEmailController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmEmailController.show().url)
 
         await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
       }
