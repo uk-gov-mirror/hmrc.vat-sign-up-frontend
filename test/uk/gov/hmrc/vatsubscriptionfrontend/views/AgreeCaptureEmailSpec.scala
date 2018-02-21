@@ -27,7 +27,6 @@ class AgreeCaptureEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val testVrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
