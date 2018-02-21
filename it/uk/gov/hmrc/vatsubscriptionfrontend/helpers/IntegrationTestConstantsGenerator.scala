@@ -30,4 +30,5 @@ object IntegrationTestConstantsGenerator {
 
   def randomVatNumber: String = "%09d".format(rand.nextInt(UPPER_BOUND_9_DIGIT_NUMBER))
 
+  def randomCompanyNumber: String = "%08d".format(rand.nextInt(UPPER_BOUND_8_DIGIT_NUMBER))
 }
