@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirmation
 
@@ -38,8 +39,9 @@ class ConfirmationController @Inject()(val controllerComponents: ControllerCompo
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      // TODO
       Future.successful(
-        NotImplemented
+        NotImplemented.removingFromSession(SessionKeys.vatNumberKey, SessionKeys.companyNumberKey, SessionKeys.emailKey)
       )
     }
   }

@@ -23,7 +23,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
@@ -53,8 +55,19 @@ class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "return not implemented" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-      val result = TestConfirmationController.submit(testPostRequest)
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber,
+        SessionKeys.emailKey -> testEmail
+      )
+
+      val result = TestConfirmationController.submit(request)
       status(result) shouldBe Status.NOT_IMPLEMENTED
+
+      val session = await(result).session(request)
+      session.get(SessionKeys.vatNumberKey) shouldBe None
+      session.get(SessionKeys.companyNumberKey) shouldBe None
+      session.get(SessionKeys.emailKey) shouldBe None
     }
   }
 
