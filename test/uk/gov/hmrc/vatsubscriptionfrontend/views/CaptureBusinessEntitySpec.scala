@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{CaptureBusinessEntity => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureBusinessEntity => messages}
 import org.jsoup.Jsoup
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._

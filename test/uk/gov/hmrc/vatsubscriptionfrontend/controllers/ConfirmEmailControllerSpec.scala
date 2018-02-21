@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
-import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
@@ -64,7 +63,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   }
 
   "Calling the submit action of the Confirm Email controller" when {
-    "email is in session and store vat is successful" should {
+    "email is in session" should {
       // TODO
       "return not implemented" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))

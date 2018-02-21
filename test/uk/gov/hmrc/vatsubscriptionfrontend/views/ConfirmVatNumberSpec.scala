@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{ConfirmVatNumber => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmVatNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest

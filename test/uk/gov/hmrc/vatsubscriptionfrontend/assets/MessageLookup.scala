@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package assets
-
+package uk.gov.hmrc.vatsubscriptionfrontend.assets
 
 object MessageLookup {
 
@@ -33,7 +32,7 @@ object MessageLookup {
 
   object ErrorMessage {
     val invalidVatNumber = "Please enter a valid vat registration number"
-    val invalidCompanyNumber  = "Please enter a valid company registration number"
+    val invalidCompanyNumber = "Please enter a valid company registration number"
   }
 
   object CaptureVatNumber {
@@ -82,7 +81,7 @@ object MessageLookup {
     val hint = "For example, me@me.com"
   }
 
-  object ConfirmEmail{
+  object ConfirmEmail {
     val title = "Check your client's email address"
     val heading: String = title
     val vatNumberHeading = "Email address"

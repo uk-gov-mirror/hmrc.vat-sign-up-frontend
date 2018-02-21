@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{CaptureEmail => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureEmail => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
