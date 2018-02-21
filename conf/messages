@@ -2,6 +2,7 @@
 base.continue                                                          = Continue
 base.confirmAndContinue                                                = Confirm and continue
 base.agree_and_continue                                                = Agree and continue
+base.accept_and_continue                                               = Accept and continue
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
 
@@ -51,4 +52,15 @@ agent.agree_capture_email.line_2                                       = They''l
 agent.capture_email.title                                              = What is your client’s email address?
 agent.capture_email.heading                                            = What is your client’s email address?
 agent.capture_email.hint                                               = For example, me@me.com
+
+## Terms page
+agent.terms.title                                                      = Terms of participation
+agent.terms.heading                                                    = Terms of participation
+agent.terms.line_1                                                     = By taking part in this trial, you agree that either you or your client will:
+agent.terms.bullet_1                                                   = use accounting software that supports Making Tax Digital to record your client’s sales and purchases, then to submit their VAT Returns
+agent.terms.bullet_2                                                   = submit each VAT Return within one calendar month and 7 days from the end of your accounting period
+agent.terms.bullet_3                                                   = tell HMRC if your client stops trading and then submit their final VAT Return
+agent.terms.bullet_4                                                   = tell HMRC if your client wants to leave this trial
+agent.terms.line_2                                                     = These terms aren''t contractual and your client can leave the trial at any time.
+
 

@@ -50,6 +50,14 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       }
     }
 
+    def shouldHaveBulletSeq(bullets: String*): Unit = {
+      if (bullets.isEmpty) fail("Should provide at least 1 bullet point for this test")
+      val bs = bullets.mkString(" ")
+      s"$name should have the bulletPoints (LI) [${bullets.mkString("], [")}]" in {
+        element.getElementsByTag("li").text() should include(bs)
+      }
+    }
+
     def shouldHaveH2(text: String): Unit =
       s"$name have a Heading 2 (H2) for '$text'" in {
         element.getElementsByTag("h2").text() should include(text)
@@ -129,6 +137,8 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     def shouldHaveContinueButton(): Unit = shouldHaveSubmitButton(common.continue)
 
     def shouldHaveConfirmAndContinueButton(): Unit = shouldHaveSubmitButton(common.confirmAndContinue)
+
+    def shouldHaveAcceptAndContinueButton(): Unit = shouldHaveSubmitButton(common.acceptAndContinue)
 
     def shouldHaveAgreeAndContinueButton(): Unit = shouldHaveSubmitButton(common.agreeAndContinue)
 
