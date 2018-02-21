@@ -16,33 +16,33 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{ConfirmVatNumber => messages}
+import assets.MessageLookup.{ConfirmEmail => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testEmail
 
-class ConfirmVatNumberSpec extends ViewSpec {
+class ConfirmEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number(
-    vatNumber = testVatNumber,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_email(
+    email = testEmail,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Vat Number view" should {
+  "The Confirm Email view" should {
 
     val testPage = TestView(
-      name = "Confirm Vat Number View",
+      name = "Confirm Email View",
       title = messages.title,
       heading = messages.heading,
       page = page
@@ -50,16 +50,16 @@ class ConfirmVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveH3(messages.vatNumberHeading)
 
-    testPage.shouldHavePara(testVatNumber)
+    testPage.shouldHavePara(testEmail)
 
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
     testPage.shouldHaveConfirmAndContinueButton()
 
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureEmailController.show().url
     )
   }
 

@@ -55,7 +55,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
 
     "there isn't a vrn in the session" should {
-      "go to the Confirm Vat number page" in {
+      "redirect to Capture Vat number page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
         val result = TestConfirmVatNumberController.show(testGetRequest)

@@ -82,5 +82,11 @@ object MessageLookup {
     val hint = "For example, me@me.com"
   }
 
+  object ConfirmEmail{
+    val title = "Check your client's email address"
+    val heading: String = title
+    val vatNumberHeading = "Email address"
+    val link = "Change email address"
+  }
 
 }
