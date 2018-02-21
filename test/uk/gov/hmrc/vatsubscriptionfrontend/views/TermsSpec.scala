@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{Terms => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Terms => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
