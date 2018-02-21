@@ -45,9 +45,6 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
 
   override def resolveError(rh: RequestHeader, ex: Throwable): Result = {
     ex match {
-      case _: InsufficientEnrolments =>
-        Logger.debug("[AuthenticationPredicate][async] No HMRC-MTD-IT Enrolment and/or No NINO.")
-        super.resolveError(rh, ex)
       case _: AuthorisationException =>
         Logger.debug("[AuthenticationPredicate][async] Unauthorised request. Redirect to Sign In.")
         toGGLogin(rh.path)
