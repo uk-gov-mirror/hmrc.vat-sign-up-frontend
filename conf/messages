@@ -8,6 +8,8 @@ error.invalid_company_number.field                                     = Please 
 error.invalid_company_number.summary                                   = Please enter a valid company registration number
 error.invalid_vat_number.field                                         = Please enter a valid vat registration number
 error.invalid_vat_number.summary                                       = Please enter a valid vat registration number
+error.invalid_email.field                                              = Please enter a valid email address
+error.invalid_email.summary                                            = Please enter a valid email address
 
 ## Agent Capture Vat Number page
 agent.capture_vat_number.title                                         = What is your client''s VAT number?
@@ -30,3 +32,9 @@ agent.confirm_company_number.title                                     = Confirm
 agent.confirm_company_number.heading                                   = Confirm your client''s company registration number
 agent.confirm_company_number.companyNumber.heading                     = Company registration number
 agent.confirm_company_number.link                                      = Change company registration number
+
+## Agent Capture Email page
+agent.capture_email.title                                              = What is your client’s email address?
+agent.capture_email.heading                                            = What is your client’s email address?
+agent.capture_email.hint                                               = For example, me@me.com
+
