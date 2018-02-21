@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@import helpers.{inputHelper, summaryErrorHelper, radioHelper, continueButton}
+@import helpers.{summaryErrorHelper, radioHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.html.helpers._
 
@@ -25,21 +25,21 @@
 
 @main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None) {
 
-<h1 class="heading-large">@Messages("agent.capture_entity_type.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.capture_entity_type.heading")</h1>
 
-@summaryErrorHelper(BusinessEntityForm)
+    @summaryErrorHelper(BusinessEntityForm)
 
-@form(action = postAction) {
+    @form(action = postAction) {
 
-    @radioHelper(
-    form = businessEntityForm,
-    inline = false,
-    options = Seq((soleTrader, Messages("agent.capture_entity_type.soleTrader")),
-                  (limitedCompany, Messages("agent.capture_entity_type.limitedCompany"))),
-    legend = Messages("agent.capture_entity_type.heading"),
-    field = businessEntityForm(businessEntity)
-)
+        @radioHelper(
+            form = businessEntityForm,
+            inline = false,
+            options = Seq((soleTrader, Messages("agent.capture_entity_type.soleTrader")),
+                          (limitedCompany, Messages("agent.capture_entity_type.limitedCompany"))),
+            legend = Messages("agent.capture_entity_type.heading"),
+            field = businessEntityForm(businessEntity)
+        )
 
-@continueButton()
-}
+        @continueButton()
+    }
 }

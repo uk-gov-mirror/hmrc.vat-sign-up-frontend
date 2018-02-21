@@ -38,7 +38,7 @@ object CompanyNumberForm {
 
   val companyNumberForm = PreprocessedForm(
     validation = companyNumberValidationForm,
-    trimRules = Map(companyNumber -> bothAndCompress),
+    trimRules = Map(companyNumber -> all),
     caseRules = Map(companyNumber -> upper)
   )
 

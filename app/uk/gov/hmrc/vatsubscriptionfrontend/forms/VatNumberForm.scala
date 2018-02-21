@@ -38,7 +38,7 @@ object VatNumberForm {
 
   val vatNumberForm = PreprocessedForm(
     validation = vatNumberValidationForm,
-    trimRules = Map(vatNumber -> bothAndCompress),
+    trimRules = Map(vatNumber -> all),
     caseRules = Map(vatNumber -> upper)
   )
 

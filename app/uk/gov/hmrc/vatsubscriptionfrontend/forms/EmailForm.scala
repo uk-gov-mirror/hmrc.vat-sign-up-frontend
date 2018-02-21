@@ -18,8 +18,8 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns.emailRegex
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns.emailRegex
 
 object EmailForm {
 
@@ -33,6 +33,11 @@ object EmailForm {
     )
   )
 
-  val emailForm = PreprocessedForm(emailValidationForm)
+  import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.TrimOption._
+
+  val emailForm = PreprocessedForm(
+    validation = emailValidationForm,
+    trimRules = Map(email -> all)
+  )
 
 }
