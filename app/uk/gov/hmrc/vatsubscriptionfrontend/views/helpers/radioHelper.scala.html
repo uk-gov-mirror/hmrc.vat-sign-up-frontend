@@ -23,9 +23,9 @@
 <div class="form-group">
     <fieldset @if(inline) { class="inline" }>
         <legend>
-            <h1 class="heading-medium">
+            <h3 class="heading-medium visuallyhidden">
                 @legend
-            </h1>
+            </h3>
             @errorNotification = @{
                 if(form.hasErrors) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${form.error(field.name).get.message}.field")}</span>
             }

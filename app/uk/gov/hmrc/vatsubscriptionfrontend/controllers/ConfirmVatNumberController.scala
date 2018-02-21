@@ -52,9 +52,8 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
       request.session.get(SessionKeys.vatNumberKey) match {
         case Some(vatNumber) if vatNumber.nonEmpty =>
           storeVatNumberService.storeVatNumber(vatNumber) map {
-            // TODO goto entity type
             case Right(_) =>
-              NotImplemented
+              Redirect(routes.CaptureBusinessEntityController.show())
             case Left(errResponse) =>
               throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
           }

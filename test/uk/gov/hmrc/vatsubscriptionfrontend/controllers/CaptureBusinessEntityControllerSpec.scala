@@ -22,6 +22,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import play.api.test.Helpers._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 
@@ -41,10 +42,9 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
       val result = TestCaptureBusinessEntityController.show(testGetRequest)
-      //todo update when page available
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-//      contentType(result) shouldBe Some("text/html")
-//      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 
@@ -66,8 +66,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
         val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
-//        contentType(result) shouldBe Some("text/html")
-//        charset(result) shouldBe Some("utf-8")
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
   }
