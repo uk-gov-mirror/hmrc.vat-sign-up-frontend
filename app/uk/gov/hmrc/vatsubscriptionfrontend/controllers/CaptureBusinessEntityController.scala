@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_business_entity
 
 import scala.concurrent.Future
@@ -44,8 +45,10 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           Future.successful(
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
           ),
-        businessEntity => //TODO redirect
-          Future.successful(NotImplemented)
+        {
+          case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+          case SoleTrader  => Future.successful(NotImplemented)
+        }
       )
     }
   }

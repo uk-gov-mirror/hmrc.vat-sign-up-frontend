@@ -22,6 +22,7 @@ object MessageLookup {
     val continue = "Continue"
     val continueToSignUp = "Continue to sign up"
     val confirmAndContinue = "Confirm and continue"
+    val acceptAndContinue = "Accept and continue"
     val agreeAndContinue = "Agree and continue"
     val submit = "Submit"
     val update = "Update"
@@ -86,6 +87,17 @@ object MessageLookup {
     val heading: String = title
     val vatNumberHeading = "Email address"
     val link = "Change email address"
+  }
+
+  object Terms {
+    val title = "Terms of participation"
+    val heading: String = title
+    val line1 = "By taking part in this trial, you agree that either you or your client will:"
+    val bullet1 = "use accounting software that supports Making Tax Digital to record your client’s sales and purchases, then to submit their VAT Returns"
+    val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of your accounting period"
+    val bullet3 = "tell HMRC if your client stops trading and then submit their final VAT Return"
+    val bullet4 = "tell HMRC if your client wants to leave this trial"
+    val line2 = "These terms aren't contractual and your client can leave the trial at any time."
   }
 
 }
