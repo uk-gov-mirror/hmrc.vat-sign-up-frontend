@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
+import assets.MessageLookup.{Base => common}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -23,7 +24,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.play.test.UnitSpec
-import assets.MessageLookup.{Base => common}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
 trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
 
@@ -40,6 +41,14 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       s"$name should have the paragraph (P) '$paragraph'" in {
         element.getElementsByTag("p").text() should include(paragraph)
       }
+
+    def shouldHaveParaSeq(paragraphs: String*): Unit = {
+      if (paragraphs.isEmpty) fail("Should provide at least 1 paragraph for this test")
+      val ps = paragraphs.mkString(" ")
+      s"$name should have the paragraphs (P) [${paragraphs.mkString("], [")}]" in {
+        element.getElementsByTag("p").text() should include(ps)
+      }
+    }
 
     def shouldHaveH2(text: String): Unit =
       s"$name have a Heading 2 (H2) for '$text'" in {
@@ -74,6 +83,11 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         link.attr("href") shouldBe href
         link.text() shouldBe text
       }
+
+    def shouldHaveSignOutLink(text: String = common.signOut): Unit = {
+      val id = "sign-out"
+      shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())
+    }
 
     def shouldHaveTextField(name: String,
                             label: String
@@ -112,11 +126,13 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         submitButtons.head.attr("value") shouldBe text
       }
 
-    def shouldHaveContinueButton() = shouldHaveSubmitButton(common.continue)
+    def shouldHaveContinueButton(): Unit = shouldHaveSubmitButton(common.continue)
 
-    def shouldHaveConfirmAndContinueButton() = shouldHaveSubmitButton(common.confirmAndContinue)
+    def shouldHaveConfirmAndContinueButton(): Unit = shouldHaveSubmitButton(common.confirmAndContinue)
 
-    def shouldHaveContinueToSignUpButton() = shouldHaveSubmitButton(common.continueToSignUp)
+    def shouldHaveAgreeAndContinueButton(): Unit = shouldHaveSubmitButton(common.agreeAndContinue)
+
+    def shouldHaveContinueToSignUpButton(): Unit = shouldHaveSubmitButton(common.continueToSignUp)
 
     def shouldHaveForm(formName: String, id: Option[String] = None)(actionCall: => Call): Unit = {
       val selector =

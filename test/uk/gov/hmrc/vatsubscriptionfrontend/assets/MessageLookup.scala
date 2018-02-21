@@ -23,6 +23,7 @@ object MessageLookup {
     val continue = "Continue"
     val continueToSignUp = "Continue to sign up"
     val confirmAndContinue = "Confirm and continue"
+    val agreeAndContinue = "Agree and continue"
     val submit = "Submit"
     val update = "Update"
     val signOut = "Sign out"
@@ -66,6 +67,13 @@ object MessageLookup {
     val heading: String = title
     val companyNumberHeading = "Company registration number"
     val link = "Change company registration number"
+  }
+
+  object AgreeCaptureEmail {
+    val title = "Agree to get emails instead of letters"
+    val heading: String = title
+    val line1 = "When your client has a new message about VAT in their HMRC account, we'll send an email to let them know."
+    val line2 = "They'll need to sign in to their account account to read the message."
   }
 
   object CaptureEmail {

@@ -1,7 +1,9 @@
 ## Base
 base.continue                                                          = Continue
 base.confirmAndContinue                                                = Confirm and continue
+base.agree_and_continue                                                = Agree and continue
 base.error_heading                                                     = There''s a problem
+base.sign_out                                                          = Sign out
 
 ## Errors
 error.invalid_company_number.field                                     = Please enter a valid company registration number
@@ -38,6 +40,12 @@ agent.confirm_company_number.title                                     = Confirm
 agent.confirm_company_number.heading                                   = Confirm your client''s company registration number
 agent.confirm_company_number.companyNumber.heading                     = Company registration number
 agent.confirm_company_number.link                                      = Change company registration number
+
+## Agent Agree Receive Email page
+agent.agree_capture_email.title                                        = Agree to get emails instead of letters
+agent.agree_capture_email.heading                                      = Agree to get emails instead of letters
+agent.agree_capture_email.line_1                                       = When your client has a new message about VAT in their HMRC account, we''ll send an email to let them know.
+agent.agree_capture_email.line_2                                       = They''ll need to sign in to their account account to read the message.
 
 ## Agent Capture Email page
 agent.capture_email.title                                              = What is your client’s email address?

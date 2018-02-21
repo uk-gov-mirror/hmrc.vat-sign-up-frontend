@@ -21,15 +21,42 @@ package uk.gov.hmrc.vatsubscriptionfrontend.config
 import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.MessagesApi
-import play.api.mvc.Request
+import play.api.mvc.Results.NotFound
+import play.api.mvc.{Request, RequestHeader, Result}
+import play.api.{Configuration, Environment, Logger}
 import play.twirl.api.Html
+import uk.gov.hmrc.auth.core.{AuthorisationException, InsufficientEnrolments}
+import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 import uk.gov.hmrc.vatsubscriptionfrontend.views
 
+
 @Singleton
-class ErrorHandler @Inject()(val messagesApi: MessagesApi, implicit val appConfig: AppConfig) extends FrontendErrorHandler {
+class ErrorHandler @Inject()(val messagesApi: MessagesApi,
+                             implicit val appConfig: AppConfig,
+                             val config: Configuration,
+                             val env: Environment
+                            ) extends FrontendErrorHandler
+  with AuthRedirects {
+
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     views.html.error_template(pageTitle, heading, message)
+
+  override def resolveError(rh: RequestHeader, ex: Throwable): Result = {
+    ex match {
+      case _: InsufficientEnrolments =>
+        Logger.debug("[AuthenticationPredicate][async] No HMRC-MTD-IT Enrolment and/or No NINO.")
+        super.resolveError(rh, ex)
+      case _: AuthorisationException =>
+        Logger.debug("[AuthenticationPredicate][async] Unauthorised request. Redirect to Sign In.")
+        toGGLogin(rh.path)
+      case _: NotFoundException =>
+        NotFound(notFoundTemplate(Request(rh, "")))
+      case _ =>
+        super.resolveError(rh, ex)
+    }
+  }
 }
 
 // $COVERAGE-ON$
