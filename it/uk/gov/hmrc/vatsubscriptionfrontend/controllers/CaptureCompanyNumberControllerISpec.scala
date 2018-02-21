@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstantsGenerator._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -39,7 +39,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = post("/company-number")(CompanyNumberForm.companyNumber -> randomCrn)
+      val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
       res should have(
         httpStatus(SEE_OTHER),
