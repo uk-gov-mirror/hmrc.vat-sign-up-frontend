@@ -22,26 +22,29 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.test.Helpers._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
+import play.api.test.Helpers._
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
-class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents{
-  
-  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents)
+class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  val testGetRequest = FakeRequest("GET", "/business-entity")
+  object TestCaptureEmailController extends CaptureEmailController(mockControllerComponents)
 
-  def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/business-entity").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
+  val testGetRequest = FakeRequest("GET", "/email-address")
 
-  "Calling the show action of the Capture Entity Type controller" should {
-    "go to the Capture Entity Type page" in {
+  def testPostRequest(emailAddress: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest("POST", "/email-address").withFormUrlEncodedBody(email -> emailAddress)
+
+  "Calling the show action of the Capture Email controller" should {
+    "go to the Capture Email page" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-      val result = TestCaptureBusinessEntityController.show(testGetRequest)
+      val result = TestCaptureEmailController.show(testGetRequest)
+
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
@@ -49,14 +52,18 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
   }
 
 
-  "Calling the submit action of the Capture Business Entitycontroller" when {
+  "Calling the submit action of the Capture Email controller" when {
     //todo update when next page played
     "form successfully submitted" should {
       "go to the new page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
+        val request = testPostRequest(testEmail)
+
+        val result = TestCaptureEmailController.submit(request)
         status(result) shouldBe Status.NOT_IMPLEMENTED
+
+        await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
       }
     }
 
@@ -64,7 +71,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "reload the page with errors" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
+        val result = TestCaptureEmailController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")

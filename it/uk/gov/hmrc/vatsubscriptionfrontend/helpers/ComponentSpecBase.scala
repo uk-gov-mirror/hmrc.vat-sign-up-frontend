@@ -70,7 +70,6 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
     )
   }
 
-
   val baseUrl: String = "/report-quarterly/vat/sign-up"
 
   def buildClient(path: String) = ws.url(s"http://localhost:$port$baseUrl$path").withFollowRedirects(false)

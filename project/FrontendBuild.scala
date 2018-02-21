@@ -9,7 +9,7 @@ object FrontendBuild extends Build with MicroService {
 
   val appName = "vat-subscription-frontend"
 
-  override lazy val appDependencies: Seq[ModuleID] = compile ++ test()
+  override lazy val appDependencies: Seq[ModuleID] = compile ++ test ++ it
 
   private val playWhitelistFilterVersion = "2.0.0"
 
@@ -29,15 +29,25 @@ object FrontendBuild extends Build with MicroService {
     "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion
   )
 
-  def test(scope: String = "test,it") = Seq(
-    "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-    "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
-    "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-    "org.pegdown" % "pegdown" % pegdownVersion % scope,
-    "org.jsoup" % "jsoup" % jsoupVersion % scope,
-    "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-    "org.mockito" % "mockito-core" % mockitoVersion % scope,
-    "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope
-  )
+  def test = {
+    val scope = "test,it"
+    Seq(
+      "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+      "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
+      "org.pegdown" % "pegdown" % pegdownVersion % scope,
+      "org.jsoup" % "jsoup" % jsoupVersion % scope,
+      "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+      "org.mockito" % "mockito-core" % mockitoVersion % scope
+    )
+  }
+
+  def it = {
+    val scope = "it"
+
+    Seq(
+      "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope
+    )
+  }
 
 }

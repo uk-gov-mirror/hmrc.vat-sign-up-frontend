@@ -19,33 +19,34 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_business_entity
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_email
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit()))
+        Ok(capture_email(emailForm, routes.CaptureEmailController.submit()))
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      businessEntityForm.bindFromRequest.fold(
+      emailForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
+            BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))
           ),
-        businessEntity => //TODO redirect
-          Future.successful(NotImplemented)
+        email => //TODO redirect
+          Future.successful(NotImplemented.addingToSession(SessionKeys.emailKey -> email))
       )
     }
   }
