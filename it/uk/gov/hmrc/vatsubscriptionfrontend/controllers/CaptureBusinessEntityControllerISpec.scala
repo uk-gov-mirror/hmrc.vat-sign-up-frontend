@@ -38,7 +38,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   "POST /business-entity" should {
     "redirect to capture company number name" when {
-      "the business entiry is limited company" in {
+      "the business entity is limited company" in {
         stubAuth(OK, successfulAuthResponse)
 
         val res = post("/business-entity")(BusinessEntityForm.businessEntity -> limitedCompany)
