@@ -21,33 +21,42 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_email
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_email
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureEmailController @Inject()(val controllerComponents: ControllerComponents)
+class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(capture_email(emailForm.form, routes.CaptureEmailController.submit()))
-      )
+      request.session.get(SessionKeys.emailKey) match {
+        case Some(email) if email.nonEmpty =>
+          Future.successful(
+            Ok(confirm_email(email, routes.ConfirmEmailController.submit()))
+          )
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureEmailController.show())
+          )
+      }
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      emailForm.bindFromRequest.fold(
-        formWithErrors =>
+      request.session.get(SessionKeys.emailKey) match {
+        case Some(email) if email.nonEmpty =>
           Future.successful(
-            BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))
-          ),
-        email =>
-          Future.successful(Redirect(routes.ConfirmEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
-      )
+            NotImplemented
+          )
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureEmailController.show())
+          )
+      }
     }
   }
+
 }

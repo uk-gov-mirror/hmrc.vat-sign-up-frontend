@@ -16,23 +16,23 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import assets.MessageLookup.{ConfirmVatNumber => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmVatNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
 
 class ConfirmVatNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val testVrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number(
-    vatNumber = testVrn,
+    vatNumber = testVatNumber,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
@@ -50,7 +50,7 @@ class ConfirmVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveH3(messages.vatNumberHeading)
 
-    testPage.shouldHavePara(testVrn)
+    testPage.shouldHavePara(testVatNumber)
 
     testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
 

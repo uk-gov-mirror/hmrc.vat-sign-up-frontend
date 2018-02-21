@@ -27,3 +27,8 @@ POST       /receive-emails             uk.gov.hmrc.vatsubscriptionfrontend.contr
 #Capture Email
 GET        /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.show
 POST       /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.submit
+
+#Confirm Email
+GET        /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.show
+POST       /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.submit
+

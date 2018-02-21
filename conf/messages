@@ -53,6 +53,12 @@ agent.capture_email.title                                              = What is
 agent.capture_email.heading                                            = What is your client’s email address?
 agent.capture_email.hint                                               = For example, me@me.com
 
+## Agent Confirm Vat Number page
+agent.confirm_email.title                                              = Check your client''s email address
+agent.confirm_email.heading                                            = Check your client''s email address
+agent.confirm_email.email.heading                                      = Email address
+agent.confirm_email.link                                               = Change email address
+
 ## Terms page
 agent.terms.title                                                      = Terms of participation
 agent.terms.heading                                                    = Terms of participation
