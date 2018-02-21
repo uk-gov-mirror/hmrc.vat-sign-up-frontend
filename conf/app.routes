@@ -19,3 +19,7 @@ POST       /confirm-company-number     uk.gov.hmrc.vatsubscriptionfrontend.contr
 #Capture Business Entity
 GET        /business-entity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.show
 POST       /business-entity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.submit
+
+#Capture Email
+GET        /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.show
+POST       /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.submit

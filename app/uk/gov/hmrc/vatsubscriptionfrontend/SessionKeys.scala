@@ -20,4 +20,5 @@ package uk.gov.hmrc.vatsubscriptionfrontend
 object SessionKeys {
   val vatNumberKey = "VatNumber"
   val companyNumberKey = "CompanyNumber"
+  val emailKey = "Email"
 }

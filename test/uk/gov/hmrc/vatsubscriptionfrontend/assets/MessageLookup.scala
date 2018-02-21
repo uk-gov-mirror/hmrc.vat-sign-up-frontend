@@ -68,4 +68,11 @@ object MessageLookup {
     val link = "Change company registration number"
   }
 
+  object CaptureEmail {
+    val title = "What is your client’s email address?"
+    val heading: String = title
+    val hint = "For example, me@me.com"
+  }
+
+
 }

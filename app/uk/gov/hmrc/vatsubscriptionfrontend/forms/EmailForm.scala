@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.helpers
+package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
-object TestConstants {
-  val testVatNumber: String = TestConstantsGenerator.randomVatNumber
-  val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
-  val testEmail: String = TestConstantsGenerator.randomEmail
+import play.api.data.Form
+import play.api.data.Forms._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns.emailRegex
+
+object EmailForm {
+
+  val email = "email"
+
+  private def vatNumberValidFormat(vatNumber: String) = vatNumber matches emailRegex
+
+  val emailForm = Form(
+    single(
+      email -> text.verifying("error.invalid_email", vatNumberValidFormat _)
+    )
+  )
+
 }
