@@ -30,6 +30,13 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
+  lazy val baseUrl: String = loadConfig("base.url")
+  val contextRoute = "/report-quarterly/vat/sign-up"
+  lazy val ggUrl = loadConfig(s"government-gateway.url")
+  lazy val ggSignInContinueUrl = s"$baseUrl$contextRoute"
+
+  def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl) = s"$ggUrl/gg/sign-out?continue=$redirectionUrl"
+
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MyService"
 
