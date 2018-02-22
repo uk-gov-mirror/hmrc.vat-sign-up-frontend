@@ -68,13 +68,13 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the submit action of the Confirm Company Number controller" when {
     "vat number is in session and store vat is successful" should {
-      // todo goto email
-      "return not implemented" in {
+      "go to the 'agree to receive emails' page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
         mockStoreCompanyNumberSuccess(vatNumber = testCompanyNumber)
 
         val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber))
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
       }
     }
     "vat number is in session but store vat is unsuccessful" should {

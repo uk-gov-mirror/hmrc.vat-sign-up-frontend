@@ -52,9 +52,8 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
       request.session.get(SessionKeys.companyNumberKey) match {
         case Some(companyNumber) if companyNumber.nonEmpty =>
           storeCompanyNumberService.storeCompanyNumber(companyNumber) map {
-            // TODO goto email
             case Right(_) =>
-              NotImplemented
+              Redirect(routes.AgreeCaptureEmailController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
           }
