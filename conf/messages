@@ -14,6 +14,11 @@ error.invalid_vat_number.summary                                       = Please 
 error.invalid_email.field                                              = Please enter a valid email address
 error.invalid_email.summary                                            = Please enter a valid email address
 
+## Not enrolled to Agent Services page
+agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
+agent.not_enrolled_to_agent_services.heading                           = You can''t use this service yet
+agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
+
 ## Agent Capture Vat Number page
 agent.capture_vat_number.title                                         = What is your client''s VAT number?
 agent.capture_vat_number.heading                                       = What is your client''s VAT number?
@@ -82,7 +87,7 @@ agent.confirmation.subsection_1.heading                                = What ha
 agent.confirmation.subsection_1.line_1                                 = We''ll contact your client within 24 hours to tell them if they can use software to submit their VAT Returns.
 agent.confirmation.subsection_2.heading                                = When your client''s information is approved
 agent.confirmation.subsection_2.line_1                                 = Either you or your client need to complete the steps below. It''s important for your client to choose a software package that can interact with yours.
-agent.confirmation.subsection_2.bullet_1                               = <a id="software-choice" href="{0}">Choose accounting software</a> if you haven''t already.
+agent.confirmation.subsection_2.bullet_1                               = Choose accounting software if you haven''t already.
 agent.confirmation.subsection_2.bullet_2                               = Sign in to the software with your Government Gateway details and authorise it to interact with HMRC.
 agent.confirmation.subsection_2.bullet_3                               = Add any purchases and sales that your client has already received or paid out.
 agent.confirmation.subsection_2.bullet_4                               = Record your client''s future purchases and sales using the software, then to submit their VAT Returns.

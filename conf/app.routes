@@ -1,46 +1,49 @@
 # microservice specific routes
 
+# Not enrolled
+GET         /there-is-a-problem                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.NotEnrolledToAgentServicesController.show
+
 # Capture VRN
-GET         /vat-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
-POST        /vat-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
+GET         /vat-number                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
+POST        /vat-number                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit
 
 # Confirm VRN
-GET         /confirm-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmVatNumberController.show
-POST        /confirm-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmVatNumberController.submit
+GET         /confirm-vat-number                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmVatNumberController.show
+POST        /confirm-vat-number                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmVatNumberController.submit
 
 # Capture Company Number
-GET        /company-number             uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
-POST       /company-number             uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
+GET         /company-number                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.show
+POST        /company-number                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureCompanyNumberController.submit
 
 # Confirm Company Number
-GET        /confirm-company-number     uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmCompanyNumberController.show
-POST       /confirm-company-number     uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmCompanyNumberController.submit
+GET         /confirm-company-number             uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmCompanyNumberController.show
+POST        /confirm-company-number             uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmCompanyNumberController.submit
 
 #Capture Business Entity
-GET        /business-entity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.show
-POST       /business-entity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.submit
+GET         /business-entity                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.show
+POST        /business-entity                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureBusinessEntityController.submit
 
 #Agree Capture Email
-GET        /receive-emails             uk.gov.hmrc.vatsubscriptionfrontend.controllers.AgreeCaptureEmailController.show
-POST       /receive-emails             uk.gov.hmrc.vatsubscriptionfrontend.controllers.AgreeCaptureEmailController.submit
+GET         /receive-emails                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.AgreeCaptureEmailController.show
+POST        /receive-emails                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.AgreeCaptureEmailController.submit
 
 #Capture Email
-GET        /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.show
-POST       /email-address              uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.submit
+GET         /email-address                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.show
+POST        /email-address                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureEmailController.submit
 
 #Confirm Email
-GET        /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.show
-POST       /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.submit
+GET         /confirm-email                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.show
+POST        /confirm-email                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmEmailController.submit
 
 #Verify Email
 GET        /verify-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.VerifyEmailController.show
 POST       /verify-email              uk.gov.hmrc.vatsubscriptionfrontend.controllers.VerifyEmailController.submit
 
 #Terms
-GET       /terms-of-participation      uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.show
-POST      /terms-of-participation      uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.submit
+GET         /terms-of-participation             uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.show
+POST        /terms-of-participation             uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.submit
 
 #Confirmation
-GET       /information-received        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmationController.show
-POST      /information-received        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmationController.submit
+GET         /information-received               uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmationController.show
+POST        /information-received               uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmationController.submit
 
