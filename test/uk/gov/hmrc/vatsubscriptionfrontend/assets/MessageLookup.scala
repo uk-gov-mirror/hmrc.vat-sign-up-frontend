@@ -89,6 +89,15 @@ object MessageLookup {
     val link = "Change email address"
   }
 
+  object VerifyEmail {
+    val title = "We've sent your client an email"
+    val heading: String = title
+
+    def line1(email: String) = s"We've sent an email to $email. Your client needs to click on the link in the email to verify their email address."
+
+    val line2 = "They need to verify their email address to get VAT emails from HMRC."
+  }
+
   object Terms {
     val title = "Terms of participation"
     val heading: String = title
