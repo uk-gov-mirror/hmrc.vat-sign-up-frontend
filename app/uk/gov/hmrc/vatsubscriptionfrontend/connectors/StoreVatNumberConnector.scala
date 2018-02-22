@@ -33,6 +33,6 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
   val vatNumberKey = "vatNumber"
 
   def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] = {
-    http.PUT[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
+    http.POST[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
   }
 }

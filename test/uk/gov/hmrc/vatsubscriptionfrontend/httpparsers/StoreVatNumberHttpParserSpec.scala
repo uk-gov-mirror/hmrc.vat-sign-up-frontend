@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
-import play.api.http.Status.{NO_CONTENT, BAD_REQUEST}
+import play.api.http.Status.{CREATED, BAD_REQUEST}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
@@ -29,8 +29,8 @@ class StoreVatNumberHttpParserSpec extends UnitSpec{
 
   "StoreVatNumberHttpReads" when {
     "read" should {
-      "parse a NO_CONTENT response as an UpsertEnrolmentSuccess" in {
-        val httpResponse = HttpResponse(NO_CONTENT)
+      "parse a CREATED response as an UpsertEnrolmentSuccess" in {
+        val httpResponse = HttpResponse(CREATED)
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
