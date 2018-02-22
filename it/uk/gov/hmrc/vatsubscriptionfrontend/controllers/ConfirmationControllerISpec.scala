@@ -17,18 +17,17 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
-class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /email-address" should {
+class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /information-received" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = get("/email-address")
+      val res = get("/information-received")
 
       res should have(
         httpStatus(OK)
@@ -36,19 +35,26 @@ class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-  "POST /email-address" should {
-    "return a redirect" in {
+  "POST /information-received" should {
+    "remove all personal data from session" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = post("/email-address")(EmailForm.email -> testEmail)
+      val res = post("/information-received",
+        Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.emailKey -> testEmail
+        ))()
 
+      // TODO
       res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmEmailController.show().url)
+        httpStatus(NOT_IMPLEMENTED)
       )
 
       val session = SessionCookieCrumbler.getSessionMap(res)
-      session.keys should contain(emailKey)
+      session.keys should not contain SessionKeys.vatNumberKey
+      session.keys should not contain SessionKeys.companyNumberKey
+      session.keys should not contain SessionKeys.emailKey
     }
   }
 }

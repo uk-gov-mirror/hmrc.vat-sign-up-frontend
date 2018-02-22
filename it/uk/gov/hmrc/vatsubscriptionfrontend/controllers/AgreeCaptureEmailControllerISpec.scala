@@ -17,18 +17,15 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
-class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /email-address" should {
+class AgreeCaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /receive-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = get("/email-address")
+      val res = get("/receive-emails")
 
       res should have(
         httpStatus(OK)
@@ -36,19 +33,16 @@ class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-  "POST /email-address" should {
-    "return a redirect" in {
+  "POST /receive-emails" should {
+    "redirect to the capture email address page" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = post("/email-address")(EmailForm.email -> testEmail)
+      val res = post("/receive-emails")()
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmEmailController.show().url)
+        redirectUri(routes.CaptureEmailController.show().url)
       )
-
-      val session = SessionCookieCrumbler.getSessionMap(res)
-      session.keys should contain(emailKey)
     }
   }
 }
