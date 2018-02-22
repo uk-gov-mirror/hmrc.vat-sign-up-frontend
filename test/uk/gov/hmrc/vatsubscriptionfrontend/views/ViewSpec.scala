@@ -97,6 +97,11 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())
     }
 
+    def shouldHaveSignOutButton(text: String = common.signOut): Unit = {
+      val id = "sign-out-button"
+      shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())
+    }
+
     def shouldHaveTextField(name: String,
                             label: String
                            ): Unit = {
