@@ -18,18 +18,18 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.emailKey
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
-class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /confirm-email" should {
+class VerifyEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /verify-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = get("/confirm-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/verify-email", Map(SessionKeys.emailKey -> testEmail))
 
       res should have(
         httpStatus(OK)
@@ -37,16 +37,15 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-
-  "POST /confirm-email" should {
+  "POST /verify-email" should {
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
+      val res = post("/verify-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.VerifyEmailController.show().url)
+        redirectUri(routes.TermsController.show().url)
       )
 
       val session = SessionCookieCrumbler.getSessionMap(res)
