@@ -34,10 +34,17 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.companyNumberKey) match {
-        case Some(companyNumber) =>
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+
+      (optVatNumber, optCompanyNumber) match {
+        case (Some(_), Some(companyNumber)) =>
           Future.successful(
             Ok(confirm_company_number(companyNumber, routes.ConfirmCompanyNumberController.submit()))
+          )
+        case (None, _) =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
           )
         case _ =>
           Future.successful(
@@ -49,14 +56,21 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.companyNumberKey) match {
-        case Some(companyNumber) if companyNumber.nonEmpty =>
-          storeCompanyNumberService.storeCompanyNumber(companyNumber) map {
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+
+      (optVatNumber, optCompanyNumber) match {
+        case (Some(vatNumber), Some(companyNumber)) =>
+          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber) map {
             case Right(_) =>
               Redirect(routes.AgreeCaptureEmailController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
           }
+        case (None, _) =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
+          )
         case _ =>
           Future.successful(
             Redirect(routes.CaptureCompanyNumberController.show())

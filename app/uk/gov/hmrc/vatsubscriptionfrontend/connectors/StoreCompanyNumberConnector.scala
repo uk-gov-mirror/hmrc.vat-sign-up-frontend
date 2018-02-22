@@ -32,8 +32,8 @@ class StoreCompanyNumberConnector @Inject()(val http: HttpClient,
 
   val companyNumberKey = "companyNumber"
 
-  def storeCompanyNumber(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] = {
-    http.PUT[JsObject, StoreCompanyNumberResponse](applicationConfig.storeCompanyNumberUrl, Json.obj(companyNumberKey -> companyNumber))
+  def storeCompanyNumber(vatNumber: String, companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] = {
+    http.PUT[JsObject, StoreCompanyNumberResponse](applicationConfig.storeCompanyNumberUrl(vatNumber), Json.obj(companyNumberKey -> companyNumber))
   }
 
 }
