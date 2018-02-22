@@ -21,12 +21,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_email
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.verify_email
 
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents)
+class VerifyEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -34,7 +34,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
       request.session.get(SessionKeys.emailKey) match {
         case Some(email) if email.nonEmpty =>
           Future.successful(
-            Ok(confirm_email(email, routes.ConfirmEmailController.submit()))
+            Ok(verify_email(email, routes.VerifyEmailController.submit()))
           )
         case _ =>
           Future.successful(
@@ -49,7 +49,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
       request.session.get(SessionKeys.emailKey) match {
         case Some(email) if email.nonEmpty =>
           Future.successful(
-            Redirect(routes.VerifyEmailController.show())
+            Redirect(routes.TermsController.show())
           )
         case _ =>
           Future.successful(

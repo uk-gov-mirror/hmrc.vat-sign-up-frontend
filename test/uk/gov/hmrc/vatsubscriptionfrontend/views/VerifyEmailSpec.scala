@@ -16,22 +16,22 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmEmail => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{VerifyEmail => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testEmail
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
-class ConfirmEmailSpec extends ViewSpec {
+class VerifyEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_email(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.verify_email(
     email = testEmail,
     postAction = testCall)(
     FakeRequest(),
@@ -39,28 +39,23 @@ class ConfirmEmailSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Email view" should {
+  "The Verify email view" should {
 
     val testPage = TestView(
-      name = "Confirm Email View",
+      name = "Verify Email View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH3(messages.emailHeading)
-
-    testPage.shouldHavePara(testEmail)
-
-    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
-
-    testPage.shouldHaveConfirmAndContinueButton()
-
-    testPage.shouldHaveALink(
-      id = "changeLink",
-      text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureEmailController.show().url
+    testPage.shouldHaveParaSeq(
+      messages.line1(testEmail),
+      messages.line2
     )
+
+
+    testPage.shouldHaveContinueButton()
+
   }
 
 }

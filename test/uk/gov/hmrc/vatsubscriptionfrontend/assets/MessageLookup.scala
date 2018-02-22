@@ -91,43 +91,51 @@ object MessageLookup {
   object ConfirmEmail {
     val title = "Check your client's email address"
     val heading: String = title
-    val vatNumberHeading = "Email address"
+    val emailHeading = "Email address"
     val link = "Change email address"
   }
 
-  object Terms {
-    val title = "Terms of participation"
-    val heading: String = title
-    val line1 = "By taking part in this trial, you agree that either you or your client will:"
-    val bullet1 = "use accounting software that supports Making Tax Digital to record your client’s sales and purchases, then to submit their VAT Returns"
-    val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of your accounting period"
-    val bullet3 = "tell HMRC if your client stops trading and then submit their final VAT Return"
-    val bullet4 = "tell HMRC if your client wants to leave this trial"
-    val line2 = "These terms aren't contractual and your client can leave the trial at any time."
-  }
-
-  object Confirmation {
-    val title = "We've received your client's information"
+  object VerifyEmail {
+    val title = "We've sent your client an email"
     val heading: String = title
 
-    object Section1 {
-      val heading = "What happens next"
-      val line1 = "We'll contact your client within 24 hours to tell them if they can use software to submit their VAT Returns."
-    }
+    def line1(email: String) = s"We've sent an email to $email. Your client needs to click on the link in the email to verify their email address."
 
-    object Section2 {
-      val heading = "When your client's information is approved"
-      val line1 = "Either you or your client need to complete the steps below. It's important for your client to choose a software package that can interact with yours."
-      val bullet1 = "Choose accounting software if you haven't already."
-      val bullet2 = "Sign in to the software with your Government Gateway details and authorise it to interact with HMRC."
-      val bullet3 = "Add any purchases and sales that your client has already received or paid out."
-      val bullet4 = "Record your client's future purchases and sales using the software, then to submit their VAT Returns."
-      val line2 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
-    }
-
-    val addAnother = "Sign up another client"
-
+    val line2 = "They need to verify their email address to get VAT emails from HMRC."
   }
 
+    object Terms {
+      val title = "Terms of participation"
+      val heading: String = title
+      val line1 = "By taking part in this trial, you agree that either you or your client will:"
+      val bullet1 = "use accounting software that supports Making Tax Digital to record your client’s sales and purchases, then to submit their VAT Returns"
+      val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of your accounting period"
+      val bullet3 = "tell HMRC if your client stops trading and then submit their final VAT Return"
+      val bullet4 = "tell HMRC if your client wants to leave this trial"
+      val line2 = "These terms aren't contractual and your client can leave the trial at any time."
+    }
+
+    object Confirmation {
+      val title = "We've received your client's information"
+      val heading: String = title
+
+      object Section1 {
+        val heading = "What happens next"
+        val line1 = "We'll contact your client within 24 hours to tell them if they can use software to submit their VAT Returns."
+      }
+
+      object Section2 {
+        val heading = "When your client's information is approved"
+        val line1 = "Either you or your client need to complete the steps below. It's important for your client to choose a software package that can interact with yours."
+        val bullet1 = "Choose accounting software if you haven't already."
+        val bullet2 = "Sign in to the software with your Government Gateway details and authorise it to interact with HMRC."
+        val bullet3 = "Add any purchases and sales that your client has already received or paid out."
+        val bullet4 = "Record your client's future purchases and sales using the software, then to submit their VAT Returns."
+        val line2 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
+      }
+
+      val addAnother = "Sign up another client"
+
+    }
 
 }

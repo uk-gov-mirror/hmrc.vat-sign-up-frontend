@@ -29,22 +29,22 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
-class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestConfirmEmailController extends ConfirmEmailController(mockControllerComponents)
+  object TestVerifyEmailController extends VerifyEmailController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/confirm-email")
+  lazy val testGetRequest = FakeRequest("GET", "/verify-email")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/confirm-email")
+    FakeRequest("POST", "/verify-email")
 
-  "Calling the show action of the Confirm Email controller" when {
+  "Calling the show action of the verify Email controller" when {
     "there is a email in the session" should {
-      "show the Confirm Email page" in {
+      "show the verify Email page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
         val request = testGetRequest.withSession(SessionKeys.emailKey -> testEmail)
 
-        val result = TestConfirmEmailController.show(request)
+        val result = TestVerifyEmailController.show(request)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -55,28 +55,29 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
       "redirect to Capture Email page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestConfirmEmailController.show(testGetRequest)
+        val result = TestVerifyEmailController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
       }
     }
   }
 
-  "Calling the submit action of the Confirm Email controller" when {
+  "Calling the submit action of the Verify Email controller" when {
     "email is in session" should {
-      "redirect to Verify Email page" in {
+      "redirect to Terms of participation page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
+        val result = TestVerifyEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
       }
     }
+
     "email is not in session" should {
       "redirect to Capture Email page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestConfirmEmailController.submit(testPostRequest)
+        val result = TestVerifyEmailController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
       }
