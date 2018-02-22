@@ -35,18 +35,16 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
   }
 
   "POST /terms-of-participation" should {
-    "redirect to the capture client business entity page" should {
-      // TODO submission scenarios
-      "go to confirmation" in {
-        stubAuth(OK, successfulAuthResponse)
+    // TODO submission scenarios
+    "Redirects to confirmation" in {
+      stubAuth(OK, successfulAuthResponse)
 
-        val res = post("/terms-of-participation")()
+      val res = post("/terms-of-participation")()
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.ConfirmationController.show().url)
-        )
-      }
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmationController.show().url)
+      )
     }
   }
 
