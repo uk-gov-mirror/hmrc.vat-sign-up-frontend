@@ -14,6 +14,11 @@ error.invalid_vat_number.summary                                       = Please 
 error.invalid_email.field                                              = Please enter a valid email address
 error.invalid_email.summary                                            = Please enter a valid email address
 
+## Not enrolled to Agent Services page
+agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
+agent.not_enrolled_to_agent_services.heading                           = You can''t use this service yet
+agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
+
 ## Agent Capture Vat Number page
 agent.capture_vat_number.title                                         = What is your client''s VAT number?
 agent.capture_vat_number.heading                                       = What is your client''s VAT number?

@@ -64,4 +64,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val btaUrl = loadConfig("bta.url")
 
+  lazy val agentServicesUrl = loadConfig("agent-services.url")
+
 }

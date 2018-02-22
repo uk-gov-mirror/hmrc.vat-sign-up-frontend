@@ -36,6 +36,12 @@ object MessageLookup {
     val invalidCompanyNumber = "Please enter a valid company registration number"
   }
 
+  object NotEnrolledToAS {
+    val title = "You can't use this service yet"
+    val heading: String = title
+    val line1 = "To use this service, you need to set up an agent services account."
+  }
+
   object CaptureVatNumber {
     val title = "What is your client's VAT number?"
     val heading: String = title
