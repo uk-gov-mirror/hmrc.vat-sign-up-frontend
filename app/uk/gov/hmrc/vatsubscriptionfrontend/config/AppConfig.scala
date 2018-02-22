@@ -55,7 +55,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val whitelistIps: Seq[String] = whitelistConfig("ip-whitelist.urls")
   lazy val ipExclusionList: Seq[Call] = whitelistConfig("ip-whitelist.excludeCalls").map(ip => Call("GET", ip))
 
-  protected lazy val protectedMicroServiceUrl = baseUrl("subscription-service")
+  lazy val protectedMicroServiceUrl = baseUrl("subscription-service")
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number"
 
   def storeCompanyNumberUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/company-number"
