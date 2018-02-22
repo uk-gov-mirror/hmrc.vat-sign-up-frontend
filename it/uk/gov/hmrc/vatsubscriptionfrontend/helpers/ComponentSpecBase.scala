@@ -37,6 +37,7 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
   val mockUrl = s"http://$mockHost:$mockPort"
 
   def config: Map[String, String] = Map(
+    "auditing.enabled" -> "false",
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
