@@ -91,7 +91,7 @@ object MessageLookup {
   object ConfirmEmail {
     val title = "Check your client's email address"
     val heading: String = title
-    val vatNumberHeading = "Email address"
+    val emailHeading = "Email address"
     val link = "Change email address"
   }
 

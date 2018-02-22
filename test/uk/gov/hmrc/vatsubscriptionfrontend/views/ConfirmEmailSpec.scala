@@ -48,7 +48,7 @@ class ConfirmEmailSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH3(messages.vatNumberHeading)
+    testPage.shouldHaveH3(messages.emailHeading)
 
     testPage.shouldHavePara(testEmail)
 
