@@ -19,19 +19,20 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.terms
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirmation
 
 import scala.concurrent.Future
 
 @Singleton
-class TermsController @Inject()(val controllerComponents: ControllerComponents)
+class ConfirmationController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(terms(routes.TermsController.submit()))
+        Ok(confirmation(routes.ConfirmationController.submit()))
       )
     }
   }
@@ -40,7 +41,7 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents)
     authorised() {
       // TODO
       Future.successful(
-        Redirect(routes.ConfirmationController.show())
+        NotImplemented.removingFromSession(SessionKeys.vatNumberKey, SessionKeys.companyNumberKey, SessionKeys.emailKey)
       )
     }
   }

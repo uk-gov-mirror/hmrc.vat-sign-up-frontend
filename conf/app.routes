@@ -35,3 +35,8 @@ POST       /confirm-email              uk.gov.hmrc.vatsubscriptionfrontend.contr
 #Terms
 GET       /terms-of-participation      uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.show
 POST      /terms-of-participation      uk.gov.hmrc.vatsubscriptionfrontend.controllers.TermsController.submit
+
+#Confirmation
+GET       /information-received        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmationController.show
+POST      /information-received        uk.gov.hmrc.vatsubscriptionfrontend.controllers.ConfirmationController.submit
+

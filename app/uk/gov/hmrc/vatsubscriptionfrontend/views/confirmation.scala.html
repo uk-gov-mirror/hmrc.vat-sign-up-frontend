@@ -24,17 +24,16 @@
     <div class="govuk-box-highlight">
         <section id="confirmation-heading">
             <h1 class="heading-large">@Messages("agent.confirmation.heading")</h1>
-            <br>
         </section>
     </div>
 
     <section id="what-happens-next">
-        <h2>@Messages("agent.confirmation.subsection_1.heading")</h2>
+        <h3 class="heading-medium">@Messages("agent.confirmation.subsection_1.heading")</h3>
         <p>@Messages("agent.confirmation.subsection_1.line_1")</p>
     </section>
 
     <section id="when-client-is-approved">
-        <h2>@Messages("agent.confirmation.subsection_2.heading")</h2>
+        <h3 class="heading-medium">@Messages("agent.confirmation.subsection_2.heading")</h3>
         <p>@Messages("agent.confirmation.subsection_2.line_1")</p>
         <ol class="list list-number">
             <li>@Html(Messages("agent.confirmation.subsection_2.bullet_1", appConfig.softwareChoicesUrl))</li>

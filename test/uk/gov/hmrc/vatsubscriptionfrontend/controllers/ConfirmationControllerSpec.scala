@@ -23,39 +23,51 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
-class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestTermsController extends TermsController(mockControllerComponents)
+  object TestConfirmationController extends ConfirmationController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/terms-of-participation")
+  lazy val testGetRequest = FakeRequest("GET", "/information-received")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/terms-of-participation")
+    FakeRequest("POST", "/information-received")
 
-  "Calling the show action of the Terms controller" should {
-    "show the Terms page" in {
+  "Calling the show action of the Confirmation controller" should {
+    "show the Confirmation page" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
       val request = testGetRequest
 
-      val result = TestTermsController.show(request)
+      val result = TestConfirmationController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
 
-  "Calling the submit action of the Terms controller" should {
+  "Calling the submit action of the Confirmation controller" should {
     // todo
     "return not implemented" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-      val result = TestTermsController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ConfirmationController.show().url)
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber,
+        SessionKeys.emailKey -> testEmail
+      )
+
+      val result = TestConfirmationController.submit(request)
+      status(result) shouldBe Status.NOT_IMPLEMENTED
+
+      val session = await(result).session(request)
+      session.get(SessionKeys.vatNumberKey) shouldBe None
+      session.get(SessionKeys.companyNumberKey) shouldBe None
+      session.get(SessionKeys.emailKey) shouldBe None
     }
   }
 
