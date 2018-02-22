@@ -31,4 +31,18 @@ object IntegrationTestConstantsGenerator {
   def randomVatNumber: String = "%09d".format(rand.nextInt(UPPER_BOUND_9_DIGIT_NUMBER))
 
   def randomCompanyNumber: String = "%08d".format(rand.nextInt(UPPER_BOUND_8_DIGIT_NUMBER))
+
+  private def randomString(alphabet: String)(max: Int): String =
+    Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(rand.nextInt(max) + 1).mkString
+
+  private def randomAlphaNumericWithAdditional(additionalChars: String)(max: Int): String =
+    randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString("") + ('0' to '9').mkString("") + additionalChars)(max)
+
+  def randomEmail: String =
+    randomAlphaNumericWithAdditional(additionalChars = "_.+-")(rand.nextInt(16) + 1) +
+      "@" + randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(10) + 1) +
+      "." + {
+      (0 to rand.nextInt(2)).map(_ => randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(3) + 1)).mkString(".")
+    }
+
 }
