@@ -22,11 +22,11 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 
 class NotEnrolledToAgentServicesControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  "GET /not-enrolled-agent-services" should {
+  "GET /there-is-a-problem" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse)
 
-      val res = get("/not-enrolled-agent-services")
+      val res = get("/there-is-a-problem")
 
       res should have(
         httpStatus(OK)
