@@ -1,7 +1,7 @@
 # microservice specific routes
 
 # Not enrolled
-GET         /not-enrolled-agent-services        uk.gov.hmrc.vatsubscriptionfrontend.controllers.NotEnrolledToAgentServicesController.show
+GET         /there-is-a-problem                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.NotEnrolledToAgentServicesController.show
 
 # Capture VRN
 GET         /vat-number                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
