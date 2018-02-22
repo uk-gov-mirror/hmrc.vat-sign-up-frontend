@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.{testCompanyNumber, testVatNumber}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreCompanyNumberService
 
 import scala.concurrent.Future
@@ -45,7 +45,10 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
     "there is a company number in the session" should {
       "go to the Confirm Company Number page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
-        val request = testGetRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber)
+        val request = testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber
+        )
 
         val result = TestConfirmCompanyNumberController.show(request)
         status(result) shouldBe Status.OK
@@ -53,12 +56,20 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         charset(result) shouldBe Some("utf-8")
       }
     }
-
-    "there isn't a company number in the session" should {
+    "there isn't a vat number in the session" should {
       "go to the Confirm company number page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
         val result = TestConfirmCompanyNumberController.show(testGetRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
+      }
+    }
+    "there isn't a company number in the session" should {
+      "go to the Confirm company number page" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        val result = TestConfirmCompanyNumberController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
       }
@@ -70,9 +81,12 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
     "vat number is in session and store vat is successful" should {
       "go to the 'agree to receive emails' page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
-        mockStoreCompanyNumberSuccess(vatNumber = testCompanyNumber)
+        mockStoreCompanyNumberSuccess(vatNumber = testVatNumber, companyNumber = testCompanyNumber)
 
-        val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber))
+        val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber
+        ))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
       }
@@ -80,10 +94,13 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
-        mockStoreCompanyNumberFailure(vatNumber = testCompanyNumber)
+        mockStoreCompanyNumberFailure(vatNumber = testVatNumber, companyNumber = testCompanyNumber)
 
         intercept[InternalServerException] {
-          await(TestConfirmCompanyNumberController.submit(testPostRequest.withSession(SessionKeys.companyNumberKey -> testCompanyNumber)))
+          await(TestConfirmCompanyNumberController.submit(testPostRequest.withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.companyNumberKey -> testCompanyNumber
+          )))
         }
       }
     }
@@ -92,6 +109,15 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
         val result = TestConfirmCompanyNumberController.submit(testPostRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
+      }
+    }
+    "company number is not in session" should {
+      "redirect to capture company number" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
       }

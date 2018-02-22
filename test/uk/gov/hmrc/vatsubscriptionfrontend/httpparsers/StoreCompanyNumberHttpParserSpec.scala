@@ -36,8 +36,7 @@ class StoreCompanyNumberHttpParserSpec extends UnitSpec {
 
         res shouldBe Right(StoreCompanyNumberSuccess)
       }
-
-      "parse any other  response as an UpsertEnrolmentSuccess" in {
+      "parse any other response as an StoreCompanyNumberFailure" in {
         val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
 
         val res = StoreCompanyNumberHttpReads.read(testHttpVerb, testUri, httpResponse)

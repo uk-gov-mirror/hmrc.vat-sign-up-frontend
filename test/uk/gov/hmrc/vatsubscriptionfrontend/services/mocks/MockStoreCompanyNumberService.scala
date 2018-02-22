@@ -37,15 +37,18 @@ trait MockStoreCompanyNumberService extends BeforeAndAfterEach with MockitoSugar
     reset(mockStoreCompanyNumberService)
   }
 
-  private def mockStoreCompanyNumber(vatNumber: String)(returnValue: Future[StoreCompanyNumberResponse]): Unit = {
-    when(mockStoreCompanyNumberService.storeCompanyNumber(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+  private def mockStoreCompanyNumber(vatNumber: String, companyNumber: String)(returnValue: Future[StoreCompanyNumberResponse]): Unit = {
+    when(mockStoreCompanyNumberService.storeCompanyNumber(
+      ArgumentMatchers.eq(vatNumber),
+      ArgumentMatchers.eq(companyNumber)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockStoreCompanyNumberSuccess(vatNumber: String): Unit =
-    mockStoreCompanyNumber(vatNumber)(Future.successful(Right(StoreCompanyNumberSuccess)))
+  def mockStoreCompanyNumberSuccess(vatNumber: String, companyNumber: String): Unit =
+    mockStoreCompanyNumber(vatNumber, companyNumber)(Future.successful(Right(StoreCompanyNumberSuccess)))
 
-  def mockStoreCompanyNumberFailure(vatNumber: String): Unit =
-    mockStoreCompanyNumber(vatNumber)(Future.successful(Left(StoreCompanyNumberFailure(500))))
+  def mockStoreCompanyNumberFailure(vatNumber: String, companyNumber: String): Unit =
+    mockStoreCompanyNumber(vatNumber, companyNumber)(Future.successful(Left(StoreCompanyNumberFailure(500))))
 
 }

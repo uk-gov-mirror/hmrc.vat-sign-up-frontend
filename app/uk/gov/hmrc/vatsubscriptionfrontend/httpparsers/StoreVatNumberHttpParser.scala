@@ -26,7 +26,7 @@ object StoreVatNumberHttpParser {
   implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
       response.status match {
-        case NO_CONTENT => Right(StoreVatNumberSuccess)
+        case CREATED => Right(StoreVatNumberSuccess)
         case status => Left(StoreVatNumberFailure(status))
       }
     }
