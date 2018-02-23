@@ -13,6 +13,8 @@
 
 
 GET        /report-quarterly/vat/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.show
+
+# NOCSRF
 POST       /report-quarterly/vat/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.submit
 
 
