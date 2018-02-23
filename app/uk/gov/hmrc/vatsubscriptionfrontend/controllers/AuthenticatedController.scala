@@ -17,16 +17,70 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import play.api.i18n.{I18nSupport, MessagesApi}
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
+import play.api.mvc.Result
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
+import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, ~}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
 
-trait AuthenticatedController extends FrontendController with AuthorisedFunctions with I18nSupport {
+import scala.concurrent.Future
+
+abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate[A] = EmptyRetrievalPredicate)
+  extends FrontendController with I18nSupport {
+
+  def authorised(predicate: Predicate = EmptyPredicate): AuthorisedFunction =
+    new AuthorisedFunction(predicate)
+
+  sealed class AuthorisedFunction(predicate: Predicate) {
+    def apply(block: => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
+      authConnector.authorise(predicate, retrievalPredicate.retrieval) flatMap {
+        retrieval =>
+          retrievalPredicate.function(block)(retrieval)
+      }
+
+    def apply[B](retrieval: Retrieval[B])(block: B => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
+      authConnector.authorise(predicate, retrievalPredicate.retrieval and retrieval) flatMap {
+        case retrievalA ~ retrievalB =>
+          retrievalPredicate.function(block(retrievalB))(retrievalA)
+      }
+
+  }
+
   def controllerComponents: ControllerComponents
 
   override val messagesApi: MessagesApi = controllerComponents.messagesApi
 
-  override val authConnector: AuthConnector = controllerComponents.authConnector
+  val authConnector: AuthConnector = controllerComponents.authConnector
 
   implicit val appConfig: AppConfig = controllerComponents.appConfig
+}
+
+trait RetrievalPredicate[A] {
+  original =>
+  def retrieval: Retrieval[A]
+
+  def function(block: => Future[Result]): A => Future[Result]
+
+  def and[B](newRetrievalPredicate: RetrievalPredicate[B]): RetrievalPredicate[A ~ B] = {
+    new RetrievalPredicate[~[A, B]] {
+      override def retrieval: Retrieval[A ~ B] =
+        original.retrieval and newRetrievalPredicate.retrieval
+
+      override def function(block: => Future[Result]): ~[A, B] => Future[Result] = {
+        case retrievalA ~ retrievalB =>
+          val originalResult = original.function(block)(retrievalA)
+          val newResult = newRetrievalPredicate.function(originalResult)(retrievalB)
+
+          newResult
+      }
+    }
+  }
+}
+
+object EmptyRetrievalPredicate extends RetrievalPredicate[Unit] {
+  override def retrieval: Retrieval[Unit] = EmptyRetrieval
+
+  override def function(block: => Future[Result]): Unit => Future[Result] = _ => block
 }
