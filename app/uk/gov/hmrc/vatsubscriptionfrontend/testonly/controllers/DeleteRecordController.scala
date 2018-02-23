@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.connectors.DeleteRecordConnector
+import uk.gov.hmrc.vatsubscriptionfrontend.testonly.models.DeleteRecordFailure
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.views.html.delete_record
 
 import scala.concurrent.Future
@@ -52,9 +53,10 @@ class DeleteRecordController @Inject()(val controllerComponents: ControllerCompo
           BadRequest(delete_record(formWithErrors, routes.DeleteRecordController.submit()))
         ),
       vatNumber =>
-        deleteRecordConnector.deleteRecord(vatNumber).map(_ =>
-          Ok("successful")
-        ).recover {
+        deleteRecordConnector.deleteRecord(vatNumber).map {
+          case Right(_) => Ok("successful")
+          case Left(DeleteRecordFailure(status)) => Status(status)(s"failed: status=$status")
+        }.recover {
           case e => Ok("failed: " + e.getMessage)
         }
     )
