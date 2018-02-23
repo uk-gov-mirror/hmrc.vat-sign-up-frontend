@@ -10,4 +10,10 @@
 # Failing to follow this rule may result in test routes deployed in production.
 
 # Add all the application routes to the prod.routes file
-->         /                          prod.Routes
+
+
+GET        /report-quarterly/vat/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.show
+POST       /report-quarterly/vat/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.submit
+
+
+->         /                                                            prod.Routes
