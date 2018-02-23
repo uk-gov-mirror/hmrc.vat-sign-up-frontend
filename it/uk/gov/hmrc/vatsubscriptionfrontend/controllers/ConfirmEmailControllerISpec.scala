@@ -19,10 +19,11 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import play.api.http.Status._
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.emailKey
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.{EmailForm, VatNumberForm}
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreEmailAddressStub._
 
 class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /confirm-email" should {
@@ -39,18 +40,34 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
 
   "POST /confirm-email" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse)
+    "redirect to verify email page" when {
+      "the email is successfully stored" in {
+        stubAuth(OK, successfulAuthResponse)
+        stubStoreEmailAddressSuccess()
 
-      val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
+        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.VerifyEmailController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.VerifyEmailController.show().url)
+        )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
-      session.keys should contain(emailKey)
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(emailKey)
+      }
+    }
+
+    "throw an internal server error" when {
+      "storing the email has been unsuccessful" in {
+        stubAuth(OK, successfulAuthResponse)
+        stubStoreEmailAddressFailure()
+
+        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+
+      }
     }
   }
 }

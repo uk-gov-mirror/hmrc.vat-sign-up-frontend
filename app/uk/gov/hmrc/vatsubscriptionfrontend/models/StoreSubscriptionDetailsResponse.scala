@@ -28,3 +28,11 @@ sealed trait StoreCompanyNumberResponse
 case object StoreCompanyNumberSuccess extends StoreCompanyNumberResponse
 
 case class StoreCompanyNumberFailure(status: Int) extends StoreCompanyNumberResponse
+
+
+
+sealed trait StoreEmailAddressResponse
+
+case object StoreEmailAddressSuccess extends StoreEmailAddressResponse
+
+case class StoreEmailAddressFailure(status: Int) extends StoreEmailAddressResponse

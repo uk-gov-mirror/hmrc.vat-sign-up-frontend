@@ -59,6 +59,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number"
 
   def storeCompanyNumberUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/company-number"
+  def storeEmailAddressUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/email"
 
   lazy val btaUrl = loadConfig("bta.url")
 

@@ -22,16 +22,19 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreEmailAddressService
 
 import scala.concurrent.Future
 
-class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+  with MockStoreEmailAddressService {
 
-  object TestConfirmEmailController extends ConfirmEmailController(mockControllerComponents)
+  object TestConfirmEmailController extends ConfirmEmailController(mockControllerComponents, mockStoreEmailAddressService)
 
   lazy val testGetRequest = FakeRequest("GET", "/confirm-email")
 
@@ -63,20 +66,46 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   }
 
   "Calling the submit action of the Confirm Email controller" when {
-    "email is in session" should {
+    "email and vat number is in session and store call is successful" should {
       "redirect to Verify Email page" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)
+
+        val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+          SessionKeys.vatNumberKey -> testVatNumber))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+      }
+    }
+    "email and vat number is in session but store call is unsuccessful" should {
+      "throw Internal Server Error" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
+        mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
+
+        intercept[InternalServerException] {
+          await(TestConfirmEmailController.submit(testPostRequest.withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.emailKey -> testEmail
+          )))
+        }
+      }
+    }
+    "vat number is not in session" should {
+      "redirect to Capture Vat number page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
       }
     }
     "email is not in session" should {
       "redirect to Capture Email page" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
-        val result = TestConfirmEmailController.submit(testPostRequest)
+        val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
       }
