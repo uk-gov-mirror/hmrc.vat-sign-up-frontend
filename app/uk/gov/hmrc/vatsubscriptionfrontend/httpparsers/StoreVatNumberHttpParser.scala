@@ -18,16 +18,25 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailure, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailureResponse, StoreVatNumberSuccessResponse,
+StoreVatNumberSuccess, StoreVatNumberNoRelationship}
 
 object StoreVatNumberHttpParser {
-  type StoreVatNumberResponse = Either[StoreVatNumberFailure , StoreVatNumberSuccess.type ]
+  type StoreVatNumberResponse = Either[StoreVatNumberFailureResponse , StoreVatNumberSuccessResponse]
 
   implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
+
+      def parseBody: Option[String] = (response.json \ StoreVatNumberNoRelationshipCodeKey).asOpt[String]
+
       response.status match {
         case CREATED => Right(StoreVatNumberSuccess)
-        case status => Left(StoreVatNumberFailure(status))
+        case FORBIDDEN => parseBody match {
+          case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Right(StoreVatNumberNoRelationship)
+          case _ => Left(StoreVatNumberFailureResponse(FORBIDDEN))
+        }
+        case status => Left(StoreVatNumberFailureResponse(status))
       }
     }
   }

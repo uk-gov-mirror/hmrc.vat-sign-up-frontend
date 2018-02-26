@@ -52,6 +52,20 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "return  not implemented" when {
+      "the vat number is unsuccessfully stored as there is no client agent relationship" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreVatNumberNoRelationship()
+
+        val res = post("/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+
+        res should have(
+          httpStatus(NOT_IMPLEMENTED)
+        )
+      }
+    }
+
     "throw an internal server error" when {
       "the vat number cannot be stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

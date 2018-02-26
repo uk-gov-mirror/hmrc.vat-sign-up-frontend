@@ -76,6 +76,15 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
       }
     }
+    "vat number is in session but store vat is unsuccessful as no agent client relationship" should {
+      "throw not implemented error" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreVatNumberNoRelationship(vatNumber = testVatNumber)
+
+        val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        status(result) shouldBe Status.NOT_IMPLEMENTED
+      }
+    }
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthRetrieveAgentEnrolment()
