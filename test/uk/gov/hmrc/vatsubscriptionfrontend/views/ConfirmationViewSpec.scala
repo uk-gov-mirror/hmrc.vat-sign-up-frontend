@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Confirmation => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Confirmation => messages, Base}
 import org.jsoup.Jsoup
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._
@@ -103,7 +103,7 @@ class ConfirmationViewSpec extends ViewSpec {
 
     "have a add another client button" in {
       val b = document.getElementById("add-another-button")
-      b.attr("value") shouldBe messages.addAnother
+      b.attr("value") shouldBe Base.signUpAnotherClient
     }
 
   }

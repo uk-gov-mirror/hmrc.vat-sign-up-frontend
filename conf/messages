@@ -5,6 +5,7 @@ base.agree_and_continue                                                = Agree a
 base.accept_and_continue                                               = Accept and continue
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
+base.sign_up_another_client                                            = Sign up another client
 
 ## Errors
 error.invalid_company_number.field                                     = Please enter a valid company registration number
@@ -18,6 +19,11 @@ error.invalid_email.summary                                            = Please 
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
 agent.not_enrolled_to_agent_services.heading                           = You can''t use this service yet
 agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
+
+## No agent client relationship page
+agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
+agent.no_agent_client_relationship.heading                             = You can''t sign up this client yet
+agent.no_agent_client_relationship.line_1                              = To use this service, your client needs to <a href="{0}">authorise you as their agent</a>.
 
 ## Agent Capture Vat Number page
 agent.capture_vat_number.title                                         = What is your client''s VAT number?
@@ -92,6 +98,5 @@ agent.confirmation.subsection_2.bullet_2                               = Sign in
 agent.confirmation.subsection_2.bullet_3                               = Add any purchases and sales that your client has already received or paid out.
 agent.confirmation.subsection_2.bullet_4                               = Record your client''s future purchases and sales using the software, then to submit their VAT Returns.
 agent.confirmation.subsection_2.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or <a id="bta" href="{0}">business tax account</a>.
-agent.confirmation.add_another                                         = Sign up another client
 
 
