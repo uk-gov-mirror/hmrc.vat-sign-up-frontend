@@ -21,15 +21,12 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreEmailAddressService
-
-import scala.concurrent.Future
 
 class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreEmailAddressService {
@@ -45,9 +42,10 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "there is a email in the session" should {
       "show the Confirm Email page" in {
         mockAuthRetrieveAgentEnrolment()
-        val request = testGetRequest.withSession(SessionKeys.emailKey -> testEmail)
+        val request = testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.emailKey -> testEmail)
 
         val result = TestConfirmEmailController.show(request)
+
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -58,7 +56,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
       "redirect to Capture Email page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestConfirmEmailController.show(testGetRequest)
+        val result = TestConfirmEmailController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
       }
@@ -69,19 +67,18 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "email and vat number is in session and store call is successful" should {
       "redirect to Verify Email page" in {
         mockAuthRetrieveAgentEnrolment()
-
         mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
           SessionKeys.vatNumberKey -> testVatNumber))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
       }
     }
     "email and vat number is in session but store call is unsuccessful" should {
       "throw Internal Server Error" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
-
+        mockAuthRetrieveAgentEnrolment()
         mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
 
         intercept[InternalServerException] {
@@ -94,7 +91,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     }
     "vat number is not in session" should {
       "redirect to Capture Vat number page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER

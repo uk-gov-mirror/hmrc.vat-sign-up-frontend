@@ -31,8 +31,6 @@ import scala.concurrent.Future
 @Singleton
 class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents,
                                        val storeEmailAddressService: StoreEmailAddressService)
-  extends AuthenticatedController {
-class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

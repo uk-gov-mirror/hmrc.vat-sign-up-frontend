@@ -19,18 +19,18 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 import play.api.http.Status._
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.emailKey
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.{EmailForm, VatNumberForm}
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreEmailAddressStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
 class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /confirm-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/confirm-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
 
       res should have(
         httpStatus(OK)
@@ -59,7 +59,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
     "throw an internal server error" when {
       "storing the email has been unsuccessful" in {
-        stubAuth(OK, successfulAuthResponse)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressFailure()
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
