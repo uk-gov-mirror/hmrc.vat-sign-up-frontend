@@ -41,7 +41,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
   "Calling the show action of the verify Email controller" when {
     "there is a email in the session" should {
       "show the verify Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
         val request = testGetRequest.withSession(SessionKeys.emailKey -> testEmail)
 
         val result = TestVerifyEmailController.show(request)
@@ -53,7 +53,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
 
     "there isn't a email in the session" should {
       "redirect to Capture Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestVerifyEmailController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
@@ -65,7 +65,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
   "Calling the submit action of the Verify Email controller" when {
     "email is in session" should {
       "redirect to Terms of participation page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestVerifyEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
@@ -75,7 +75,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
 
     "email is not in session" should {
       "redirect to Capture Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestVerifyEmailController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER

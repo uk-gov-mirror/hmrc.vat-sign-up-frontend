@@ -16,8 +16,13 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 
+import uk.gov.hmrc.auth.core.Enrolment
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
+
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
   val testEmail: String = TestConstantsGenerator.randomEmail
+
+  val testAgentEnrolment: Enrolment = Enrolment(AgentEnrolmentPredicate.agentEnrolmentKey)
 }

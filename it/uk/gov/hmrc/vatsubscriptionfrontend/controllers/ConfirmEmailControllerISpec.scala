@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreEmailAddres
 class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /confirm-email" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/confirm-email", Map(SessionKeys.emailKey -> testEmail))
 
@@ -42,7 +42,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
   "POST /confirm-email" should {
     "redirect to verify email page" when {
       "the email is successfully stored" in {
-        stubAuth(OK, successfulAuthResponse)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess()
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)

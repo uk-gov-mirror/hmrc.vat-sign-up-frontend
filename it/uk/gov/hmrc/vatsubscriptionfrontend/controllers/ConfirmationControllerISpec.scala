@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /information-received" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/information-received")
 
@@ -37,7 +37,7 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
 
   "POST /information-received" should {
     "remove all personal data from session" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/information-received",
         Map(

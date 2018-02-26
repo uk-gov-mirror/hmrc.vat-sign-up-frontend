@@ -39,7 +39,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   "Calling the show action of the Capture Entity Type controller" should {
     "go to the Capture Entity Type page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestCaptureBusinessEntityController.show(testGetRequest)
       status(result) shouldBe Status.OK
@@ -55,7 +55,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
       "go to the capture company number" when {
         "the business entity is limited company" in {
-          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+          mockAuthRetrieveAgentEnrolment()
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedCompany))
           status(result) shouldBe Status.SEE_OTHER
@@ -65,7 +65,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
       "return not implemented" when {
         "the business entity is sole trader" in {
-          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+          mockAuthRetrieveAgentEnrolment()
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
           status(result) shouldBe Status.NOT_IMPLEMENTED
@@ -75,7 +75,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST

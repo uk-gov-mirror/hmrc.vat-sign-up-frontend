@@ -38,7 +38,7 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockCon
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
       val result = TestTermsController.show(request)
@@ -51,7 +51,7 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockCon
   "Calling the submit action of the Terms controller" should {
     // todo
     "return not implemented" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestTermsController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

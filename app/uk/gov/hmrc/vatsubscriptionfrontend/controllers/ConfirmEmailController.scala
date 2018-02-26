@@ -22,6 +22,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreEmailAddressService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_email
 
@@ -31,6 +32,8 @@ import scala.concurrent.Future
 class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents,
                                        val storeEmailAddressService: StoreEmailAddressService)
   extends AuthenticatedController {
+class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents)
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

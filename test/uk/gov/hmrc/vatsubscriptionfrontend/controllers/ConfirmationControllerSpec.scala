@@ -40,7 +40,7 @@ class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
   "Calling the show action of the Confirmation controller" should {
     "show the Confirmation page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
       val result = TestConfirmationController.show(request)
@@ -53,7 +53,7 @@ class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   "Calling the submit action of the Confirmation controller" should {
     // todo
     "return not implemented" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
