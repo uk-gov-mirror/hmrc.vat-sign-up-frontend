@@ -65,4 +65,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val agentServicesUrl = loadConfig("agent-services.url")
 
+  // TODO confirm url
+  lazy val authoriseAgentUrl = loadConfig("agent-services.url")
+
 }

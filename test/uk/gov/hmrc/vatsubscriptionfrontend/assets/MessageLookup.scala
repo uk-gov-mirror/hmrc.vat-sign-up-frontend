@@ -29,6 +29,7 @@ object MessageLookup {
     val signOut = "Sign out"
     val signUp = "Sign up"
     val goBack = "Go back"
+    val signUpAnotherClient = "Sign up another client"
   }
 
   object ErrorMessage {
@@ -40,6 +41,12 @@ object MessageLookup {
     val title = "You can't use this service yet"
     val heading: String = title
     val line1 = "To use this service, you need to set up an agent services account."
+  }
+
+  object NoAgentClientRelationship {
+    val title = "You can't sign up this client yet"
+    val heading: String = title
+    val line1 = "To use this service, your client needs to authorise you as their agent."
   }
 
   object CaptureVatNumber {
@@ -133,8 +140,6 @@ object MessageLookup {
         val bullet4 = "Record your client's future purchases and sales using the software, then to submit their VAT Returns."
         val line2 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
       }
-
-      val addAnother = "Sign up another client"
 
     }
 
