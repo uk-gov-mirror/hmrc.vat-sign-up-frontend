@@ -52,7 +52,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
-    "return  not implemented" when {
+    "redirect to no agent client relationship page" when {
       "the vat number is unsuccessfully stored as there is no client agent relationship" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberNoRelationship()
@@ -61,7 +61,8 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.NoAgentClientRelationshipController.show().url)
         )
       }
     }

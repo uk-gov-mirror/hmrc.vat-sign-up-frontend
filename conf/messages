@@ -23,7 +23,7 @@ agent.not_enrolled_to_agent_services.line_1                            = To use 
 ## No agent client relationship page
 agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
 agent.no_agent_client_relationship.heading                             = You can''t sign up this client yet
-agent.no_agent_client_relationship.line_1                              = To use this service, your client needs to <a href="{0}">authorise you as their agent</a>.
+agent.no_agent_client_relationship.line_1                              = To use this service, your client needs to authorise you as their agent.
 
 ## Agent Capture Vat Number page
 agent.capture_vat_number.title                                         = What is your client''s VAT number?

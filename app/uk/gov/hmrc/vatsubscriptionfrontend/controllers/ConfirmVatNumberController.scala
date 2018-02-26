@@ -57,7 +57,7 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
             case Right(StoreVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())
             case Right(StoreVatNumberNoRelationship) =>
-              NotImplemented
+              Redirect(routes.NoAgentClientRelationshipController.show())
             case Left(errResponse) =>
               throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
           }
