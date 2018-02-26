@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 class AgreeCaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /receive-email" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/receive-emails")
 
@@ -35,7 +35,7 @@ class AgreeCaptureEmailControllerISpec extends ComponentSpecBase with CustomMatc
 
   "POST /receive-emails" should {
     "redirect to the capture email address page" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/receive-emails")()
 

@@ -16,8 +16,11 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 
+import java.util.UUID
+
 object IntegrationTestConstants {
   val testVatNumber: String = IntegrationTestConstantsGenerator.randomVatNumber
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
+  val testArn: String = UUID.randomUUID().toString
 }

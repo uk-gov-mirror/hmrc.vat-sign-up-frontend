@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /confirm-email" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/confirm-email", Map(SessionKeys.emailKey -> testEmail))
 
@@ -40,7 +40,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
   "POST /confirm-email" should {
     "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
 

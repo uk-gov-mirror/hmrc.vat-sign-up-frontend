@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_business_entity
@@ -28,7 +29,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
