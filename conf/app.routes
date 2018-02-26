@@ -3,6 +3,8 @@
 # Not enrolled
 GET         /there-is-a-problem                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.NotEnrolledToAgentServicesController.show
 
+GET         /not-authorised                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.NoAgentClientRelationshipController.show
+
 # Capture VRN
 GET         /vat-number                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.show
 POST        /vat-number                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.CaptureVatNumberController.submit

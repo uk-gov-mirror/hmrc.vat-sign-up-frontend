@@ -18,41 +18,26 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
-class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class NoAgentClientRelationshipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestTermsController extends TermsController(mockControllerComponents)
+  object TestNoAgentClientRelationshipController extends NoAgentClientRelationshipController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/terms-of-participation")
-
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/terms-of-participation")
+  lazy val testGetRequest = FakeRequest("GET", "/not-authorised")
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
       mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
-      val result = TestTermsController.show(request)
+      val result = TestNoAgentClientRelationshipController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-    }
-  }
-
-  "Calling the submit action of the Terms controller" should {
-    // todo
-    "return not implemented" in {
-      mockAuthRetrieveAgentEnrolment()
-
-      val result = TestTermsController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ConfirmationController.show().url)
     }
   }
 

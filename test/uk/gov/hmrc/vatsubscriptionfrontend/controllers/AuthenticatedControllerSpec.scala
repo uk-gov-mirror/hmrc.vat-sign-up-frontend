@@ -17,15 +17,15 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers
 
 import play.api.mvc.Result
-import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals, ~}
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals, ~}
 import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
 import scala.concurrent.Future
 

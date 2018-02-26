@@ -21,15 +21,12 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreVatNumberService
-
-import scala.concurrent.Future
 
 class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreVatNumberService {
@@ -77,12 +74,13 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       }
     }
     "vat number is in session but store vat is unsuccessful as no agent client relationship" should {
-      "throw not implemented error" in {
+      "go to the no agent client relationship page" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatNumberNoRelationship(vatNumber = testVatNumber)
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.NoAgentClientRelationshipController.show().url)
       }
     }
     "vat number is in session but store vat is unsuccessful" should {
