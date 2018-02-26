@@ -34,7 +34,7 @@ class NotEnrolledToAgentServicesControllerSpec extends UnitSpec with GuiceOneApp
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
-      mockAuthRetrieveAgentEnrolment()
+      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
       val request = testGetRequest
 
       val result = TestNotEnrolledToAgentServicesController.show(request)

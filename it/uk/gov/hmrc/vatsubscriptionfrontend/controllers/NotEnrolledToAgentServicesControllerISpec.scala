@@ -24,7 +24,7 @@ class NotEnrolledToAgentServicesControllerISpec extends ComponentSpecBase with C
 
   "GET /there-is-a-problem" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+      stubAuth(OK, successfulAuthResponse())
 
       val res = get("/there-is-a-problem")
 
