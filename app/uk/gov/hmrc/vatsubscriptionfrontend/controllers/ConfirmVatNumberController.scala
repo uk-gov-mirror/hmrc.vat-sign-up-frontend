@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberNoRelationship, StoreVatNumberSuccess}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
 
@@ -53,8 +54,10 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
       request.session.get(SessionKeys.vatNumberKey) match {
         case Some(vatNumber) if vatNumber.nonEmpty =>
           storeVatNumberService.storeVatNumber(vatNumber) map {
-            case Right(_) =>
+            case Right(StoreVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())
+            case Right(StoreVatNumberNoRelationship) =>
+              NotImplemented
             case Left(errResponse) =>
               throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
           }

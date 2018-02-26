@@ -21,8 +21,9 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberResponse
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailure, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.models._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 
 import scala.concurrent.Future
 
@@ -46,6 +47,9 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     mockStoreVatNumber(vatNumber)(Future.successful(Right(StoreVatNumberSuccess)))
 
   def mockStoreVatNumberFailure(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberFailure(500))))
+    mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
+
+  def mockStoreVatNumberNoRelationship(vatNumber: String): Unit =
+    mockStoreVatNumber(vatNumber)(Future.successful(Right(StoreVatNumberNoRelationship)))
 
 }

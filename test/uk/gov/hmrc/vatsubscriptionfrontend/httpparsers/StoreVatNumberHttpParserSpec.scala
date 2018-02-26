@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
-import play.api.http.Status.{BAD_REQUEST, CREATED}
+import play.api.http.Status.{CREATED, FORBIDDEN, BAD_REQUEST}
 import play.api.libs.json.Json
+import play.api.libs.openid.Errors.BAD_RESPONSE
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberHttpReads
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailure, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailureResponse, StoreVatNumberNoRelationship, StoreVatNumberSuccess}
 
 class StoreVatNumberHttpParserSpec extends UnitSpec {
   val testHttpVerb = "PUT"
@@ -37,13 +39,30 @@ class StoreVatNumberHttpParserSpec extends UnitSpec {
         res shouldBe Right(StoreVatNumberSuccess)
       }
 
-      "parse any other response as an StoreVatNumberFailure" in {
-        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
+      "parse a FORBIDDEN response as an StoreVatNumberNoRelationship when the response code matches" in {
+        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue)))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Left(StoreVatNumberFailure(httpResponse.status))
+        res shouldBe Right(StoreVatNumberNoRelationship)
       }
+
+      "parse a FORBIDDEN response as a StoreVatNumberFailureResponse when the response code does not match" in {
+        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> "INCORRECT_CODE")))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldEqual Left(StoreVatNumberFailureResponse(FORBIDDEN))
+      }
+
+      "parse any other response as a StoreVatNumberFailureResponse" in {
+        val httpResponse = HttpResponse(BAD_REQUEST)
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldEqual Left(StoreVatNumberFailureResponse(BAD_REQUEST))
+      }
+
     }
   }
 }
