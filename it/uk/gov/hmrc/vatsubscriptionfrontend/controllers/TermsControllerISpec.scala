@@ -24,7 +24,7 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /terms-of-participation" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/terms-of-participation")
 
@@ -37,7 +37,7 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
   "POST /terms-of-participation" should {
     // TODO submission scenarios
     "Redirects to confirmation" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/terms-of-participation")()
 

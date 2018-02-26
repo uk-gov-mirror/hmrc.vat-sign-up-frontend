@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /email-address" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/email-address")
 
@@ -38,7 +38,7 @@ class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
   "POST /email-address" should {
     "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/email-address")(EmailForm.email -> testEmail)
 

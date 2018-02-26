@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /company-number" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/company-number")
 
@@ -37,7 +37,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
 
   "POST /company-number" should {
     "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 

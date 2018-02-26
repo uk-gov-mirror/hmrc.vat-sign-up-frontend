@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /confirm-vat-number" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))
 
@@ -39,7 +39,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
   "POST /vat-number" should {
     "redirect to the capture client business entity page" when {
       "the vat number is successfully stored" in {
-        stubAuth(OK, successfulAuthResponse)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberSuccess()
 
         val res = post("/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
@@ -54,7 +54,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
     "throw an internal server error" when {
       "the vat number cannot be stored" in {
-        stubAuth(OK, successfulAuthResponse)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberFailure()
 
         val res = post("/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()

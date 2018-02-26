@@ -21,11 +21,8 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
-
-import scala.concurrent.Future
 
 class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -38,7 +35,7 @@ class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   "Calling the show action of the Agree Capture Email controller" should {
     "show the Agree Capture Email page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
       val result = TestAgreeCaptureEmailController.show(request)
@@ -50,7 +47,7 @@ class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   "Calling the submit action of the Agree Capture Email controller" should {
     "go to the business entity type page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestAgreeCaptureEmailController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

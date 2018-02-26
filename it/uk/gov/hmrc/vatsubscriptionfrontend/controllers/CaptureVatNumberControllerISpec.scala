@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /vat-number" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/vat-number")
 
@@ -37,7 +37,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
   "POST /vat-number" should {
     "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 

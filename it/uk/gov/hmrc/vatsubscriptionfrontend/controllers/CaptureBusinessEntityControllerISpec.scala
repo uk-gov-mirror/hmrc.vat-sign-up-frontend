@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /business-entity" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/business-entity")
 
@@ -39,7 +39,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   "POST /business-entity" should {
     "redirect to capture company number name" when {
       "the business entity is limited company" in {
-        stubAuth(OK, successfulAuthResponse)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = post("/business-entity")(BusinessEntityForm.businessEntity -> limitedCompany)
 
@@ -52,7 +52,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
     "return not implemented" when {
       "the business entiry is sole trader" in {
-        stubAuth(OK, successfulAuthResponse)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = post("/business-entity")(BusinessEntityForm.businessEntity -> soleTrader)
 

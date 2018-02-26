@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 class VerifyEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /verify-email" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/verify-email", Map(SessionKeys.emailKey -> testEmail))
 
@@ -39,7 +39,7 @@ class VerifyEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "POST /verify-email" should {
     "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/verify-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
 

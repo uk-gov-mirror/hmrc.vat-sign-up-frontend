@@ -41,7 +41,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the show action of the Capture Vat Number controller" should {
     "go to the Capture Vat number page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestCaptureVatNumberController.show(testGetRequest)
       status(result) shouldBe Status.OK
@@ -54,7 +54,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   "Calling the submit action of the Capture Vat Number controller" when {
     "form successfully submitted" should {
       "go to the new page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest(testVatNumber)
 
@@ -68,7 +68,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST

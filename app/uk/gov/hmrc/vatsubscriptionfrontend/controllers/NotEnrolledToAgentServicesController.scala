@@ -20,13 +20,14 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.not_enrolled_to_agent_services
 
 import scala.concurrent.Future
 
 @Singleton
 class NotEnrolledToAgentServicesController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
