@@ -1,0 +1,51 @@
+# microservice specific routes
+
+# Not enrolled
+GET         /there-is-a-problem            uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.NotEnrolledToAgentServicesController.show
+
+GET         /not-authorised                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.NoAgentClientRelationshipController.show
+
+# Capture VRN
+GET         /vat-number                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureVatNumberController.show
+POST        /vat-number                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureVatNumberController.submit
+
+# Confirm VRN
+GET         /confirm-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmVatNumberController.show
+POST        /confirm-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmVatNumberController.submit
+
+# Capture Company Number
+GET         /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureCompanyNumberController.show
+POST        /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureCompanyNumberController.submit
+
+# Confirm Company Number
+GET         /confirm-company-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmCompanyNumberController.show
+POST        /confirm-company-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmCompanyNumberController.submit
+
+#Capture Business Entity
+GET         /business-entity               uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureBusinessEntityController.show
+POST        /business-entity               uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureBusinessEntityController.submit
+
+#Agree Capture Email
+GET         /receive-emails                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.AgreeCaptureEmailController.show
+POST        /receive-emails                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.AgreeCaptureEmailController.submit
+
+#Capture Email
+GET         /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureEmailController.show
+POST        /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureEmailController.submit
+
+#Confirm Email
+GET         /confirm-email                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmEmailController.show
+POST        /confirm-email                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmEmailController.submit
+
+#Verify Email
+GET         /verify-email                  uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.VerifyEmailController.show
+POST        /verify-email                  uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.VerifyEmailController.submit
+
+#Terms
+GET         /terms-of-participation        uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.TermsController.show
+POST        /terms-of-participation        uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.TermsController.submit
+
+#Confirmation
+GET         /information-received          uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmationController.show
+POST        /information-received          uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmationController.submit
+

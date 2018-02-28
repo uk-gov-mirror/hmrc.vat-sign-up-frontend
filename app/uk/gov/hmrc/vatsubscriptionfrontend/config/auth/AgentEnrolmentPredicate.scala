@@ -21,7 +21,7 @@ import play.api.mvc.Results._
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.RetrievalPredicate
-import uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
 
 import scala.concurrent.Future
 
