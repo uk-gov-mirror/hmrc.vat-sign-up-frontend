@@ -59,7 +59,7 @@ class ConfirmVatNumberSpec extends ViewSpec {
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.routes.CaptureVatNumberController.show().url
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureVatNumberController.show().url
     )
   }
 
