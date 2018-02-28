@@ -14,48 +14,50 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{AgreeCaptureEmail => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureEmail => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class AgreeCaptureEmailSpec extends ViewSpec {
+class CaptureEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agree_capture_email(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_email(
+    emailForm = emailForm.form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Agree Capture email view" should {
+  "The Capture Email view" should {
 
     val testPage = TestView(
-      name = "Agree Capture Email View",
+      name = "Capture Email View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
+    testPage.shouldHaveHint(
+      messages.hint
     )
 
-    testPage.shouldHaveForm("Capture email Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
-    testPage.shouldHaveAgreeAndContinueButton()
+    testPage.shouldHaveTextField(email, messages.heading)
 
-    testPage.shouldHaveSignOutLink()
+    testPage.shouldHaveContinueButton()
   }
 
 }

@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.not_enrolled_to_agent_services
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.not_enrolled_to_agent_services
 
 import scala.concurrent.Future
 

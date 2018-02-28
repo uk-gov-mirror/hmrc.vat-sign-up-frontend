@@ -14,49 +14,54 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Terms => messages}
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureVatNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class TermsSpec extends ViewSpec {
+class CaptureVatNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.terms(
+  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_vat_number(
+    vatNumberForm = vatNumberForm.form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Terms view" should {
+  "The Capture Vat Number view" should {
 
     val testPage = TestView(
-      name = "Terms View",
+      name = "Capture Vat Number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
+    testPage.shouldHavePara(
+      messages.description
     )
 
-    testPage.shouldHaveBulletSeq(
-      messages.bullet1,
-      messages.bullet2,
-      messages.bullet3,
-      messages.bullet4
+    testPage.shouldHaveHint(
+      messages.hint
     )
 
-    testPage.shouldHaveAcceptAndContinueButton()
+    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
 
+    testPage.shouldHaveTextField(vatNumber, messages.heading)
+
+    testPage.shouldHaveContinueButton()
   }
 
 }

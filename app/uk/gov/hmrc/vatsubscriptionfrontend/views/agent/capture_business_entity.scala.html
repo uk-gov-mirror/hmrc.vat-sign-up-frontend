@@ -17,9 +17,11 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@import helpers.{summaryErrorHelper, radioHelper, continueButton}
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.html.helpers._
+
 
 @(BusinessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 

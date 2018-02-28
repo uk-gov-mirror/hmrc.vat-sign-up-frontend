@@ -16,23 +16,24 @@
 
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@import helpers.continueButton
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{continueButton, signOutLink}
 
-@(vatNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.confirm_vat_number.title"), bodyClasses = None) {
+@main_template(title = Messages("agent.agree_capture_email.title"), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("agent.confirm_vat_number.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.agree_capture_email.heading")</h1>
 
-    <h3 class="heading-medium">@Messages("agent.confirm_vat_number.vatNumber.heading")</h3>
+    <p>@Messages("agent.agree_capture_email.line_1")</p>
 
-    <p class="lede">@vatNumber</p>
+    <p>@Messages("agent.agree_capture_email.line_2")</p>
 
     @form(action = postAction) {
         <div class="form-group">
-            @continueButton(Some(Messages("base.confirmAndContinue")))
+            @continueButton(Some(Messages("base.agree_and_continue")))
         </div>
     }
 
-    <p><a id="changeLink" href="@uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureVatNumberController.show().url">@Messages("agent.confirm_vat_number.link")</a></p>
+    @signOutLink()
 }

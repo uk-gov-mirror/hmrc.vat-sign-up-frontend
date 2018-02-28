@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Confirmation => messages, Base}
 import org.jsoup.Jsoup
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base, Confirmation => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 class ConfirmationViewSpec extends ViewSpec {
 
@@ -31,7 +32,7 @@ class ConfirmationViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirmation(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirmation(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

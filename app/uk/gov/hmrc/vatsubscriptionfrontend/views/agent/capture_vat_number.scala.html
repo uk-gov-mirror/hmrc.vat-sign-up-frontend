@@ -16,8 +16,9 @@
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@import helpers.{inputHelper, summaryErrorHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
 
 @(vatNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 

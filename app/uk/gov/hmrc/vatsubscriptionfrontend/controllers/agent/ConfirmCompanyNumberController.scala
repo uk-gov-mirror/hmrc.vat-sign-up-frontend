@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreCompanyNumberService
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_company_number
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_company_number
 
 import scala.concurrent.Future
 

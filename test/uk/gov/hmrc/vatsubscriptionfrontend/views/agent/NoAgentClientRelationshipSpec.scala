@@ -14,49 +14,44 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureEmail => messages}
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{NoAgentClientRelationship => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class CaptureEmailSpec extends ViewSpec {
+class NoAgentClientRelationshipSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_email(
-    emailForm = emailForm.form,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.no_agent_client_relationship(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Email view" should {
+  "The No Agent Client Relationship view" should {
 
     val testPage = TestView(
-      name = "Capture Email View",
+      name = "No Agent Client Relationship View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveHint(
-      messages.hint
-    )
+    testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
+    testPage.shouldHaveForm("No Agent Client Relationship Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(email, messages.heading)
+    testPage.shouldHaveSignUpAnotherClientButton()
 
-    testPage.shouldHaveContinueButton()
+    testPage.shouldHaveSignOutLink()
+
   }
 
 }

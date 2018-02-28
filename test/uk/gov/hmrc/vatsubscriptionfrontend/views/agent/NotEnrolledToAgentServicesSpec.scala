@@ -14,53 +14,39 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmEmail => messages}
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{NotEnrolledToAS => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testEmail
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class ConfirmEmailSpec extends ViewSpec {
+class NotEnrolledToAgentServicesSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_email(
-    email = testEmail,
-    postAction = testCall)(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.not_enrolled_to_agent_services()(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Email view" should {
+  "The Not Enrolled to Agent Services view" should {
 
     val testPage = TestView(
-      name = "Confirm Email View",
+      name = "Not Enrolled to Agent Services View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH3(messages.emailHeading)
+    testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHavePara(testEmail)
+    testPage.shouldHaveSignOutButton()
 
-    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
-
-    testPage.shouldHaveConfirmAndContinueButton()
-
-    testPage.shouldHaveALink(
-      id = "changeLink",
-      text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureEmailController.show().url
-    )
   }
 
 }

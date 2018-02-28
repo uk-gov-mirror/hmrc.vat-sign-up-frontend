@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmVatNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmVatNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 class ConfirmVatNumberSpec extends ViewSpec {
 
@@ -31,7 +32,7 @@ class ConfirmVatNumberSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_vat_number(
     vatNumber = testVatNumber,
     postAction = testCall)(
     FakeRequest(),

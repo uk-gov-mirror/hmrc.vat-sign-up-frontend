@@ -14,38 +14,47 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{NotEnrolledToAS => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureCompanyNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class NotEnrolledToAgentServicesSpec extends ViewSpec {
+
+class CaptureCompanyNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.not_enrolled_to_agent_services()(
+  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_company_number(
+    companyNumberForm = companyNumberForm.form,
+    postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Not Enrolled to Agent Services view" should {
+  "The Capture Company Number view" should {
 
     val testPage = TestView(
-      name = "Not Enrolled to Agent Services View",
+      name = "Capture Company Number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHavePara(messages.line1)
+    testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveSignOutButton()
+    testPage.shouldHaveTextField(companyNumber, messages.heading)
 
+    testPage.shouldHaveContinueButton()
   }
 
 }

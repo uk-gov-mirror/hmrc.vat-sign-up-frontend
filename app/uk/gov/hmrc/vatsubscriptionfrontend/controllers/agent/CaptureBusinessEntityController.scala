@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_business_entity
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_business_entity
 
 import scala.concurrent.Future
 

@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_email
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_email
 
 import scala.concurrent.Future
 

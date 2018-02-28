@@ -14,43 +14,54 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{NoAgentClientRelationship => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmEmail => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testEmail
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class NoAgentClientRelationshipSpec extends ViewSpec {
+class ConfirmEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.no_agent_client_relationship(
+  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_email(
+    email = testEmail,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The No Agent Client Relationship view" should {
+  "The Confirm Email view" should {
 
     val testPage = TestView(
-      name = "No Agent Client Relationship View",
+      name = "Confirm Email View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHavePara(messages.line1)
+    testPage.shouldHaveH3(messages.emailHeading)
 
-    testPage.shouldHaveForm("No Agent Client Relationship Form")(actionCall = testCall)
+    testPage.shouldHavePara(testEmail)
 
-    testPage.shouldHaveSignUpAnotherClientButton()
+    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
-    testPage.shouldHaveSignOutLink()
+    testPage.shouldHaveConfirmAndContinueButton()
 
+    testPage.shouldHaveALink(
+      id = "changeLink",
+      text = messages.link,
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureEmailController.show().url
+    )
   }
 
 }

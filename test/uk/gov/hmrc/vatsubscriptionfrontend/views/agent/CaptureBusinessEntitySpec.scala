@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureBusinessEntity => messages}
 import org.jsoup.Jsoup
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureBusinessEntity => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 
 class CaptureBusinessEntitySpec extends ViewSpec {
@@ -33,7 +34,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_business_entity(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_business_entity(
     businessEntityForm,
     postAction = testCall)(
     FakeRequest(),

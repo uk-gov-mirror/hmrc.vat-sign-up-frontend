@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.verify_email
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.verify_email
 
 import scala.concurrent.Future
 

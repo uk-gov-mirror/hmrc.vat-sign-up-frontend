@@ -14,53 +14,50 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureVatNumber => messages}
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Terms => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class CaptureVatNumberSpec extends ViewSpec {
+class TermsSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_vat_number(
-    vatNumberForm = vatNumberForm.form,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.terms(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Vat Number view" should {
+  "The Terms view" should {
 
     val testPage = TestView(
-      name = "Capture Vat Number View",
+      name = "Terms View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHavePara(
-      messages.description
+    testPage.shouldHaveParaSeq(
+      messages.line1,
+      messages.line2
     )
 
-    testPage.shouldHaveHint(
-      messages.hint
+    testPage.shouldHaveBulletSeq(
+      messages.bullet1,
+      messages.bullet2,
+      messages.bullet3,
+      messages.bullet4
     )
 
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+    testPage.shouldHaveAcceptAndContinueButton()
 
-    testPage.shouldHaveTextField(vatNumber, messages.heading)
-
-    testPage.shouldHaveContinueButton()
   }
 
 }

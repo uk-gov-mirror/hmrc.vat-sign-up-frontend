@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberNoRelationship, StoreVatNumberSuccess}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_vat_number
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_vat_number
 
 import scala.concurrent.Future
 

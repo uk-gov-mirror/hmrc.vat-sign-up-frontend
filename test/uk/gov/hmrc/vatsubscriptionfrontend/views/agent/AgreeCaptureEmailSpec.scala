@@ -14,53 +14,49 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmCompanyNumber => messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{AgreeCaptureEmail => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class ConfirmCompanyNumberSpec extends ViewSpec {
+class AgreeCaptureEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val testCrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.confirm_company_number(
-    companyNumber = testCrn,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.agree_capture_email(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Company Number view" should {
+  "The Agree Capture email view" should {
 
     val testPage = TestView(
-      name = "Confirm Company Number View",
+      name = "Agree Capture Email View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH3(messages.companyNumberHeading)
-
-    testPage.shouldHavePara(testCrn)
-
-    testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
-
-    testPage.shouldHaveConfirmAndContinueButton()
-
-    testPage.shouldHaveALink(
-      id = "changeLink",
-      text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureCompanyNumberController.show().url
+    testPage.shouldHaveParaSeq(
+      messages.line1,
+      messages.line2
     )
+
+    testPage.shouldHaveForm("Capture email Form")(actionCall = testCall)
+
+    testPage.shouldHaveAgreeAndContinueButton()
+
+    testPage.shouldHaveSignOutLink()
   }
 
 }

@@ -14,46 +14,54 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CaptureCompanyNumber => messages}
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmCompanyNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-
-class CaptureCompanyNumberSpec extends ViewSpec {
+class ConfirmCompanyNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
+  val testCrn = ""
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.capture_company_number(
-    companyNumberForm = companyNumberForm.form,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_company_number(
+    companyNumber = testCrn,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Company Number view" should {
+  "The Confirm Company Number view" should {
 
     val testPage = TestView(
-      name = "Capture Company Number View",
+      name = "Confirm Company Number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
+    testPage.shouldHaveH3(messages.companyNumberHeading)
+
+    testPage.shouldHavePara(testCrn)
+
     testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(companyNumber, messages.heading)
+    testPage.shouldHaveConfirmAndContinueButton()
 
-    testPage.shouldHaveContinueButton()
+    testPage.shouldHaveALink(
+      id = "changeLink",
+      text = messages.link,
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureCompanyNumberController.show().url
+    )
   }
 
 }

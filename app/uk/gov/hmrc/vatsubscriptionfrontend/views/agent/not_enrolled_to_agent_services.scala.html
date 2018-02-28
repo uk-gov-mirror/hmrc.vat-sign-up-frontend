@@ -15,23 +15,21 @@
  *@
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@import helpers.{continueButton}
-@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.signOutButton
 
-@(email: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.verify_email.title"), bodyClasses = None) {
+@main_template(title = Messages("agent.not_enrolled_to_agent_services.title")) {
 
-    <h1 class="heading-large">@Messages("agent.verify_email.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.not_enrolled_to_agent_services.heading")</h1>
 
-    <p>@Messages("agent.verify_email.line_1", email)</p>
+    <div class="form-group">
+        <p>@Html(Messages("agent.not_enrolled_to_agent_services.line_1", appConfig.agentServicesUrl))</p>
+    </div>
 
-    <p>@Messages("agent.verify_email.line_2")</p>
-
-    @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.continue")))
-        </div>
-    }
+    <div class="form-group">
+        @signOutButton()
+    </div>
 
 }

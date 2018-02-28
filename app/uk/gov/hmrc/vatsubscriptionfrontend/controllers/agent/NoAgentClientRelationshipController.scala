@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.no_agent_client_relationship
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.no_agent_client_relationship
 
 import scala.concurrent.Future
 
