@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.connectors
+package uk.gov.hmrc.vatsubscriptionfrontend.services
 
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionHttpParser._
+import uk.gov.hmrc.vatsubscriptionfrontend.connectors.SubmissionConnector
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionHttpParser.SubmissionResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmissionConnector @Inject()(val http: HttpClient,
-                                    val applicationConfig: AppConfig) {
-
-  private def url(vatNumber: String): String =
-    s"${applicationConfig.protectedMicroServiceUrl}/vat-subscription/subscription-request/vat-number/$vatNumber/submit"
+class SubmissionService @Inject()(val submissionConnector: SubmissionConnector) {
 
   def submit(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[SubmissionResponse] =
-    http.POSTEmpty[SubmissionResponse](url(vatNumber))
+    submissionConnector.submit(vatNumber)
 
 }

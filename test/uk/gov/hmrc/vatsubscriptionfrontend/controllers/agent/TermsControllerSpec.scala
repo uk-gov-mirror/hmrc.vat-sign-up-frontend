@@ -21,17 +21,23 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockSubmissionService
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
-class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents
+  with MockSubmissionService {
 
-  object TestTermsController extends TermsController(mockControllerComponents)
+  object TestTermsController extends TermsController(mockControllerComponents, mockSubmissionService)
 
   lazy val testGetRequest = FakeRequest("GET", "/terms-of-participation")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/terms-of-participation")
+    FakeRequest("POST", "/terms-of-participation").withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
@@ -45,14 +51,26 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockCon
     }
   }
 
-  "Calling the submit action of the Terms controller" should {
-    // todo
-    "return not implemented" in {
-      mockAuthRetrieveAgentEnrolment()
+  "Calling the submit action of the Terms controller" when {
+    "submission is successful" should {
+      "goto information recieved page" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockSubmitSuccess(testVatNumber)
 
-      val result = TestTermsController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ConfirmationController.show().url)
+        val result = TestTermsController.submit(testPostRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmationController.show().url)
+      }
+    }
+    "submission is unsuccessful" should {
+      "throw internal server exception" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockSubmitFailure(testVatNumber)
+
+        intercept[InternalServerException] {
+          await(TestTermsController.submit(testPostRequest))
+        }
+      }
     }
   }
 

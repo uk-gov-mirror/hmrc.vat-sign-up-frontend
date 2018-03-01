@@ -17,7 +17,10 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.SubmissionStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -34,17 +37,31 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
     }
   }
 
-  "POST /terms-of-participation" should {
-    // TODO submission scenarios
-    "Redirects to confirmation" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+  "POST /terms-of-participation" when {
+    "Submission is successful" should {
+      "Redirects to confirmation" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubSubmissionSuccess()
 
-      val res = post("/client/terms-of-participation")()
+        val res = post("/client/terms-of-participation", cookies = Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmationController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmationController.show().url)
+        )
+      }
+    }
+    "Submission is unsuccessful" should {
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubSubmissionFailure()
+
+        val res = post("/client/terms-of-participation", cookies = Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
     }
   }
 
