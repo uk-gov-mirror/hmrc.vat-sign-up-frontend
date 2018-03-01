@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.models.ClientDetailsModel._
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.ClientDetailsModel
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.ClientDetailsForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
@@ -23,7 +23,7 @@
 
 @(clientDetailsForm: Form[ClientDetailsModel], postAction: Call, isEditMode: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@core.views.html.templates.main_template(title = Messages("agent.client-details.title"), form = clientDetailsForm) {
+@main_template(title = Messages("agent.client-details.title"), bodyClasses = None) {
 
     @summaryErrorHelper(clientDetailsForm)
 
@@ -36,42 +36,30 @@
         <div class="form-group">
             <div class="form-field-group">
             @inputHelper(
-                field = clientDetailsForm(clientFirstName),
-                label = Messages("agent.client-details.field_1"),
-                labelClass = "form-label-bold",
-                maxLength = nameMaxLength,
-                parentForm = clientDetailsForm
+                field = clientDetailsForm("firstName"),
+                parentForm = clientDetailsForm,
+                label = Messages("agent.client-details.field_1")
             )
             </div>
             <div class="form-field-group">
-            @inputHelper(
-                field = clientDetailsForm(clientLastName),
-                label = Messages("agent.client-details.field_2"),
-                labelClass = "form-label-bold",
-                maxLength = nameMaxLength,
-                parentForm = clientDetailsForm
-            )
+                @inputHelper(
+                field = clientDetailsForm("secondName"),
+                parentForm = clientDetailsForm,
+                label = Messages("agent.client-details.field_2")
+                )
             </div>
             <div class="form-field-group">
-            @inputHelper(
-                field = clientDetailsForm(clientNino),
-                label = Messages("agent.client-details.field_3"),
-                labelClass = "form-label-bold",
-                formHint = Seq(Messages("agent.client_details.formhint.1.line_1")),
-                parentForm = clientDetailsForm
-            )
+                @inputHelper(
+                field = clientDetailsForm("nino"),
+                parentForm = clientDetailsForm,
+                label = Messages("agent.client-details.field_3")
+                )
             </div>
 
-            @dateHelper(
-                field = clientDetailsForm(clientDateOfBirth),
-                label = Messages("agent.client-details.field_4"),
-                parentForm = clientDetailsForm,
-                hintText = Messages("agent.client-details.formhint.2")
-            )
         </div>
 
         @if(isEditMode) {
-            @continueButton(Messages("agent.base.update"))
+            @continueButton(Some(Messages("agent.base.update")))
         } else {
             @continueButton()
         }
