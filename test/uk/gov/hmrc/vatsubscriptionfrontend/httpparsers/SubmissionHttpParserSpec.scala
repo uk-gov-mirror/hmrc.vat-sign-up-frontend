@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionHttpParser.SubmissionHttpHttpReads
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionHttpParser.SubmissionHttpReads
 
 class SubmissionHttpParserSpec extends UnitSpec {
   val testHttpVerb = "POST"
@@ -30,7 +30,7 @@ class SubmissionHttpParserSpec extends UnitSpec {
       "parse a NO_CONTENT response as an SubmissionSuccessResponse" in {
         val httpResponse = HttpResponse(NO_CONTENT)
 
-        val res = SubmissionHttpHttpReads.read(testHttpVerb, testUri, httpResponse)
+        val res = SubmissionHttpReads.read(testHttpVerb, testUri, httpResponse)
 
         res shouldBe Right(SubmissionSuccessResponse)
       }
@@ -38,7 +38,7 @@ class SubmissionHttpParserSpec extends UnitSpec {
       "parse a INTERNAL_SERVER_ERROR response as an SubmissionFailureResponse when the response code matches" in {
         val httpResponse = HttpResponse(INTERNAL_SERVER_ERROR)
 
-        val res = SubmissionHttpHttpReads.read(testHttpVerb, testUri, httpResponse)
+        val res = SubmissionHttpReads.read(testHttpVerb, testUri, httpResponse)
 
         res shouldBe Left(SubmissionFailureResponse(INTERNAL_SERVER_ERROR))
       }

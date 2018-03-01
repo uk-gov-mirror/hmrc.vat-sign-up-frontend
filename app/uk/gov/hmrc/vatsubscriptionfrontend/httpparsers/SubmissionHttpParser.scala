@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 object SubmissionHttpParser {
   type SubmissionResponse = Either[SubmissionFailureResponse, SubmissionSuccessResponse.type]
 
-  implicit object SubmissionHttpHttpReads extends HttpReads[SubmissionResponse] {
+  implicit object SubmissionHttpReads extends HttpReads[SubmissionResponse] {
     override def read(method: String, url: String, response: HttpResponse): SubmissionResponse =
       response.status match {
         case NO_CONTENT => Right(SubmissionSuccessResponse)
