@@ -14,11 +14,12 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.models.ClientDetailsModel
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.ClientDetailsModel._
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.ClientDetailsForm._
-@import core.views.html.helpers._
+@import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import core.config.AppConfig
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
 
 @(clientDetailsForm: Form[ClientDetailsModel], postAction: Call, isEditMode: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 

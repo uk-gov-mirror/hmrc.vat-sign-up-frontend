@@ -22,6 +22,12 @@ import uk.gov.hmrc.vatsubscriptionfrontend.models.{ClientDetailsModel, DateModel
 
 
 object ClientDetailsForm {
+
+  val clientFirstName = "clientFirstName"
+  val clientLastName = "clientLastName"
+  val clientNino = "clientNino"
+  val clientDateOfBirth = "clientDateOfBirth"
+
   val dateMapping: Mapping[DateModel] = mapping(
     "day" -> text,
     "month" -> text,
