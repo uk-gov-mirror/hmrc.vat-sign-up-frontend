@@ -75,6 +75,18 @@ object MessageLookup {
     val radioLimitedCompany: String = "Limited company"
   }
 
+  object ClientDetails {
+    val title = "Enter your client's details"
+    val heading = "Enter your client's details"
+    val line1 = "We will attempt to match these details against information we currently hold."
+    val field1 = "First name"
+    val field2 = "Last name"
+    val field3 = "National Insurance number"
+    val field4 = "Date of birth"
+    val formhint1_line1 = "For example, 'QQ 12 34 56 C'."
+    val formhint2 = "For example, 10 12 1990"
+  }
+
   object ConfirmCompanyNumber {
     val title = "Confirm your client's company registration number"
     val heading: String = title

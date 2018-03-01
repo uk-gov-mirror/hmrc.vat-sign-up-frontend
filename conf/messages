@@ -6,6 +6,7 @@ base.accept_and_continue                                               = Accept 
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
 base.sign_up_another_client                                            = Sign up another client
+agent.base.update                                                      = Update
 
 ## Errors
 error.invalid_company_number.field                                     = Please enter a valid company registration number
@@ -46,6 +47,17 @@ agent.capture_entity_type.title                                        = What ty
 agent.capture_entity_type.heading                                      = What type of business is your client registered as?
 agent.capture_entity_type.soleTrader                                   = Sole trader
 agent.capture_entity_type.limitedCompany                               = Limited company
+
+## Client Details ##
+agent.client-details.title                                            = Enter your client''s details
+agent.client-details.heading                                          = Enter your client''s details
+agent.client-details.line_1                                           = We will attempt to match these details against information we currently hold.
+agent.client-details.field_1                                          = First name
+agent.client-details.field_2                                          = Last name
+agent.client-details.field_3                                          = National Insurance number
+agent.client-details.field_4                                          = Date of birth
+agent.client_details.formhint.1.line_1                                = For example, ''QQ 12 34 56 C''.
+agent.client-details.formhint.2                                       = For example, 10 12 1990
 
 ## Agent Confirm Company Number page
 agent.confirm_company_number.title                                     = Confirm your client''s company registration number
