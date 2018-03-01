@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.models.SubmissionFailureResponse
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionFailureResponse
 import uk.gov.hmrc.vatsubscriptionfrontend.services.SubmissionService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.terms
 

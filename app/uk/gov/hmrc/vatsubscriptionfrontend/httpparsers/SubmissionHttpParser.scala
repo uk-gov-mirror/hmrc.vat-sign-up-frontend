@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsubscriptionfrontend.models._
 
 object SubmissionHttpParser {
   type SubmissionResponse = Either[SubmissionFailureResponse, SubmissionSuccessResponse.type]
@@ -34,4 +33,6 @@ object SubmissionHttpParser {
 
 }
 
+case object SubmissionSuccessResponse
 
+case class SubmissionFailureResponse(status: Int)

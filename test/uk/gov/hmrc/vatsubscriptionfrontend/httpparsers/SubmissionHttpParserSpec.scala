@@ -20,7 +20,6 @@ import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionHttpParser.SubmissionHttpHttpReads
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{SubmissionFailureResponse, SubmissionSuccessResponse}
 
 class SubmissionHttpParserSpec extends UnitSpec {
   val testHttpVerb = "POST"
