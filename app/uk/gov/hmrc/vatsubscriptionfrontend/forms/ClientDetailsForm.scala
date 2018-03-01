@@ -16,12 +16,25 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
+import play.api.data.{Form, Mapping}
+import play.api.data.Forms._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{ClientDetailsModel, DateModel}
+
+
 object ClientDetailsForm {
+  val dateMapping: Mapping[DateModel] = mapping(
+    "day" -> text,
+    "month" -> text,
+    "year" -> text
+  )(DateModel.apply)(DateModel.unapply)
 
-  val clientFirstName = "clientFirstName"
-  val clientLastName = "clientLastName"
-  val clientNino = "clientNino"
-  val clientDateOfBirth = "clientDateOfBirth"
 
-
+  val clientDetailsForm = Form(
+    mapping(
+      "firstName" -> text,
+      "lastName" -> text,
+      "nino" -> text,
+      "dateOfBirth" -> dateMapping
+    )(ClientDetailsModel.apply)(ClientDetailsModel.unapply)
+  )
 }
