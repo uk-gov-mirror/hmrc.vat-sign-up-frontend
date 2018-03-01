@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 case class ClientDetailsModel (firstName: String,
                                lastName: String,
                                nino: String,
-                               dateOfBirth: String)
+                               dateOfBirth: DateModel)
 
 
 object ClientDetailsModel {
