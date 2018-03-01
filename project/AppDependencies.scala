@@ -5,11 +5,9 @@ import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
 
-object FrontendBuild extends Build with MicroService {
+object AppDependencies {
 
-  val appName = "vat-subscription-frontend"
-
-  override lazy val appDependencies: Seq[ModuleID] = compile ++ test ++ it
+  lazy val appDependencies: Seq[ModuleID] = compile ++ test ++ it
 
   private val playWhitelistFilterVersion = "2.0.0"
 
