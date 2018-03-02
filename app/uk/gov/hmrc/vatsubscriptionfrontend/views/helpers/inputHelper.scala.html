@@ -16,7 +16,7 @@
 
 @import play.api.data.Form
 @import play.api.data.Field
-@(field: Field, parentForm: Option[Form[_]] = None, label: String)(implicit messages: Messages)
+@(field: Field, parentForm: Form[_], label: String)(implicit messages: Messages)
 
 @errorNotification = @{
 if(parentForm.hasErrors) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>

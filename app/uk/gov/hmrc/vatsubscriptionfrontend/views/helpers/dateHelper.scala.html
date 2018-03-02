@@ -21,7 +21,7 @@
 @(field: Field,
         label: Option[String] = None,
         hintText: Option[String] = None,
-        parentForm: Option[Form[_]] = None
+        parentForm: Form[_]
 )(implicit messages: Messages)
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.ErrorMessageHelper._
@@ -44,14 +44,17 @@
             <div class="form-date">
                 @inputHelper(
                     field(dateDay),
+                    parentForm = parentForm,
                     label = Messages("base.day")
                 )
                 @inputHelper(
                     field(dateMonth),
+                    parentForm = parentForm,
                     label = Messages("base.month")
                 )
                 @inputHelper(
                     field(dateYear),
+                    parentForm = parentForm,
                     label = Messages("base.year")
                 )
             </div>
