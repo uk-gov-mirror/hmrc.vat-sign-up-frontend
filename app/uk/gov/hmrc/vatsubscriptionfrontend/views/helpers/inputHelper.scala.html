@@ -16,14 +16,14 @@
 
 @import play.api.data.Form
 @import play.api.data.Field
-@(field: Field, parentForm: Form[_], label: String)(implicit messages: Messages)
+@(field: Field, parentForm: Form[_], label: String, hideLabel: Boolean = true)(implicit messages: Messages)
 
 @errorNotification = @{
 if(parentForm.hasErrors) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
 }
 
 <div class="form-group form-field @if(parentForm.hasErrors) { form-field--error }">
-    <label class='form-label visuallyhidden' for=@field.name>@label</label>
+    <label class='form-label @if(hideLabel) { visuallyhidden }' for=@field.name>@label</label>
     @errorNotification
     <input name="@field.name" class="form-control" id="@field.name" type="text"
            value="@field.value.getOrElse("")">

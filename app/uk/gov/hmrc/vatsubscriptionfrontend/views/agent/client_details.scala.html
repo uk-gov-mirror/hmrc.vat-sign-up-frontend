@@ -38,22 +38,25 @@
             @inputHelper(
                 field = clientDetailsForm("firstName"),
                 parentForm = clientDetailsForm,
-                label = Messages("agent.client-details.field_1")
+                label = Messages("agent.client-details.field_1"),
+                hideLabel = false
             )
             </div>
             <div class="form-field-group">
                 @inputHelper(
                 field = clientDetailsForm("secondName"),
                 parentForm = clientDetailsForm,
-                label = Messages("agent.client-details.field_2")
-                )
+                label = Messages("agent.client-details.field_2"),
+                hideLabel = false
+            )
             </div>
             <div class="form-field-group">
                 @inputHelper(
                 field = clientDetailsForm("nino"),
                 parentForm = clientDetailsForm,
-                label = Messages("agent.client-details.field_3")
-                )
+                label = Messages("agent.client-details.field_3"),
+                hideLabel = false
+            )
             </div>
 
             @dateHelper(
