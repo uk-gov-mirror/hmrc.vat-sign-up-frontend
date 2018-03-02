@@ -16,7 +16,7 @@
 
 @import play.api.data.Form
 @import play.api.data.Field
-@import core.forms.submapping.DateMapping._
+@import uk.gov.hmrc.vatsubscriptionfrontend.forms.submapping.DateMapping._
 
 @(field: Field,
         label: Option[String] = None,
@@ -24,7 +24,7 @@
         parentForm: Option[Form[_]] = None
 )(implicit messages: Messages)
 
-@import core.forms.validation.ErrorMessageHelper._
+@import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.ErrorMessageHelper._
 
 @hasError = @{
     val fieldError = getFieldError(field, parentForm)
@@ -44,24 +44,15 @@
             <div class="form-date">
                 @inputHelper(
                     field(dateDay),
-                    label = Messages("base.day"),
-                    divClass = "form-group-day",
-                    maxLength = 2,
-                    isNumeric = true
+                    label = Messages("base.day")
                 )
                 @inputHelper(
                     field(dateMonth),
-                    label = Messages("base.month"),
-                    divClass = "form-group-month",
-                    maxLength = 2,
-                    isNumeric = true
+                    label = Messages("base.month")
                 )
                 @inputHelper(
                     field(dateYear),
-                    label = Messages("base.year"),
-                    divClass = "form-group-year",
-                    maxLength = 4,
-                    isNumeric = true
+                    label = Messages("base.year")
                 )
             </div>
     </fieldset>
