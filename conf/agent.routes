@@ -49,3 +49,5 @@ POST        /terms-of-participation        uk.gov.hmrc.vatsubscriptionfrontend.c
 GET         /information-received          uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmationController.show
 POST        /information-received          uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmationController.submit
 
+#TEST
+GET        /test                           uk.gov.hmrc.vatsubscriptionfrontend.controllers.TestController.show
