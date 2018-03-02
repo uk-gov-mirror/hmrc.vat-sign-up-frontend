@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
-@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers._
 
 @(clientDetailsForm: Form[ClientDetailsModel], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -55,6 +55,13 @@
                 label = Messages("agent.client-details.field_3")
                 )
             </div>
+
+            @dateHelper(
+            field = clientDetailsForm(clientDateOfBirth),
+            label = Some(Messages("agent.client-details.field_4")),
+            parentForm = clientDetailsForm,
+            hintText = Some(Messages("agent.client-details.formhint.2"))
+            )
 
         </div>
 
