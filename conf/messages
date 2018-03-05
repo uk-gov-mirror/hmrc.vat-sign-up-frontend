@@ -6,7 +6,9 @@ base.accept_and_continue                                               = Accept 
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
 base.sign_up_another_client                                            = Sign up another client
-agent.base.update                                                      = Update
+base.day                                                               = Day
+base.month                                                             = Month
+base.year                                                              = Year
 
 ## Errors
 error.invalid_company_number.field                                     = Please enter a valid company registration number
@@ -15,6 +17,19 @@ error.invalid_vat_number.field                                         = Please 
 error.invalid_vat_number.summary                                       = Please enter a valid vat registration number
 error.invalid_email.field                                              = Please enter a valid email address
 error.invalid_email.summary                                            = Please enter a valid email address
+
+error.invalid_first_name.field                                         = Please enter a valid first name
+error.invalid_first_name.summary                                       = Please enter a valid first name
+error.exceeds_max_first_name.field                                     = You can''t enter more than 105 characters for first name
+error.exceeds_max_first_name.summary                                   = You can''t enter more than 105 characters for first name
+error.invalid_last_name.field                                          = Please enter a valid last name
+error.invalid_last_name.summary                                        = Please enter a valid last name
+error.exceeds_max_last_name.field                                      = You can''t enter more than 105 characters for last name
+error.exceeds_max_last_name.summary                                    = You can''t enter more than 105 characters for last name
+error.invalid_nino.field                                               = Please enter a valid National Insurance number
+error.invalid_nino.summary                                             = Please enter a valid National Insurance number
+error.invalid_dob.field                                                = Please enter a valid date of birth
+error.invalid_dob.summary                                              = Please enter a valid date of birth
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet

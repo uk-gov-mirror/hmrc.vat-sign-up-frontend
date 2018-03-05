@@ -18,13 +18,13 @@ package uk.gov.hmrc.vatsubscriptionfrontend.models
 
 import play.api.libs.json.Json
 
-case class ClientDetailsModel (firstName: String,
-                               lastName: String,
-                               nino: String,
-                               dateOfBirth: DateModel)
+case class UserDetailsModel(firstName: String,
+                            lastName: String,
+                            nino: String,
+                            dateOfBirth: DateModel)
 
 
-object ClientDetailsModel {
-  implicit val format = Json.format[ClientDetailsModel]
+object UserDetailsModel {
+  implicit val format = Json.format[UserDetailsModel]
 
 }

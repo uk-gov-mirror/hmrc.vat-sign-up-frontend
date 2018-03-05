@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ClientDetails => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.ClientDetailsForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.UserDetailsForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 
@@ -34,7 +34,7 @@ class ClientDetailsSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.client_details(
-    clientDetailsForm = clientDetailsForm.form,
+    userDetailsForm = userDetailsForm.form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
@@ -52,11 +52,14 @@ class ClientDetailsSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Client Details Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(clientFirstName, messages.field1)
-    testPage.shouldHaveTextField(clientLastName, messages.field2)
-    testPage.shouldHaveTextField(clientNino, messages.field3)
-    testPage.shouldHaveTextField(clientDateOfBirth, messages.field4)
-
+    testPage.shouldHaveTextField(userFirstName, messages.field1, hideLabel = false)
+    testPage.shouldHaveTextField(userLastName, messages.field2, hideLabel = false)
+    testPage.shouldHaveTextField(userNino, messages.field3, hideLabel = false)
+    testPage.shouldHaveDateField(
+      id = userDateOfBirth,
+      legend = messages.field4,
+      exampleDate = messages.formhint2
+    )
 
     testPage.shouldHaveContinueButton()
 

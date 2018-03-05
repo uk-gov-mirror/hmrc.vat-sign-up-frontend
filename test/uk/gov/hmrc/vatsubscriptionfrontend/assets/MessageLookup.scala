@@ -30,6 +30,9 @@ object MessageLookup {
     val signUp = "Sign up"
     val goBack = "Go back"
     val signUpAnotherClient = "Sign up another client"
+    val day = "Day"
+    val month = "Month"
+    val year = "Year"
   }
 
   object ErrorMessage {

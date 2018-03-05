@@ -14,18 +14,18 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.models.ClientDetailsModel
-@import uk.gov.hmrc.vatsubscriptionfrontend.forms.ClientDetailsForm._
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
+@import uk.gov.hmrc.vatsubscriptionfrontend.forms.UserDetailsForm._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers._
 
-@(clientDetailsForm: Form[ClientDetailsModel], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(userDetailsForm: Form[UserDetailsModel], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @main_template(title = Messages("agent.client-details.title"), bodyClasses = None) {
 
-    @summaryErrorHelper(clientDetailsForm)
+    @summaryErrorHelper(userDetailsForm)
 
     <h1 class="heading-large">@Messages("agent.client-details.heading")</h1>
 
@@ -36,38 +36,39 @@
         <div class="form-group">
             <div class="form-field-group">
             @inputHelper(
-                field = clientDetailsForm("firstName"),
-                parentForm = clientDetailsForm,
+                field = userDetailsForm(userFirstName),
+                parentForm = userDetailsForm,
                 label = Messages("agent.client-details.field_1"),
+                labelClass = Some("form-label-bold"),
                 hideLabel = false
             )
             </div>
             <div class="form-field-group">
                 @inputHelper(
-                field = clientDetailsForm("secondName"),
-                parentForm = clientDetailsForm,
+                field = userDetailsForm(userLastName),
+                parentForm = userDetailsForm,
                 label = Messages("agent.client-details.field_2"),
+                labelClass = Some("form-label-bold"),
                 hideLabel = false
             )
             </div>
             <div class="form-field-group">
                 @inputHelper(
-                field = clientDetailsForm("nino"),
-                parentForm = clientDetailsForm,
+                field = userDetailsForm(userNino),
+                parentForm = userDetailsForm,
                 label = Messages("agent.client-details.field_3"),
+                labelClass = Some("form-label-bold"),
                 hideLabel = false
             )
             </div>
 
             @dateHelper(
-            field = clientDetailsForm(clientDateOfBirth),
-            label = Some(Messages("agent.client-details.field_4")),
-            parentForm = clientDetailsForm,
-            hintText = Some(Messages("agent.client-details.formhint.2"))
+                field = userDetailsForm(userDateOfBirth),
+                label = Some(Messages("agent.client-details.field_4")),
+                parentForm = userDetailsForm,
+                hintText = Some(Messages("agent.client-details.formhint.2"))
             )
-
         </div>
-
 
         @continueButton()
 

@@ -45,17 +45,26 @@
                 @inputHelper(
                     field(dateDay),
                     parentForm = parentForm,
-                    label = Messages("base.day")
+                    label = Messages("base.day"),
+                    divClass = Some("form-group-day"),
+                    maxLength = Some(2),
+                    isNumeric = Some(true)
                 )
                 @inputHelper(
                     field(dateMonth),
                     parentForm = parentForm,
-                    label = Messages("base.month")
+                    label = Messages("base.month"),
+                    divClass = Some("form-group-month"),
+                    maxLength = Some(2),
+                    isNumeric = Some(true)
                 )
                 @inputHelper(
                     field(dateYear),
                     parentForm = parentForm,
-                    label = Messages("base.year")
+                    label = Messages("base.year"),
+                    divClass = Some("form-group-year"),
+                    maxLength = Some(4),
+                    isNumeric = Some(true)
                 )
             </div>
     </fieldset>

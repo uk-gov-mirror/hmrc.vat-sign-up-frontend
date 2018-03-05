@@ -37,6 +37,15 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     val element: Element
 
+    private def selectHead(name: String, cssQuery: String): ElementTest = {
+      lazy val n = s"""${this.name}."$name""""
+      ElementTest(n, () => {
+        val selector = element.select(cssQuery)
+        if (selector.isEmpty) fail(s"Unable to locate $cssQuery in\n$element")
+        selector.get(0)
+      })
+    }
+
     def shouldHavePara(paragraph: String): Unit =
       s"$name should have the paragraph (P) '$paragraph'" in {
         element.getElementsByTag("p").text() should include(paragraph)
@@ -103,7 +112,11 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     }
 
     def shouldHaveTextField(name: String,
-                            label: String
+                            label: String,
+                            hideLabel: Boolean = true,
+                            maxLength: Option[Int] = None,
+                            pattern: Option[String] = None,
+                            inputMode: Option[String] = None
                            ): Unit = {
 
       s"${this.name} should have an input field '$name'" which {
@@ -115,6 +128,15 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
           if (eles.size() > 1) fail(s"$name have multiple input fields with name=$name")
           val ele = eles.head
           ele.attr("type") shouldBe "text"
+          maxLength.map {
+            l => ele.attr("maxLength") shouldBe l.toString
+          }
+          pattern.map {
+            p => ele.attr("pattern") shouldBe p
+          }
+          inputMode.map {
+            m => ele.attr("inputMode") shouldBe m
+          }
         }
 
         lazy val labelField = element.select(s"label[for=$name]")
@@ -123,11 +145,47 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
           labelField.text() shouldBe label
         }
 
-        s"and the label should be visuallyhidden" in
-          withClue(s"$name does not have the class 'visuallyhidden'\n") {
-            labelField.hasClass("visuallyhidden") shouldBe true
-          }
+        if (hideLabel) {
+          s"and the label should be visuallyhidden" in
+            withClue(s"$name does not have the class 'visuallyhidden'\n") {
+              labelField.hasClass("visuallyhidden") shouldBe true
+            }
+        }
       }
+    }
+
+    def shouldHaveDateField(id: String, legend: String, exampleDate: String): Unit = {
+      val selector = s"#$id"
+      s"${this.name} have a fieldset with id '$id' with the legend '$legend'" in {
+        val ele = element.getElementById(id)
+        ele.select("span.form-label-bold").text() shouldBe legend
+        ele.select("span.form-hint").text() shouldBe exampleDate
+        ele.tag().toString shouldBe "fieldset"
+      }
+      val date = selectHead(id, selector)
+      val numericPattern = "[0-9]*"
+      val inputMode = "numeric"
+      date.shouldHaveTextField(s"$id.dateDay", common.day, maxLength = Some(2), pattern = Some(numericPattern), inputMode = Some(inputMode))
+      date.shouldHaveTextField(s"$id.dateMonth", common.month, maxLength = Some(2), pattern = Some(numericPattern), inputMode = Some(inputMode))
+      date.shouldHaveTextField(s"$id.dateYear", common.year, maxLength = Some(4), pattern = Some(numericPattern), inputMode = Some(inputMode))
+    }
+
+    object ElementTest {
+
+      // n.b. element must be null-ary function to prevent evaluation at instantiation
+      def apply(name: String, element: () => Element): ElementTest = {
+        val n = name
+        val ele = element
+        if (ele == null) {
+          throw new IllegalArgumentException("creation of name failed: element is null")
+        }
+        new ElementTest {
+          override lazy val name: String = n
+          override lazy val element: Element = ele()
+        }
+
+      }
+
     }
 
     private def shouldHaveSubmitButton(text: String): Unit =
