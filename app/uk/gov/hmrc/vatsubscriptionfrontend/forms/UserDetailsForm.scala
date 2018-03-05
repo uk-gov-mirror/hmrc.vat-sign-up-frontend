@@ -1,0 +1,95 @@
+/*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.vatsubscriptionfrontend.forms
+
+import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
+import play.api.data.{Form, Mapping}
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, UserDetailsModel}
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.ConstraintUtil._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.MappingUtil._
+
+import scala.util.Try
+
+object UserDetailsForm {
+
+  val userFirstName = "firstName"
+  val userLastName = "lastName"
+  val userNino = "nino"
+  val userDateOfBirth = "dateOfBirth"
+
+  val dateMapping: Mapping[DateModel] = mapping(
+    "day" -> optText.toText,
+    "month" -> optText.toText,
+    "year" -> optText.toText
+  )(DateModel.apply)(DateModel.unapply)
+
+
+  val nameMaxLength = 105
+
+  val firstNameInvalid: Constraint[String] = Constraint("first_name.invalid")(
+    x => if (x.isEmpty || !Patterns.validText(x.trim)) Invalid("error.invalid_first_name") else Valid
+  )
+
+  val lastNameInvalid: Constraint[String] = Constraint("last_name.invalid")(
+    x => if (x.isEmpty || !Patterns.validText(x.trim)) Invalid("error.invalid_last_name") else Valid
+  )
+
+  val firstNameMaxLength: Constraint[String] = Constraint("first_name.maxLength")(
+    x => if (x.trim.length > nameMaxLength) Invalid("error.exceeds_max_first_name") else Valid
+  )
+
+  val lastNameMaxLength: Constraint[String] = Constraint("last_name.maxLength")(
+    x => if (x.trim.length > nameMaxLength) Invalid("error.exceeds_max_last_name") else Valid
+  )
+
+  val dobInvalid: Constraint[DateModel] = constraint[DateModel](
+    date => {
+      Try[ValidationResult] {
+        date.toLocalDate
+        Valid
+      }.getOrElse(Invalid("error.invalid_dob"))
+    }
+  )
+
+  val userValidationDetailsForm = Form(
+    mapping(
+      userFirstName -> optText.toText.verifying(firstNameInvalid andThen firstNameMaxLength),
+      userLastName -> optText.toText.verifying(lastNameInvalid andThen lastNameMaxLength),
+      userNino -> optText.toText.verifying("error.invalid_nino", Patterns.validNino _),
+      userDateOfBirth -> dateMapping.verifying(dobInvalid)
+    )(UserDetailsModel.apply)(UserDetailsModel.unapply)
+  )
+
+  import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.CaseOption._
+  import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.TrimOption._
+
+  val userDetailsForm = PreprocessedForm(
+    validation = userValidationDetailsForm,
+    trimRules = Map(
+      userFirstName -> both,
+      userLastName -> both,
+      userNino -> bothAndCompress
+    ),
+    caseRules = Map(
+      userNino -> upper
+    )
+  )
+
+}

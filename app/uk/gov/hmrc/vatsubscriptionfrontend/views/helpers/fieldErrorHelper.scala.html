@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.vatsubscriptionfrontend.helpers
+@import play.api.data.Form
+@import play.api.data.Field
 
-import uk.gov.hmrc.auth.core.Enrolment
-import uk.gov.hmrc.domain.Generator
-import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
+@(field: Field, parentForm: Form[_])(implicit messages: Messages)
 
-object TestConstants {
-  val testVatNumber: String = TestConstantsGenerator.randomVatNumber
+    @import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.ErrorMessageHelper._
 
-  val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
-  val testEmail: String = TestConstantsGenerator.randomEmail
-  lazy val testNino: String = new Generator().nextNino.nino
+    @error = @{
+        getFieldError(field, parentForm)
+    }
 
-  val testAgentEnrolment: Enrolment = Enrolment(AgentEnrolmentPredicate.agentEnrolmentKey)
-}
+    @error match {
+        case Some(err) => {
+            <span class="error-notification" role="tooltip" id="error-message-@field.name">@err.toText</span>
+        }
+        case _ => {}
+    }

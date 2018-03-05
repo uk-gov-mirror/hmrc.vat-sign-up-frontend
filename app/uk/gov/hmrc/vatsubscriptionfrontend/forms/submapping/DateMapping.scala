@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.forms
+package uk.gov.hmrc.vatsubscriptionfrontend.forms.submapping
 
-object ClientDetailsForm {
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.MappingUtil._
+import play.api.data.Forms.mapping
+import play.api.data.Mapping
+import uk.gov.hmrc.vatsubscriptionfrontend.models.DateModel
 
-  val clientFirstName = "clientFirstName"
-  val clientLastName = "clientLastName"
-  val clientNino = "clientNino"
-  val clientDateOfBirth = "clientDateOfBirth"
+object DateMapping {
 
+  val dateDay = "dateDay"
+  val dateMonth = "dateMonth"
+  val dateYear = "dateYear"
+
+  val dateMapping: Mapping[DateModel] = mapping(
+    dateDay -> optText.toText,
+    dateMonth -> optText.toText,
+    dateYear -> optText.toText
+  )(DateModel.apply)(DateModel.unapply)
 
 }
