@@ -18,39 +18,40 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_business_entity
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.UserDetailsForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.client_details
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureClientDetailsController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit()))
+        Ok(client_details(userDetailsForm.form, routes.CaptureClientDetailsController.submit()))
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      businessEntityForm.bindFromRequest.fold(
+      userDetailsForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
+            BadRequest(client_details(formWithErrors, routes.CaptureClientDetailsController.submit()))
           ),
-        {
-          case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
-          case SoleTrader  => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
-        }
+        userDetails =>
+          Future.successful(
+            NotImplemented.addingToSession(SessionKeys.userDetailsKey -> Json.toJson(userDetails).toString())
+          )
       )
     }
   }
