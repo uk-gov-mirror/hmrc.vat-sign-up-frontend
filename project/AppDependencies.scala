@@ -23,7 +23,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "govuk-template" % "5.18.0",
     "uk.gov.hmrc" %% "play-ui" % "7.13.0",
     ws,
-    "uk.gov.hmrc" %% "bootstrap-play-25" % "1.3.0",
+    "uk.gov.hmrc" %% "bootstrap-play-25" % "1.4.0",
     "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion
   )
 
