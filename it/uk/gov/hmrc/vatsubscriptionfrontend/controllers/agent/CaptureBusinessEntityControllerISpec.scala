@@ -50,14 +50,15 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return not implemented" when {
+    "redirect to capture client details" when {
       "the business entiry is sole trader" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> soleTrader)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureClientDetailsController.show().url)
         )
       }
     }

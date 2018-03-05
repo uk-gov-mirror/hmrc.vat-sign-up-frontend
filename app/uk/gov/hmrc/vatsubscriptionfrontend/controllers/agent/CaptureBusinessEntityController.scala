@@ -49,7 +49,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           ),
         {
           case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
-          case SoleTrader  => Future.successful(NotImplemented)
+          case SoleTrader  => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
         }
       )
     }
