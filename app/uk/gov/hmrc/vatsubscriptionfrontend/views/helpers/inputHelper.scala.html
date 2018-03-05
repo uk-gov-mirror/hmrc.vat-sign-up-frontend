@@ -27,7 +27,7 @@
 )(implicit messages: Messages)
 
 @errorNotification = @{
-if(parentForm.hasErrors) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
+    if(parentForm.errors(field.name).nonEmpty) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
 }
 
 <div class="form-group form-field@divClass.map(cls => s" $cls") @if(parentForm.hasErrors) { form-field--error }">

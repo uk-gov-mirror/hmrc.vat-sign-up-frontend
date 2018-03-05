@@ -50,7 +50,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     //todo update when next page played
     "form successfully submitted" should {
 
-      "go to the capture company number" when {
+      "go to the capture company number page" when {
         "the business entity is limited company" in {
           mockAuthRetrieveAgentEnrolment()
 
@@ -60,12 +60,13 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "return not implemented" when {
+      "go to the capture client details page" when {
         "the business entity is sole trader" in {
           mockAuthRetrieveAgentEnrolment()
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureClientDetailsController.show().url)
         }
       }
     }
