@@ -26,11 +26,14 @@
   isNumeric: Boolean = false
 )(implicit messages: Messages)
 
+@hasErrors = @{ parentForm.errors(field.name).nonEmpty }
+
 @errorNotification = @{
-    if(parentForm.errors(field.name).nonEmpty) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
+    if(hasErrors)
+    <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
 }
 
-<div class="form-group form-field@divClass.map(cls => s" $cls") @if(parentForm.hasErrors) { form-field--error }">
+<div class="form-group form-field@divClass.map(cls => s" $cls") @if(hasErrors) { form-field--error }">
     <label class='form-label@labelClass.map(x =>s" $x")@if(hideLabel) { visuallyhidden }' for=@field.name>@label</label>
     @errorNotification
     <input name="@field.name" class="form-control" id="@field.name" type="text"
