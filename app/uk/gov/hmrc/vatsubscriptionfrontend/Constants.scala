@@ -19,5 +19,4 @@ package uk.gov.hmrc.vatsubscriptionfrontend
 object Constants {
    val StoreVatNumberNoRelationshipCodeKey = "CODE"
    val StoreVatNumberNoRelationshipCodeValue = "RELATIONSHIP_NOT_FOUND"
-   val MatchingStubTestIdKey = "True-Client-IP"
 }
