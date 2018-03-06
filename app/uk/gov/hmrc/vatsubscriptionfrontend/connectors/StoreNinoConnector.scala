@@ -34,7 +34,7 @@ class StoreNinoConnector @Inject()(val http: HttpClient,
   private def storeNinoUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/vat-subscription/subscription-request/vat-number/$vatNumber/nino"
 
   def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
-    http.POST[JsObject, StoreNinoResponse](storeNinoUrl(vatNumber),
+    http.PUT[JsObject, StoreNinoResponse](storeNinoUrl(vatNumber),
       Json.obj(
         "firstName" -> userDetailsModel.firstName,
         "lastName" -> userDetailsModel.lastName,
