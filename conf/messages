@@ -129,7 +129,6 @@ agent.confirmation.subsection_2.line_2                                 = Your cl
 # Check your client's details page
 agent.client-details.summary.title                                    = Confirm your client
 agent.client-details.summary.heading                                  = Check your answers
-agent.client-details.summary.heading_hidden                           = before looking up your client
 agent.client-details.summary.first_name                               = First name
 agent.client-details.summary.last_name                                = Last name
 agent.client-details.summary.nino                                     = National Insurance number
