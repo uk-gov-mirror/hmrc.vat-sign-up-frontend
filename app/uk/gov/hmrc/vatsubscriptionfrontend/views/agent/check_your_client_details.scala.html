@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
 
-@(userDetailsModel: UserDetailsModel, postAction: Call, backUrl: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(userDetailsModel: UserDetailsModel, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @import _root_.uk.gov.hmrc.vatsubscriptionfrontend.views.helpers.ConfirmClientIdConstants._
 
 @summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
@@ -35,7 +35,7 @@
             </div>
     @changeUrl match {
         case Some(url) => {
-            <a class="tabular-data__data-2" href="@url" id="@field-edit">@Messages("agent.base.change") <span class="visuallyhidden">@question</span> </a>
+            <a class="tabular-data__data-2" href="@url" id="@field-edit">@Messages("base.change") <span class="visuallyhidden">@question</span> </a>
         }
         case _ => {
             <div class="tabular-data__data-2"></div>
@@ -77,9 +77,10 @@
 }
 
 
-@main_template(title = Messages("agent.client-details.summary.title"), bodyClasses = None) {
+@main_template(title = Messages("agent.client-details.summary.title"), articleLayout = false) {
 
-    <h1 class="heading-large">@Messages("agent.client-details.summary.heading")</span></h1>
+    <h1 class="heading-large">@Messages("agent.client-details.summary.heading")</h1>
+    <h3 class="heading-medium">@Messages("agent.client-details.summary.sub_heading")</h3>
 
     <div class="form-group">
         @firstName(userDetailsModel)

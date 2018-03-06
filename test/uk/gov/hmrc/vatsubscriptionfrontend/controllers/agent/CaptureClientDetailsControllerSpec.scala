@@ -69,13 +69,14 @@ class CaptureClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the submit action of the Capture Client Details controller" when {
     "form successfully submitted" should {
-      "not implemented" in {
+      "redirect to Confirm Client Details page" in {
         mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest(testUserDetails)
 
         val result = TestCaptureClientDetailsController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmClientDetailsController.show().url)
 
         Json.parse(result.session(request).get(SessionKeys.userDetailsKey).get).validate[UserDetailsModel].get shouldBe testUserDetails
       }

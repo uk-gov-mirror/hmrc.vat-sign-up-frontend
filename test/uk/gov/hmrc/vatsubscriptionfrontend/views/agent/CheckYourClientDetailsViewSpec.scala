@@ -45,15 +45,12 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
     testNino,
     testDob)
 
-  lazy val backUrl: String = "testBackUrl"
-
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   def page(): Html = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.check_your_client_details(
     userDetailsModel = testClientDetails,
-    postAction = testCall,
-    backUrl = backUrl
+    postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
   lazy val doc = Jsoup.parse(page.body)
@@ -83,83 +80,84 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
       page = page
     )
 
+    testPage.shouldHaveH3(messages.subHeading)
 
     testPage.shouldHaveForm("Client Details Form")(actionCall = testCall)
+  }
+
+  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
+    val accountingPeriod = doc.getElementById(sectionId)
+    val question = doc.getElementById(questionId(sectionId))
+    val answer = doc.getElementById(answerId(sectionId))
+    val editLink = doc.getElementById(editLinkId(sectionId))
+
+    questionStyleCorrectness(question)
+    answerStyleCorrectness(answer)
+    if (expectedEditLink.nonEmpty) editLinkStyleCorrectness(editLink)
+
+    question.text() shouldBe expectedQuestion
+    answer.text() shouldBe expectedAnswer
+    if (expectedEditLink.nonEmpty) {
+      editLink.attr("href") shouldBe expectedEditLink.get
+      editLink.select("span").text() shouldBe expectedQuestion
+      editLink.select("span").hasClass("visuallyhidden") shouldBe true
     }
+  }
 
-    def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
-      val accountingPeriod = doc.getElementById(sectionId)
-      val question = doc.getElementById(questionId(sectionId))
-      val answer = doc.getElementById(answerId(sectionId))
-      val editLink = doc.getElementById(editLinkId(sectionId))
+  "display the correct info for firstName" in {
+    val sectionId = FirstNameId
+    val expectedQuestion = messages.firstName
+    val expectedAnswer = testFirstName
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
-      questionStyleCorrectness(question)
-      answerStyleCorrectness(answer)
-      if (expectedEditLink.nonEmpty) editLinkStyleCorrectness(editLink)
+    sectionTest(
+      sectionId = sectionId,
+      expectedQuestion = expectedQuestion,
+      expectedAnswer = expectedAnswer,
+      expectedEditLink = Some(expectedEditLink)
+    )
+  }
 
-      question.text() shouldBe expectedQuestion
-      answer.text() shouldBe expectedAnswer
-      if (expectedEditLink.nonEmpty) {
-        editLink.attr("href") shouldBe expectedEditLink.get
-        editLink.select("span").text() shouldBe expectedQuestion
-        editLink.select("span").hasClass("visuallyhidden") shouldBe true
-      }
-    }
+  "display the correct info for lastName" in {
+    val sectionId = LastNameId
+    val expectedQuestion = messages.lastName
+    val expectedAnswer = testLastName
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
-    "display the correct info for firstName" in {
-      val sectionId = FirstNameId
-      val expectedQuestion = messages.firstName
-      val expectedAnswer = testFirstName
-      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
+    sectionTest(
+      sectionId = sectionId,
+      expectedQuestion = expectedQuestion,
+      expectedAnswer = expectedAnswer,
+      expectedEditLink = Some(expectedEditLink)
+    )
+  }
 
-      sectionTest(
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
+  "display the correct info for nino" in {
+    val sectionId = NinoId
+    val expectedQuestion = messages.nino
+    val expectedAnswer = testNino
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
-    "display the correct info for lastName" in {
-      val sectionId = LastNameId
-      val expectedQuestion = messages.lastName
-      val expectedAnswer = testLastName
-      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
+    sectionTest(
+      sectionId = sectionId,
+      expectedQuestion = expectedQuestion,
+      expectedAnswer = expectedAnswer,
+      expectedEditLink = Some(expectedEditLink)
+    )
+  }
 
-      sectionTest(
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
+  "display the correct info for dob" in {
+    val sectionId = DobId
+    val expectedQuestion = messages.dob
+    val expectedAnswer = testDob.toCheckYourAnswersDateFormat
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
-    "display the correct info for nino" in {
-      val sectionId = NinoId
-      val expectedQuestion = messages.nino
-      val expectedAnswer = testNino
-      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
-
-      sectionTest(
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
-
-    "display the correct info for dob" in {
-      val sectionId = DobId
-      val expectedQuestion = messages.dob
-      val expectedAnswer = testDob.toCheckYourAnswersDateFormat
-      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
-
-      sectionTest(
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
+    sectionTest(
+      sectionId = sectionId,
+      expectedQuestion = expectedQuestion,
+      expectedAnswer = expectedAnswer,
+      expectedEditLink = Some(expectedEditLink)
+    )
+  }
 
 }
