@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend
+//$COVERAGE-OFF$Disabling scoverage
 
-object Constants {
-   val StoreVatNumberNoRelationshipCodeKey = "CODE"
-   val StoreVatNumberNoRelationshipCodeValue = "RELATIONSHIP_NOT_FOUND"
-   val MatchingStubTestIdKey = "True-Client-IP"
-}
+package uk.gov.hmrc.vatsubscriptionfrontend.testonly.models
+
+sealed trait MatchingStubResponse
+
+case object MatchingStubSuccess extends MatchingStubResponse
+
+case class MatchingStubFailure(status: Int) extends MatchingStubResponse
+
+// $COVERAGE-ON$

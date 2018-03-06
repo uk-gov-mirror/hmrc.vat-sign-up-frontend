@@ -12,10 +12,15 @@
 # Add all the application routes to the prod.routes file
 
 
-GET        /report-quarterly/vat/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.show
+GET        /report-quarterly/vat/sign-up/test-only/delete-record                uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.show
 
 # NOCSRF
-POST       /report-quarterly/vat/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.submit
+POST       /report-quarterly/vat/sign-up/test-only/delete-record                uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.submit
+
+GET        /report-quarterly/income-and-expenses/sign-up/test-only/stub-user    uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.show
+
+# NOCSRF
+POST       /report-quarterly/income-and-expenses/sign-up/test-only/stub-user    uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
 
 
 ->         /                                                            prod.Routes
