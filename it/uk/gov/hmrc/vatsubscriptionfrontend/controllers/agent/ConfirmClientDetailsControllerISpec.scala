@@ -67,14 +67,14 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     }
 
     "store nino returned no match" should {
-      "NOT_IMPLEMENTED" in {
+      "INTERNAL_SERVER_ERROR" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreNinoNoMatch(testVatNumber, testUserDetails)
 
         val res = post("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(INTERNAL_SERVER_ERROR)
         )
       }
     }

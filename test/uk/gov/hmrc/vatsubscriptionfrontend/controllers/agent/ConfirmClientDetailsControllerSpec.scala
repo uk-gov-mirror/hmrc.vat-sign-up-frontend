@@ -103,13 +103,15 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       }
 
       "but store nino returned no match" should {
-        "NOT_IMPLEMENTED" in {
+        "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreNinoNoMatch(testVatNumber, testUserDetails)
 
           val result = callSubmit
 
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          intercept[InternalServerException] {
+            await(result)
+          }
         }
       }
 
