@@ -26,20 +26,18 @@
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.ErrorMessageHelper._
 
-@hasError = @{
-    val fieldError = getFieldError(field, parentForm)
-    fieldError match {
-        case Some(_) => true
-        case _ => false
-    }
+@hasErrors = @{ parentForm.errors(field.name).nonEmpty }
+
+@errorNotification = @{
+    if(hasErrors) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
 }
 
-<div class="form-group form-field@if(hasError) { form-field--error}">
+<div class="form-group form-field@if(hasErrors) { form-field--error}">
     <fieldset id="@field.name">
         <legend>
             <span class="form-label-bold">@label</span>
             @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
-            @fieldErrorHelper(field, parentForm)
+            @errorNotification
         </legend>
             <div class="form-date">
                 @inputHelper(
