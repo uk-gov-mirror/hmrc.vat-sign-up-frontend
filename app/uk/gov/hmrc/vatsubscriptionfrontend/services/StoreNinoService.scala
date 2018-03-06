@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class StoreNinoService @Inject()(val storeNinoConnector: StoreNinoConnector) {
 
-  def storeVatNumber(vatNumber: String, userDetailsModel: UserDetailsModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     storeNinoConnector.storeNino(vatNumber, userDetailsModel)
 
 }

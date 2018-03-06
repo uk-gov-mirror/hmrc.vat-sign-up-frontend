@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class CaptureUserDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
+class CaptureClientDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /client-details" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -51,7 +51,8 @@ class CaptureUserDetailsControllerISpec extends ComponentSpecBase with CustomMat
       )
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmClientDetailsController.show().url)
       )
     }
   }

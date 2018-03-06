@@ -17,6 +17,10 @@ POST        /confirm-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.c
 GET         /client-details                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureClientDetailsController.show
 POST        /client-details                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureClientDetailsController.submit
 
+# Confirm Client details
+GET         /confirm-client                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmClientDetailsController.show
+POST        /confirm-client                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmClientDetailsController.submit
+
 # Capture Company Number
 GET         /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureCompanyNumberController.show
 POST        /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureCompanyNumberController.submit

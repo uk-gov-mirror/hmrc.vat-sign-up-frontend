@@ -50,9 +50,10 @@ class CaptureClientDetailsController @Inject()(val controllerComponents: Control
           ),
         userDetails =>
           Future.successful(
-            NotImplemented.addingToSession(SessionKeys.userDetailsKey -> Json.toJson(userDetails).toString())
+            Redirect(routes.ConfirmClientDetailsController.show()).addingToSession(SessionKeys.userDetailsKey -> Json.toJson(userDetails).toString())
           )
       )
     }
   }
+
 }

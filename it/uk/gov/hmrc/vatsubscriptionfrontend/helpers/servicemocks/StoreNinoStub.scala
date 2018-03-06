@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks
 
+import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 
@@ -33,5 +34,9 @@ object StoreNinoStub extends WireMockMethods {
       body = toJson(userDetailsModel))
       .thenReturn(status = responseStatus)
   }
+
+  def stubStoreNinoSuccess(vatNumber: String, userDetailsModel: UserDetailsModel): Unit = stubStoreNino(vatNumber, userDetailsModel)(NO_CONTENT)
+
+  def stubStoreNinoNoMatch(vatNumber: String, userDetailsModel: UserDetailsModel): Unit = stubStoreNino(vatNumber, userDetailsModel)(FORBIDDEN)
 
 }
