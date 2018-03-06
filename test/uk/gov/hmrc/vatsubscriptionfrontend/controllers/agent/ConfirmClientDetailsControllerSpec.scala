@@ -88,7 +88,8 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the submit action of the Confirm Client Details controller" when {
     "vat number and client details are in session" when {
-      def callSubmit = TestConfirmClientDetailsController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))
+      lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
+      def callSubmit = TestConfirmClientDetailsController.submit(request)
 
       "and store nino is successful" should {
         "redirect to agree capture email page" in {
@@ -99,6 +100,8 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+
+          result.session(request).get(SessionKeys.userDetailsKey) shouldBe None
         }
       }
 

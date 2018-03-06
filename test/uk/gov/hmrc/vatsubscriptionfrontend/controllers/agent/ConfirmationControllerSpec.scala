@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
+import java.util.UUID
+
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
@@ -48,23 +50,25 @@ class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   }
 
   "Calling the submit action of the Confirmation controller" should {
-    // todo
-    "return not implemented" in {
+    "redirect back to vat-number" in {
       mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
         SessionKeys.companyNumberKey -> testCompanyNumber,
-        SessionKeys.emailKey -> testEmail
+        SessionKeys.emailKey -> testEmail,
+        SessionKeys.userDetailsKey -> UUID.randomUUID().toString
       )
 
       val result = TestConfirmationController.submit(request)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
 
       val session = await(result).session(request)
       session.get(SessionKeys.vatNumberKey) shouldBe None
       session.get(SessionKeys.companyNumberKey) shouldBe None
       session.get(SessionKeys.emailKey) shouldBe None
+      session.get(SessionKeys.userDetailsKey) shouldBe None
     }
   }
 
