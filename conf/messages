@@ -126,4 +126,11 @@ agent.confirmation.subsection_2.bullet_3                               = Add any
 agent.confirmation.subsection_2.bullet_4                               = Record your client''s future purchases and sales using the software, then to submit their VAT Returns.
 agent.confirmation.subsection_2.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or <a id="bta" href="{0}">business tax account</a>.
 
+# Check your client's details page
+agent.client-details.summary.title                                    = Confirm your client
+agent.client-details.summary.heading                                  = Check your answers
+agent.client-details.summary.first_name                               = First name
+agent.client-details.summary.last_name                                = Last name
+agent.client-details.summary.nino                                     = National Insurance number
+agent.client-details.summary.dob                                      = Date of birth
 

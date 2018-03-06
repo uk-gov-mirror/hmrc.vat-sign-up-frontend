@@ -68,4 +68,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   // TODO confirm url
   lazy val authoriseAgentUrl = loadConfig("agent-services.url")
 
+  lazy val matchingStubUrl = baseUrl("matching-stub")
+  lazy val stubCitizenDetailsUserUrl = s"$matchingStubUrl/dynamic-cid"
+
 }

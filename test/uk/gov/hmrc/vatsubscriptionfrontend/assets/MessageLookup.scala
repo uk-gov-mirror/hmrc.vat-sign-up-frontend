@@ -33,6 +33,7 @@ object MessageLookup {
     val day = "Day"
     val month = "Month"
     val year = "Year"
+    val change = "Change"
   }
 
   object ErrorMessage {
@@ -126,7 +127,18 @@ object MessageLookup {
     val line2 = "They need to verify their email address to get VAT emails from HMRC."
   }
 
-    object Terms {
+  object ConfirmClient {
+    val title = "Confirm your client"
+    val heading = "Check your answers"
+    val h2 = "You've told us"
+    val firstName = "First name"
+    val lastName = "Last name"
+    val nino = "National Insurance number"
+    val dob = "Date of birth"
+  }
+
+
+  object Terms {
       val title = "Terms of participation"
       val heading: String = title
       val line1 = "By taking part in this trial, you agree that either you or your client will:"

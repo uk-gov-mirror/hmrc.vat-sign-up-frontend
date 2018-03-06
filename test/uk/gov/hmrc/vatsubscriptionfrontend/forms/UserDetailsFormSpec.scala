@@ -104,9 +104,9 @@ class UserDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       def dateMap(day: String, month: String, year: String) =
         Map(
-          userDateOfBirth + ".day" -> day,
-          userDateOfBirth + ".month" -> month,
-          userDateOfBirth + ".year" -> year
+          userDateOfBirth + ".dateDay" -> day,
+          userDateOfBirth + ".dateMonth" -> month,
+          userDateOfBirth + ".dateYear" -> year
         )
 
       "ensure the dob exists" in {

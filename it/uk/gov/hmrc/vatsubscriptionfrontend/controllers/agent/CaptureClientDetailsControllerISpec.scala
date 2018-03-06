@@ -45,9 +45,9 @@ class CaptureClientDetailsControllerISpec extends ComponentSpecBase with CustomM
         UserDetailsForm.userFirstName -> UUID.randomUUID().toString,
         UserDetailsForm.userLastName -> UUID.randomUUID().toString,
         UserDetailsForm.userNino -> testNino,
-        UserDetailsForm.userDateOfBirth + ".day" -> "1",
-        UserDetailsForm.userDateOfBirth + ".month" -> "1",
-        UserDetailsForm.userDateOfBirth + ".year" -> "0"
+        UserDetailsForm.userDateOfBirth + ".dateDay" -> "1",
+        UserDetailsForm.userDateOfBirth + ".dateMonth" -> "1",
+        UserDetailsForm.userDateOfBirth + ".dateYear" -> "0"
       )
 
       res should have(

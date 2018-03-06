@@ -43,9 +43,9 @@ class CaptureClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       userFirstName -> userDetails.firstName,
       userLastName -> userDetails.lastName,
       userNino -> userDetails.nino,
-      userDateOfBirth + ".day" -> userDetails.dateOfBirth.day,
-      userDateOfBirth + ".month" -> userDetails.dateOfBirth.month,
-      userDateOfBirth + ".year" -> userDetails.dateOfBirth.year
+      userDateOfBirth + ".dateDay" -> userDetails.dateOfBirth.day,
+      userDateOfBirth + ".dateMonth" -> userDetails.dateOfBirth.month,
+      userDateOfBirth + ".dateYear" -> userDetails.dateOfBirth.year
     )
 
   val testUserDetails = UserDetailsModel(
