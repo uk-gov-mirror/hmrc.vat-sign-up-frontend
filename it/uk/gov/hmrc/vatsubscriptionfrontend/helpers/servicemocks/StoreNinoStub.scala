@@ -25,7 +25,7 @@ object StoreNinoStub extends WireMockMethods {
     "firstName" -> userDetailsModel.firstName,
     "lastName" -> userDetailsModel.lastName,
     "nino" -> userDetailsModel.nino,
-    "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate.toString
+    "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate
   )
 
   def stubStoreNino(vatNumber: String, userDetailsModel: UserDetailsModel)(responseStatus: Int): Unit = {
