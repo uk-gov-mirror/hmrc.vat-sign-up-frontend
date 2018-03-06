@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.models
 
-import play.api.libs.json.Json
+import java.time.format.{DateTimeFormatter, ResolverStyle}
+
+import play.api.libs.json.{Json, OWrites}
 
 case class UserDetailsModel(firstName: String,
                             lastName: String,
@@ -25,6 +27,18 @@ case class UserDetailsModel(firstName: String,
 
 
 object UserDetailsModel {
-  implicit val format = Json.format[UserDetailsModel]
+  implicit val reads = Json.reads[UserDetailsModel]
+  implicit val writes = Json.writes[UserDetailsModel]
+
+  val matchingStubWrites = new OWrites[UserDetailsModel] {
+    private val dobFormat = DateTimeFormatter.ofPattern("ddMMyyyy").withResolverStyle(ResolverStyle.STRICT)
+
+    def writes(userDetails: UserDetailsModel) = Json.obj(
+      "firstname" -> Json.obj("value" -> userDetails.firstName),
+      "lastName"  -> Json.obj("value" -> userDetails.lastName),
+      "nino"  -> Json.obj("value" -> userDetails.nino),
+      "dob"  -> Json.obj("value" -> userDetails.dateOfBirth.toLocalDate.format(dobFormat))
+    )
+  }
 
 }

@@ -20,6 +20,7 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
 import play.api.data.{Form, Mapping}
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.submapping.DateMapping
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, UserDetailsModel}
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.ConstraintUtil._
@@ -33,13 +34,6 @@ object UserDetailsForm {
   val userLastName = "lastName"
   val userNino = "nino"
   val userDateOfBirth = "dateOfBirth"
-
-  val dateMapping: Mapping[DateModel] = mapping(
-    "day" -> optText.toText,
-    "month" -> optText.toText,
-    "year" -> optText.toText
-  )(DateModel.apply)(DateModel.unapply)
-
 
   val nameMaxLength = 105
 
@@ -73,7 +67,7 @@ object UserDetailsForm {
       userFirstName -> optText.toText.verifying(firstNameInvalid andThen firstNameMaxLength),
       userLastName -> optText.toText.verifying(lastNameInvalid andThen lastNameMaxLength),
       userNino -> optText.toText.verifying("error.invalid_nino", Patterns.validNino _),
-      userDateOfBirth -> dateMapping.verifying(dobInvalid)
+      userDateOfBirth -> DateMapping.dateMapping.verifying(dobInvalid)
     )(UserDetailsModel.apply)(UserDetailsModel.unapply)
   )
 
