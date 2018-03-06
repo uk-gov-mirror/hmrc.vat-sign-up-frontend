@@ -36,7 +36,7 @@ import scala.concurrent.Future
 @Singleton
 class StubCitizenDetailsUserController @Inject()(val controllerComponents: ControllerComponents,
                                                  matchingStubConnector: MatchingStubConnector
-                                      ) extends FrontendController with I18nSupport {
+                                                ) extends FrontendController with I18nSupport {
 
   override val messagesApi: MessagesApi = controllerComponents.messagesApi
 

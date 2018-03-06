@@ -17,10 +17,10 @@ GET        /report-quarterly/vat/sign-up/test-only/delete-record                
 # NOCSRF
 POST       /report-quarterly/vat/sign-up/test-only/delete-record                uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.submit
 
-GET        /report-quarterly/income-and-expenses/sign-up/test-only/stub-user    uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.show
+GET        /report-quarterly/vat/sign-up/test-only/stub-user    uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.show
 
 # NOCSRF
-POST       /report-quarterly/income-and-expenses/sign-up/test-only/stub-user    uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
+POST       /report-quarterly/vat/sign-up/test-only/stub-user    uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
 
 
 ->         /                                                            prod.Routes

@@ -28,8 +28,8 @@ import play.api.http.Status.OK
 import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.httpparsers.MatchingStubHttpParser.MatchingStubResponse
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.httpparsers.MatchingStubHttpParser._
-
-import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import scala.concurrent.Future
 
 
 case class Request(data: UserDetailsModel,
@@ -53,7 +53,7 @@ object Request {
 class MatchingStubConnector @Inject()(val http: HttpClient,
                                       val applicationConfig: AppConfig) {
 
-  def stubUser(userData: UserDetailsModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MatchingStubResponse] = {
+  def stubUser(userData: UserDetailsModel)(implicit hc: HeaderCarrier): Future[MatchingStubResponse] = {
     val requestModel = Request(userData)
     http.POST[Request, MatchingStubResponse](applicationConfig.stubCitizenDetailsUserUrl, requestModel)
   }
