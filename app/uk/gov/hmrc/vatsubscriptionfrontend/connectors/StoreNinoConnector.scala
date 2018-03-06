@@ -39,7 +39,7 @@ class StoreNinoConnector @Inject()(val http: HttpClient,
         "firstName" -> userDetailsModel.firstName,
         "lastName" -> userDetailsModel.lastName,
         "nino" -> userDetailsModel.nino,
-        "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate.toString
+        "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate
       )
     )
 
