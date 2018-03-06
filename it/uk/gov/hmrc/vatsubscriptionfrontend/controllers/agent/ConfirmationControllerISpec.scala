@@ -36,7 +36,7 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
   }
 
   "POST /information-received" should {
-    "remove all personal data from session" in {
+    "remove all personal data from session and redirect back to vat-number" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/client/information-received",
@@ -46,9 +46,9 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
           SessionKeys.emailKey -> testEmail
         ))()
 
-      // TODO
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CaptureVatNumberController.show().url)
       )
 
       val session = SessionCookieCrumbler.getSessionMap(res)

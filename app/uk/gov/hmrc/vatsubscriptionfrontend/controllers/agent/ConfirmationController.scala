@@ -41,9 +41,9 @@ class ConfirmationController @Inject()(val controllerComponents: ControllerCompo
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      // TODO
       Future.successful(
-        NotImplemented.removingFromSession(SessionKeys.vatNumberKey, SessionKeys.companyNumberKey, SessionKeys.emailKey)
+        Redirect(routes.CaptureVatNumberController.show())
+          .removingFromSession(SessionKeys.vatNumberKey, SessionKeys.companyNumberKey, SessionKeys.emailKey, SessionKeys.userDetailsKey)
       )
     }
   }
