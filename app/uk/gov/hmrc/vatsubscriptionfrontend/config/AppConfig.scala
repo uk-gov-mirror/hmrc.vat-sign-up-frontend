@@ -71,4 +71,15 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val matchingStubUrl = baseUrl("matching-stub")
   lazy val stubCitizenDetailsUserUrl = s"$matchingStubUrl/dynamic-cid"
 
+  /*
+  *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes
+  *  This flag can be used by the application to check if the test only routes are enabled. i.e. this flag can be used to
+  *  determine the service is not running in the prod environment
+  *
+  *  One usage of this is in StoreNinoService where we determine if a "True-Client-IP" should be added for the purpose of
+  *  matching.
+  */
+  lazy val hasEnabledTestOnlyRoutes: Boolean =
+    runModeConfiguration.getString("application.router").get == "testOnlyDoNotUseInAppConf.Routes"
+
 }
