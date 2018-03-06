@@ -16,38 +16,47 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
-import org.jsoup.nodes.{Document, Element}
+import java.time.LocalDate
+
+import org.jsoup.Jsoup
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, UserDetailsModel}
 import org.scalatest.Matchers._
+import org.jsoup.nodes.{Document, Element}
 import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
-import utils.TestConstants
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base => common, ConfirmClient => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.views.helpers.ConfirmClientIdConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmClient => messages}
 
 class CheckYourClientDetailsViewSpec extends ViewSpec {
 
   val testFirstName = "Test"
   val testLastName = "User"
-  val testNino = TestConstants.testNino
-  val testDob = TestModels.testStartDate
+  val testNino = "AA111111A"
+  val testDob = DateModel.dateConvert(LocalDate.now())
   val testClientDetails = UserDetailsModel(
     testFirstName,
     testLastName,
     testNino,
     testDob)
 
-  lazy val postAction: Call = controllers.matching.routes.ConfirmClientController.submit()
   lazy val backUrl: String = "testBackUrl"
 
-  def page(): Html = views.html.check_your_client_details(
-    userDetailsModel = testClientDetails,
-    postAction = postAction,
-    backUrl = backUrl
-  )(FakeRequest(), applicationMessages, appConfig)
+  val env = Environment.simple()
+  val configuration = Configuration.load(env)
 
-  def document(): Document = page().doc
+  def page(): Html = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.check_your_client_details(
+    userDetailsModel = testClientDetails,
+    postAction = testCall,
+    backUrl = backUrl
+  )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+
+  lazy val doc = Jsoup.parse(page.body)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -67,48 +76,22 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
 
   "Confirm Client page view" should {
 
-    s"have a back buttong pointed to $backUrl" in {
-      val backLink = document().select("#back")
-      backLink.isEmpty shouldBe false
-      backLink.attr("href") shouldBe backUrl
-    }
+    val testPage = TestView(
+      name = "Client Details View",
+      title = messages.title,
+      heading = messages.heading,
+      page = page
+    )
 
-    s"have the title '${messages.title}'" in {
-      document().title() shouldBe messages.title
-    }
 
-    s"have the heading (H1) '${messages.heading}'" in {
-      document().select("h1").text() should include(messages.heading)
-    }
-
-    s"have visually hidden text as part of the (H1) '${messages.heading_hidden}'" in {
-      document().select("h1 span").text() should include(messages.heading_hidden)
-    }
-
-    s"have the secondary heading (H2) '${messages.h2}'" in {
-      document().select("h2").text() should include(messages.h2)
-    }
-
-    "has a form" which {
-
-      "has a submit button" in {
-        val submit = document().getElementById("continue-button")
-        submit.isEmpty shouldBe false
-        submit.text shouldBe common.continue
-      }
-
-      s"has a post action to '${postAction.url}'" in {
-        document().select("form").attr("action") shouldBe postAction.url
-        document().select("form").attr("method") shouldBe "POST"
-      }
-
+    testPage.shouldHaveForm("Client Details Form")(actionCall = testCall)
     }
 
     def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
-      val accountingPeriod = document().getElementById(sectionId)
-      val question = document().getElementById(questionId(sectionId))
-      val answer = document().getElementById(answerId(sectionId))
-      val editLink = document().getElementById(editLinkId(sectionId))
+      val accountingPeriod = doc.getElementById(sectionId)
+      val question = doc.getElementById(questionId(sectionId))
+      val answer = doc.getElementById(answerId(sectionId))
+      val editLink = doc.getElementById(editLinkId(sectionId))
 
       questionStyleCorrectness(question)
       answerStyleCorrectness(answer)
@@ -118,7 +101,6 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
       answer.text() shouldBe expectedAnswer
       if (expectedEditLink.nonEmpty) {
         editLink.attr("href") shouldBe expectedEditLink.get
-        editLink.text() should include(MessageLookup.Base.change)
         editLink.select("span").text() shouldBe expectedQuestion
         editLink.select("span").hasClass("visuallyhidden") shouldBe true
       }
@@ -128,13 +110,13 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
       val sectionId = FirstNameId
       val expectedQuestion = messages.firstName
       val expectedAnswer = testFirstName
-      val expectedEditLink = controllers.matching.routes.ClientDetailsController.show(editMode = true).url
+      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
       sectionTest(
         sectionId = sectionId,
         expectedQuestion = expectedQuestion,
         expectedAnswer = expectedAnswer,
-        expectedEditLink = expectedEditLink
+        expectedEditLink = Some(expectedEditLink)
       )
     }
 
@@ -142,27 +124,27 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
       val sectionId = LastNameId
       val expectedQuestion = messages.lastName
       val expectedAnswer = testLastName
-      val expectedEditLink = controllers.matching.routes.ClientDetailsController.show(editMode = true).url
+      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
       sectionTest(
         sectionId = sectionId,
         expectedQuestion = expectedQuestion,
         expectedAnswer = expectedAnswer,
-        expectedEditLink = expectedEditLink
+        expectedEditLink = Some(expectedEditLink)
       )
     }
 
     "display the correct info for nino" in {
       val sectionId = NinoId
       val expectedQuestion = messages.nino
-      val expectedAnswer = testNino.toNinoDisplayFormat
-      val expectedEditLink = agent.controllers.matching.routes.ClientDetailsController.show(editMode = true).url
+      val expectedAnswer = testNino
+      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
       sectionTest(
         sectionId = sectionId,
         expectedQuestion = expectedQuestion,
         expectedAnswer = expectedAnswer,
-        expectedEditLink = expectedEditLink
+        expectedEditLink = Some(expectedEditLink)
       )
     }
 
@@ -170,16 +152,14 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
       val sectionId = DobId
       val expectedQuestion = messages.dob
       val expectedAnswer = testDob.toCheckYourAnswersDateFormat
-      val expectedEditLink = agent.controllers.matching.routes.ClientDetailsController.show(editMode = true).url
+      val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
 
       sectionTest(
         sectionId = sectionId,
         expectedQuestion = expectedQuestion,
         expectedAnswer = expectedAnswer,
-        expectedEditLink = expectedEditLink
+        expectedEditLink = Some(expectedEditLink)
       )
     }
-
-  }
 
 }

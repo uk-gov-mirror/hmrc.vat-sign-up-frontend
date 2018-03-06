@@ -14,14 +14,15 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsubscriptionfrontend.models.ClientDetailsModel
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton, ConfirmClientIdConstants}
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
 
-@(clientDetailsModel: ClientDetailsModel, postAction: Call, backUrl: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(userDetailsModel: UserDetailsModel, postAction: Call, backUrl: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @import _root_.uk.gov.hmrc.vatsubscriptionfrontend.views.helpers.ConfirmClientIdConstants._
 
 @summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
@@ -43,50 +44,48 @@
         </div>
 }
 
-@firstName(clientDetailsModel: ClientDetailsModel) = @{
+@firstName(userDetailsModel: UserDetailsModel) = @{
     val rowName = FirstNameId
     val rowQuestion = Messages("agent.client-details.summary.first_name")
-    val rowAnswer = clientDetailsModel.firstName
-    val rowUrl = agent.controllers.matching.routes.ClientDetailsController.show(editMode = true).url
-    summaryRow(rowName, rowQuestion, rowAnswer, rowUrl)
+    val rowAnswer = userDetailsModel.firstName
+    val rowUrl = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
-@lastName(clientDetailsModel: ClientDetailsModel) = @{
+@lastName(userDetailsModel: UserDetailsModel) = @{
     val rowName = LastNameId
     val rowQuestion = Messages("agent.client-details.summary.last_name")
-    val rowAnswer = clientDetailsModel.lastName
-    val rowUrl = agent.controllers.matching.routes.ClientDetailsController.show(editMode = true).url
-    summaryRow(rowName, rowQuestion, rowAnswer, rowUrl)
+    val rowAnswer = userDetailsModel.lastName
+    val rowUrl = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
-@nino(clientDetailsModel: ClientDetailsModel) = @{
+@nino(userDetailsModel: UserDetailsModel) = @{
     val rowName = NinoId
     val rowQuestion = Messages("agent.client-details.summary.nino")
-    val rowAnswer = clientDetailsModel.ninoInDisplayFormat
-    val rowUrl = agent.controllers.matching.routes.ClientDetailsController.show(editMode = true).url
-    summaryRow(rowName, rowQuestion, rowAnswer, rowUrl)
+    val rowAnswer = userDetailsModel.nino
+    val rowUrl = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
-@dob(clientDetailsModel: ClientDetailsModel) = @{
+@dob(userDetailsModel: UserDetailsModel) = @{
     val rowName = DobId
     val rowQuestion = Messages("agent.client-details.summary.dob")
-    val rowAnswer = clientDetailsModel.dateOfBirth.toCheckYourAnswersDateFormat
-    val rowUrl = agent.controllers.matching.routes.ClientDetailsController.show(editMode = true).url
-    summaryRow(rowName, rowQuestion, rowAnswer, rowUrl)
+    val rowAnswer = userDetailsModel.dateOfBirth.toCheckYourAnswersDateFormat
+    val rowUrl = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 
 @main_template(title = Messages("agent.client-details.summary.title"), bodyClasses = None) {
 
-    @back_link(backUrl)
-
-    <h1 class="heading-large">@Messages("agent.client-details.summary.heading") <span class="visuallyhidden">@Messages("agent.client-details.summary.heading_hidden")</span></h1>
+    <h1 class="heading-large">@Messages("agent.client-details.summary.heading")</span></h1>
 
     <div class="form-group">
-        @firstName(clientDetailsModel)
-        @lastName(clientDetailsModel)
-        @nino(clientDetailsModel)
-        @dob(clientDetailsModel)
+        @firstName(userDetailsModel)
+        @lastName(userDetailsModel)
+        @nino(userDetailsModel)
+        @dob(userDetailsModel)
         <div class="divider--top--thick"></div>
     </div>
 
