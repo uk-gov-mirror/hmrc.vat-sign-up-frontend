@@ -40,13 +40,13 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
   val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
 
   "GET /confirm-client" should {
-    "return an NOT_IMPLEMENTED" in {
+    "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
+        httpStatus(OK)
       )
     }
   }

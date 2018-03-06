@@ -59,10 +59,9 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
         val request = testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
 
         val result = TestConfirmClientDetailsController.show(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        //        status(result) shouldBe Status.OK
-        //        contentType(result) shouldBe Some("text/html")
-        //        charset(result) shouldBe Some("utf-8")
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
 

@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{NoMatchFoundFailure, NoV
 import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.check_your_client_details
 
 import scala.concurrent.Future
 
@@ -44,7 +45,8 @@ class ConfirmClientDetailsController @Inject()(val controllerComponents: Control
       (optVatNumber, optUserDetails) match {
         case (None, _) => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
         case (_, None) => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
-        case (Some(vatNumber), Some(userDetails)) => Future.successful(NotImplemented)
+        case (Some(vatNumber), Some(userDetails)) =>
+          Future.successful(Ok(check_your_client_details(userDetails, routes.ConfirmClientDetailsController.submit())))
       }
 
     }

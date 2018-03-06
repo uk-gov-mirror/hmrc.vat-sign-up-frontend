@@ -22,7 +22,7 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
 
-@(userDetailsModel: UserDetailsModel, postAction: Call, backUrl: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(userDetailsModel: UserDetailsModel, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @import _root_.uk.gov.hmrc.vatsubscriptionfrontend.views.helpers.ConfirmClientIdConstants._
 
 @summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
@@ -79,7 +79,7 @@
 
 @main_template(title = Messages("agent.client-details.summary.title"), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("agent.client-details.summary.heading")</span></h1>
+    <h1 class="heading-large">@Messages("agent.client-details.summary.heading")</h1>
 
     <div class="form-group">
         @firstName(userDetailsModel)
