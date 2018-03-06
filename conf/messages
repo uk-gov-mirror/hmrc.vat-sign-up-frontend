@@ -9,6 +9,7 @@ base.sign_up_another_client                                            = Sign up
 base.day                                                               = Day
 base.month                                                             = Month
 base.year                                                              = Year
+base.change                                                            = Change
 
 ## Errors
 error.invalid_company_number.field                                     = Please enter a valid company registration number
@@ -129,6 +130,7 @@ agent.confirmation.subsection_2.line_2                                 = Your cl
 # Check your client's details page
 agent.client-details.summary.title                                    = Confirm your client
 agent.client-details.summary.heading                                  = Check your answers
+agent.client-details.summary.sub_heading                              = You''ve told us
 agent.client-details.summary.first_name                               = First name
 agent.client-details.summary.last_name                                = Last name
 agent.client-details.summary.nino                                     = National Insurance number
