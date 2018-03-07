@@ -92,7 +92,7 @@ agent.capture_email.title                                              = What is
 agent.capture_email.heading                                            = What is your client’s email address?
 agent.capture_email.hint                                               = For example, me@me.com
 
-## Agent Confirm Vat Number page
+## Agent Confirm Email page
 agent.confirm_email.title                                              = Check your client''s email address
 agent.confirm_email.heading                                            = Check your client''s email address
 agent.confirm_email.email.heading                                      = Email address
@@ -128,11 +128,17 @@ agent.confirmation.subsection_2.bullet_4                               = Record 
 agent.confirmation.subsection_2.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or <a id="bta" href="{0}">business tax account</a>.
 
 # Check your client's details page
-agent.client-details.summary.title                                    = Confirm your client
-agent.client-details.summary.heading                                  = Check your answers
-agent.client-details.summary.sub_heading                              = You''ve told us
-agent.client-details.summary.first_name                               = First name
-agent.client-details.summary.last_name                                = Last name
-agent.client-details.summary.nino                                     = National Insurance number
-agent.client-details.summary.dob                                      = Date of birth
+agent.client-details.summary.title                                     = Confirm your client
+agent.client-details.summary.heading                                   = Check your answers
+agent.client-details.summary.sub_heading                               = You''ve told us
+agent.client-details.summary.first_name                                = First name
+agent.client-details.summary.last_name                                 = Last name
+agent.client-details.summary.nino                                      = National Insurance number
+agent.client-details.summary.dob                                       = Date of birth
+
+## Your VAT number page
+principal.your_vat_number.title                                       = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.heading                                     = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.vatNumber.heading                           = VAT number
+principal.your_vat_number.link                                        = I want to use a different VAT number
 
