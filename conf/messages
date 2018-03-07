@@ -154,3 +154,8 @@ principal.confirm_email.email.heading                                 = Email ad
 principal.confirm_email.link                                          = Change email address
 
 
+## Agree Receive Email page
+principal.agree_capture_email.title                                    = Agree to get emails instead of letters
+principal.agree_capture_email.heading                                  = Agree to get emails instead of letters
+principal.agree_capture_email.line_1                                   = When you have a new message about VAT in your HMRC account, we''ll send you an email to let you know.
+principal.agree_capture_email.line_2                                   = You''ll need to sign in to your account to read the message.

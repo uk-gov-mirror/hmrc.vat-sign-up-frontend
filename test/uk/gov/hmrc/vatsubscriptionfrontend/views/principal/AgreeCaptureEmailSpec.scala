@@ -20,44 +20,43 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalCaptureEmail => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalAgreeCaptureEmail => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class CaptureEmailSpec extends ViewSpec {
+class AgreeCaptureEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.capture_email(
-    emailForm = emailForm.form,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.agree_capture_email(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Email view" should {
+  "The Principal Agree Capture email view" should {
 
     val testPage = TestView(
-      name = "Capture Email View",
+      name = "Principal Agree Capture Email View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveHint(
-      messages.hint
+    testPage.shouldHaveParaSeq(
+      messages.line1,
+      messages.line2
     )
 
-    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Capture email Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(email, messages.heading)
+    testPage.shouldHaveAgreeAndContinueButton()
 
-    testPage.shouldHaveContinueButton()
+    testPage.shouldHaveSignOutLink()
   }
 
 }
