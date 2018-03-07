@@ -170,4 +170,12 @@ object MessageLookup {
 
     }
 
+    object YourVatNumber {
+      val title = "Confirm you want to use this VAT number to sign up"
+      val heading: String = title
+      val vatNumberHeading = "VAT number"
+      val link = "I want to use a different VAT number"
+  }
+
+
 }

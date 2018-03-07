@@ -92,7 +92,7 @@ agent.capture_email.title                                              = What is
 agent.capture_email.heading                                            = What is your client’s email address?
 agent.capture_email.hint                                               = For example, me@me.com
 
-## Agent Confirm Vat Number page
+## Agent Confirm Email page
 agent.confirm_email.title                                              = Check your client''s email address
 agent.confirm_email.heading                                            = Check your client''s email address
 agent.confirm_email.email.heading                                      = Email address
@@ -135,4 +135,10 @@ agent.client-details.summary.first_name                               = First na
 agent.client-details.summary.last_name                                = Last name
 agent.client-details.summary.nino                                     = National Insurance number
 agent.client-details.summary.dob                                      = Date of birth
+
+## Your VAT number page
+your_vat_number.title                                                 = Confirm you want to use this VAT number to sign up
+your_vat_number.heading                                               = Confirm you want to use this VAT number to sign up
+your_vat_number.vatNumber.heading                                     = VAT number
+your_vat_number.link                                                  = I want to use a different VAT number
 
