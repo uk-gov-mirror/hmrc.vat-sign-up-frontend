@@ -18,14 +18,14 @@ package uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks
 
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants.{testVatNumber, testEmail}
 
-import play.api.http.Status.{BAD_REQUEST, NO_CONTENT}
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.Json
 
 object StoreEmailAddressStub extends WireMockMethods {
 
-  def stubStoreEmailAddressSuccess(): Unit = {
+  def stubStoreEmailAddressSuccess(emailVerified: Boolean): Unit = {
     when(method = PUT, uri = s"/vat-subscription/subscription-request/vat-number/$testVatNumber/email", body = Json.obj("email" -> testEmail))
-      .thenReturn(status = NO_CONTENT)
+      .thenReturn(status = OK, Json.parse(s"""{"emailVerified":$emailVerified}"""))
   }
 
   def stubStoreEmailAddressFailure(): Unit = {

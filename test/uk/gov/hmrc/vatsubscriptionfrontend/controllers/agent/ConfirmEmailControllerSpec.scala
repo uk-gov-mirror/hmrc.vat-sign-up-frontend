@@ -64,16 +64,30 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   }
 
   "Calling the submit action of the Confirm Email controller" when {
-    "email and vat number is in session and store call is successful" should {
-      "redirect to Verify Email page" in {
-        mockAuthRetrieveAgentEnrolment()
-        mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)
+    "email and vat number is in session and store call is successful" when {
+      "email is not verified" should {
+        "redirect to Verify Email page" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = false)
 
-        val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-          SessionKeys.vatNumberKey -> testVatNumber))
+          val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+            SessionKeys.vatNumberKey -> testVatNumber))
 
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+        }
+      }
+      "email is verified" should {
+        "redirect to Terms page" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
+
+          val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+            SessionKeys.vatNumberKey -> testVatNumber))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+        }
       }
     }
     "email and vat number is in session but store call is unsuccessful" should {

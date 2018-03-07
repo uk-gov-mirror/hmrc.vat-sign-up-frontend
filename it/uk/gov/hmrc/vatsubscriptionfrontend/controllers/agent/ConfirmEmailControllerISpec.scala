@@ -41,9 +41,26 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
   "POST /confirm-email" should {
     "redirect to verify email page" when {
-      "the email is successfully stored" in {
+      "the email is successfully stored and returned with email not verified" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreEmailAddressSuccess()
+        stubStoreEmailAddressSuccess(emailVerified = false)
+
+        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.VerifyEmailController.show().url)
+        )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(emailKey)
+      }
+    }
+
+    "redirect to terms page" when {
+      "the email is successfully stored and returned with email verified flag" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreEmailAddressSuccess(emailVerified = false)
 
         val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 

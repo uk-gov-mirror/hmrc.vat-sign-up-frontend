@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
-import play.api.http.Status.{BAD_REQUEST, NO_CONTENT}
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressHttpReads
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreEmailAddressFailure, StoreEmailAddressSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreEmailAddressHttpParser._
 
 class StoreEmailAddressHttpParserSpec extends UnitSpec {
   val testHttpVerb = "PUT"
@@ -29,12 +28,12 @@ class StoreEmailAddressHttpParserSpec extends UnitSpec {
 
   "StoreEmailAddressHttpReads" when {
     "read" should {
-      "parse a NO_CONTENT response as an UpsertEnrolmentSuccess" in {
-        val httpResponse = HttpResponse(NO_CONTENT)
+      "parse a OK response as an StoreEmailAddressSuccess" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(EmailVerifiedKey -> true)))
 
         val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(StoreEmailAddressSuccess)
+        res shouldBe Right(StoreEmailAddressSuccess(true))
       }
       "parse any other response as an StoreEmailAddressFailure" in {
         val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
