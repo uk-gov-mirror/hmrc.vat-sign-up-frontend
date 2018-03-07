@@ -57,10 +57,11 @@ class ConfirmEmailSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmAndContinueButton()
 
+    //TODO change this to the actual link when it becomes available
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureEmailController.show().url
+      href = ""
     )
   }
 
