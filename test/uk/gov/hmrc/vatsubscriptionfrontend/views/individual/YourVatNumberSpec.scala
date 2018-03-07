@@ -57,11 +57,8 @@ class YourVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmAndContinueButton()
 
-    testPage.shouldHaveALink(
-      id = "changeLink",
-      text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureVatNumberController.show().url
-    )
+//    TODO: Complete should have a link check once new controller defined
+
   }
 
 }
