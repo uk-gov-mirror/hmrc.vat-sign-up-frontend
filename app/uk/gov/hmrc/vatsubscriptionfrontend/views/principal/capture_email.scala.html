@@ -24,21 +24,21 @@
 
 @main_template(title = Messages("principal.capture_email.title"), bodyClasses = None) {
 
-<h1 class="heading-large">@Messages("principal.capture_email.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.capture_email.heading")</h1>
 
-@summaryErrorHelper(emailForm)
+    @summaryErrorHelper(emailForm)
 
-@form(action = postAction) {
-<div class="form-group">
-    <span class="form-hint">@Messages("principal.capture_email.hint")</span>
-    @inputHelper(
-    field = emailForm(email),
-    label = Messages("principal.capture_email.heading"),
-    parentForm = emailForm
-    )
+    @form(action = postAction) {
+        <div class="form-group">
+            <span class="form-hint">@Messages("principal.capture_email.hint")</span>
+            @inputHelper(
+                field = emailForm(email),
+                label = Messages("principal.capture_email.heading"),
+                parentForm = emailForm
+            )
 
-    @continueButton()
-</div>
-}
+            @continueButton()
+        </div>
+    }
 
 }
