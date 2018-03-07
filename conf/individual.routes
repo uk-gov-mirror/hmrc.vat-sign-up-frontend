@@ -1,6 +1,0 @@
-# microservice specific routes
-
-# Your VRN
-GET         /your-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.individual.YourVatNumberController.show
-POST        /your-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.individual.YourVatNumberController.submit
-
