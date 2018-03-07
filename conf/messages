@@ -147,6 +147,12 @@ principal.capture_email.title                                         = What is 
 principal.capture_email.heading                                       = What is your email address?
 principal.capture_email.hint                                          = For example, me@me.com
 
+## Principal Confirm Email page
+principal.confirm_email.title                                         = Check your email address
+principal.confirm_email.heading                                       = Check your email address
+principal.confirm_email.email.heading                                 = Email address
+principal.confirm_email.link                                          = Change email address
+
 
 ## Agree Receive Email page
 principal.agree_capture_email.title                                    = Agree to get emails instead of letters

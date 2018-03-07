@@ -177,10 +177,10 @@ object MessageLookup {
       val link = "I want to use a different VAT number"
   }
 
-  object YourCaptureEmail {
-    val title = "What is your email address?"
-    val heading: String = title
-    val hint = "For example, me@me.com"
+    object YourCaptureEmail {
+      val title = "What is your email address?"
+      val heading: String = title
+      val hint = "For example, me@me.com"
   }
 
     object PrincipalAgreeCaptureEmail {
@@ -188,6 +188,13 @@ object MessageLookup {
       val heading: String = title
       val line1 = "When you have a new message about VAT in your HMRC account, we'll send you an email to let you know."
       val line2 = "You'll need to sign in to your account to read the message."
+  }
+
+    object PrincipalConfirmEmail {
+      val title = "Check your email address"
+      val heading: String = title
+      val emailHeading = "Email address"
+      val link = "Change email address"
   }
 
 
