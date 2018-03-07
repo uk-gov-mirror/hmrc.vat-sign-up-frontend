@@ -20,7 +20,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{YourCaptureEmail => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalCaptureEmail => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
