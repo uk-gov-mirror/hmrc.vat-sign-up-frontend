@@ -177,6 +177,12 @@ object MessageLookup {
       val link = "I want to use a different VAT number"
   }
 
+  object YourCaptureEmail {
+    val title = "What is your email address?"
+    val heading: String = title
+    val hint = "For example, me@me.com"
+  }
+
     object PrincipalAgreeCaptureEmail {
       val title = "Agree to get emails instead of letters"
       val heading: String = title

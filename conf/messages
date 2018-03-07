@@ -137,10 +137,16 @@ agent.client-details.summary.nino                                      = Nationa
 agent.client-details.summary.dob                                       = Date of birth
 
 ## Your VAT number page
-principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.heading                                      = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.vatNumber.heading                            = VAT number
-principal.your_vat_number.link                                         = I want to use a different VAT number
+principal.your_vat_number.title                                       = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.heading                                     = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.vatNumber.heading                           = VAT number
+principal.your_vat_number.link                                        = I want to use a different VAT number
+
+## Principal Capture Email page
+principal.capture_email.title                                         = What is your email address?
+principal.capture_email.heading                                       = What is your email address?
+principal.capture_email.hint                                          = For example, me@me.com
+
 
 ## Agree Receive Email page
 principal.agree_capture_email.title                                    = Agree to get emails instead of letters
