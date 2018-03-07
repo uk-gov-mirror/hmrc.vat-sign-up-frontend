@@ -18,18 +18,27 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreEmailAddressFailure, StoreEmailAddressSuccess}
 
 object StoreEmailAddressHttpParser {
-  type StoreEmailAddressResponse = Either[StoreEmailAddressFailure , StoreEmailAddressSuccess.type ]
+
+  type StoreEmailAddressResponse = Either[StoreEmailAddressFailure, StoreEmailAddressSuccess]
+
+  val EmailVerifiedKey = "emailVerified"
 
   implicit object StoreEmailAddressHttpReads extends HttpReads[StoreEmailAddressResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreEmailAddressResponse = {
-      response.status match {
-        case NO_CONTENT => Right(StoreEmailAddressSuccess)
-        case status => Left(StoreEmailAddressFailure(status))
+      def parseBody: Option[Boolean] = (response.json \ EmailVerifiedKey).asOpt[Boolean]
+
+      (response.status, parseBody) match {
+        case (OK, Some(verified)) => Right(StoreEmailAddressSuccess(verified))
+        case (status, _) => Left(StoreEmailAddressFailure(status))
       }
     }
   }
+
 }
 
+
+case class StoreEmailAddressSuccess(emailVerified: Boolean)
+
+case class StoreEmailAddressFailure(status: Int)

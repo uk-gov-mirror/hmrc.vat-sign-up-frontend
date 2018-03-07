@@ -21,7 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressResponse
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreEmailAddressFailure, StoreEmailAddressSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{StoreEmailAddressFailure, StoreEmailAddressSuccess}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreEmailAddressService
 
 import scala.concurrent.Future
@@ -45,8 +45,8 @@ trait MockStoreEmailAddressService extends BeforeAndAfterEach with MockitoSugar 
       .thenReturn(returnValue)
   }
 
-  def mockStoreEmailAddressSuccess(vatNumber: String, email: String): Unit =
-    mockStoreEmailAddress(vatNumber, email)(Future.successful(Right(StoreEmailAddressSuccess)))
+  def mockStoreEmailAddressSuccess(vatNumber: String, email: String)(emailVerified: Boolean): Unit =
+    mockStoreEmailAddress(vatNumber, email)(Future.successful(Right(StoreEmailAddressSuccess(emailVerified))))
 
   def mockStoreEmailAddressFailure(vatNumber: String, email: String): Unit =
     mockStoreEmailAddress(vatNumber, email)(Future.successful(Left(StoreEmailAddressFailure(500))))

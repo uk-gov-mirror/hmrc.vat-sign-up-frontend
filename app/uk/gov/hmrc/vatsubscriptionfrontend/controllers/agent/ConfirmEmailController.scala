@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreEmailAddressService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_email
 
@@ -64,8 +65,10 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
       (optVatNumber, optEmail) match {
         case (Some(vatNumber), Some(email)) =>
           storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
-            case Right(_) =>
+            case Right(StoreEmailAddressSuccess(false)) =>
               Redirect(routes.VerifyEmailController.show().url)
+            case Right(StoreEmailAddressSuccess(true)) =>
+              Redirect(routes.TermsController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
           }
