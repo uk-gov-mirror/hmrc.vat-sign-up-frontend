@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views.individual
+package uk.gov.hmrc.vatsubscriptionfrontend.views.principal
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
@@ -32,7 +32,7 @@ class YourVatNumberSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.individual.your_vat_number(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.your_vat_number(
     vatNumber = testVatNumber,
     postAction = testCall)(
     FakeRequest(),
