@@ -137,8 +137,8 @@ agent.client-details.summary.nino                                      = Nationa
 agent.client-details.summary.dob                                       = Date of birth
 
 ## Your VAT number page
-individual.your_vat_number.title                                       = Confirm you want to use this VAT number to sign up
-individual.your_vat_number.heading                                     = Confirm you want to use this VAT number to sign up
-individual.your_vat_number.vatNumber.heading                           = VAT number
-individual.your_vat_number.link                                        = I want to use a different VAT number
+principal.your_vat_number.title                                       = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.heading                                     = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.vatNumber.heading                           = VAT number
+principal.your_vat_number.link                                        = I want to use a different VAT number
 
