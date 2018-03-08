@@ -45,8 +45,8 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
         val res = post("/your-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
         res should have(
-          //TODO - update when page is created
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
     }
