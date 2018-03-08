@@ -13,6 +13,8 @@ base.year                                                              = Year
 base.change                                                            = Change
 
 ## Errors
+error.business-entity.field                                            = Please select an option
+error.business-entity.summary                                          = Please select an option
 error.invalid_company_number.field                                     = Please enter a valid company registration number
 error.invalid_company_number.summary                                   = Please enter a valid company registration number
 error.invalid_vat_number.field                                         = Please enter a valid vat registration number
