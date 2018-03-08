@@ -3,6 +3,7 @@ base.continue                                                          = Continu
 base.confirmAndContinue                                                = Confirm and continue
 base.agree_and_continue                                                = Agree and continue
 base.accept_and_continue                                               = Accept and continue
+base.continue_to_sign_up                                               = Continue to sign up
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
 base.sign_up_another_client                                            = Sign up another client
@@ -163,4 +164,10 @@ principal.agree_capture_email.line_2                                   = You''ll
 principal.verify_email.title                                           = Verify your email address
 principal.verify_email.heading                                         = Verify your email address
 principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
+
+
+# Email verified page
+principal.email_verified.title                                         = You''ve verified your email address
+principal.email_verified.heading                                       = You''ve verified your email address
+principal.email_verified.line_1                                        = You''ll now receive messages and email notifications from HMRC.
 
