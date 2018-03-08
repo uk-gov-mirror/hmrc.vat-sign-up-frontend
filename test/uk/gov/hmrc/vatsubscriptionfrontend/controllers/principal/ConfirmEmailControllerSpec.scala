@@ -77,7 +77,8 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
           val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
             SessionKeys.vatNumberKey -> testVatNumber))
 
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
 
         }
       }
@@ -112,7 +113,8 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
 
       }
     }

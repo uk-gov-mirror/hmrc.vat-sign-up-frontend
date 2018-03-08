@@ -47,8 +47,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
           )
         case (None, _) =>
           Future.successful(
-           //Redirect to CaptureVAT controller
-            NotImplemented
+            Redirect(routes.YourVatNumberController.show())
           )
         case _ =>
           Future.successful(
@@ -67,7 +66,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
         case (Some(vatNumber), Some(email)) =>
           storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
             case Right(StoreEmailAddressSuccess(false)) =>
-              NotImplemented
+              Redirect(routes.VerifyEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
             //Redirect to Terms controller
               NotImplemented
@@ -76,8 +75,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
           }
         case (None, _) =>
           Future.successful(
-            //Redirect to CaptureVAT controller
-            NotImplemented
+            Redirect(routes.YourVatNumberController.show())
           )
         case _ =>
           Future.successful(

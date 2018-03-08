@@ -17,15 +17,15 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.models
 
 
-sealed trait StoreVatNumberResponse
 
-sealed trait StoreVatNumberSuccessResponse extends StoreVatNumberResponse
 
-case object StoreVatNumberSuccess extends StoreVatNumberSuccessResponse
+case object StoreVatNumberSuccess
 
-case object StoreVatNumberNoRelationship extends StoreVatNumberSuccessResponse
+sealed trait StoreVatNumberFailure
 
-case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberResponse
+case object StoreVatNumberNoRelationship extends StoreVatNumberFailure
+
+case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberFailure
 
 
 sealed trait StoreCompanyNumberResponse

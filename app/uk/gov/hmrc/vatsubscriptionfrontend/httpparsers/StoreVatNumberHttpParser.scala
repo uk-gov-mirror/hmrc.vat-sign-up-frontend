@@ -19,11 +19,10 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailureResponse, StoreVatNumberSuccessResponse,
-StoreVatNumberSuccess, StoreVatNumberNoRelationship}
+import uk.gov.hmrc.vatsubscriptionfrontend.models._
 
 object StoreVatNumberHttpParser {
-  type StoreVatNumberResponse = Either[StoreVatNumberFailureResponse , StoreVatNumberSuccessResponse]
+  type StoreVatNumberResponse = Either[StoreVatNumberFailure, StoreVatNumberSuccess.type]
 
   implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
@@ -33,7 +32,7 @@ object StoreVatNumberHttpParser {
       response.status match {
         case CREATED => Right(StoreVatNumberSuccess)
         case FORBIDDEN => parseBody match {
-          case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Right(StoreVatNumberNoRelationship)
+          case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Left(StoreVatNumberNoRelationship)
           case _ => Left(StoreVatNumberFailureResponse(FORBIDDEN))
         }
         case status => Left(StoreVatNumberFailureResponse(status))

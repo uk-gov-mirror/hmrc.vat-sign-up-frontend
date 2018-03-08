@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend
+package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
-object Constants {
-  val StoreVatNumberNoRelationshipCodeKey = "CODE"
-  val StoreVatNumberNoRelationshipCodeValue = "RELATIONSHIP_NOT_FOUND"
+import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-  object Enrolments {
-    val agentEnrolmentKey = "HMRC-AS-AGENT"
-    val VatDecEnrolmentKey = "HMCE-VATDEC-ORG"
-    val VatReferenceKey = "VATRegNo"
+class EmailVerifiedControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  "GET /email-verified" should {
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/email-verified")
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
   }
 
 }

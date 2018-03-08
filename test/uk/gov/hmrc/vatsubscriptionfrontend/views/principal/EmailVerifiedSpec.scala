@@ -20,44 +20,38 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{YourVatNumber => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalEmailVerified => messages, Base => common}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class YourVatNumberSpec extends ViewSpec {
+class EmailVerifiedSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.your_vat_number(
-    vatNumber = testVatNumber,
-    postAction = testCall)(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.email_verified()(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Your Vat Number view" should {
+  "The Email verified view" should {
 
     val testPage = TestView(
-      name = "Your Vat Number View",
+      name = "Email verified View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH3(messages.vatNumberHeading)
+    testPage.shouldHavePara(
+      messages.line1
+    )
 
-    testPage.shouldHavePara(testVatNumber)
-
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
-
-    testPage.shouldHaveConfirmAndContinueButton()
-
-    //    TODO: Complete should have a link check once new controller defined
+    // TODO up date once terms is available
+    testPage.shouldHaveContinueButtonLink("",common.continueToSignUp)
 
   }
 

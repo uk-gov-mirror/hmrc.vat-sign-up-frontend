@@ -1,10 +1,20 @@
 # microservice specific routes
 
+# Confirm Vat number
+GET         /your-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.show
+POST        /your-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.submit
+
+#Capture Email
+GET         /email-address          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.show
+POST        /email-address          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.submit
+
 #Confirm Email
 GET         /confirm-email                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmEmailController.show
 POST        /confirm-email                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmEmailController.submit
 
-#Capture Email
-GET         /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.show
-POST        /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.submit
+#Verify Email
+GET         /verify-email           uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.VerifyEmailController.show
+
+#Email Verified
+GET         /email-verified         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.EmailVerifiedController.show
 
