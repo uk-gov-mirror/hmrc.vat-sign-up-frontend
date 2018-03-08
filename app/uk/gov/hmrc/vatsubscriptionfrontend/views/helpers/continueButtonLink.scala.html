@@ -16,5 +16,5 @@
 
 @(href: String, alternativeText: Option[String] = None)(implicit messages: Messages)
 
-<a id="continue-button" href=@href>@alternativeText.getOrElse(Messages("base.continue"))</a>
+<a id="continue-button" class="button" role="button" href=@href>@alternativeText.getOrElse(Messages("base.continue"))</a>
 
