@@ -1,0 +1,3 @@
+#Capture Email
+GET         /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.show
+POST        /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.submit
