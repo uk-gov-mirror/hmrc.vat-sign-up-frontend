@@ -34,7 +34,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
   object TestCaptureEmailController extends CaptureEmailController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/email-address")
+  lazy val testGetRequest = FakeRequest("GET", "/email-address")
 
   def testPostRequest(emailAddress: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/email-address").withFormUrlEncodedBody(email -> emailAddress)
