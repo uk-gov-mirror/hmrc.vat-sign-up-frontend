@@ -38,13 +38,14 @@ class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
   }
 
   "POST /email-address" should {
-    "return a redirect" in {
+    "return a redirect to Confirm email" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/email-address")(EmailForm.email -> testEmail)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmEmailController.show().url)
       )
 
       val session = SessionCookieCrumbler.getSessionMap(res)

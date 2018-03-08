@@ -47,7 +47,7 @@ class CaptureEmailController @Inject()(val controllerComponents: ControllerCompo
             BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))
           ),
         email =>
-          Future.successful(NotImplemented.addingToSession(SessionKeys.emailKey -> email))
+          Future.successful(Redirect(routes.ConfirmEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
       )
     }
   }
