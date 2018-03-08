@@ -50,6 +50,6 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
 
   def mockStoreVatNumberNoRelationship(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Right(StoreVatNumberNoRelationship)))
+    mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberNoRelationship)))
 
 }

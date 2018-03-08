@@ -20,8 +20,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json, Writes}
-import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate.agentEnrolmentKey
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.Enrolments._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 
 object AuthStub extends WireMockMethods {
@@ -49,6 +48,16 @@ object AuthStub extends WireMockMethods {
       Json.obj(
         "key" -> "AgentReferenceNumber",
         "value" -> testArn
+      )
+    )
+  )
+
+  val vatDecEnrolment: JsObject = Json.obj(
+    "key" -> VatDecEnrolmentKey,
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> VatReferenceKey,
+        "value" -> testVatNumber
       )
     )
   )
