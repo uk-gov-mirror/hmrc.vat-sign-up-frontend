@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.UserDetailsForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.client_details
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
@@ -50,7 +51,7 @@ class CaptureClientDetailsController @Inject()(val controllerComponents: Control
           ),
         userDetails =>
           Future.successful(
-            Redirect(routes.ConfirmClientDetailsController.show()).addingToSession(SessionKeys.userDetailsKey -> Json.toJson(userDetails).toString())
+            Redirect(routes.ConfirmClientDetailsController.show()).addingToSession(SessionKeys.userDetailsKey, userDetails)
           )
       )
     }

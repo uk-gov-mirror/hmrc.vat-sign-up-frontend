@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.userDetailsKey
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
@@ -40,7 +41,7 @@ class ConfirmClientDetailsController @Inject()(val controllerComponents: Control
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optUserDetails = request.session.getJson[UserDetailsModel](SessionKeys.userDetailsKey)
+      val optUserDetails = request.session.getModel[UserDetailsModel](userDetailsKey)
 
       (optVatNumber, optUserDetails) match {
         case (None, _) => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
@@ -55,7 +56,7 @@ class ConfirmClientDetailsController @Inject()(val controllerComponents: Control
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optUserDetails = request.session.getJson[UserDetailsModel](SessionKeys.userDetailsKey)
+      val optUserDetails = request.session.getModel[UserDetailsModel](userDetailsKey)
 
       (optVatNumber, optUserDetails) match {
         case (None, _) => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
@@ -67,7 +68,7 @@ class ConfirmClientDetailsController @Inject()(val controllerComponents: Control
             case Left(NoVATNumberFailure) => throw new InternalServerException(s"Failure calling store nino: vat number is not found")
             case Left(StoreNinoFailureResponse(status)) => throw new InternalServerException(s"Failure calling store nino: status=$status")
           }
-        }.map(_.removingFromSession(SessionKeys.userDetailsKey))
+        }.map(_.removingFromSession(userDetailsKey))
       }
     }
   }

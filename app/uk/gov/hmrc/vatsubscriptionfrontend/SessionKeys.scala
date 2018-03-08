@@ -22,4 +22,5 @@ object SessionKeys {
   val companyNumberKey = "CompanyNumber"
   val emailKey = "Email"
   val userDetailsKey = "UserDetails"
+  val businessEntityKey = "BusinessEntity"
 }
