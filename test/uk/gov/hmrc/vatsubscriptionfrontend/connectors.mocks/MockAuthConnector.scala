@@ -46,6 +46,9 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
     ) thenReturn response
   }
 
+  def mockAuthEmptyRetrieval(): Unit =
+    mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+
   def mockAuthRetrieveAgentEnrolment(): Unit =
     mockAuthorise(retrievals = Retrievals.allEnrolments)(Future.successful(Enrolments(Set(testAgentEnrolment))))
 
