@@ -25,7 +25,6 @@ import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrievals, ~}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreVatNumberService
@@ -72,7 +71,7 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         mockAuthRetrieveVatDecEnrolment()
         mockStoreVatNumberSuccess(vatNumber = testVatNumber)
 
-        val result = TestYourVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        val result = TestYourVatNumberController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
       }

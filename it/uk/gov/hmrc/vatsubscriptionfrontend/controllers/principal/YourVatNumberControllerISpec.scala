@@ -28,7 +28,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-      val res = get("/your-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))
+      val res = get("/your-vat-number")
 
       res should have(
         httpStatus(OK)
@@ -42,7 +42,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubStoreVatNumberSuccess()
 
-        val res = post("/your-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/your-vat-number")()
 
         res should have(
           httpStatus(SEE_OTHER),
