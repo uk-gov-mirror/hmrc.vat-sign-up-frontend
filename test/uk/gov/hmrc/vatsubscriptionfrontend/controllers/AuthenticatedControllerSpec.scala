@@ -21,7 +21,7 @@ import play.api.mvc.Results._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals, ~}
+import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, Retrievals, ~}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
@@ -110,6 +110,23 @@ class AuthenticatedControllerSpec extends UnitSpec with MockControllerComponents
 
           val res = await(TestAuthenticatedController.authorised()(Retrievals.affinityGroup) {
             case Some(AffinityGroup.Agent) => Future.successful(Ok)
+            case _ => fail()
+          })
+          res shouldBe Ok
+        }
+      }
+    }
+    "a class level predicate has not been set" when {
+      "a method level retrieval has been set" should {
+        "perform the method level retrieval only" in {
+          mockAuthorise(EmptyPredicate, EmptyRetrieval and Retrievals.nino)(Future.successful(new ~(Unit, Some(""))))
+
+          object TestAuthenticatedController extends AuthenticatedController() {
+            override def controllerComponents: ControllerComponents = mockControllerComponents
+          }
+
+          val res = await(TestAuthenticatedController.authorised()(Retrievals.nino){
+            case Some(_) => Future.successful(Ok)
             case _ => fail()
           })
           res shouldBe Ok
