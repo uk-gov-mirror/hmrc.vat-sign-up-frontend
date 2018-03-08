@@ -197,5 +197,12 @@ object MessageLookup {
     val link = "Change email address"
   }
 
+  object PrincipalVerifyEmail {
+    val title = "Verify your email address"
+    val heading: String = title
+
+    def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
+  }
+
 
 }
