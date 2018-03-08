@@ -64,10 +64,8 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.VerifyEmailController.show().url)
-        )
+        //TODO Redirect to Terms controller
+
 
         val session = SessionCookieCrumbler.getSessionMap(res)
         session.keys should contain(emailKey)
