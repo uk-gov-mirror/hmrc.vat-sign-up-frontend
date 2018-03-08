@@ -16,8 +16,28 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.models
 
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils.SessionFormatter
+
 sealed trait BusinessEntity
 
 object LimitedCompany extends BusinessEntity
 
 object SoleTrader extends BusinessEntity
+
+object BusinessEntity {
+  val LimitedCompanyKey = "limited-company"
+  val SoleTraderKey = "sole-trader"
+
+  implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
+    override def fromString(string: String): Option[BusinessEntity] = string match {
+      case LimitedCompanyKey => Some(LimitedCompany)
+      case SoleTraderKey => Some(SoleTrader)
+      case _ => None
+    }
+
+    override def toString(entity: BusinessEntity): String = entity match {
+      case LimitedCompany => LimitedCompanyKey
+      case SoleTrader => SoleTraderKey
+    }
+  }
+}
