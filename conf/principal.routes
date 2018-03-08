@@ -1,3 +1,9 @@
+# microservice specific routes
+
 #Capture Email
 GET         /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.show
 POST        /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.submit
+
+# Confirm Vat number
+GET         /your-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.show
+POST        /your-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.submit

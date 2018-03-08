@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend
+package uk.gov.hmrc.vatsubscriptionfrontend.utils
 
-object Constants {
-  val StoreVatNumberNoRelationshipCodeKey = "CODE"
-  val StoreVatNumberNoRelationshipCodeValue = "RELATIONSHIP_NOT_FOUND"
+import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.Enrolments._
 
-  object Enrolments {
-    val agentEnrolmentKey = "HMRC-AS-AGENT"
-    val VatDecEnrolmentKey = "HMCE-VATDEC-ORG"
-    val VatReferenceKey = "VATRegNo"
+object EnrolmentUtils {
+
+  implicit class EnrolmentUtils(enrolments: Enrolments) {
+    def vatNumber: Option[String] =
+      enrolments getEnrolment VatDecEnrolmentKey flatMap {
+        vatDecEnrolment =>
+          vatDecEnrolment getIdentifier VatReferenceKey map (_.value)
+      }
   }
 
 }

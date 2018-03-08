@@ -22,11 +22,11 @@ import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.RetrievalPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.Enrolments.agentEnrolmentKey
 
 import scala.concurrent.Future
 
 object AgentEnrolmentPredicate extends RetrievalPredicate[Enrolments] {
-  val agentEnrolmentKey = "HMRC-AS-AGENT"
 
   override def retrieval: Retrieval[Enrolments] = Retrievals.allEnrolments
 

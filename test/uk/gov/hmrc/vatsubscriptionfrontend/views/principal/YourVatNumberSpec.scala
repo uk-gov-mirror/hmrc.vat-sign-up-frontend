@@ -57,7 +57,7 @@ class YourVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmAndContinueButton()
 
-//    TODO: Complete should have a link check once new controller defined
+    //    TODO: Complete should have a link check once new controller defined
 
   }
 
