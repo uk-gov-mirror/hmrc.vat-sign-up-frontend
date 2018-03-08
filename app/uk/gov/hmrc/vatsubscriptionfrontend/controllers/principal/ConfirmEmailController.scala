@@ -18,25 +18,22 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 
-import com.sun.xml.internal.bind.v2.TODO
 import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.Result
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
-import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
-//import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreEmailAddressService
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_email
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.confirm_email
 
 import scala.concurrent.Future
 
 @Singleton
 class ConfirmEmailController @Inject()(val controllerComponents: ControllerComponents,
                                        val storeEmailAddressService: StoreEmailAddressService)
-  extends AuthenticatedController {
+  extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -50,7 +47,8 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
           )
         case (None, _) =>
           Future.successful(
-            TODO
+           //Redirect to CaptureVAT controller
+            NotImplemented
           )
         case _ =>
           Future.successful(
@@ -69,15 +67,17 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
         case (Some(vatNumber), Some(email)) =>
           storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
             case Right(StoreEmailAddressSuccess(false)) =>
-              Redirect(routes.VerifyEmailController.show().url)
+              NotImplemented
             case Right(StoreEmailAddressSuccess(true)) =>
-              Redirect(routes.TermsController.show().url)
+            //Redirect to Terms controller
+              NotImplemented
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
           }
         case (None, _) =>
           Future.successful(
-            Redirect(routes.CaptureVatNumberController.show())
+            //Redirect to CaptureVAT controller
+            NotImplemented
           )
         case _ =>
           Future.successful(
