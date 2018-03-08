@@ -145,6 +145,12 @@ principal.your_vat_number.heading                                     = Confirm 
 principal.your_vat_number.vatNumber.heading                           = VAT number
 principal.your_vat_number.link                                        = I want to use a different VAT number
 
+## Principal Capture Entity Type page
+principal.capture_entity_type.title                                    = What type of business are you registered as?
+principal.capture_entity_type.heading                                  = What type of business are you registered as?
+principal.capture_entity_type.soleTrader                               = Sole trader
+principal.capture_entity_type.limitedCompany                           = Limited company
+
 ## Principal Capture Email page
 principal.capture_email.title                                         = What is your email address?
 principal.capture_email.heading                                       = What is your email address?
@@ -167,8 +173,7 @@ principal.verify_email.title                                           = Verify 
 principal.verify_email.heading                                         = Verify your email address
 principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
 
-
-# Email verified page
+## Principal Email verified page
 principal.email_verified.title                                         = You''ve verified your email address
 principal.email_verified.heading                                       = You''ve verified your email address
 principal.email_verified.line_1                                        = You''ll now receive messages and email notifications from HMRC.

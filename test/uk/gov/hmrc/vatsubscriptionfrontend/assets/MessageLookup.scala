@@ -177,6 +177,13 @@ object MessageLookup {
     val link = "I want to use a different VAT number"
   }
 
+  object PrincipalCaptureBusinessEntity {
+    val title = "What type of business are you registered as?"
+    val heading: String = title
+    val radioSoleTrader: String = "Sole trader"
+    val radioLimitedCompany: String = "Limited company"
+  }
+
   object PrincipalCaptureEmail {
     val title = "What is your email address?"
     val heading: String = title
