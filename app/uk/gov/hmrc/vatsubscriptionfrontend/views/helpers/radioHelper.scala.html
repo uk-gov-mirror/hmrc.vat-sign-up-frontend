@@ -14,22 +14,22 @@
  * limitations under the License.
  *@
 
-@(form: Form[_],
+@(parentForm: Form[_],
   inline: Boolean,
   options: Seq[(String, String)],
   legend: String,
   field: Field)(implicit messages: Messages)
 
-<div class="form-group">
+@hasError = @{
+    parentForm.error(field.name).isDefined
+}
+
+<div class="form-group@if(hasError){ form-field--error}">
     <fieldset @if(inline) { class="inline" }>
-        <legend>
-            <h3 class="heading-medium visuallyhidden">
-                @legend
-            </h3>
-            @errorNotification = @{
-                if(form.hasErrors) <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${form.error(field.name).get.message}.field")}</span>
-            }
-        </legend>
+        <legend class="visuallyhidden">@legend</legend>
+        @if(hasError){
+            <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
+        }
         @for(option <- options) {
             <div class="multiple-choice">
                 <input id="@option._1" type="radio" name="@field.name" value="@option._1">
