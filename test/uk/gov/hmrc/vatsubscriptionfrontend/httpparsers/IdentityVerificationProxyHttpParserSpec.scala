@@ -20,15 +20,15 @@ import play.api.http.Status.{BAD_REQUEST, CREATED}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IVProxyHttpParser._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxyHttpParser._
 
-class IVProxyHttpParserSpec extends UnitSpec {
+class IdentityVerificationProxyHttpParserSpec extends UnitSpec {
   val testHttpVerb = "POST"
   val testUri = "/"
 
-  "IVProxyHttpReads" when {
+  "IdentityVerificationProxyHttpReads" when {
     "read" should {
-      "parse a CREATED response as an IVSuccessResponse" in {
+      "parse a CREATED response as an IdentityVerificationProxySuccessResponse" in {
         val httpResponse = HttpResponse(CREATED, Some(
           Json.parse(
             """{
@@ -37,17 +37,17 @@ class IVProxyHttpParserSpec extends UnitSpec {
               |}""".stripMargin('|')))
         )
 
-        val res = IVProxyHttpReads.read(testHttpVerb, testUri, httpResponse)
+        val res = IdentityVerificationProxyHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(IVSuccessResponse("/some-journey-start-url", "/some-journey-status-url"))
+        res shouldBe Right(IdentityVerificationProxySuccessResponse("/some-journey-start-url", "/some-journey-status-url"))
       }
 
-      "parse any other response as an IVFailureResponse" in {
+      "parse any other response as an IdentityVerificationProxyFailureResponse" in {
         val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
 
-        val res = IVProxyHttpReads.read(testHttpVerb, testUri, httpResponse)
+        val res = IdentityVerificationProxyHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Left(IVFailureResponse(httpResponse.status))
+        res shouldBe Left(IdentityVerificationProxyFailureResponse(httpResponse.status))
       }
     }
   }

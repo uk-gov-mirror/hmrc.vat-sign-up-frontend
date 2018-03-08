@@ -17,13 +17,10 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class IVCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
+class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /identity-verified" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())

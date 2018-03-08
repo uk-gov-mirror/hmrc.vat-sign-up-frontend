@@ -73,7 +73,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val stubCitizenDetailsUserUrl = s"$matchingStubUrl/dynamic-cid"
 
   lazy val identityVerificationProxyUrl = baseUrl("identity-verification-proxy")
-  lazy val ivStartUrl = identityVerificationProxyUrl + "/identity-verification-proxy/journey/start"
+  lazy val identityVerificationStartUrl = identityVerificationProxyUrl + "/identity-verification-proxy/journey/start"
 
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes

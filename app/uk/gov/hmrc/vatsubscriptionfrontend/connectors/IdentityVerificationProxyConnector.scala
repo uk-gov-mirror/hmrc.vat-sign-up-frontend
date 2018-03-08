@@ -24,24 +24,27 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IVProxyHttpParser._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxyHttpParser._
 
 import scala.concurrent.Future
 
 @Singleton
-class IVProxyConnector @Inject()(val http: HttpClient,
-                                 val applicationConfig: AppConfig) {
+class IdentityVerificationProxyConnector @Inject()(val http: HttpClient,
+                                                   val applicationConfig: AppConfig) {
 
-  def start()(implicit hc: HeaderCarrier): Future[IVProxyResponse] =
-    http.POST[JsObject, IVProxyResponse](applicationConfig.ivStartUrl, IVProxyConnector.startIVRequest)
+  def start()(implicit hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
+    http.POST[JsObject, IdentityVerificationProxyResponse](
+      applicationConfig.identityVerificationStartUrl,
+      IdentityVerificationProxyConnector.startIdentityVerificationRequest
+    )
 
 }
 
-object IVProxyConnector {
-  val startIVRequest: JsObject = Json.obj(
+object IdentityVerificationProxyConnector {
+  val startIdentityVerificationRequest: JsObject = Json.obj(
     "origin" -> "mtd-vat",
-    "confidenceLevel" -> "200",
-    "completionURL" -> routes.IVCallbackController.continue().url,
-    "failureURL" -> routes.IVCallbackController.continue().url
+    "confidenceLevel" -> 200,
+    "completionURL" -> routes.IdentityVerificationCallbackController.continue().url,
+    "failureURL" -> routes.IdentityVerificationCallbackController.continue().url
   )
 }

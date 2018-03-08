@@ -19,15 +19,15 @@ package uk.gov.hmrc.vatsubscriptionfrontend.services
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsubscriptionfrontend.connectors.SubmissionConnector
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionHttpParser.SubmissionResponse
+import uk.gov.hmrc.vatsubscriptionfrontend.connectors.IdentityVerificationProxyConnector
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxyResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
-class SubmissionService @Inject()(val submissionConnector: SubmissionConnector) {
+class IdentityVerificationService @Inject()(val identityVerificationProxyConnector: IdentityVerificationProxyConnector) {
 
-  def submit(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[SubmissionResponse] =
-    submissionConnector.submit(vatNumber)
+  def start()(implicit hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
+    identityVerificationProxyConnector.start()
 
 }
