@@ -1,0 +1,5 @@
+# microservice specific routes
+
+#Confirm Email
+GET         /confirm-email                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmEmailController.show
+POST        /confirm-email                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmEmailController.submit
