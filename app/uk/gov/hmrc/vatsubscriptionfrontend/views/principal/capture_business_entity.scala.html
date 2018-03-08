@@ -34,7 +34,7 @@
     @form(action = postAction) {
 
         @radioHelper(
-            form = businessEntityForm,
+            parentForm = businessEntityForm,
             inline = false,
             options = Seq((soleTrader, Messages("principal.capture_entity_type.soleTrader")),
                           (limitedCompany, Messages("principal.capture_entity_type.limitedCompany"))),
