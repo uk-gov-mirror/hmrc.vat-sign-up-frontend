@@ -68,7 +68,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
             case Right(StoreEmailAddressSuccess(false)) =>
               Redirect(routes.VerifyEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
-            //Redirect to Terms controller
+            //TODO Redirect to Terms controller
               NotImplemented
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)

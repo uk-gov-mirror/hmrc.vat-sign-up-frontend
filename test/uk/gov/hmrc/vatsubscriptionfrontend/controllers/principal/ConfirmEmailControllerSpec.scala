@@ -90,6 +90,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
           val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
             SessionKeys.vatNumberKey -> testVatNumber))
 
+          //TODO Redirect to Terms controller
           status(result) shouldBe Status.NOT_IMPLEMENTED
 
         }
