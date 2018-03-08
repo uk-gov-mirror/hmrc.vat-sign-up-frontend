@@ -18,3 +18,7 @@ GET         /verify-email           uk.gov.hmrc.vatsubscriptionfrontend.controll
 #Email Verified
 GET         /email-verified         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.EmailVerifiedController.show
 
+#Business Type
+GET         /business-type          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.show
+POST        /business-type          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.submit
+
