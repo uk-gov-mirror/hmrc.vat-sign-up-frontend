@@ -204,5 +204,10 @@ object MessageLookup {
     def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
   }
 
+  object PrincipalEmailVerified {
+    val title = "You've verified your email address"
+    val heading: String = title
+    val line1 = "You'll now receive messages and email notifications from HMRC."
+  }
 
 }
