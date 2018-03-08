@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
+package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm
@@ -24,11 +24,11 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /business-entity" should {
+  "GET /business-type" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+      stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/client/business-entity")
+      val res = get("/business-type")
 
       res should have(
         httpStatus(OK)
@@ -36,29 +36,28 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     }
   }
 
-  "POST /business-entity" should {
-    "redirect to capture company number name" when {
-      "the business entity is limited company" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+  "POST /business-type" should {
 
-        val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> limitedCompany)
+    "return a NOT_IMPLEMENTED status" when {
+      "the business type is limited company" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
 
         res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureCompanyNumberController.show().url)
+          httpStatus(NOT_IMPLEMENTED)
         )
       }
     }
 
-    "redirect to capture client details" when {
-      "the business entity is sole trader" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return a NOT_IMPLEMENTED status" when {
+      "the business type is sole trader" in {
+        stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> soleTrader)
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
         res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureClientDetailsController.show().url)
+          httpStatus(NOT_IMPLEMENTED)
         )
       }
     }
