@@ -22,3 +22,4 @@ GET         /email-verified         uk.gov.hmrc.vatsubscriptionfrontend.controll
 GET         /business-type          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.show
 POST        /business-type          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.submit
 
+GET         /identity-verified      uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.IVCallbackController.continue

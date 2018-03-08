@@ -23,32 +23,18 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /your-vat-number" should {
+class IVCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /identity-verified" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+      stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/your-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))
+      val res = get("/identity-verified")
 
+      //TODO - update when implemented
       res should have(
-        httpStatus(OK)
+        httpStatus(NOT_IMPLEMENTED)
       )
     }
   }
 
-  "POST /your-vat-number" should {
-    "redirect to the capture client business entity page" when {
-      "the vat number is successfully stored" in {
-        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubStoreVatNumberSuccess()
-
-        val res = post("/your-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-        res should have(
-          //TODO - update when page is created
-          httpStatus(NOT_IMPLEMENTED)
-        )
-      }
-    }
-  }
 }
