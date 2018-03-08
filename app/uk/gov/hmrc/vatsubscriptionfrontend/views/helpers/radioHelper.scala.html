@@ -31,7 +31,7 @@
             <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
         @for(option <- options) {
-            <div class="multiple-choice">
+            <div id="@{field.name}" class="multiple-choice">
                 <input id="@option._1" type="radio" name="@field.name" value="@option._1">
                 <label for="@option._1">@option._2</label>
             </div>
