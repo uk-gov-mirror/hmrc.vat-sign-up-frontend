@@ -26,4 +26,5 @@ object IntegrationTestConstants {
   val testNino: String = new Generator().nextNino.nino
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
   val testArn: String = UUID.randomUUID().toString
+  val testUri: String ="/test/url"
 }
