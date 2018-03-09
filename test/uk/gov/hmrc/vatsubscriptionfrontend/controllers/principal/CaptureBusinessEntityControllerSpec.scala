@@ -18,22 +18,16 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxySuccessResponse
-import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockIdentityVerificationService
 
-class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
-  with MockIdentityVerificationService {
+class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents, mockIdentityVerificationService)
+  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/business-entity")
 
@@ -53,40 +47,24 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
 
   "Calling the submit action of the Capture Business Entity controller" when {
+    //todo update when next page played
     "form successfully submitted" should {
-
-      lazy val expectedJsonInSession =
-        Json.toJson(IdentityVerificationProxySuccessResponse("/some-journey-start-url", "/some-journey-status-url")).toString()
 
       "go to Identity Verification with limited company stored in session" when {
         "the business entity is limited company" in {
-          val request = testPostRequest(limitedCompany)
-
           mockAuthEmptyRetrieval()
-          mockStartSuccess()
 
-          val result = TestCaptureBusinessEntityController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result).get should include("/some-journey-start-url")
-
-          result.session(request).get(SessionKeys.businessEntityKey) shouldBe Some(limitedCompany)
-          result.session(request).get(SessionKeys.identityVerificationJourneyKey) shouldBe Some(expectedJsonInSession)
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedCompany))
+          status(result) shouldBe Status.NOT_IMPLEMENTED //TODO Update when IV is ready
         }
       }
 
       "go to Identity Verification with sole trader stored in session" when {
         "the business entity is sole trader" in {
-          val request = testPostRequest(soleTrader)
-
           mockAuthEmptyRetrieval()
-          mockStartSuccess()
 
-          val result = TestCaptureBusinessEntityController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result).get should include("/some-journey-start-url")
-
-          result.session(request).get(SessionKeys.businessEntityKey) shouldBe Some(soleTrader)
-          result.session(request).get(SessionKeys.identityVerificationJourneyKey) shouldBe Some(expectedJsonInSession)
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
+          status(result) shouldBe Status.NOT_IMPLEMENTED //TODO Update when IV is ready
         }
       }
     }
