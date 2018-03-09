@@ -21,11 +21,15 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrievals, ~}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreVatNumberService
+
+import scala.concurrent.Future
 
 class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreVatNumberService {
@@ -40,24 +44,39 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   "Calling the show action of the Confirm Vat Number controller" should {
     "go to the Confirm Vat number page" in {
       mockAuthRetrieveVatDecEnrolment()
+      val request = testGetRequest
 
-      val result = TestYourVatNumberController.show(testGetRequest)
+      val result = TestYourVatNumberController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
 
-  "Calling the submit action of the Confirm Vat Number controller" when {
+  "there isn't a vrn in the enrolment" should {
+    "redirect to Capture Vat number page" in {
+      mockAuthorise(
+        retrievals = EmptyRetrieval and Retrievals.allEnrolments
+      )(Future.successful(new ~(Unit, Enrolments(Set()))))
+
+      val result = TestYourVatNumberController.show(testGetRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
+    }
+  }
+
+  "Calling the submit action of the Your Vat Number controller" when {
     "store vat is successful" should {
       "return unimplemented" in {
         mockAuthRetrieveVatDecEnrolment()
         mockStoreVatNumberSuccess(vatNumber = testVatNumber)
 
         val result = TestYourVatNumberController.submit(testPostRequest)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
       }
     }
+
     "store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthRetrieveVatDecEnrolment()

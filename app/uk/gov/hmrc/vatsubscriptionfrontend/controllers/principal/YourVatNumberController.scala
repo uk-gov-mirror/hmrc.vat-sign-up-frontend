@@ -42,7 +42,9 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
         case Some(vatNumber) =>
           Future.successful(Ok(your_vat_number(vatNumber, routes.YourVatNumberController.submit())))
         case None =>
-          Future.successful(NotImplemented)
+          Future.successful(
+            Redirect(routes.YourVatNumberController.show())
+          )
       }
     }
   }
@@ -53,13 +55,15 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
         case Some(vatNumber) =>
           storeVatNumberService.storeVatNumber(vatNumber) map {
             case Right(StoreVatNumberSuccess) =>
-              NotImplemented
+              Redirect(routes.CaptureBusinessEntityController.show())
                 .withSession(SessionKeys.vatNumberKey -> vatNumber)
             case Left(_) =>
               throw new InternalServerException("storeVatNumber failed")
           }
         case None =>
-          Future.successful(NotImplemented)
+          Future.successful(
+            Redirect(routes.YourVatNumberController.show())
+          )
       }
     }
   }
