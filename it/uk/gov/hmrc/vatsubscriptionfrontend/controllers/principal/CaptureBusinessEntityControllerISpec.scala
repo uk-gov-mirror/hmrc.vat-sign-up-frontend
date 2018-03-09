@@ -20,7 +20,9 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.IdentityVerificationStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxySuccessResponse
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -38,26 +40,30 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   "POST /business-type" should {
 
-    "return a NOT_IMPLEMENTED status" when {
+    "return a SEE_OTHER status" when {
       "the business type is limited company" in {
         stubAuth(OK, successfulAuthResponse())
+        stubIdentityVerificationProxy(IdentityVerificationProxySuccessResponse("/link","/journey/link"))
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri("/link")
         )
       }
     }
 
-    "return a NOT_IMPLEMENTED status" when {
+    "return a SEE_OTHER status" when {
       "the business type is sole trader" in {
         stubAuth(OK, successfulAuthResponse())
+        stubIdentityVerificationProxy(IdentityVerificationProxySuccessResponse("/link","/journey/link"))
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri("/link")
         )
       }
     }
