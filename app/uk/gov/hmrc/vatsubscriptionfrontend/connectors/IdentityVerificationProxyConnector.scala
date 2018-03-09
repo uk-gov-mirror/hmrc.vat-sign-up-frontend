@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.connectors
 import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.{JsObject, Json}
+import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -32,7 +33,7 @@ import scala.concurrent.Future
 class IdentityVerificationProxyConnector @Inject()(val http: HttpClient,
                                                    val applicationConfig: AppConfig) {
 
-  def start()(implicit hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
+  def start()(implicit request: Request[AnyContent], hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
     http.POST[JsObject, IdentityVerificationProxyResponse](
       applicationConfig.identityVerificationStartUrl,
       IdentityVerificationProxyConnector.startIdentityVerificationRequest
@@ -41,10 +42,10 @@ class IdentityVerificationProxyConnector @Inject()(val http: HttpClient,
 }
 
 object IdentityVerificationProxyConnector {
-  val startIdentityVerificationRequest: JsObject = Json.obj(
+  def startIdentityVerificationRequest(implicit request: Request[AnyContent]): JsObject = Json.obj(
     "origin" -> "mtd-vat",
     "confidenceLevel" -> 200,
-    "completionURL" -> routes.IdentityVerificationCallbackController.continue().url,
-    "failureURL" -> routes.IdentityVerificationCallbackController.continue().url
+    "completionURL" -> routes.IdentityVerificationCallbackController.continue().absoluteURL(),
+    "failureURL" -> routes.IdentityVerificationCallbackController.continue().absoluteURL()
   )
 }
