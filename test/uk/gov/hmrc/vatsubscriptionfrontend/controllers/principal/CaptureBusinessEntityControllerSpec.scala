@@ -50,7 +50,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     //todo update when next page played
     "form successfully submitted" should {
 
-      "go to IV with limited company stored in session" when {
+      "go to Identity Verification with limited company stored in session" when {
         "the business entity is limited company" in {
           mockAuthEmptyRetrieval()
 
@@ -59,7 +59,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "go to IV with sole trader stored in session" when {
+      "go to Identity Verification with sole trader stored in session" when {
         "the business entity is sole trader" in {
           mockAuthEmptyRetrieval()
 

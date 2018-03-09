@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import scala.concurrent.Future
 
 @Singleton
-class IVCallbackController @Inject()(val controllerComponents: ControllerComponents)
+class IdentityVerificationCallbackController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController() {
 
   val continue: Action[AnyContent] = Action.async { implicit request =>

@@ -18,9 +18,9 @@ package uk.gov.hmrc.vatsubscriptionfrontend.config
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.{Configuration, Environment}
 import play.api.Mode.Mode
 import play.api.mvc.Call
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 @Singleton
@@ -59,6 +59,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number"
 
   def storeCompanyNumberUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/company-number"
+
   def storeEmailAddressUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/email"
 
   lazy val btaUrl = loadConfig("bta.url")
@@ -70,6 +71,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val matchingStubUrl = baseUrl("matching-stub")
   lazy val stubCitizenDetailsUserUrl = s"$matchingStubUrl/dynamic-cid"
+
+  lazy val identityVerificationProxyUrl = baseUrl("identity-verification-proxy")
+  lazy val identityVerificationStartUrl = identityVerificationProxyUrl + "/identity-verification-proxy/journey/start"
 
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes

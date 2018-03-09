@@ -25,18 +25,18 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
 import scala.concurrent.Future
 
-class IVCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestIVCallbackController extends IVCallbackController(mockControllerComponents)
+  object TestIdentityVerificationCallbackController extends IdentityVerificationCallbackController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/identity-verified")
 
-  "Calling the continue action of the IV call back controller" should {
+  "Calling the continue action of the Identity Verification call back controller" should {
     "return not implemented" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
 
       //TODO - update when implemented
-      val result = TestIVCallbackController.continue(testGetRequest)
+      val result = TestIdentityVerificationCallbackController.continue(testGetRequest)
       status(result) shouldBe Status.NOT_IMPLEMENTED
     }
   }
