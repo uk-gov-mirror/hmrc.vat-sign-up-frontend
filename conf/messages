@@ -198,3 +198,13 @@ principal.your-details.summary.last_name                               = Last na
 principal.your-details.summary.nino                                    = National Insurance number
 principal.your-details.summary.dob                                     = Date of birth
 
+## Terms page
+principal.terms.title                                                  = Terms of participation
+principal.terms.heading                                                = Terms of participation
+principal.terms.line_1                                                 = By taking part in this trial, you agree to:
+principal.terms.bullet_1                                               = use accounting software that supports Making Tax Digital to record your sales and purchases, then to submit your VAT returns
+principal.terms.bullet_2                                               = submit each VAT return within one calendar month and 7 days from the end of your accounting period
+principal.terms.bullet_3                                               = authorise any third party you use (such as your accountant) and be responsible for any information they give to HMRC on your behalf
+principal.terms.bullet_4                                               = tell HMRC if you stop trading and then submit your final VAT return
+principal.terms.bullet_5                                               = tell HMRC if you want to leave this trial
+principal.terms.line_2                                                 = These terms aren''t contractual and you can stop taking part in the trial at any time.
