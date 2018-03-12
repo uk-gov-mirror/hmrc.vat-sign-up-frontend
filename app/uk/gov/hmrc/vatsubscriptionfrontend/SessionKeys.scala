@@ -23,5 +23,5 @@ object SessionKeys {
   val emailKey = "Email"
   val userDetailsKey = "UserDetails"
   val businessEntityKey = "BusinessEntity"
-  val identityVerificationJourneyKey = "IdentityVerification"
+  val identityVerificationContinueUrlKey = "IdentityVerification"
 }
