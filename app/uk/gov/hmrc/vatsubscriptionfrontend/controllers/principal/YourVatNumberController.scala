@@ -56,6 +56,7 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
           storeVatNumberService.storeVatNumber(vatNumber) map {
             case Right(StoreVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())
+                .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
             case Left(_) =>
               throw new InternalServerException("storeVatNumber failed")
           }
