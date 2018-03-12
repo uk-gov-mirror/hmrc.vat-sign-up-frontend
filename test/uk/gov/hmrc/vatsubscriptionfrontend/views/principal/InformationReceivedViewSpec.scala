@@ -25,14 +25,14 @@ import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base, Principal
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class ConfirmationViewSpec extends ViewSpec {
+class InformationReceivedViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.confirmation(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
@@ -41,7 +41,7 @@ class ConfirmationViewSpec extends ViewSpec {
 
   lazy val document = Jsoup.parse(page.body)
 
-  "The Confirmation view" should {
+  "The information received view" should {
 
     s"have the title '${messages.title}'" in {
       document.title() should be(messages.title)
