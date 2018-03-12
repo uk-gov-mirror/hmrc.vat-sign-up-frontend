@@ -19,25 +19,85 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreIdentityVerificationService
 
 import scala.concurrent.Future
 
-class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents with MockStoreIdentityVerificationService {
 
-  object TestIdentityVerificationCallbackController extends IdentityVerificationCallbackController(mockControllerComponents)
+  object TestIdentityVerificationCallbackController extends IdentityVerificationCallbackController(
+    mockControllerComponents,
+    mockStoreIdentityVerificationService
+  )
 
-  lazy val testGetRequest = FakeRequest("GET", "/identity-verified")
+  "Calling the continue action of the Identity Verification call back controller" when {
+    "there is a VAT number, business entity and IV continue url in session" when {
+      "the service returns IdentityVerified" when {
+        "the business entity type is Sole Trader" should {
+          "return a redirect to the capture e-mail controller" in {
+            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+            mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
 
-  "Calling the continue action of the Identity Verification call back controller" should {
-    "return not implemented" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+            val request = FakeRequest() withSession(
+              vatNumberKey -> testVatNumber,
+              businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+              identityVerificationContinueUrlKey -> testUri
+            )
 
-      //TODO - update when implemented
-      val result = TestIdentityVerificationCallbackController.continue(testGetRequest)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
+            val result = await(TestIdentityVerificationCallbackController.continue(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureEmailController.show().url)
+          }
+        }
+        "the business entity type is Limited Company" should {
+          "NOT IMPLEMENTED" in {
+            //TODO - Update test when capture company number page is implemented
+          }
+        }
+      }
+      "the service returns a failure" should {
+        "NOT IMPLEMENTED" in {
+          //TODO - Update test when IV failure page is implemented
+        }
+      }
+    }
+    "there is no VAT number in session" should {
+      "redirect to the vat number controller" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        val result = await(TestIdentityVerificationCallbackController.continue(FakeRequest()))
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.YourVatNumberController.show().url)
+      }
+    }
+
+    "there is no business entity in session" should {
+      "redirect to the capture business entity" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        val result = await(
+          TestIdentityVerificationCallbackController
+            .continue(FakeRequest() withSession (vatNumberKey -> testVatNumber))
+        )
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+      }
+    }
+
+    "there is no IV continue url in session" should {
+      "NOT IMPLEMENTED" in {
+        //TODO - Update test when capture user details page is complete
+      }
     }
   }
 

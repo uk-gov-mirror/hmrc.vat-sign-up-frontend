@@ -26,6 +26,7 @@ object TestConstants {
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
   val testEmail: String = TestConstantsGenerator.randomEmail
   lazy val testNino: String = new Generator().nextNino.nino
+  val testUri: String = "/test/uri"
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)
