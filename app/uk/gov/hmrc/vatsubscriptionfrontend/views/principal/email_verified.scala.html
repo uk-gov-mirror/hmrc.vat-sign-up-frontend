@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.continueButtonLink
+@import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -28,7 +28,7 @@
     <p>@Messages("principal.email_verified.line_1")</p>
 
     <div class="form-group">
-        @continueButtonLink(href = "", alternativeText = Some(Messages("base.continue_to_sign_up")))
+        @continueButtonLink(href = routes.TermsController.show().url, alternativeText = Some(Messages("base.continue_to_sign_up")))
     </div>
 
 }

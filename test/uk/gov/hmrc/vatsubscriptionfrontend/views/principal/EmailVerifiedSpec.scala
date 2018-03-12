@@ -20,8 +20,9 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalEmailVerified => messages, Base => common}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base => common, PrincipalEmailVerified => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 class EmailVerifiedSpec extends ViewSpec {
@@ -50,8 +51,7 @@ class EmailVerifiedSpec extends ViewSpec {
       messages.line1
     )
 
-    // TODO up date once terms is available
-    testPage.shouldHaveContinueButtonLink("",common.continueToSignUp)
+    testPage.shouldHaveContinueButtonLink(routes.TermsController.show().url,common.continueToSignUp)
 
   }
 
