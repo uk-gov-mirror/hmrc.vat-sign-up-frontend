@@ -53,31 +53,23 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
 
   "Calling the show action of the Confirm Your Details controller" when {
-    "there is a vrn and clientDetails in the session" should {
-      "NOT_IMPLEMENTED" in {
-        mockAuthRetrieveVatDecEnrolment()
-        val request = testGetRequest.withSession(SessionKeys.userDetailsKey -> testUserDetailsJson)
+    "Your Details in the session" should {
+      "return an OK" in {
+        mockAuthEmptyRetrieval()
 
+        val request = testGetRequest.withSession(SessionKeys.userDetailsKey -> testUserDetailsJson)
         val result = TestConfirmYourDetailsController.show(request)
+
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
       }
     }
 
-    "there isn't a vrn in the session" should {
-      "redirect to Capture Vat Number page" in {
-        mockAuthRetrieveVatDecEnrolment()
-
-        val result = TestConfirmYourDetailsController.show(testGetRequest)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
-      }
-    }
 
     "there isn't a user detail in the session" should {
       "redirect to Capture Your Details page" in {
-        mockAuthRetrieveVatDecEnrolment()
+        mockAuthEmptyRetrieval()
 
         val result = TestConfirmYourDetailsController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
@@ -87,13 +79,13 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   }
 
   "Calling the submit action of the Confirm Your Details controller" when {
-    "vat number and client details are in session" when {
+    "vat number and your details are in session" when {
       lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
       def callSubmit = TestConfirmYourDetailsController.submit(request)
 
       "and store nino is successful" should {
         "redirect to agree capture email page" in {
-          mockAuthRetrieveVatDecEnrolment()
+          mockAuthEmptyRetrieval()
           mockStoreNinoSuccess(testVatNumber, testUserDetails)
 
           val result = callSubmit
@@ -107,7 +99,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "but store nino returned no match" should {
         "throw internal server exception" in {
-          mockAuthRetrieveVatDecEnrolment()
+          mockAuthEmptyRetrieval()
           mockStoreNinoNoMatch(testVatNumber, testUserDetails)
 
           val result = callSubmit
@@ -120,7 +112,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "but store nino returned no vat" should {
         "throw internal server exception" in {
-          mockAuthRetrieveVatDecEnrolment()
+          mockAuthEmptyRetrieval()
           mockStoreNinoNoVatStored(testVatNumber, testUserDetails)
 
           val result = callSubmit
@@ -133,7 +125,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "but store nino returned failure" should {
         "throw internal server exception" in {
-          mockAuthRetrieveVatDecEnrolment()
+          mockAuthEmptyRetrieval()
           mockStoreNinoNoVatStored(testVatNumber, testUserDetails)
 
           val result = callSubmit
@@ -147,7 +139,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     "vat number is not in session" should {
       "redirect to capture vat number" in {
-        mockAuthRetrieveVatDecEnrolment()
+        mockAuthEmptyRetrieval()
 
         val result = TestConfirmYourDetailsController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
@@ -155,9 +147,9 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
 
-    "client details is not in session" should {
-      "redirect to capture client details" in {
-        mockAuthRetrieveVatDecEnrolment()
+    "your details is not in session" should {
+      "redirect to capture your details" in {
+        mockAuthEmptyRetrieval()
 
         val result = TestConfirmYourDetailsController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER

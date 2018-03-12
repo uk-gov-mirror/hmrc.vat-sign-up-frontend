@@ -57,7 +57,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
         stubAuth(OK, successfulAuthResponse())
         stubStoreNinoSuccess(testVatNumber, testUserDetails)
 
-        val res = post("/confirm-details", Map(SessionKeys.userDetailsKey -> testUserDetailsJson))()
+        val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -71,7 +71,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
         stubAuth(OK, successfulAuthResponse())
         stubStoreNinoNoMatch(testVatNumber, testUserDetails)
 
-        val res = post("/confirm-details", Map(SessionKeys.userDetailsKey -> testUserDetailsJson))()
+        val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)

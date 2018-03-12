@@ -57,7 +57,7 @@ class CaptureYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the show action of the Capture Your Details controller" should {
     "go to the Capture Your Details page" in {
-      mockAuthRetrieveVatDecEnrolment()
+      mockAuthEmptyRetrieval()
 
       val result = TestCaptureYourDetailsController.show(testGetRequest)
       status(result) shouldBe Status.OK
@@ -69,8 +69,8 @@ class CaptureYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Capture Client Details controller" when {
     "form successfully submitted" should {
-      "redirect to Confirm Client Details page" in {
-        mockAuthRetrieveVatDecEnrolment()
+      "redirect to Confirm Your Details page" in {
+        mockAuthEmptyRetrieval()
 
         val request = testPostRequest(testUserDetails)
 
@@ -84,7 +84,7 @@ class CaptureYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        mockAuthRetrieveVatDecEnrolment()
+        mockAuthEmptyRetrieval()
 
         val result = TestCaptureYourDetailsController.submit(testPostRequest(testUserDetails.copy(nino = "")))
         status(result) shouldBe Status.BAD_REQUEST

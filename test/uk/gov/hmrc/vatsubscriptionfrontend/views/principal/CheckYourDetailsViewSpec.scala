@@ -45,7 +45,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def page(): Html = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.check_your_client_details(
+  def page(): Html = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.check_your_details(
     userDetailsModel = testClientDetails,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
@@ -68,10 +68,10 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     section.attr("class") shouldBe "tabular-data__data-2"
   }
 
-  "Confirm Client page view" should {
+  "Confirm Your Details page view" should {
 
     val testPage = TestView(
-      name = "Client Details View",
+      name = "Your Details View",
       title = messages.title,
       heading = messages.heading,
       page = page
@@ -79,7 +79,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
 
     testPage.shouldHaveH3(messages.subHeading)
 
-    testPage.shouldHaveForm("Client Details Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Your Details Form")(actionCall = testCall)
   }
 
   def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
@@ -105,7 +105,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     val sectionId = FirstNameId
     val expectedQuestion = messages.firstName
     val expectedAnswer = testFirstName
-    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureClientDetailsController.show().url
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
@@ -119,7 +119,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     val sectionId = LastNameId
     val expectedQuestion = messages.lastName
     val expectedAnswer = testLastName
-    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureClientDetailsController.show().url
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
@@ -133,7 +133,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     val sectionId = NinoId
     val expectedQuestion = messages.nino
     val expectedAnswer = testNino
-    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureClientDetailsController.show().url
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
@@ -147,7 +147,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     val sectionId = DobId
     val expectedQuestion = messages.dob
     val expectedAnswer = testDob.toCheckYourAnswersDateFormat
-    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureClientDetailsController.show().url
+    val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
