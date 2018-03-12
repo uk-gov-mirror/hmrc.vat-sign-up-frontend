@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
-import play.api.mvc.Result
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
@@ -68,8 +67,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
             case Right(StoreEmailAddressSuccess(false)) =>
               Redirect(routes.VerifyEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
-            //TODO Redirect to Terms controller
-              NotImplemented
+              Redirect(routes.TermsController.show())
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
           }

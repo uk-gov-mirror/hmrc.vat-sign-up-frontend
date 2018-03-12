@@ -57,16 +57,16 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
       }
     }
 
-    "return NOT_IMPLEMENTED" when {
+    "redirect to terms" when {
       "the email is successfully stored and returned with email verified flag" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreEmailAddressSuccess(emailVerified = true)
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
-        //TODO Redirect to Terms controller
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.TermsController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
