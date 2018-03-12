@@ -251,7 +251,7 @@ object MessageLookup {
     val line2 = "These terms aren't contractual and you can stop taking part in the trial at any time."
   }
 
-  object PrincipalInformationReceived{
+  object PrincipalInformationReceived {
     val title = "We've received your information"
     val heading: String = title
 
@@ -264,11 +264,12 @@ object MessageLookup {
       val heading = "After your application is approved"
       val bullet1 = "Choose accounting software that supports this service if you haven't already."
       val bullet2 = "Sign in to the software with your Government Gateway details and authorise it to interact with HMRC."
-      val bullet3 = "Add any sales and purchases that you’ve already received or paid out."
+      val bullet3 = "Add any sales and purchases that you've already received or paid out."
       val bullet4 = "Record your future sales and purchases using the software."
       val bullet5 = "Submit your VAT Returns before your deadlines."
       val line1 = "You can view your VAT Return deadlines in your accounting software or business tax account."
     }
+
   }
 
 }

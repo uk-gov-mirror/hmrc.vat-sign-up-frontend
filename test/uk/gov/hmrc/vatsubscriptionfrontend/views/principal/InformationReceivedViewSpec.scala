@@ -32,8 +32,7 @@ class InformationReceivedViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received(
-    postAction = testCall)(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received()(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
