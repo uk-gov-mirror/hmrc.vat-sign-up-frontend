@@ -19,20 +19,56 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreIdentityVerificationService
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
 @Singleton
-class IdentityVerificationCallbackController @Inject()(val controllerComponents: ControllerComponents)
+class IdentityVerificationCallbackController @Inject()(val controllerComponents: ControllerComponents,
+                                                       storeIdentityVerificationService: StoreIdentityVerificationService)
   extends AuthenticatedController() {
 
   val continue: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      //TODO - implement
-      Future.successful(NotImplemented)
+      (
+        request.session.get(vatNumberKey),
+        request.session.getModel[BusinessEntity](businessEntityKey),
+        request.session.get(identityVerificationContinueUrlKey)
+      ) match {
+        case (Some(vatNumber), Some(businessEntity), Some(continueUrl)) =>
+          storeIdentityVerificationService.storeIdentityVerification(vatNumber, continueUrl) map {
+            case Right(IdentityVerified) =>
+              businessEntity match {
+                case SoleTrader =>
+                  Redirect(routes.CaptureEmailController.show())
+                case LimitedCompany =>
+                  //TODO - implement capture company number page
+                  NotImplemented
+              }
+            case _ =>
+              //TODO - implement IV failed page
+              NotImplemented
+          }
+        case (None, _, _) =>
+          Future.successful(
+            Redirect(routes.YourVatNumberController.show())
+          )
+        case (_, None, _) =>
+          Future.successful(
+            Redirect(routes.CaptureBusinessEntityController.show())
+          )
+        case (_, _, None) =>
+          Future.successful(
+            //TODO - Redirect to capture user details
+            NotImplemented
+          )
+      }
     }
   }
-
 }

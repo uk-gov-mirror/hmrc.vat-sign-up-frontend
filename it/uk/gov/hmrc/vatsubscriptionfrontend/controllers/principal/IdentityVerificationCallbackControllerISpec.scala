@@ -17,19 +17,32 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreIdentityVerificationStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
 class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /identity-verified" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
+      stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
 
-      val res = get("/identity-verified")
+      val res = get(
+        uri = "/identity-verified",
+        cookies = Map(
+          vatNumberKey -> testVatNumber,
+          businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+          identityVerificationContinueUrlKey -> testUri
+        )
+      )
 
-      //TODO - update when implemented
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CaptureEmailController.show().url)
       )
     }
   }
