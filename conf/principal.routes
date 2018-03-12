@@ -4,22 +4,30 @@
 GET         /your-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.show
 POST        /your-vat-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.submit
 
-#Capture Email
+# Capture Email
 GET         /email-address          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.show
 POST        /email-address          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.submit
 
-#Confirm Email
+# Confirm Email
 GET         /confirm-email          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmEmailController.show
 POST        /confirm-email          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmEmailController.submit
 
-#Verify Email
+# Verify Email
 GET         /verify-email           uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.VerifyEmailController.show
 
-#Email Verified
+# Email Verified
 GET         /email-verified         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.EmailVerifiedController.show
 
-#Business Type
+# Business Type
 GET         /business-type          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.show
 POST        /business-type          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.submit
 
 GET         /identity-verified      uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.IdentityVerificationCallbackController.continue
+
+# Capture your details
+GET         /your-details           uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureYourDetailsController.show
+POST        /your-details           uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureYourDetailsController.submit
+
+# Confirm your details
+GET         /confirm-details        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmYourDetailsController.show
+POST        /confirm-details        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmYourDetailsController.submit

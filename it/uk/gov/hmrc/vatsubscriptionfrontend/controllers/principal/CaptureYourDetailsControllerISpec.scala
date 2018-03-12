@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
+package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import java.util.UUID
 
@@ -24,12 +24,12 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class CaptureClientDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /client-details" should {
+class CaptureYourDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /your-details" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+      stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/client/client-details")
+      val res = get("/your-details")
 
       res should have(
         httpStatus(OK)
@@ -37,11 +37,11 @@ class CaptureClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     }
   }
 
-  "POST /client-details" should {
+  "POST /your-details" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+      stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/client/client-details")(
+      val res = post("/your-details")(
         UserDetailsForm.userFirstName -> UUID.randomUUID().toString,
         UserDetailsForm.userLastName -> UUID.randomUUID().toString,
         UserDetailsForm.userNino -> testNino,
@@ -52,7 +52,7 @@ class CaptureClientDetailsControllerISpec extends ComponentSpecBase with CustomM
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmClientDetailsController.show().url)
+        redirectUri(routes.ConfirmYourDetailsController.show().url)
       )
     }
   }

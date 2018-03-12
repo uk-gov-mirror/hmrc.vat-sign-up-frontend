@@ -68,15 +68,15 @@ agent.capture_entity_type.soleTrader                                   = Sole tr
 agent.capture_entity_type.limitedCompany                               = Limited company
 
 ## Client Details ##
-agent.client-details.title                                            = Enter your client''s details
-agent.client-details.heading                                          = Enter your client''s details
-agent.client-details.line_1                                           = We will attempt to match these details against information we currently hold.
-agent.client-details.field_1                                          = First name
-agent.client-details.field_2                                          = Last name
-agent.client-details.field_3                                          = National Insurance number
-agent.client-details.field_4                                          = Date of birth
-agent.client_details.formhint.1.line_1                                = For example, ''QQ 12 34 56 C''.
-agent.client-details.formhint.2                                       = For example, 10 12 1990
+agent.client-details.title                                             = Enter your client''s details
+agent.client-details.heading                                           = Enter your client''s details
+agent.client-details.line_1                                            = We will attempt to match these details against information we currently hold.
+agent.client-details.field_1                                           = First name
+agent.client-details.field_2                                           = Last name
+agent.client-details.field_3                                           = National Insurance number
+agent.client-details.field_4                                           = Date of birth
+agent.client_details.formhint.1.line_1                                 = For example, ''QQ 12 34 56 C''.
+agent.client-details.formhint.2                                        = For example, 10 12 1990
 
 ## Agent Confirm Company Number page
 agent.confirm_company_number.title                                     = Confirm your client''s company registration number
@@ -140,10 +140,10 @@ agent.client-details.summary.nino                                      = Nationa
 agent.client-details.summary.dob                                       = Date of birth
 
 ## Your VAT number page
-principal.your_vat_number.title                                       = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.heading                                     = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.vatNumber.heading                           = VAT number
-principal.your_vat_number.link                                        = I want to use a different VAT number
+principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.heading                                      = Confirm you want to use this VAT number to sign up
+principal.your_vat_number.vatNumber.heading                            = VAT number
+principal.your_vat_number.link                                         = I want to use a different VAT number
 
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = What type of business are you registered as?
@@ -152,15 +152,15 @@ principal.capture_entity_type.soleTrader                               = Sole tr
 principal.capture_entity_type.limitedCompany                           = Limited company
 
 ## Principal Capture Email page
-principal.capture_email.title                                         = What is your email address?
-principal.capture_email.heading                                       = What is your email address?
-principal.capture_email.hint                                          = For example, me@me.com
+principal.capture_email.title                                          = What is your email address?
+principal.capture_email.heading                                        = What is your email address?
+principal.capture_email.hint                                           = For example, me@me.com
 
 ## Principal Confirm Email page
-principal.confirm_email.title                                         = Check your email address
-principal.confirm_email.heading                                       = Check your email address
-principal.confirm_email.email.heading                                 = Email address
-principal.confirm_email.link                                          = Change email address
+principal.confirm_email.title                                          = Check your email address
+principal.confirm_email.heading                                        = Check your email address
+principal.confirm_email.email.heading                                  = Email address
+principal.confirm_email.link                                           = Change email address
 
 ## Principal Agree Receive Email page
 principal.agree_capture_email.title                                    = Agree to get emails instead of letters
@@ -177,4 +177,24 @@ principal.verify_email.line_1                                          = We''ve 
 principal.email_verified.title                                         = You''ve verified your email address
 principal.email_verified.heading                                       = You''ve verified your email address
 principal.email_verified.line_1                                        = You''ll now receive messages and email notifications from HMRC.
+
+## Your Details ##
+principal.your-details.title                                           = Enter your details
+principal.your-details.heading                                         = Enter your details
+principal.your-details.line_1                                          = We will attempt to match these details against information we currently hold.
+principal.your-details.field_1                                         = First name
+principal.your-details.field_2                                         = Last name
+principal.your-details.field_3                                         = National Insurance number
+principal.your-details.field_4                                         = Date of birth
+principal.your.formhint.1.line_1                                       = For example, ''QQ 12 34 56 C''.
+principal.your-details.formhint.2                                      = For example, 10 12 1990
+
+# Check your details page
+principal.your-details.summary.title                                   = Confirm your details
+principal.your-details.summary.heading                                 = Check your answers
+principal.your-details.summary.sub_heading                             = You''ve told us
+principal.your-details.summary.first_name                              = First name
+principal.your-details.summary.last_name                               = Last name
+principal.your-details.summary.nino                                    = National Insurance number
+principal.your-details.summary.dob                                     = Date of birth
 
