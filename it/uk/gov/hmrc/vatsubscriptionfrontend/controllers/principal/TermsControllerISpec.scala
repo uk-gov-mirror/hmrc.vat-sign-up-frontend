@@ -39,15 +39,15 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "POST /terms-of-participation" when {
     "Submission is successful" should {
-      "NOT_IMPLEMENTED" in {
+      "redirect to information received" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionSuccess()
 
         val res = post("/terms-of-participation", cookies = Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
-        // TODO
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.InformationReceivedController.show().url)
         )
       }
     }

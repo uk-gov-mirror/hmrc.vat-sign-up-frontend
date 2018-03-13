@@ -53,16 +53,16 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Terms controller" when {
     "submission is successful" should {
-      "gNOT_IMPLEMENTED" in {
+      "goto information received" in {
         mockAuthEmptyRetrieval()
         mockSubmitSuccess(testVatNumber)
 
         val result = TestTermsController.submit(testPostRequest)
-        // TODO goto confirmation
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.InformationReceivedController.show().url)
       }
     }
+
     "submission is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthEmptyRetrieval()

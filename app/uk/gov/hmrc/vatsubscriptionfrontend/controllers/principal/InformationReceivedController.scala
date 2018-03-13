@@ -19,35 +19,19 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.SubmissionFailureResponse
-import uk.gov.hmrc.vatsubscriptionfrontend.services.SubmissionService
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.terms
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received
 
 import scala.concurrent.Future
 
 @Singleton
-class TermsController @Inject()(val controllerComponents: ControllerComponents,
-                                val submissionService: SubmissionService)
+class InformationReceivedController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(terms(routes.TermsController.submit()))
-      )
-    }
-  }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      submissionService.submit(request.session(SessionKeys.vatNumberKey)).map {
-        case Right(_) => Redirect(routes.InformationReceivedController.show())
-        case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
-      }
+      Future.successful(Ok(information_received()))
     }
   }
 
