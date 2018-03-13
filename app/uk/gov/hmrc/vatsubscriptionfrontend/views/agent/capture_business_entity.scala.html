@@ -27,9 +27,9 @@
 
 @main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("agent.capture_entity_type.heading")</h1>
-
     @summaryErrorHelper(businessEntityForm)
+
+    <h1 class="heading-large">@Messages("agent.capture_entity_type.heading")</h1>
 
     @form(action = postAction) {
 
