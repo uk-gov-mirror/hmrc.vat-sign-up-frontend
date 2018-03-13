@@ -47,7 +47,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
 
   "Calling the submit action of the Capture Business Entity controller" when {
-    //todo update when next page played
     "form successfully submitted" should {
 
       "go to the capture company number page" when {

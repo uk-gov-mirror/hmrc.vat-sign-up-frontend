@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalConfirmEmail => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testEmail
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
@@ -57,11 +58,10 @@ class ConfirmEmailSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmAndContinueButton()
 
-    //TODO change this to the actual link when it becomes available
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = ""
+      href = routes.CaptureEmailController.show().url
     )
   }
 
