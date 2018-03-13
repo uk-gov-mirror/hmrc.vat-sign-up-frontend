@@ -24,9 +24,9 @@
 
 @main_template(title = Messages("agent.capture_email.title"), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("agent.capture_email.heading")</h1>
-
     @summaryErrorHelper(emailForm)
+
+    <h1 class="heading-large">@Messages("agent.capture_email.heading")</h1>
 
     @form(action = postAction) {
         <div class="form-group">

@@ -239,6 +239,12 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
+  object PrincipalCaptureCompanyNumber {
+    val title = "What is your company number?"
+    val heading: String = title
+    val line1 = "You received this from Companies House when you set up your company. It's 8 digits and sometimes starts with 2 letters."
+  }
+
   object PrincipalTerms {
     val title = "Terms of participation"
     val heading: String = title
