@@ -23,11 +23,11 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /company-registration-number" should {
+  "GET /company-number" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-      val res = get("/company-registration-number")
+      val res = get("/company-number")
 
       res should have(
         httpStatus(OK)
@@ -35,11 +35,11 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
     }
   }
 
-  "POST /company-registration-number" should {
+  "POST /company-number" should {
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-      val res = post("/company-registration-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+      val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
       // TODO goto confirm crn
       res should have(

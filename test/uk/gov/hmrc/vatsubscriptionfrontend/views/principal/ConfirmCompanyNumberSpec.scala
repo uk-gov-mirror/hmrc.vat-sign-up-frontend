@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
+package uk.gov.hmrc.vatsubscriptionfrontend.views.principal
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{ConfirmCompanyNumber => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalConfirmCompanyNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
@@ -32,7 +32,7 @@ class ConfirmCompanyNumberSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_company_number(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.confirm_company_number(
     companyNumber = testCompanyNumber,
     postAction = testCall)(
     FakeRequest(),
@@ -60,7 +60,7 @@ class ConfirmCompanyNumberSpec extends ViewSpec {
     testPage.shouldHaveALink(
       id = "changeLink",
       text = messages.link,
-      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes.CaptureCompanyNumberController.show().url
+      href = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.CaptureCompanyNumberController.show().url
     )
   }
 
