@@ -38,7 +38,7 @@ object MessageLookup {
 
   object ErrorMessage {
     val invalidVatNumber = "Please enter a valid vat registration number"
-    val invalidCompanyNumber = "Please enter a valid company registration number"
+    val invalidCompanyNumber = "Please enter a valid company number"
   }
 
   object NotEnrolledToAS {
@@ -68,7 +68,7 @@ object MessageLookup {
   }
 
   object CaptureCompanyNumber {
-    val title = "What is your client's company registration number?"
+    val title = "What is your client's company number?"
     val heading: String = title
   }
 
@@ -92,10 +92,10 @@ object MessageLookup {
   }
 
   object ConfirmCompanyNumber {
-    val title = "Confirm your client's company registration number"
+    val title = "Confirm your client's company number"
     val heading: String = title
-    val companyNumberHeading = "Company registration number"
-    val link = "Change company registration number"
+    val companyNumberHeading = "Company number"
+    val link = "Change company number"
   }
 
   object AgreeCaptureEmail {
@@ -243,6 +243,13 @@ object MessageLookup {
     val title = "What is your company number?"
     val heading: String = title
     val line1 = "You received this from Companies House when you set up your company. It's 8 digits and sometimes starts with 2 letters."
+  }
+
+  object PrincipalConfirmCompanyNumber {
+    val title = "Confirm your company number"
+    val heading: String = title
+    val companyNumberHeading = "Company number"
+    val link = "Change company number"
   }
 
   object PrincipalTerms {

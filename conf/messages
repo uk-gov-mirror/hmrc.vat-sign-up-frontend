@@ -15,8 +15,8 @@ base.change                                                            = Change
 ## Errors
 error.business-entity.field                                            = Please select an option
 error.business-entity.summary                                          = Please select an option
-error.invalid_company_number.field                                     = Please enter a valid company registration number
-error.invalid_company_number.summary                                   = Please enter a valid company registration number
+error.invalid_company_number.field                                     = Please enter a valid company number
+error.invalid_company_number.summary                                   = Please enter a valid company number
 error.invalid_vat_number.field                                         = Please enter a valid vat registration number
 error.invalid_vat_number.summary                                       = Please enter a valid vat registration number
 error.invalid_email.field                                              = Please enter a valid email address
@@ -58,8 +58,8 @@ agent.confirm_vat_number.vatNumber.heading                             = VAT num
 agent.confirm_vat_number.link                                          = Change VAT number
 
 ## Agent Capture Company Number page
-agent.capture_company_number.title                                     = What is your client''s company registration number?
-agent.capture_company_number.heading                                   = What is your client''s company registration number?
+agent.capture_company_number.title                                     = What is your client''s company number?
+agent.capture_company_number.heading                                   = What is your client''s company number?
 
 ## Agent Capture Entity Type page
 agent.capture_entity_type.title                                        = What type of business is your client registered as?
@@ -79,10 +79,10 @@ agent.client_details.formhint.1.line_1                                 = For exa
 agent.client-details.formhint.2                                        = For example, 10 12 1990
 
 ## Agent Confirm Company Number page
-agent.confirm_company_number.title                                     = Confirm your client''s company registration number
-agent.confirm_company_number.heading                                   = Confirm your client''s company registration number
-agent.confirm_company_number.companyNumber.heading                     = Company registration number
-agent.confirm_company_number.link                                      = Change company registration number
+agent.confirm_company_number.title                                     = Confirm your client''s company number
+agent.confirm_company_number.heading                                   = Confirm your client''s company number
+agent.confirm_company_number.companyNumber.heading                     = Company number
+agent.confirm_company_number.link                                      = Change company number
 
 ## Agent Agree Receive Email page
 agent.agree_capture_email.title                                        = Agree to get emails instead of letters
@@ -222,8 +222,13 @@ principal.confirmation.subsection_2.bullet_4                           = Record 
 principal.confirmation.subsection_2.bullet_5                           = Submit your VAT Returns before your deadlines.
 principal.confirmation.subsection_2.line_1                             = You can view your VAT Return deadlines in your accounting software or <a id="bta" href="{0}">business tax account</a>.
 
-## Agent Capture Company Number page
+## Capture Company Number page
 principal.capture_company_number.title                                 = What is your company number?
 principal.capture_company_number.heading                               = What is your company number?
 principal.capture_company_number.line_1                                = You received this from Companies House when you set up your company. It''s 8 digits and sometimes starts with 2 letters.
 
+## Confirm Company Number page
+principal.confirm_company_number.title                                 = Confirm your company number
+principal.confirm_company_number.heading                               = Confirm your company number
+principal.confirm_company_number.companyNumber.heading                 = Company number
+principal.confirm_company_number.link                                  = Change company number
