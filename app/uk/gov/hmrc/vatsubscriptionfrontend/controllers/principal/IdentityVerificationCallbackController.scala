@@ -52,8 +52,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
                   Redirect(routes.CaptureCompanyNumberController.show())
               }
             case _ =>
-              //TODO - implement IV failed page
-              NotImplemented("IV failed")
+              Redirect(routes.FailedIdentityVerificationController.show())
           }
         case (None, _, _) =>
           Future.successful(

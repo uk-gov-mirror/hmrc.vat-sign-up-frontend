@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.{IdentityVerificationFailure, IdentityVerified}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreIdentityVerificationService
@@ -77,8 +77,19 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
         }
       }
       "the service returns a failure" should {
-        "NOT IMPLEMENTED" in {
-          //TODO - Update test when IV failure page is implemented
+        "go to failed identity verification" in {
+          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+          mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Left(IdentityVerificationFailure)))
+
+          val request = FakeRequest() withSession(
+            vatNumberKey -> testVatNumber,
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
+            identityVerificationContinueUrlKey -> testUri
+          )
+
+          val result = await(TestIdentityVerificationCallbackController.continue(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.FailedIdentityVerificationController.show().url)
         }
       }
     }
