@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /identity-verified" when {
     "the user selected sole trader as their business entity" should {
-      "return an SEE_OTHER to capture email" in {
+      "return an SEE_OTHER to agree to capture email" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
 
@@ -43,7 +43,7 @@ class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureEmailController.show().url)
+          redirectUri(routes.AgreeCaptureEmailController.show().url)
         )
       }
     }
