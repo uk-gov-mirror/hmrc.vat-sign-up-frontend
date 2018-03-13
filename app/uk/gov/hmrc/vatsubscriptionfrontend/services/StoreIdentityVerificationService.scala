@@ -26,7 +26,7 @@ import scala.concurrent.Future
 
 class StoreIdentityVerificationService @Inject()(storeIdentityVerificationConnector: StoreIdentityVerificationConnector) {
   def storeIdentityVerification(vatNumber: String,
-                                continueUrl: String
+                                journeyLink: String
                                )(implicit hc: HeaderCarrier): Future[StoreIdentityVerificationResponse] =
-    storeIdentityVerificationConnector.storeIdentityVerification(vatNumber, continueUrl)
+    storeIdentityVerificationConnector.storeIdentityVerification(vatNumber, journeyLink)
 }

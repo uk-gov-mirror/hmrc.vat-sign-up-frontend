@@ -24,13 +24,13 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerification
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.{IdentityVerificationFailure, IdentityVerified}
 
 class StoreIdentityVerificationHttpParserSpec extends UnitSpec {
-  val testHttpVerb = "PUT"
+  val testHttpVerb = "POST"
   val testUri = "/"
 
   "StoreIdentityVerificationHttpReads" when {
     "read" should {
-      "parse a CREATED response as an IdentityVerified" in {
-        val httpResponse = HttpResponse(CREATED)
+      "parse a NO_CONTENT response as an IdentityVerified" in {
+        val httpResponse = HttpResponse(NO_CONTENT)
 
         val res = read(testHttpVerb, testUri, httpResponse)
 
