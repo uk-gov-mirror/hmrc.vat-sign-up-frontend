@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{YourVatNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
@@ -57,7 +58,7 @@ class YourVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmAndContinueButton()
 
-    //    TODO: Complete should have a link check once new controller defined
+    testPage.shouldHaveALink("sign-in-with-different-details", messages.link, routes.SignInWithDifferentDetailsController.show().url)
 
   }
 

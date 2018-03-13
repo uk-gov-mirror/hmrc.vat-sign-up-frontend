@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
+package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
-class NoAgentClientRelationshipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+import scala.concurrent.Future
 
-  object TestNoAgentClientRelationshipController extends NoAgentClientRelationshipController(mockControllerComponents)
+class SignInWithDifferentDetailsSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  lazy val testGetRequest = FakeRequest("GET", "/not-authorised")
+  object TestSignInWithDifferentDetailsController extends SignInWithDifferentDetailsController(mockControllerComponents)
 
-  "Calling the show action of the No agent client relationship controller" should {
+  lazy val testGetRequest = FakeRequest("GET", "/sign-in-with-different-details")
+
+  "Calling the show action of the Sign in with different details controller" should {
     "return OK" in {
-      mockAuthRetrieveAgentEnrolment()
+      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
       val request = testGetRequest
 
-      val result = TestNoAgentClientRelationshipController.show(request)
+      val result = TestSignInWithDifferentDetailsController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")

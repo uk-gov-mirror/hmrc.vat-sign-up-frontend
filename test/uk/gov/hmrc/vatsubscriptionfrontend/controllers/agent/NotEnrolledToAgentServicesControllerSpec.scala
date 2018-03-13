@@ -32,8 +32,8 @@ class NotEnrolledToAgentServicesControllerSpec extends UnitSpec with GuiceOneApp
 
   lazy val testGetRequest = FakeRequest("GET", "/not-enrolled-agent-services")
 
-  "Calling the show action of the Terms controller" should {
-    "show the Terms page" in {
+  "Calling the show action of the Not enrolled to agent services controller" should {
+    "return OK" in {
       mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
       val request = testGetRequest
 
