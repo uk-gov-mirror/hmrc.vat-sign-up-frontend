@@ -23,27 +23,50 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreIdentityVerificationStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 
 class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /identity-verified" should {
-    "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
-      stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
+  "GET /identity-verified" when {
+    "the user selected sole trader as their business entity" should {
+      "return an SEE_OTHER to capture email" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
 
-      val res = get(
-        uri = "/identity-verified",
-        cookies = Map(
-          vatNumberKey -> testVatNumber,
-          businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
-          identityVerificationContinueUrlKey -> testUri
+        val res = get(
+          uri = "/identity-verified",
+          cookies = Map(
+            vatNumberKey -> testVatNumber,
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+            identityVerificationContinueUrlKey -> testUri
+          )
         )
-      )
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureEmailController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureEmailController.show().url)
+        )
+      }
+    }
+
+    "the user selected sole trader as their business entity" should {
+      "return an SEE_OTHER to capture company number" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
+
+        val res = get(
+          uri = "/identity-verified",
+          cookies = Map(
+            vatNumberKey -> testVatNumber,
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
+            identityVerificationContinueUrlKey -> testUri
+          )
+        )
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureCompanyNumberController.show().url)
+        )
+      }
     }
   }
 

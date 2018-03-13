@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
+import java.lang.ProcessBuilder.Redirect
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
@@ -48,8 +49,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
                 case SoleTrader =>
                   Redirect(routes.CaptureEmailController.show())
                 case LimitedCompany =>
-                  //TODO - implement capture company number page
-                  NotImplemented
+                  Redirect(routes.CaptureCompanyNumberController.show())
               }
             case _ =>
               //TODO - implement IV failed page
