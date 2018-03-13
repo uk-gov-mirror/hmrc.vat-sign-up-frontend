@@ -68,6 +68,27 @@ class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with
         )
       }
     }
+
+    "the user failed identity verification" should {
+      "return an SEE_OTHER to failed identity verification" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreIdentityVerification(testVatNumber, testUri)(FORBIDDEN)
+
+        val res = get(
+          uri = "/identity-verified",
+          cookies = Map(
+            vatNumberKey -> testVatNumber,
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
+            identityVerificationContinueUrlKey -> testUri
+          )
+        )
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.FailedIdentityVerificationController.show().url)
+        )
+      }
+    }
   }
 
 }
