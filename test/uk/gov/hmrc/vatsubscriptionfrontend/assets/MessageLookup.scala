@@ -177,6 +177,12 @@ object MessageLookup {
     val link = "I want to use a different VAT number"
   }
 
+  object SignInWithDifferentDetails {
+    val title = "You need to sign in with different details"
+    val heading: String = title
+    val line1 = "You need to sign in with the Government Gateway details for the business you want to sign up."
+  }
+
   object PrincipalCaptureBusinessEntity {
     val title = "What type of business are you registered as?"
     val heading: String = title

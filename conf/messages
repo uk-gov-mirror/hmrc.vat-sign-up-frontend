@@ -145,6 +145,11 @@ principal.your_vat_number.heading                                      = Confirm
 principal.your_vat_number.vatNumber.heading                            = VAT number
 principal.your_vat_number.link                                         = I want to use a different VAT number
 
+# Sign in with another login
+principal.sign_in_with_different_details.title                         = You need to sign in with different details
+principal.sign_in_with_different_details.heading                       = You need to sign in with different details
+principal.sign_in_with_different_details.line_1                        = You need to sign in with the Government Gateway details for the business you want to sign up.
+
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = What type of business are you registered as?
 principal.capture_entity_type.heading                                  = What type of business are you registered as?
