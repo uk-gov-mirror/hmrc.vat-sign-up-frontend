@@ -245,6 +245,13 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
+  object FailedIdentityVerification {
+    val title = "We couldn't confirm your details"
+    val heading: String = title
+    val line1 = "The information you provided doesn't match the details on our system."
+    val tryAgain = "Try again"
+  }
+
   object PrincipalCaptureCompanyNumber {
     val title = "What is your company number?"
     val heading: String = title

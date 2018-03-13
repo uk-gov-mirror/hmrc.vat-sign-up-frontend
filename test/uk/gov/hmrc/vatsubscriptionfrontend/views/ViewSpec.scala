@@ -188,7 +188,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     }
 
-    private def shouldHaveSubmitButton(text: String): Unit =
+    def shouldHaveSubmitButton(text: String): Unit =
       s"$name should have the a submit button (Button) '$text'" in {
         import collection.JavaConversions._
         val submitButtons = element.getElementsByTag("input").filter(_.attr("type") == "submit")
