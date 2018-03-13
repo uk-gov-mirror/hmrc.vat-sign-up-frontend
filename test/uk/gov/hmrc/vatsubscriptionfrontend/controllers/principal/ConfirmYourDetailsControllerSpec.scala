@@ -104,8 +104,10 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             val result = callSubmit
 
+            val expectedRedirectUrl = mockAppConfig.identityVerificationFrontendRedirectionUrl(testRedirectUrl)
+
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(testRedirectUrl)
+            redirectLocation(result) should contain(expectedRedirectUrl)
 
             result.session.get(SessionKeys.identityVerificationContinueUrlKey) should contain(testContinueUrl)
             result.session.get(SessionKeys.userDetailsKey) shouldBe empty

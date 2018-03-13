@@ -24,6 +24,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.play.test.UnitSpec
 import SessionCookieBaker._
+import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
 trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with WiremockHelper with BeforeAndAfterAll {
   lazy val ws = app.injector.instanceOf[WSClient]
@@ -76,5 +77,7 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
   val baseUrl: String = "/report-quarterly/vat/sign-up"
 
   def buildClient(path: String) = ws.url(s"http://localhost:$port$baseUrl$path").withFollowRedirects(false)
+
+  protected lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
 }
