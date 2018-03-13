@@ -38,7 +38,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   "POST /business-type" should {
 
-    "return a NOT_IMPLEMENTED status" when {
+    "return a SEE_OTHER status and go to capture your details" when {
       "the business type is limited company" in {
         stubAuth(OK, successfulAuthResponse())
 
@@ -51,7 +51,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a NOT_IMPLEMENTED status" when {
+    "return a SEE_OTHER status and go to capture your details" when {
       "the business type is sole trader" in {
         stubAuth(OK, successfulAuthResponse())
 

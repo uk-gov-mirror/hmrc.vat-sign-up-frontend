@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreIdentityVerificationService
 
 import scala.concurrent.Future
@@ -60,8 +60,19 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
           }
         }
         "the business entity type is Limited Company" should {
-          "NOT IMPLEMENTED" in {
-            //TODO - Update test when capture company number page is implemented
+          "return a redirect to the capture company number controller" in {
+            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+            mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
+
+            val request = FakeRequest() withSession(
+              vatNumberKey -> testVatNumber,
+              businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
+              identityVerificationContinueUrlKey -> testUri
+            )
+
+            val result = await(TestIdentityVerificationCallbackController.continue(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
           }
         }
       }
@@ -99,7 +110,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
         val result = await(
           TestIdentityVerificationCallbackController
-            .continue(FakeRequest() withSession (
+            .continue(FakeRequest() withSession(
               vatNumberKey -> testVatNumber,
               identityVerificationContinueUrlKey -> testUri
             ))
