@@ -64,9 +64,11 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
 
         val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
+        val expectedRedirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(testContinueUrl)
+
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(testContinueUrl)
+          redirectUri(expectedRedirectUrl)
         )
       }
     }

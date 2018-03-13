@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.{identityVerificationContinueUrlKey, userDetailsKey}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{IdentityVerificationProxySuccessResponse, NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 import uk.gov.hmrc.vatsubscriptionfrontend.services.{IdentityVerificationService, StoreNinoService}
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
@@ -62,7 +62,9 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
             case Right(_) =>
               identityVerificationService.start() map {
                 case Right(response) =>
-                  Redirect(response.link)
+                  val redirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(response.link)
+
+                  Redirect(redirectUrl)
                     .addingToSession(identityVerificationContinueUrlKey -> response.journeyLink)
                 case Left(error) =>
                   throw new BadGatewayException(s"Failure calling identity verification: status=${error.status}")
