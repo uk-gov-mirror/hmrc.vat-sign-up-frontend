@@ -45,7 +45,8 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureYourDetailsController.show().url)
         )
       }
     }
@@ -57,7 +58,8 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureYourDetailsController.show().url)
         )
       }
     }

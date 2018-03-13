@@ -38,15 +38,8 @@ trait MockIdentityVerificationService extends BeforeAndAfterEach with MockitoSug
     reset(mockIdentityVerificationService)
   }
 
-  private def mockStart(returnValue: Future[IdentityVerificationProxyResponse]): Unit = {
+  def mockStart(returnValue: Future[IdentityVerificationProxyResponse]): Unit = {
     when(mockIdentityVerificationService.start()(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
-
-  def mockStartSuccess(): Unit =
-    mockStart(Future.successful(Right(IdentityVerificationProxySuccessResponse("/some-journey-start-url", "/some-journey-status-url"))))
-
-  def mockStartFailure(vatNumber: String): Unit =
-    mockStart(Future.successful(Left(IdentityVerificationProxyFailureResponse(BAD_REQUEST))))
-
 }

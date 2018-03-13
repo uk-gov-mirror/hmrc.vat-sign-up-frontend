@@ -49,7 +49,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           ),
         businessEntity =>
           Future.successful(
-            NotImplemented addingToSession(SessionKeys.businessEntityKey, businessEntity)
+            Redirect(routes.CaptureYourDetailsController.show())
+              .addingToSession(SessionKeys.businessEntityKey, businessEntity)
           )
       )
     }

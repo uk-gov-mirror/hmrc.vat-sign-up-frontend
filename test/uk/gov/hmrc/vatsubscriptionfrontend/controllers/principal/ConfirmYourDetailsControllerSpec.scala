@@ -30,13 +30,20 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxySuccessResponse
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, UserDetailsModel}
-import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreNinoService
+import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.{MockIdentityVerificationService, MockStoreNinoService}
 
-class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
-  with MockStoreNinoService {
+import scala.concurrent.Future
 
-  object TestConfirmYourDetailsController extends ConfirmYourDetailsController(mockControllerComponents, mockStoreNinoService)
+class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents with MockStoreNinoService with MockIdentityVerificationService {
+
+  object TestConfirmYourDetailsController extends ConfirmYourDetailsController(
+    mockControllerComponents,
+    mockStoreNinoService,
+    mockIdentityVerificationService
+  )
 
   lazy val testGetRequest = FakeRequest("GET", "/confirm-details")
 
@@ -80,20 +87,29 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Confirm Your Details controller" when {
     "vat number and your details are in session" when {
-      lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
+      implicit lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
       def callSubmit = TestConfirmYourDetailsController.submit(request)
 
-      "and store nino is successful" should {
-        "redirect to agree capture email page" in {
-          mockAuthEmptyRetrieval()
-          mockStoreNinoSuccess(testVatNumber, testUserDetails)
+      "and store nino is successful" when {
+        "identity verification is successful" should {
+          "redirect to agree capture email page" in {
+            val testRedirectUrl = "/test/redirect/url"
+            val testContinueUrl = "/test/continue/url"
 
-          val result = callSubmit
+            mockAuthEmptyRetrieval()
+            mockStoreNinoSuccess(testVatNumber, testUserDetails)
+            mockStart(Future.successful(Right(
+              IdentityVerificationProxySuccessResponse(testRedirectUrl, testContinueUrl)
+            )))
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+            val result = callSubmit
 
-          result.session(request).get(SessionKeys.userDetailsKey) shouldBe None
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(testRedirectUrl)
+
+            result.session.get(SessionKeys.identityVerificationContinueUrlKey) should contain(testContinueUrl)
+            result.session.get(SessionKeys.userDetailsKey) shouldBe empty
+          }
         }
       }
 
