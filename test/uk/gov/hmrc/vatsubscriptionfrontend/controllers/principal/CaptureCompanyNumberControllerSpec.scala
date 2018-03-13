@@ -50,15 +50,15 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the submit action of the Capture Company Number controller" when {
     "form successfully submitted" should {
-      "NOT_IMPLEMENTED" in {
+      "goto confirm Company number page" in {
         mockAuthEmptyRetrieval()
 
         val request = testPostRequest(testCompanyNumber)
 
         val result = TestCaptureCompanyNumberController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmCompanyNumberController.show().url)
 
-        // TODO goto confirm crn
         result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
       }
     }

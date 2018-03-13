@@ -17,17 +17,15 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /company-number" should {
+class AgreeCaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /receive-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/company-number")
+      val res = get("/receive-emails")
 
       res should have(
         httpStatus(OK)
@@ -35,15 +33,15 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
     }
   }
 
-  "POST /company-number" should {
-    "return a redirect" in {
+  "POST /receive-emails" should {
+    "redirect to the capture email address page" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+      val res = post("/receive-emails")()
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmCompanyNumberController.show().url)
+        redirectUri(routes.CaptureEmailController.show().url)
       )
     }
   }

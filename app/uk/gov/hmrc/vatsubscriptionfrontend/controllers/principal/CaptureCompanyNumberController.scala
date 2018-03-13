@@ -21,7 +21,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.capture_company_number
@@ -51,7 +50,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
             ),
           companyNumber =>
             Future.successful(
-              NotImplemented.addingToSession(SessionKeys.companyNumberKey -> companyNumber)
+              Redirect(routes.ConfirmCompanyNumberController.show()).addingToSession(SessionKeys.companyNumberKey -> companyNumber)
             )
         )
       }

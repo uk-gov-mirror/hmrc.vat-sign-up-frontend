@@ -8,6 +8,14 @@ POST        /your-vat-number               uk.gov.hmrc.vatsubscriptionfrontend.c
 GET         /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureCompanyNumberController.show
 POST        /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureCompanyNumberController.submit
 
+# Confirm Company Number
+GET         /confirm-company-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmCompanyNumberController.show
+POST        /confirm-company-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmCompanyNumberController.submit
+
+#Agree Capture Email
+GET         /receive-emails                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.AgreeCaptureEmailController.show
+POST        /receive-emails                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.AgreeCaptureEmailController.submit
+
 # Capture Email
 GET         /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.show
 POST        /email-address                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureEmailController.submit

@@ -47,7 +47,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
             case Right(IdentityVerified) =>
               businessEntity match {
                 case SoleTrader =>
-                  Redirect(routes.CaptureEmailController.show())
+                  Redirect(routes.AgreeCaptureEmailController.show())
                 case LimitedCompany =>
                   Redirect(routes.CaptureCompanyNumberController.show())
               }

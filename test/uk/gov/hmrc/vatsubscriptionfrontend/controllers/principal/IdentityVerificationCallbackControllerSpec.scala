@@ -44,7 +44,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
     "there is a VAT number, business entity and IV continue url in session" when {
       "the service returns IdentityVerified" when {
         "the business entity type is Sole Trader" should {
-          "return a redirect to the capture e-mail controller" in {
+          "return a redirect to the agree to capture e-mail controller" in {
             mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
             mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
 
@@ -56,7 +56,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
 
             val result = await(TestIdentityVerificationCallbackController.continue(request))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureEmailController.show().url)
+            redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
           }
         }
         "the business entity type is Limited Company" should {
