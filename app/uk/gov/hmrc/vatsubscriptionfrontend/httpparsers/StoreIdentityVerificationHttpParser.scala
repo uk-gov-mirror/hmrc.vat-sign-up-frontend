@@ -25,7 +25,7 @@ object StoreIdentityVerificationHttpParser {
   implicit object StoreIdentityVerificationHttpReads extends HttpReads[StoreIdentityVerificationResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreIdentityVerificationResponse = {
       response.status match {
-        case CREATED => Right(IdentityVerified)
+        case NO_CONTENT => Right(IdentityVerified)
         case _ => Left(IdentityVerificationFailure)
       }
     }

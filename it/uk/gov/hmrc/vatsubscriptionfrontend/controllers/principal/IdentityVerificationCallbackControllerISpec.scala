@@ -30,7 +30,7 @@ class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with
     "the user selected sole trader as their business entity" should {
       "return an SEE_OTHER to agree to capture email" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
+        stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
 
         val res = get(
           uri = "/identity-verified",
@@ -51,7 +51,7 @@ class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with
     "the user selected sole trader as their business entity" should {
       "return an SEE_OTHER to capture company number" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
+        stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
 
         val res = get(
           uri = "/identity-verified",

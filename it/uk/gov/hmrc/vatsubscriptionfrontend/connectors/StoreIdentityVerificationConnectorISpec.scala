@@ -30,9 +30,9 @@ class StoreIdentityVerificationConnectorISpec extends ComponentSpecBase {
   private implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   "storeIdentityVerification" when {
-    "Backend returns a CREATED response" should {
+    "Backend returns a NO_CONTENT response" should {
       "return StoreNinoSuccess" in {
-        StoreIdentityVerificationStub.stubStoreIdentityVerification(testVatNumber, testUri)(CREATED)
+        StoreIdentityVerificationStub.stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
 
         val res = connector.storeIdentityVerification(testVatNumber, testUri)
 

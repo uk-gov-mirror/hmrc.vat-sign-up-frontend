@@ -42,8 +42,8 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
         request.session.getModel[BusinessEntity](businessEntityKey),
         request.session.get(identityVerificationContinueUrlKey)
       ) match {
-        case (Some(vatNumber), Some(businessEntity), Some(continueUrl)) =>
-          storeIdentityVerificationService.storeIdentityVerification(vatNumber, continueUrl) map {
+        case (Some(vatNumber), Some(businessEntity), Some(journeyLink)) =>
+          storeIdentityVerificationService.storeIdentityVerification(vatNumber, journeyLink) map {
             case Right(IdentityVerified) =>
               businessEntity match {
                 case SoleTrader =>
@@ -53,7 +53,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
               }
             case _ =>
               //TODO - implement IV failed page
-              NotImplemented
+              NotImplemented("IV failed")
           }
         case (None, _, _) =>
           Future.successful(

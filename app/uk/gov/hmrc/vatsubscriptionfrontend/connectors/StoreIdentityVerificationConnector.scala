@@ -31,10 +31,10 @@ import scala.concurrent.Future
 class StoreIdentityVerificationConnector @Inject()(http: HttpClient,
                                                    applicationConfig: AppConfig) {
   def storeIdentityVerification(vatNumber: String,
-                                continueUrl: String
+                                journeyLink: String
                                )(implicit hc: HeaderCarrier): Future[StoreIdentityVerificationResponse] =
     http.POST(
       url = applicationConfig.storeIdentityVerificationUrl(vatNumber),
-      body = Json.obj(StoreIdentityVerificationUrlKey -> continueUrl)
+      body = Json.obj(StoreIdentityVerificationUrlKey -> journeyLink)
     )
 }
