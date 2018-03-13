@@ -22,8 +22,11 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, SoleTrader}
 
 class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -47,15 +50,19 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
 
   "Calling the submit action of the Capture Business Entity controller" when {
-    //todo update when next page played
     "form successfully submitted" should {
 
       "go to Identity Verification with limited company stored in session" when {
         "the business entity is limited company" in {
           mockAuthEmptyRetrieval()
 
-          val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedCompany))
-          status(result) shouldBe Status.NOT_IMPLEMENTED //TODO Update when IV is ready
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
         }
       }
 
@@ -63,8 +70,13 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "the business entity is sole trader" in {
           mockAuthEmptyRetrieval()
 
-          val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
-          status(result) shouldBe Status.NOT_IMPLEMENTED //TODO Update when IV is ready
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }
       }
     }

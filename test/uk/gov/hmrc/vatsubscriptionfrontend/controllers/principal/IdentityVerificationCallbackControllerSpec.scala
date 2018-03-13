@@ -95,8 +95,18 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
     }
 
     "there is no IV continue url in session" should {
-      "NOT IMPLEMENTED" in {
-        //TODO - Update test when capture user details page is complete
+      "redirect to capture your details controller" in {
+        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        val result = await(
+          TestIdentityVerificationCallbackController
+            .continue(FakeRequest() withSession (
+              vatNumberKey -> testVatNumber,
+              identityVerificationContinueUrlKey -> testUri
+            ))
+        )
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
       }
     }
   }

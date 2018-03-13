@@ -65,8 +65,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
           )
         case (_, _, None) =>
           Future.successful(
-            //TODO - Redirect to capture user details
-            NotImplemented
+            Redirect(routes.CaptureYourDetailsController.show())
           )
       }
     }

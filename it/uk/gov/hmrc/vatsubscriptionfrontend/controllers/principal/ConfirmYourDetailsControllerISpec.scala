@@ -27,6 +27,8 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreNinoStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, UserDetailsModel}
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.IdentityVerificationStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxySuccessResponse
 
 class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -54,14 +56,17 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
   "POST /confirm-details" when {
     "store nino is successful" should {
       "redirect to capture email page" in {
+        val testContinueUrl = "test/continue/url"
+
         stubAuth(OK, successfulAuthResponse())
         stubStoreNinoSuccess(testVatNumber, testUserDetails)
+        stubIdentityVerificationProxy(IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
 
         val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureEmailController.show().url)
+          redirectUri(testContinueUrl)
         )
       }
     }
