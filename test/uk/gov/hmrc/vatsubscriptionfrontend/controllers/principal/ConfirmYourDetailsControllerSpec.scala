@@ -92,9 +92,9 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       def callSubmit = TestConfirmYourDetailsController.submit(request)
 
       "and store nino is successful" when {
-        "confidence level is below 200L" when {
+        "confidence level is below L200" when {
           "identity verification is successful" should {
-            "redirect to identity verification callback" in {
+            "redirect to identity verification" in {
               val testRedirectUrl = "/test/redirect/url"
               val testContinueUrl = "/test/continue/url"
 
@@ -116,8 +116,8 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             }
           }
         }
-        "and confidence level is 200L or above" should {
-            "redirect to agree capture email page" in {
+        "and confidence level is L200 or above" should {
+            "redirect to identity verification callback" in {
 
               mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L200)
               mockStoreNinoSuccess(testVatNumber, testUserDetails)
@@ -125,7 +125,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               val result = callSubmit
 
               status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+                redirectLocation(result) shouldBe Some(routes.IdentityVerificationCallbackController.continue().url)
 
               result.session.get(SessionKeys.userDetailsKey) shouldBe empty
             }
