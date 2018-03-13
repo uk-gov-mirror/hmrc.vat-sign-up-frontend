@@ -21,6 +21,7 @@ import java.util.UUID
 
 import play.api.http.Status._
 import play.api.libs.json.Json
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
@@ -54,11 +55,11 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
   }
 
   "POST /confirm-details" when {
-    "store nino is successful" should {
-      "redirect to capture email page" in {
+    "store nino is successful and confidence level is below 200L" should {
+      "redirect to identity verification callback url" in {
         val testContinueUrl = "test/continue/url"
 
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
         stubStoreNinoSuccess(testVatNumber, testUserDetails)
         stubIdentityVerificationProxy(IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
 
@@ -69,6 +70,21 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(expectedRedirectUrl)
+        )
+      }
+    }
+
+    "store nino is successful and confidence level is 200L or above" should {
+      "redirect to capture email page" in {
+
+        stubAuth(OK, confidenceLevel(ConfidenceLevel.L200))
+        stubStoreNinoSuccess(testVatNumber, testUserDetails)
+
+        val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureEmailController.show().url)
         )
       }
     }

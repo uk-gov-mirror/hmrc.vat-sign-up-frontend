@@ -19,6 +19,8 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.{identityVerificationContinueUrlKey, userDetailsKey}
@@ -52,36 +54,39 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optUserDetails = request.session.getModel[UserDetailsModel](userDetailsKey)
+    authorised()(Retrievals.confidenceLevel) {
+      confidenceLevel =>
+        val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+        val optUserDetails = request.session.getModel[UserDetailsModel](userDetailsKey)
 
-      (optVatNumber, optUserDetails) match {
-        case (Some(vatNumber), Some(userDetails)) =>
-          storeNinoService.storeNino(vatNumber, userDetails) flatMap {
-            case Right(_) =>
-              identityVerificationService.start() map {
-                case Right(response) =>
-                  val redirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(response.link)
+        (optVatNumber, optUserDetails) match {
+          case (Some(vatNumber), Some(userDetails)) =>
+            storeNinoService.storeNino(vatNumber, userDetails) flatMap {
+              case Right(_) =>
+                if (confidenceLevel.compare(ConfidenceLevel.L200) < 0) {
+                  identityVerificationService.start() map {
+                    case Right(response) =>
+                      val redirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(response.link)
 
-                  Redirect(redirectUrl)
-                    .addingToSession(identityVerificationContinueUrlKey -> response.journeyLink)
-                case Left(error) =>
-                  throw new BadGatewayException(s"Failure calling identity verification: status=${error.status}")
-              }
-            case Left(NoMatchFoundFailure) =>
-              Future.failed(new InternalServerException(s"Failure calling store nino: no match found"))
-            case Left(NoVATNumberFailure) =>
-              Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))
-            case Left(StoreNinoFailureResponse(status)) =>
-              Future.failed(new InternalServerException(s"Failure calling store nino: status=$status"))
-          }
-        case (None, _) =>
-          Future.successful(Redirect(routes.YourVatNumberController.show()))
-        case (_, None) =>
-          Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
-      }
-    } map(_ removingFromSession userDetailsKey)
+                      Redirect(redirectUrl)
+                        .addingToSession(identityVerificationContinueUrlKey -> response.journeyLink)
+                    case Left(error) =>
+                      throw new BadGatewayException(s"Failure calling identity verification: status=${error.status}")
+                  }
+                } else Future.successful(Redirect(routes.CaptureEmailController.show()))
+              case Left(NoMatchFoundFailure) =>
+                Future.failed(new InternalServerException(s"Failure calling store nino: no match found"))
+              case Left(NoVATNumberFailure) =>
+                Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))
+              case Left(StoreNinoFailureResponse(status)) =>
+                Future.failed(new InternalServerException(s"Failure calling store nino: status=$status"))
+            }
+          case (None, _) =>
+            Future.successful(Redirect(routes.YourVatNumberController.show()))
+          case (_, None) =>
+            Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+        }
+    } map (_ removingFromSession userDetailsKey)
   }
 
 }
