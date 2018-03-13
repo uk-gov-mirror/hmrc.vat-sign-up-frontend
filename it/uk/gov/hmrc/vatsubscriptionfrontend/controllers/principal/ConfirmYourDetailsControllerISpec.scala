@@ -55,8 +55,8 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
   }
 
   "POST /confirm-details" when {
-    "store nino is successful and confidence level is below 200L" should {
-      "redirect to identity verification callback url" in {
+    "store nino is successful and confidence level is below L200" should {
+      "redirect to identity verification journey" in {
         val testContinueUrl = "test/continue/url"
 
         stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
@@ -74,8 +74,8 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
       }
     }
 
-    "store nino is successful and confidence level is 200L or above" should {
-      "redirect to capture email page" in {
+    "store nino is successful and confidence level is L200 or above" should {
+      "redirect to identity verification callback url" in {
 
         stubAuth(OK, confidenceLevel(ConfidenceLevel.L200))
         stubStoreNinoSuccess(testVatNumber, testUserDetails)
@@ -84,7 +84,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureEmailController.show().url)
+          redirectUri(routes.IdentityVerificationCallbackController.continue().url)
         )
       }
     }
