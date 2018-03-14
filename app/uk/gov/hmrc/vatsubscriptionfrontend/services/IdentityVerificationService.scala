@@ -18,17 +18,17 @@ package uk.gov.hmrc.vatsubscriptionfrontend.services
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsubscriptionfrontend.connectors.IdentityVerificationProxyConnector
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxyResponse
+import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 
 import scala.concurrent.Future
 
 @Singleton
 class IdentityVerificationService @Inject()(val identityVerificationProxyConnector: IdentityVerificationProxyConnector) {
 
-  def start()(implicit request: Request[AnyContent], hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
-    identityVerificationProxyConnector.start()
+  def start(userDetails: UserDetailsModel)(implicit hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
+    identityVerificationProxyConnector.start(userDetails)
 
 }

@@ -40,8 +40,8 @@ POST        /business-type                         uk.gov.hmrc.vatsubscriptionfr
 GET         /identity-verified                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.IdentityVerificationCallbackController.continue
 
 # Failed Identity Verification
-GET         /incorrect-details                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.show
-POST        /incorrect-details                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.submit
+GET         /could-not-confirm-identity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.show
+POST        /could-not-confirm-identity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.submit
 
 # Capture your details
 GET         /your-details                          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureYourDetailsController.show
