@@ -23,6 +23,7 @@ import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.BAD_REQUEST
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxyResponse
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{IdentityVerificationProxyFailureResponse, IdentityVerificationProxySuccessResponse}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 import uk.gov.hmrc.vatsubscriptionfrontend.services.IdentityVerificationService
 
 import scala.concurrent.Future
@@ -38,8 +39,8 @@ trait MockIdentityVerificationService extends BeforeAndAfterEach with MockitoSug
     reset(mockIdentityVerificationService)
   }
 
-  def mockStart(returnValue: Future[IdentityVerificationProxyResponse]): Unit = {
-    when(mockIdentityVerificationService.start()(ArgumentMatchers.any(), ArgumentMatchers.any()))
+  def mockStart(userDetails: UserDetailsModel)(returnValue: Future[IdentityVerificationProxyResponse]): Unit = {
+    when(mockIdentityVerificationService.start(ArgumentMatchers.eq(userDetails))(ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 }

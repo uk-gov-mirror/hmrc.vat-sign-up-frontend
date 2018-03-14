@@ -19,12 +19,13 @@ package uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.CREATED
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.IdentityVerificationProxySuccessResponse
+import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
 
 object IdentityVerificationStub extends WireMockMethods {
   val proxy = "/identity-verification-proxy/journey/start"
 
-  def stubIdentityVerificationProxy(response: IdentityVerificationProxySuccessResponse): StubMapping =
+  def stubIdentityVerificationProxy(userDetails: UserDetailsModel)(status: Int, response: IdentityVerificationProxySuccessResponse): StubMapping =
     when(method = POST, uri = proxy)
-      .thenReturn(status = CREATED, body = IdentityVerificationProxySuccessResponse.writer.writes(response))
+      .thenReturn(status = status, body = IdentityVerificationProxySuccessResponse.writer.writes(response))
 
 }

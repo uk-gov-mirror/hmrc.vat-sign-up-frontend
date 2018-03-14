@@ -64,10 +64,9 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
         storeNinoService.storeNino(vatNumber, userDetails) flatMap {
           case Right(_) =>
             if(confidenceLevel < ConfidenceLevel.L200) {
-              identityVerificationService.start() map {
+              identityVerificationService.start(userDetails) map {
                 case Right(response) =>
                   val redirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(response.link)
-
                   Redirect(redirectUrl)
                     .addingToSession(identityVerificationContinueUrlKey -> response.journeyLink)
                 case Left(error) =>

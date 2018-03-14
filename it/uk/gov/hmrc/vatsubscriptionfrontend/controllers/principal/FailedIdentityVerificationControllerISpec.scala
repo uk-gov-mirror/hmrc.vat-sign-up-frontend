@@ -21,11 +21,12 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class FailedIdentityVerificationControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /incorrect-details" should {
+
+  "GET /could-not-confirm-identity" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/incorrect-details")
+      val res = get("/could-not-confirm-identity")
 
       res should have(
         httpStatus(OK)
@@ -33,11 +34,11 @@ class FailedIdentityVerificationControllerISpec extends ComponentSpecBase with C
     }
   }
 
-  "POST /incorrect-details" should {
+  "POST /could-not-confirm-identity" should {
     "redirect to the capture email address page" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/incorrect-details")()
+      val res = post("/could-not-confirm-identity")()
 
       res should have(
         httpStatus(SEE_OTHER),
@@ -45,4 +46,5 @@ class FailedIdentityVerificationControllerISpec extends ComponentSpecBase with C
       )
     }
   }
+
 }

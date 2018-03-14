@@ -61,7 +61,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
 
         stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
         stubStoreNinoSuccess(testVatNumber, testUserDetails)
-        stubIdentityVerificationProxy(IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
+        stubIdentityVerificationProxy(testUserDetails)(CREATED, IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
 
         val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 

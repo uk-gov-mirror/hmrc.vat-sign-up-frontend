@@ -100,7 +100,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
               mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
               mockStoreNinoSuccess(testVatNumber, testUserDetails)
-              mockStart(Future.successful(Right(
+              mockStart(testUserDetails)(Future.successful(Right(
                 IdentityVerificationProxySuccessResponse(testRedirectUrl, testContinueUrl)
               )))
 
