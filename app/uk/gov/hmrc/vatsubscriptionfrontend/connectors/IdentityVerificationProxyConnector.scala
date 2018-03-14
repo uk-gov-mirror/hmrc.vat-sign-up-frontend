@@ -33,19 +33,22 @@ import scala.concurrent.Future
 class IdentityVerificationProxyConnector @Inject()(val http: HttpClient,
                                                    val applicationConfig: AppConfig) {
 
+  private def startIdentityVerificationRequest: JsObject = {
+    val redirectionUrl = applicationConfig.baseUrl + routes.IdentityVerificationCallbackController.continue().url
+    Json.obj(
+      "origin" -> "mtd-vat",
+      "confidenceLevel" -> 200,
+      "completionURL" -> redirectionUrl,
+      "failureURL" -> redirectionUrl
+    )
+  }
+
   def start()(implicit request: Request[AnyContent], hc: HeaderCarrier): Future[IdentityVerificationProxyResponse] =
     http.POST[JsObject, IdentityVerificationProxyResponse](
       applicationConfig.identityVerificationStartUrl,
-      IdentityVerificationProxyConnector.startIdentityVerificationRequest
+      startIdentityVerificationRequest
     )
 
 }
 
-object IdentityVerificationProxyConnector {
-  def startIdentityVerificationRequest(implicit request: Request[AnyContent]): JsObject = Json.obj(
-    "origin" -> "mtd-vat",
-    "confidenceLevel" -> 200,
-    "completionURL" -> routes.IdentityVerificationCallbackController.continue().absoluteURL(),
-    "failureURL" -> routes.IdentityVerificationCallbackController.continue().absoluteURL()
-  )
-}
+
