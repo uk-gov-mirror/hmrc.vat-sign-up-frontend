@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 class FailedMatchingControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /error/incorrect-details" should {
-    "return an NOT_IMPLEMENTED" in {
+    "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/error/incorrect-details")
