@@ -249,3 +249,9 @@ principal.confirm_company_number.title                                 = Confirm
 principal.confirm_company_number.heading                               = Confirm your company number
 principal.confirm_company_number.companyNumber.heading                 = Company number
 principal.confirm_company_number.link                                  = Change company number
+
+## Principal Incorrect Details page
+principal.failed_matching.title                                        = We couldn''t confirm your details
+principal.failed_matching.heading                                      = We couldn''t confirm your details
+principal.failed_matching.line_1                                       = The information you provided doesn''t match the details on our system.
+principal.failed_matching.try_again                                    = Try again
