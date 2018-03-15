@@ -42,8 +42,9 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
         case Some(vatNumber) =>
           Future.successful(Ok(your_vat_number(vatNumber, routes.YourVatNumberController.submit())))
         case None =>
+          //TODO redirect to cannot-use-service-yet
           Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+            NotImplemented
           )
       }
     }
@@ -61,8 +62,9 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
               throw new InternalServerException("storeVatNumber failed")
           }
         case None =>
-          Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+          //TODO redirect to cannot-use-service-yet
+        Future.successful(
+            NotImplemented
           )
       }
     }
