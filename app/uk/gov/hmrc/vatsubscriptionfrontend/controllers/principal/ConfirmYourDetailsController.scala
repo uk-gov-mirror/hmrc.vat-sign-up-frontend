@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
+import java.lang.ProcessBuilder.Redirect
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
@@ -77,7 +78,7 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
                 addingToSession(identityVerificationContinueUrlKey -> "continueUrl"))
             }
           case Left(NoMatchFoundFailure) =>
-            Future.failed(new InternalServerException(s"Failure calling store nino: no match found"))
+            Future.successful(Redirect(routes.FailedMatchingController.show()))
           case Left(NoVATNumberFailure) =>
             Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))
           case Left(StoreNinoFailureResponse(status)) =>
