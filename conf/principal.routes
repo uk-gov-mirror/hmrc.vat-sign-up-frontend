@@ -51,6 +51,10 @@ POST        /your-details                          uk.gov.hmrc.vatsubscriptionfr
 GET         /confirm-details                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmYourDetailsController.show
 POST        /confirm-details                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmYourDetailsController.submit
 
+# Failed Identity Verification
+GET         /error/incorrect-details               uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedMatchingController.show
+POST        /error/incorrect-details               uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedMatchingController.submit
+
 #Terms
 GET         /terms-of-participation                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.TermsController.show
 POST        /terms-of-participation                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.TermsController.submit
