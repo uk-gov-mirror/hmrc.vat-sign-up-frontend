@@ -55,22 +55,40 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
   }
 
   "POST /confirm-details" when {
-    "store nino is successful and confidence level is below L200" should {
-      "redirect to identity verification journey" in {
-        val testContinueUrl = "test/continue/url"
+    "store nino is successful and confidence level is below L200" when {
+      "user matches record on CID" should {
+        "redirect to identity verification journey" in {
+          val testContinueUrl = "test/continue/url"
 
-        stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
-        stubStoreNinoSuccess(testVatNumber, testUserDetails)
-        stubIdentityVerificationProxy(testUserDetails)(CREATED, IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
+          stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
+          stubStoreNinoSuccess(testVatNumber, testUserDetails)
+          stubIdentityVerificationProxy(testUserDetails)(CREATED, IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
 
-        val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
+          val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
-        val expectedRedirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(testContinueUrl)
+          val expectedRedirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(testContinueUrl)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(expectedRedirectUrl)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(expectedRedirectUrl)
+          )
+        }
+      }
+
+      "user fails matching on CID" should {
+        "redirect to identity verification journey" in {
+          val testContinueUrl = "test/continue/url"
+
+          stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
+          stubStoreNinoNoMatch(testVatNumber, testUserDetails)
+
+          val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.FailedMatchingController.show().url)
+          )
+        }
       }
     }
 

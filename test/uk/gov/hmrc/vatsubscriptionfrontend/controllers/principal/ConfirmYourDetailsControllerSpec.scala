@@ -89,6 +89,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the submit action of the Confirm Your Details controller" when {
     "vat number and your details are in session" when {
       implicit lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
+
       def callSubmit = TestConfirmYourDetailsController.submit(request)
 
       "and store nino is successful" when {
@@ -117,31 +118,30 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
         }
         "and confidence level is L200 or above" should {
-            "redirect to identity verification callback" in {
+          "redirect to identity verification callback" in {
 
-              mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L200)
-              mockStoreNinoSuccess(testVatNumber, testUserDetails)
+            mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L200)
+            mockStoreNinoSuccess(testVatNumber, testUserDetails)
 
-              val result = callSubmit
+            val result = callSubmit
 
-              status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.IdentityVerificationCallbackController.continue().url)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.IdentityVerificationCallbackController.continue().url)
 
-              result.session.get(SessionKeys.userDetailsKey) shouldBe empty
-            }
+            result.session.get(SessionKeys.userDetailsKey) shouldBe empty
+          }
         }
       }
 
       "but store nino returned no match" should {
-        "throw internal server exception" in {
+        "goto failed matching page" in {
           mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
           mockStoreNinoNoMatch(testVatNumber, testUserDetails)
 
           val result = callSubmit
 
-          intercept[InternalServerException] {
-            await(result)
-          }
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.FailedMatchingController.show().url)
         }
       }
 
