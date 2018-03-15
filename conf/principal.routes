@@ -51,7 +51,7 @@ POST        /your-details                          uk.gov.hmrc.vatsubscriptionfr
 GET         /confirm-details                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmYourDetailsController.show
 POST        /confirm-details                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.ConfirmYourDetailsController.submit
 
-# Failed Identity Verification
+# Failed User Matching
 GET         /error/incorrect-details               uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedMatchingController.show
 POST        /error/incorrect-details               uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedMatchingController.submit
 
