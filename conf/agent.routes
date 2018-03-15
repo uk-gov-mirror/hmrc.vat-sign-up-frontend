@@ -21,6 +21,10 @@ POST        /client-details                uk.gov.hmrc.vatsubscriptionfrontend.c
 GET         /confirm-client                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmClientDetailsController.show
 POST        /confirm-client                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmClientDetailsController.submit
 
+# Failed Client Matching
+GET         /error/incorrect-details       uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.FailedClientMatchingController.show
+POST        /error/incorrect-details       uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.FailedClientMatchingController.submit
+
 # Capture Company Number
 GET         /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureCompanyNumberController.show
 POST        /company-number                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureCompanyNumberController.submit
