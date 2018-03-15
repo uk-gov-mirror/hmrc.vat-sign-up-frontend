@@ -34,16 +34,14 @@ class FailedMatchingControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
     FakeRequest("POST", "/error/incorrect-details")
 
   "Calling the show action of the Agree Capture Email controller" should {
-    "NOT_IMPLEMENTED" in {
+    "show the incorrect details page" in {
       mockAuthEmptyRetrieval()
       val request = testGetRequest
 
       val result = TestFailedMatchingController.show(request)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-
-//      status(result) shouldBe Status.OK
-//      contentType(result) shouldBe Some("text/html")
-//      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 

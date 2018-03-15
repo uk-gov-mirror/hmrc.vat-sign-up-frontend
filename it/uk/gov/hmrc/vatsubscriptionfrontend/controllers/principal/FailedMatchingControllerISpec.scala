@@ -30,8 +30,7 @@ class FailedMatchingControllerISpec extends ComponentSpecBase with CustomMatcher
 
       //todo
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
-//        httpStatus(OK)
+        httpStatus(OK)
       )
     }
   }
