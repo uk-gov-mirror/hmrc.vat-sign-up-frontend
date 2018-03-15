@@ -28,7 +28,6 @@ class FailedMatchingControllerISpec extends ComponentSpecBase with CustomMatcher
 
       val res = get("/error/incorrect-details")
 
-      //todo
       res should have(
         httpStatus(OK)
       )
