@@ -1,6 +1,6 @@
 # Add all the application routes to the app.routes file
-->         /report-quarterly/vat/sign-up/client        agent.Routes
-->         /report-quarterly/vat/sign-up               principal.Routes
+->         /vat-through-software/client                agent.Routes
+->         /vat-through-software                       principal.Routes
 ->         /                                           health.Routes
 ->         /template                                   template.Routes
 
