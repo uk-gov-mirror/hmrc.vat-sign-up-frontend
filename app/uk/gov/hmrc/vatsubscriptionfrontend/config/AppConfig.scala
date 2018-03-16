@@ -49,6 +49,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val shutterPage: String = loadConfig("shutter-page.url")
 
+  lazy val govUK: String = loadConfig("gov-uk.url")
+
   private def whitelistConfig(key: String): Seq[String] =
     runModeConfiguration.getString(key).getOrElse("").split(",").toSeq
 
