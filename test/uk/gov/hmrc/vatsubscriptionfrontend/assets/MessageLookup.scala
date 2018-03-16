@@ -127,6 +127,14 @@ object MessageLookup {
     val line2 = "They need to verify their email address to get VAT emails from HMRC."
   }
 
+  object ClientVerifiedEmail {
+    val title = "You've verified your email address"
+    val heading: String = title
+    val line1 = "HM Revenue and Customs will contact you by email instead of sending letters."
+    val link = "Return to GOV.UK"
+  }
+
+
   object ConfirmClient {
     val title = "Confirm your client"
     val heading = "Check your answers"

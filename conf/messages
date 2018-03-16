@@ -107,6 +107,12 @@ agent.verify_email.heading                                             = We''ve 
 agent.verify_email.line_1                                              = We''ve sent an email to {0}. Your client needs to click on the link in the email to verify their email address.
 agent.verify_email.line_2                                              = They need to verify their email address to get VAT emails from HMRC.
 
+# When client verified their email requested by an agent
+client.verified_email.title                                            = You''ve verified your email address
+client.verified_email.heading                                          = You''ve verified your email address
+client.verified_email.line_1                                           = HM Revenue and Customs will contact you by email instead of sending letters.
+client.verified_email.return_to_gov_uk                                 = Return to GOV.UK
+
 ## Terms page
 agent.terms.title                                                      = Terms of participation
 agent.terms.heading                                                    = Terms of participation
