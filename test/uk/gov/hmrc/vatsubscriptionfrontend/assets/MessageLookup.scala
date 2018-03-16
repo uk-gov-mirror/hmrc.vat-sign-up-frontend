@@ -34,6 +34,7 @@ object MessageLookup {
     val month = "Month"
     val year = "Year"
     val change = "Change"
+    val tryAgain = "Try again"
   }
 
   object ErrorMessage {
@@ -135,6 +136,12 @@ object MessageLookup {
     val lastName = "Last name"
     val nino = "National Insurance number"
     val dob = "Date of birth"
+  }
+
+  object FailedClientMatching {
+    val title = "There's a problem"
+    val heading: String = title
+    val description = "The details you've entered are not on our system."
   }
 
 

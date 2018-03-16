@@ -67,14 +67,15 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     }
 
     "store nino returned no match" should {
-      "INTERNAL_SERVER_ERROR" in {
+      "redirect to the failed client matching page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreNinoNoMatch(testVatNumber, testUserDetails)
 
         val res = post("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
         res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.FailedClientMatchingController.show().url)
         )
       }
     }

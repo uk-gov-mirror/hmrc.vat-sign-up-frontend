@@ -11,6 +11,7 @@ base.day                                                               = Day
 base.month                                                             = Month
 base.year                                                              = Year
 base.change                                                            = Change
+base.try_again                                                         = Try again
 
 ## Errors
 error.business-entity.field                                            = Please select an option
@@ -138,6 +139,11 @@ agent.client-details.summary.first_name                                = First n
 agent.client-details.summary.last_name                                 = Last name
 agent.client-details.summary.nino                                      = National Insurance number
 agent.client-details.summary.dob                                       = Date of birth
+
+# Failed Client Matching
+agent.failed_client_matching.title                                     = There''s a problem
+agent.failed_client_matching.heading                                   = There''s a problem
+agent.failed_client_matching.line_1                                    = The details you''ve entered are not on our system.
 
 ## Your VAT number page
 principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up

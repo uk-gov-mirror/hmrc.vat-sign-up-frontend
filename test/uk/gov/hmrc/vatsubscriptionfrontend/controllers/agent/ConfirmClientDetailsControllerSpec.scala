@@ -112,9 +112,10 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
           val result = callSubmit
 
-          intercept[InternalServerException] {
-            await(result)
-          }
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.FailedClientMatchingController.show().url)
+
+          result.session(request).get(SessionKeys.userDetailsKey) shouldBe None
         }
       }
 
