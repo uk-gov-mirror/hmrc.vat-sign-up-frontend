@@ -21,7 +21,7 @@
 
 @(email: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.verify_email.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.verify_email.title"), bodyClasses = None) {
 
     <h1 class="heading-large">@Messages("agent.verify_email.heading")</h1>
 

@@ -25,7 +25,7 @@
 
 @(BusinessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None) {
 
     @summaryErrorHelper(BusinessEntityForm)
 
