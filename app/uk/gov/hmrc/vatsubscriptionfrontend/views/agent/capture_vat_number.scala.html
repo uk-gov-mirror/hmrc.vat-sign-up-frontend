@@ -22,7 +22,7 @@
 
 @(vatNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.capture_vat_number.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.capture_vat_number.title"), bodyClasses = None) {
 
     @summaryErrorHelper(vatNumberForm)
 

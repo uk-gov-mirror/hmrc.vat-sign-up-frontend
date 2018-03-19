@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @(appConfig: AppConfig,
   title: String,
+  navigationTitle: Option[String] = None,
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
   bodyClasses: Option[String] = None,
@@ -41,7 +42,7 @@
 
 @insideHeader = {
     @uiLayouts.header_nav(
-      navTitle = Some("vat-subscription-frontend"),
+      navTitle = navigationTitle,
       navTitleLink = None,
       showBetaLink = false,
       navLinks = Some(headerNavLinks))

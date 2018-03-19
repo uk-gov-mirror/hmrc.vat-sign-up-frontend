@@ -21,7 +21,7 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title = Messages("agent.agree_capture_email.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.agree_capture_email.title"), bodyClasses = None) {
 
     <h1 class="heading-large">@Messages("agent.agree_capture_email.heading")</h1>
 

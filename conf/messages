@@ -1,3 +1,7 @@
+## Service Name
+service_name.principal_journey=Use software to submit your VAT Returns
+service_name.agent_journey=Use software to submit your client''s VAT returns
+
 ## Base
 base.continue                                                          = Continue
 base.confirmAndContinue                                                = Confirm and continue
