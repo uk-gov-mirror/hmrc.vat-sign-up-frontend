@@ -80,7 +80,7 @@ class CheckYourClientDetailsViewSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH3(messages.subHeading)
+    testPage.shouldHaveH2(messages.subHeading)
 
     testPage.shouldHaveForm("Client Details Form")(actionCall = testCall)
   }

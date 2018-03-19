@@ -49,7 +49,7 @@ class ConfirmVatNumberSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH3(messages.vatNumberHeading)
+    testPage.shouldHaveH2(messages.vatNumberHeading)
 
     testPage.shouldHavePara(testVatNumber)
 

@@ -60,7 +60,7 @@ class InformationReceivedViewSpec extends ViewSpec {
     "have a 'What happens next' section" which {
 
       s"has the section heading '${messages.Section1.heading}'" in {
-        document.select("#what-happens-next h3").text() shouldBe messages.Section1.heading
+        document.select("#what-happens-next h2").text() shouldBe messages.Section1.heading
       }
 
       s"has a paragraph stating HMRC process '${messages.Section1.line1}'" in {
@@ -72,7 +72,7 @@ class InformationReceivedViewSpec extends ViewSpec {
     "have a 'When your client’s information is approved' section" which {
 
       s"has the section heading '${messages.Section2.heading}'" in {
-        document.select("#when-your-application-is-approved h3").text() shouldBe messages.Section2.heading
+        document.select("#when-your-application-is-approved h2").text() shouldBe messages.Section2.heading
       }
 
 
