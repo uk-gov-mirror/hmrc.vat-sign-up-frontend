@@ -49,7 +49,7 @@ class ConfirmCompanyNumberSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH3(messages.companyNumberHeading)
+    testPage.shouldHaveH2(messages.companyNumberHeading)
 
     testPage.shouldHavePara(testCompanyNumber)
 

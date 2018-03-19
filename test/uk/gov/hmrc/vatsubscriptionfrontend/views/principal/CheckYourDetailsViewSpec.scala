@@ -77,7 +77,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH3(messages.subHeading)
+    testPage.shouldHaveH2(messages.subHeading)
 
     testPage.shouldHaveForm("Your Details Form")(actionCall = testCall)
   }
