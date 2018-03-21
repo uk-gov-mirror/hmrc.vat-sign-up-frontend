@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.connectors
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.Constants.StoreIdentityVerificationUr
 
 import scala.concurrent.Future
 
+@Singleton
 class StoreIdentityVerificationConnector @Inject()(http: HttpClient,
                                                    applicationConfig: AppConfig) {
   def storeIdentityVerification(vatNumber: String,
