@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.services
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsubscriptionfrontend.connectors.StoreIdentityVerificationConnector
@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerification
 
 import scala.concurrent.Future
 
+@Singleton
 class StoreIdentityVerificationService @Inject()(storeIdentityVerificationConnector: StoreIdentityVerificationConnector) {
   def storeIdentityVerification(vatNumber: String,
                                 journeyLink: String
