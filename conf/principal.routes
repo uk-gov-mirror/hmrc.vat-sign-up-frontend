@@ -43,6 +43,10 @@ GET         /identity-verified                     uk.gov.hmrc.vatsubscriptionfr
 GET         /could-not-confirm-identity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.show
 POST        /could-not-confirm-identity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.submit
 
+# Success Identity Verification
+GET         /confirmed-identity                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.SuccessIdentityVerificationController.show
+POST        /confirmed-identity                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.SuccessIdentityVerificationController.submit
+
 # Capture your details
 GET         /your-details                          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureYourDetailsController.show
 POST        /your-details                          uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureYourDetailsController.submit
