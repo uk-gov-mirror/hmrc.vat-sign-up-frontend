@@ -33,8 +33,8 @@ class FailedIdentityVerificationControllerSpec extends UnitSpec with GuiceOneApp
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/could-not-confirm-identity")
 
-  "Calling the show action of the Failed IV controller" should {
-    "show the failed IV page" in {
+  "Calling the show action of the Failed Identity Verification controller" should {
+    "show the failed Identity Verification page" in {
       mockAuthEmptyRetrieval()
       val request = testGetRequest
 
@@ -45,7 +45,7 @@ class FailedIdentityVerificationControllerSpec extends UnitSpec with GuiceOneApp
     }
   }
 
-  "Calling the submit action of the Failed IV controller" should {
+  "Calling the submit action of the Failed Identity Verification controller" should {
     "redirect to capture your details page" in {
       mockAuthEmptyRetrieval()
 
