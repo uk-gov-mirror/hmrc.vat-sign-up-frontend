@@ -71,6 +71,7 @@ agent.capture_entity_type.title                                        = What ty
 agent.capture_entity_type.heading                                      = What type of business is your client registered as?
 agent.capture_entity_type.soleTrader                                   = Sole trader
 agent.capture_entity_type.limitedCompany                               = Limited company
+agent.capture_entity_type.other                                        = Other
 
 ## Client Details ##
 agent.client-details.title                                             = Enter your client''s details
