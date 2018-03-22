@@ -24,14 +24,18 @@ object LimitedCompany extends BusinessEntity
 
 object SoleTrader extends BusinessEntity
 
+object Other extends BusinessEntity
+
 object BusinessEntity {
   val LimitedCompanyKey = "limited-company"
   val SoleTraderKey = "sole-trader"
+  val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
     override def fromString(string: String): Option[BusinessEntity] = string match {
       case LimitedCompanyKey => Some(LimitedCompany)
       case SoleTraderKey => Some(SoleTrader)
+      case OtherKey => Some(Other)
       case _ => None
     }
 

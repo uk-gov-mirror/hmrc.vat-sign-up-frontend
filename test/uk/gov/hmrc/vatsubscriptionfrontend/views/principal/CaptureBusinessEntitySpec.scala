@@ -55,6 +55,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
     soleTrader -> messages.radioSoleTrader
     limitedCompany -> messages.radioLimitedCompany
+    other -> messages.radioOther
 
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
