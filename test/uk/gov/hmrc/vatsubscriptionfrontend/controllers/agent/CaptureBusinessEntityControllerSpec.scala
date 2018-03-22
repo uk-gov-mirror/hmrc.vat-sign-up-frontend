@@ -68,6 +68,16 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           redirectLocation(result) shouldBe Some(routes.CaptureClientDetailsController.show().url)
         }
       }
+
+      "go to the cannot use service yet page" when {
+        "the business entity is other" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(other))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+        }
+      }
     }
 
     "form unsuccessfully submitted" should {
