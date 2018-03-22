@@ -44,7 +44,8 @@ class StubCitizenDetailsUserController @Inject()(val controllerComponents: Contr
 
   val show: Action[AnyContent] = Action.async { implicit request =>
       Future.successful(
-        Ok(client_details(userDetailsForm.form, routes.StubCitizenDetailsUserController.submit()))
+        Ok(client_details(userDetailsForm.form.fill(UserDetailsModel("Test", "User", "AA111111A", DateModel("01","01","1980"))),
+          routes.StubCitizenDetailsUserController.submit()))
       )
   }
 
