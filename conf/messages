@@ -46,10 +46,10 @@ agent.not_enrolled_to_agent_services.heading                           = You can
 agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
 
 ## Agent Cannot Use Service Yet page
-agent.cannot_use_service.title                                         = You can''t use this service yet
-agent.cannot_use_service.heading                                       = You can''t use this service yet
+agent.cannot_use_service.title                                         = Your client can''t use this service yet
+agent.cannot_use_service.heading                                       = Your client can''t use this service yet
 agent.cannot_use_service.line_1                                        = This service is currently only available to certain sole traders and limited companies.
-agent.cannot_use_service.line_2                                        = You must come back and sign up in April 2019, when this service is available to you.
+agent.cannot_use_service.line_2                                        = Your client must come back and sign up in April 2019, when this service is available to them.
 
 ## No agent client relationship page
 agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
