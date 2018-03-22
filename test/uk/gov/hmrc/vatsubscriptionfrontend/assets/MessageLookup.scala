@@ -207,6 +207,13 @@ object MessageLookup {
     val radioOther: String = "Other"
   }
 
+  object PrincipalCannotUseServiceYet {
+    val title = "You can't use this service yet"
+    val heading: String = title
+    val line1 = "This service is currently only available to certain sole traders and limited companies."
+    val line2 = "You must come back and sign up in April 2019, when this service is available to you."
+  }
+
   object PrincipalCaptureEmail {
     val title = "What is your email address?"
     val heading: String = title
