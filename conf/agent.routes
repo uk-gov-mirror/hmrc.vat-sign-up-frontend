@@ -13,6 +13,9 @@ POST        /vat-number                    uk.gov.hmrc.vatsubscriptionfrontend.c
 GET         /confirm-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmVatNumberController.show
 POST        /confirm-vat-number            uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmVatNumberController.submit
 
+# Cannot use service yet
+GET         /cannot-use-service-yet        uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CannotUseServiceController.show
+
 # Capture Client details
 GET         /client-details                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureClientDetailsController.show
 POST        /client-details                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureClientDetailsController.submit
