@@ -64,7 +64,7 @@
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-      betaBanner = HtmlFormat.empty,
+      betaBanner = uiLayouts.betaBanner(false, appConfig.betaFeedbackUrl, appConfig.betaFeedbackUnauthenticatedUrl),
       includeGridWrapper = false,
       serviceInfoContent = Some(serviceInfoContent))
 }
