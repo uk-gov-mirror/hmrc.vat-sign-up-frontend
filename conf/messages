@@ -272,3 +272,9 @@ principal.failed_matching.title                                        = We coul
 principal.failed_matching.heading                                      = We couldn''t confirm your details
 principal.failed_matching.line_1                                       = The information you provided doesn''t match the details on our system.
 principal.failed_matching.try_again                                    = Try again
+
+## Cannot Use Service Yet page
+principal.cannot_use_service.title                                     = You can''t use this service yet
+principal.cannot_use_service.heading                                   = You can''t use this service yet
+principal.cannot_use_service.line_1                                    = This service is currently only available to certain sole traders and limited companies.
+principal.cannot_use_service.line_2                                    = You must come back and sign up in April 2019, when this service is available to you.
