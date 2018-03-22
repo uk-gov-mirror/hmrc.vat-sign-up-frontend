@@ -99,6 +99,26 @@ class CaptureBusinessEntitySpec extends ViewSpec {
           }
         }
       }
+
+      "for the option 'Other'" should {
+
+        "have the text 'Other'" in {
+          messages.radioOther shouldEqual "Other"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#other")
+
+          "have the id 'other'" in {
+            optionLabel.attr("id") shouldEqual "other"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
     }
 
 
