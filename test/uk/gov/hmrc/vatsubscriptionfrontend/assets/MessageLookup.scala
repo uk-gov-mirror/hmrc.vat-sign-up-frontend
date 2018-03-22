@@ -267,7 +267,7 @@ object MessageLookup {
     val tryAgain = "Try again"
   }
 
-  object SuccessIdentityVerification {
+  object IdentityVerificationSuccess {
     val title = "We've confirmed your identity"
     val heading: String = title
     val line1 = "You can now sign up for this service."

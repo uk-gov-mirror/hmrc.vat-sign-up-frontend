@@ -20,28 +20,28 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{SuccessIdentityVerification => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{IdentityVerificationSuccess => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class SuccessIdentityVerificationSpec extends ViewSpec {
+class IdentityVerificationSuccessSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.success_identity_verification(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.identity_verification_success(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Success identity verification view" should {
+  "The Identity verification success view" should {
 
     val testPage = TestView(
-      name = "Success identity verification View",
+      name = "Identity verification success View",
       title = messages.title,
       heading = messages.heading,
       page = page
@@ -51,7 +51,7 @@ class SuccessIdentityVerificationSpec extends ViewSpec {
       messages.line1
     )
 
-    testPage.shouldHaveForm("Success identity verification Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Identity verification success Form")(actionCall = testCall)
 
     testPage.shouldHaveContinueButton()
 

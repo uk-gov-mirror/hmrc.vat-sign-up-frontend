@@ -226,9 +226,9 @@ principal.failed_identity_verification.line_1                          = The inf
 principal.failed_identity_verification.try_again                       = Try again
 
 ## Success IV page
-principal.success_identity_verification.title                          = We''ve confirmed your identity
-principal.success_identity_verification.heading                        = We''ve confirmed your identity
-principal.success_identity_verification.line_1                         = You can now sign up for this service.
+principal.identity_verification_success.title                          = We''ve confirmed your identity
+principal.identity_verification_success.heading                        = We''ve confirmed your identity
+principal.identity_verification_success.line_1                         = You can now sign up for this service.
 
 ## Terms page
 principal.terms.title                                                  = Terms of participation

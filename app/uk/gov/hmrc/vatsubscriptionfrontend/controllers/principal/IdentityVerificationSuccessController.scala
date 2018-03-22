@@ -21,18 +21,18 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.success_identity_verification
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.identity_verification_success
 
 import scala.concurrent.Future
 
 @Singleton
-class SuccessIdentityVerificationController @Inject()(val controllerComponents: ControllerComponents)
+class IdentityVerificationSuccessController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(success_identity_verification(routes.SuccessIdentityVerificationController.submit()))
+        Ok(identity_verification_success(routes.IdentityVerificationSuccessController.submit()))
       )
     }
   }
