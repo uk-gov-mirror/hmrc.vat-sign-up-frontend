@@ -41,7 +41,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
   )
 
   "Calling the continue action of the Identity Verification call back controller" when {
-    "there is a VAT number, business entity and IV continue url in session" when {
+    "there is a VAT number, business entity and Identity Verification continue url in session" when {
       "the service returns IdentityVerified" when {
         "the business entity type is Sole Trader" should {
           "return a redirect to the agree to capture e-mail controller" in {
@@ -116,7 +116,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
       }
     }
 
-    "there is no IV continue url in session" should {
+    "there is no Identity Verification continue url in session" should {
       "redirect to capture your details controller" in {
         mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
         val result = await(

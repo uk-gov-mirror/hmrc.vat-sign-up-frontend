@@ -24,34 +24,34 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
-class FailedIdentityVerificationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestFailedIdentityVerificationController extends FailedIdentityVerificationController(mockControllerComponents)
+  object TestIdentityVerificationSuccessController extends IdentityVerificationSuccessController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/could-not-confirm-identity")
+  lazy val testGetRequest = FakeRequest("GET", "/confirmed-identity")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/could-not-confirm-identity")
+    FakeRequest("POST", "/confirmed-identity")
 
-  "Calling the show action of the Failed Identity Verification controller" should {
-    "show the failed Identity Verification page" in {
+  "Calling the show action of the Identity Verification Success controller" should {
+    "show the success Identity Verification page" in {
       mockAuthEmptyRetrieval()
       val request = testGetRequest
 
-      val result = TestFailedIdentityVerificationController.show(request)
+      val result = TestIdentityVerificationSuccessController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
 
-  "Calling the submit action of the Failed Identity Verification controller" should {
-    "redirect to capture your details page" in {
+  "Calling the submit action of the Identity Verification Success controller" should {
+    "go to agree to receive emails page" in {
       mockAuthEmptyRetrieval()
 
-      val result = TestFailedIdentityVerificationController.submit(testPostRequest)
+      val result = TestIdentityVerificationSuccessController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+      redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
     }
   }
 
