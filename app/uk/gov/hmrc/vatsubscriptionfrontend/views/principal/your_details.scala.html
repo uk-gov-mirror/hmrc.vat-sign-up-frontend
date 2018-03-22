@@ -35,31 +35,32 @@
 
         <div class="form-group">
             <div class="form-field-group">
-            @inputHelper(
-                field = userDetailsForm(userFirstName),
-                parentForm = userDetailsForm,
-                label = Messages("principal.your-details.field_1"),
-                labelClass = Some("form-label-bold"),
-                hideLabel = false
-            )
+                @inputHelper(
+                    field = userDetailsForm(userFirstName),
+                    parentForm = userDetailsForm,
+                    label = Messages("principal.your-details.field_1"),
+                    labelBold = true,
+                    hideLabel = false
+                )
             </div>
             <div class="form-field-group">
                 @inputHelper(
-                field = userDetailsForm(userLastName),
-                parentForm = userDetailsForm,
-                label = Messages("principal.your-details.field_2"),
-                labelClass = Some("form-label-bold"),
-                hideLabel = false
-            )
+                    field = userDetailsForm(userLastName),
+                    parentForm = userDetailsForm,
+                    label = Messages("principal.your-details.field_2"),
+                    labelBold = true,
+                    hideLabel = false
+                )
             </div>
             <div class="form-field-group">
                 @inputHelper(
-                field = userDetailsForm(userNino),
-                parentForm = userDetailsForm,
-                label = Messages("principal.your-details.field_3"),
-                labelClass = Some("form-label-bold"),
-                hideLabel = false
-            )
+                    field = userDetailsForm(userNino),
+                    parentForm = userDetailsForm,
+                    label = Messages("principal.your-details.field_3"),
+                    labelBold = true,
+                    hideLabel = false,
+                    hintText = Some(Html(Messages("principal.your.formhint.1.line_1")))
+                )
             </div>
 
             @dateHelper(

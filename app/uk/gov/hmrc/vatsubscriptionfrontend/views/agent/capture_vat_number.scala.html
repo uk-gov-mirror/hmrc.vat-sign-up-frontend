@@ -32,10 +32,10 @@
 
     @form(action = postAction) {
         <div class="form-group">
-            <span class="form-hint">@Messages("agent.capture_vat_number.hint")</span>
             @inputHelper(
                 field = vatNumberForm(vatNumber),
                 label = Messages("agent.capture_vat_number.heading"),
+                hintText = Some(Html(Messages("agent.capture_vat_number.hint"))),
                 parentForm = vatNumberForm
             )
         </div>
