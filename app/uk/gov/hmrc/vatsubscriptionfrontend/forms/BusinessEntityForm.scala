@@ -47,6 +47,7 @@ object BusinessEntityForm {
       val stringValue = value match {
         case SoleTrader => soleTrader
         case LimitedCompany => limitedCompany
+        case Other => other
       }
 
       Map(key -> stringValue)

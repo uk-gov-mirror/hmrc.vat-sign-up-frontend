@@ -42,6 +42,7 @@ object BusinessEntity {
     override def toString(entity: BusinessEntity): String = entity match {
       case LimitedCompany => LimitedCompanyKey
       case SoleTrader => SoleTraderKey
+      case Other => OtherKey
     }
   }
 }
