@@ -45,6 +45,12 @@ agent.not_enrolled_to_agent_services.title                             = You can
 agent.not_enrolled_to_agent_services.heading                           = You can''t use this service yet
 agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
 
+## Agent Cannot Use Service Yet page
+agent.cannot_use_service.title                                         = You can''t use this service yet
+agent.cannot_use_service.heading                                       = You can''t use this service yet
+agent.cannot_use_service.line_1                                        = This service is currently only available to certain sole traders and limited companies.
+agent.cannot_use_service.line_2                                        = You must come back and sign up in April 2019, when this service is available to you.
+
 ## No agent client relationship page
 agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
 agent.no_agent_client_relationship.heading                             = You can''t sign up this client yet
@@ -273,7 +279,7 @@ principal.failed_matching.heading                                      = We coul
 principal.failed_matching.line_1                                       = The information you provided doesn''t match the details on our system.
 principal.failed_matching.try_again                                    = Try again
 
-## Cannot Use Service Yet page
+## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = You can''t use this service yet
 principal.cannot_use_service.heading                                   = You can''t use this service yet
 principal.cannot_use_service.line_1                                    = This service is currently only available to certain sole traders and limited companies.

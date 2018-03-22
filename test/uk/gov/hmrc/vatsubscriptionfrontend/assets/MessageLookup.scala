@@ -54,6 +54,13 @@ object MessageLookup {
     val line1 = "To use this service, your client needs to authorise you as their agent."
   }
 
+  object CannotUseServiceYet {
+    val title = "You can't use this service yet"
+    val heading: String = title
+    val line1 = "This service is currently only available to certain sole traders and limited companies."
+    val line2 = "You must come back and sign up in April 2019, when this service is available to you."
+  }
+
   object CaptureVatNumber {
     val title = "What is your client's VAT number?"
     val heading: String = title
