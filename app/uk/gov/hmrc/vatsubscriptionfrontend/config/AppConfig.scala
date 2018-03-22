@@ -84,6 +84,12 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def identityVerificationFrontendRedirectionUrl(link: String) = s"$identityVerificationFrontendUrl$link"
 
+  lazy val contactFrontendUrl = loadConfig("contact-frontend.host")
+
+  lazy val betaFeedbackUrl = s"$contactFrontendUrl/contact/beta-feedback"
+
+  lazy val betaFeedbackUnauthenticatedUrl = s"$contactFrontendUrl/contact/beta-feedback-unauthenticated"
+
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes
   *  This flag can be used by the application to check if the test only routes are enabled. i.e. this flag can be used to
