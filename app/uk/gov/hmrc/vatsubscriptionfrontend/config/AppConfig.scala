@@ -38,7 +38,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl) = s"$ggUrl/gg/sign-out?continue=$redirectionUrl"
 
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier = "MyService"
+  private val contactFormServiceIdentifier = "MTDVAT"
 
   lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   lazy val analyticsToken = loadConfig(s"google-analytics.token")
@@ -86,9 +86,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val contactFrontendUrl = loadConfig("contact-frontend.host")
 
-  lazy val betaFeedbackUrl = s"$contactFrontendUrl/contact/beta-feedback"
+  lazy val betaFeedbackUrl = s"$contactFrontendUrl/contact/beta-feedback?service=$contactFormServiceIdentifier"
 
-  lazy val betaFeedbackUnauthenticatedUrl = s"$contactFrontendUrl/contact/beta-feedback-unauthenticated"
+  lazy val betaFeedbackUnauthenticatedUrl = s"$contactFrontendUrl/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes
