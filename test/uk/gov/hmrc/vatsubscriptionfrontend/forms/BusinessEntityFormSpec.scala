@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 import play.api.data.FormError
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, Other, SoleTrader}
 
 class BusinessEntityFormSpec extends UnitSpec {
   "businessEntityForm" should {
@@ -31,6 +31,11 @@ class BusinessEntityFormSpec extends UnitSpec {
     "successfully parse a limited company entity" in {
       val res = businessEntityForm.bind(Map(businessEntity -> limitedCompany))
       res.value should contain(LimitedCompany)
+    }
+
+    "successfully parse a other entity" in {
+      val res = businessEntityForm.bind(Map(businessEntity -> other))
+      res.value should contain(Other)
     }
 
     "fail when nothing has been entered" in {

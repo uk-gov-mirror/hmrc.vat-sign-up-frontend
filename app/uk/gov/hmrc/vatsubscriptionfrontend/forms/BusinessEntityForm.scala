@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 import play.api.data.{Form, FormError}
 import play.api.data.Forms._
 import play.api.data.format.Formatter
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 
 object BusinessEntityForm {
 
@@ -29,6 +29,8 @@ object BusinessEntityForm {
 
   val limitedCompany: String = "limited-company"
 
+  val other: String = "other"
+
   val businessEntityError: String = "error.business-entity"
 
   private val formatter: Formatter[BusinessEntity] = new Formatter[BusinessEntity] {
@@ -36,6 +38,7 @@ object BusinessEntityForm {
       data.get(key) match {
         case Some(`soleTrader`) => Right(SoleTrader)
         case Some(`limitedCompany`) => Right(LimitedCompany)
+        case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, businessEntityError)))
       }
     }
@@ -44,6 +47,7 @@ object BusinessEntityForm {
       val stringValue = value match {
         case SoleTrader => soleTrader
         case LimitedCompany => limitedCompany
+        case Other => other
       }
 
       Map(key -> stringValue)

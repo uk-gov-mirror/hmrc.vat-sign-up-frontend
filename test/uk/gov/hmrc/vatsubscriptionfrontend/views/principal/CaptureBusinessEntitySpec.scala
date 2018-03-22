@@ -55,6 +55,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
     soleTrader -> messages.radioSoleTrader
     limitedCompany -> messages.radioLimitedCompany
+    other -> messages.radioOther
 
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
@@ -91,6 +92,26 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'limited-company'" in {
             optionLabel.attr("id") shouldEqual "limited-company"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'Other'" should {
+
+        "have the text 'Other'" in {
+          messages.radioOther shouldEqual "Other"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#other")
+
+          "have the id 'other'" in {
+            optionLabel.attr("id") shouldEqual "other"
           }
 
           "be of type radio" in {

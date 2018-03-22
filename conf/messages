@@ -171,6 +171,7 @@ principal.capture_entity_type.title                                    = What ty
 principal.capture_entity_type.heading                                  = What type of business are you registered as?
 principal.capture_entity_type.soleTrader                               = Sole trader
 principal.capture_entity_type.limitedCompany                           = Limited company
+principal.capture_entity_type.other                                    = Other
 
 ## Principal Capture Email page
 principal.capture_email.title                                          = What is your email address?
