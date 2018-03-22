@@ -78,6 +78,7 @@ object MessageLookup {
     val heading: String = title
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
+    val radioOther: String = "Other"
   }
 
   object ClientDetails {
