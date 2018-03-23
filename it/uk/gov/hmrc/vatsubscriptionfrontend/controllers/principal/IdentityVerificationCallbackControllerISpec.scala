@@ -24,27 +24,50 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreIdentityVer
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 
 class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /identity-verified" when {
     "the user selected sole trader as their business entity" should {
-      "return an SEE_OTHER to identity verification success" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
+      "return an SEE_OTHER to identity verification success" when {
+        "user has went through Identity Verification" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
 
-        val res = get(
-          uri = "/identity-verified",
-          cookies = Map(
-            vatNumberKey -> testVatNumber,
-            businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
-            identityVerificationContinueUrlKey -> testUri
+          val res = get(
+            uri = "/identity-verified",
+            cookies = Map(
+              vatNumberKey -> testVatNumber,
+              businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+              identityVerificationContinueUrlKey -> testUri
+            )
           )
-        )
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.IdentityVerificationSuccessController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.IdentityVerificationSuccessController.show().url)
+          )
+        }
+      }
+      "return an SEE_OTHER to identity verification success" when {
+        "user has skipped Identity Verification" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreIdentityVerification(testVatNumber, skipIvJourneyValue)(NO_CONTENT)
+
+          val res = get(
+            uri = "/identity-verified",
+            cookies = Map(
+              vatNumberKey -> testVatNumber,
+              businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+              identityVerificationContinueUrlKey -> skipIvJourneyValue
+            )
+          )
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AgreeCaptureEmailController.show().url)
+          )
+        }
       }
     }
 

@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerification
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreIdentityVerificationService
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
-
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 import scala.concurrent.Future
 
 @Singleton
@@ -44,7 +44,9 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
         case (Some(vatNumber), Some(_), Some(journeyLink)) =>
           storeIdentityVerificationService.storeIdentityVerification(vatNumber, journeyLink) map {
             case Right(IdentityVerified) =>
-              Redirect(routes.IdentityVerificationSuccessController.show())
+              if(journeyLink == skipIvJourneyValue)
+                Redirect(routes.AgreeCaptureEmailController.show())
+              else Redirect(routes.IdentityVerificationSuccessController.show())
             case _ =>
               Redirect(routes.FailedIdentityVerificationController.show())
           }
