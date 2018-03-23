@@ -23,72 +23,78 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreIdentityVerificationStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, Other, SoleTrader}
 
-class IdentityVerificationCallbackControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /identity-verified" when {
+class IdentityVerificationSuccessControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  "GET /confirmed-identity" should {
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/confirmed-identity")
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
+  }
+
+  "POST /confirmed-identity" when {
     "the user selected sole trader as their business entity" should {
-      "return an SEE_OTHER to identity verification success" in {
+      "return an SEE_OTHER to agree to receive emails" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
 
-        val res = get(
-          uri = "/identity-verified",
+        val res = post(
+          uri = "/confirmed-identity",
           cookies = Map(
-            vatNumberKey -> testVatNumber,
-            businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
-            identityVerificationContinueUrlKey -> testUri
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
           )
-        )
+        )()
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.IdentityVerificationSuccessController.show().url)
+          redirectUri(routes.AgreeCaptureEmailController.show().url)
         )
       }
     }
 
     "the user selected limited company as their business entity" should {
-      "return an SEE_OTHER to identity verification success" in {
+      "return an SEE_OTHER to capture company number" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreIdentityVerification(testVatNumber, testUri)(NO_CONTENT)
 
-        val res = get(
-          uri = "/identity-verified",
+        val res = post(
+          uri = "/confirmed-identity",
           cookies = Map(
-            vatNumberKey -> testVatNumber,
-            businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
-            identityVerificationContinueUrlKey -> testUri
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany)
           )
-        )
+        )()
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.IdentityVerificationSuccessController.show().url)
+          redirectUri(routes.CaptureCompanyNumberController.show().url)
         )
       }
     }
 
-    "the user failed identity verification" should {
-      "return an SEE_OTHER to failed identity verification" in {
+    "the user selected other as their business entity" should {
+      "return an SEE_OTHER to capture business entity" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreIdentityVerification(testVatNumber, testUri)(FORBIDDEN)
 
-        val res = get(
-          uri = "/identity-verified",
+        val res = post(
+          uri = "/confirmed-identity",
           cookies = Map(
-            vatNumberKey -> testVatNumber,
-            businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
-            identityVerificationContinueUrlKey -> testUri
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(Other)
           )
-        )
+        )()
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.FailedIdentityVerificationController.show().url)
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
     }
   }
-
 }

@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
-import java.lang.ProcessBuilder.Redirect
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
@@ -24,7 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreIdentityVerificationService
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 
@@ -42,15 +41,10 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
         request.session.getModel[BusinessEntity](businessEntityKey),
         request.session.get(identityVerificationContinueUrlKey)
       ) match {
-        case (Some(vatNumber), Some(businessEntity), Some(journeyLink)) =>
+        case (Some(vatNumber), Some(_), Some(journeyLink)) =>
           storeIdentityVerificationService.storeIdentityVerification(vatNumber, journeyLink) map {
             case Right(IdentityVerified) =>
-              businessEntity match {
-                case SoleTrader =>
-                  Redirect(routes.AgreeCaptureEmailController.show())
-                case LimitedCompany =>
-                  Redirect(routes.CaptureCompanyNumberController.show())
-              }
+              Redirect(routes.IdentityVerificationSuccessController.show())
             case _ =>
               Redirect(routes.FailedIdentityVerificationController.show())
           }

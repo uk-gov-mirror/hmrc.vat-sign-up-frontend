@@ -22,7 +22,10 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.businessEntityKey
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 
 class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -45,14 +48,39 @@ class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAp
     }
   }
 
-  "Calling the submit action of the Identity Verification Success controller" should {
-    "go to agree to receive emails page" in {
-      mockAuthEmptyRetrieval()
+  "Calling the submit action of the Identity Verification Success controller" when {
 
-      val result = TestIdentityVerificationSuccessController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+    def request(businessEntity: BusinessEntity) = FakeRequest() withSession(
+      businessEntityKey -> BusinessEntitySessionFormatter.toString(businessEntity)
+    )
+
+    "the business entity is Sole Trader" should {
+      "redirect to the Agree Capture Email page" in {
+        mockAuthEmptyRetrieval()
+        val result = TestIdentityVerificationSuccessController.submit(request(SoleTrader))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+      }
     }
+
+    "the business entity is Limited Company" should {
+      "redirect to the Capture Company Number page" in {
+        mockAuthEmptyRetrieval()
+        val result = TestIdentityVerificationSuccessController.submit(request(LimitedCompany))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+      }
+    }
+
+    "the business entity is Other" should {
+      "redirect to the Capture Business Entity page" in {
+        mockAuthEmptyRetrieval()
+        val result = TestIdentityVerificationSuccessController.submit(request(Other))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+      }
+    }
+
   }
 
 }
