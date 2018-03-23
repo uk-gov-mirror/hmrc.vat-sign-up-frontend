@@ -22,8 +22,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm.{businessEntity, _}
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.Other
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.capture_business_entity
@@ -50,15 +49,16 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
           ),
         businessEntity =>
-          businessEntity match {
-            case Other  => Future.successful(Redirect(routes.CannotUseServiceController.show()))
-            case _ => Future.successful(
-              Redirect(routes.CaptureYourDetailsController.show())
-                .addingToSession(SessionKeys.businessEntityKey, businessEntity)
-            )
-          }
-
+          Future.successful(
+            {
+              businessEntity match {
+                case Other => Redirect(routes.CannotUseServiceController.show())
+                case _ => Redirect(routes.CaptureYourDetailsController.show())
+              }
+            }.addingToSession(SessionKeys.businessEntityKey, businessEntity)
+          )
       )
     }
   }
+
 }
