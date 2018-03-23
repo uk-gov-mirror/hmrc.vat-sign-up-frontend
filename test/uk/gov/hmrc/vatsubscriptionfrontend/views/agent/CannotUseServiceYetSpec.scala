@@ -44,7 +44,8 @@ class CannotUseServiceYetSpec extends ViewSpec {
       name = "Agent Cannot use service yet View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHaveParaSeq(

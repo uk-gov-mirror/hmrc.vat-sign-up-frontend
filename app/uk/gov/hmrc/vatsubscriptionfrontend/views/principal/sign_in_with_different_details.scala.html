@@ -20,7 +20,7 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.sign_in_with_different_details.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.sign_in_with_different_details.title"), bodyClasses = None, showSignOutLink = false) {
 
     <h1 class="heading-large">@Messages("principal.sign_in_with_different_details.heading")</h1>
 

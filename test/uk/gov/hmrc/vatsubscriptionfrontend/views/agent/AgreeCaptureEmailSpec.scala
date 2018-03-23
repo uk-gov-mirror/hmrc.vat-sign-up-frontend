@@ -44,7 +44,8 @@ class AgreeCaptureEmailSpec extends ViewSpec {
       name = "Agree Capture Email View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHaveParaSeq(

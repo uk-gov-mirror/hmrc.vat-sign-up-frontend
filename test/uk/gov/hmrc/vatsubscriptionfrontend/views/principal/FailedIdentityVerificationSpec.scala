@@ -44,7 +44,8 @@ class FailedIdentityVerificationSpec extends ViewSpec {
       name = "Failed identity verification View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHavePara(

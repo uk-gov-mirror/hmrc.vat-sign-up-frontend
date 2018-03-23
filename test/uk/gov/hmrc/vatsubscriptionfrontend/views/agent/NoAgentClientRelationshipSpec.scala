@@ -41,7 +41,8 @@ class NoAgentClientRelationshipSpec extends ViewSpec {
       name = "No Agent Client Relationship View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHavePara(messages.line1)

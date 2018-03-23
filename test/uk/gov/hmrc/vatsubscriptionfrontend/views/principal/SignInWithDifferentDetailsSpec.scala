@@ -40,7 +40,8 @@ class SignInWithDifferentDetailsSpec extends ViewSpec {
       name = "Sign in with different details View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHavePara(messages.line1)
