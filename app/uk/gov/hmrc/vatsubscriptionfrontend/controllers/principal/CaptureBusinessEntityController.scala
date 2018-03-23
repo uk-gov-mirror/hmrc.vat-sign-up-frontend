@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.Other
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.capture_business_entity
 
@@ -49,10 +50,15 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           ),
         businessEntity =>
           Future.successful(
-            Redirect(routes.CaptureYourDetailsController.show())
-              .addingToSession(SessionKeys.businessEntityKey, businessEntity)
+            {
+              businessEntity match {
+                case Other => Redirect(routes.CannotUseServiceController.show())
+                case _ => Redirect(routes.CaptureYourDetailsController.show())
+              }
+            }.addingToSession(SessionKeys.businessEntityKey, businessEntity)
           )
       )
     }
   }
+
 }

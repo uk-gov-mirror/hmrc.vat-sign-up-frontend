@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 
 class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -77,6 +77,21 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
 
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+        }
+      }
+
+      "go to Cannot use service yet page" when {
+        "the business entity is other" in {
+          mockAuthEmptyRetrieval()
+
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(other)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
         }
       }
     }
