@@ -62,5 +62,18 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         )
       }
     }
+
+    "redirect to cannot use service" when {
+      "the business entity is other" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> other)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CannotUseServiceController.show().url)
+        )
+      }
+    }
   }
 }
