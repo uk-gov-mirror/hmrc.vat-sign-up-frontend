@@ -15,12 +15,14 @@
  *@
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-@(  title: String,
-    sidebarLinks: Option[Html] = None,
-    contentHeader: Option[Html] = None,
-    bodyClasses: Option[String] = None,
-    mainClass: Option[String] = None,
-    articleLayout: Boolean = true,
-    scriptElem: Option[Html] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
+@(title: String,
+  sidebarLinks: Option[Html] = None,
+  contentHeader: Option[Html] = None,
+  bodyClasses: Option[String] = None,
+  mainClass: Option[String] = None,
+  articleLayout: Boolean = true,
+  scriptElem: Option[Html] = None,
+  showSignOutLink: Boolean = true
+)(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title, Some(Messages("service_name.principal_journey")), sidebarLinks, contentHeader, bodyClasses, mainClass, articleLayout, scriptElem)(mainContent)(request, messages, appConfig)
+@main_template(title, Some(Messages("service_name.principal_journey")), sidebarLinks, contentHeader, bodyClasses, mainClass, articleLayout, scriptElem, showSignOutLink)(mainContent)(request, messages, appConfig)

@@ -20,7 +20,7 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.not_enrolled_to_agent_services.title")) {
+@agent_main_template(title = Messages("agent.not_enrolled_to_agent_services.title"), showSignOutLink = false) {
 
     <h1 class="heading-large">@Messages("agent.not_enrolled_to_agent_services.heading")</h1>
 

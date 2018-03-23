@@ -44,7 +44,8 @@ class FailedClientMatchingSpec extends ViewSpec {
       name = "Failed Client Matching View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHavePara(messages.description)

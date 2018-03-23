@@ -21,7 +21,7 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.failed_matching.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.failed_matching.title"), bodyClasses = None, showSignOutLink = false) {
 
     <h1 class="heading-large">@Messages("principal.failed_matching.heading")</h1>
 

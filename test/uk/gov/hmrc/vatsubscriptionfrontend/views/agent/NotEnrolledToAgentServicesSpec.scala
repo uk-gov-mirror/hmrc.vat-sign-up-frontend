@@ -40,7 +40,8 @@ class NotEnrolledToAgentServicesSpec extends ViewSpec {
       name = "Not Enrolled to Agent Services View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
     testPage.shouldHavePara(messages.line1)
