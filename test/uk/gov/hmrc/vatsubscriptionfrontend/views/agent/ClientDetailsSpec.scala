@@ -54,7 +54,7 @@ class ClientDetailsSpec extends ViewSpec {
 
     testPage.shouldHaveTextField(userFirstName, messages.field1, hideLabel = false)
     testPage.shouldHaveTextField(userLastName, messages.field2, hideLabel = false)
-    testPage.shouldHaveTextField(userNino, messages.field3, hideLabel = false)
+    testPage.shouldHaveTextField(userNino, messages.field3 + " " + messages.formhint1_line1, hideLabel = false)
     testPage.shouldHaveDateField(
       id = userDateOfBirth,
       legend = messages.field4,

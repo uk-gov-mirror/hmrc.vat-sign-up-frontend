@@ -30,13 +30,12 @@
 
     @form(action = postAction) {
         <div class="form-group">
-            <span class="form-hint">@Messages("agent.capture_email.hint")</span>
             @inputHelper(
                 field = emailForm(email),
                 label = Messages("agent.capture_email.heading"),
-                parentForm = emailForm
+                parentForm = emailForm,
+                hintText = Some(Html(Messages("agent.capture_email.hint")))
             )
-
             @continueButton()
         </div>
     }
