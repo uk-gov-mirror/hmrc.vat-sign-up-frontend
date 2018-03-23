@@ -25,7 +25,9 @@
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
-  scriptElem: Option[Html] = None)(implicit request: Request[_], messages: Messages)
+  scriptElem: Option[Html] = None,
+  showSignOutLink: Boolean = true
+)(implicit request: Request[_], messages: Messages)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -38,7 +40,11 @@
     <meta name="format-detection" content="telephone=no" />
 }
 
-@headerNavLinks = {}
+@headerNavLinks = {
+    @if(showSignOutLink) {
+        <li><a id="logOutNavHref" href=@appConfig.ggSignOutUrl()>@Messages("base.sign_out")</a></li>
+    }
+}
 
 @insideHeader = {
     @uiLayouts.header_nav(

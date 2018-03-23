@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.views
 
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base => common}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -24,6 +23,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base => common}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 
 trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
@@ -237,7 +237,8 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
   class TestView(override val name: String,
                  title: String,
                  heading: String,
-                 page: => Html) extends ElementTest {
+                 page: => Html,
+                 haveSignOutInBanner: Boolean) extends ElementTest {
 
     lazy val document: Document = Jsoup.parse(page.body)
     override lazy val element: Element = document.getElementById("content")
@@ -252,13 +253,22 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       h1.text() shouldBe heading
     }
 
+    s"$name should ${if (!haveSignOutInBanner) "not "}have a sign out link in the banner" in {
+      val signOut = document.getElementById("logOutNavHref")
+      if (haveSignOutInBanner)
+        signOut should not be null
+      else
+        signOut shouldBe null
+    }
+
   }
 
   object TestView {
     def apply(name: String,
               title: String,
               heading: String,
-              page: => Html): TestView = new TestView(name, title, heading, page)
+              page: => Html,
+              haveSignOutInBanner: Boolean = true): TestView = new TestView(name, title, heading, page, haveSignOutInBanner)
   }
 
 }
