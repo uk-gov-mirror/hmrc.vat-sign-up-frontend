@@ -42,40 +42,23 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
 
   "Calling the continue action of the Identity Verification call back controller" when {
     "there is a VAT number, business entity and Identity Verification continue url in session" when {
-      "the service returns IdentityVerified" when {
-        "the business entity type is Sole Trader" should {
-          "return a redirect to the agree to capture e-mail controller" in {
-            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
-            mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
+      "the service returns IdentityVerified" should {
+        "return a redirect to the identity verification success controller" in {
+          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+          mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
 
-            val request = FakeRequest() withSession(
-              vatNumberKey -> testVatNumber,
-              businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
-              identityVerificationContinueUrlKey -> testUri
-            )
+          val request = FakeRequest() withSession(
+            vatNumberKey -> testVatNumber,
+            businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+            identityVerificationContinueUrlKey -> testUri
+          )
 
-            val result = await(TestIdentityVerificationCallbackController.continue(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
-          }
-        }
-        "the business entity type is Limited Company" should {
-          "return a redirect to the capture company number controller" in {
-            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
-            mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
-
-            val request = FakeRequest() withSession(
-              vatNumberKey -> testVatNumber,
-              businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany),
-              identityVerificationContinueUrlKey -> testUri
-            )
-
-            val result = await(TestIdentityVerificationCallbackController.continue(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
-          }
+          val result = await(TestIdentityVerificationCallbackController.continue(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.IdentityVerificationSuccessController.show().url)
         }
       }
+
       "the service returns a failure" should {
         "go to failed identity verification" in {
           mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))

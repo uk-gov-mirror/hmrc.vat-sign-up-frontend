@@ -19,8 +19,11 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.businessEntityKey
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.identity_verification_success
 
 import scala.concurrent.Future
@@ -39,8 +42,16 @@ class IdentityVerificationSuccessController @Inject()(val controllerComponents: 
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      val businessEntity = request.session.getModel[BusinessEntity](businessEntityKey)
       Future.successful(
-        Redirect(routes.AgreeCaptureEmailController.show())
+        businessEntity match {
+          case Some(SoleTrader) =>
+            Redirect(routes.AgreeCaptureEmailController.show())
+          case Some(LimitedCompany) =>
+            Redirect(routes.CaptureCompanyNumberController.show())
+          case _ =>
+            Redirect(routes.CaptureBusinessEntityController.show())
+        }
       )
     }
   }
