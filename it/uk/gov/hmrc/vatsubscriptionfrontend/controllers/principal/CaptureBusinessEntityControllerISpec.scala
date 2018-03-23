@@ -63,5 +63,18 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         )
       }
     }
+
+    "return a SEE_OTHER status and go to capture your details" when {
+      "the business type is other" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> other)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CannotUseServiceController.show().url)
+        )
+      }
+    }
   }
 }
