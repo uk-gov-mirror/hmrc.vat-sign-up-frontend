@@ -149,8 +149,8 @@ agent.confirmation.subsection_2.bullet_4                               = Record 
 agent.confirmation.subsection_2.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or <a id="bta" href="{0}">business tax account</a>.
 
 # Check your client's details page
-agent.client-details.summary.title                                     = Confirm your client
-agent.client-details.summary.heading                                   = Check your answers
+agent.client-details.summary.title                                     = Confirm your client''s details
+agent.client-details.summary.heading                                   = Confirm your client''s details
 agent.client-details.summary.sub_heading                               = You''ve told us
 agent.client-details.summary.first_name                                = First name
 agent.client-details.summary.last_name                                 = Last name
@@ -220,7 +220,7 @@ principal.your-details.formhint.2                                      = For exa
 
 # Check your details page
 principal.your-details.summary.title                                   = Confirm your details
-principal.your-details.summary.heading                                 = Check your answers
+principal.your-details.summary.heading                                 = Confirm your details
 principal.your-details.summary.sub_heading                             = You''ve told us
 principal.your-details.summary.first_name                              = First name
 principal.your-details.summary.last_name                               = Last name
