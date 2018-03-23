@@ -27,4 +27,5 @@ object Constants {
     val VatReferenceKey = "VATRegNo"
   }
 
+  val skipIvJourneyValue = "skipIdentityVerification"
 }

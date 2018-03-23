@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerification
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreIdentityVerificationService
-
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 import scala.concurrent.Future
 
 class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneAppPerSuite
@@ -43,19 +43,38 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
   "Calling the continue action of the Identity Verification call back controller" when {
     "there is a VAT number, business entity and Identity Verification continue url in session" when {
       "the service returns IdentityVerified" should {
-        "return a redirect to the identity verification success controller" in {
-          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
-          mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
+        "return a redirect to the identity verification success controller" when {
+          "when confidence level is below 200" in {
+            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+            mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
 
-          val request = FakeRequest() withSession(
-            vatNumberKey -> testVatNumber,
-            businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
-            identityVerificationContinueUrlKey -> testUri
-          )
+            val request = FakeRequest() withSession(
+              vatNumberKey -> testVatNumber,
+              businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+              identityVerificationContinueUrlKey -> testUri
+            )
 
-          val result = await(TestIdentityVerificationCallbackController.continue(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.IdentityVerificationSuccessController.show().url)
+            val result = await(TestIdentityVerificationCallbackController.continue(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.IdentityVerificationSuccessController.show().url)
+          }
+        }
+
+        "return a redirect to the agree to receive emails controller" when {
+          "when confidence level is 200 or above" in {
+            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+            mockStoreIdentityVerification(testVatNumber, skipIvJourneyValue)(Future.successful(Right(IdentityVerified)))
+
+            val request = FakeRequest() withSession(
+              vatNumberKey -> testVatNumber,
+              businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader),
+              identityVerificationContinueUrlKey -> skipIvJourneyValue
+            )
+
+            val result = await(TestIdentityVerificationCallbackController.continue(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+          }
         }
       }
 

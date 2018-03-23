@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
-import java.lang.ProcessBuilder.Redirect
-import javax.inject.{Inject, Singleton}
 
+import javax.inject.{Inject, Singleton}
+import  uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
@@ -75,7 +75,7 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
               }
             } else {
               Future.successful(Redirect(routes.IdentityVerificationCallbackController.continue()).
-                addingToSession(identityVerificationContinueUrlKey -> "continueUrl"))
+                addingToSession(identityVerificationContinueUrlKey -> skipIvJourneyValue))
             }
           case Left(NoMatchFoundFailure) =>
             Future.successful(Redirect(routes.FailedMatchingController.show()))
