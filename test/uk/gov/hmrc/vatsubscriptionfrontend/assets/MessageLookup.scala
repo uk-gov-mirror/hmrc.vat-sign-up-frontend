@@ -115,7 +115,7 @@ object MessageLookup {
   }
 
   object CaptureEmail {
-    val title = "What is your client’s email address?"
+    val title = "What is your client's email address?"
     val heading: String = title
     val hint = "For example, me@me.com"
   }
@@ -165,7 +165,7 @@ object MessageLookup {
     val title = "Terms of participation"
     val heading: String = title
     val line1 = "By taking part in this trial, you agree that either you or your client will:"
-    val bullet1 = "use accounting software that supports Making Tax Digital to record your client’s sales and purchases, then to submit their VAT Returns"
+    val bullet1 = "use accounting software that supports Making Tax Digital to record your client's sales and purchases, then to submit their VAT Returns"
     val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of your accounting period"
     val bullet3 = "tell HMRC if your client stops trading and then submit their final VAT Return"
     val bullet4 = "tell HMRC if your client wants to leave this trial"
