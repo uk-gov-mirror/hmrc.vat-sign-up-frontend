@@ -19,14 +19,15 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
-import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreIdentityVerificationService
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
-import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
+
 import scala.concurrent.Future
 
 @Singleton
@@ -41,11 +42,17 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
         request.session.getModel[BusinessEntity](businessEntityKey),
         request.session.get(identityVerificationContinueUrlKey)
       ) match {
-        case (Some(vatNumber), Some(_), Some(journeyLink)) =>
+        case (Some(_), Some(Other), Some(_))  => Future.successful(Redirect(routes.CaptureBusinessEntityController.show()))
+        case (Some(vatNumber), Some(businessEntity), Some(journeyLink)) =>
+
           storeIdentityVerificationService.storeIdentityVerification(vatNumber, journeyLink) map {
             case Right(IdentityVerified) =>
-              if(journeyLink == skipIvJourneyValue)
-                Redirect(routes.AgreeCaptureEmailController.show())
+              if(journeyLink == skipIvJourneyValue){
+                businessEntity match {
+                  case LimitedCompany => Redirect(routes.CaptureCompanyNumberController.show())
+                  case SoleTrader => Redirect(routes.AgreeCaptureEmailController.show())
+                }
+              }
               else Redirect(routes.IdentityVerificationSuccessController.show())
             case _ =>
               Redirect(routes.FailedIdentityVerificationController.show())
