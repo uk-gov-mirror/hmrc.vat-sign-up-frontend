@@ -61,10 +61,9 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
       )(Future.successful(new ~(Unit, Enrolments(Set()))))
 
       val result = TestYourVatNumberController.show(testGetRequest)
-      //TODO redirect to cannot-use-service-yet
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-      //      status(result) shouldBe Status.SEE_OTHER
 
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
     }
   }
 
