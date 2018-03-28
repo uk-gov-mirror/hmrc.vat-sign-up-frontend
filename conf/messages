@@ -1,6 +1,12 @@
+# override for default values which contained the invalid apostrophe symbols
+global.error.pageNotFound404.heading                                   = This page can''t be found
+global.error.InternalServerError500.heading                            = Sorry, we''re experiencing technical difficulties
+error.address.invalid.character                                        = This line contains an invalid character. Valid characters are: A-Z a-z 0-9 - '' , / & space
+
+
 ## Service Name
-service_name.principal_journey=Use software to submit your VAT Returns
-service_name.agent_journey=Use software to submit your client''s VAT returns
+service_name.principal_journey                                         = Use software to submit your VAT Returns
+service_name.agent_journey                                             = Use software to submit your client''s VAT returns
 
 ## Base
 base.continue                                                          = Continue
@@ -242,12 +248,12 @@ principal.identity_verification_success.line_1                         = You can
 principal.terms.title                                                  = Terms of participation
 principal.terms.heading                                                = Terms of participation
 principal.terms.line_1                                                 = By taking part in this trial, you agree to:
-principal.terms.bullet_1                                               = use accounting software that supports Making Tax Digital to record your sales and purchases, then to submit your VAT returns
-principal.terms.bullet_2                                               = submit each VAT return within one calendar month and 7 days from the end of your accounting period
-principal.terms.bullet_3                                               = authorise any third party you use (such as your accountant) and be responsible for any information they give to HMRC on your behalf
+principal.terms.bullet_1                                               = use relevant software to record your sales and purchases, then to submit your VAT returns
+principal.terms.bullet_2                                               = submit each VAT Return within one calendar month and 7 days from the end of your accounting period
+principal.terms.bullet_3                                               = authorise any third party you use (such as your accountant) and have responsibility for any information they give to HMRC on your behalf
 principal.terms.bullet_4                                               = tell HMRC if you stop trading and then submit your final VAT return
 principal.terms.bullet_5                                               = tell HMRC if you want to leave this trial
-principal.terms.line_2                                                 = These terms aren''t contractual and you can stop taking part in the trial at any time.
+principal.terms.line_2                                                 = These terms are not contractual and you can stop taking part in the trial at any time.
 
 ## Confirmation page
 principal.confirmation.title                                           = We''ve received your information
@@ -282,5 +288,5 @@ principal.failed_matching.try_again                                    = Try aga
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = You can''t use this service yet
 principal.cannot_use_service.heading                                   = You can''t use this service yet
-principal.cannot_use_service.line_1                                    = This service is currently only available to certain sole traders and limited companies.
-principal.cannot_use_service.line_2                                    = You must come back and sign up in April 2019, when this service is available to you.
+principal.cannot_use_service.line_1                                    = This service is only available to some limited companies and sole traders.
+principal.cannot_use_service.line_2                                    = You''ll be able to sign up for this service by April 2019.
