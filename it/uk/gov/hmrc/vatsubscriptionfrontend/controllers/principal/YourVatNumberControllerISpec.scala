@@ -17,8 +17,6 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
@@ -36,19 +34,38 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
     }
   }
 
-  "POST /your-vat-number" should {
-    "redirect to the capture client business entity page" when {
-      "the vat number is successfully stored" in {
-        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubStoreVatNumberSuccess()
+  "POST /your-vat-number" when {
+    "the vat number is on the profile" should {
+      "redirect to the capture client business entity page" when {
+        "the vat number is successfully stored" in {
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubStoreVatNumberSuccess()
 
-        val res = post("/your-vat-number")()
+          val res = post("/your-vat-number")()
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureBusinessEntityController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureBusinessEntityController.show().url)
+          )
+        }
+      }
+    }
+
+    "the vat number is not on the profile" should {
+      "redirect to the cannot use this service page" when {
+        "the vat number is successfully stored" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreVatNumberSuccess()
+
+          val res = post("/your-vat-number")()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CannotUseServiceController.show().url)
+          )
+        }
       }
     }
   }
+
 }
