@@ -135,11 +135,11 @@ client.verified_email.return_to_gov_uk                                 = Return 
 agent.terms.title                                                      = Terms of participation
 agent.terms.heading                                                    = Terms of participation
 agent.terms.line_1                                                     = By taking part in this trial, you agree that either you or your client will:
-agent.terms.bullet_1                                                   = use accounting software that supports Making Tax Digital to record your client''s sales and purchases, then to submit their VAT Returns
-agent.terms.bullet_2                                                   = submit each VAT Return within one calendar month and 7 days from the end of your accounting period
+agent.terms.bullet_1                                                   = use relevant software to record your client''s sales and purchases, then to submit their VAT Returns
+agent.terms.bullet_2                                                   = submit each VAT Return within one calendar month and 7 days from the end of their accounting period
 agent.terms.bullet_3                                                   = tell HMRC if your client stops trading and then submit their final VAT Return
 agent.terms.bullet_4                                                   = tell HMRC if your client wants to leave this trial
-agent.terms.line_2                                                     = These terms aren''t contractual and your client can leave the trial at any time.
+agent.terms.line_2                                                     = These terms are not contractual and your client can stop taking part in this trial at any time.
 
 ## Confirmation page
 agent.confirmation.title                                               = We''ve received your client''s information
