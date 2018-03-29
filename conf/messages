@@ -32,6 +32,9 @@ error.invalid_vat_number.field                                         = Please 
 error.invalid_vat_number.summary                                       = Please enter a valid vat registration number
 error.invalid_email.field                                              = Please enter a valid email address
 error.invalid_email.summary                                            = Please enter a valid email address
+error.exceeds_max_length_email.field                                   = Email address must be 132 characters or less
+error.exceeds_max_length_email.summary                                 = Email address must be 132 characters or less
+
 
 error.invalid_first_name.field                                         = Please enter a valid first name
 error.invalid_first_name.summary                                       = Please enter a valid first name
