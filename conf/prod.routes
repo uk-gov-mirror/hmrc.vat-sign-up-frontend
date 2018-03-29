@@ -1,7 +1,8 @@
 # Add all the application routes to the app.routes file
-->         /vat-through-software/sign-up/client        agent.Routes
-->         /vat-through-software/sign-up               principal.Routes
-->         /                                           health.Routes
-->         /template                                   template.Routes
+->         /vat-through-software/sign-up/client              agent.Routes
+->         /vat-through-software/sign-up                     principal.Routes
+->         /                                                 health.Routes
+->         /template                                         template.Routes
 
-GET        /admin/metrics                              @com.kenshoo.play.metrics.MetricsController.metrics
+GET        /admin/metrics                                    com.kenshoo.play.metrics.MetricsController.metrics
+GET        /vat-through-software/sign-up/assets/*file        controllers.Assets.at(path="/public", file)
