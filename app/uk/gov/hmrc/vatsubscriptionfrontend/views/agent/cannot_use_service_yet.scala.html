@@ -20,7 +20,7 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("agent.cannot_use_service.title"), bodyClasses = None, showSignOutLink = false) {
+@agent_main_template(title = Messages("agent.cannot_use_service.title"), bodyClasses = None, showSignOutLink = false) {
 
     <h1 class="heading-large">@Messages("agent.cannot_use_service.heading")</h1>
 
