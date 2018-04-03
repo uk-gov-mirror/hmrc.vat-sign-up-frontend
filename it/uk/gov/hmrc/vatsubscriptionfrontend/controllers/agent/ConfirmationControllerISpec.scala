@@ -21,13 +21,18 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
 class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /information-received" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/information-received")
+      val res = get("/client/information-received",
+        Map(
+          SessionKeys.businessEntityKey -> SoleTrader.toString
+        )
+      )
 
       res should have(
         httpStatus(OK)
@@ -43,7 +48,8 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.emailKey -> testEmail
+          SessionKeys.emailKey -> testEmail,
+          SessionKeys.businessEntityKey -> SoleTrader.toString
         ))()
 
       res should have(
@@ -55,6 +61,7 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
       session.keys should not contain SessionKeys.vatNumberKey
       session.keys should not contain SessionKeys.companyNumberKey
       session.keys should not contain SessionKeys.emailKey
+      session.keys should not contain SessionKeys.businessEntityKey
     }
   }
 }

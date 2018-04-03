@@ -23,7 +23,9 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirmation
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
@@ -34,7 +36,10 @@ class ConfirmationController @Inject()(val controllerComponents: ControllerCompo
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(confirmation(routes.ConfirmationController.submit()))
+        Ok(confirmation(
+          request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).get,
+          routes.ConfirmationController.submit()
+        ))
       )
     }
   }
@@ -43,7 +48,13 @@ class ConfirmationController @Inject()(val controllerComponents: ControllerCompo
     authorised() {
       Future.successful(
         Redirect(routes.CaptureVatNumberController.show())
-          .removingFromSession(SessionKeys.vatNumberKey, SessionKeys.companyNumberKey, SessionKeys.emailKey, SessionKeys.userDetailsKey)
+          .removingFromSession(
+            SessionKeys.vatNumberKey,
+            SessionKeys.companyNumberKey,
+            SessionKeys.emailKey,
+            SessionKeys.businessEntityKey,
+            SessionKeys.userDetailsKey
+          )
       )
     }
   }
