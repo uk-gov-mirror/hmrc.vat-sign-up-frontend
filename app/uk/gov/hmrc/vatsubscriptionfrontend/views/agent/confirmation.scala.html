@@ -17,12 +17,17 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 
-@(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(entityType: BusinessEntity, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.confirmation.title")) {
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-complete.js")></script>
+}
 
-    <div class="govuk-box-highlight">
+@agent_main_template(title = Messages("agent.confirmation.title"), scriptElem = Some(scripts)) {
+
+    <div data-entity-type="@entityType.toString" class="govuk-box-highlight">
         <section id="confirmation-heading">
             <h1 class="heading-xlarge">@Messages("agent.confirmation.heading")</h1>
         </section>

@@ -19,12 +19,14 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{LimitedCompany, Other, SoleTrader}
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.capture_business_entity
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
@@ -47,11 +49,13 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           Future.successful(
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
           ),
-        {
-          case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
-          case SoleTrader  => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
-          case Other  => Future.successful(Redirect(routes.CannotUseServiceController.show()))
-        }
+        entityType => {
+          entityType match {
+            case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+            case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
+            case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
+          }
+        }.map(_.addingToSession(SessionKeys.businessEntityKey, entityType))
       )
     }
   }
