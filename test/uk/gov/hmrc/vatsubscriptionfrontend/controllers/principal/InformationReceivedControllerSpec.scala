@@ -21,13 +21,15 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
 class InformationReceivedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   object TestInformationReceivedController extends InformationReceivedController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/information-received")
+  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(SessionKeys.businessEntityKey -> SoleTrader.toString)
 
   "Calling the show action of the information received controller" should {
     "show the information received page" in {

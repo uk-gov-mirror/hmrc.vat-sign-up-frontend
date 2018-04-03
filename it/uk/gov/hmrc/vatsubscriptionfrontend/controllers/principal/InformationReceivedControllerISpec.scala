@@ -17,15 +17,17 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
 class InformationReceivedControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /information-received" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-      val res = get("/information-received")
+      val res = get("/information-received", Map(SessionKeys.businessEntityKey -> SoleTrader.toString))
 
       res should have(
         httpStatus(OK)

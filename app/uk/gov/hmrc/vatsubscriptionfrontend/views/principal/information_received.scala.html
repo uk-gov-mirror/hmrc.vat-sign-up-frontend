@@ -17,12 +17,17 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers._
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(entityType: BusinessEntity)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.confirmation.title"), showSignOutLink = false) {
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-complete.js")></script>
+}
 
-    <div class="govuk-box-highlight">
+@principal_main_template(title = Messages("principal.confirmation.title"), scriptElem = Some(scripts), showSignOutLink = false) {
+
+    <div data-entity-type="@entityType.toString" class="govuk-box-highlight">
         <section id="confirmation-heading">
             <h1 class="heading-xlarge">@Messages("principal.confirmation.heading")</h1>
         </section>

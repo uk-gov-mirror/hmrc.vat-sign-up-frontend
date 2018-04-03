@@ -24,6 +24,8 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base, PrincipalInformationReceived => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
+
 
 class InformationReceivedViewSpec extends ViewSpec {
 
@@ -32,7 +34,7 @@ class InformationReceivedViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received()(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received(SoleTrader)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -44,6 +46,10 @@ class InformationReceivedViewSpec extends ViewSpec {
 
     s"have the title '${messages.title}'" in {
       document.title() should be(messages.title)
+    }
+
+    "have the business entity type on a data attribute embedded exactly once" in {
+      document.select(s"""[data-entity-type="${SoleTrader.toString}"]""").size() shouldBe 1
     }
 
     "have a confirmation banner" which {

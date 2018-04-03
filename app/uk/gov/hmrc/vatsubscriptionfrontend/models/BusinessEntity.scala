@@ -18,7 +18,16 @@ package uk.gov.hmrc.vatsubscriptionfrontend.models
 
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils.SessionFormatter
 
-sealed trait BusinessEntity
+sealed trait BusinessEntity {
+
+  import BusinessEntity._
+
+  override def toString: String = this match {
+    case LimitedCompany => LimitedCompanyKey
+    case SoleTrader => SoleTraderKey
+    case Other => OtherKey
+  }
+}
 
 object LimitedCompany extends BusinessEntity
 
@@ -45,4 +54,5 @@ object BusinessEntity {
       case Other => OtherKey
     }
   }
+
 }
