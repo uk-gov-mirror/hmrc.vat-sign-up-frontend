@@ -18,18 +18,29 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid}
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns.emailRegex
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.ConstraintUtil._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.MappingUtil._
 
 object EmailForm {
 
   val email = "email"
 
-  private def vatNumberValidFormat(vatNumber: String) = vatNumber matches emailRegex
+  val MaxLengthEmail = 132
+
+  val emailMaxLength: Constraint[String] = Constraint("email.maxLength")(
+    email => if (email.trim.length > MaxLengthEmail) Invalid("error.exceeds_max_length_email") else Valid
+  )
+  val emailInvalid: Constraint[String] = Constraint("email.invalid")(
+    email => if (email matches emailRegex) Valid else Invalid("error.invalid_email")
+  )
+
 
   private val emailValidationForm = Form(
     single(
-      email -> text.verifying("error.invalid_email", vatNumberValidFormat _)
+      email -> optText.toText.verifying(emailMaxLength andThen emailInvalid)
     )
   )
 

@@ -29,6 +29,8 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     val error_key = "error.invalid_email"
 
+    val maxlength_error_key = "error.exceeds_max_length_email"
+
     "validate that data containing a valid email passes" in {
       val actual = emailForm.bind(Map(email -> testEmail)).value
       actual shouldBe Some(testEmail)
@@ -43,5 +45,18 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
       val formWithError = emailForm.bind(Map(email -> "invalid"))
       formWithError.errors should contain(FormError(email, error_key))
     }
+
+    "validate that email does not exceed max length" in {
+      val exceed = emailForm.bind(Map(email -> ("a" * (MaxLengthEmail + 1)))).errors
+      exceed should contain(FormError(email, maxlength_error_key))
+      exceed.seq.size shouldBe 1
+    }
+
+    "validate that email allows max length" in {
+      val errors = emailForm.bind(Map(email -> ("a" * MaxLengthEmail))).errors
+      errors should not contain FormError(email, maxlength_error_key)
+    }
+
+
   }
 }

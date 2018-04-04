@@ -22,14 +22,18 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsubscriptionfrontend.models._
 
 class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents{
   
   object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/business-type")
+  implicit val testGetRequest = FakeRequest("GET", "/business-type")
+
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
@@ -56,6 +60,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedCompany))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
         }
       }
 
@@ -66,6 +72,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureClientDetailsController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }
       }
 
@@ -76,6 +84,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(other))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
         }
       }
     }

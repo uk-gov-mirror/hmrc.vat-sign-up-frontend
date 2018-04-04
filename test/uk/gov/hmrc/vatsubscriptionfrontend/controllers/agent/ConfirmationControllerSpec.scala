@@ -27,12 +27,13 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
 class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   object TestConfirmationController extends ConfirmationController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/information-received")
+  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(SessionKeys.businessEntityKey -> SoleTrader.toString)
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/information-received")

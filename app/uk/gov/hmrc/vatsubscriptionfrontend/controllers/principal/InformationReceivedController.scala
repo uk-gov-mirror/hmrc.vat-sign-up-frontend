@@ -19,11 +19,14 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.information_received
+import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity
 
 import scala.concurrent.Future
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 
 @Singleton
 class InformationReceivedController @Inject()(val controllerComponents: ControllerComponents)
@@ -31,7 +34,7 @@ class InformationReceivedController @Inject()(val controllerComponents: Controll
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(information_received()))
+      Future.successful(Ok(information_received(request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).get)))
     }
   }
 

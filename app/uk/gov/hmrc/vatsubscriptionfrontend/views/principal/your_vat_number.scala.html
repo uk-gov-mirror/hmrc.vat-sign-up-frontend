@@ -22,7 +22,12 @@
 
 @(vatNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.your_vat_number.title"), bodyClasses = None) {
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-confirm-vat.js")></script>
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-change-vat.js")></script>
+}
+
+@principal_main_template(title = Messages("principal.your_vat_number.title"), bodyClasses = None, scriptElem = Some(scripts)) {
 
     <h1 class="heading-large">@Messages("principal.your_vat_number.heading")</h1>
 
