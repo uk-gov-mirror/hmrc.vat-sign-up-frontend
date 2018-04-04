@@ -32,10 +32,11 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
   
   object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents)
 
-  implicit val testGetRequest = FakeRequest("GET", "/business-entity")
+  implicit val testGetRequest = FakeRequest("GET", "/business-type")
+
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/business-entity").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
+    FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
 
   "Calling the show action of the Capture Entity Type controller" should {
     "go to the Capture Entity Type page" in {

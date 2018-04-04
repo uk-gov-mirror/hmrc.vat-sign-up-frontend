@@ -24,11 +24,11 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /business-entity" should {
+  "GET /business-type" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/business-entity")
+      val res = get("/client/business-type")
 
       res should have(
         httpStatus(OK)
@@ -36,12 +36,12 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     }
   }
 
-  "POST /business-entity" should {
+  "POST /business-type" should {
     "redirect to capture company number name" when {
       "the business entity is limited company" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> limitedCompany)
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -54,7 +54,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       "the business entity is sole trader" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> soleTrader)
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -67,7 +67,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       "the business entity is other" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = post("/client/business-entity")(BusinessEntityForm.businessEntity -> other)
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> other)
 
         res should have(
           httpStatus(SEE_OTHER),
