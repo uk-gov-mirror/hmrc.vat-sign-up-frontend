@@ -37,8 +37,8 @@ GET         /confirm-company-number        uk.gov.hmrc.vatsubscriptionfrontend.c
 POST        /confirm-company-number        uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.ConfirmCompanyNumberController.submit
 
 #Capture Business Entity
-GET         /business-entity               uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureBusinessEntityController.show
-POST        /business-entity               uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureBusinessEntityController.submit
+GET         /business-type                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureBusinessEntityController.show
+POST        /business-type                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.CaptureBusinessEntityController.submit
 
 #Agree Capture Email
 GET         /receive-emails                uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.AgreeCaptureEmailController.show
