@@ -5,7 +5,7 @@ error.address.invalid.character                                        = This li
 
 
 ## Service Name
-service_name.principal_journey                                         = Use software to submit your VAT Returns
+service_name.principal_journey                                         = Use software to submit your VAT returns
 service_name.agent_journey                                             = Use software to submit your client''s VAT returns
 
 ## Base
