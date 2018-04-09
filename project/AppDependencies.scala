@@ -19,7 +19,6 @@ object AppDependencies {
   private val jsoupVersion =  "1.8.1"
   private val mockitoVersion = "2.7.6"
   private val wiremockVersion = "2.5.1"
-  private val playLanguageVersion = "3.4.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "govuk-template" % "5.18.0",
@@ -27,8 +26,7 @@ object AppDependencies {
     ws,
     "uk.gov.hmrc" %% "bootstrap-play-25" % "1.5.0",
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion,
-    "uk.gov.hmrc" %% "play-language" % playLanguageVersion
+    "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion
   )
 
   def test = {
