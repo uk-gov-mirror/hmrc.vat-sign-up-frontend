@@ -18,25 +18,57 @@ package uk.gov.hmrc.vatsubscriptionfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid}
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.PreprocessedForm
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.ConstraintUtil._
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.MappingUtil._
 
 object CompanyNumberForm {
 
   val companyNumber = "companyNumber"
-  val companyNumberRegex = "^([SC]{2}[0-9]{6}|[0-9]{8})$"
+  private val allNumbersRegex = "^([0-9]{1,8})$".r
+  private val withPrefixRegex = "^([A-Za-z][A-Za-z0-9])([0-9]{0,6})$".r
+  private val maxLength = 8
 
-  private def companyNumberValidFormat(companyNumber: String) = companyNumber matches companyNumberRegex
+  // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/426891/uniformResourceIdentifiersCustomerGuide.pdf
+  lazy val validCompanyNumberPrefixes = Set(
+    "AC", "ZC", "FC", "GE",
+    "LP", "OC", "SE", "SA",
+    "SZ", "SF", "GS", "SL",
+    "SO", "SC", "ES", "NA",
+    "NZ", "NF", "GN", "NL",
+    "NC", "R0", "NI", "EN",
+    "IP", "SP", "IC", "SI",
+    "NP", "NV", "RC", "SR",
+    "NR", "NO"
+  )
+
+  val withinMaxLength: Constraint[String] = Constraint("companyNumber.maxLength")(
+    companyNumber => if (companyNumber.length <= maxLength) Valid else Invalid("error.invalid_company_number")
+  )
+
+  val allNumbers: Constraint[String] = Constraint("companyNumber.allNumbers") {
+    case allNumbersRegex(numbers) if numbers.toInt > 0 => Valid
+    case x => Invalid("error.invalid_company_number")
+  }
+
+  lazy val numbersWithValidPrefix: Constraint[String] = Constraint("companyNumber.prefix") {
+    case withPrefixRegex(prefix, numbers) if validCompanyNumberPrefixes.contains(prefix) && numbers.toInt > 0 => Valid
+    case x => Invalid("error.invalid_company_number")
+  }
+
+  lazy val companyNumberValidation: Constraint[String] = withinMaxLength andThen (numbersWithValidPrefix or allNumbers)
 
   private val companyNumberValidationForm = Form(
     single(
-      companyNumber -> text.verifying("error.invalid_company_number", companyNumberValidFormat _)
+      companyNumber -> optText.toText.verifying(companyNumberValidation)
     )
   )
 
   import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.TrimOption._
 
-  val companyNumberForm = PreprocessedForm(
+  lazy val companyNumberForm = PreprocessedForm(
     validation = companyNumberValidationForm,
     trimRules = Map(companyNumber -> all),
     caseRules = Map(companyNumber -> upper)

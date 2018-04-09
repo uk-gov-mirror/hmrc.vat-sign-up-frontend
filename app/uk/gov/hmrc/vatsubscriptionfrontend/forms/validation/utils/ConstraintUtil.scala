@@ -33,6 +33,17 @@ object ConstraintUtil {
         }
       )
 
+    def or(newCons: Constraint[A]): Constraint[A] =
+      constraint((data: A) =>
+        cons.apply(data) match {
+          case Valid => Valid
+          case invalid => newCons.apply(data) match {
+            case Valid => Valid
+            case _ => invalid // return the first invalid message
+          }
+        }
+      )
+
   }
 
 }
