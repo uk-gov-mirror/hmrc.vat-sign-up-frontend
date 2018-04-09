@@ -1,5 +1,9 @@
 # microservice specific routes
 
+# Home page
+GET         /                              uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.HomeController.show
+GET         /start                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.HomeController.show
+
 # Not enrolled
 GET         /there-is-a-problem            uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.NotEnrolledToAgentServicesController.show
 
