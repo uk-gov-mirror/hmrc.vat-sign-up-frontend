@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
 class HomeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestHomeController extends HomeController(mockControllerComponents)
+  object TestHomeController extends GuidanceController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/start")
 

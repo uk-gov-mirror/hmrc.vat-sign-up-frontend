@@ -342,7 +342,7 @@ object MessageLookup {
 
   }
 
-  object AgentHome {
+  object AgentGuidance {
     val title = "Use software to submit your client's VAT Returns"
     val heading = "Use software to submit your client's VAT Returns"
     val line1 = "From April 2019, sole trader businesses and limited companies with a turnover above £85,000 must submit their VAT Returns using software that supports Making Tax Digital."

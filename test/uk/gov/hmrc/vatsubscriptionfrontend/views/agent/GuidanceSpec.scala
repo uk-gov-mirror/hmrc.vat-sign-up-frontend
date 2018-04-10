@@ -21,19 +21,19 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base, AgentHome => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base, AgentGuidance => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent.routes
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class HomeViewSpec extends ViewSpec {
+class GuidanceSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.home(
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.guidance(
   )(FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -46,7 +46,7 @@ class HomeViewSpec extends ViewSpec {
 
   lazy val document = Jsoup.parse(page.body)
 
-  "The Home view" should {
+  "The guidance view" should {
 
     import ExternalUrls._
 

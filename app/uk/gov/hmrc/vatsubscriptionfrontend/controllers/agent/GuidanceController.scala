@@ -24,10 +24,10 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.home
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.guidance
 
 @Singleton
-class HomeController @Inject()(val controllerComponents: ControllerComponents)
+class GuidanceController @Inject()(val controllerComponents: ControllerComponents)
   extends FrontendController() with I18nSupport{
 
   implicit val appConfig: AppConfig = controllerComponents.appConfig
@@ -35,6 +35,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents)
   override def messagesApi = controllerComponents.messagesApi
 
   val show: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(home()))
+    Future.successful(Ok(guidance()))
   }
 }
