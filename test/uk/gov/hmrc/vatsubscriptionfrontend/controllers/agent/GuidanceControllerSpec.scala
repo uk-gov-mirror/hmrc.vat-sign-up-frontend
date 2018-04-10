@@ -23,16 +23,16 @@ import uk.gov.hmrc.play.test.UnitSpec
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
-class HomeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class GuidanceControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestHomeController extends GuidanceController(mockControllerComponents)
+  object TestGuidanceController extends GuidanceController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/start")
+  lazy val testGetRequest = FakeRequest("GET", "/")
 
-  "Calling the show action of the Home controller" should {
+  "Calling the show action of the Guidance controller" should {
     "go to the start page" in {
 
-      val result = TestHomeController.show(testGetRequest)
+      val result = TestGuidanceController.show(testGetRequest)
 
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
