@@ -23,6 +23,7 @@
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-confirm-vat.js")></script>
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-change-vat.js")></script>
 }
 
 @agent_main_template(title = Messages("agent.confirm_vat_number.title"), bodyClasses = None, scriptElem = Some(scripts)) {

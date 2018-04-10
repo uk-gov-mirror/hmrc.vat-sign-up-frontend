@@ -23,14 +23,12 @@ object IntegrationTestConstantsGenerator {
 
   private val rand = new Random()
 
-  private val UPPER_BOUND_9_DIGIT_NUMBER = 100000000
-  private val UPPER_BOUND_8_DIGIT_NUMBER = 10000000
-  private val UPPER_BOUND_7_DIGIT_NUMBER = 1000000
-  private val UPPER_BOUND_6_DIGIT_NUMBER = 100000
+  private val UPPER_BOUND_9_DIGIT_NUMBER = 1000000000
+  private val UPPER_BOUND_8_DIGIT_NUMBER = 99999999
 
   def randomVatNumber: String = "%09d".format(rand.nextInt(UPPER_BOUND_9_DIGIT_NUMBER))
 
-  def randomCompanyNumber: String = "%08d".format(rand.nextInt(UPPER_BOUND_8_DIGIT_NUMBER))
+  def randomCompanyNumber: String = "%08d".format(rand.nextInt(UPPER_BOUND_8_DIGIT_NUMBER) + 1)
 
   private def randomString(alphabet: String)(max: Int): String =
     Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(rand.nextInt(max) + 1).mkString

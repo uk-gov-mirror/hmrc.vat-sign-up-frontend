@@ -1,6 +1,6 @@
 $(document).ready($(function () {
 
-    var link = $("#sign-in-with-different-details");
+    var link = $("#changeLink");
 
     link.on('click', on_click_function = function (e) {
         // only try submit to ga if ga token is set, otherwise the ga call will fail and we'll never be able to submit

@@ -58,7 +58,7 @@ class YourVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmAndContinueButton()
 
-    testPage.shouldHaveALink("sign-in-with-different-details", messages.link, routes.SignInWithDifferentDetailsController.show().url)
+    testPage.shouldHaveALink("changeLink", messages.link, routes.SignInWithDifferentDetailsController.show().url)
 
   }
 
