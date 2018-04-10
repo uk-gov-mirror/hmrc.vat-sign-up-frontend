@@ -20,6 +20,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec
+import play.api.test.Helpers._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
 class HomeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -34,9 +35,8 @@ class HomeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockCont
       val result = TestHomeController.show(testGetRequest)
 
       status(result) shouldBe Status.OK
-      //todo reapply when template added
-      //contentType(result) shouldBe Some("text/html")
-      //charset(result) shouldBe Some("utf-8")
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 }

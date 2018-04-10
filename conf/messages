@@ -22,6 +22,7 @@ base.month                                                             = Month
 base.year                                                              = Year
 base.change                                                            = Change
 base.try_again                                                         = Try again
+base.start_now                                                         = Start now
 
 ## Errors
 error.business-entity.field                                            = Please select an option
@@ -64,6 +65,28 @@ agent.cannot_use_service.line_2                                        = Your cl
 agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
 agent.no_agent_client_relationship.heading                             = You can''t sign up this client yet
 agent.no_agent_client_relationship.line_1                              = To use this service, your client needs to authorise you as their agent.
+
+## Agent Home page
+agent.home.title = Use software to submit your client''s VAT Returns
+agent.home.heading = Use software to submit your client''s VAT Returns
+agent.home.line_1 = From April 2019, sole trader businesses and limited companies with a turnover above £85,000 must submit their VAT Returns using software that supports Making Tax Digital.
+agent.home.line_2 = If your client is VAT registered they can choose to sign up for this new reporting method now. To help us test this new way of working out your tax, they''ll need to:
+agent.home.bullet_1 = use software that supports Making Tax Digital to record their purchases and sales
+agent.home.bullet_2 = submit their VAT Returns using their software
+agent.home.bullet_3 = agree to get emails instead of letters
+agent.home.sub_heading.before_you_start = Before you start
+agent.home.before_you_start.line_1 = To sign your clients up to this service you''ll need to:
+agent.home.before_you_start.bullet_1 = <a id="agent_services" href="https://www.tax.service.gov.uk/agent-subscription/start">set up an agent services account</a>
+agent.home.before_you_start.bullet_2 = add clients to your account
+agent.home.sub_heading.sign_up_your_clients = Sign up your clients
+agent.home.sign_up_your_clients.line_1 = Once you''ve set up your agent services account, you can sign up your clients for this new way of reporting their tax. This will add clients to your account.
+agent.home.sign_up_your_clients.line_2 = You can sign up your clients if they''re either a sole trader or limited company. Your clients can submit their VAT Returns using software, or you can submit them on their behalf.
+agent.home.sub_heading.software = Software
+agent.home.software.line_1 = You need to choose software that supports Making Tax Digital. You can still use your existing software if it supports Making Tax Digital.
+agent.home.software.line_2 = If you and your client will use software, it''s important they choose a software package that can interact with yours.
+agent.home.sub_heading.get_help = Get help
+agent.home.get_help.line_1 = You need to contact your software supplier if you need help using your software, for example to upload sales records or sending updates to HMRC.
+agent.home.get_help.line_2 = If you have other questions about sending updates, contact <a id="hmrc" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">HMRC</a>.
 
 ## Agent Capture Vat Number page
 agent.capture_vat_number.title                                         = What is your client''s VAT number?

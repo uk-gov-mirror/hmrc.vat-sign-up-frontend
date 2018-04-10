@@ -342,4 +342,32 @@ object MessageLookup {
 
   }
 
+  object AgentHome {
+    val title = "Use software to submit your client's VAT Returns"
+    val heading = "Use software to submit your client's VAT Returns"
+    val line1 = "From April 2019, sole trader businesses and limited companies with a turnover above £85,000 must submit their VAT Returns using software that supports Making Tax Digital."
+    val line2 = "If your client is VAT registered they can choose to sign up for this new reporting method now. To help us test this new way of working out your tax, they'll need to:"
+    val bullet1 = "use software that supports Making Tax Digital to record their purchases and sales"
+    val bullet2 = "submit their VAT Returns using their software"
+    val bullet3 = "agree to get emails instead of letters"
+
+    val subHeadingBeforeYouStart = "Before you start"
+    val beforeYouStartLine1 = "To sign your clients up to this service you'll need to:"
+    val beforeYouStartBullet1 = "set up an agent services account"
+    val beforeYouStartBullet2 = "add clients to your account"
+
+    val subHeadingSignUpYourClients = "Sign up your clients"
+    val signUpYourClientsLine1 = "Once you've set up your agent services account, you can sign up your clients for this new way of reporting their tax. This will add clients to your account."
+    val signUpYourClientsLine2 = "You can sign up your clients if they're either a sole trader or limited company. Your clients can submit their VAT Returns using software, or you can submit them on their behalf."
+
+    val subHeadingSoftware = "Software"
+    val softwareLine1 = "You need to choose software that supports Making Tax Digital. You can still use your existing software if it supports Making Tax Digital."
+    val softwareLine2 = "If you and your client will use software, it's important they choose a software package that can interact with yours."
+
+    val subHeadingGetHelp = "Get help"
+    val getHelpLine1 = "You need to contact your software supplier if you need help using your software, for example to upload sales records or sending updates to HMRC."
+    val getHelpLine2 = "If you have other questions about sending updates, contact HMRC."
+
+  }
+
 }

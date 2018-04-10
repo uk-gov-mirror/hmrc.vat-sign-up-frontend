@@ -18,16 +18,23 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
+
 import scala.concurrent.Future
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.home
 
 @Singleton
-class HomeController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController() {
+class HomeController @Inject()(val controllerComponents: ControllerComponents)
+  extends FrontendController() with I18nSupport{
 
-  //todo add template
+  implicit val appConfig: AppConfig = controllerComponents.appConfig
+
+  override def messagesApi = controllerComponents.messagesApi
+
   val show: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok)
+    Future.successful(Ok(home()))
   }
 }
