@@ -18,33 +18,25 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.EmailForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 
-import scala.concurrent.Future
+class GuidanceControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-class HomeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+  object TestGuidanceController extends GuidanceController(mockControllerComponents)
 
-  object TestHomeController extends HomeController(mockControllerComponents)
+  lazy val testGetRequest = FakeRequest("GET", "/")
 
-  lazy val testGetRequest = FakeRequest("GET", "/start")
+  "Calling the show action of the Guidance controller" should {
+    "go to the guidance page" in {
 
-  "Calling the show action of the Home controller" should {
-    "go to the start page" in {
-
-      val result = TestHomeController.show(testGetRequest)
+      val result = TestGuidanceController.show(testGetRequest)
 
       status(result) shouldBe Status.OK
-      //todo reapply when template added
-      //contentType(result) shouldBe Some("text/html")
-      //charset(result) shouldBe Some("utf-8")
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 }

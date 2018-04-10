@@ -206,6 +206,35 @@ object MessageLookup {
     val line1 = "You need to sign in with the Government Gateway details for the business you want to sign up."
   }
 
+  object PrincipalGuidance {
+    val title = "Use software to submit your VAT Returns"
+    val heading: String = title
+    val line1 = "HM Revenue and Customs (HMRC) are changing the way you submit your VAT Returns."
+    val line2 = "From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns."
+    val line3 = "If you're a sole trader or a director of a limited company you can try this new way of reporting now, instead of waiting until April 2019."
+    val line4 = "You'll need to sign up for this new service, even if you already use software to submit your VAT Returns."
+
+    object Section1 {
+      val heading = "How it works"
+      val line1 = "To sign up for this service, you need to use software to record your purchases and sales. If you don't already record in this way, submit your next VAT Return on GOV.UK or by post before you sign up. This will give you more time to complete your first return using software."
+      val number1 = "You need to choose relevant third party software (opens in a new window). If you already use software, check with your supplier to see if you can use it with this service."
+      val number2 = "Sign up for this service and agree to get emails instead of letters."
+      val number3 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
+      val number4 = "Use your software to record your purchases and sales, then to submit your VAT Returns. We'll email you to let you know when to send a return."
+      val line2 = "You can also choose to:"
+      val bullet1 = "pay throughout the year, if it helps you manage your income"
+      val bullet2 = "get your accountant to send your VAT Returns"
+      val bullet3 = "view your VAT Return deadlines in your business tax account"
+    }
+
+    object Section2 {
+      val heading = "Sign up"
+      val line1 = "To sign up you'll need the Government Gateway details you got when you registered for VAT."
+      val line2 = "If you haven't submitted a VAT Return online before, then you'll also need your VAT registration certificate."
+      val link = "Sign up to use software to submit your VAT Returns."
+    }
+  }
+
   object PrincipalCaptureBusinessEntity {
     val title = "What type of business are you registered as?"
     val heading: String = title
