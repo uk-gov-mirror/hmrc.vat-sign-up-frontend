@@ -1,7 +1,7 @@
 # microservice specific routes
 
-# Home page
-GET         /                                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.HomeController.show
+# Guidance page
+GET         /                                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.GuidanceController.show
 
 # Confirm Vat number
 GET         /your-vat-number                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.show
