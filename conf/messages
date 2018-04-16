@@ -339,3 +339,9 @@ principal.cannot_use_service.title                                     = You can
 principal.cannot_use_service.heading                                   = You can''t use this service yet
 principal.cannot_use_service.line_1                                    = This service is only available to some limited companies and sole traders.
 principal.cannot_use_service.line_2                                    = You''ll be able to sign up for this service by April 2019.
+
+## Principal Already Signed Up page
+principal.already_signed_up.title                                      = You''ve already signed up
+principal.already_signed_up.heading                                    = You''ve already signed up
+principal.already_signed_up.line_1                                     = Your sign in details are already in use.
+

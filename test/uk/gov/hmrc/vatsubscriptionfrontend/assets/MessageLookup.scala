@@ -371,6 +371,12 @@ object MessageLookup {
 
   }
 
+  object PrincipalAlreadySignedUp {
+    val title = "You've already signed up"
+    val heading: String = title
+    val line1 = "Your sign in details are already in use."
+    }
+
   object AgentGuidance {
     val title = "Use software to submit your client's VAT Returns"
     val heading = "Use software to submit your client's VAT Returns"
