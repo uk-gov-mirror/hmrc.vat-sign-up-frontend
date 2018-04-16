@@ -194,6 +194,11 @@ agent.failed_client_matching.title                                     = There''
 agent.failed_client_matching.heading                                   = There''s a problem
 agent.failed_client_matching.line_1                                    = The details you''ve entered are not on our system.
 
+## Already signed up page
+agent.client_already_signed_up.title                                   = Your client has already signed up
+agent.client_already_signed_up.heading                                 = Your client has already signed up
+agent.client_already_signed_up.line_1                                  = This client''s details are already in use.
+
 ## Guidance page
 principal.guidance.title                                               = Use software to submit your VAT Returns
 principal.guidance.heading                                             = Use software to submit your VAT Returns

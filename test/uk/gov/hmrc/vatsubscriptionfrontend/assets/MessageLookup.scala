@@ -160,6 +160,12 @@ object MessageLookup {
     val description = "The details you've entered are not on our system."
   }
 
+  object ClientAlreadySignedUp {
+    val title = "Your client has already signed up"
+    val heading: String = title
+    val line1 = "This client's details are already in use."
+  }
+
 
   object Terms {
     val title = "Terms of participation"
