@@ -13,6 +13,9 @@ GET         /sign-in-with-different-details        uk.gov.hmrc.vatsubscriptionfr
 # Cannot use service yet
 GET         /cannot-use-service-yet                uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CannotUseServiceController.show
 
+# Already signed up
+GET         /error/already-signed-up               uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.AlreadySignedUpController.show
+
 # Capture Company Number
 GET         /company-number                        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureCompanyNumberController.show
 POST        /company-number                        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureCompanyNumberController.submit
