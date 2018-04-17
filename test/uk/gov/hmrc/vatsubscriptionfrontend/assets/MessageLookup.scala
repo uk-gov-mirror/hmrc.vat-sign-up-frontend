@@ -206,6 +206,12 @@ object MessageLookup {
     val link = "I want to use a different VAT number"
   }
 
+  object VatNumber {
+    val title = "What is your VAT number?"
+    val heading: String = title
+    val line1 = "You can find this 9-digit number on your VAT registration certificate."
+  }
+
   object SignInWithDifferentDetails {
     val title = "You need to sign in with different details"
     val heading: String = title
