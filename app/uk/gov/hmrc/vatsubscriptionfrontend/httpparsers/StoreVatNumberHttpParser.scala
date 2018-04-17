@@ -35,6 +35,7 @@ object StoreVatNumberHttpParser {
           case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Left(StoreVatNumberNoRelationship)
           case _ => Left(StoreVatNumberFailureResponse(FORBIDDEN))
         }
+        case CONFLICT => Left(StoreVatNumberAlreadySubscribed)
         case status => Left(StoreVatNumberFailureResponse(status))
       }
     }
