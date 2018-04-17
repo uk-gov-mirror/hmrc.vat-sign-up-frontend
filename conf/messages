@@ -228,6 +228,12 @@ principal.your_vat_number.heading                                      = Confirm
 principal.your_vat_number.vatNumber.heading                            = VAT number
 principal.your_vat_number.link                                         = I want to use a different VAT number
 
+## VAT number page
+principal.vat_number.title                                             = What is your VAT number?
+principal.vat_number.heading                                           = What is your VAT number?
+principal.vat_number.line_1                                            = You can find this 9-digit number on your VAT registration certificate.
+
+
 # Sign in with another login
 principal.sign_in_with_different_details.title                         = You need to sign in with different details
 principal.sign_in_with_different_details.heading                       = You need to sign in with different details
