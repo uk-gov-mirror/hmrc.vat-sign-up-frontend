@@ -65,6 +65,21 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+
+    "redirect to the already signed up page" when {
+      "the vat number has already been signed up" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreVatNumberAlreadySignedUp()
+
+        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.AlreadySignedUpController.show().url)
+        )
+      }
+    }
+
     "throw an internal server error" when {
       "the vat number cannot be stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

@@ -93,6 +93,20 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         }
       }
     }
+
+    "store vat is unsuccessful" when {
+      "vat number is already subscribed" should {
+        "redirect to the already subscribed page" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber)
+
+         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+         status(result) shouldBe Status.SEE_OTHER
+         redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+      }
+    }
+  }
+
     "vat number is not in session" should {
       "redirect to capture vat number" in {
         mockAuthRetrieveAgentEnrolment()
