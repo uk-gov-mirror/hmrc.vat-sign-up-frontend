@@ -17,14 +17,13 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import org.scalatest.EitherValues
-import play.api.http.Status.{BAD_REQUEST, CREATED, FORBIDDEN}
+import play.api.http.Status.{BAD_REQUEST, CONFLICT, CREATED, FORBIDDEN}
 import play.api.libs.json.Json
-import play.api.libs.openid.Errors.BAD_RESPONSE
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberHttpReads
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberFailureResponse, StoreVatNumberNoRelationship, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberAlreadySubscribed, StoreVatNumberFailureResponse, StoreVatNumberNoRelationship, StoreVatNumberSuccess}
 
 class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
@@ -54,6 +53,14 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
         res.left.value shouldBe StoreVatNumberFailureResponse(FORBIDDEN)
+      }
+
+      "parse a CONFLICT response as a StoreVatNumberFailureResponse when the vat number is already subscribed" in {
+        val httpResponse = HttpResponse(CONFLICT)
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe StoreVatNumberAlreadySubscribed
       }
 
       "parse any other response as a StoreVatNumberFailureResponse" in {

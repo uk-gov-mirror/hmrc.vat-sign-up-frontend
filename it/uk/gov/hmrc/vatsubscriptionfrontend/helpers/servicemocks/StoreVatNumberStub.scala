@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks
 
-import play.api.http.Status.{BAD_REQUEST, CREATED, FORBIDDEN}
+import play.api.http.Status.{BAD_REQUEST, CREATED, FORBIDDEN, CONFLICT}
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants.testVatNumber
@@ -31,6 +31,11 @@ object StoreVatNumberStub extends WireMockMethods {
   def stubStoreVatNumberNoRelationship(): Unit = {
     when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = FORBIDDEN, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue))
+  }
+
+  def stubStoreVatNumberAlreadySignedUp(): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+      .thenReturn(status = CONFLICT)
   }
 
   def stubStoreVatNumberFailure(): Unit = {

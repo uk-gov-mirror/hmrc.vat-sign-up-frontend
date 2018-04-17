@@ -53,7 +53,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
       "redirect to the already signed up page" when {
         "the vat number has already been signed up" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubStoreVatNumberSuccess()
+          stubStoreVatNumberAlreadySignedUp()
 
           val res = post("/your-vat-number")()
 
