@@ -212,6 +212,11 @@ object MessageLookup {
     val line1 = "You need to sign in with the Government Gateway details for the business you want to sign up."
   }
 
+  object PrincipalBusinessPostCode {
+    val title = "What is your business''s postcode?"
+    val heading = "What is the postcode of your business address?"
+  }
+
   object PrincipalGuidance {
     val title = "Use software to submit your VAT Returns"
     val heading: String = title

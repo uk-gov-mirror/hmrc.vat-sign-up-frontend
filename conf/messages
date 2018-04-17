@@ -233,6 +233,10 @@ principal.sign_in_with_different_details.title                         = You nee
 principal.sign_in_with_different_details.heading                       = You need to sign in with different details
 principal.sign_in_with_different_details.line_1                        = You need to sign in with the Government Gateway details for the business you want to sign up.
 
+## Principal Business Postcode
+principal.business_postcode.title                                      = What is your business''s postcode?
+principal.business_postcode.heading                                    = What is the postcode of your business address?
+
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = What type of business are you registered as?
 principal.capture_entity_type.heading                                  = What type of business are you registered as?
