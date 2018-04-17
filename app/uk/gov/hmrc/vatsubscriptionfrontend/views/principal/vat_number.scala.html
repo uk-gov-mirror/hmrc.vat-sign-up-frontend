@@ -14,13 +14,14 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
-@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.continueButton
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, continueButton}
 @import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
 
-@(vatNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(vatNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @principal_main_template(title = Messages("principal.vat_number.title"), bodyClasses = None) {
 
@@ -29,7 +30,14 @@
     <p>@Messages("principal.vat_number.line_1")</p>
 
     @form(action = postAction) {
+        <div class="form-group">
+            @inputHelper(
+                field = vatNumberForm(vatNumber),
+                label = Messages("principal.vat_number.heading"),
+                parentForm = vatNumberForm
+            )
+        </div>
+
         @continueButton()
     }
-
 }

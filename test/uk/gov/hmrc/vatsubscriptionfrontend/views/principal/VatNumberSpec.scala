@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{VatNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testVatNumber
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm.vatNumberForm
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 class VatNumberSpec extends ViewSpec {
@@ -33,7 +33,7 @@ class VatNumberSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.vat_number(
-    vatNumber = testVatNumber,
+    vatNumberForm = vatNumberForm.form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
