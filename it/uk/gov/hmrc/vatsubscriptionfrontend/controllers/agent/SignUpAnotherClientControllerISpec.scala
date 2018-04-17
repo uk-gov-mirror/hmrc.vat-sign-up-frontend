@@ -23,20 +23,30 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
-class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /information-received" should {
-    "return an OK" in {
+class SignUpAnotherClientControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  "POST /information-received" should {
+    "remove all personal data from session and redirect back to vat-number" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/information-received",
+      val res = post("/client/information-received",
         Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.emailKey -> testEmail,
           SessionKeys.businessEntityKey -> SoleTrader.toString
-        )
-      )
+        ))()
 
       res should have(
-        httpStatus(OK)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CaptureVatNumberController.show().url)
       )
+
+      val session = SessionCookieCrumbler.getSessionMap(res)
+      session.keys should not contain SessionKeys.vatNumberKey
+      session.keys should not contain SessionKeys.companyNumberKey
+      session.keys should not contain SessionKeys.emailKey
+      session.keys should not contain SessionKeys.businessEntityKey
     }
   }
 }

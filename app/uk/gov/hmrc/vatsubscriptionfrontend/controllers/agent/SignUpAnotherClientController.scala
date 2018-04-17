@@ -19,22 +19,28 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.no_agent_client_relationship
 
 import scala.concurrent.Future
 
 @Singleton
-class NoAgentClientRelationshipController @Inject()(val controllerComponents: ControllerComponents)
+class SignUpAnotherClientController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
+  val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      //n.b. can create a separate action here if the functionalities diverge
       Future.successful(
-        Ok(no_agent_client_relationship(routes.SignUpAnotherClientController.submit()))
+        Redirect(routes.CaptureVatNumberController.show())
+          .removingFromSession(
+            SessionKeys.vatNumberKey,
+            SessionKeys.companyNumberKey,
+            SessionKeys.emailKey,
+            SessionKeys.businessEntityKey,
+            SessionKeys.userDetailsKey
+          )
       )
     }
   }

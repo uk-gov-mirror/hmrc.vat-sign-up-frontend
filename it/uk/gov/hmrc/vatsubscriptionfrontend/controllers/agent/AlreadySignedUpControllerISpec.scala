@@ -17,26 +17,21 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /information-received" should {
+class AlreadySignedUpControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  "GET /error/already-signed-up" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+      stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/client/information-received",
-        Map(
-          SessionKeys.businessEntityKey -> SoleTrader.toString
-        )
-      )
+      val res = get("/error/already-signed-up")
 
       res should have(
         httpStatus(OK)
       )
     }
   }
+
 }

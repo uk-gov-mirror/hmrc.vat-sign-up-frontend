@@ -38,23 +38,8 @@ class ConfirmationController @Inject()(val controllerComponents: ControllerCompo
       Future.successful(
         Ok(confirmation(
           request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).get,
-          routes.ConfirmationController.submit()
+          routes.SignUpAnotherClientController.submit()
         ))
-      )
-    }
-  }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      Future.successful(
-        Redirect(routes.CaptureVatNumberController.show())
-          .removingFromSession(
-            SessionKeys.vatNumberKey,
-            SessionKeys.companyNumberKey,
-            SessionKeys.emailKey,
-            SessionKeys.businessEntityKey,
-            SessionKeys.userDetailsKey
-          )
       )
     }
   }

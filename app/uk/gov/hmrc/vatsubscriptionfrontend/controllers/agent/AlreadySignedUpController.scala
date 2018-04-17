@@ -20,21 +20,19 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.no_agent_client_relationship
+import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.already_signed_up
 
 import scala.concurrent.Future
 
 @Singleton
-class NoAgentClientRelationshipController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AgentEnrolmentPredicate) {
+class AlreadySignedUpController @Inject()(val controllerComponents: ControllerComponents)
+  extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      //n.b. can create a separate action here if the functionalities diverge
       Future.successful(
-        Ok(no_agent_client_relationship(routes.SignUpAnotherClientController.submit()))
+        Ok(already_signed_up(routes.SignUpAnotherClientController.submit()))
       )
     }
   }

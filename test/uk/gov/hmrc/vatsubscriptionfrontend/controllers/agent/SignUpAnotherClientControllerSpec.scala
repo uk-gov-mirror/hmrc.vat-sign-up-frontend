@@ -29,24 +29,34 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
-class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SignUpAnotherClientControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestConfirmationController extends ConfirmationController(mockControllerComponents)
-
-  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(SessionKeys.businessEntityKey -> SoleTrader.toString)
+  object TestSignUpAnotherClientController extends SignUpAnotherClientController(mockControllerComponents)
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/information-received")
 
-  "Calling the show action of the Confirmation controller" should {
-    "show the Confirmation page" in {
+  "Calling the submit action of the Sign Up Another Client controller" should {
+    "redirect back to vat-number" in {
       mockAuthRetrieveAgentEnrolment()
-      val request = testGetRequest
 
-      val result = TestConfirmationController.show(request)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber,
+        SessionKeys.emailKey -> testEmail,
+        SessionKeys.userDetailsKey -> UUID.randomUUID().toString
+      )
+
+      val result = TestSignUpAnotherClientController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
+
+      val session = await(result).session(request)
+      session.get(SessionKeys.vatNumberKey) shouldBe None
+      session.get(SessionKeys.companyNumberKey) shouldBe None
+      session.get(SessionKeys.emailKey) shouldBe None
+      session.get(SessionKeys.userDetailsKey) shouldBe None
     }
   }
+
 }

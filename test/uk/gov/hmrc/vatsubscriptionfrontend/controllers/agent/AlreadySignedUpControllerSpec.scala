@@ -16,37 +16,29 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
-import java.util.UUID
-
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsubscriptionfrontend.models.SoleTrader
 
-class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class AlreadySignedUpControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestConfirmationController extends ConfirmationController(mockControllerComponents)
+  object TestAlreadySignedUpController extends AlreadySignedUpController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(SessionKeys.businessEntityKey -> SoleTrader.toString)
+  lazy val testGetRequest = FakeRequest("GET", "/error/already-signed-up")
 
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/information-received")
-
-  "Calling the show action of the Confirmation controller" should {
-    "show the Confirmation page" in {
-      mockAuthRetrieveAgentEnrolment()
+  "Calling the show action of the Already signed up controller" should {
+    "return OK" in {
+      mockAuthEmptyRetrieval()
       val request = testGetRequest
 
-      val result = TestConfirmationController.show(request)
+      val result = TestAlreadySignedUpController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
+
 }
