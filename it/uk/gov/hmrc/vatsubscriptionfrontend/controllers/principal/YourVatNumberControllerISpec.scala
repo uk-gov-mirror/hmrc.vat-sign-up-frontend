@@ -49,6 +49,20 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
           )
         }
       }
+
+      "redirect to the already signed up page" when {
+        "the vat number has already been signed up" in {
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubStoreVatNumberAlreadySignedUp()
+
+          val res = post("/your-vat-number")()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AlreadySignedUpController.show().url)
+          )
+        }
+      }
     }
 
     "the vat number is not on the profile" should {

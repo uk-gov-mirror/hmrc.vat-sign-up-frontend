@@ -52,4 +52,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberNoRelationship(vatNumber: String): Unit =
     mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberNoRelationship)))
 
+  def mockStoreVatNumberAlreadySubscribed(vatNumber: String): Unit =
+    mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberAlreadySubscribed)))
+
+
 }
