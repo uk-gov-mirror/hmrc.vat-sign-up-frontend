@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{VatNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm.vatNumberForm
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
 class VatNumberSpec extends ViewSpec {
@@ -52,6 +52,8 @@ class VatNumberSpec extends ViewSpec {
     testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
 
     testPage.shouldHavePara(messages.line1)
+
+    testPage.shouldHaveTextField(vatNumber, messages.heading)
 
     testPage.shouldHaveContinueButton()
 
