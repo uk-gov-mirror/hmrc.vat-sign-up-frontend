@@ -34,7 +34,7 @@ class BusinessPostCodeSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.business_postcode(
-    businessPostCodeForm = businessPostCodeForm.form,
+    businessPostCodeForm = businessPostCodeForm,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

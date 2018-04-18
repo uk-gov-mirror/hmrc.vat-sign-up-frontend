@@ -213,7 +213,7 @@ object MessageLookup {
   }
 
   object PrincipalBusinessPostCode {
-    val title = "What is your business''s postcode?"
+    val title = "What is your business's postcode?"
     val heading = "What is the postcode of your business address?"
   }
 

@@ -25,7 +25,7 @@ object BusinessPostCodeForm {
 
   val businessPostCode = "businessPostCode"
 
-  private val businessPostCodeForm = Form(
+  val businessPostCodeForm = Form(
     single(
       businessPostCode -> nonEmptyText
     )
