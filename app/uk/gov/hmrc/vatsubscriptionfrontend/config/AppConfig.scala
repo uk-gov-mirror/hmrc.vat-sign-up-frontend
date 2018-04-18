@@ -101,4 +101,5 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val hasEnabledTestOnlyRoutes: Boolean =
     runModeConfiguration.getString("application.router").get == "testOnlyDoNotUseInAppConf.Routes"
 
+  lazy val backendFeatureSwitchUrl: String = s"$protectedMicroServiceUrl/vat-subscription/test-only/feature-switch"
 }
