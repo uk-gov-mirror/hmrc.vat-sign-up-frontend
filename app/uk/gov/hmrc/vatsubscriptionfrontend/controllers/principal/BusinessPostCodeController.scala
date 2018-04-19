@@ -34,7 +34,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(business_postcode(businessPostCodeForm, routes.BusinessPostCodeController.submit()))
+          Ok(business_postcode(businessPostCodeForm.form, routes.BusinessPostCodeController.submit()))
         )
       }
   }
@@ -48,7 +48,6 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
               BadRequest(business_postcode(formWithErrors, routes.BusinessPostCodeController.submit()))
             ),
           businessPostCode =>
-//            TODO: Make known facts call to match DES known facts
             Future.successful(
               Redirect(routes.CaptureBusinessEntityController.show())
             )

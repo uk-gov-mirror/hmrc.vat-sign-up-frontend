@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessPostCodeForm._
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testBusinessPostcode
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testBusinessPostCode
 
 class BusinessPostCodeFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
@@ -30,8 +30,8 @@ class BusinessPostCodeFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     val error_key = "error.invalid_postcode"
 
     "validate that data containing a valid post code passes" in {
-      val actual = businessPostCodeForm.bind(Map(businessPostCode -> testBusinessPostcode)).value
-      actual shouldBe Some(testBusinessPostcode)
+      val actual = businessPostCodeForm.bind(Map(businessPostCode -> testBusinessPostCode)).value
+      actual shouldBe Some(testBusinessPostCode)
     }
 
     "validate that data starts with either 1 or 2 letters" in {

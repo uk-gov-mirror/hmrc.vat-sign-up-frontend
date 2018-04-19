@@ -53,7 +53,6 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       "goto capture Business Entity page" in {
         mockAuthEmptyRetrieval()
 
-//        TODO: Update TestConstants logic for Business PostCode
         val request = testPostRequest(testBusinessPostCode)
         val result = TestBusinessPostCodeController.submit(request)
         status(result) shouldBe Status.SEE_OTHER

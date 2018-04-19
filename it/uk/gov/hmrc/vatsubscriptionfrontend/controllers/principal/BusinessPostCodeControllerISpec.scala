@@ -39,7 +39,6 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse())
 
-//      TODO: Update testBusinessPostCode logic on IntegrationTestConstants
       val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode)
 
       res should have(
