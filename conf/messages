@@ -235,6 +235,10 @@ principal.vat_number.title                                             = What is
 principal.vat_number.heading                                           = What is your VAT number?
 principal.vat_number.line_1                                            = You can find this 9-digit number on your VAT registration certificate.
 
+## Principal Could not confirm VAT number
+principal.could_not_confirm_vat_number.title                           = We could not confirm your VAT number
+principal.could_not_confirm_vat_number.heading                         = We could not confirm your VAT number
+principal.could_not_confirm_vat_number.line_1                          = The VAT number you entered is not on our system.
 
 # Sign in with another login
 principal.sign_in_with_different_details.title                         = You need to sign in with different details

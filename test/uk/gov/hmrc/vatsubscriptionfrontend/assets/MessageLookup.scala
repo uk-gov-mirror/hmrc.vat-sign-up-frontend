@@ -212,6 +212,12 @@ object MessageLookup {
     val line1 = "You can find this 9-digit number on your VAT registration certificate."
   }
 
+  object PrincipalCouldNotConfirmVatNumber {
+    val title = "We could not confirm your VAT number"
+    val heading: String = title
+    val line1 = "The VAT number you entered is not on our system."
+  }
+
   object SignInWithDifferentDetails {
     val title = "You need to sign in with different details"
     val heading: String = title
