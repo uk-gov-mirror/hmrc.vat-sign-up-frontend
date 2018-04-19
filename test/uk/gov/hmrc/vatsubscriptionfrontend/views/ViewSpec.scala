@@ -165,9 +165,9 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       val date = selectHead(id, selector)
       val numericPattern = "[0-9]*"
       val inputMode = "numeric"
-      date.shouldHaveTextField(s"$id.dateDay", common.day, maxLength = Some(2), pattern = Some(numericPattern), inputMode = Some(inputMode))
-      date.shouldHaveTextField(s"$id.dateMonth", common.month, maxLength = Some(2), pattern = Some(numericPattern), inputMode = Some(inputMode))
-      date.shouldHaveTextField(s"$id.dateYear", common.year, maxLength = Some(4), pattern = Some(numericPattern), inputMode = Some(inputMode))
+      date.shouldHaveTextField(s"$id.dateDay", common.day, hideLabel = false, maxLength = Some(2), pattern = Some(numericPattern), inputMode = Some(inputMode))
+      date.shouldHaveTextField(s"$id.dateMonth", common.month, hideLabel = false, maxLength = Some(2), pattern = Some(numericPattern), inputMode = Some(inputMode))
+      date.shouldHaveTextField(s"$id.dateYear", common.year, hideLabel = false, maxLength = Some(4), pattern = Some(numericPattern), inputMode = Some(inputMode))
     }
 
     object ElementTest {

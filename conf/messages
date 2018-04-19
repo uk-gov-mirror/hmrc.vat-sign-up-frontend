@@ -35,6 +35,8 @@ error.invalid_email.field                                              = Please 
 error.invalid_email.summary                                            = Please enter a valid email address
 error.invalid_postcode.field                                           = Please enter a valid postcode
 error.invalid_postcode.summary                                         = Please enter a valid postcode
+error.invalid_vat_registration_date.field                              = Please enter a valid vat registration date
+error.invalid_vat_registration_date.summary                            = Please enter a valid vat registration date
 error.exceeds_max_length_email.field                                   = Email address must be 132 characters or less
 error.exceeds_max_length_email.summary                                 = Email address must be 132 characters or less
 
@@ -223,7 +225,6 @@ principal.guidance.subsection_2.line_1                                 = To sign
 principal.guidance.subsection_2.line_2                                 = If you haven''t submitted a VAT Return online before, then you''ll also need your VAT registration certificate.
 principal.guidance.subsection_2.link                                   = Sign up to use software to submit your VAT Returns.
 
-
 ## Your VAT number page
 principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up
 principal.your_vat_number.heading                                      = Confirm you want to use this VAT number to sign up
@@ -239,6 +240,11 @@ principal.vat_number.line_1                                            = You can
 principal.could_not_confirm_vat_number.title                           = We could not confirm your VAT number
 principal.could_not_confirm_vat_number.heading                         = We could not confirm your VAT number
 principal.could_not_confirm_vat_number.line_1                          = The VAT number you entered is not on our system.
+## Principal VAT Registration Date
+principal.vat_registration_date.title                                  = When did you register for VAT?
+principal.vat_registration_date.heading                                = When did you become VAT registered?
+principal.vat_registration_date.line_1                                 = You can find this date on your VAT registration certificate.
+principal.vat_registration_date.formhint_1                             = For example, 6 4 2017
 
 # Sign in with another login
 principal.sign_in_with_different_details.title                         = You need to sign in with different details

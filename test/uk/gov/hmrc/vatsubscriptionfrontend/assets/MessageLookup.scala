@@ -212,6 +212,13 @@ object MessageLookup {
     val line1 = "You can find this 9-digit number on your VAT registration certificate."
   }
 
+  object VatRegistrationDate {
+    val title = "When did you register for VAT?"
+    val heading = "When did you become VAT registered?"
+    val line1 = "You can find this date on your VAT registration certificate."
+    val formhint1 = "For example, 6 4 2017"
+  }
+
   object PrincipalCouldNotConfirmVatNumber {
     val title = "We could not confirm your VAT number"
     val heading: String = title
