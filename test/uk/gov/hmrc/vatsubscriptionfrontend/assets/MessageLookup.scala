@@ -335,6 +335,13 @@ object MessageLookup {
     val tryAgain = "Try again"
   }
 
+  object CouldNotConfirmBusiness {
+    val title = "We could not confirm your business"
+    val heading: String = title
+    val line1 = "The information you provided does not match the details we have about your business."
+    val tryAgain = "Try again"
+  }
+
   object IdentityVerificationSuccess {
     val title = "We've confirmed your identity"
     val heading: String = title
