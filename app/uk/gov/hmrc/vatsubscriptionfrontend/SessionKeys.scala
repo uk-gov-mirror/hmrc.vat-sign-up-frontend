@@ -24,5 +24,4 @@ object SessionKeys {
   val userDetailsKey = "UserDetails"
   val businessEntityKey = "BusinessEntity"
   val identityVerificationContinueUrlKey = "IdentityVerification"
-  val vatRegistrationDateKey = "VatRegistrationDate"
 }
