@@ -203,6 +203,11 @@ agent.client_already_signed_up.title                                   = Your cl
 agent.client_already_signed_up.heading                                 = Your client has already signed up
 agent.client_already_signed_up.line_1                                  = This client''s details are already in use.
 
+# Could not confirm business
+principal.could_not_confirm_business.title                             = We could not confirm your business
+principal.could_not_confirm_business.heading                           = We could not confirm your business
+principal.could_not_confirm_business.line_1                            = The information you provided does not match the details we have about your business.
+
 ## Guidance page
 principal.guidance.title                                               = Use software to submit your VAT Returns
 principal.guidance.heading                                             = Use software to submit your VAT Returns
