@@ -7,6 +7,10 @@ GET         /                                      uk.gov.hmrc.vatsubscriptionfr
 GET         /your-vat-number                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.show
 POST        /your-vat-number                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.submit
 
+# Invalid Vat Number
+GET        /could-not-confirm-vat-number           uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.InvalidVatNumberController.show
+POST       /could-not-confirm-vat-number           uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.InvalidVatNumberController.submit
+
 # Sign in with another login
 GET         /sign-in-with-different-details        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.SignInWithDifferentDetailsController.show
 
