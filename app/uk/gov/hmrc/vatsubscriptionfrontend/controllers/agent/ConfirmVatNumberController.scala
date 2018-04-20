@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberAlreadySubscribed, StoreVatNumberFailureResponse, StoreVatNumberNoRelationship, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.confirm_vat_number
 
@@ -57,9 +57,9 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
           storeVatNumberService.storeVatNumber(vatNumber) map {
             case Right(StoreVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())
-            case Left(StoreVatNumberNoRelationship) =>
+            case Left(NoAgentClientRelationship) =>
               Redirect(routes.NoAgentClientRelationshipController.show())
-            case Left(StoreVatNumberAlreadySubscribed) =>
+            case Left(AlreadySubscribed) =>
               Redirect(routes.AlreadySignedUpController.show())
             case Left(errResponse: StoreVatNumberFailureResponse) =>
               throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
