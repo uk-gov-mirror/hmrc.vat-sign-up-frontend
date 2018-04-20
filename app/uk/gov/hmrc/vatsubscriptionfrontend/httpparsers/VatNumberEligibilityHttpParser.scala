@@ -26,7 +26,8 @@ object VatNumberEligibilityHttpParser {
     override def read(method: String, url: String, response: HttpResponse): VatNumberEligibilityResponse = {
       response.status match {
         case NO_CONTENT => Right(VatNumberEligible)
-        case BAD_REQUEST => Left(InvalidVatNumber)
+        case BAD_REQUEST => Left(IneligibleForMtdVatNumber)
+        case NOT_FOUND => Left(InvalidVatNumber)
         case CONFLICT => Left(VatNumberAlreadySubscribed)
         case status => Left(VatNumberEligibilityFailureResponse(status))
       }
@@ -37,6 +38,8 @@ object VatNumberEligibilityHttpParser {
 case object VatNumberEligible
 
 sealed trait VatNumberIneligible
+
+case object IneligibleForMtdVatNumber extends VatNumberIneligible
 
 case object VatNumberAlreadySubscribed extends VatNumberIneligible
 

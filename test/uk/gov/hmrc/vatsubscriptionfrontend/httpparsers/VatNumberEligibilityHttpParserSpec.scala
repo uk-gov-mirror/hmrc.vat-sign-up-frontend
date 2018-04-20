@@ -17,13 +17,10 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import org.scalatest.EitherValues
-import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, NO_CONTENT}
-import play.api.libs.json.Json
+import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, NO_CONTENT, NOT_FOUND}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityHttpReads
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberAlreadySubscribed, StoreVatNumberFailureResponse, StoreVatNumberNoRelationship, StoreVatNumberSuccess}
 
 class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
@@ -39,8 +36,16 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
         res.right.value shouldBe VatNumberEligible
       }
 
-      "parse a BAD_REQUEST response as a InvalidVatNumber when the vat number is not on the control list" in {
+      "parse a BAD_REQUEST response as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
         val httpResponse = HttpResponse(BAD_REQUEST)
+
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe IneligibleForMtdVatNumber
+      }
+
+      "parse a NOT_FOUND response as a InvalidVatNumber when the vat number is not on the control list" in {
+        val httpResponse = HttpResponse(NOT_FOUND)
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 

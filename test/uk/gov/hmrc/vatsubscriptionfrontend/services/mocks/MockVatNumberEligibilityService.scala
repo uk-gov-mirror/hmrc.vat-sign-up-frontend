@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.VatNumberEligibilityHttpP
 import uk.gov.hmrc.vatsubscriptionfrontend.models._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.VatNumberEligibilityService
 import play.api.http.Status.INTERNAL_SERVER_ERROR
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{InvalidVatNumber, VatNumberAlreadySubscribed, VatNumberEligibilityFailureResponse, VatNumberEligible}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers._
 
 import scala.concurrent.Future
 
@@ -49,6 +49,9 @@ trait MockVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSug
 
   def mockVatNumberEligibilityFailure(vatNumber: String): Unit =
     mockVatNumberEligibility(vatNumber)(Future.successful(Left(VatNumberEligibilityFailureResponse(INTERNAL_SERVER_ERROR))))
+
+  def mockVatNumberIneligibleForMtd(vatNumber: String): Unit =
+    mockVatNumberEligibility(vatNumber)(Future.successful(Left(IneligibleForMtdVatNumber)))
 
   def mockVatNumberEligibilityInvalid(vatNumber: String): Unit =
     mockVatNumberEligibility(vatNumber)(Future.successful(Left(InvalidVatNumber)))
