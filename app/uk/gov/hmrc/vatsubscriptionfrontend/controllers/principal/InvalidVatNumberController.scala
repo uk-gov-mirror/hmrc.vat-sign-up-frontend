@@ -29,12 +29,10 @@ import scala.concurrent.Future
 
 @Singleton
 class InvalidVatNumberController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController() with FeatureSwitching with FeatureSwitchedController[Unit] {
-
-  override val featureSwitches: Set[FeatureSwitch] = Set(KnownFactsJourney)
+  extends FeatureSwitchedController(featureSwitches = Set(KnownFactsJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
-    featureEnabledWithAuth {
+    authorised() {
       Future.successful(
         Ok(could_not_confirm_vat_number(routes.InvalidVatNumberController.submit()))
       )
@@ -42,7 +40,7 @@ class InvalidVatNumberController @Inject()(val controllerComponents: ControllerC
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
-    featureEnabledWithAuth {
+    authorised() {
       Future.successful(
         //todo Redirect to capture vat number
         NotImplemented

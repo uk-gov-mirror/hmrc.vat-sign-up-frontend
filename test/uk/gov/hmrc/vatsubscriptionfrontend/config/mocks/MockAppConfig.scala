@@ -20,11 +20,17 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitch, FeatureSwitching}
 
-trait MockAppConfig extends MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
+trait MockAppConfig extends MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with FeatureSwitching {
   this: TestSuite =>
 
   //TODO: Replace with mock config
   lazy val mockAppConfig: AppConfig = app.injector.instanceOf[AppConfig]
+
+  override protected def beforeEach(): Unit = {
+    super.beforeEach()
+    FeatureSwitch.switches foreach disable
+  }
 
 }

@@ -21,8 +21,10 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
@@ -36,38 +38,64 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   def testPostRequest(businessPostCodeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-postcode").withFormUrlEncodedBody(businessPostCode -> businessPostCodeVal)
 
-  "Calling the show action of the Business PostCode controller" should {
-    "go to the Business PostCode page" in {
-      mockAuthEmptyRetrieval()
+  "Calling the show action of the Business PostCode controller" when {
+    "the known facts journey feature switch is enabled" should {
+      "go to the Business PostCode page" in {
+        enable(KnownFactsJourney)
 
-      val result = TestBusinessPostCodeController.show(testGetRequest)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+        mockAuthEmptyRetrieval()
+
+        val result = TestBusinessPostCodeController.show(testGetRequest)
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+    "the known facts journey feature switch is disabled" should {
+      "throw a NotFoundException" in {
+        disable(KnownFactsJourney)
+
+        intercept[NotFoundException](await(TestBusinessPostCodeController.show(testGetRequest)))
+
+      }
     }
   }
 
 
   "Calling the submit action of the Business PostCode controller" when {
-    "form successfully submitted" should {
-      "goto capture Business Entity page" in {
-        mockAuthEmptyRetrieval()
+    "the known facts journey feature switch is enabled" when {
+      "form successfully submitted" should {
+        "goto capture Business Entity page" in {
+          enable(KnownFactsJourney)
 
-        val request = testPostRequest(testBusinessPostCode)
-        val result = TestBusinessPostCodeController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+          mockAuthEmptyRetrieval()
+
+          val request = testPostRequest(testBusinessPostcode)
+          val result = TestBusinessPostCodeController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+        }
+      }
+
+      "form unsuccessfully submitted" should {
+        "reload the page with errors" in {
+          enable(KnownFactsJourney)
+
+          mockAuthEmptyRetrieval()
+
+          val result = TestBusinessPostCodeController.submit(testPostRequest(""))
+          status(result) shouldBe Status.BAD_REQUEST
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
       }
     }
+    "the known facts journey feature switch is disabled" should {
+      "throw a NotFoundException" in {
+        disable(KnownFactsJourney)
 
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
-        mockAuthEmptyRetrieval()
+        intercept[NotFoundException](await(TestBusinessPostCodeController.submit(testPostRequest(""))))
 
-        val result = TestBusinessPostCodeController.submit(testPostRequest(""))
-        status(result) shouldBe Status.BAD_REQUEST
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
       }
     }
   }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -25,8 +25,10 @@ import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.play.test.UnitSpec
 import SessionCookieBaker._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitch, FeatureSwitching}
 
-trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with WiremockHelper with BeforeAndAfterAll {
+trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with WiremockHelper with BeforeAndAfterAll
+ with FeatureSwitching with BeforeAndAfterEach {
   lazy val ws = app.injector.instanceOf[WSClient]
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
@@ -56,6 +58,11 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
   override def afterAll(): Unit = {
     stopWiremock()
     super.afterAll()
+  }
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    FeatureSwitch.switches foreach disable
   }
 
   def get(uri: String, cookies: Map[String, String] = Map.empty): WSResponse =

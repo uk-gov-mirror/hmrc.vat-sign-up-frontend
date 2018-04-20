@@ -23,10 +23,10 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching{
 
-  enable(KnownFactsJourney)
-
   "GET /could-not-confirm-vat-number" should {
     "return an OK" in {
+      enable(KnownFactsJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/could-not-confirm-vat-number")
@@ -39,6 +39,8 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
   "POST /could-not-confirm-vat-number" should {
     "return an NOT_IMPLEMENTED" in {
+      enable(KnownFactsJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/could-not-confirm-vat-number")()

@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessPostCodeForm
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
@@ -25,6 +26,8 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMat
 class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /business-postcode" should {
     "return an OK" in {
+      enable(KnownFactsJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/business-postcode")
@@ -37,6 +40,8 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
 
   "POST /business-postcode" should {
     "return a redirect" in {
+      enable(KnownFactsJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode)
