@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
@@ -26,7 +27,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
-class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with FeatureSwitching {
+class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents with FeatureSwitching with BeforeAndAfterEach {
 
   object TestInvalidVatNumberController extends InvalidVatNumberController(mockControllerComponents)
 
@@ -36,11 +38,13 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     FakeRequest("POST", "/could-not-confirm-vat-number")
 
 
+  override def beforeEach(): Unit = enable(KnownFactsJourney)
+
+  override def afterEach(): Unit = disable(KnownFactsJourney)
+
   "Calling the show action of the Invalid Vat Number controller" when {
     "the known facts journey feature switch is enabled" should {
       "show the page" in {
-        enable(KnownFactsJourney)
-
         mockAuthEmptyRetrieval()
         val request = testGetRequest
 
@@ -53,7 +57,6 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "the known facts journey feature switch is disabled" should {
       "throw a NotFoundException" in {
         disable(KnownFactsJourney)
-
         intercept[NotFoundException](await(TestInvalidVatNumberController.show(testGetRequest)))
       }
     }
@@ -63,8 +66,6 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   "Calling the submit action of the Invalid Vat Number controller" should {
     "the known facts journey feature switch is enabled" should {
       "return NotImplemented" in {
-        enable(KnownFactsJourney)
-
         mockAuthEmptyRetrieval()
 
         val result = TestInvalidVatNumberController.submit(testPostRequest)
@@ -74,7 +75,6 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "the known facts journey feature switch is disabled" should {
       "throw a NotFoundException" in {
         disable(KnownFactsJourney)
-
         intercept[NotFoundException](await(TestInvalidVatNumberController.submit(testPostRequest)))
       }
     }

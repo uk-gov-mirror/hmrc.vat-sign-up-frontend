@@ -20,6 +20,10 @@ GET         /cannot-use-service-yet                uk.gov.hmrc.vatsubscriptionfr
 # Already signed up
 GET         /error/already-signed-up               uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.AlreadySignedUpController.show
 
+# Capture VAT Registration Date
+GET         /vat-registration-date                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureVatRegistrationDateController.show
+POST        /vat-registration-date                 uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureVatRegistrationDateController.submit
+
 # Capture Company Number
 GET         /company-number                        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureCompanyNumberController.show
 POST        /company-number                        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureCompanyNumberController.submit

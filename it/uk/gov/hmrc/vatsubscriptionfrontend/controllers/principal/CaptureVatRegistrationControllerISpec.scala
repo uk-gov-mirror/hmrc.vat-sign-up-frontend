@@ -16,23 +16,26 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import play.api.http.Status._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
-import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
+import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+import uk.gov.hmrc.vatsubscriptionfrontend.models.DateModel
 
+class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   override def beforeEach(): Unit = enable(KnownFactsJourney)
 
   override def afterEach(): Unit = disable(KnownFactsJourney)
 
-  "GET /could-not-confirm-vat-number" should {
+  "GET /vat-registration-date" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/could-not-confirm-vat-number")
+      val res = get("/vat-registration-date")
 
       res should have(
         httpStatus(OK)
@@ -40,25 +43,29 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     }
   }
 
-  "POST /could-not-confirm-vat-number" should {
-    "return an NOT_IMPLEMENTED" in {
+  "POST /vat-registration-date" should {
+    "return a redirect" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/could-not-confirm-vat-number")()
+      val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
+
+      val res = post("/vat-registration-date")(vatRegistrationDate + ".dateDay" -> yesterday.day,
+                                                 vatRegistrationDate + ".dateMonth" -> yesterday.month,
+                                                 vatRegistrationDate + ".dateYear" -> yesterday.year)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.BusinessPostCodeController.show().url)
       )
     }
   }
 
-
-  "Making a request to /could-not-confirm-vat-number when not enabled" should {
+  "Making a request to /vat-registration-date when not enabled" should {
     "return NotFound" in {
       disable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/could-not-confirm-vat-number")
+      val res = get("/vat-registration-date")
 
       res should have(
         httpStatus(NOT_FOUND)
