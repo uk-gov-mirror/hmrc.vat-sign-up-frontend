@@ -17,13 +17,12 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import org.scalatest.EitherValues
-import play.api.http.Status.{BAD_REQUEST, CONFLICT, CREATED, FORBIDDEN}
+import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
-import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberHttpReads
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberAlreadySubscribed, StoreVatNumberFailureResponse, StoreVatNumberNoRelationship, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
 
 class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
@@ -39,12 +38,12 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         res.right.value shouldBe StoreVatNumberSuccess
       }
 
-      "parse a FORBIDDEN response as an StoreVatNumberNoRelationship when the response code matches" in {
+      "parse a FORBIDDEN response as a NoAgentClientRelationship when the response code matches" in {
         val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue)))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe StoreVatNumberNoRelationship
+        res.left.value shouldBe NoAgentClientRelationship
       }
 
       "parse a FORBIDDEN response as a StoreVatNumberFailureResponse when the response code does not match" in {
@@ -55,20 +54,36 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe StoreVatNumberFailureResponse(FORBIDDEN)
       }
 
-      "parse a CONFLICT response as a StoreVatNumberFailureResponse when the vat number is already subscribed" in {
+      "parse a CONFLICT response as an AlreadySubscribed when the vat number is already subscribed" in {
         val httpResponse = HttpResponse(CONFLICT)
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe StoreVatNumberAlreadySubscribed
+        res.left.value shouldBe AlreadySubscribed
       }
 
-      "parse any other response as a StoreVatNumberFailureResponse" in {
+      "parse a PRECONDITION_FAILED response as an InvalidVatNumber when the vat number is already subscribed" in {
+        val httpResponse = HttpResponse(PRECONDITION_FAILED)
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe StoreVatNumberHttpParser.InvalidVatNumber
+      }
+
+      "parse a BAD_REQUEST response as a IneligibleVatNumber when the vat number is already subscribed" in {
         val httpResponse = HttpResponse(BAD_REQUEST)
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe StoreVatNumberFailureResponse(BAD_REQUEST)
+        res.left.value shouldBe StoreVatNumberHttpParser.IneligibleVatNumber
+      }
+
+      "parse any other response as a StoreVatNumberFailureResponse" in {
+        val httpResponse = HttpResponse(INTERNAL_SERVER_ERROR)
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR)
       }
 
     }
