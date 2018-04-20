@@ -16,20 +16,28 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch
 
-import play.api.mvc.{Request, Result}
-import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import play.api.mvc.Result
+import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
+import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.http.{HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.{AuthenticatedController, EmptyRetrievalPredicate, RetrievalPredicate}
 
 import scala.concurrent.Future
 
-trait FeatureSwitchedController[A] extends FeatureSwitching {
-  self: AuthenticatedController[A] =>
+abstract class FeatureSwitchedController[A](retrievalPredicate: RetrievalPredicate[A] = EmptyRetrievalPredicate,
+                                            featureSwitches: Set[FeatureSwitch])
+  extends AuthenticatedController[A](retrievalPredicate) with FeatureSwitching {
 
-  val featureSwitches: Set[FeatureSwitch]
+  lazy val featureSwitchError: String =
+    "The feature switches [" + (featureSwitches filterNot isEnabled map (_.name) mkString ", ") + "] are required to be enabled for this url."
 
-  def featureEnabledWithAuth(block: => Future[Result])(implicit request: Request[_]): Future[Result] =
+  override def authorised(predicate: Predicate = EmptyPredicate): AuthorisedFunction =
+    if (featureSwitches forall isEnabled) super.authorised(predicate)
+    else new AuthorisedFunction(predicate) {
+      override def apply(block: => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
+        Future.failed(new NotFoundException(featureSwitchError))
 
-    if (featureSwitches.forall(isEnabled)) authorised()(block)
-    else Future.failed(new NotFoundException(request.uri))
-
+      override def apply[B](retrieval: Retrieval[B])(block: B => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
+        Future.failed(new NotFoundException(featureSwitchError))
+    }
 }

@@ -46,6 +46,10 @@ GET         /verify-email                          uk.gov.hmrc.vatsubscriptionfr
 # Email Verified
 GET         /email-verified                        uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.EmailVerifiedController.show
 
+# Business PostCode
+GET         /business-postcode                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.BusinessPostCodeController.show
+POST        /business-postcode                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.BusinessPostCodeController.submit
+
 # Business Type
 GET         /business-type                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.show
 POST        /business-type                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.submit

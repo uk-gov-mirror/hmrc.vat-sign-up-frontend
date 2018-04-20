@@ -33,7 +33,7 @@ abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate
   def authorised(predicate: Predicate = EmptyPredicate): AuthorisedFunction =
     new AuthorisedFunction(predicate)
 
-  sealed class AuthorisedFunction(predicate: Predicate) {
+  class AuthorisedFunction(predicate: Predicate, filter: => Boolean = true) {
     def apply(block: => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
       authConnector.authorise(predicate, retrievalPredicate.retrieval) flatMap {
         retrieval =>
@@ -45,7 +45,6 @@ abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate
         case retrievalA ~ retrievalB =>
           retrievalPredicate.function(block(retrievalB))(retrievalA)
       }
-
   }
 
   def controllerComponents: ControllerComponents
