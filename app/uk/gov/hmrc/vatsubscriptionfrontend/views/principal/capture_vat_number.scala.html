@@ -30,14 +30,16 @@
     <p>@Messages("principal.vat_number.line_1")</p>
 
     @form(action = postAction) {
+
         <div class="form-group">
             @inputHelper(
                 field = vatNumberForm(vatNumber),
                 label = Messages("principal.vat_number.heading"),
                 parentForm = vatNumberForm
             )
-        </div>
 
-        @continueButton()
+            @continueButton()
+
+        </div>
     }
 }

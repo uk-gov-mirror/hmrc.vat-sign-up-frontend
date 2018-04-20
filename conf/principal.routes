@@ -3,6 +3,10 @@
 # Guidance page
 GET         /                                      uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.GuidanceController.show
 
+# Capture Vat number
+GET         /vat-number                            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureVatNumberController.show
+POST        /vat-number                            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureVatNumberController.submit
+
 # Confirm Vat number
 GET         /your-vat-number                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.show
 POST        /your-vat-number                       uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.YourVatNumberController.submit
