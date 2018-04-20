@@ -56,6 +56,10 @@ POST        /business-type                         uk.gov.hmrc.vatsubscriptionfr
 
 GET         /identity-verified                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.IdentityVerificationCallbackController.continue
 
+# Could not confirm business
+GET         /could-not-confirm-business            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CouldNotConfirmBusinessController.show
+POST        /could-not-confirm-business            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CouldNotConfirmBusinessController.submit
+
 # Failed Identity Verification
 GET         /could-not-confirm-identity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.show
 POST        /could-not-confirm-identity            uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.FailedIdentityVerificationController.submit
