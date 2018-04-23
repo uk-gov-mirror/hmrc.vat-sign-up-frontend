@@ -14,49 +14,49 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend.views.principal
+package uk.gov.hmrc.vatsubscriptionfrontend.views.agent
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{VatNumber => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{CouldNotConfirmVatNumber => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
-import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
 
-class VatNumberSpec extends ViewSpec {
+class CouldNotConfirmVatNumberSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.capture_vat_number(
-    vatNumberForm = vatNumberForm.form,
+  lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.could_not_confirm_vat_number(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Vat Number view" should {
+  "The Could not confirm VAT Number view" should {
 
     val testPage = TestView(
-      name = "Vat Number View",
+      name = "Could not confirm VAT number View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+    testPage.shouldHavePara(
+      messages.line1
+    )
 
-    testPage.shouldHavePara(messages.line1)
+    testPage.shouldHaveForm("Could not find VAT Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(vatNumber, messages.heading)
+    testPage.shouldHaveSubmitButton(messages.tryAgain)
 
-    testPage.shouldHaveContinueButton()
-
+    testPage.shouldHaveSignOutLink()
   }
 
 }

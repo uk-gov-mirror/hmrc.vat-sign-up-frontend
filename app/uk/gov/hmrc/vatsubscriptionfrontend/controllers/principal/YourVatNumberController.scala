@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{StoreVatNumberAlreadySubscribed, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.your_vat_number
@@ -57,7 +57,7 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
             case Right(StoreVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())
                 .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-            case Left(StoreVatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
+            case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
             case Left(_) =>
               throw new InternalServerException("storeVatNumber failed")
           }

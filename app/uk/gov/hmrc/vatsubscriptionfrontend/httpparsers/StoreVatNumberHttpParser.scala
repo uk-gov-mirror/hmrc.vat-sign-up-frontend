@@ -32,14 +32,31 @@ object StoreVatNumberHttpParser {
       response.status match {
         case CREATED => Right(StoreVatNumberSuccess)
         case FORBIDDEN => parseBody match {
-          case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Left(StoreVatNumberNoRelationship)
+          case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Left(NoAgentClientRelationship)
           case _ => Left(StoreVatNumberFailureResponse(FORBIDDEN))
         }
-        case CONFLICT => Left(StoreVatNumberAlreadySubscribed)
+        case PRECONDITION_FAILED => Left(InvalidVatNumber)
+        case BAD_REQUEST => Left(IneligibleVatNumber)
+        case CONFLICT => Left(AlreadySubscribed)
         case status => Left(StoreVatNumberFailureResponse(status))
       }
     }
   }
+
+  case object StoreVatNumberSuccess
+
+  sealed trait StoreVatNumberFailure
+
+  case object NoAgentClientRelationship extends StoreVatNumberFailure
+
+  case object AlreadySubscribed extends StoreVatNumberFailure
+
+  case object InvalidVatNumber extends StoreVatNumberFailure
+
+  case object IneligibleVatNumber extends StoreVatNumberFailure
+
+  case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberFailure
+
 }
 
 
