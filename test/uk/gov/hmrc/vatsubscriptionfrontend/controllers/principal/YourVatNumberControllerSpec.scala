@@ -26,6 +26,7 @@ import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrievals, ~}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreVatNumberService
@@ -42,45 +43,64 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   lazy implicit val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-vat-number")
 
-  "Calling the show action of the Confirm Vat Number controller" should {
-    "go to the Confirm Vat number page" in {
-      mockAuthRetrieveVatDecEnrolment()
-      val request = testGetRequest
+  "Calling the show action of the Confirm Vat Number controller" when {
+    "the user has a VAT-DEC enrolment" should {
+      "go to the Confirm Vat number page" in {
+        mockAuthRetrieveVatDecEnrolment()
+        val request = testGetRequest
 
-      val result = TestYourVatNumberController.show(request)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+        val result = TestYourVatNumberController.show(request)
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
     }
   }
 
-  "there isn't a vrn in the enrolment" should {
-    "redirect to Capture Vat number page" in {
-      mockAuthorise(
-        retrievals = EmptyRetrieval and Retrievals.allEnrolments
-      )(Future.successful(new ~(Unit, Enrolments(Set()))))
+  "the user does not have a VAT-DEC enrolment" when {
+    "the known facts journey feature switch is enabled" should {
+      "redirect to Capture VAT number page" in {
+        enable(KnownFactsJourney)
 
-      val result = TestYourVatNumberController.show(testGetRequest)
+        mockAuthorise(
+          retrievals = EmptyRetrieval and Retrievals.allEnrolments
+        )(Future.successful(new ~(Unit, Enrolments(Set()))))
 
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
+        val result = TestYourVatNumberController.show(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+      }
+    }
+
+    "the known facts journey feature switch is disabled" should {
+      "redirect to Cannot Use Service page" in {
+        mockAuthorise(
+          retrievals = EmptyRetrieval and Retrievals.allEnrolments
+        )(Future.successful(new ~(Unit, Enrolments(Set()))))
+
+        val result = TestYourVatNumberController.show(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
+      }
     }
   }
 
   "Calling the submit action of the Your Vat Number controller" when {
-    "store vat is successful" should {
-      "return the capture business entity page with the vat number in session" in {
-        mockAuthRetrieveVatDecEnrolment()
-        mockStoreVatNumberSuccess(vatNumber = testVatNumber)
+    "the user has a VAT-DEC enrolment" when {
+      "store vat is successful" should {
+        "return the capture business entity page with the vat number in session" in {
+          mockAuthRetrieveVatDecEnrolment()
+          mockStoreVatNumberSuccess(vatNumber = testVatNumber)
 
-        val result = TestYourVatNumberController.submit(testPostRequest)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
-        result.session.get(SessionKeys.vatNumberKey) should contain(testVatNumber)
+          val result = TestYourVatNumberController.submit(testPostRequest)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+          result.session.get(SessionKeys.vatNumberKey) should contain(testVatNumber)
+        }
       }
-    }
 
-    "store vat is unsuccessful" when {
       "vat number is already subscribed" should {
         "redirect to the already subscribed page" in {
           mockAuthRetrieveVatDecEnrolment()
@@ -91,18 +111,46 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
         }
       }
+
+      "store vat returns any other error" should {
+        "throw internal server exception" in {
+          mockAuthRetrieveVatDecEnrolment()
+          mockStoreVatNumberFailure(vatNumber = testVatNumber)
+
+          intercept[InternalServerException] {
+            await(TestYourVatNumberController.submit(testPostRequest))
+          }
+        }
+      }
     }
+    "the user does not have a VAT-DEC enrolment" when {
+      "the known facts journey feature switch is enabled" should {
+        "redirect to capture VAT number" in {
+          enable(KnownFactsJourney)
 
-    "store vat is unsuccessful" should {
-      "throw internal server exception" in {
-        mockAuthRetrieveVatDecEnrolment()
-        mockStoreVatNumberFailure(vatNumber = testVatNumber)
+          mockAuthorise(
+            retrievals = EmptyRetrieval and Retrievals.allEnrolments
+          )(Future.successful(new ~(Unit, Enrolments(Set()))))
 
-        intercept[InternalServerException] {
-          await(TestYourVatNumberController.submit(testPostRequest))
+          val result = TestYourVatNumberController.submit(testPostRequest)
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+        }
+      }
+
+      "the known facts journey feature switch is disabled" should {
+        "redirect to Cannot Use Service page" in {
+          mockAuthorise(
+            retrievals = EmptyRetrieval and Retrievals.allEnrolments
+          )(Future.successful(new ~(Unit, Enrolments(Set()))))
+
+          val result = TestYourVatNumberController.submit(testPostRequest)
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
         }
       }
     }
   }
-
 }

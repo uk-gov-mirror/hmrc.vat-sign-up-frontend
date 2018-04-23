@@ -17,20 +17,54 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /your-vat-number" should {
-    "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+  "GET /your-vat-number" when {
+    "the vat number is on the profile" should {
+      "return an OK" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-      val res = get("/your-vat-number")
+        val res = get("/your-vat-number")
 
-      res should have(
-        httpStatus(OK)
-      )
+        res should have(
+          httpStatus(OK)
+        )
+      }
+    }
+    "the vat number is not on the profile" when {
+      "the KnownFactsJourney feature switch is enabled" should {
+        "redirect to the capture VAT number page" in {
+          enable(KnownFactsJourney)
+
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreVatNumberSuccess()
+
+          val res = get("/your-vat-number")
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureVatNumberController.show().url)
+          )
+        }
+      }
+
+      "the KnownFactsJourney feature switch is disabled" should {
+        "redirect to the Cannot Use Service page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreVatNumberSuccess()
+
+          val res = get("/your-vat-number")
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CannotUseServiceController.show().url)
+          )
+        }
+      }
     }
   }
 
@@ -65,9 +99,25 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
       }
     }
 
-    "the vat number is not on the profile" should {
-      "redirect to the cannot use this service page" when {
-        "the vat number is successfully stored" in {
+    "the vat number is not on the profile" when {
+      "the KnownFactsJourney feature switch is enabled" should {
+        "redirect to the capture VAT number page" in {
+          enable(KnownFactsJourney)
+
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreVatNumberSuccess()
+
+          val res = post("/your-vat-number")()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureVatNumberController.show().url)
+          )
+        }
+      }
+
+      "the KnownFactsJourney feature switch is disabled" should {
+        "redirect to the Cannot Use Service page" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreVatNumberSuccess()
 
@@ -81,5 +131,4 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
       }
     }
   }
-
 }

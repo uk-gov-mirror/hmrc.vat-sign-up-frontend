@@ -17,12 +17,12 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
-import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
+import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
@@ -41,6 +41,10 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
       enrolments.vatNumber match {
         case Some(vatNumber) =>
           Future.successful(Ok(your_vat_number(vatNumber, routes.YourVatNumberController.submit())))
+        case None if appConfig.isEnabled(KnownFactsJourney) =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
+          )
         case None =>
           Future.successful(
             Redirect(routes.CannotUseServiceController.show())
@@ -61,10 +65,14 @@ class YourVatNumberController @Inject()(val controllerComponents: ControllerComp
             case Left(_) =>
               throw new InternalServerException("storeVatNumber failed")
           }
+        case None if appConfig.isEnabled(KnownFactsJourney) =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
+          )
         case None =>
-        Future.successful(
-          Redirect(routes.CannotUseServiceController.show())
-        )
+          Future.successful(
+            Redirect(routes.CannotUseServiceController.show())
+          )
       }
     }
   }
