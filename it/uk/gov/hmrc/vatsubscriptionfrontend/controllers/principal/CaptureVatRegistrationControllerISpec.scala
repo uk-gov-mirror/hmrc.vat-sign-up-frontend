@@ -19,20 +19,19 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import java.time.LocalDate
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.vatRegistrationDateKey
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.DateModel
 
 class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = enable(KnownFactsJourney)
-
-  override def afterEach(): Unit = disable(KnownFactsJourney)
 
   "GET /vat-registration-date" should {
     "return an OK" in {
+      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/vat-registration-date")
@@ -45,6 +44,7 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
 
   "POST /vat-registration-date" should {
     "return a redirect" in {
+      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
@@ -57,6 +57,9 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
         httpStatus(SEE_OTHER),
         redirectUri(routes.BusinessPostCodeController.show().url)
       )
+
+      val session = SessionCookieCrumbler.getSessionMap(res)
+      session.keys should contain(vatRegistrationDateKey)
     }
   }
 

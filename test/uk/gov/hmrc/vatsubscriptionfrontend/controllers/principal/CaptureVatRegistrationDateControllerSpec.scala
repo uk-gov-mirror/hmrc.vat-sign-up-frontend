@@ -20,13 +20,16 @@ import java.time.LocalDate
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatRegistrationDateForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants.testCompanyNumber
 import uk.gov.hmrc.vatsubscriptionfrontend.models.DateModel
 
 class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneAppPerSuite
@@ -42,13 +45,10 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
         vatRegistrationDate + ".dateMonth" -> registrationDate.month,
         vatRegistrationDate + ".dateYear" -> registrationDate.year)
 
-  override def beforeEach(): Unit = enable(KnownFactsJourney)
-
-  override def afterEach(): Unit = disable(KnownFactsJourney)
-
 
   "Calling the show action of the Capture Vat Registration Date controller" should {
     "go to the Capture Vat Registration Date page" in {
+      enable(KnownFactsJourney)
       mockAuthEmptyRetrieval()
 
       val result = TestCaptureVatNumberController.show(testGetRequest)
@@ -62,18 +62,23 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
   "Calling the submit action of the Capture Vat Registration Date controller" when {
     "form successfully submitted" should {
       "redirect to the Business Postcode page" in {
+        enable(KnownFactsJourney)
         mockAuthEmptyRetrieval()
 
-        val request = testPostRequest(DateModel.dateConvert(LocalDate.now().minusDays(1)))
+        val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
+        val request = testPostRequest(yesterday)
 
         val result = TestCaptureVatNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
+
+        Json.parse(result.session(request).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
       }
     }
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
+        enable(KnownFactsJourney)
         mockAuthEmptyRetrieval()
 
         val invalidRequest = FakeRequest("POST", "/vat-registration-date")

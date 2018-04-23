@@ -38,13 +38,10 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     FakeRequest("POST", "/could-not-confirm-vat-number")
 
 
-  override def beforeEach(): Unit = enable(KnownFactsJourney)
-
-  override def afterEach(): Unit = disable(KnownFactsJourney)
-
   "Calling the show action of the Invalid Vat Number controller" when {
     "the known facts journey feature switch is enabled" should {
       "show the page" in {
+        enable(KnownFactsJourney)
         mockAuthEmptyRetrieval()
         val request = testGetRequest
 
@@ -66,6 +63,7 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the submit action of the Invalid Vat Number controller" should {
     "the known facts journey feature switch is enabled" should {
       "return NotImplemented" in {
+        enable(KnownFactsJourney)
         mockAuthEmptyRetrieval()
 
         val result = TestInvalidVatNumberController.submit(testPostRequest)
