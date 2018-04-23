@@ -21,13 +21,14 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitchedController, KnownFactsJourney}
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.could_not_confirm_business
 
 import scala.concurrent.Future
 
 @Singleton
 class CouldNotConfirmBusinessController @Inject()(val controllerComponents: ControllerComponents)
-  extends FeatureSwitchedController(featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -39,7 +40,7 @@ class CouldNotConfirmBusinessController @Inject()(val controllerComponents: Cont
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Redirect(routes.YourVatNumberController.show())
+        Redirect(routes.CaptureVatNumberController.show())
       )
     }
   }

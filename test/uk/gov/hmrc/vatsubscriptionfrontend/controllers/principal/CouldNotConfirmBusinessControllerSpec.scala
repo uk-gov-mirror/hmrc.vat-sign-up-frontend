@@ -58,7 +58,7 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
 
       val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.YourVatNumberController.show().url)
+      redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
     }
   }
 
