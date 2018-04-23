@@ -20,20 +20,19 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitchedController, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.could_not_confirm_business
 
 import scala.concurrent.Future
 
 @Singleton
 class CouldNotConfirmBusinessController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController() {
+  extends FeatureSwitchedController(featureSwitches = Set(KnownFactsJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_business(routes.CouldNotConfirmBusinessController.submit()))
-      )
+        Ok(could_not_confirm_business((routes.CouldNotConfirmBusinessController.submit()))))
     }
   }
 

@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -24,6 +25,8 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
 
   "GET /could-not-confirm-business" should {
     "return an OK" in {
+
+      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/could-not-confirm-business")
@@ -36,6 +39,9 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
 
   "POST /could-not-confirm-business" should {
     "redirect to the capture vat number page" in {
+
+      enable(KnownFactsJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/could-not-confirm-business")()
