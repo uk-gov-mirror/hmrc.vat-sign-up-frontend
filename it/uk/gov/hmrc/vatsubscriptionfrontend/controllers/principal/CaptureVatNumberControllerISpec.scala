@@ -43,7 +43,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
   }
 
   "POST /vat-number" should {
-    "return NotImplemented" when {
+    "redirect to Capture Vat Registration Date page" when {
       "the vat number is eligible" in {
         stubAuth(OK, successfulAuthResponse())
         stubVatNumberEligibilitySuccess(testVatNumber)
@@ -51,7 +51,8 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureVatRegistrationDateController.show().url)
         )
 
       }

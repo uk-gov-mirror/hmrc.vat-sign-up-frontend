@@ -52,7 +52,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           ),
         vatNumber =>
           vatNumberEligibilityService.checkVatNumberEligibility(vatNumber) map {
-            case Right(VatNumberEligible) => NotImplemented
+            case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show())
             case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
             case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
             case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
