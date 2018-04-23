@@ -17,9 +17,11 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitchedController, KnownFactsJourney}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.business_postcode
 
@@ -27,7 +29,7 @@ import scala.concurrent.Future
 
 @Singleton
 class BusinessPostCodeController @Inject()(val controllerComponents: ControllerComponents)
-  extends FeatureSwitchedController(featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>

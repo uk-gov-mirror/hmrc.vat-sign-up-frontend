@@ -21,7 +21,8 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitchedController, KnownFactsJourney}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers._
 import uk.gov.hmrc.vatsubscriptionfrontend.services.VatNumberEligibilityService
@@ -32,7 +33,7 @@ import scala.concurrent.Future
 @Singleton
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
                                            vatNumberEligibilityService: VatNumberEligibilityService)
-  extends FeatureSwitchedController(featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
