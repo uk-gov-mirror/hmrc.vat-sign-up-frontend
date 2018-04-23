@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 @Singleton
 class InvalidVatNumberController @Inject()(val controllerComponents: ControllerComponents)
-  extends FeatureSwitchedController(featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

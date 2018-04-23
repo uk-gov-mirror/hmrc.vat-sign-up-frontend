@@ -23,15 +23,17 @@ import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitch, FeatureSwitchedController}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
 
 import scala.concurrent.Future
 
-abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate[A] = EmptyRetrievalPredicate)
-  extends FrontendController with I18nSupport {
+abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate[A] = EmptyRetrievalPredicate,
+                                          override val featureSwitches: Set[FeatureSwitch] = Set.empty)
+  extends FeatureSwitchedController with FrontendController with I18nSupport {
 
   def authorised(predicate: Predicate = EmptyPredicate): AuthorisedFunction =
-    new AuthorisedFunction(predicate)
+    featureEnabled[AuthorisedFunction](new AuthorisedFunction(predicate))
 
   class AuthorisedFunction(predicate: Predicate, filter: => Boolean = true) {
     def apply(block: => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =

@@ -21,12 +21,12 @@ import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching{
+class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+
 
   "GET /could-not-confirm-vat-number" should {
     "return an OK" in {
       enable(KnownFactsJourney)
-
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/could-not-confirm-vat-number")
@@ -40,7 +40,6 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
   "POST /could-not-confirm-vat-number" should {
     "return an NOT_IMPLEMENTED" in {
       enable(KnownFactsJourney)
-
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/could-not-confirm-vat-number")()
@@ -55,7 +54,6 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
   "Making a request to /could-not-confirm-vat-number when not enabled" should {
     "return NotFound" in {
       disable(KnownFactsJourney)
-
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/could-not-confirm-vat-number")
