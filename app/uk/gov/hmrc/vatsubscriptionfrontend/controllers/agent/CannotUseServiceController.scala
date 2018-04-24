@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
@@ -40,9 +41,15 @@ class CannotUseServiceController @Inject()(val controllerComponents: ControllerC
     authorised() {
       Future.successful(
         Redirect(routes.CaptureClientDetailsController.show())
+          .removingFromSession(
+            SessionKeys.vatNumberKey,
+            SessionKeys.companyNumberKey,
+            SessionKeys.emailKey,
+            SessionKeys.businessEntityKey,
+            SessionKeys.userDetailsKey
+          )
       )
     }
-
   }
 
 }
