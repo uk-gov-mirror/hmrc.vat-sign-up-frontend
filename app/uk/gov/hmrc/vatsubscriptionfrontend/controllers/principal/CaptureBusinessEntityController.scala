@@ -19,11 +19,13 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.Other
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.capture_business_entity
 
@@ -42,7 +44,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
+    authorised()(Retrievals.allEnrolments) { enrolments =>
       businessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
@@ -51,9 +53,10 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         businessEntity =>
           Future.successful(
             {
-              businessEntity match {
-                case Other => Redirect(routes.CannotUseServiceController.show())
-                case _ => Redirect(routes.CaptureYourDetailsController.show())
+              (businessEntity, enrolments.vatNumber) match {
+                case (Other, _) => Redirect(routes.CannotUseServiceController.show())
+                case (_, Some(_)) => Redirect(routes.CaptureYourDetailsController.show())
+                case _ => Redirect(routes.CheckYourAnswersController.show())
               }
             }.addingToSession(SessionKeys.businessEntityKey, businessEntity)
           )

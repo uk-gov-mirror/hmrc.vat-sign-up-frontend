@@ -40,7 +40,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
     "return a SEE_OTHER status and go to capture your details" when {
       "the business type is limited company" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
 
@@ -53,7 +53,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
     "return a SEE_OTHER status and go to capture your details" when {
       "the business type is sole trader" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
@@ -64,7 +64,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a SEE_OTHER status and go to capture your details" when {
+    "return a SEE_OTHER status and go to cannot use service" when {
       "the business type is other" in {
         stubAuth(OK, successfulAuthResponse())
 
@@ -73,6 +73,30 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.CannotUseServiceController.show().url)
+        )
+      }
+    }
+
+    "return a SEE_OTHER status and go to check your answers" when {
+      "the business type is sole trader and a vat number is not on the enrolment" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersController.show().url)
+        )
+      }
+
+      "the business type is limited company and a vat number is not on the enrolment" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersController.show().url)
         )
       }
     }
