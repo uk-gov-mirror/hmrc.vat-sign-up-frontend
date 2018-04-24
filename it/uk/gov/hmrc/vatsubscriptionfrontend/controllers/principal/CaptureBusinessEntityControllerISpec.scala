@@ -77,14 +77,15 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a NOT_IMPLEMENTED status" when {
+    "return a SEE_OTHER status and go to check your answers" when {
       "the business type is sole trader and a vat number is not on the enrolment" in {
         stubAuth(OK, successfulAuthResponse())
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersController.show().url)
         )
       }
 
@@ -94,7 +95,8 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersController.show().url)
         )
       }
     }

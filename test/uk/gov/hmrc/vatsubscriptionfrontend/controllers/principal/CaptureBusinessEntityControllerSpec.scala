@@ -100,7 +100,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "return NOT_IMPLEMENTED" when {
+      "go to check your answers" when {
         "no vat enrolment is on the profile" when {
           "the business entity is sole trader" in {
             mockAuthorise(
@@ -111,7 +111,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
             val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.NOT_IMPLEMENTED
+
+            status(result) shouldBe Status.SEE_OTHER
+
+            redirectLocation(result) should contain(routes.CheckYourAnswersController.show().url)
+
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
           }
 
           "the business entity is limited company" in {
@@ -123,7 +128,11 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
 
             val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.NOT_IMPLEMENTED
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CheckYourAnswersController.show().url)
+
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
           }
         }
       }

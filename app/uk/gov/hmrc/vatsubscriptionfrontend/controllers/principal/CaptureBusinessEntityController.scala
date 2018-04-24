@@ -56,10 +56,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               (businessEntity, enrolments.vatNumber) match {
                 case (Other, _) => Redirect(routes.CannotUseServiceController.show())
                 case (_, Some(_)) => Redirect(routes.CaptureYourDetailsController.show())
-                case _ => {
-                  //todo redirect to confirm kf page when completed
-                  NotImplemented
-                }
+                case _ => Redirect(routes.CheckYourAnswersController.show())
               }
             }.addingToSession(SessionKeys.businessEntityKey, businessEntity)
           )

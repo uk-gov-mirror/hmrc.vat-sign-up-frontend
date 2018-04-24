@@ -127,7 +127,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the submit action of the Check your answers controller" when {
     "all prerequisite data are in" should {
-      // TODO update for when elligibility is done
+      // TODO update for when eligibility is done
       "goto capture your details controller" in {
         mockAuthEmptyRetrieval()
 
