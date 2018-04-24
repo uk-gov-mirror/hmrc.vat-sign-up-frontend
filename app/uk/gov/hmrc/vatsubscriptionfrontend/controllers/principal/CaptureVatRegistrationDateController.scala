@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class CaptureVatRegistrationDateController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
+  def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
         Ok(vat_registration_date(vatRegistrationDateForm, routes.CaptureVatRegistrationDateController.submit()))
@@ -41,7 +41,7 @@ class CaptureVatRegistrationDateController @Inject()(val controllerComponents: C
     }
   }
 
-  val submit: Action[AnyContent] = Action.async { implicit request =>
+  def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       vatRegistrationDateForm.bindFromRequest.fold(
         formWithErrors =>

@@ -36,7 +36,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                                            vatNumberEligibilityService: VatNumberEligibilityService)
   extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
+  def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
         Ok(capture_vat_number(vatNumberForm.form, routes.CaptureVatNumberController.submit()))
@@ -44,7 +44,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
     }
   }
 
-  val submit: Action[AnyContent] = Action.async { implicit request =>
+  def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       vatNumberForm.bindFromRequest.fold(
         formWithErrors =>

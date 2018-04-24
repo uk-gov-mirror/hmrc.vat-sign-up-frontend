@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
+  def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
@@ -70,7 +70,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     }
   }
 
-  val submit: Action[AnyContent] = Action.async { implicit request =>
+  def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)

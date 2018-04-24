@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
