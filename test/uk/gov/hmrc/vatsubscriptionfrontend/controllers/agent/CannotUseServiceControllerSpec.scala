@@ -18,9 +18,11 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 
 class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -28,6 +30,8 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   object TestCannotUseServiceController extends CannotUseServiceController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/cannot-use-service-yet ")
+  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("POST", "/cannot-use-service-yet")
 
   "Calling the show action of the cannot use service controller" should {
     "show the cannot use service page" in {
@@ -38,6 +42,17 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+  "Calling the submit action of the Cannot Use Service controller" should {
+    "redirect to capture client details page" in {
+
+      mockAuthEmptyRetrieval()
+
+      val result = TestCannotUseServiceController.submit(testPostRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) should contain(routes.CaptureClientDetailsController.show().url)
     }
   }
 

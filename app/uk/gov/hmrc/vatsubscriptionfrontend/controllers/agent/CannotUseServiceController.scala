@@ -31,8 +31,17 @@ class CannotUseServiceController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(cannot_use_service_yet()))
+      Future.successful(Ok(cannot_use_service_yet(routes.CannotUseServiceController.submit())))
     }
+  }
+
+  val submit: Action[AnyContent] = Action.async { implicit request =>
+    authorised() {
+      Future.successful(
+        Redirect(routes.CaptureClientDetailsController.show())
+      )
+    }
+
   }
 
 }

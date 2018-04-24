@@ -1,0 +1,1163 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 263716864 bytes for committing reserved memory.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_linux.cpp:2640), pid=25039, tid=0x00007f8f237f7700
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_171-b11) (build 1.8.0_171-b11)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.171-b11 mixed mode linux-amd64 compressed oops)
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f8f581c7800):  VMThread [stack: 0x00007f8f236f7000,0x00007f8f237f8000] [id=25049]
+
+Stack: [0x00007f8f236f7000,0x00007f8f237f8000],  sp=0x00007f8f237f6020,  free space=1020k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xacfffa]  VMError::report_and_die()+0x2ba
+V  [libjvm.so+0x5005cb]  report_vm_out_of_memory(char const*, int, unsigned long, VMErrorType, char const*)+0x8b
+V  [libjvm.so+0x92dd93]  os::Linux::commit_memory_impl(char*, unsigned long, bool)+0x123
+V  [libjvm.so+0x92dfb9]  os::pd_commit_memory(char*, unsigned long, unsigned long, bool)+0x29
+V  [libjvm.so+0x92527a]  os::commit_memory(char*, unsigned long, unsigned long, bool)+0x2a
+V  [libjvm.so+0x99b223]  PSVirtualSpace::expand_by(unsigned long)+0x53
+V  [libjvm.so+0x98bae0]  PSOldGen::expand(unsigned long)+0x170
+V  [libjvm.so+0x98bceb]  PSOldGen::resize(unsigned long)+0x1cb
+V  [libjvm.so+0x9939f1]  PSParallelCompact::invoke_no_policy(bool)+0x991
+V  [libjvm.so+0x99934d]  PSScavenge::invoke()+0x1ad
+V  [libjvm.so+0x94fcb0]  ParallelScavengeHeap::failed_mem_allocate(unsigned long)+0x70
+V  [libjvm.so+0xad1a77]  VM_ParallelGCFailedAllocation::doit()+0x97
+V  [libjvm.so+0xad9595]  VM_Operation::evaluate()+0x55
+V  [libjvm.so+0xad795a]  VMThread::evaluate_operation(VM_Operation*)+0xba
+V  [libjvm.so+0xad7cde]  VMThread::loop()+0x1ce
+V  [libjvm.so+0xad8150]  VMThread::run()+0x70
+V  [libjvm.so+0x92e0f8]  java_start(Thread*)+0x108
+
+VM_Operation (0x00007f8f20d1ed50): ParallelGCFailedAllocation, mode: safepoint, requested by thread 0x00007f8f59300800
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f8ec0001000 JavaThread "pool-4-thread-10" [_thread_blocked, id=25106, stack(0x00007f8ec7cfd000,0x00007f8ec7dfe000)]
+  0x00007f8eec0a2800 JavaThread "pool-4-thread-9" [_thread_blocked, id=25105, stack(0x00007f8ec7dfe000,0x00007f8ec7eff000)]
+  0x00007f8f59307000 JavaThread "pool-4-thread-8" [_thread_blocked, id=25104, stack(0x00007f8ec7eff000,0x00007f8ec8000000)]
+  0x00007f8f59305800 JavaThread "pool-4-thread-7" [_thread_blocked, id=25103, stack(0x00007f8ef8099000,0x00007f8ef819a000)]
+  0x00007f8f59304000 JavaThread "pool-4-thread-6" [_thread_blocked, id=25102, stack(0x00007f8ef819a000,0x00007f8ef829b000)]
+  0x00007f8f59302800 JavaThread "pool-4-thread-5" [_thread_blocked, id=25101, stack(0x00007f8f2031b000,0x00007f8f2041c000)]
+  0x00007f8f59301800 JavaThread "pool-4-thread-4" [_thread_blocked, id=25100, stack(0x00007f8f20a20000,0x00007f8f20b21000)]
+  0x00007f8f59300800 JavaThread "pool-4-thread-3" [_thread_blocked, id=25099, stack(0x00007f8f20c22000,0x00007f8f20d23000)]
+  0x00007f8f592ff800 JavaThread "pool-4-thread-2" [_thread_blocked, id=25098, stack(0x00007f8f2051d000,0x00007f8f2061e000)]
+  0x00007f8f592ff000 JavaThread "pool-4-thread-1" [_thread_blocked, id=25097, stack(0x00007f8f20b21000,0x00007f8f20c22000)]
+  0x00007f8ed8009000 JavaThread "sbt-web-akka.actor.default-dispatcher-4" [_thread_blocked, id=25096, stack(0x00007f8f20d23000,0x00007f8f20e24000)]
+  0x00007f8f5892d000 JavaThread "sbt-web-akka.actor.default-dispatcher-3" [_thread_blocked, id=25095, stack(0x00007f8f2071f000,0x00007f8f20820000)]
+  0x00007f8f58928000 JavaThread "sbt-web-akka.actor.default-dispatcher-2" [_thread_blocked, id=25094, stack(0x00007f8f2061e000,0x00007f8f2071f000)]
+  0x00007f8f58a4d000 JavaThread "sbt-web-scheduler-1" [_thread_blocked, id=25093, stack(0x00007f8f2041c000,0x00007f8f2051d000)]
+  0x00007f8f58822000 JavaThread "process reaper" daemon [_thread_blocked, id=25060, stack(0x00007f8f222cc000,0x00007f8f22305000)]
+  0x00007f8f58224800 JavaThread "Service Thread" daemon [_thread_blocked, id=25057, stack(0x00007f8f22c17000,0x00007f8f22d18000)]
+  0x00007f8f5820f800 JavaThread "C1 CompilerThread3" daemon [_thread_blocked, id=25056, stack(0x00007f8f22d18000,0x00007f8f22e19000)]
+  0x00007f8f5820d800 JavaThread "C2 CompilerThread2" daemon [_thread_blocked, id=25055, stack(0x00007f8f22e19000,0x00007f8f22f1a000)]
+  0x00007f8f5820b800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=25054, stack(0x00007f8f22f1a000,0x00007f8f2301b000)]
+  0x00007f8f58208800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=25053, stack(0x00007f8f2301b000,0x00007f8f2311c000)]
+  0x00007f8f58207000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=25052, stack(0x00007f8f2311c000,0x00007f8f2321d000)]
+  0x00007f8f581d3800 JavaThread "Finalizer" daemon [_thread_blocked, id=25051, stack(0x00007f8f234f5000,0x00007f8f235f6000)]
+  0x00007f8f581cf000 JavaThread "Reference Handler" daemon [_thread_blocked, id=25050, stack(0x00007f8f235f6000,0x00007f8f236f7000)]
+  0x00007f8f5800a800 JavaThread "main" [_thread_blocked, id=25040, stack(0x00007f8f600e1000,0x00007f8f601e2000)]
+
+Other Threads:
+=>0x00007f8f581c7800 VMThread [stack: 0x00007f8f236f7000,0x00007f8f237f8000] [id=25049]
+  0x00007f8f58229800 WatcherThread [stack: 0x00007f8f22b16000,0x00007f8f22c17000] [id=25058]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f8f58006350] ExpandHeap_lock - owner thread: 0x00007f8f581c7800
+[0x00007f8f580069d0] Threads_lock - owner thread: 0x00007f8f581c7800
+[0x00007f8f58006ed0] Heap_lock - owner thread: 0x00007f8f59300800
+
+Heap:
+ PSYoungGen      total 401920K, used 0K [0x00000000e0100000, 0x0000000100000000, 0x0000000100000000)
+  eden space 287232K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f1980000)
+  from space 114688K, 0% used [0x00000000f1980000,0x00000000f1980000,0x00000000f8980000)
+  to   space 115712K, 0% used [0x00000000f8f00000,0x00000000f8f00000,0x0000000100000000)
+ ParOldGen       total 358400K, used 270995K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 75% used [0x00000000a0200000,0x00000000b0aa4cc8,0x00000000b6000000)
+ Metaspace       used 96190K, capacity 96934K, committed 97432K, reserved 1130496K
+  class space    used 16454K, capacity 16681K, committed 16792K, reserved 1048576K
+
+Card table byte_map: [0x00007f8f5cb76000,0x00007f8f5ce76000] byte_map_base: 0x00007f8f5c675000
+
+Marking Bits: (ParMarkBitMap*) 0x00007f8f5f5ae280
+ Begin Bits: [0x00007f8f29010000, 0x00007f8f2a808000)
+ End Bits:   [0x00007f8f2a808000, 0x00007f8f2c000000)
+
+Polling page: 0x00007f8f60200000
+
+CodeCache: size=245760Kb used=72334Kb max_used=72342Kb free=173425Kb
+ bounds [0x00007f8f49000000, 0x00007f8f4d760000, 0x00007f8f58000000]
+ total_blobs=18845 nmethods=18336 adapters=417
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 42.765 Thread 0x00007f8f58208800 nmethod 24388 0x00007f8f4d612710 code [0x00007f8f4d6129a0, 0x00007f8f4d613830]
+Event: 42.765 Thread 0x00007f8f58208800 24396       4       scala.tools.nsc.backend.icode.BasicBlocks$BasicBlock::iterator (36 bytes)
+Event: 42.768 Thread 0x00007f8f58208800 nmethod 24396 0x00007f8f4af7dc50 code [0x00007f8f4af7ddc0, 0x00007f8f4af7dfd8]
+Event: 42.768 Thread 0x00007f8f58208800 24397       4       scala.collection.AbstractIterator::dropWhile (6 bytes)
+Event: 42.770 Thread 0x00007f8f58208800 nmethod 24397 0x00007f8f4ac416d0 code [0x00007f8f4ac41820, 0x00007f8f4ac41918]
+Event: 42.770 Thread 0x00007f8f58208800 24398       4       scala.collection.Iterator$$anon$18::next (51 bytes)
+Event: 42.775 Thread 0x00007f8f58208800 nmethod 24398 0x00007f8f4ac3c0d0 code [0x00007f8f4ac3c280, 0x00007f8f4ac3c658]
+Event: 42.775 Thread 0x00007f8f58208800 24385       4       scala.tools.asm.FieldWriter::<init> (97 bytes)
+Event: 42.803 Thread 0x00007f8f58208800 nmethod 24385 0x00007f8f4d197a10 code [0x00007f8f4d197d20, 0x00007f8f4d198f18]
+Event: 42.803 Thread 0x00007f8f58208800 24399 %     4       scala.tools.asm.ClassWriter::toByteArray @ 670 (1289 bytes)
+
+GC Heap History (10 events):
+Event: 35.317 GC heap after
+Heap after GC invocations=28 (full 5):
+ PSYoungGen      total 393728K, used 41388K [0x00000000e0100000, 0x00000000fee00000, 0x0000000100000000)
+  eden space 275456K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f0e00000)
+  from space 118272K, 34% used [0x00000000f0e00000,0x00000000f366b0c8,0x00000000f8180000)
+  to   space 111104K, 0% used [0x00000000f8180000,0x00000000f8180000,0x00000000fee00000)
+ ParOldGen       total 358400K, used 229980K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 64% used [0x00000000a0200000,0x00000000ae297350,0x00000000b6000000)
+ Metaspace       used 94657K, capacity 95334K, committed 95768K, reserved 1128448K
+  class space    used 16390K, capacity 16617K, committed 16664K, reserved 1048576K
+}
+Event: 37.953 GC heap before
+{Heap before GC invocations=29 (full 5):
+ PSYoungGen      total 393728K, used 316844K [0x00000000e0100000, 0x00000000fee00000, 0x0000000100000000)
+  eden space 275456K, 100% used [0x00000000e0100000,0x00000000f0e00000,0x00000000f0e00000)
+  from space 118272K, 34% used [0x00000000f0e00000,0x00000000f366b0c8,0x00000000f8180000)
+  to   space 111104K, 0% used [0x00000000f8180000,0x00000000f8180000,0x00000000fee00000)
+ ParOldGen       total 358400K, used 229980K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 64% used [0x00000000a0200000,0x00000000ae297350,0x00000000b6000000)
+ Metaspace       used 95075K, capacity 95814K, committed 96152K, reserved 1128448K
+  class space    used 16415K, capacity 16649K, committed 16792K, reserved 1048576K
+Event: 38.003 GC heap after
+Heap after GC invocations=29 (full 5):
+ PSYoungGen      total 391680K, used 67239K [0x00000000e0100000, 0x00000000ffd00000, 0x0000000100000000)
+  eden space 280576K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f1300000)
+  from space 111104K, 60% used [0x00000000f8180000,0x00000000fc329f50,0x00000000fee00000)
+  to   space 113152K, 0% used [0x00000000f1300000,0x00000000f1300000,0x00000000f8180000)
+ ParOldGen       total 358400K, used 241751K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 67% used [0x00000000a0200000,0x00000000aee15ed0,0x00000000b6000000)
+ Metaspace       used 95075K, capacity 95814K, committed 96152K, reserved 1128448K
+  class space    used 16415K, capacity 16649K, committed 16792K, reserved 1048576K
+}
+Event: 40.473 GC heap before
+{Heap before GC invocations=30 (full 5):
+ PSYoungGen      total 391680K, used 347815K [0x00000000e0100000, 0x00000000ffd00000, 0x0000000100000000)
+  eden space 280576K, 100% used [0x00000000e0100000,0x00000000f1300000,0x00000000f1300000)
+  from space 111104K, 60% used [0x00000000f8180000,0x00000000fc329f50,0x00000000fee00000)
+  to   space 113152K, 0% used [0x00000000f1300000,0x00000000f1300000,0x00000000f8180000)
+ ParOldGen       total 358400K, used 241751K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 67% used [0x00000000a0200000,0x00000000aee15ed0,0x00000000b6000000)
+ Metaspace       used 96052K, capacity 96806K, committed 97176K, reserved 1130496K
+  class space    used 16448K, capacity 16681K, committed 16792K, reserved 1048576K
+Event: 40.551 GC heap after
+Heap after GC invocations=30 (full 5):
+ PSYoungGen      total 393728K, used 85668K [0x00000000e0100000, 0x0000000100000000, 0x0000000100000000)
+  eden space 280576K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f1300000)
+  from space 113152K, 75% used [0x00000000f1300000,0x00000000f66a9298,0x00000000f8180000)
+  to   space 121344K, 0% used [0x00000000f8980000,0x00000000f8980000,0x0000000100000000)
+ ParOldGen       total 358400K, used 268759K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 74% used [0x00000000a0200000,0x00000000b0875c80,0x00000000b6000000)
+ Metaspace       used 96052K, capacity 96806K, committed 97176K, reserved 1130496K
+  class space    used 16448K, capacity 16681K, committed 16792K, reserved 1048576K
+}
+Event: 41.750 GC heap before
+{Heap before GC invocations=31 (full 5):
+ PSYoungGen      total 393728K, used 366244K [0x00000000e0100000, 0x0000000100000000, 0x0000000100000000)
+  eden space 280576K, 100% used [0x00000000e0100000,0x00000000f1300000,0x00000000f1300000)
+  from space 113152K, 75% used [0x00000000f1300000,0x00000000f66a9298,0x00000000f8180000)
+  to   space 121344K, 0% used [0x00000000f8980000,0x00000000f8980000,0x0000000100000000)
+ ParOldGen       total 358400K, used 268759K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 74% used [0x00000000a0200000,0x00000000b0875c80,0x00000000b6000000)
+ Metaspace       used 96169K, capacity 96934K, committed 97432K, reserved 1130496K
+  class space    used 16450K, capacity 16681K, committed 16792K, reserved 1048576K
+Event: 41.814 GC heap after
+Heap after GC invocations=31 (full 5):
+ PSYoungGen      total 403456K, used 47926K [0x00000000e0100000, 0x00000000ffb00000, 0x0000000100000000)
+  eden space 287232K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f1980000)
+  from space 116224K, 41% used [0x00000000f8980000,0x00000000fb84d988,0x00000000ffb00000)
+  to   space 114688K, 0% used [0x00000000f1980000,0x00000000f1980000,0x00000000f8980000)
+ ParOldGen       total 358400K, used 308023K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 85% used [0x00000000a0200000,0x00000000b2ecdc90,0x00000000b6000000)
+ Metaspace       used 96169K, capacity 96934K, committed 97432K, reserved 1130496K
+  class space    used 16450K, capacity 16681K, committed 16792K, reserved 1048576K
+}
+Event: 42.810 GC heap before
+{Heap before GC invocations=32 (full 5):
+ PSYoungGen      total 403456K, used 335158K [0x00000000e0100000, 0x00000000ffb00000, 0x0000000100000000)
+  eden space 287232K, 100% used [0x00000000e0100000,0x00000000f1980000,0x00000000f1980000)
+  from space 116224K, 41% used [0x00000000f8980000,0x00000000fb84d988,0x00000000ffb00000)
+  to   space 114688K, 0% used [0x00000000f1980000,0x00000000f1980000,0x00000000f8980000)
+ ParOldGen       total 358400K, used 308023K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 85% used [0x00000000a0200000,0x00000000b2ecdc90,0x00000000b6000000)
+ Metaspace       used 96190K, capacity 96934K, committed 97432K, reserved 1130496K
+  class space    used 16454K, capacity 16681K, committed 16792K, reserved 1048576K
+Event: 42.889 GC heap after
+Heap after GC invocations=32 (full 5):
+ PSYoungGen      total 401920K, used 4374K [0x00000000e0100000, 0x0000000100000000, 0x0000000100000000)
+  eden space 287232K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f1980000)
+  from space 114688K, 3% used [0x00000000f1980000,0x00000000f1dc5900,0x00000000f8980000)
+  to   space 115712K, 0% used [0x00000000f8f00000,0x00000000f8f00000,0x0000000100000000)
+ ParOldGen       total 358400K, used 354002K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 98% used [0x00000000a0200000,0x00000000b5bb4848,0x00000000b6000000)
+ Metaspace       used 96190K, capacity 96934K, committed 97432K, reserved 1130496K
+  class space    used 16454K, capacity 16681K, committed 16792K, reserved 1048576K
+}
+Event: 42.890 GC heap before
+{Heap before GC invocations=33 (full 6):
+ PSYoungGen      total 401920K, used 4374K [0x00000000e0100000, 0x0000000100000000, 0x0000000100000000)
+  eden space 287232K, 0% used [0x00000000e0100000,0x00000000e0100000,0x00000000f1980000)
+  from space 114688K, 3% used [0x00000000f1980000,0x00000000f1dc5900,0x00000000f8980000)
+  to   space 115712K, 0% used [0x00000000f8f00000,0x00000000f8f00000,0x0000000100000000)
+ ParOldGen       total 358400K, used 354002K [0x00000000a0200000, 0x00000000b6000000, 0x00000000e0100000)
+  object space 358400K, 98% used [0x00000000a0200000,0x00000000b5bb4848,0x00000000b6000000)
+ Metaspace       used 96190K, capacity 96934K, committed 97432K, reserved 1130496K
+  class space    used 16454K, capacity 16681K, committed 16792K, reserved 1048576K
+
+Deoptimization events (10 events):
+Event: 41.902 Thread 0x00007f8f59300800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8f4d55bd68 method=scala.tools.asm.Frame.init(I)V @ 25
+Event: 41.903 Thread 0x00007f8f59300800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8f4d65b694 method=scala.tools.nsc.backend.jvm.GenASM$JPlainBuilder$jcode$.iconst(I)V @ 65
+Event: 42.105 Thread 0x00007f8f59300800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f8f4d27a4d8 method=scala.tools.nsc.backend.jvm.BCodeAsmCommon$$anonfun$9.apply(Lscala/reflect/internal/Symbols$Symbol;)Lscala/collection/Iterable; @ 333
+Event: 42.105 Thread 0x00007f8f59300800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8f4cb7dd98 method=scala.tools.nsc.backend.jvm.BCodeAsmCommon$$anonfun$memberClassesForInnerClassTable$1.applyOrElse(Lscala/reflect/internal/Symbols$Symbol;Lscala/Function1;)Ljava/lang/Object;
+Event: 42.106 Thread 0x00007f8f59300800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f8f4d27a4d8 method=scala.tools.nsc.backend.jvm.BCodeAsmCommon$$anonfun$9.apply(Lscala/reflect/internal/Symbols$Symbol;)Lscala/collection/Iterable; @ 333
+Event: 42.123 Thread 0x00007f8f59300800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f8f4b550854 method=scala.reflect.internal.util.InternalPositionImpl$class.finalPosition(Lscala/reflect/internal/util/Position;)Lscala/reflect/internal/util/Position; @ 1
+Event: 42.135 Thread 0x00007f8f59300800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8f4a5ac648 method=scala.tools.nsc.backend.jvm.GenASM$JPlainBuilder.isClosureApply$1(Lscala/reflect/internal/Symbols$Symbol;)Z @ 44
+Event: 42.137 Thread 0x00007f8f59300800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8f4cd51d18 method=scala.tools.asm.Item.isEqualTo(Lscala/tools/asm/Item;)Z @ 345
+Event: 42.144 Thread 0x00007f8f59300800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8f4cd4e478 method=scala.tools.asm.Frame.merge(Lscala/tools/asm/ClassWriter;Lscala/tools/asm/Frame;I)Z @ 59
+Event: 42.219 Thread 0x00007f8f59300800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f8f4d66a1c4 method=scala.collection.mutable.AnyRefMap.seekEntryOrOpen(ILjava/lang/Object;)I @ 62
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 19.094 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4a938878 to 0x00007f8f4a938cb9
+Event: 19.095 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4a325bb9 to 0x00007f8f4a325cb2
+Event: 19.096 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4a7f6591 to 0x00007f8f4a7f6645
+Event: 20.617 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f492062d0 to 0x00007f8f49206445
+Event: 20.617 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4bd76eba to 0x00007f8f4bd7b26d
+Event: 20.631 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4a6ba4ce to 0x00007f8f4a6baaf5
+Event: 20.631 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4a27a6e2 to 0x00007f8f4a27ac61
+Event: 22.195 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4a57dbe0 to 0x00007f8f4a57dc8a
+Event: 41.877 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4c83e043 to 0x00007f8f4c84083d
+Event: 41.900 Thread 0x00007f8f59300800 Implicit null exception at 0x00007f8f4b217030 to 0x00007f8f4b2170ed
+
+Events (10 events):
+Event: 42.467 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4cdb2850
+Event: 42.468 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4cebb650
+Event: 42.469 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4d1a4450
+Event: 42.469 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4d1f3c10
+Event: 42.469 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4d25c9d0
+Event: 42.470 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4d601490
+Event: 42.470 Thread 0x00007f8f5820f800 flushing nmethod 0x00007f8f4d60bcd0
+Event: 42.627 Thread 0x00007f8f59300800 DEOPT PACKING pc=0x00007f8f4b925995 sp=0x00007f8f20d1eb60
+Event: 42.627 Thread 0x00007f8f59300800 DEOPT UNPACKING pc=0x00007f8f49047784 sp=0x00007f8f20d1e878 mode 0
+Event: 42.810 Executing VM operation: ParallelGCFailedAllocation
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 fc:01 14037297                           /usr/lib/jvm/java-8-oracle/jre/bin/java
+00600000-00601000 rw-p 00000000 fc:01 14037297                           /usr/lib/jvm/java-8-oracle/jre/bin/java
+0219a000-021bb000 rw-p 00000000 00:00 0                                  [heap]
+a0200000-b6000000 rw-p 00000000 00:00 0 
+c5b80000-e0100000 ---p 00000000 00:00 0 
+e0100000-100000000 rw-p 00000000 00:00 0 
+100000000-101066000 rw-p 00000000 00:00 0 
+101066000-140000000 ---p 00000000 00:00 0 
+7f8eb4000000-7f8eb4021000 rw-p 00000000 00:00 0 
+7f8eb4021000-7f8eb8000000 ---p 00000000 00:00 0 
+7f8eb8000000-7f8eb8021000 rw-p 00000000 00:00 0 
+7f8eb8021000-7f8ebc000000 ---p 00000000 00:00 0 
+7f8ebc000000-7f8ebc021000 rw-p 00000000 00:00 0 
+7f8ebc021000-7f8ec0000000 ---p 00000000 00:00 0 
+7f8ec0000000-7f8ec0048000 rw-p 00000000 00:00 0 
+7f8ec0048000-7f8ec4000000 ---p 00000000 00:00 0 
+7f8ec53b2000-7f8ec5472000 rw-p 00000000 00:00 0 
+7f8ec5472000-7f8ec55b2000 ---p 00000000 00:00 0 
+7f8ec55b2000-7f8ec57b2000 rw-p 00000000 00:00 0 
+7f8ec57b2000-7f8ec59b2000 rw-p 00000000 00:00 0 
+7f8ec59b2000-7f8ec5bb2000 rw-p 00000000 00:00 0 
+7f8ec5bb2000-7f8ec5db2000 rw-p 00000000 00:00 0 
+7f8ec5db2000-7f8ec5db5000 r--s 0000b000 00:2c 7078586                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.objenesis/objenesis/objenesis-2.5.jar
+7f8ec5db5000-7f8ec5db7000 r--s 00006000 00:2c 7078946                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.bytebuddy/byte-buddy-agent/byte-buddy-agent-1.6.5.jar
+7f8ec5db7000-7f8ec5df1000 r--s 00268000 00:2c 7078635                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.bytebuddy/byte-buddy/byte-buddy-1.6.5.jar
+7f8ec5df1000-7f8ec5e00000 r--s 00073000 00:2c 7078452                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.mockito/mockito-core/mockito-core-2.7.6.jar
+7f8ec5e00000-7f8ec5e06000 r--s 00044000 00:2c 7078819                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.jsoup/jsoup/jsoup-1.8.1.jar
+7f8ec5e06000-7f8ec5e0b000 r--s 0005d000 00:2c 7078700                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-leg-rc/selenium-leg-rc-2.53.1.jar
+7f8ec5e0b000-7f8ec5e10000 r--s 00025000 00:2c 7078583                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-support/selenium-support-2.53.1.jar
+7f8ec5e10000-7f8ec5e12000 r--s 00014000 00:2c 7078750                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-safari-driver/selenium-safari-driver-2.53.1.jar
+7f8ec5e12000-7f8ec5e13000 r--s 00002000 00:2c 7078446                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-ie-driver/selenium-ie-driver-2.53.1.jar
+7f8ec5e13000-7f8ec5e15000 r--s 000c7000 00:2c 7078412                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-firefox-driver/selenium-firefox-driver-2.53.1.jar
+7f8ec5e15000-7f8ec5e17000 r--s 0000e000 00:2c 7078828                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/htmlunit-driver/htmlunit-driver-2.21.jar
+7f8ec5e17000-7f8ec5e18000 r--s 00001000 00:2c 7078805                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-edge-driver/selenium-edge-driver-2.53.1.jar
+7f8ec5e18000-7f8ec5e1d000 r--s 0001f000 00:2c 7078444                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-api/selenium-api-2.53.1.jar
+7f8ec5e1d000-7f8ec5e22000 r--s 00035000 00:2c 7078489                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-remote-driver/selenium-remote-driver-2.53.1.jar
+7f8ec5e22000-7f8ec5e23000 r--s 00002000 00:2c 7078507                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-chrome-driver/selenium-chrome-driver-2.53.1.jar
+7f8ec5e23000-7f8ec5e24000 r--s 00000000 00:2c 7078713                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.seleniumhq.selenium/selenium-java/selenium-java-2.53.1.jar
+7f8ec5e24000-7f8ec5e28000 r--s 00030000 00:2c 7078516                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.scalatestplus.play/scalatestplus-play_2.11/scalatestplus-play_2.11-2.0.0.jar
+7f8ec5e28000-7f8ec5e29000 r--s 0000a000 00:2c 7078603                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.ow2.asm/asm-util/asm-util-5.0.3.jar
+7f8ec5e29000-7f8ec5e2a000 r--s 00004000 00:2c 7078508                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.ow2.asm/asm-analysis/asm-analysis-5.0.3.jar
+7f8ec5e2a000-7f8ec5e2c000 r--s 00006000 00:2c 7078533                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.ow2.asm/asm-tree/asm-tree-5.0.3.jar
+7f8ec5e2c000-7f8ec5e2d000 r--s 0000c000 00:2c 7078842                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.ow2.asm/asm/asm-5.0.3.jar
+7f8ec5e2d000-7f8ec5e32000 r--s 00029000 00:2c 7078676                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.parboiled/parboiled-core/parboiled-core-1.1.7.jar
+7f8ec5e32000-7f8ec5e34000 r--s 00010000 00:2c 7078461                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.parboiled/parboiled-java/parboiled-java-1.1.7.jar
+7f8ec5e34000-7f8ec5e37000 r--s 00011000 00:2c 7078898                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.pegdown/pegdown/pegdown-1.6.0.jar
+7f8ec5e37000-7f8ec5e41000 r--s 000ab000 00:2c 7078560                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.scalactic/scalactic_2.11/scalactic_2.11-3.0.1.jar
+7f8ec5e41000-7f8ec5eec000 r--s 00946000 00:2c 7078853                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.scalatest/scalatest_2.11/scalatest_2.11-3.0.1.jar
+7f8ec5eec000-7f8ec5eef000 r--s 00018000 00:2c 7078632                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/hmrctest_2.11/hmrctest_2.11-3.0.0.jar
+7f8ec5eef000-7f8ec5f00000 r--s 00155000 00:2c 7078803                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.java.dev.jna/jna-platform/jna-platform-4.1.0.jar
+7f8ec5f00000-7f8ec5f04000 r--s 000dc000 00:2c 7078642                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.java.dev.jna/jna/jna-4.1.0.jar
+7f8ec5f04000-7f8ec5f06000 r--s 0000c000 00:2c 7078864                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.apache.commons/commons-exec/commons-exec-1.3.jar
+7f8ec5f06000-7f8ec5f0b000 r--s 0002f000 00:2c 7078679                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.google.code.gson/gson/gson-2.3.1.jar
+7f8ec5f0b000-7f8ec5f12000 r--s 00049000 00:2c 7078671                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/cglib/cglib-nodep/cglib-nodep-2.1_3.jar
+7f8ec5f12000-7f8ec5f15000 r--s 00014000 00:2c 1060757                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.fluentlenium/fluentlenium-core/fluentlenium-core-0.10.9.jar
+7f8ec5f15000-7f8ec5f17000 r--s 00009000 00:2c 7078960                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.eclipse.jetty.websocket/websocket-api/websocket-api-9.2.15.v20160210.jar
+7f8ec5f17000-7f8ec5f1c000 r--s 00028000 00:2c 7078570                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.eclipse.jetty.websocket/websocket-common/websocket-common-9.2.15.v20160210.jar
+7f8ec5f1c000-7f8ec5f1f000 r--s 00018000 00:2c 7078739                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.eclipse.jetty/jetty-io/jetty-io-9.2.15.v20160210.jar
+7f8ec5f1f000-7f8ec5f25000 r--s 00054000 00:2c 7078596                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.eclipse.jetty/jetty-util/jetty-util-9.2.15.v20160210.jar
+7f8ec5f25000-7f8ec5f26000 r--s 00008000 00:2c 7078785                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.eclipse.jetty.websocket/websocket-client/websocket-client-9.2.15.v20160210.jar
+7f8ec5f26000-7f8ec5f27000 r--s 00003000 00:2c 7078927                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.w3c.css/sac/sac-1.3.jar
+7f8ec5f27000-7f8ec5f2b000 r--s 00058000 00:2c 7078589                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.sourceforge.cssparser/cssparser/cssparser-0.9.18.jar
+7f8ec5f2b000-7f8ec5f2d000 r--s 0001d000 00:2c 7078944                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.sourceforge.nekohtml/nekohtml/nekohtml-1.9.22.jar
+7f8ec5f2d000-7f8ec5f3b000 r--s 000fc000 00:2c 7078519                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.sourceforge.htmlunit/htmlunit-core-js/htmlunit-core-js-2.17.jar
+7f8ec5f3b000-7f8ec5f3d000 r--s 00009000 00:2c 7078545                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.apache.httpcomponents/httpmime/httpmime-4.5.2.jar
+7f8ec5f3d000-7f8ec5f41000 r--s 00040000 00:2c 7078894                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/xalan/serializer/serializer-2.7.2.jar
+7f8ec5f41000-7f8ec5f66000 r--s 002de000 00:2c 7078948                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/xalan/xalan/xalan-2.7.2.jar
+7f8ec5f66000-7f8ec5f8c000 r--s 0019d000 00:2c 7078525                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.sourceforge.htmlunit/htmlunit/htmlunit-2.20.jar
+7f8ec5f8c000-7f8ec5f8e000 r--s 00003000 00:2c 7078592                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.google.code.findbugs/jsr305/jsr305-3.0.1.jar
+7f8ec5f8e000-7f8ec5f90000 r--s 00002000 00:2c 7078610                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.scala-sbt/test-interface/test-interface-1.0.jar
+7f8ec5f90000-7f8ec5f92000 r--s 00006000 00:2c 7078661                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.novocode/junit-interface/junit-interface-0.11.jar
+7f8ec5f92000-7f8ec5f94000 r--s 00009000 00:2c 7078693                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.hamcrest/hamcrest-core/hamcrest-core-1.3.jar
+7f8ec5f94000-7f8ec5f9c000 r--s 00045000 00:2c 7078538                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/junit/junit/junit-4.12.jar
+7f8ec5f9c000-7f8ec5f9f000 r--s 0001f000 00:2c 7078765                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-test_2.11/play-test_2.11-2.5.12.jar
+7f8ec5f9f000-7f8ec619f000 rw-p 00000000 00:00 0 
+7f8ec619f000-7f8ec639f000 rw-p 00000000 00:00 0 
+7f8ec639f000-7f8ec659f000 rw-p 00000000 00:00 0 
+7f8ec659f000-7f8ec679f000 rw-p 00000000 00:00 0 
+7f8ec679f000-7f8ec699f000 rw-p 00000000 00:00 0 
+7f8ec699f000-7f8ec6b9f000 rw-p 00000000 00:00 0 
+7f8ec6b9f000-7f8ec6d9f000 rw-p 00000000 00:00 0 
+7f8ec6d9f000-7f8ec6da3000 r--s 0003a000 fc:01 14157868                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/sunpkcs11.jar
+7f8ec6da3000-7f8ec6dbf000 r--s 00393000 fc:01 14157277                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/cldrdata.jar
+7f8ec6dbf000-7f8ec6dc0000 r--s 00010000 fc:01 14157691                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/zipfs.jar
+7f8ec6dc0000-7f8ec6dca000 r--s 00116000 fc:01 14157916                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/localedata.jar
+7f8ec6dca000-7f8ec6e5f000 r--s 0110b000 fc:01 14157284                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/jfxrt.jar
+7f8ec6e5f000-7f8ec6e64000 r--s 0003f000 fc:01 14157917                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/sunjce_provider.jar
+7f8ec6e64000-7f8ec6e65000 r--s 0000a000 fc:01 14157427                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/jaccess.jar
+7f8ec6e65000-7f8ec6e67000 r--s 00001000 fc:01 14157274                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/dnsns.jar
+7f8ec6e67000-7f8ec6e69000 r--s 00009000 fc:01 14157268                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/sunec.jar
+7f8ec6e69000-7f8ec6e84000 r--s 001d4000 fc:01 14157669                   /usr/lib/jvm/java-8-oracle/jre/lib/ext/nashorn.jar
+7f8ec6e84000-7f8ec6e89000 r--s 00084000 fc:01 14037320                   /usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar
+7f8ec6e89000-7f8ec6e8e000 r--s 002f9000 fc:01 14037372                   /usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar
+7f8ec6e8e000-7f8ec708e000 rw-p 00000000 00:00 0 
+7f8ec708e000-7f8ec728e000 rw-p 00000000 00:00 0 
+7f8ec728e000-7f8ec748e000 rw-p 00000000 00:00 0 
+7f8ec748e000-7f8ec768e000 rw-p 00000000 00:00 0 
+7f8ec768e000-7f8ec788e000 rw-p 00000000 00:00 0 
+7f8ec788e000-7f8ec7894000 r--s 00038000 00:2c 6818017                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/org.scala-sbt-compiler-interface-0.13.17-bin_2.11.11__52.0/org.scala-sbt-compiler-interface-0.13.17-bin_2.11.11__52.0.jar
+7f8ec7894000-7f8ec7898000 r--s 0003e000 00:2c 7078666                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/jline/jline/jline-2.14.3.jar
+7f8ec7898000-7f8ec78a2000 r--s 0009a000 00:2c 7078442                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.scala-lang.modules/scala-xml_2.11/scala-xml_2.11-1.0.5.jar
+7f8ec78a2000-7f8ec79af000 r--s 00dd4000 00:2c 1060777                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.scala-lang/scala-compiler/scala-compiler-2.11.11.jar
+7f8ec79af000-7f8ec79b0000 r--s 00002000 00:2c 7078776                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/play-whitelist-filter_2.11/play-whitelist-filter_2.11-2.0.0.jar
+7f8ec79b0000-7f8ec79b4000 r--s 00034000 00:2c 7078730                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/domain_2.11/domain_2.11-5.1.0.jar
+7f8ec79b4000-7f8ec79b6000 r--s 00000000 00:2c 7078845                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-logback/metrics-logback-3.1.2.jar
+7f8ec79b6000-7f8ec79b8000 r--s 00008000 00:2c 7078956                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-jvm/metrics-jvm-3.1.2.jar
+7f8ec79b8000-7f8ec79b9000 r--s 00003000 00:2c 7078810                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-json/metrics-json-3.1.2.jar
+7f8ec79b9000-7f8ec79bb000 r--s 00008000 00:2c 7078624                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/de.threedimensions/metrics-play_2.11/metrics-play_2.11-2.5.13.jar
+7f8ec79bb000-7f8ec79bd000 r--s 00009000 00:2c 7078621                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.slf4j/slf4j-api/slf4j-api-1.7.22.jar
+7f8ec79bd000-7f8ec79c1000 r--s 0001e000 00:2c 1060774                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-core/metrics-core-3.2.5.jar
+7f8ec79c1000-7f8ec79c3000 r--s 00004000 00:2c 7078550                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/io.dropwizard.metrics/metrics-graphite/metrics-graphite-3.2.5.jar
+7f8ec79c3000-7f8ec79c7000 r--s 0002a000 00:2c 7078476                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/commons-io/commons-io/commons-io-2.4.jar
+7f8ec79c7000-7f8ec79c8000 r--s 00003000 00:2c 7078795                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/logback-json-logger_2.11/logback-json-logger_2.11-3.1.0.jar
+7f8ec79c8000-7f8ec79ca000 r--s 0000c000 00:2c 7078780                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/play-config_2.11/play-config_2.11-5.0.0.jar
+7f8ec79ca000-7f8ec79cc000 r--s 0000c000 00:2c 7078576                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/play-health_2.11/play-health_2.11-2.1.0.jar
+7f8ec79cc000-7f8ec79d0000 r--s 00018000 00:2c 7078788                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/net.ceedubs/ficus_2.11/ficus_2.11-1.1.2.jar
+7f8ec79d0000-7f8ec79d7000 r--s 0004d000 00:2c 7078605                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/auth-client_2.11/auth-client_2.11-2.6.0.jar
+7f8ec79d7000-7f8ec79f0000 r--s 00126000 00:2c 7078647                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/io.netty/netty/netty-3.9.2.Final.jar
+7f8ec79f0000-7f8ec79fa000 r--s 00079000 00:2c 7078449                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.ning/async-http-client/async-http-client-1.8.15.jar
+7f8ec79fa000-7f8ec79ff000 r--s 00026000 00:2c 7078639                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/play-auditing_2.11/play-auditing_2.11-3.3.0.jar
+7f8ec79ff000-7f8ec7a02000 r--s 00010000 00:2c 7078965                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/http-verbs-play-25_2.11/http-verbs-play-25_2.11-0.10.0.jar
+7f8ec7a02000-7f8ec7a06000 r--s 0002c000 00:2c 7078816                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/http-core_2.11/http-core_2.11-0.7.0.jar
+7f8ec7a06000-7f8ec7a0b000 r--s 0002d000 00:2c 7078758                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.github.nscala-time/nscala-time_2.11/nscala-time_2.11-2.2.0.jar
+7f8ec7a0b000-7f8ec7a0d000 r--s 00008000 00:2c 7078937                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/time_2.11/time_2.11-2.0.0.jar
+7f8ec7a0d000-7f8ec7a0e000 r--s 00001000 00:2c 7078473                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-datacommons_2.11/play-datacommons_2.11-2.5.16.jar
+7f8ec7a0e000-7f8ec7a17000 r--s 0005c000 00:2c 7078668                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-functional_2.11/play-functional_2.11-2.5.16.jar
+7f8ec7a17000-7f8ec7a1c000 r--s 00040000 00:2c 1060781                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.typesafe/config/config-1.3.1.jar
+7f8ec7a1c000-7f8ec7a2f000 r--s 000ad000 00:2c 7078753                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-iteratees_2.11/play-iteratees_2.11-2.5.16.jar
+7f8ec7a2f000-7f8ec7a3c000 r--s 00092000 00:2c 7078637                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-json_2.11/play-json_2.11-2.5.16.jar
+7f8ec7a3c000-7f8ec7a3e000 r--s 0000d000 00:2c 7078655                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/http-verbs_2.11/http-verbs_2.11-7.3.0.jar
+7f8ec7a3e000-7f8ec7a88000 r--s 002f4000 00:2c 7078423                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.bouncycastle/bcprov-jdk15on/bcprov-jdk15on-1.55.jar
+7f8ec7a88000-7f8ec7a8a000 r--s 00006000 00:2c 7078695                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/secure_2.11/secure_2.11-7.1.0.jar
+7f8ec7a8a000-7f8ec7a8d000 r--s 00018000 00:2c 7078830                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/crypto_2.11/crypto_2.11-4.4.0.jar
+7f8ec7a8d000-7f8ec7a96000 r--s 0005e000 00:2c 7078889                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/filters-helpers_2.11/filters-helpers_2.11-2.5.12.jar
+7f8ec7a96000-7f8ec7aa0000 r--s 00061000 00:2c 7078415                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/bootstrap-play-25_2.11/bootstrap-play-25_2.11-1.5.0.jar
+7f8ec7aa0000-7f8ec7aa2000 r--s 0000e000 00:2c 7078763                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/commons-logging/commons-logging/commons-logging-1.2.jar
+7f8ec7aa2000-7f8ec7aaf000 r--s 000a7000 00:2c 7078711                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.apache.httpcomponents/httpclient/httpclient-4.5.2.jar
+7f8ec7aaf000-7f8ec7ab6000 r--s 00049000 00:2c 7078954                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.apache.httpcomponents/httpcore/httpcore-4.4.4.jar
+7f8ec7ab6000-7f8ec7ab7000 r--s 00001000 00:2c 7078760                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/oauth.signpost/signpost-commonshttp4/signpost-commonshttp4-1.2.1.2.jar
+7f8ec7ab7000-7f8ec7aba000 r--s 00009000 00:2c 7078617                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/oauth.signpost/signpost-core/signpost-core-1.2.1.2.jar
+7f8ec7aba000-7f8ec7ac4000 r--s 000aa000 00:2c 7078924                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.javassist/javassist/javassist-3.21.0-GA.jar
+7f8ec7ac4000-7f8ec7ac5000 r--s 0000b000 00:2c 7078432                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.asynchttpclient/netty-codec-dns/netty-codec-dns-2.0.24.jar
+7f8ec7ac5000-7f8ec7ac6000 r--s 00005000 00:2c 7078523                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.asynchttpclient/netty-resolver/netty-resolver-2.0.24.jar
+7f8ec7ac6000-7f8ec7ac8000 r--s 0000f000 00:2c 7078651                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.asynchttpclient/netty-resolver-dns/netty-resolver-dns-2.0.24.jar
+7f8ec7ac8000-7f8ec7acb000 r--s 00022000 00:2c 7078783                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-transport-native-epoll/netty-transport-native-epoll-4.0.42.Final-linux-x86_64.jar
+7f8ec7acb000-7f8ec7ad1000 r--s 00046000 00:2c 7078614                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-handler/netty-handler-4.0.42.Final.jar
+7f8ec7ad1000-7f8ec7ad9000 r--s 00054000 00:2c 7078897                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-transport/netty-transport-4.0.42.Final.jar
+7f8ec7ad9000-7f8ec7add000 r--s 00021000 00:2c 7078491                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-codec/netty-codec-4.0.42.Final.jar
+7f8ec7add000-7f8ec7ae6000 r--s 00067000 00:2c 7078479                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-codec-http/netty-codec-http-4.0.42.Final.jar
+7f8ec7ae6000-7f8ec7af0000 r--s 00078000 00:2c 7078895                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-common/netty-common-4.0.42.Final.jar
+7f8ec7af0000-7f8ec7af4000 r--s 00033000 00:2c 7078843                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/io.netty/netty-buffer/netty-buffer-4.0.42.Final.jar
+7f8ec7af4000-7f8ec7af5000 r--s 00001000 00:2c 7078826                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.asynchttpclient/async-http-client-netty-utils/async-http-client-netty-utils-2.0.24.jar
+7f8ec7af5000-7f8ec7afe000 r--s 00060000 00:2c 7078574                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.asynchttpclient/async-http-client/async-http-client-2.0.24.jar
+7f8ec7afe000-7f8ec7b2a000 r--s 00208000 00:2c 7078567                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.google.guava/guava/guava-19.0.jar
+7f8ec7b2a000-7f8ec7b36000 r--s 00096000 00:2c 7078791                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-ws_2.11/play-ws_2.11-2.5.12.jar
+7f8ec7b36000-7f8ec7b44000 r--s 0007f000 00:2c 7078420                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/play-ui_2.11/play-ui_2.11-7.14.0.jar
+7f8ec7b44000-7f8ec7b47000 r--s 000c4000 00:2c 7078554                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/uk.gov.hmrc/govuk-template_2.11/govuk-template_2.11-5.18.0.jar
+7f8ec7b47000-7f8ec7b51000 r--s 00069000 00:2c 7078891                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/ch.qos.logback/logback-core/logback-core-1.1.7.jar
+7f8ec7b51000-7f8ec7b58000 r--s 00044000 00:2c 7078850                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/ch.qos.logback/logback-classic/logback-classic-1.1.7.jar
+7f8ec7b58000-7f8ec7b59000 r--s 00005000 00:2c 7078887                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-logback_2.11/play-logback_2.11-2.5.12.jar
+7f8ec7b59000-7f8ec7b5b000 r--s 00004000 00:2c 7078690                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.netty/netty-reactive-streams/netty-reactive-streams-1.0.8.jar
+7f8ec7b5b000-7f8ec7b5c000 r--s 00007000 00:2c 7078466                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.netty/netty-reactive-streams-http/netty-reactive-streams-http-1.0.8.jar
+7f8ec7b5c000-7f8ec7b61000 r--s 0002b000 00:2c 7078653                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-netty-server_2.11/play-netty-server_2.11-2.5.12.jar
+7f8ec7b61000-7f8ec7b63000 r--s 00009000 00:2c 7078724                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.google.inject.extensions/guice-assistedinject/guice-assistedinject-4.0.jar
+7f8ec7b63000-7f8ec7b65000 r--s 00000000 00:2c 7078484                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/aopalliance/aopalliance/aopalliance-1.0.jar
+7f8ec7b65000-7f8ec7b66000 r--s 00000000 00:2c 7078487                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/javax.inject/javax.inject/javax.inject-1.jar
+7f8ec7b66000-7f8ec7b74000 r--s 00096000 00:2c 7078579                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.google.inject/guice/guice-4.0.jar
+7f8ec7b74000-7f8ec7b75000 r--s 00003000 00:2c 7078565                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/javax.transaction/jta/jta-1.1.jar
+7f8ec7b75000-7f8ec7b7e000 r--s 0002d000 00:2c 7078801                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/xml-apis/xml-apis/xml-apis-1.4.01.jar
+7f8ec7b7e000-7f8ec7b97000 r--s 00135000 00:2c 7078627                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/xerces/xercesImpl/xercesImpl-2.11.0.jar
+7f8ec7b97000-7f8ec7b9e000 r--s 0003f000 00:2c 7078770                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/commons-codec/commons-codec/commons-codec-1.10.jar
+7f8ec7b9e000-7f8ec7b9f000 r--s 00004000 00:2c 1060771                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.akka/akka-slf4j_2.11/akka-slf4j_2.11-2.4.14.jar
+7f8ec7b9f000-7f8ec7baa000 r--s 0005d000 00:2c 7078774                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.scala-lang.modules/scala-parser-combinators_2.11/scala-parser-combinators_2.11-1.0.4.jar
+7f8ec7baa000-7f8ec7bb2000 r--s 00052000 00:2c 7078552                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.typesafe/ssl-config-core_2.11/ssl-config-core_2.11-0.2.1.jar
+7f8ec7bb2000-7f8ec7bc0000 r--s 00081000 00:2c 7078463                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.scala-lang.modules/scala-java8-compat_2.11/scala-java8-compat_2.11-0.7.0.jar
+7f8ec7bc0000-7f8ec7bef000 r--s 002f8000 00:2c 7078935                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.akka/akka-actor_2.11/akka-actor_2.11-2.4.14.jar
+7f8ec7bef000-7f8ec7c3a000 r--s 003e1000 00:2c 7078527                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.akka/akka-stream_2.11/akka-stream_2.11-2.4.14.jar
+7f8ec7c3a000-7f8ec7c3b000 r--s 00000000 00:2c 7078798                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.reactivestreams/reactive-streams/reactive-streams-1.0.0.jar
+7f8ec7c3b000-7f8ec7c42000 r--s 00043000 00:2c 7078855                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-streams_2.11/play-streams_2.11-2.5.12.jar
+7f8ec7c42000-7f8ec7c44000 r--s 00003000 00:2c 1060765                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.slf4j/jcl-over-slf4j/jcl-over-slf4j-1.7.21.jar
+7f8ec7c44000-7f8ec7c46000 r--s 00000000 00:2c 7078535                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.slf4j/jul-to-slf4j/jul-to-slf4j-1.7.21.jar
+7f8ec7c46000-7f8ec7c49000 r--s 00013000 00:2c 7078496                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/jackson-datatype-jsr310-2.7.8.jar
+7f8ec7c49000-7f8ec7c4b000 r--s 00005000 00:2c 7078963                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/jackson-datatype-jdk8-2.7.8.jar
+7f8ec7c4b000-7f8ec7c5c000 r--s 00116000 00:2c 7078529                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.fasterxml.jackson.core/jackson-databind/jackson-databind-2.7.8.jar
+7f8ec7c5c000-7f8ec7c5f000 r--s 0000a000 00:2c 7078832                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.fasterxml.jackson.core/jackson-annotations/jackson-annotations-2.7.8.jar
+7f8ec7c5f000-7f8ec7cab000 r--s 00418000 00:2c 7078941                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.scala-lang/scala-reflect/scala-reflect-2.11.11.jar
+7f8ec7cab000-7f8ec7cfd000 r--s 00399000 00:2c 7078778                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play_2.11/play_2.11-2.5.12.jar
+7f8ec7cfd000-7f8ec7d00000 ---p 00000000 00:00 0 
+7f8ec7d00000-7f8ec7dfe000 rw-p 00000000 00:00 0 
+7f8ec7dfe000-7f8ec7e01000 ---p 00000000 00:00 0 
+7f8ec7e01000-7f8ec7eff000 rw-p 00000000 00:00 0 
+7f8ec7eff000-7f8ec7f02000 ---p 00000000 00:00 0 
+7f8ec7f02000-7f8ec8000000 rw-p 00000000 00:00 0 
+7f8ec8000000-7f8ec8021000 rw-p 00000000 00:00 0 
+7f8ec8021000-7f8ecc000000 ---p 00000000 00:00 0 
+7f8ecc000000-7f8ecc021000 rw-p 00000000 00:00 0 
+7f8ecc021000-7f8ed0000000 ---p 00000000 00:00 0 
+7f8ed0000000-7f8ed0892000 rw-p 00000000 00:00 0 
+7f8ed0892000-7f8ed4000000 ---p 00000000 00:00 0 
+7f8ed4000000-7f8ed4381000 rw-p 00000000 00:00 0 
+7f8ed4381000-7f8ed8000000 ---p 00000000 00:00 0 
+7f8ed8000000-7f8ed80e8000 rw-p 00000000 00:00 0 
+7f8ed80e8000-7f8edc000000 ---p 00000000 00:00 0 
+7f8edc000000-7f8edc021000 rw-p 00000000 00:00 0 
+7f8edc021000-7f8ee0000000 ---p 00000000 00:00 0 
+7f8ee0000000-7f8ee01e5000 rw-p 00000000 00:00 0 
+7f8ee01e5000-7f8ee4000000 ---p 00000000 00:00 0 
+7f8ee4000000-7f8ee55aa000 rw-p 00000000 00:00 0 
+7f8ee55aa000-7f8ee8000000 ---p 00000000 00:00 0 
+7f8ee8000000-7f8ee82af000 rw-p 00000000 00:00 0 
+7f8ee82af000-7f8eec000000 ---p 00000000 00:00 0 
+7f8eec000000-7f8eec0bb000 rw-p 00000000 00:00 0 
+7f8eec0bb000-7f8ef0000000 ---p 00000000 00:00 0 
+7f8ef0000000-7f8ef0021000 rw-p 00000000 00:00 0 
+7f8ef0021000-7f8ef4000000 ---p 00000000 00:00 0 
+7f8ef4000000-7f8ef4021000 rw-p 00000000 00:00 0 
+7f8ef4021000-7f8ef8000000 ---p 00000000 00:00 0 
+7f8ef8000000-7f8ef8001000 r--s 00004000 00:2c 7078755                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-netty-utils/play-netty-utils-2.5.12.jar
+7f8ef8001000-7f8ef8004000 r--s 0003b000 00:2c 7078418                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/com.fasterxml.jackson.core/jackson-core/jackson-core-2.7.8.jar
+7f8ef8004000-7f8ef8008000 r--s 00018000 00:2c 7078426                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.joda/joda-convert/joda-convert-1.8.1.jar
+7f8ef8008000-7f8ef8019000 r--s 0008a000 00:2c 7078658                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/joda-time/joda-time/joda-time-2.9.6.jar
+7f8ef8019000-7f8ef8022000 r--s 00091000 00:2c 7078402                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.scala-stm/scala-stm_2.11/scala-stm_2.11-0.7.jar
+7f8ef8022000-7f8ef8024000 r--s 00000000 00:2c 7078455                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-exceptions/play-exceptions-2.5.12.jar
+7f8ef8024000-7f8ef8025000 r--s 00000000 00:2c 7078557                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/build-link/build-link-2.5.12.jar
+7f8ef8025000-7f8ef802c000 r--s 00041000 00:2c 7078478                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/play-server_2.11/play-server_2.11-2.5.12.jar
+7f8ef802c000-7f8ef8037000 r--s 00096000 00:2c 7078781                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/bundles/org.scala-lang.modules/scala-xml_2.11/scala-xml_2.11-1.0.1.jar
+7f8ef8037000-7f8ef803e000 r--s 00064000 00:2c 7078602                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.apache.commons/commons-lang3/commons-lang3-3.4.jar
+7f8ef803e000-7f8ef8040000 r--s 0000d000 00:2c 7078847                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/com.typesafe.play/twirl-api_2.11/twirl-api_2.11-1.1.1.jar
+7f8ef8040000-7f8ef8099000 r--s 00523000 00:2c 1060783                    /home/morgan/Applications/hmrc-development-environment/vat-subscription-frontend/lib_managed/jars/org.scala-lang/scala-library/scala-library-2.11.11.jar
+7f8ef8099000-7f8ef809c000 ---p 00000000 00:00 0 
+7f8ef809c000-7f8ef819a000 rw-p 00000000 00:00 0 
+7f8ef819a000-7f8ef819d000 ---p 00000000 00:00 0 
+7f8ef819d000-7f8ef849b000 rw-p 00000000 00:00 0 
+7f8ef849b000-7f8ef869b000 rw-p 00000000 00:00 0 
+7f8ef869b000-7f8ef889b000 rw-p 00000000 00:00 0 
+7f8ef889b000-7f8ef8a9b000 rw-p 00000000 00:00 0 
+7f8ef8a9b000-7f8ef8a9e000 r--s 0001a000 fc:01 14037385                   /usr/lib/jvm/java-8-oracle/jre/lib/jce.jar
+7f8ef8a9e000-7f8ef8c9e000 rw-p 00000000 00:00 0 
+7f8ef8c9e000-7f8ef8cc2000 r--s 001bc000 00:2c 29493629                   /home/morgan/.ivy2/cache/org.scalariform/scalariform_2.10/jars/scalariform_2.10-0.2.0.jar
+7f8ef8cc2000-7f8ef8cd5000 r--s 000e8000 00:2c 29493811                   /home/morgan/.ivy2/cache/org.scalastyle/scalastyle_2.10/jars/scalastyle_2.10-1.0.0.jar
+7f8ef8cd5000-7f8ef8cd8000 r--s 00010000 00:2c 29360211                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/org.scalastyle/scalastyle-sbt-plugin/jars/scalastyle-sbt-plugin-1.0.0.jar
+7f8ef8cd8000-7f8ef8cdd000 r--s 0003b000 00:2c 29492627                   /home/morgan/.ivy2/cache/org.scoverage/scalac-scoverage-plugin_2.10/jars/scalac-scoverage-plugin_2.10-1.3.0.jar
+7f8ef8cdd000-7f8ef8cdf000 r--s 00010000 00:2c 29363491                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/org.scoverage/sbt-scoverage/jars/sbt-scoverage-1.5.0.jar
+7f8ef8cdf000-7f8ef8d2f000 r--s 0028c000 00:2c 29492341                   /home/morgan/.ivy2/cache/org.webjars/npm/jars/npm-2.11.2.jar
+7f8ef8d2f000-7f8ef8d30000 r--s 00001000 00:2c 29363333                   /home/morgan/.ivy2/cache/com.typesafe/npm_2.10/jars/npm_2.10-1.1.1.jar
+7f8ef8d30000-7f8ef8d31000 r--s 00007000 00:2c 29232033                   /home/morgan/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.12.jar
+7f8ef8d31000-7f8ef8d32000 r--s 00002000 00:2c 29363339                   /home/morgan/.ivy2/cache/org.slf4j/slf4j-simple/jars/slf4j-simple-1.7.12.jar
+7f8ef8d32000-7f8ef8d36000 r--s 00043000 00:2c 29363338                   /home/morgan/.ivy2/cache/io.spray/spray-json_2.10/bundles/spray-json_2.10-1.3.2.jar
+7f8ef8d36000-7f8ef8d3a000 r--s 000ac000 00:2c 29363337                   /home/morgan/.ivy2/cache/io.apigee.trireme/trireme-node10src/jars/trireme-node10src-0.8.5.jar
+7f8ef8d3a000-7f8ef8d47000 r--s 0010f000 00:2c 29231456                   /home/morgan/.ivy2/cache/io.apigee/rhino/jars/rhino-1.7R5pre4.jar
+7f8ef8d47000-7f8ef8d4f000 r--s 00060000 00:2c 29363336                   /home/morgan/.ivy2/cache/io.apigee.trireme/trireme-core/jars/trireme-core-0.8.5.jar
+7f8ef8d4f000-7f8ef8d50000 r--s 0001e000 00:2c 29491228                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni-win64/jars/leveldbjni-win64-1.5.jar
+7f8ef8d50000-7f8ef8d51000 r--s 0001b000 00:2c 29491226                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni-win32/jars/leveldbjni-win32-1.5.jar
+7f8ef8d51000-7f8ef8d52000 r--s 00044000 00:2c 29491224                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni-linux64/jars/leveldbjni-linux64-1.5.jar
+7f8ef8d52000-7f8ef8d53000 r--s 00044000 00:2c 29491222                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni-linux32/jars/leveldbjni-linux32-1.5.jar
+7f8ef8d53000-7f8ef8d54000 r--s 00028000 00:2c 29491220                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni-osx/jars/leveldbjni-osx-1.5.jar
+7f8ef8d54000-7f8ef8d55000 r--s 00004000 00:2c 29491230                   /home/morgan/.ivy2/cache/org.fusesource.hawtjni/hawtjni-runtime/jars/hawtjni-runtime-1.8.jar
+7f8ef8d55000-7f8ef8d57000 r--s 0000c000 00:2c 29491218                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni/jars/leveldbjni-1.7.jar
+7f8ef8d57000-7f8ef8d5a000 r--s 000fa000 00:2c 29491214                   /home/morgan/.ivy2/cache/org.fusesource.leveldbjni/leveldbjni-all/bundles/leveldbjni-all-1.7.jar
+7f8ef8d5a000-7f8ef8d5d000 r--s 00006000 00:2c 29492640                   /home/morgan/.ivy2/cache/com.google.code.findbugs/jsr305/jars/jsr305-1.3.9.jar
+7f8ef8d5d000-7f8ef8d7f000 r--s 00195000 00:2c 29231454                   /home/morgan/.ivy2/cache/com.google.guava/guava/jars/guava-12.0.jar
+7f8ef8d7f000-7f8ef8d81000 r--s 00001000 00:2c 29491216                   /home/morgan/.ivy2/cache/org.iq80.leveldb/leveldb-api/jars/leveldb-api-0.5.jar
+7f8ef8d81000-7f8ef8d85000 r--s 00034000 00:2c 29491212                   /home/morgan/.ivy2/cache/org.iq80.leveldb/leveldb/jars/leveldb-0.5.jar
+7f8ef8d85000-7f8ef8d93000 r--s 000bf000 00:2c 29492340                   /home/morgan/.ivy2/cache/com.typesafe.akka/akka-persistence-experimental_2.10/jars/akka-persistence-experimental_2.10-2.3.11.jar
+7f8ef8d93000-7f8ef8da3000 r--s 000f7000 00:2c 29492339                   /home/morgan/.ivy2/cache/com.typesafe.akka/akka-cluster_2.10/jars/akka-cluster_2.10-2.3.11.jar
+7f8ef8da3000-7f8ef8dab000 r--s 0007b000 00:2c 29491208                   /home/morgan/.ivy2/cache/com.google.protobuf/protobuf-java/bundles/protobuf-java-2.5.0.jar
+7f8ef8dab000-7f8ef8dc3000 r--s 00115000 00:2c 29230782                   /home/morgan/.ivy2/cache/io.netty/netty/bundles/netty-3.8.0.Final.jar
+7f8ef8dc3000-7f8ef8dd9000 r--s 00135000 00:2c 29492338                   /home/morgan/.ivy2/cache/com.typesafe.akka/akka-remote_2.10/jars/akka-remote_2.10-2.3.11.jar
+7f8ef8dd9000-7f8ef8dff000 r--s 00263000 00:2c 29363334                   /home/morgan/.ivy2/cache/com.typesafe.akka/akka-actor_2.10/jars/akka-actor_2.10-2.3.11.jar
+7f8ef8dff000-7f8ef8fff000 rw-p 00000000 00:00 0 
+7f8ef8fff000-7f8efc000000 rw-p 00000000 00:00 0 
+7f8efc000000-7f8efd53a000 rw-p 00000000 00:00 0 
+7f8efd53a000-7f8f00000000 ---p 00000000 00:00 0 
+7f8f00000000-7f8f00021000 rw-p 00000000 00:00 0 
+7f8f00021000-7f8f04000000 ---p 00000000 00:00 0 
+7f8f04000000-7f8f059ca000 rw-p 00000000 00:00 0 
+7f8f059ca000-7f8f08000000 ---p 00000000 00:00 0 
+7f8f08000000-7f8f0999e000 rw-p 00000000 00:00 0 
+7f8f0999e000-7f8f0c000000 ---p 00000000 00:00 0 
+7f8f0c000000-7f8f0c021000 rw-p 00000000 00:00 0 
+7f8f0c021000-7f8f10000000 ---p 00000000 00:00 0 
+7f8f10000000-7f8f11a40000 rw-p 00000000 00:00 0 
+7f8f11a40000-7f8f14000000 ---p 00000000 00:00 0 
+7f8f14000000-7f8f14021000 rw-p 00000000 00:00 0 
+7f8f14021000-7f8f18000000 ---p 00000000 00:00 0 
+7f8f18000000-7f8f18021000 rw-p 00000000 00:00 0 
+7f8f18021000-7f8f1c000000 ---p 00000000 00:00 0 
+7f8f1c000000-7f8f1c2eb000 rw-p 00000000 00:00 0 
+7f8f1c2eb000-7f8f20000000 ---p 00000000 00:00 0 
+7f8f20000000-7f8f20002000 r--s 0000a000 00:2c 29491210                   /home/morgan/.ivy2/cache/org.uncommons.maths/uncommons-maths/jars/uncommons-maths-1.2.2a.jar
+7f8f20002000-7f8f20011000 r--s 000bf000 00:2c 29363335                   /home/morgan/.ivy2/cache/com.typesafe.akka/akka-contrib_2.10/jars/akka-contrib_2.10-2.3.11.jar
+7f8f20011000-7f8f20015000 r--s 00022000 00:2c 29363329                   /home/morgan/.ivy2/cache/com.typesafe/jse_2.10/jars/jse_2.10-1.1.2.jar
+7f8f20015000-7f8f20019000 r--s 00020000 00:2c 29363321                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.typesafe.sbt/sbt-js-engine/jars/sbt-js-engine-1.1.3.jar
+7f8f20019000-7f8f2001c000 r--s 0002e000 00:2c 29230788                   /home/morgan/.ivy2/cache/com.fasterxml.jackson.core/jackson-core/bundles/jackson-core-2.3.3.jar
+7f8f2001c000-7f8f2001e000 r--s 00007000 00:2c 29230787                   /home/morgan/.ivy2/cache/com.fasterxml.jackson.core/jackson-annotations/bundles/jackson-annotations-2.3.0.jar
+7f8f2001e000-7f8f2002f000 r--s 000cf000 00:2c 29230786                   /home/morgan/.ivy2/cache/com.fasterxml.jackson.core/jackson-databind/bundles/jackson-databind-2.3.3.jar
+7f8f2002f000-7f8f20030000 r--s 00006000 00:2c 29492336                   /home/morgan/.ivy2/cache/org.webjars/webjars-locator-core/jars/webjars-locator-core-0.26.jar
+7f8f20030000-7f8f20032000 r--s 00002000 00:2c 29492334                   /home/morgan/.ivy2/cache/org.webjars/webjars-locator/jars/webjars-locator-0.26.jar
+7f8f20032000-7f8f2003a000 r--s 00040000 00:2c 29363320                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.typesafe.sbt/sbt-web/jars/sbt-web-1.3.0.jar
+7f8f2003a000-7f8f2003c000 r--s 000a0000 00:2c 29363314                   /home/morgan/.ivy2/cache/net.contentobjects.jnotify/jnotify/jars/jnotify-0.94-play-1.jar
+7f8f2003c000-7f8f20041000 r--s 0003f000 00:2c 29231453                   /home/morgan/.ivy2/cache/com.typesafe/config/bundles/config-1.3.0.jar
+7f8f20041000-7f8f20043000 r--s 00000000 00:2c 29363559                   /home/morgan/.ivy2/cache/com.typesafe.play/play-exceptions/jars/play-exceptions-2.5.12.jar
+7f8f20043000-7f8f20044000 r--s 00000000 00:2c 29363557                   /home/morgan/.ivy2/cache/com.typesafe.play/build-link/jars/build-link-2.5.12.jar
+7f8f20044000-7f8f20048000 r--s 00022000 00:2c 29363806                   /home/morgan/.ivy2/cache/com.typesafe.play/sbt-run-support_2.10/jars/sbt-run-support_2.10-2.5.12.jar
+7f8f20048000-7f8f2004c000 r--s 0002a000 00:2c 29230078                   /home/morgan/.ivy2/cache/commons-io/commons-io/jars/commons-io-2.4.jar
+7f8f2004c000-7f8f2005c000 r--s 00086000 00:2c 29234037                   /home/morgan/.ivy2/cache/com.typesafe.play/sbt-routes-compiler_2.10/jars/sbt-routes-compiler_2.10-2.5.12.jar
+7f8f2005c000-7f8f20065000 r--s 00054000 00:2c 29363803                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.typesafe.play/sbt-plugin/jars/sbt-plugin-2.5.12.jar
+7f8f20065000-7f8f20066000 r--s 00004000 00:2c 29362823                   /home/morgan/.ivy2/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.9.6.jar
+7f8f20066000-7f8f20085000 r--s 001d1000 00:2c 29362822                   /home/morgan/.ivy2/cache/org.apache.ant/ant/jars/ant-1.9.6.jar
+7f8f20085000-7f8f200a3000 r--s 00109000 00:2c 29362821                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.typesafe.sbt/sbt-native-packager/jars/sbt-native-packager-1.1.0.jar
+7f8f200a3000-7f8f200aa000 r--s 00056000 00:2c 29362469                   /home/morgan/.ivy2/cache/org.apache.commons/commons-compress/jars/commons-compress-1.9.jar
+7f8f200aa000-7f8f200ac000 r--s 00006000 00:2c 29362819                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/uk.gov.hmrc/sbt-distributables/jars/sbt-distributables-1.0.0.jar
+7f8f200ac000-7f8f200b0000 r--s 00019000 00:2c 29363158                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.typesafe.sbt/sbt-git/jars/sbt-git-0.8.5.jar
+7f8f200b0000-7f8f200b2000 r--s 00003000 00:2c 29363155                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/uk.gov.hmrc/sbt-git-versioning/jars/sbt-git-versioning-0.9.0.jar
+7f8f200b2000-7f8f200b9000 r--s 0004f000 00:2c 29362465                   /home/morgan/.ivy2/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.3.1.jar
+7f8f200b9000-7f8f200d8000 r--s 001c5000 00:2c 29230776                   /home/morgan/.ivy2/cache/org.eclipse.jgit/org.eclipse.jgit/jars/org.eclipse.jgit-3.7.0.201502260915-r.jar
+7f8f200d8000-7f8f200da000 r--s 00004000 00:2c 29362461                   /home/morgan/.ivy2/cache/org.eclipse.jgit/org.eclipse.jgit.archive/jars/org.eclipse.jgit.archive-3.7.0.201502260915-r.jar
+7f8f200da000-7f8f200dc000 r--s 0000a000 00:2c 29362459                   /home/morgan/.ivy2/cache/args4j/args4j/jars/args4j-2.0.12.jar
+7f8f200dc000-7f8f200e0000 r--s 0002d000 00:2c 29362457                   /home/morgan/.ivy2/cache/org.eclipse.jgit/org.eclipse.jgit.pgm/jars/org.eclipse.jgit.pgm-3.7.0.201502260915-r.jar
+7f8f200e0000-7f8f200e8000 r--s 00041000 00:2c 29363326                   /home/morgan/.ivy2/cache/com.typesafe.play/twirl-parser_2.10/jars/twirl-parser_2.10-1.1.1.jar
+7f8f200e8000-7f8f200ef000 r--s 00064000 00:2c 29230084                   /home/morgan/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.4.jar
+7f8f200ef000-7f8f200f1000 r--s 0000d000 00:2c 29363322                   /home/morgan/.ivy2/cache/com.typesafe.play/twirl-api_2.10/jars/twirl-api_2.10-1.1.1.jar
+7f8f200f1000-7f8f200f4000 r--s 00019000 00:2c 29363325                   /home/morgan/.ivy2/cache/com.typesafe.play/twirl-compiler_2.10/jars/twirl-compiler_2.10-1.1.1.jar
+7f8f200f4000-7f8f200f7000 r--s 00011000 00:2c 29363316                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.typesafe.sbt/sbt-twirl/jars/sbt-twirl-1.1.1.jar
+7f8f200f7000-7f8f200f9000 r--s 0000d000 00:2c 29229159                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/com.eed3si9n/sbt-buildinfo/jars/sbt-buildinfo-0.3.2.jar
+7f8f200f9000-7f8f200fb000 r--s 0000d000 00:2c 29229151                   /home/morgan/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.4.jar
+7f8f200fb000-7f8f200fd000 r--s 0000d000 00:2c 29229149                   /home/morgan/.ivy2/cache/commons-logging/commons-logging/jars/commons-logging-1.1.1.jar
+7f8f200fd000-7f8f20102000 r--s 00028000 00:2c 29229147                   /home/morgan/.ivy2/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.1.4.jar
+7f8f20102000-7f8f2010b000 r--s 0004e000 00:2c 29229145                   /home/morgan/.ivy2/cache/org.apache.httpcomponents/httpclient/jars/httpclient-4.1.3.jar
+7f8f2010b000-7f8f2011b000 r--s 00088000 00:2c 29230963                   /home/morgan/.ivy2/cache/joda-time/joda-time/jars/joda-time-2.8.2.jar
+7f8f2011b000-7f8f2031b000 rw-p 00000000 00:00 0 
+7f8f2031b000-7f8f2031e000 ---p 00000000 00:00 0 
+7f8f2031e000-7f8f2041c000 rw-p 00000000 00:00 0 
+7f8f2041c000-7f8f2041f000 ---p 00000000 00:00 0 
+7f8f2041f000-7f8f2051d000 rw-p 00000000 00:00 0 
+7f8f2051d000-7f8f20520000 ---p 00000000 00:00 0 
+7f8f20520000-7f8f2061e000 rw-p 00000000 00:00 0 
+7f8f2061e000-7f8f20621000 ---p 00000000 00:00 0 
+7f8f20621000-7f8f2071f000 rw-p 00000000 00:00 0 
+7f8f2071f000-7f8f20722000 ---p 00000000 00:00 0 
+7f8f20722000-7f8f20a20000 rw-p 00000000 00:00 0 
+7f8f20a20000-7f8f20a23000 ---p 00000000 00:00 0 
+7f8f20a23000-7f8f20b21000 rw-p 00000000 00:00 0 
+7f8f20b21000-7f8f20b24000 ---p 00000000 00:00 0 
+7f8f20b24000-7f8f20c22000 rw-p 00000000 00:00 0 
+7f8f20c22000-7f8f20c25000 ---p 00000000 00:00 0 
+7f8f20c25000-7f8f20d23000 rw-p 00000000 00:00 0 
+7f8f20d23000-7f8f20d26000 ---p 00000000 00:00 0 
+7f8f20d26000-7f8f21024000 rw-p 00000000 00:00 0 
+7f8f21024000-7f8f21224000 rw-p 00000000 00:00 0 
+7f8f21224000-7f8f21424000 rw-p 00000000 00:00 0 
+7f8f21424000-7f8f21624000 rw-p 00000000 00:00 0 
+7f8f21624000-7f8f21824000 rw-p 00000000 00:00 0 
+7f8f21824000-7f8f21825000 r--s 00006000 00:2c 29362463                   /home/morgan/.ivy2/cache/org.eclipse.jgit/org.eclipse.jgit.ui/jars/org.eclipse.jgit.ui-3.7.0.201502260915-r.jar
+7f8f21825000-7f8f21828000 r--s 0001c000 00:2c 29229143                   /home/morgan/.ivy2/cache/com.googlecode.javaewah/JavaEWAH/bundles/JavaEWAH-0.7.9.jar
+7f8f21828000-7f8f2182c000 r--s 0003b000 00:2c 29102020                   /home/morgan/.ivy2/cache/com.jcraft/jsch/jars/jsch-0.1.50.jar
+7f8f2182c000-7f8f2182e000 r--s 00008000 00:2c 29229141                   /home/morgan/.ivy2/cache/org.joda/joda-convert/jars/joda-convert-1.2.jar
+7f8f2182e000-7f8f21832000 r--s 0002c000 00:2c 29229304                   /home/morgan/.ivy2/cache/com.github.nscala-time/nscala-time_2.10/jars/nscala-time_2.10-2.2.0.jar
+7f8f21832000-7f8f21834000 r--s 00003000 00:2c 29229303                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/uk.gov.hmrc/sbt-git-stamp/jars/sbt-git-stamp-5.3.0.jar
+7f8f21834000-7f8f21836000 r--s 00009000 00:2c 29235056                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/uk.gov.hmrc/sbt-settings/jars/sbt-settings-3.5.0.jar
+7f8f21836000-7f8f21839000 r--s 00017000 00:2c 29364011                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/de.heikoseeberger/sbt-header/jars/sbt-header-1.8.0.jar
+7f8f21839000-7f8f2183b000 r--s 0000b000 00:2c 29364178                   /home/morgan/.ivy2/cache/scala_2.10/sbt_0.13/uk.gov.hmrc/sbt-auto-build/jars/sbt-auto-build-1.8.0.jar
+7f8f2183b000-7f8f2184e000 r--s 00345000 fc:01 14037378                   /usr/lib/jvm/java-8-oracle/jre/lib/resources.jar
+7f8f2184e000-7f8f21a4e000 rw-p 00000000 00:00 0 
+7f8f21a4e000-7f8f21c4e000 rw-p 00000000 00:00 0 
+7f8f21c4e000-7f8f21e4e000 rw-p 00000000 00:00 0 
+7f8f21e4e000-7f8f21ec7000 r--s 010f9000 fc:01 14025544                   /usr/lib/jvm/java-8-oracle/lib/tools.jar
+7f8f21ec7000-7f8f220c7000 rw-p 00000000 00:00 0 
+7f8f220c7000-7f8f220cc000 r--s 0009d000 fc:01 14037379                   /usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar
+7f8f220cc000-7f8f222cc000 rw-p 00000000 00:00 0 
+7f8f222cc000-7f8f222cf000 ---p 00000000 00:00 0 
+7f8f222cf000-7f8f22305000 rw-p 00000000 00:00 0 
+7f8f22305000-7f8f22306000 r--p 00000000 fc:01 15735410                   /usr/share/locale-langpack/en_GB/LC_MESSAGES/libc.mo
+7f8f22306000-7f8f22308000 r--s 0000b000 00:2c 6817900                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/xsbti/interface-0.13.17.jar
+7f8f22308000-7f8f22508000 rw-p 00000000 00:00 0 
+7f8f22508000-7f8f2250f000 r--s 0003f000 00:2c 6817911                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/io-0.13.17.jar
+7f8f2250f000-7f8f22514000 r--s 00039000 00:2c 6817903                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/command-0.13.17.jar
+7f8f22514000-7f8f22518000 r--s 0003b000 00:2c 6817889                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/jsch-0.1.50.jar
+7f8f22518000-7f8f22520000 r--s 00060000 00:2c 6817887                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/collections-0.13.17.jar
+7f8f22520000-7f8f22521000 r--s 00001000 00:2c 6817878                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/json4s-support_2.10-0.6.0.jar
+7f8f22521000-7f8f22536000 r--s 00101000 00:2c 6817879                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/ivy-2.3.0-sbt-b18f59ea3bc914a297bb6f1a4f7fb0ace399e310.jar
+7f8f22536000-7f8f22537000 r--s 00005000 00:2c 6817870                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/test-agent-0.13.17.jar
+7f8f22537000-7f8f22568000 r--s 00273000 00:2c 6817904                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/main-0.13.17.jar
+7f8f22568000-7f8f2256a000 r--s 00002000 00:2c 6817885                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/control-0.13.17.jar
+7f8f2256a000-7f8f22578000 r--s 000bc000 00:2c 6817884                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/scala-pickling_2.10-0.10.1.jar
+7f8f22578000-7f8f2257f000 r--s 0004b000 00:2c 6817874                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/serialization_2.10-0.1.2.jar
+7f8f2257f000-7f8f22581000 r--s 00014000 00:2c 6817877                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/classpath-0.13.17.jar
+7f8f22581000-7f8f225b6000 r--s 002df000 00:2c 6817896                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/scala-reflect-2.10.7.jar
+7f8f225b6000-7f8f225b8000 r--s 00002000 00:2c 6817909                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/test-interface-1.0.jar
+7f8f225b8000-7f8f225c0000 r--s 00058000 00:2c 6817876                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/completion-0.13.17.jar
+7f8f225c0000-7f8f225c3000 r--s 00017000 00:2c 6817881                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/testing-0.13.17.jar
+7f8f225c3000-7f8f225c4000 r--s 00002000 00:2c 6817873                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/launcher-interface-1.0.1.jar
+7f8f225c4000-7f8f225c8000 r--s 00022000 00:2c 6817892                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/sbinary_2.10-0.4.2.jar
+7f8f225c8000-7f8f225cb000 r--s 0001e000 00:2c 6817915                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/task-system-0.13.17.jar
+7f8f225cb000-7f8f225d1000 r--s 00040000 00:2c 6817918                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/api-0.13.17.jar
+7f8f225d1000-7f8f225dd000 r--s 000a4000 00:2c 6817893                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/quasiquotes_2.10-2.0.1.jar
+7f8f225dd000-7f8f225df000 r--s 00013000 00:2c 6817917                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/json4s-ast_2.10-3.2.10.jar
+7f8f225df000-7f8f225ea000 r--s 0009b000 00:2c 6817871                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/main-settings-0.13.17.jar
+7f8f225ea000-7f8f225ed000 r--s 00018000 00:2c 6817880                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/logging-0.13.17.jar
+7f8f225ed000-7f8f225ef000 r--s 00014000 00:2c 6817906                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/apply-macro-0.13.17.jar
+7f8f225ef000-7f8f226ee000 r--s 00cda000 00:2c 6817927                    /home/morgan/.sbt/boot/scala-2.10.7/lib/scala-compiler.jar
+7f8f226ee000-7f8f226ff000 r-xp 00000000 fc:01 14158951                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnio.so
+7f8f226ff000-7f8f228fe000 ---p 00011000 fc:01 14158951                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnio.so
+7f8f228fe000-7f8f228ff000 rw-p 00010000 fc:01 14158951                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnio.so
+7f8f228ff000-7f8f22915000 r-xp 00000000 fc:01 14158948                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f8f22915000-7f8f22b15000 ---p 00016000 fc:01 14158948                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f8f22b15000-7f8f22b16000 rw-p 00016000 fc:01 14158948                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f8f22b16000-7f8f22b17000 ---p 00000000 00:00 0 
+7f8f22b17000-7f8f22c17000 rw-p 00000000 00:00 0 
+7f8f22c17000-7f8f22c1a000 ---p 00000000 00:00 0 
+7f8f22c1a000-7f8f22d18000 rw-p 00000000 00:00 0 
+7f8f22d18000-7f8f22d1b000 ---p 00000000 00:00 0 
+7f8f22d1b000-7f8f22e19000 rw-p 00000000 00:00 0 
+7f8f22e19000-7f8f22e1c000 ---p 00000000 00:00 0 
+7f8f22e1c000-7f8f22f1a000 rw-p 00000000 00:00 0 
+7f8f22f1a000-7f8f22f1d000 ---p 00000000 00:00 0 
+7f8f22f1d000-7f8f2301b000 rw-p 00000000 00:00 0 
+7f8f2301b000-7f8f2301e000 ---p 00000000 00:00 0 
+7f8f2301e000-7f8f2311c000 rw-p 00000000 00:00 0 
+7f8f2311c000-7f8f2311f000 ---p 00000000 00:00 0 
+7f8f2311f000-7f8f2321d000 rw-p 00000000 00:00 0 
+7f8f2321d000-7f8f234f5000 r--p 00000000 fc:01 13893945                   /usr/lib/locale/locale-archive
+7f8f234f5000-7f8f234f8000 ---p 00000000 00:00 0 
+7f8f234f8000-7f8f235f6000 rw-p 00000000 00:00 0 
+7f8f235f6000-7f8f235f9000 ---p 00000000 00:00 0 
+7f8f235f9000-7f8f236f7000 rw-p 00000000 00:00 0 
+7f8f236f7000-7f8f236f8000 ---p 00000000 00:00 0 
+7f8f236f8000-7f8f24000000 rw-p 00000000 00:00 0 
+7f8f24000000-7f8f24021000 rw-p 00000000 00:00 0 
+7f8f24021000-7f8f28000000 ---p 00000000 00:00 0 
+7f8f28000000-7f8f2c000000 rw-p 00000000 00:00 0 
+7f8f2c000000-7f8f2c021000 rw-p 00000000 00:00 0 
+7f8f2c021000-7f8f30000000 ---p 00000000 00:00 0 
+7f8f30000000-7f8f30021000 rw-p 00000000 00:00 0 
+7f8f30021000-7f8f34000000 ---p 00000000 00:00 0 
+7f8f34000000-7f8f34021000 rw-p 00000000 00:00 0 
+7f8f34021000-7f8f38000000 ---p 00000000 00:00 0 
+7f8f38000000-7f8f38021000 rw-p 00000000 00:00 0 
+7f8f38021000-7f8f3c000000 ---p 00000000 00:00 0 
+7f8f3c000000-7f8f3c021000 rw-p 00000000 00:00 0 
+7f8f3c021000-7f8f40000000 ---p 00000000 00:00 0 
+7f8f40000000-7f8f40021000 rw-p 00000000 00:00 0 
+7f8f40021000-7f8f44000000 ---p 00000000 00:00 0 
+7f8f44000000-7f8f44021000 rw-p 00000000 00:00 0 
+7f8f44021000-7f8f48000000 ---p 00000000 00:00 0 
+7f8f48000000-7f8f48001000 r--s 00002000 00:2c 6817882                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/cross-0.13.17.jar
+7f8f48001000-7f8f48024000 r--s 001bc000 00:2c 6817914                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/ivy-0.13.17.jar
+7f8f48024000-7f8f48327000 rw-p 00000000 00:00 0 
+7f8f48327000-7f8f48501000 r--s 03d68000 fc:01 14037374                   /usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
+7f8f48501000-7f8f49000000 rw-p 00000000 00:00 0 
+7f8f49000000-7f8f4d760000 rwxp 00000000 00:00 0 
+7f8f4d760000-7f8f58000000 ---p 00000000 00:00 0 
+7f8f58000000-7f8f5a7cb000 rw-p 00000000 00:00 0 
+7f8f5a7cb000-7f8f5c000000 ---p 00000000 00:00 0 
+7f8f5c000000-7f8f5c004000 r--s 0001d000 00:2c 6817907                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/tasks-0.13.17.jar
+7f8f5c004000-7f8f5c00e000 r--s 00070000 00:2c 6817901                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/incremental-compiler-0.13.17.jar
+7f8f5c00e000-7f8f5c017000 r--s 0006f000 00:2c 6817897                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/actions-0.13.17.jar
+7f8f5c017000-7f8f5c019000 r--s 00015000 00:2c 6817891                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/classfile-0.13.17.jar
+7f8f5c019000-7f8f5c01a000 r--s 0000c000 00:2c 6817872                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/sbt-0.13.17.jar
+7f8f5c01a000-7f8f5c01c000 r--s 00004000 00:2c 6817888                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/compiler-ivy-integration-0.13.17.jar
+7f8f5c01c000-7f8f5c01e000 r--s 00006000 00:2c 6817905                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/relation-0.13.17.jar
+7f8f5c01e000-7f8f5c023000 r--s 00025000 00:2c 6817886                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/persist-0.13.17.jar
+7f8f5c023000-7f8f5c029000 r--s 00039000 00:2c 6817890                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/compile-0.13.17.jar
+7f8f5c029000-7f8f5c02b000 r--s 00007000 00:2c 6817908                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/paranamer-2.6.jar
+7f8f5c02b000-7f8f5c031000 r--s 00038000 00:2c 6817910                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/compiler-interface-0.13.17.jar
+7f8f5c031000-7f8f5c034000 r--s 0001a000 00:2c 6817913                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/cache-0.13.17.jar
+7f8f5c034000-7f8f5c069000 r--s 002df000 00:2c 6817926                    /home/morgan/.sbt/boot/scala-2.10.7/lib/scala-reflect.jar
+7f8f5c069000-7f8f5c0dc000 r--s 0065b000 00:2c 6817929                    /home/morgan/.sbt/boot/scala-2.10.7/lib/scala-library.jar
+7f8f5c0dc000-7f8f5c0f8000 r--s 0010e000 fc:01 13895894                   /usr/share/sbt/bin/sbt-launch.jar
+7f8f5c0f8000-7f8f5c16e000 rw-p 00000000 00:00 0 
+7f8f5c16e000-7f8f5c16f000 ---p 00000000 00:00 0 
+7f8f5c16f000-7f8f5c26f000 rw-p 00000000 00:00 0 
+7f8f5c26f000-7f8f5c270000 ---p 00000000 00:00 0 
+7f8f5c270000-7f8f5c370000 rw-p 00000000 00:00 0 
+7f8f5c370000-7f8f5c371000 ---p 00000000 00:00 0 
+7f8f5c371000-7f8f5c471000 rw-p 00000000 00:00 0 
+7f8f5c471000-7f8f5c472000 ---p 00000000 00:00 0 
+7f8f5c472000-7f8f5c572000 rw-p 00000000 00:00 0 
+7f8f5c572000-7f8f5c573000 ---p 00000000 00:00 0 
+7f8f5c573000-7f8f5c673000 rw-p 00000000 00:00 0 
+7f8f5c673000-7f8f5c674000 ---p 00000000 00:00 0 
+7f8f5c674000-7f8f5c774000 rw-p 00000000 00:00 0 
+7f8f5c774000-7f8f5c775000 ---p 00000000 00:00 0 
+7f8f5c775000-7f8f5c875000 rw-p 00000000 00:00 0 
+7f8f5c875000-7f8f5c876000 ---p 00000000 00:00 0 
+7f8f5c876000-7f8f5ca25000 rw-p 00000000 00:00 0 
+7f8f5ca25000-7f8f5cb76000 ---p 00000000 00:00 0 
+7f8f5cb76000-7f8f5cc25000 rw-p 00000000 00:00 0 
+7f8f5cc25000-7f8f5cd75000 ---p 00000000 00:00 0 
+7f8f5cd75000-7f8f5ce75000 rw-p 00000000 00:00 0 
+7f8f5ce75000-7f8f5cf94000 rw-p 00000000 00:00 0 
+7f8f5cf94000-7f8f5d236000 ---p 00000000 00:00 0 
+7f8f5d236000-7f8f5d251000 r-xp 00000000 fc:01 14158944                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f8f5d251000-7f8f5d451000 ---p 0001b000 fc:01 14158944                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f8f5d451000-7f8f5d452000 rw-p 0001b000 fc:01 14158944                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f8f5d452000-7f8f5d45d000 r-xp 00000000 fc:01 23339756                   /lib/x86_64-linux-gnu/libnss_files-2.23.so
+7f8f5d45d000-7f8f5d65c000 ---p 0000b000 fc:01 23339756                   /lib/x86_64-linux-gnu/libnss_files-2.23.so
+7f8f5d65c000-7f8f5d65d000 r--p 0000a000 fc:01 23339756                   /lib/x86_64-linux-gnu/libnss_files-2.23.so
+7f8f5d65d000-7f8f5d65e000 rw-p 0000b000 fc:01 23339756                   /lib/x86_64-linux-gnu/libnss_files-2.23.so
+7f8f5d65e000-7f8f5d664000 rw-p 00000000 00:00 0 
+7f8f5d664000-7f8f5d66f000 r-xp 00000000 fc:01 23339760                   /lib/x86_64-linux-gnu/libnss_nis-2.23.so
+7f8f5d66f000-7f8f5d86e000 ---p 0000b000 fc:01 23339760                   /lib/x86_64-linux-gnu/libnss_nis-2.23.so
+7f8f5d86e000-7f8f5d86f000 r--p 0000a000 fc:01 23339760                   /lib/x86_64-linux-gnu/libnss_nis-2.23.so
+7f8f5d86f000-7f8f5d870000 rw-p 0000b000 fc:01 23339760                   /lib/x86_64-linux-gnu/libnss_nis-2.23.so
+7f8f5d870000-7f8f5d886000 r-xp 00000000 fc:01 23339740                   /lib/x86_64-linux-gnu/libnsl-2.23.so
+7f8f5d886000-7f8f5da85000 ---p 00016000 fc:01 23339740                   /lib/x86_64-linux-gnu/libnsl-2.23.so
+7f8f5da85000-7f8f5da86000 r--p 00015000 fc:01 23339740                   /lib/x86_64-linux-gnu/libnsl-2.23.so
+7f8f5da86000-7f8f5da87000 rw-p 00016000 fc:01 23339740                   /lib/x86_64-linux-gnu/libnsl-2.23.so
+7f8f5da87000-7f8f5da89000 rw-p 00000000 00:00 0 
+7f8f5da89000-7f8f5da91000 r-xp 00000000 fc:01 23339751                   /lib/x86_64-linux-gnu/libnss_compat-2.23.so
+7f8f5da91000-7f8f5dc90000 ---p 00008000 fc:01 23339751                   /lib/x86_64-linux-gnu/libnss_compat-2.23.so
+7f8f5dc90000-7f8f5dc91000 r--p 00007000 fc:01 23339751                   /lib/x86_64-linux-gnu/libnss_compat-2.23.so
+7f8f5dc91000-7f8f5dc92000 rw-p 00008000 fc:01 23339751                   /lib/x86_64-linux-gnu/libnss_compat-2.23.so
+7f8f5dc92000-7f8f5dcbd000 r-xp 00000000 fc:01 14158938                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f8f5dcbd000-7f8f5debc000 ---p 0002b000 fc:01 14158938                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f8f5debc000-7f8f5debe000 rw-p 0002a000 fc:01 14158938                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f8f5debe000-7f8f5decb000 r-xp 00000000 fc:01 14158943                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f8f5decb000-7f8f5e0cb000 ---p 0000d000 fc:01 14158943                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f8f5e0cb000-7f8f5e0cd000 rw-p 0000d000 fc:01 14158943                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f8f5e0cd000-7f8f5e0d4000 r-xp 00000000 fc:01 23339761                   /lib/x86_64-linux-gnu/librt-2.23.so
+7f8f5e0d4000-7f8f5e2d3000 ---p 00007000 fc:01 23339761                   /lib/x86_64-linux-gnu/librt-2.23.so
+7f8f5e2d3000-7f8f5e2d4000 r--p 00006000 fc:01 23339761                   /lib/x86_64-linux-gnu/librt-2.23.so
+7f8f5e2d4000-7f8f5e2d5000 rw-p 00007000 fc:01 23339761                   /lib/x86_64-linux-gnu/librt-2.23.so
+7f8f5e2d5000-7f8f5e3dd000 r-xp 00000000 fc:01 23339739                   /lib/x86_64-linux-gnu/libm-2.23.so
+7f8f5e3dd000-7f8f5e5dc000 ---p 00108000 fc:01 23339739                   /lib/x86_64-linux-gnu/libm-2.23.so
+7f8f5e5dc000-7f8f5e5dd000 r--p 00107000 fc:01 23339739                   /lib/x86_64-linux-gnu/libm-2.23.so
+7f8f5e5dd000-7f8f5e5de000 rw-p 00108000 fc:01 23339739                   /lib/x86_64-linux-gnu/libm-2.23.so
+7f8f5e5de000-7f8f5f2b7000 r-xp 00000000 fc:01 14158744                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f8f5f2b7000-7f8f5f4b6000 ---p 00cd9000 fc:01 14158744                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f8f5f4b6000-7f8f5f590000 rw-p 00cd8000 fc:01 14158744                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f8f5f590000-7f8f5f5db000 rw-p 00000000 00:00 0 
+7f8f5f5db000-7f8f5f79b000 r-xp 00000000 fc:01 23339743                   /lib/x86_64-linux-gnu/libc-2.23.so
+7f8f5f79b000-7f8f5f99b000 ---p 001c0000 fc:01 23339743                   /lib/x86_64-linux-gnu/libc-2.23.so
+7f8f5f99b000-7f8f5f99f000 r--p 001c0000 fc:01 23339743                   /lib/x86_64-linux-gnu/libc-2.23.so
+7f8f5f99f000-7f8f5f9a1000 rw-p 001c4000 fc:01 23339743                   /lib/x86_64-linux-gnu/libc-2.23.so
+7f8f5f9a1000-7f8f5f9a5000 rw-p 00000000 00:00 0 
+7f8f5f9a5000-7f8f5f9a8000 r-xp 00000000 fc:01 23339745                   /lib/x86_64-linux-gnu/libdl-2.23.so
+7f8f5f9a8000-7f8f5fba7000 ---p 00003000 fc:01 23339745                   /lib/x86_64-linux-gnu/libdl-2.23.so
+7f8f5fba7000-7f8f5fba8000 r--p 00002000 fc:01 23339745                   /lib/x86_64-linux-gnu/libdl-2.23.so
+7f8f5fba8000-7f8f5fba9000 rw-p 00003000 fc:01 23339745                   /lib/x86_64-linux-gnu/libdl-2.23.so
+7f8f5fba9000-7f8f5fbbf000 r-xp 00000000 fc:01 14158691                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f8f5fbbf000-7f8f5fdbe000 ---p 00016000 fc:01 14158691                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f8f5fdbe000-7f8f5fdbf000 rw-p 00015000 fc:01 14158691                   /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f8f5fdbf000-7f8f5fdd7000 r-xp 00000000 fc:01 23339742                   /lib/x86_64-linux-gnu/libpthread-2.23.so
+7f8f5fdd7000-7f8f5ffd6000 ---p 00018000 fc:01 23339742                   /lib/x86_64-linux-gnu/libpthread-2.23.so
+7f8f5ffd6000-7f8f5ffd7000 r--p 00017000 fc:01 23339742                   /lib/x86_64-linux-gnu/libpthread-2.23.so
+7f8f5ffd7000-7f8f5ffd8000 rw-p 00018000 fc:01 23339742                   /lib/x86_64-linux-gnu/libpthread-2.23.so
+7f8f5ffd8000-7f8f5ffdc000 rw-p 00000000 00:00 0 
+7f8f5ffdc000-7f8f60002000 r-xp 00000000 fc:01 23339741                   /lib/x86_64-linux-gnu/ld-2.23.so
+7f8f60002000-7f8f60004000 r--s 0000e000 00:2c 6817895                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/logic-0.13.17.jar
+7f8f60004000-7f8f60006000 r--s 0000b000 00:2c 6817875                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/tracking-0.13.17.jar
+7f8f60006000-7f8f60009000 r--s 0001e000 00:2c 6817869                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/run-0.13.17.jar
+7f8f60009000-7f8f6000b000 r--s 00012000 00:2c 6817902                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/jawn-parser_2.10-0.6.0.jar
+7f8f6000b000-7f8f60015000 r--s 00085000 00:2c 6817916                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/json4s-core_2.10-3.2.10.jar
+7f8f60015000-7f8f60019000 r--s 0003e000 00:2c 6817883                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/jline-2.14.5.jar
+7f8f60019000-7f8f600e1000 rw-p 00000000 00:00 0 
+7f8f600e1000-7f8f600e4000 ---p 00000000 00:00 0 
+7f8f600e4000-7f8f601e7000 rw-p 00000000 00:00 0 
+7f8f601e7000-7f8f601e8000 r--s 00000000 00:2c 6817894                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/template-resolver-0.1.jar
+7f8f601e8000-7f8f601ec000 r--s 0001c000 00:2c 6817912                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/compiler-integration-0.13.17.jar
+7f8f601ec000-7f8f601f0000 r--s 0001b000 00:2c 6817898                    /home/morgan/.sbt/boot/scala-2.10.7/org.scala-sbt/sbt/0.13.17/process-0.13.17.jar
+7f8f601f0000-7f8f601f4000 r--s 00025000 00:2c 6817930                    /home/morgan/.sbt/boot/scala-2.10.7/lib/jline.jar
+7f8f601f4000-7f8f601f7000 r--s 00018000 00:2c 6817928                    /home/morgan/.sbt/boot/scala-2.10.7/lib/jansi.jar
+7f8f601f7000-7f8f601ff000 rw-s 00000000 fc:01 12716334                   /tmp/hsperfdata_morgan/25039
+7f8f601ff000-7f8f60200000 rw-p 00000000 00:00 0 
+7f8f60200000-7f8f60201000 ---p 00000000 00:00 0 
+7f8f60201000-7f8f60202000 r--p 00025000 fc:01 23339741                   /lib/x86_64-linux-gnu/ld-2.23.so
+7f8f60202000-7f8f60203000 rw-p 00026000 fc:01 23339741                   /lib/x86_64-linux-gnu/ld-2.23.so
+7f8f60203000-7f8f60204000 rw-p 00000000 00:00 0 
+7ffd9dd26000-7ffd9dd48000 rw-p 00000000 00:00 0                          [stack]
+7ffd9ddb2000-7ffd9ddb5000 r--p 00000000 00:00 0                          [vvar]
+7ffd9ddb5000-7ffd9ddb7000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -XX:MaxMetaspaceSize=512m -Xmx1534m 
+java_command: /usr/share/sbt/bin/sbt-launch.jar test
+java_class_path (initial): /usr/share/sbt/bin/sbt-launch.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/usr/lib/jvm/java-8-oracle
+PATH=/home/morgan/.local/share/umake/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xad0890], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xad0890], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x928640], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x928640], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x928640], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x928640], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x929ea0], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x92b2a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0x92b2a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0x92b2a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x92b2a0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=16.04
+DISTRIB_CODENAME=xenial
+DISTRIB_DESCRIPTION="Ubuntu 16.04.4 LTS"
+
+uname:Linux 4.4.0-119-generic #143-Ubuntu SMP Mon Apr 2 16:08:24 UTC 2018 x86_64
+libc:glibc 2.23 NPTL 2.23 
+rlimit: STACK 8192k, CORE 0k, NPROC 62289, NOFILE 1048576, AS infinity
+load average:5.24 6.59 4.95
+
+/proc/meminfo:
+MemTotal:       16238008 kB
+MemFree:          177144 kB
+MemAvailable:      99724 kB
+Buffers:            1816 kB
+Cached:           374892 kB
+SwapCached:         8840 kB
+Active:          5708628 kB
+Inactive:        1026868 kB
+Active(anon):    5664680 kB
+Inactive(anon):   990472 kB
+Active(file):      43948 kB
+Inactive(file):    36396 kB
+Unevictable:         520 kB
+Mlocked:             520 kB
+SwapTotal:      16621052 kB
+SwapFree:            488 kB
+Dirty:              2624 kB
+Writeback:           232 kB
+AnonPages:       6355644 kB
+Mapped:          8768372 kB
+Shmem:            295200 kB
+Slab:             318092 kB
+SReclaimable:     119684 kB
+SUnreclaim:       198408 kB
+KernelStack:       59088 kB
+PageTables:       195456 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    24740056 kB
+Committed_AS:   51340712 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:           0 kB
+VmallocChunk:          0 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      531056 kB
+DirectMap2M:    13955072 kB
+DirectMap1G:     2097152 kB
+
+
+CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 94 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, rtm, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 2988.882
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 2991.421
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 1
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 3063.125
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 2
+cpu cores	: 4
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 3016.000
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 3
+cpu cores	: 4
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 4
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 2976.187
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 0
+cpu cores	: 4
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 5
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 2939.015
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 1
+cpu cores	: 4
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 6
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 2901.234
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 2
+cpu cores	: 4
+apicid		: 5
+initial apicid	: 5
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 7
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 94
+model name	: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz
+stepping	: 3
+microcode	: 0xc2
+cpu MHz		: 2916.468
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 8
+core id		: 3
+cpu cores	: 4
+apicid		: 7
+initial apicid	: 7
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb invpcid_single intel_pt rsb_ctxsw spec_ctrl retpoline kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 5183.88
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 16238008k(177144k free), swap 16621052k(564k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.171-b11) for linux-amd64 JRE (1.8.0_171-b11), built on Mar 28 2018 17:07:08 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Mon Apr 23 16:23:03 2018
+elapsed time: 43 seconds (0d 0h 0m 43s)
+
