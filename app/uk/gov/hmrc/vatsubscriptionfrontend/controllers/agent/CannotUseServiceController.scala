@@ -33,7 +33,7 @@ class CannotUseServiceController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(cannot_use_service_yet(routes.CannotUseServiceController.show())))
+      Future.successful(Ok(cannot_use_service_yet(routes.SignUpAnotherClientController.submit())))
     }
   }
 
