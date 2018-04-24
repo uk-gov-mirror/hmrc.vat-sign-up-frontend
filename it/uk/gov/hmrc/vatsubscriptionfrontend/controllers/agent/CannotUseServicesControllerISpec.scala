@@ -26,6 +26,8 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
   "GET /client/cannot-use-service-yet" should {
     "return an OK" in {
 
+      enable(KnownFactsJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/client/cannot-use-service-yet")
@@ -38,6 +40,8 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
 
   "POST /client/cannot-use-service-yet" should {
     "redirect to the capture client details page" in {
+
+      enable(KnownFactsJourney)
 
       stubAuth(OK, successfulAuthResponse())
 

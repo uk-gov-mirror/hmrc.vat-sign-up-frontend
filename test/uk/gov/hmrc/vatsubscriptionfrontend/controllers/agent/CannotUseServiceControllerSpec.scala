@@ -35,6 +35,9 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the show action of the cannot use service controller" should {
     "show the cannot use service page" in {
+
+      enable(KnownFactsJourney)
+
       mockAuthEmptyRetrieval()
       val request = testGetRequest
 
@@ -47,6 +50,8 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the submit action of the Cannot Use Service controller" should {
     "redirect to capture client details page" in {
+
+      enable(KnownFactsJourney)
 
       mockAuthEmptyRetrieval()
 

@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.cannot_use_service_yet
 
@@ -27,7 +28,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CannotUseServiceController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController() {
+  extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
