@@ -54,4 +54,18 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
     }
   }
 
+  "Making a request to /client/cannot-use-service-yet when feature switch not enabled" should {
+    "return NotFound" in {
+      disable(KnownFactsJourney)
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/client/cannot-use-service-yet")
+
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
+
+    }
+  }
+
 }
