@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatNumberForm
@@ -61,10 +62,13 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         mockAuthEmptyRetrieval()
         mockVatNumberEligibilitySuccess(testVatNumber)
 
-        val request = testPostRequest(testVatNumber)
+        implicit val request = testPostRequest(testVatNumber)
 
         val result = TestCaptureVatNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+
+        result.session get SessionKeys.vatNumberKey should contain(testVatNumber)
       }
 
       "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {

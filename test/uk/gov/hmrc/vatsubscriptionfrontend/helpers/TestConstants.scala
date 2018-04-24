@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.Constants.Enrolments._
 
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
-  val testBusinessPostcode: String = "A111AA"
+  val testBusinessPostcode: String = TestConstantsGenerator.randomPostCode
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
   val testEmail: String = TestConstantsGenerator.randomEmail
   lazy val testNino: String = new Generator().nextNino.nino

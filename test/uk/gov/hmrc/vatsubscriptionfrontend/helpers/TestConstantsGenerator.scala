@@ -50,6 +50,12 @@ object TestConstantsGenerator {
   private def randomString(alphabet: String)(max: Int): String =
     Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(rand.nextInt(max) + 1).mkString
 
+  private def randomAlpha(max: Int): String =
+    randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString(""))(max)
+
+  private def randomNumeric(max: Int): String =
+    randomString(('0' to '9').mkString(""))(max)
+
   private def randomAlphaNumericWithAdditional(additionalChars: String)(max: Int): String =
     randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString("") + ('0' to '9').mkString("") + additionalChars)(max)
 
@@ -60,4 +66,8 @@ object TestConstantsGenerator {
       (0 to rand.nextInt(2)).map(_ => randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(3) + 1)).mkString(".")
     }
 
+  def randomPostCode: String =
+    randomAlpha(2) +
+      randomNumeric(1) + randomNumeric(1) + // must have 2 numeric
+      randomAlpha(1) + randomAlpha(1) // must end with 2 alphas
 }

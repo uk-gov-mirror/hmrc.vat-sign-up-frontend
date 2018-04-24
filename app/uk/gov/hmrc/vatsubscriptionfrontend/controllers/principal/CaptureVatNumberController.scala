@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
@@ -52,7 +53,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           ),
         vatNumber =>
           vatNumberEligibilityService.checkVatNumberEligibility(vatNumber) map {
-            case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show())
+            case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(SessionKeys.vatNumberKey -> vatNumber)
             case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
             case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
             case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
