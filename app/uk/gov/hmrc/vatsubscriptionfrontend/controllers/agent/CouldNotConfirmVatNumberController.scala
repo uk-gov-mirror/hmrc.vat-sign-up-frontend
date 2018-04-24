@@ -33,7 +33,7 @@ class CouldNotConfirmVatNumberController @Inject()(val controllerComponents: Con
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_vat_number((routes.CouldNotConfirmVatNumberController.submit()))))
+        Ok(could_not_confirm_vat_number(routes.CouldNotConfirmVatNumberController.submit())))
     }
   }
 

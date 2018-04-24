@@ -46,14 +46,14 @@ class FeatureSwitchController @Inject()(val messagesApi: MessagesApi,
       FeatureSwitchController.submit()
     )
 
-  lazy val show: Action[AnyContent] = Action.async { implicit req =>
+  def show: Action[AnyContent] = Action.async { implicit req =>
     for {
       backendFeatureSwitches <- featureSwitchConnector.getBackendFeatureSwitches
       featureSwitches =     ListMap(switches.toSeq sortBy(_.displayText) map (switch => switch -> isEnabled(switch)):_*)
     } yield Ok(view(featureSwitches, backendFeatureSwitches))
   }
 
-  lazy val submit: Action[AnyContent] = Action.async { implicit req =>
+  def submit: Action[AnyContent] = Action.async { implicit req =>
     val submittedData: Set[String] = req.body.asFormUrlEncoded match {
       case None => Set.empty
       case Some(data) => data.keySet

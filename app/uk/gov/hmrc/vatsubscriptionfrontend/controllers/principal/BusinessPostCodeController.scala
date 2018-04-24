@@ -32,7 +32,7 @@ import scala.concurrent.Future
 class BusinessPostCodeController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
-  val show: Action[AnyContent] = Action.async {
+  def show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         Future.successful(
@@ -41,7 +41,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
       }
   }
 
-  val submit: Action[AnyContent] = Action.async {
+  def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         businessPostCodeForm.bindFromRequest.fold(
