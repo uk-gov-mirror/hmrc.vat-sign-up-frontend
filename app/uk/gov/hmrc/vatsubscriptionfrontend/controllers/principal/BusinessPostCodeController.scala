@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
@@ -50,7 +51,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
             ),
           businessPostCode =>
             Future.successful(
-              Redirect(routes.CaptureBusinessEntityController.show())
+              Redirect(routes.CaptureBusinessEntityController.show()).addingToSession(SessionKeys.businessPostCodeKey-> businessPostCode)
             )
         )
       }

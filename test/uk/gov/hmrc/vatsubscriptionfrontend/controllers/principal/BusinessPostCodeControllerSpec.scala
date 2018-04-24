@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
-import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
@@ -70,10 +70,12 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
           mockAuthEmptyRetrieval()
 
-          val request = testPostRequest(testBusinessPostcode)
+          implicit val request = testPostRequest(testBusinessPostcode)
           val result = TestBusinessPostCodeController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+
+          result.session get SessionKeys.businessPostCodeKey should contain(testBusinessPostcode.toUpperCase().replaceAll(" ", ""))
         }
       }
 

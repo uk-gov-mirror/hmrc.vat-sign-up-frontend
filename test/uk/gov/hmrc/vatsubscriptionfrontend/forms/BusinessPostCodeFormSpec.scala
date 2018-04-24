@@ -31,7 +31,7 @@ class BusinessPostCodeFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "validate that data containing a valid post code passes" in {
       val actual = businessPostCodeForm.bind(Map(businessPostCode -> testBusinessPostcode)).value
-      actual shouldBe Some(testBusinessPostcode)
+      actual shouldBe Some(testBusinessPostcode.replaceAll(" ","").toUpperCase())
     }
 
     "validate that data starts with either 1 or 2 letters" in {

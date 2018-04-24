@@ -62,6 +62,10 @@ POST        /business-postcode                     uk.gov.hmrc.vatsubscriptionfr
 GET         /business-type                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.show
 POST        /business-type                         uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CaptureBusinessEntityController.submit
 
+# Check your answers
+GET         /check-your-answers                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CheckYourAnswersController.show
+POST        /check-your-answers                    uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.CheckYourAnswersController.submit
+
 GET         /identity-verified                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.IdentityVerificationCallbackController.continue
 
 # Could not confirm business

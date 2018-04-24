@@ -143,7 +143,6 @@ object MessageLookup {
     val link = "Return to GOV.UK"
   }
 
-
   object ConfirmClient {
     val title = "Confirm your client's details"
     val heading = "Confirm your client's details"
@@ -165,7 +164,6 @@ object MessageLookup {
     val heading: String = title
     val line1 = "This client's details are already in use."
   }
-
 
   object Terms {
     val title = "Terms of participation"
@@ -270,6 +268,7 @@ object MessageLookup {
       val line2 = "If you haven't submitted a VAT Return online before, then you'll also need your VAT registration certificate."
       val link = "Sign up to use software to submit your VAT Returns."
     }
+
   }
 
   object PrincipalCaptureBusinessEntity {
@@ -278,6 +277,16 @@ object MessageLookup {
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
     val radioOther: String = "Other"
+  }
+
+  object PrincipalCheckYourAnswers {
+    val title = "Check your answers"
+    val heading = "Check your answers"
+    val subHeading = "You've told us"
+    val yourVatNumber = "What is your VAT number?"
+    val vatRegistrationDate = "What is your VAT registration date?"
+    val businessPostCode = "What is your business postcode?"
+    val businessEntity = "What type of business are you registered as?"
   }
 
   object PrincipalCannotUseServiceYet {
@@ -419,7 +428,7 @@ object MessageLookup {
     val title = "You've already signed up"
     val heading: String = title
     val line1 = "Your sign in details are already in use."
-    }
+  }
 
   object AgentGuidance {
     val title = "Use software to submit your client's VAT Returns"
