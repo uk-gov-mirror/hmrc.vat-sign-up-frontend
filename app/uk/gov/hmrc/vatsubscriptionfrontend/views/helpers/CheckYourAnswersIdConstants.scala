@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend
+package uk.gov.hmrc.vatsubscriptionfrontend.views.helpers
 
+object CheckYourAnswersIdConstants {
 
-object SessionKeys {
-  val vatNumberKey = "VatNumber"
-  val companyNumberKey = "CompanyNumber"
-  val emailKey = "Email"
-  val userDetailsKey = "UserDetails"
-  val businessEntityKey = "BusinessEntity"
-  val identityVerificationContinueUrlKey = "IdentityVerification"
-  val vatRegistrationDateKey = "VatRegistrationDate"
-  val businessPostCodeKey = "BusinessPostCode"
+val VatNumberId = "your-vat-number"
+val VatRegistrationDateId = "vat-registration-date"
+val BusinessPostCodeId = "business-post-code"
+val BusinessEntityId = "business-entity"
+
 }

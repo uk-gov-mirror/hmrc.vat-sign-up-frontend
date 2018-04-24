@@ -23,9 +23,9 @@ import uk.gov.hmrc.domain.Generator
 object IntegrationTestConstants {
   val testVatNumber: String = IntegrationTestConstantsGenerator.randomVatNumber
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
-  val testBusinessPostCode: String = "ZZ11 1ZZ"
+  val testBusinessPostCode: String = IntegrationTestConstantsGenerator.randomPostCode
   val testNino: String = new Generator().nextNino.nino
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
   val testArn: String = UUID.randomUUID().toString
-  val testUri: String ="/test/url"
+  val testUri: String = "/test/url"
 }
