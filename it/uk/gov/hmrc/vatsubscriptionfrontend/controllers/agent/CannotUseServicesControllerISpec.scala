@@ -38,22 +38,6 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
     }
   }
 
-  "POST /client/cannot-use-service-yet" should {
-    "redirect to the capture client details page" in {
-
-      enable(KnownFactsJourney)
-
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = post("/client/cannot-use-service-yet")()
-
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureClientDetailsController.show().url)
-      )
-    }
-  }
-
   "Making a request to /client/cannot-use-service-yet when feature switch not enabled" should {
     "return NotFound" in {
       disable(KnownFactsJourney)

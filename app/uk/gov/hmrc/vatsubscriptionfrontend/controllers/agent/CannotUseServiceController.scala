@@ -33,22 +33,7 @@ class CannotUseServiceController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(cannot_use_service_yet(routes.CannotUseServiceController.submit())))
-    }
-  }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      Future.successful(
-        Redirect(routes.CaptureClientDetailsController.show())
-          .removingFromSession(
-            SessionKeys.vatNumberKey,
-            SessionKeys.companyNumberKey,
-            SessionKeys.emailKey,
-            SessionKeys.businessEntityKey,
-            SessionKeys.userDetailsKey
-          )
-      )
+      Future.successful(Ok(cannot_use_service_yet(routes.CannotUseServiceController.show())))
     }
   }
 

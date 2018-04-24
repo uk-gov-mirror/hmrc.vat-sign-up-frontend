@@ -48,17 +48,4 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
   }
 
-  "Calling the submit action of the Cannot Use Service controller" should {
-    "redirect to capture client details page" in {
-
-      enable(KnownFactsJourney)
-
-      mockAuthEmptyRetrieval()
-
-      val result = TestCannotUseServiceController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.CaptureClientDetailsController.show().url)
-    }
-  }
-
 }
