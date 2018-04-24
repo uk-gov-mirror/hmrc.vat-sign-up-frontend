@@ -53,4 +53,18 @@ class CouldNotConfirmVatNumberControllerISpec extends ComponentSpecBase with Cus
     }
   }
 
+  "Making a request to /client/could-not-confirm-VAT-number when feature switch not enabled" should {
+    "return NotFound" in {
+      disable(KnownFactsJourney)
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/client/could-not-confirm-VAT-number")
+
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
+
+    }
+  }
+
 }
