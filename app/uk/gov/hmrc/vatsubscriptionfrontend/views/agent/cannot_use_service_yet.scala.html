@@ -15,10 +15,11 @@
  *@
 
 @import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
-@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.signOutButton
+@import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{continueButton, signOutLink}
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @agent_main_template(title = Messages("agent.cannot_use_service.title"), bodyClasses = None, showSignOutLink = false) {
 
@@ -29,7 +30,10 @@
     <p>@Messages("agent.cannot_use_service.line_2")</p>
 
 
-    <div class="form-group">
-        @signOutButton()
-    </div>
+    @form(action = postAction) {
+        <div class="form-group">
+            @continueButton(Some(Messages("base.sign_up_another_client")))
+        </div>
+        @signOutLink()
+    }
 }

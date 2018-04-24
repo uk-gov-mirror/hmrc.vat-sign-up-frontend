@@ -32,7 +32,7 @@ class CannotUseServiceYetSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsubscriptionfrontend.views.html.agent.cannot_use_service_yet(
-    )(
+    postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -53,7 +53,9 @@ class CannotUseServiceYetSpec extends ViewSpec {
       messages.line2
     )
 
-    testPage.shouldHaveSignOutButton()
+    testPage.shouldHaveSignUpAnotherClientButton()
+
+    testPage.shouldHaveSignOutLink()
   }
 
 }
