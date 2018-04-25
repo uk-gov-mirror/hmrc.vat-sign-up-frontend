@@ -223,7 +223,7 @@ principal.guidance.line_3                                              = If you'
 principal.guidance.line_4                                              = You''ll need to sign up for this new service, even if you already use software to submit your VAT Returns.
 principal.guidance.subsection_1.sub_heading_1                          = How it works
 principal.guidance.subsection_1.line_1                                 = To sign up for this service, you need to use software to record your purchases and sales. If you don''t already record in this way, submit your next VAT Return on GOV.UK or by post before you sign up. This will give you more time to complete your first return using software.
-principal.guidance.subsection_1.number_1                               = You need to choose relevant third party software (opens in a new window). If you already use software, check with your supplier to see if you can use it with this service.
+principal.guidance.subsection_1.number_1                               = You need to choose relevant third party software. If you already use software, check with your supplier to see if you can use it with this service.
 principal.guidance.subsection_1.number_2                               = Sign up for this service and agree to get emails instead of letters.
 principal.guidance.subsection_1.number_3                               = Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details.
 principal.guidance.subsection_1.number_4                               = Use your software to record your purchases and sales, then to submit your VAT Returns. We''ll email you to let you know when to send a return.
@@ -234,7 +234,6 @@ principal.guidance.subsection_1.bullet_3                               = view yo
 principal.guidance.subsection_2.sub_heading_2                          = Sign up
 principal.guidance.subsection_2.line_1                                 = To sign up you''ll need the Government Gateway details you got when you registered for VAT.
 principal.guidance.subsection_2.line_2                                 = If you haven''t submitted a VAT Return online before, then you''ll also need your VAT registration certificate.
-principal.guidance.subsection_2.link                                   = Sign up to use software to submit your VAT Returns.
 
 ## Your VAT number page
 principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up

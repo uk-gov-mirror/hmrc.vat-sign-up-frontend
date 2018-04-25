@@ -35,6 +35,7 @@ object MessageLookup {
     val year = "Year"
     val change = "Change"
     val tryAgain = "Try again"
+    val startNow = "Start now"
   }
 
   object ErrorMessage {
@@ -252,7 +253,7 @@ object MessageLookup {
     object Section1 {
       val heading = "How it works"
       val line1 = "To sign up for this service, you need to use software to record your purchases and sales. If you don't already record in this way, submit your next VAT Return on GOV.UK or by post before you sign up. This will give you more time to complete your first return using software."
-      val number1 = "You need to choose relevant third party software (opens in a new window). If you already use software, check with your supplier to see if you can use it with this service."
+      val number1 = "You need to choose relevant third party software. If you already use software, check with your supplier to see if you can use it with this service."
       val number2 = "Sign up for this service and agree to get emails instead of letters."
       val number3 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
       val number4 = "Use your software to record your purchases and sales, then to submit your VAT Returns. We'll email you to let you know when to send a return."
@@ -266,7 +267,6 @@ object MessageLookup {
       val heading = "Sign up"
       val line1 = "To sign up you'll need the Government Gateway details you got when you registered for VAT."
       val line2 = "If you haven't submitted a VAT Return online before, then you'll also need your VAT registration certificate."
-      val link = "Sign up to use software to submit your VAT Returns."
     }
 
   }

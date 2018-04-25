@@ -143,7 +143,7 @@ class GuidanceSpec extends ViewSpec {
     s"have a button with text 'Start now' pointed to the first page in the agent journey" in {
       val link = document.getElementById("start-now")
       link.attr("href") shouldBe routes.ConfirmVatNumberController.show().url
-      link.text() shouldBe "Start now"
+      link.text() shouldBe Base.startNow
     }
 
     s"have a link with text 'HMRC' pointed to 'Gov Uk'" in {

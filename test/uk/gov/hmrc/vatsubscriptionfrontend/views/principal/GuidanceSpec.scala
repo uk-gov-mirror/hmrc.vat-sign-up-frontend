@@ -21,7 +21,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{PrincipalGuidance => messages}
+import uk.gov.hmrc.vatsubscriptionfrontend.assets.MessageLookup.{Base, PrincipalGuidance => messages}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.AppConfig
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsubscriptionfrontend.views.ViewSpec
@@ -118,8 +118,7 @@ class GuidanceSpec extends ViewSpec {
 
     }
 
-    testPage.shouldHaveALink("signUp", messages.Section2.link, routes.YourVatNumberController.show().url)
-
+    testPage.shouldHaveALink("start-now", Base.startNow, routes.YourVatNumberController.show().url)
   }
 
 }
