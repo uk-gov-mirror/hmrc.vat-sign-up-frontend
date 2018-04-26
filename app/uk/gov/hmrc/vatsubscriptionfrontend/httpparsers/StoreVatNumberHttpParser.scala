@@ -18,8 +18,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
-import uk.gov.hmrc.vatsubscriptionfrontend.models._
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants._
 
 object StoreVatNumberHttpParser {
   type StoreVatNumberResponse = Either[StoreVatNumberFailure, StoreVatNumberSuccess.type]
@@ -33,10 +32,11 @@ object StoreVatNumberHttpParser {
         case CREATED => Right(StoreVatNumberSuccess)
         case FORBIDDEN => parseBody match {
           case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Left(NoAgentClientRelationship)
+          case Some(code) if code.matches(StoreVatNumberKnownFactsMismatchCodeValue) => Left(KnownFactsMismatch)
           case _ => Left(StoreVatNumberFailureResponse(FORBIDDEN))
         }
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
-        case BAD_REQUEST => Left(IneligibleVatNumber)
+        case UNPROCESSABLE_ENTITY => Left(IneligibleVatNumber)
         case CONFLICT => Left(AlreadySubscribed)
         case status => Left(StoreVatNumberFailureResponse(status))
       }
@@ -49,6 +49,8 @@ object StoreVatNumberHttpParser {
 
   case object NoAgentClientRelationship extends StoreVatNumberFailure
 
+  case object KnownFactsMismatch extends StoreVatNumberFailure
+
   case object AlreadySubscribed extends StoreVatNumberFailure
 
   case object InvalidVatNumber extends StoreVatNumberFailure
@@ -58,5 +60,3 @@ object StoreVatNumberHttpParser {
   case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberFailure
 
 }
-
-

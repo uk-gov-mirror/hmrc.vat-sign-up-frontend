@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend
 object Constants {
   val StoreVatNumberNoRelationshipCodeKey = "CODE"
   val StoreVatNumberNoRelationshipCodeValue = "RELATIONSHIP_NOT_FOUND"
+  val StoreVatNumberKnownFactsMismatchCodeValue = "KNOWN_FACTS_MISMATCH"
   val StoreIdentityVerificationUrlKey = "journeyLink"
 
   object Enrolments {

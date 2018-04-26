@@ -21,7 +21,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberKnownFactsMismatchCodeValue, StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser._
 
 class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
@@ -44,6 +44,14 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
         res.left.value shouldBe NoAgentClientRelationship
+      }
+
+      "parse a FORBIDDEN response as a KnownFactsMismatch when the response code matches" in {
+        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberKnownFactsMismatchCodeValue)))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe KnownFactsMismatch
       }
 
       "parse a FORBIDDEN response as a StoreVatNumberFailureResponse when the response code does not match" in {
@@ -70,8 +78,8 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe StoreVatNumberHttpParser.InvalidVatNumber
       }
 
-      "parse a BAD_REQUEST response as a IneligibleVatNumber when the vat number is already subscribed" in {
-        val httpResponse = HttpResponse(BAD_REQUEST)
+      "parse a UNPROCESSABLE_ENTITY response as a IneligibleVatNumber when the vat number is already subscribed" in {
+        val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY)
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
@@ -88,4 +96,5 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
     }
   }
+
 }

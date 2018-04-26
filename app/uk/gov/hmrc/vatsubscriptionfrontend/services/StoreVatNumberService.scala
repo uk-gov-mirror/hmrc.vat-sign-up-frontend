@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsubscriptionfrontend.connectors.StoreVatNumberConnector
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberResponse
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, PostCode}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,5 +30,10 @@ class StoreVatNumberService @Inject()(val storeVatNumberConnector: StoreVatNumbe
 
   def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber)
+
+  def storeVatNumber(vatNumber: String,
+                     postCode: PostCode,
+                     registrationDate: DateModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString)
 
 }
