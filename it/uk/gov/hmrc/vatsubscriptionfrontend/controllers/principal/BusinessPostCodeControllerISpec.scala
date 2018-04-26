@@ -44,7 +44,7 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
 
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode)
+      val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode.postCode)
 
       res should have(
         httpStatus(SEE_OTHER),

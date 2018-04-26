@@ -20,8 +20,9 @@
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html._
 @import uk.gov.hmrc.vatsubscriptionfrontend.views.html.helpers.{inputHelper, continueButton}
 @import uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes
+@import uk.gov.hmrc.vatsubscriptionfrontend.models.PostCode
 
-@(businessPostCodeForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(businessPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @principal_main_template(title = Messages("principal.business_postcode.title"), bodyClasses = None) {
 

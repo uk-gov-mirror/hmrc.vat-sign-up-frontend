@@ -20,6 +20,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation._
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.validation.utils.Patterns.postcodeRegex
+import uk.gov.hmrc.vatsubscriptionfrontend.models.PostCode
 
 object BusinessPostCodeForm {
 
@@ -28,9 +29,9 @@ object BusinessPostCodeForm {
   private def businessPostCodeFormat(businessPostCode: String) = businessPostCode matches postcodeRegex
 
   private val businessPostCodeValidationForm = Form(
-    single(
+    mapping(
       businessPostCode -> text.verifying("error.invalid_postcode", businessPostCodeFormat _)
-    )
+    )(PostCode.apply)(PostCode.unapply)
   )
 
   import uk.gov.hmrc.vatsubscriptionfrontend.forms.prevalidation.CaseOption._

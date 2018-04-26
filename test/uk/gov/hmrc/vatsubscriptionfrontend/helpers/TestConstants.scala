@@ -19,10 +19,11 @@ package uk.gov.hmrc.vatsubscriptionfrontend.helpers
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.vatsubscriptionfrontend.Constants.Enrolments._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.PostCode
 
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
-  val testBusinessPostcode: String = TestConstantsGenerator.randomPostCode
+  val testBusinessPostcode: PostCode = PostCode(TestConstantsGenerator.randomPostCode)
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
   val testEmail: String = TestConstantsGenerator.randomEmail
   lazy val testNino: String = new Generator().nextNino.nino

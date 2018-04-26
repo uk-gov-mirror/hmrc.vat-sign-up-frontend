@@ -130,7 +130,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
   "display the correct info for BusinessPostCode" in {
     val sectionId = BusinessPostCodeId
     val expectedQuestion = messages.businessPostCode
-    val expectedAnswer = testBusinessPostcode
+    val expectedAnswer = testBusinessPostcode.checkYourAnswersFormat
     val expectedEditLink = uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
 
     sectionTest(

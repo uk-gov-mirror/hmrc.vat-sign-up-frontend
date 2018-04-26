@@ -30,7 +30,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourne
 import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, DateModel, Other, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models._
 
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -40,25 +40,25 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      registrationDate: Option[DateModel] = Some(testDate),
-                     postCode: Option[String] = Some(testBusinessPostcode),
+                     postCode: Option[PostCode] = Some(testBusinessPostcode),
                      businessType: Option[BusinessEntity] = Some(SoleTrader)
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessPostCodeKey -> postCode.getOrElse(""),
+      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
                       registrationDate: Option[DateModel] = Some(testDate),
-                      postCode: Option[String] = Some(testBusinessPostcode),
+                      postCode: Option[PostCode] = Some(testBusinessPostcode),
                       businessType: Option[BusinessEntity] = Some(SoleTrader)
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessPostCodeKey -> postCode.getOrElse(""),
+      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
     )
 

@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -70,12 +71,14 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
           mockAuthEmptyRetrieval()
 
-          implicit val request = testPostRequest(testBusinessPostcode)
+          implicit val request = testPostRequest(testBusinessPostcode.postCode)
           val result = TestBusinessPostCodeController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
 
-          result.session get SessionKeys.businessPostCodeKey should contain(testBusinessPostcode.toUpperCase().replaceAll(" ", ""))
+          result.session get SessionKeys.businessPostCodeKey should contain(
+            Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ",""))).toString
+          )
         }
       }
 

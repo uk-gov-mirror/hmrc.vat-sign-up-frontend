@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, DateModel, LimitedCompany, SoleTrader}
+import uk.gov.hmrc.vatsubscriptionfrontend.models._
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.check_your_answers
 
@@ -37,7 +37,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
-      val optBusinessPostCode = request.session.get(SessionKeys.businessPostCodeKey).filter(_.nonEmpty)
+      val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBusinessEntity) match {

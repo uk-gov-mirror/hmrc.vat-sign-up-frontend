@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.BusinessPostCodeForm._
+import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.business_postcode
 
 import scala.concurrent.Future
@@ -51,7 +52,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
             ),
           businessPostCode =>
             Future.successful(
-              Redirect(routes.CaptureBusinessEntityController.show()).addingToSession(SessionKeys.businessPostCodeKey-> businessPostCode)
+              Redirect(routes.CaptureBusinessEntityController.show()).addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
             )
         )
       }
