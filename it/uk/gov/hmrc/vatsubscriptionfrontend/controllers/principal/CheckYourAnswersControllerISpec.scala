@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, SoleTrader}
@@ -44,7 +45,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-          SessionKeys.businessPostCodeKey ->  Json.toJson(testBusinessPostCode).toString(),
+          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
         )
       )
@@ -55,28 +56,108 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     }
   }
 
-  "POST /check-your-answersr" should {
-    // TODO update when known facts check is implemented
-    "redirect to capture your details" in {
-      stubAuth(OK, successfulAuthResponse())
+  "POST /check-your-answersr" when {
+    "store vat is successful" should {
+      "redirect to capture your details" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberSuccess(testBusinessPostCode, testDate)
 
-      val res = post("/check-your-answers",
-        Map(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureYourDetailsController.show().url)
         )
-      )()
+      }
+    }
+    "store vat returned known facts mismatch" should {
+      "redirect to could not confirm business" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureYourDetailsController.show().url)
-      )
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          )
+        )()
 
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+        )
+      }
+    }
+    "store vat returned invalid vat number" should {
+      "redirect to invalid vat number" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberInvalid(testBusinessPostCode, testDate)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.InvalidVatNumberController.show().url)
+        )
+      }
+    }
+    "store vat returned ineligible vat number" should {
+      "redirect to cannot use service" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberIneligible(testBusinessPostCode, testDate)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CannotUseServiceController.show().url)
+        )
+      }
+    }
+    "store vat returned already signed up" should {
+      "redirect to already signed up" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.AlreadySignedUpController.show().url)
+        )
+      }
     }
   }
-
 
   "Making a request to /check-your-answers when not enabled" should {
     "return NotFound" in {

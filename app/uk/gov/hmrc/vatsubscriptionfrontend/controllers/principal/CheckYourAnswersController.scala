@@ -19,18 +19,22 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, InvalidVatNumber, KnownFactsMismatch}
 import uk.gov.hmrc.vatsubscriptionfrontend.models._
+import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsubscriptionfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.check_your_answers
 
 import scala.concurrent.Future
 
 @Singleton
-class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents)
+class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents,
+                                           val storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
@@ -70,19 +74,26 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     }
   }
 
+  private def storeVatNumber(vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel)(implicit hc: HeaderCarrier) =
+    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate).map {
+      case Right(_) => Redirect(routes.CaptureYourDetailsController.show())
+      case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
+      case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
+      case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
+      case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
+      case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
+    }
+
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
-      val optBusinessPostCode = request.session.get(SessionKeys.businessPostCodeKey).filter(_.nonEmpty)
+      val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBusinessEntity) match {
-        case (Some(vat_number), Some(vatRegistrationDate), Some(postCode), Some(entity@(SoleTrader | LimitedCompany))) =>
-          // TODO call check known facts instead when it's ready
-          Future.successful(
-            Redirect(routes.CaptureYourDetailsController.show())
-          )
+        case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode), Some(entity@(SoleTrader | LimitedCompany))) =>
+          storeVatNumber(vatNumber, postCode, vatRegistrationDate)
         case (None, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())

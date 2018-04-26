@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks
 
-import play.api.http.Status.{BAD_REQUEST, CREATED, FORBIDDEN, CONFLICT}
+import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
-import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants.testVatNumber
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberKnownFactsMismatchCodeValue, StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
+import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, PostCode}
 
 object StoreVatNumberStub extends WireMockMethods {
 
@@ -41,6 +42,57 @@ object StoreVatNumberStub extends WireMockMethods {
   def stubStoreVatNumberFailure(): Unit = {
     when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = BAD_REQUEST)
+  }
+
+
+  def stubStoreVatNumberSuccess(postCode: PostCode, registrationDate: DateModel): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+      Json.obj(
+        "vatNumber" -> testVatNumber,
+        "postCode" -> postCode.postCode,
+        "registrationDate" -> registrationDate.toLocalDate.toString
+      ))
+      .thenReturn(status = CREATED)
+  }
+
+  def stubStoreVatNumberKnownFactsMismatch(postCode: PostCode, registrationDate: DateModel): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+      Json.obj(
+        "vatNumber" -> testVatNumber,
+        "postCode" -> postCode.postCode,
+        "registrationDate" -> registrationDate.toLocalDate.toString
+      ))
+      .thenReturn(status = FORBIDDEN, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberKnownFactsMismatchCodeValue))
+  }
+
+  def stubStoreVatNumberInvalid(postCode: PostCode, registrationDate: DateModel): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+      Json.obj(
+        "vatNumber" -> testVatNumber,
+        "postCode" -> postCode.postCode,
+        "registrationDate" -> registrationDate.toLocalDate.toString
+      ))
+      .thenReturn(status = PRECONDITION_FAILED)
+  }
+
+  def stubStoreVatNumberIneligible(postCode: PostCode, registrationDate: DateModel): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+      Json.obj(
+        "vatNumber" -> testVatNumber,
+        "postCode" -> postCode.postCode,
+        "registrationDate" -> registrationDate.toLocalDate.toString
+      ))
+      .thenReturn(status = UNPROCESSABLE_ENTITY)
+  }
+
+  def stubStoreVatNumberAlreadySignedUp(postCode: PostCode, registrationDate: DateModel): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+      Json.obj(
+        "vatNumber" -> testVatNumber,
+        "postCode" -> postCode.postCode,
+        "registrationDate" -> registrationDate.toLocalDate.toString
+      ))
+      .thenReturn(status = CONFLICT)
   }
 
 }

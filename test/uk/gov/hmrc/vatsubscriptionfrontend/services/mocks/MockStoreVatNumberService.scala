@@ -70,8 +70,14 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberFailure(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
 
-  def mockStoreVatNumberNoRelationship(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(NoAgentClientRelationship)))
+  def mockStoreVatNumberKnownFactsMismatch(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(KnownFactsMismatch)))
+
+  def mockStoreVatNumberInvalid(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(InvalidVatNumber)))
+
+  def mockStoreVatNumberIneligible(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(IneligibleVatNumber)))
 
   def mockStoreVatNumberAlreadySubscribed(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(AlreadySubscribed)))

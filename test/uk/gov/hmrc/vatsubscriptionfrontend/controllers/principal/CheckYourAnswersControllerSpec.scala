@@ -24,6 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
@@ -31,10 +32,13 @@ import uk.gov.hmrc.vatsubscriptionfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsubscriptionfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsubscriptionfrontend.models._
+import uk.gov.hmrc.vatsubscriptionfrontend.services.mocks.MockStoreVatNumberService
 
-class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents
+  with MockStoreVatNumberService {
 
-  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents)
+  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents, mockStoreVatNumberService)
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -124,16 +128,68 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
   }
 
-
   "Calling the submit action of the Check your answers controller" when {
-    "all prerequisite data are in" should {
-      // TODO update for when eligibility is done
-      "goto capture your details controller" in {
-        mockAuthEmptyRetrieval()
+    "all prerequisite data are in" when {
+      "store vat number returned StoreVatNumberSuccess" should {
+        "goto capture your details controller" in {
+          mockAuthEmptyRetrieval()
+          mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
-        val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+        }
+      }
+      "store vat number returned KnownFactsMismatch" should {
+        "go to the could not confirm business page" in {
+          mockAuthEmptyRetrieval()
+          mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate)
+
+          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmBusinessController.show().url)
+        }
+      }
+      "store vat number returned InvalidVatNumber" should {
+        "go to the invalid vat number page" in {
+          mockAuthEmptyRetrieval()
+          mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate)
+
+          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
+        }
+      }
+      "store vat number returned IneligibleVatNumber" should {
+        "go to the could not use service page" in {
+          mockAuthEmptyRetrieval()
+          mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate)
+
+          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+        }
+      }
+      "store vat number returned AlreadySubscribed" should {
+        "go to the already signed up page" in {
+          mockAuthEmptyRetrieval()
+          mockStoreVatNumberAlreadySubscribed(testVatNumber, testBusinessPostcode, testDate)
+
+          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+        }
+      }
+      "store vat number returned a failure" should {
+        "throw internal server exception" in {
+          mockAuthEmptyRetrieval()
+          mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate)
+
+          intercept[InternalServerException] {
+            await(TestCheckYourAnswersController.submit(testGetRequest()))
+          }
+
+        }
       }
     }
     "vat number is missing" should {
