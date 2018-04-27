@@ -61,6 +61,8 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
               Redirect(routes.NoAgentClientRelationshipController.show())
             case Left(AlreadySubscribed) =>
               Redirect(routes.AlreadySignedUpController.show())
+            case Left(IneligibleVatNumber) =>
+              Redirect(routes.CannotUseServiceController.show())
             case Left(errResponse: StoreVatNumberFailureResponse) =>
               throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
           }

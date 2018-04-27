@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.servicemocks.StoreVatNumberSt
 import uk.gov.hmrc.vatsubscriptionfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
+
   "GET /confirm-vat-number" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -65,6 +66,19 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "redirect to cannot use service page" when {
+      "the vat number is unsuccessfully stored as the client is ineligible" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreVatNumberIneligible()
+
+        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CannotUseServiceController.show().url)
+        )
+      }
+    }
 
     "redirect to the already signed up page" when {
       "the vat number has already been signed up" in {
@@ -93,4 +107,5 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
   }
+
 }
