@@ -34,6 +34,12 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = FORBIDDEN, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue))
   }
 
+  def stubStoreVatNumberIneligible(): Unit = {
+    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+      .thenReturn(status = UNPROCESSABLE_ENTITY)
+  }
+
+
   def stubStoreVatNumberAlreadySignedUp(): Unit = {
     when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = CONFLICT)
