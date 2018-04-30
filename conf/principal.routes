@@ -98,3 +98,6 @@ POST        /terms-of-participation                uk.gov.hmrc.vatsubscriptionfr
 
 #Confirmation
 GET         /information-received                  uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.InformationReceivedController.show
+
+#Assistant Credential Role
+GET         /not-administrator                     uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal.AssistantCredentialErrorController.show

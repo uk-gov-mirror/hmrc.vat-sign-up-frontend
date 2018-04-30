@@ -458,4 +458,10 @@ object MessageLookup {
 
   }
 
+  object AssistantCredentialError {
+    val title = "You cannot use this service"
+    val heading = title
+    val line1 = "You can only sign up this business if you are an administrator."
+  }
+
 }
