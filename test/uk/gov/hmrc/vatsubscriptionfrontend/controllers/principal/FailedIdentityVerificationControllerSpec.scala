@@ -35,7 +35,7 @@ class FailedIdentityVerificationControllerSpec extends UnitSpec with GuiceOneApp
 
   "Calling the show action of the Failed Identity Verification controller" should {
     "show the failed Identity Verification page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestFailedIdentityVerificationController.show(request)
@@ -47,7 +47,7 @@ class FailedIdentityVerificationControllerSpec extends UnitSpec with GuiceOneApp
 
   "Calling the submit action of the Failed Identity Verification controller" should {
     "redirect to capture your details page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestFailedIdentityVerificationController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

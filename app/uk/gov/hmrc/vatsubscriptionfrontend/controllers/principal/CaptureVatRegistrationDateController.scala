@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.forms.VatRegistrationDateForm._
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CaptureVatRegistrationDateController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

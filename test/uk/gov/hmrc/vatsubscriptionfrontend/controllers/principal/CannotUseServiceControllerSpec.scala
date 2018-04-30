@@ -31,7 +31,7 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the show action of the cannot use service controller" should {
     "show the cannot use service page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestCannotUseServiceController.show(request)

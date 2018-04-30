@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 
 import javax.inject.{Inject, Singleton}
-import  uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
+import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys.{identityVerificationContinueUrlKey, userDetailsKey}
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
 import uk.gov.hmrc.vatsubscriptionfrontend.models.UserDetailsModel
@@ -39,7 +40,7 @@ import scala.concurrent.Future
 class ConfirmYourDetailsController @Inject()(val controllerComponents: ControllerComponents,
                                              storeNinoService: StoreNinoService,
                                              identityVerificationService: IdentityVerificationService)
-  extends AuthenticatedController() {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

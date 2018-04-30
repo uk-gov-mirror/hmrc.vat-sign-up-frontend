@@ -34,7 +34,7 @@ class SignInWithDifferentDetailsSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the show action of the Sign in with different details controller" should {
     "return OK" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestSignInWithDifferentDetailsController.show(request)

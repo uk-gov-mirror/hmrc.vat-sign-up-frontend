@@ -21,7 +21,7 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrievals, ~}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
@@ -43,7 +43,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   "Calling the show action of the Capture Entity Type controller" should {
     "go to the Capture Entity Type page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestCaptureBusinessEntityController.show(testGetRequest)
       status(result) shouldBe Status.OK
@@ -87,8 +87,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "go to Cannot use service yet page" when {
         "the business entity is other" in {
           mockAuthorise(
-            retrievals = EmptyRetrieval and Retrievals.allEnrolments
-          )(Future.successful(new ~(Unit, Enrolments(Set()))))
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(other)
 
@@ -104,8 +104,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "no vat enrolment is on the profile" when {
           "the business entity is sole trader" in {
             mockAuthorise(
-              retrievals = EmptyRetrieval and Retrievals.allEnrolments
-            )(Future.successful(new ~(Unit, Enrolments(Set()))))
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
@@ -121,8 +121,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
           "the business entity is limited company" in {
             mockAuthorise(
-              retrievals = EmptyRetrieval and Retrievals.allEnrolments
-            )(Future.successful(new ~(Unit, Enrolments(Set()))))
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
@@ -142,8 +142,8 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
         mockAuthorise(
-          retrievals = EmptyRetrieval and Retrievals.allEnrolments
-        )(Future.successful(new ~(Unit, Enrolments(Set()))))
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
 
         val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))

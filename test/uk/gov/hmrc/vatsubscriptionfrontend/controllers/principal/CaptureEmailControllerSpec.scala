@@ -41,7 +41,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
   "Calling the show action of the Capture Email controller" should {
     "go to the Capture Email page" in {
-      mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+      mockAuthAdminRole()
 
       val result = TestCaptureEmailController.show(testGetRequest)
 
@@ -55,7 +55,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   "Calling the submit action of the Capture Email controller" when {
     "form successfully submitted" should {
       "go to the Confirm Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val request = testPostRequest(testEmail)
 
@@ -69,7 +69,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val result = TestCaptureEmailController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST

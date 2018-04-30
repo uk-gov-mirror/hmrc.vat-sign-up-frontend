@@ -40,7 +40,8 @@ object AuthStub extends WireMockMethods {
   }
 
   def successfulAuthResponse(enrolments: JsObject*): JsObject = Json.obj(
-    "allEnrolments" -> enrolments
+    "allEnrolments" -> enrolments,
+    "credentialRole" -> "Admin"
   )
 
   val agentEnrolment: JsObject = Json.obj(
@@ -63,6 +64,10 @@ object AuthStub extends WireMockMethods {
     )
   )
 
-  def confidenceLevel(confidenceLevel: ConfidenceLevel): JsValue = confidenceLevel.toJson
+  def confidenceLevel(confidenceLevel: ConfidenceLevel): JsValue =
+    Json.obj(
+      "credentialRole" -> "Admin",
+      "confidenceLevel" -> confidenceLevel.level
+    )
 
 }

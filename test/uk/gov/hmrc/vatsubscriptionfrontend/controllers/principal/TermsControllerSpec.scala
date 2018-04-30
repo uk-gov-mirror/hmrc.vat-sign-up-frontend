@@ -41,7 +41,7 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestTermsController.show(request)
@@ -54,7 +54,7 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the submit action of the Terms controller" when {
     "submission is successful" should {
       "goto information received" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockSubmitSuccess(testVatNumber)
 
         val result = TestTermsController.submit(testPostRequest)
@@ -65,7 +65,7 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     "submission is unsuccessful" should {
       "throw internal server exception" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockSubmitFailure(testVatNumber)
 
         intercept[InternalServerException] {

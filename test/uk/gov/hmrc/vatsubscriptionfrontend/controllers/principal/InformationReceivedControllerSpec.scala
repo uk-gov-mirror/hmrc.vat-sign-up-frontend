@@ -33,7 +33,7 @@ class InformationReceivedControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
   "Calling the show action of the information received controller" should {
     "show the information received page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestInformationReceivedController.show(request)

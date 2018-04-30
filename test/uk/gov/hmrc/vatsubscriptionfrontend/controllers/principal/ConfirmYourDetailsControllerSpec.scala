@@ -63,7 +63,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the show action of the Confirm Your Details controller" when {
     "Your Details in the session" should {
       "return an OK" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val request = testGetRequest.withSession(SessionKeys.userDetailsKey -> testUserDetailsJson)
         val result = TestConfirmYourDetailsController.show(request)
@@ -77,7 +77,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     "there isn't a user detail in the session" should {
       "redirect to Capture Your Details page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestConfirmYourDetailsController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER

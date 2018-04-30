@@ -44,7 +44,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the show action of the Capture Vat Number controller" should {
     "go to the Capture Vat Number page" in {
       enable(KnownFactsJourney)
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestCaptureVatNumberController.show(testGetRequest)
 
@@ -59,7 +59,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "form successfully submitted" should {
       "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockVatNumberEligibilitySuccess(testVatNumber)
 
         implicit val request = testPostRequest(testVatNumber)
@@ -73,7 +73,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockVatNumberIneligibleForMtd(testVatNumber)
 
         val request = testPostRequest(testVatNumber)
@@ -85,7 +85,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "redirect to Invalid Vat Number page when the vat number is invalid" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockVatNumberEligibilityInvalid(testVatNumber)
 
         val request = testPostRequest(testVatNumber)
@@ -97,7 +97,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "redirect to Already Signed Up page when the vat number has already been subscribed" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockVatNumberEligibilityAlreadySubscribed(testVatNumber)
 
         val request = testPostRequest(testVatNumber)
@@ -109,7 +109,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "throw an exception for any other scenario" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         mockVatNumberEligibilityFailure(testVatNumber)
 
         val request = testPostRequest(testVatNumber)
@@ -122,7 +122,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST

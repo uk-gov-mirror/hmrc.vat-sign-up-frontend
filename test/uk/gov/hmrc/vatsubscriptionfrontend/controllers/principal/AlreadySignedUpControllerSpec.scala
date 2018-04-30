@@ -31,7 +31,7 @@ class AlreadySignedUpControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   "Calling the show action of the already signed up controller" should {
     "show the already signed up page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestAlreadySignedUpController.show(request)

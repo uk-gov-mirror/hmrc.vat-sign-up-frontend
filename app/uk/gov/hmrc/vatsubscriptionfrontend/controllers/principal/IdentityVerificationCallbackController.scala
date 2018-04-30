@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.Constants.skipIvJourneyValue
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys._
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.httpparsers.StoreIdentityVerificationHttpParser.IdentityVerified
 import uk.gov.hmrc.vatsubscriptionfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 @Singleton
 class IdentityVerificationCallbackController @Inject()(val controllerComponents: ControllerComponents,
                                                        storeIdentityVerificationService: StoreIdentityVerificationService)
-  extends AuthenticatedController() {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val continue: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

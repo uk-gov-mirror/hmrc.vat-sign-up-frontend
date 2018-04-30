@@ -44,7 +44,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   "Calling the show action of the Confirm Email controller" when {
     "there is a email in the session" should {
       "show the Confirm Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val request = testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.emailKey -> testEmail)
 
@@ -58,7 +58,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
     "there isn't a email in the session" should {
       "redirect to Capture Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val result = TestConfirmEmailController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -71,7 +71,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "email and vat number is in session and store call is successful" when {
       "email is not verified" should {
         "redirect to Verify Email page" in {
-          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+          mockAuthAdminRole()
           mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = false)
 
           val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
@@ -84,7 +84,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
       }
       "email is verified" should {
         "redirect to Terms page" in {
-          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+          mockAuthAdminRole()
           mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
 
           val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
@@ -98,7 +98,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     }
     "email and vat number is in session but store call is unsuccessful" should {
       "throw Internal Server Error" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
         mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
 
         intercept[InternalServerException] {
@@ -111,7 +111,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     }
     "vat number is not in session" should {
       "redirect to Capture Vat number page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
@@ -121,7 +121,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     }
     "email is not in session" should {
       "redirect to Capture Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))

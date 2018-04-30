@@ -46,7 +46,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
       "the service returns IdentityVerified" should {
         "return a redirect to the identity verification success controller" when {
           "when confidence level is below 200" in {
-            mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+            mockAuthAdminRole()
             mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Right(IdentityVerified)))
 
             val request = FakeRequest() withSession(
@@ -64,7 +64,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
         "return a redirect to the agree to receive emails controller" when {
           "business Entity is Sole Trader" when {
             "when confidence level is 200 or above" in {
-              mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+              mockAuthAdminRole()
               mockStoreIdentityVerification(testVatNumber, skipIvJourneyValue)(Future.successful(Right(IdentityVerified)))
 
               val request = FakeRequest() withSession(
@@ -83,7 +83,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
         "return a redirect to the capture company number controller" when {
           "business Entity is Limited Company" when {
             "when confidence level is 200 or above" in {
-              mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+              mockAuthAdminRole()
               mockStoreIdentityVerification(testVatNumber, skipIvJourneyValue)(Future.successful(Right(IdentityVerified)))
 
               val request = FakeRequest() withSession(
@@ -102,7 +102,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
         "return a redirect to the capture business entity controller" when {
           "business Entity is Other" when {
             "when confidence level is 200 or above" in {
-              mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+              mockAuthAdminRole()
               mockStoreIdentityVerification(testVatNumber, skipIvJourneyValue)(Future.successful(Right(IdentityVerified)))
 
               val request = FakeRequest() withSession(
@@ -121,7 +121,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
 
       "the service returns a failure" should {
         "go to failed identity verification" in {
-          mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+          mockAuthAdminRole()
           mockStoreIdentityVerification(testVatNumber, testUri)(Future.successful(Left(IdentityVerificationFailure)))
 
           val request = FakeRequest() withSession(
@@ -138,7 +138,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
     }
     "there is no VAT number in session" should {
       "redirect to the vat number controller" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
         val result = await(TestIdentityVerificationCallbackController.continue(FakeRequest()))
 
         status(result) shouldBe Status.SEE_OTHER
@@ -148,7 +148,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
 
     "there is no business entity in session" should {
       "redirect to the capture business entity" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
         val result = await(
           TestIdentityVerificationCallbackController
             .continue(FakeRequest() withSession (vatNumberKey -> testVatNumber))
@@ -161,7 +161,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
 
     "there is no Identity Verification continue url in session" should {
       "redirect to capture your details controller" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
         val result = await(
           TestIdentityVerificationCallbackController
             .continue(FakeRequest() withSession(
