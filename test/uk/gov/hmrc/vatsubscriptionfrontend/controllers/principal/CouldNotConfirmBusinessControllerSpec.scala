@@ -39,7 +39,7 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
 
       enable(KnownFactsJourney)
 
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestCouldNotConfirmBusinessController.show(request)
@@ -54,7 +54,7 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
 
       enable(KnownFactsJourney)
 
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

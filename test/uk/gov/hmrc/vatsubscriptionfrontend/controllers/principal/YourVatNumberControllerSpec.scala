@@ -21,7 +21,7 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrievals, ~}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
@@ -63,8 +63,8 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         enable(KnownFactsJourney)
 
         mockAuthorise(
-          retrievals = EmptyRetrieval and Retrievals.allEnrolments
-        )(Future.successful(new ~(Unit, Enrolments(Set()))))
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestYourVatNumberController.show(testGetRequest)
 
@@ -76,8 +76,8 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
     "the known facts journey feature switch is disabled" should {
       "redirect to Cannot Use Service page" in {
         mockAuthorise(
-          retrievals = EmptyRetrieval and Retrievals.allEnrolments
-        )(Future.successful(new ~(Unit, Enrolments(Set()))))
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestYourVatNumberController.show(testGetRequest)
 
@@ -129,8 +129,8 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           enable(KnownFactsJourney)
 
           mockAuthorise(
-            retrievals = EmptyRetrieval and Retrievals.allEnrolments
-          )(Future.successful(new ~(Unit, Enrolments(Set()))))
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
           val result = TestYourVatNumberController.submit(testPostRequest)
 
@@ -142,8 +142,8 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
       "the known facts journey feature switch is disabled" should {
         "redirect to Cannot Use Service page" in {
           mockAuthorise(
-            retrievals = EmptyRetrieval and Retrievals.allEnrolments
-          )(Future.successful(new ~(Unit, Enrolments(Set()))))
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
           val result = TestYourVatNumberController.submit(testPostRequest)
 

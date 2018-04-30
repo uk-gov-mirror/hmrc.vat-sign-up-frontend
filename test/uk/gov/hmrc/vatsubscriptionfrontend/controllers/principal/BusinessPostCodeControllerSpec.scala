@@ -44,7 +44,7 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       "go to the Business PostCode page" in {
         enable(KnownFactsJourney)
 
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestBusinessPostCodeController.show(testGetRequest)
         status(result) shouldBe Status.OK
@@ -69,7 +69,7 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         "goto capture Business Entity page" in {
           enable(KnownFactsJourney)
 
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
 
           implicit val request = testPostRequest(testBusinessPostcode.postCode)
           val result = TestBusinessPostCodeController.submit(request)
@@ -86,7 +86,7 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         "reload the page with errors" in {
           enable(KnownFactsJourney)
 
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
 
           val result = TestBusinessPostCodeController.submit(testPostRequest(""))
           status(result) shouldBe Status.BAD_REQUEST

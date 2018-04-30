@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
@@ -34,7 +35,7 @@ import scala.concurrent.Future
 @Singleton
 class YourVatNumberController @Inject()(val controllerComponents: ControllerComponents,
                                         val storeVatNumberService: StoreVatNumberService)
-  extends AuthenticatedController() {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>

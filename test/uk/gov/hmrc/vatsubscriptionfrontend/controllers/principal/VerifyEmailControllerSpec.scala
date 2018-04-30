@@ -37,7 +37,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
       lazy val testGetRequest = FakeRequest("GET", "/verify-email").withSession(SessionKeys.emailKey -> testEmail)
 
       "go to the Verify Email page" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val result = TestVerifyEmailController.show(testGetRequest)
 
@@ -51,7 +51,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
       lazy val testGetRequest = FakeRequest("GET", "/verify-email")
 
       "throw exception" in {
-        mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Some("")))
+        mockAuthAdminRole()
 
         val result = TestVerifyEmailController.show(testGetRequest)
 

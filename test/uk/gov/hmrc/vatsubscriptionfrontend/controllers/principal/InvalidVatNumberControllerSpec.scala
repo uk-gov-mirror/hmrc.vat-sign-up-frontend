@@ -42,7 +42,7 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the known facts journey feature switch is enabled" should {
       "show the page" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         val request = testGetRequest
 
         val result = TestInvalidVatNumberController.show(request)
@@ -64,7 +64,7 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the known facts journey feature switch is enabled" should {
       "return NotImplemented" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestInvalidVatNumberController.submit(testPostRequest)
         status(result) shouldBe Status.NOT_IMPLEMENTED

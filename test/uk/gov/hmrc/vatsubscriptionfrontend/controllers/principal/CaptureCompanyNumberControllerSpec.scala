@@ -38,7 +38,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the show action of the Capture Company Number controller" should {
     "go to the Capture Company number page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestCaptureCompanyNumberController.show(testGetRequest)
       status(result) shouldBe Status.OK
@@ -51,7 +51,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
   "Calling the submit action of the Capture Company Number controller" when {
     "form successfully submitted" should {
       "goto confirm Company number page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val request = testPostRequest(testCompanyNumber)
 
@@ -65,7 +65,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCaptureCompanyNumberController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST

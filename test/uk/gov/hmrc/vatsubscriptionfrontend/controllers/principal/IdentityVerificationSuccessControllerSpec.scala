@@ -38,7 +38,7 @@ class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAp
 
   "Calling the show action of the Identity Verification Success controller" should {
     "show the success Identity Verification page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestIdentityVerificationSuccessController.show(request)
@@ -56,7 +56,7 @@ class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAp
 
     "the business entity is Sole Trader" should {
       "redirect to the Agree Capture Email page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         val result = TestIdentityVerificationSuccessController.submit(request(SoleTrader))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
@@ -65,7 +65,7 @@ class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAp
 
     "the business entity is Limited Company" should {
       "redirect to the Capture Company Number page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         val result = TestIdentityVerificationSuccessController.submit(request(LimitedCompany))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
@@ -74,7 +74,7 @@ class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAp
 
     "the business entity is Other" should {
       "redirect to the Capture Business Entity page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
         val result = TestIdentityVerificationSuccessController.submit(request(Other))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)

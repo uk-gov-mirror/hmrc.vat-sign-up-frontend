@@ -49,7 +49,7 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
   "Calling the show action of the Capture Vat Registration Date controller" should {
     "go to the Capture Vat Registration Date page" in {
       enable(KnownFactsJourney)
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestCaptureVatNumberController.show(testGetRequest)
       status(result) shouldBe Status.OK
@@ -63,7 +63,7 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
     "form successfully submitted" should {
       "redirect to the Business Postcode page" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
         val request = testPostRequest(yesterday)
@@ -79,7 +79,7 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
         enable(KnownFactsJourney)
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val invalidRequest = FakeRequest("POST", "/vat-registration-date")
           .withFormUrlEncodedBody("" -> "")

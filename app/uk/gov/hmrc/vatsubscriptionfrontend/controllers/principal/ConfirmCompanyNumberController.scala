@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.confirm_company_number
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 @Singleton
 class ConfirmCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
                                                val storeCompanyNumberService: StoreCompanyNumberService)
-  extends AuthenticatedController() {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsubscriptionfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsubscriptionfrontend.SessionKeys
 import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.views.html.principal.verify_email
 
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 @Singleton
 class VerifyEmailController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController() {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

@@ -73,7 +73,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the show action of the Check your answers controller" when {
     "all prerequisite data are in session" should {
       "go to the Check your answers page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.show(testGetRequest())
         status(result) shouldBe Status.OK
@@ -83,7 +83,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat number is missing" should {
       "go to capture vat number page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.show(testGetRequest(vatNumber = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -92,7 +92,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat registration date is missing" should {
       "go to capture vat registration date page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.show(testGetRequest(registrationDate = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -101,7 +101,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "post code is missing" should {
       "go to business post code page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.show(testGetRequest(postCode = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -110,7 +110,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "business entity is missing" should {
       "go to business entity page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.show(testGetRequest(businessType = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -119,7 +119,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "business entity is Other" should {
       "go to business entity page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.show(testGetRequest(businessType = Some(Other)))
         status(result) shouldBe Status.SEE_OTHER
@@ -132,7 +132,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "all prerequisite data are in" when {
       "store vat number returned StoreVatNumberSuccess" should {
         "goto capture your details controller" in {
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
           mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
           val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
@@ -142,7 +142,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned KnownFactsMismatch" should {
         "go to the could not confirm business page" in {
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
           mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -152,7 +152,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned InvalidVatNumber" should {
         "go to the invalid vat number page" in {
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
           mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -162,7 +162,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned IneligibleVatNumber" should {
         "go to the could not use service page" in {
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
           mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -172,7 +172,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned AlreadySubscribed" should {
         "go to the already signed up page" in {
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
           mockStoreVatNumberAlreadySubscribed(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -182,7 +182,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned a failure" should {
         "throw internal server exception" in {
-          mockAuthEmptyRetrieval()
+          mockAuthAdminRole()
           mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate)
 
           intercept[InternalServerException] {
@@ -194,7 +194,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat number is missing" should {
       "go to capture vat number page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = await(TestCheckYourAnswersController.submit(testPostRequest(vatNumber = None)))
 
@@ -204,7 +204,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat registration date is missing" should {
       "go to capture vat registration date page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(registrationDate = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -213,7 +213,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "post code is missing" should {
       "go to business post code page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(postCode = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -222,7 +222,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "business entity is missing" should {
       "go to business entity page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(businessType = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -231,7 +231,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "business entity is Other" should {
       "go to business entity page" in {
-        mockAuthEmptyRetrieval()
+        mockAuthAdminRole()
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(Other)))
         status(result) shouldBe Status.SEE_OTHER

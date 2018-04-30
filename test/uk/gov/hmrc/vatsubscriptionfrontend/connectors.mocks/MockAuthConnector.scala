@@ -20,7 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, Enrolments}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, Retrievals, ~}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -50,18 +50,22 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
     mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
   def mockAuthConfidenceLevelRetrieval(confidenceLevel: ConfidenceLevel): Unit =
-    mockAuthorise(retrievals = EmptyRetrieval and Retrievals.confidenceLevel)(Future.successful(new ~(Unit, confidenceLevel)))
+    mockAuthorise(retrievals = Retrievals.credentialRole and Retrievals.confidenceLevel)(Future.successful(new ~(Some(Admin), confidenceLevel)))
 
   def mockAuthRetrieveAgentEnrolment(): Unit =
     mockAuthorise(retrievals = Retrievals.allEnrolments)(Future.successful(Enrolments(Set(testAgentEnrolment))))
 
   def mockAuthRetrieveVatDecEnrolment(): Unit = {
     mockAuthorise(
-      retrievals = EmptyRetrieval and Retrievals.allEnrolments
+      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
     )(
-      Future.successful(new ~(Unit, Enrolments(Set(testVatDecEnrolment))))
+      Future.successful(new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment))))
     )
   }
+
+  def mockAuthAdminRole(): Unit =
+    mockAuthorise(retrievals = Retrievals.credentialRole)(Future.successful(Some(Admin)))
+
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

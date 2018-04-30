@@ -35,7 +35,7 @@ class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   "Calling the show action of the Agree Capture Email controller" should {
     "show the Agree Capture Email page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestAgreeCaptureEmailController.show(request)
@@ -47,7 +47,7 @@ class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   "Calling the submit action of the Agree Capture Email controller" should {
     "go to the business entity type page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestAgreeCaptureEmailController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

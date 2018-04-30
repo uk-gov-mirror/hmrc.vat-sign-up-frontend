@@ -35,7 +35,7 @@ class FailedMatchingControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
   "Calling the show action of the Agree Capture Email controller" should {
     "show the incorrect details page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
       val request = testGetRequest
 
       val result = TestFailedMatchingController.show(request)
@@ -47,7 +47,7 @@ class FailedMatchingControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
   "Calling the submit action of the Agree Capture Email controller" should {
     "go to capture your details page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthAdminRole()
 
       val result = TestFailedMatchingController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER
