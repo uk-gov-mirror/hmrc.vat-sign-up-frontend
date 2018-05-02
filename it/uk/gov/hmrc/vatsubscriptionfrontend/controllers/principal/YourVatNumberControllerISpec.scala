@@ -97,6 +97,20 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
           )
         }
       }
+
+      "redirect to the cannot use service page" when {
+        "the vat number is ineligible" in {
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubStoreVatNumberIneligible()
+
+          val res = post("/your-vat-number")()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CannotUseServiceController.show().url)
+          )
+        }
+      }
     }
 
     "the vat number is not on the profile" when {
