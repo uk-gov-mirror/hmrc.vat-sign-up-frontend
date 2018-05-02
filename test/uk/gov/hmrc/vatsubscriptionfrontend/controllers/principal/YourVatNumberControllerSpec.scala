@@ -111,6 +111,16 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
         }
       }
+      "the vat number is ineligible" should {
+        "redirect to the already subscribed page" in {
+          mockAuthRetrieveVatDecEnrolment()
+          mockStoreVatNumberIneligible(vatNumber = testVatNumber)
+
+          val result = TestYourVatNumberController.submit(testPostRequest)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+        }
+      }
 
       "store vat returns any other error" should {
         "throw internal server exception" in {
