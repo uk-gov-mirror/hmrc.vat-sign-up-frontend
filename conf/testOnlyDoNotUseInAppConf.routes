@@ -23,9 +23,18 @@ GET         /vat-through-software/sign-up/test-only/stub-user            uk.gov.
 POST        /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
 
 
-->          /                                                            prod.Routes
-
 GET         /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.FeatureSwitchController.show
 
 #NOCSRF
 POST        /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.FeatureSwitchController.submit
+
+
+GET         /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubIssuerController.show
+
+#NOCSRF
+POST        /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubIssuerController.submit
+
+
+
+->          /                                                            prod.Routes
+

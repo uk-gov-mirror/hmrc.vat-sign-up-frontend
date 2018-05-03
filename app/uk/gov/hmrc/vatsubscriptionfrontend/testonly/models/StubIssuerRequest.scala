@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsubscriptionfrontend
+package uk.gov.hmrc.vatsubscriptionfrontend.testonly.models
 
-object Constants {
-  val StoreVatNumberNoRelationshipCodeKey = "CODE"
-  val StoreVatNumberNoRelationshipCodeValue = "RELATIONSHIP_NOT_FOUND"
-  val StoreVatNumberKnownFactsMismatchCodeValue = "KNOWN_FACTS_MISMATCH"
-  val StoreIdentityVerificationUrlKey = "journeyLink"
+import uk.gov.hmrc.vatsubscriptionfrontend.models.DateModel
 
-  object Enrolments {
-    val agentEnrolmentKey = "HMRC-AS-AGENT"
-    val VatDecEnrolmentKey = "HMCE-VATDEC-ORG"
-    val VatReferenceKey = "VATRegNo"
-  }
 
-  object TaxEnrolments {
-    val serviceName = "HMRC-MTD-VAT"
-  }
+case class StubIssuerRequest(safeId: String,
+                             isSuccessful: Boolean,
+                             vatNumber: Option[String],
+                             postCode: Option[String],
+                             registrationDate: Option[DateModel],
+                             errorMessage: Option[String]
+                            )
 
-  val skipIvJourneyValue = "skipIdentityVerification"
-}
