@@ -5,8 +5,8 @@ error.address.invalid.character                                        = This li
 
 
 ## Service Name
-service_name.principal_journey                                         = Use software to submit your VAT returns
-service_name.agent_journey                                             = Use software to submit your client''s VAT returns
+service_name.principal_journey                                         = Use software to submit your VAT Returns
+service_name.agent_journey                                             = Use software to submit your client''s VAT Returns
 
 ## Base
 base.continue                                                          = Continue
@@ -344,10 +344,10 @@ principal.identity_verification_success.line_1                         = You can
 principal.terms.title                                                  = Terms of participation
 principal.terms.heading                                                = Terms of participation
 principal.terms.line_1                                                 = By taking part in this trial, you agree to:
-principal.terms.bullet_1                                               = use relevant software to record your sales and purchases, then to submit your VAT returns
+principal.terms.bullet_1                                               = use relevant software to record your sales and purchases, then to submit your VAT Returns
 principal.terms.bullet_2                                               = submit each VAT Return within one calendar month and 7 days from the end of your accounting period
 principal.terms.bullet_3                                               = authorise any third party you use (such as your accountant) and have responsibility for any information they give to HMRC on your behalf
-principal.terms.bullet_4                                               = tell HMRC if you stop trading and then submit your final VAT return
+principal.terms.bullet_4                                               = tell HMRC if you stop trading and then submit your final VAT Return
 principal.terms.bullet_5                                               = tell HMRC if you want to leave this trial
 principal.terms.line_2                                                 = These terms are not contractual and you can stop taking part in the trial at any time.
 

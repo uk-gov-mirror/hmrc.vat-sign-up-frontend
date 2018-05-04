@@ -395,10 +395,10 @@ object MessageLookup {
     val title = "Terms of participation"
     val heading: String = title
     val line1 = "By taking part in this trial, you agree to:"
-    val bullet1 = "use relevant software to record your sales and purchases, then to submit your VAT returns"
+    val bullet1 = "use relevant software to record your sales and purchases, then to submit your VAT Returns"
     val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of your accounting period"
     val bullet3 = "authorise any third party you use (such as your accountant) and have responsibility for any information they give to HMRC on your behalf"
-    val bullet4 = "tell HMRC if you stop trading and then submit your final VAT return"
+    val bullet4 = "tell HMRC if you stop trading and then submit your final VAT Return"
     val bullet5 = "tell HMRC if you want to leave this trial"
     val line2 = "These terms are not contractual and you can stop taking part in the trial at any time."
   }
