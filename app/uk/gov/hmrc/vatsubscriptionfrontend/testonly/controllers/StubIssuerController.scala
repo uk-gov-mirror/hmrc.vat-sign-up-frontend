@@ -20,10 +20,9 @@ package uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsubscriptionfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsubscriptionfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsubscriptionfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.forms.StubIssuerRequestForm._
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.models.StubIssuerRequest
 import uk.gov.hmrc.vatsubscriptionfrontend.testonly.services.StubIssuerService
@@ -34,37 +33,37 @@ import scala.concurrent.Future
 @Singleton
 class StubIssuerController @Inject()(val controllerComponents: ControllerComponents,
                                      stubIssuerService: StubIssuerService
-                                    ) extends FrontendController with I18nSupport {
-
-  override val messagesApi: MessagesApi = controllerComponents.messagesApi
-
-  implicit val appConfig: AppConfig = controllerComponents.appConfig
+                                    ) extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(
-      Ok(stub_issuer(stubIssuerForm.fill(StubIssuerRequest(
-        vatNumber = "",
-        isSuccessful = true,
-        postCode = None,
-        registrationDate = None,
-        errorMessage = None
-      )), routes.StubIssuerController.submit()))
-    )
+    authorised() {
+      Future.successful(
+        Ok(stub_issuer(stubIssuerForm.fill(StubIssuerRequest(
+          vatNumber = "",
+          isSuccessful = true,
+          postCode = None,
+          registrationDate = None,
+          errorMessage = None
+        )), routes.StubIssuerController.submit()))
+      )
+    }
   }
 
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    stubIssuerForm.bindFromRequest.fold(
-      formWithErrors =>
-        Future.successful(
-          BadRequest(stub_issuer(formWithErrors, routes.StubIssuerController.submit()))
-        ),
-      stubIssuerRequest =>
-        stubIssuerService.callIssuer(stubIssuerRequest).map {
-          case Right(_) => Ok("success")
-          case Left(err) => BadGateway(err.toString)
-        }
-    )
+    authorised() {
+      stubIssuerForm.bindFromRequest.fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(stub_issuer(formWithErrors, routes.StubIssuerController.submit()))
+          ),
+        stubIssuerRequest =>
+          stubIssuerService.callIssuer(stubIssuerRequest).map {
+            case Right(_) => Ok("success")
+            case Left(err) => BadGateway(err.toString)
+          }
+      )
+    }
   }
 
 }
