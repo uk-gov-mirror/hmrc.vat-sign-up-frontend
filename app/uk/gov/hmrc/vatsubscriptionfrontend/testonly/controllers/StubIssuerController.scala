@@ -43,9 +43,8 @@ class StubIssuerController @Inject()(val controllerComponents: ControllerCompone
   val show: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(
       Ok(stub_issuer(stubIssuerForm.fill(StubIssuerRequest(
-        safeId = "",
+        vatNumber = "",
         isSuccessful = true,
-        vatNumber = None,
         postCode = None,
         registrationDate = None,
         errorMessage = None

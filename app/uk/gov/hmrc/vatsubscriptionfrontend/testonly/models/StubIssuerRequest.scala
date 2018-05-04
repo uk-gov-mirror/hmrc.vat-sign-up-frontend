@@ -19,9 +19,8 @@ package uk.gov.hmrc.vatsubscriptionfrontend.testonly.models
 import uk.gov.hmrc.vatsubscriptionfrontend.models.DateModel
 
 
-case class StubIssuerRequest(safeId: String,
+case class StubIssuerRequest(vatNumber: String,
                              isSuccessful: Boolean,
-                             vatNumber: Option[String],
                              postCode: Option[String],
                              registrationDate: Option[DateModel],
                              errorMessage: Option[String]
