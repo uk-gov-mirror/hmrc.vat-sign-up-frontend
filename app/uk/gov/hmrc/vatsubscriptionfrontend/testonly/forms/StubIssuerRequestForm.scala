@@ -30,14 +30,11 @@ import scala.util.Try
 
 object StubIssuerRequestForm {
 
-  val safeId = "safeId"
   val isSuccessful = "isSuccessful"
   val vatNumber = "vatNumber"
   val postCode = "postCode"
   val vatRegistrationDate = "vatRegistrationDate"
   val errorMessage = "errorMessage"
-
-  val safeIdRegex = """^[A-Za-z0-9\-]{1,36}$"""
 
   val vatRegistrationDateInvalid: Constraint[DateModel] = constraint[DateModel](
     date => {
@@ -69,9 +66,8 @@ object StubIssuerRequestForm {
 
   val stubIssuerForm: Form[StubIssuerRequest] = Form(
     mapping(
-      safeId -> text.verifying("Please enter a valid safe id", _ matches safeIdRegex),
+      vatNumber -> text.verifying("error.invalid_vat_number", _ matches vatNumberRegex),
       isSuccessful -> boolean,
-      vatNumber -> dependsOn(isSuccessful = true)(text.verifying("error.invalid_vat_number", _ matches vatNumberRegex)),
       postCode -> dependsOn(isSuccessful = true)(text.verifying("error.invalid_postcode", _ matches postcodeRegex)),
       vatRegistrationDate -> dependsOn(isSuccessful = true)(dateMapping.verifying(vatRegistrationDateInvalid)),
       errorMessage -> dependsOn(isSuccessful = false)(text.verifying("Please enter a valid error message", x=> x.nonEmpty && (x matches iso8859_1Regex)))

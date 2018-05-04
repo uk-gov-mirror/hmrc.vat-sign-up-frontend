@@ -35,13 +35,14 @@
     @summaryErrorHelper(stubIssuerRequestForm)
 
     @form(action = postAction) {
+
+        <h2 class="heading-medium">Enter the VAT number</h2>
         @inputHelper(
-            field = stubIssuerRequestForm(safeId),
-            label = "Enter the safe ID",
-            parentForm = stubIssuerRequestForm,
-            hideLabel = false,
-            labelBold = true
+            field = stubIssuerRequestForm(vatNumber),
+            label = "Enter the VAT number",
+            parentForm = stubIssuerRequestForm
         )
+
         <div class="form-group">
             <h2 class="heading-medium">Select desired ETMP behaviour</h2>
             <fieldset class="inline">
@@ -55,13 +56,6 @@
                 </div>
 
                 <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("true")) { js-hidden }" id="succeeded">
-                    @inputHelper(
-                        field = stubIssuerRequestForm(vatNumber),
-                        label = "Enter the VAT number",
-                        parentForm = stubIssuerRequestForm,
-                        hideLabel = false,
-                        labelBold = true
-                    )
 
                     @inputHelper(
                         field = stubIssuerRequestForm(postCode),

@@ -32,14 +32,13 @@ class StubIssuerService @Inject()(issuerConnector: IssuerConnector) {
   def callIssuer(stubIssuerRequest: StubIssuerRequest)(implicit hc: HeaderCarrier): Future[IssuerResponse] = {
     if (stubIssuerRequest.isSuccessful)
       issuerConnector.issuerSuccess(
-        safeId = stubIssuerRequest.safeId.replaceAll(" ", "").toUpperCase,
-        vatNumber = stubIssuerRequest.vatNumber.get.replaceAll(" ", "").toUpperCase,
+        vatNumber = stubIssuerRequest.vatNumber.replaceAll(" ", "").toUpperCase,
         postCode = stubIssuerRequest.postCode.get.replaceAll(" ", "").toUpperCase,
         registrationDate = stubIssuerRequest.registrationDate.get.toLocalDate.toString
       )
     else
       issuerConnector.issuerFail(
-        safeId = stubIssuerRequest.safeId.replaceAll(" ", "").toUpperCase,
+        vatNumber = stubIssuerRequest.vatNumber.replaceAll(" ", "").toUpperCase,
         reason = stubIssuerRequest.errorMessage.get
       )
   }

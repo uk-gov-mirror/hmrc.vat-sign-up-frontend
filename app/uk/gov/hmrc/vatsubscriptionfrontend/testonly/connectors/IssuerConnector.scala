@@ -33,10 +33,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class IssuerConnector @Inject()(val http: HttpClient,
                                 val applicationConfig: AppConfig) {
 
-  private def issuerUrl(safeId: String) = s"${applicationConfig.taxEnrolmentUrl}/tax-enrolments/subscriptions/$safeId/issuer"
+  private def issuerUrl(safeId: String) = s"${applicationConfig.taxEnrolmentsUrl}/tax-enrolments/subscriptions/$safeId/issuer"
 
-  def issuerSuccess(safeId: String, vatNumber: String, postCode: String, registrationDate: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[IssuerResponse] =
-    http.PUT[JsObject, IssuerResponse](issuerUrl(safeId),
+  def issuerSuccess(vatNumber: String, postCode: String, registrationDate: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[IssuerResponse] =
+    http.PUT[JsObject, IssuerResponse](issuerUrl(vatNumber),
       Json.obj(
         "serviceName" -> serviceName,
         "identifiers" -> Json.arr(
@@ -47,7 +47,7 @@ class IssuerConnector @Inject()(val http: HttpClient,
         ),
         "verifiers" -> Json.arr(
           Json.obj(
-            "key" -> "PostCode",
+            "key" -> "Postcode",
             "value" -> postCode
           ),
           Json.obj(
@@ -59,8 +59,8 @@ class IssuerConnector @Inject()(val http: HttpClient,
       )
     )
 
-  def issuerFail(safeId: String, reason: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[IssuerResponse] =
-    http.PUT[JsObject, IssuerResponse](issuerUrl(safeId),
+  def issuerFail(vatNumber: String, reason: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[IssuerResponse] =
+    http.PUT[JsObject, IssuerResponse](issuerUrl(vatNumber),
       Json.obj(
         "serviceName" -> serviceName,
         "subscriptionState" -> "ERROR",
