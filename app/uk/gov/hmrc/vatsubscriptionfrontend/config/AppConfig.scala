@@ -57,18 +57,18 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val whitelistIps: Seq[String] = whitelistConfig("ip-whitelist.urls")
   lazy val ipExclusionList: Seq[Call] = whitelistConfig("ip-whitelist.excludeCalls").map(ip => Call("GET", ip))
 
-  lazy val protectedMicroServiceUrl = baseUrl("subscription-service")
-  lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number"
+  lazy val protectedMicroServiceUrl = baseUrl("vat-sign-up") + "/vat-sign-up"
+  lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/subscription-request/vat-number"
 
   def vatNumberEligibilityUrl(vatNumber: String): String =
-    s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/mtdfb-eligibility"
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/mtdfb-eligibility"
 
-  def storeCompanyNumberUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/company-number"
+  def storeCompanyNumberUrl(vatNumber: String) = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/company-number"
 
-  def storeEmailAddressUrl(vatNumber: String) = s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/email"
+  def storeEmailAddressUrl(vatNumber: String) = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/email"
 
   def storeIdentityVerificationUrl(vatNumber: String): String =
-    s"$protectedMicroServiceUrl/vat-subscription/subscription-request/vat-number/$vatNumber/identity-verification"
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/identity-verification"
 
   lazy val btaUrl = loadConfig("bta.url")
 
@@ -106,5 +106,5 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val hasEnabledTestOnlyRoutes: Boolean =
     runModeConfiguration.getString("application.router").get == "testOnlyDoNotUseInAppConf.Routes"
 
-  lazy val backendFeatureSwitchUrl: String = s"$protectedMicroServiceUrl/vat-subscription/test-only/feature-switch"
+  lazy val backendFeatureSwitchUrl: String = s"$protectedMicroServiceUrl/test-only/feature-switch"
 }

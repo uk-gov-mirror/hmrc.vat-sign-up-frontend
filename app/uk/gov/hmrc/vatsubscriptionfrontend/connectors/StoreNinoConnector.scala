@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class StoreNinoConnector @Inject()(val http: HttpClient,
                                    val applicationConfig: AppConfig) {
 
-  private def storeNinoUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/vat-subscription/subscription-request/vat-number/$vatNumber/nino"
+  private def storeNinoUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/nino"
 
   def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     http.PUT[JsObject, StoreNinoResponse](storeNinoUrl(vatNumber),

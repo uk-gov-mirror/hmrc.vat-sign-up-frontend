@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsubscriptionfrontend.Constants.StoreIdentityVerificationUr
 
 object StoreIdentityVerificationStub extends WireMockMethods {
   def stubStoreIdentityVerification(vatNumber: String, continueUrl: String)(responseStatus: Int): Unit = {
-    when(method = POST, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/identity-verification",
+    when(method = POST, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/identity-verification",
       body = Json.obj(StoreIdentityVerificationUrlKey -> continueUrl))
       .thenReturn(status = responseStatus)
   }

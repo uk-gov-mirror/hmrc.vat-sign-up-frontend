@@ -30,7 +30,7 @@ object StoreCompanyNumberStub extends WireMockMethods {
   )
 
   def stubStoreCompanyNumber(vatNumber: String, companyNumber: String)(responseStatus: Int): Unit = {
-    when(method = PUT, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/company-number",
+    when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/company-number",
       body = Json.obj("companyNumber" -> companyNumber))
       .thenReturn(status = responseStatus)
   }
