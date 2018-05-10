@@ -23,27 +23,27 @@ import uk.gov.hmrc.vatsubscriptionfrontend.Constants.{StoreVatNumberNoRelationsh
 object VatEligibilityStub extends WireMockMethods {
 
   def stubVatNumberEligibilitySuccess(vatNumber: String): Unit = {
-    when(method = GET, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
+    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
       .thenReturn(status = NO_CONTENT)
   }
 
   def stubVatNumberEligibilityFailure(vatNumber: String): Unit = {
-    when(method = GET, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
+    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
       .thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue))
   }
 
   def stubVatNumberIneligibleForMtd(vatNumber: String): Unit = {
-    when(method = GET, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
+    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
       .thenReturn(status = BAD_REQUEST)
   }
 
   def stubVatNumberEligibilityInvalid(vatNumber: String): Unit = {
-    when(method = GET, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
+    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
       .thenReturn(status = NOT_FOUND)
   }
 
   def stubVatNumberEligibilityAlreadySubscribed(vatNumber: String): Unit = {
-    when(method = GET, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
+    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
       .thenReturn(status = CONFLICT)
   }
 

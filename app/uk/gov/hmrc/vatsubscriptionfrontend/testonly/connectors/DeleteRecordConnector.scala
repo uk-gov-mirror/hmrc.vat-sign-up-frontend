@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteRecordConnector @Inject()(val http: HttpClient,
                                       val applicationConfig: AppConfig) {
 
-  private def deleteRecordUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/vat-subscription/test-only/vat-number/$vatNumber"
+  private def deleteRecordUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/test-only/vat-number/$vatNumber"
 
   def deleteRecord(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeleteRecordResponse] =
     http.DELETE[DeleteRecordResponse](deleteRecordUrl(vatNumber))

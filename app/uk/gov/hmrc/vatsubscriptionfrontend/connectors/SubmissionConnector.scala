@@ -30,7 +30,7 @@ class SubmissionConnector @Inject()(val http: HttpClient,
                                     val applicationConfig: AppConfig) {
 
   private def url(vatNumber: String): String =
-    s"${applicationConfig.protectedMicroServiceUrl}/vat-subscription/subscription-request/vat-number/$vatNumber/submit"
+    s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/submit"
 
   def submit(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[SubmissionResponse] =
     http.POSTEmpty[SubmissionResponse](url(vatNumber))

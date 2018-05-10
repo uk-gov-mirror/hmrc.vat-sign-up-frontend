@@ -38,7 +38,7 @@ class StoreVatNumberConnectorSpec extends UnitSpec with MockitoSugar{
     "use the correct url" when {
 
       "storing the vat number" in {
-        TestStoreVatNumberConnector.applicationConfig.storeVatNumberUrl should endWith(s"/vat-subscription/subscription-request/vat-number")
+        TestStoreVatNumberConnector.applicationConfig.storeVatNumberUrl should endWith(s"/vat-sign-up/subscription-request/vat-number")
       }
 
     }

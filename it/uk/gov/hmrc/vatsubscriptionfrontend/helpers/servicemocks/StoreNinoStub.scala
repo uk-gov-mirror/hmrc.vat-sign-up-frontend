@@ -30,7 +30,7 @@ object StoreNinoStub extends WireMockMethods {
   )
 
   def stubStoreNino(vatNumber: String, userDetailsModel: UserDetailsModel)(responseStatus: Int): Unit = {
-    when(method = PUT, uri = s"/vat-subscription/subscription-request/vat-number/$vatNumber/nino",
+    when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/nino",
       body = toJson(userDetailsModel))
       .thenReturn(status = responseStatus)
   }

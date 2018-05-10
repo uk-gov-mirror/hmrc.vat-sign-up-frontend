@@ -44,8 +44,8 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
-    "microservice.services.subscription-service.host" -> mockHost,
-    "microservice.services.subscription-service.port" -> mockPort,
+    "microservice.services.vat-sign-up.host" -> mockHost,
+    "microservice.services.vat-sign-up.port" -> mockPort,
     "microservice.services.identity-verification-proxy.host" -> mockHost,
     "microservice.services.identity-verification-proxy.port" -> mockPort
   )

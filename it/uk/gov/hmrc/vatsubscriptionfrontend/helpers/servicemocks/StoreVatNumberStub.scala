@@ -25,34 +25,34 @@ import uk.gov.hmrc.vatsubscriptionfrontend.models.{DateModel, PostCode}
 object StoreVatNumberStub extends WireMockMethods {
 
   def stubStoreVatNumberSuccess(): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = CREATED)
   }
 
   def stubStoreVatNumberNoRelationship(): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = FORBIDDEN, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue))
   }
 
   def stubStoreVatNumberIneligible(): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = UNPROCESSABLE_ENTITY)
   }
 
 
   def stubStoreVatNumberAlreadySignedUp(): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = CONFLICT)
   }
 
   def stubStoreVatNumberFailure(): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
       .thenReturn(status = BAD_REQUEST)
   }
 
 
   def stubStoreVatNumberSuccess(postCode: PostCode, registrationDate: DateModel): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       Json.obj(
         "vatNumber" -> testVatNumber,
         "postCode" -> postCode.postCode,
@@ -62,7 +62,7 @@ object StoreVatNumberStub extends WireMockMethods {
   }
 
   def stubStoreVatNumberKnownFactsMismatch(postCode: PostCode, registrationDate: DateModel): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       Json.obj(
         "vatNumber" -> testVatNumber,
         "postCode" -> postCode.postCode,
@@ -72,7 +72,7 @@ object StoreVatNumberStub extends WireMockMethods {
   }
 
   def stubStoreVatNumberInvalid(postCode: PostCode, registrationDate: DateModel): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       Json.obj(
         "vatNumber" -> testVatNumber,
         "postCode" -> postCode.postCode,
@@ -82,7 +82,7 @@ object StoreVatNumberStub extends WireMockMethods {
   }
 
   def stubStoreVatNumberIneligible(postCode: PostCode, registrationDate: DateModel): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       Json.obj(
         "vatNumber" -> testVatNumber,
         "postCode" -> postCode.postCode,
@@ -92,7 +92,7 @@ object StoreVatNumberStub extends WireMockMethods {
   }
 
   def stubStoreVatNumberAlreadySignedUp(postCode: PostCode, registrationDate: DateModel): Unit = {
-    when(method = POST, uri = "/vat-subscription/subscription-request/vat-number", body =
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       Json.obj(
         "vatNumber" -> testVatNumber,
         "postCode" -> postCode.postCode,

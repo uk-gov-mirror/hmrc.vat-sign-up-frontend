@@ -22,12 +22,12 @@ import uk.gov.hmrc.vatsubscriptionfrontend.helpers.IntegrationTestConstants.test
 object SubmissionStub extends WireMockMethods {
 
   def stubSubmissionSuccess(): Unit = {
-    when(method = POST, uri = s"/vat-subscription/subscription-request/vat-number/$testVatNumber/submit")
+    when(method = POST, uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/submit")
       .thenReturn(status = NO_CONTENT)
   }
 
   def stubSubmissionFailure(): Unit = {
-    when(method = POST, uri = s"/vat-subscription/subscription-request/vat-number/$testVatNumber/submit")
+    when(method = POST, uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/submit")
       .thenReturn(status = INTERNAL_SERVER_ERROR)
   }
 
