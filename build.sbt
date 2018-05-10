@@ -1,7 +1,7 @@
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
-name := "vat-subscription-frontend"
+name := "vat-sign-up-frontend"
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
