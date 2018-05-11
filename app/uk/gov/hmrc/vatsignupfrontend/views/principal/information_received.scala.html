@@ -1,0 +1,57 @@
+@*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
+@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
+
+@(entityType: BusinessEntity)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-complete.js")></script>
+}
+
+@principal_main_template(title = Messages("principal.confirmation.title"), scriptElem = Some(scripts), showSignOutLink = false) {
+
+    <div data-entity-type="@entityType.toString" class="govuk-box-highlight">
+        <section id="confirmation-heading">
+            <h1 class="heading-xlarge">@Messages("principal.confirmation.heading")</h1>
+        </section>
+    </div>
+
+    <section id="what-happens-next">
+        <h2 class="heading-medium">@Messages("principal.confirmation.subsection_1.heading")</h2>
+        <p>@Messages("principal.confirmation.subsection_1.line_1")</p>
+    </section>
+
+    <section id="when-your-application-is-approved">
+        <h2 class="heading-medium">@Messages("principal.confirmation.subsection_2.heading")</h2>
+        <ol class="list list-number">
+            <li>@Messages("principal.confirmation.subsection_2.bullet_1")</li>
+            <li>@Messages("principal.confirmation.subsection_2.bullet_2")</li>
+            <li>@Messages("principal.confirmation.subsection_2.bullet_3")</li>
+            <li>@Messages("principal.confirmation.subsection_2.bullet_4")</li>
+            <li>@Messages("principal.confirmation.subsection_2.bullet_5")</li>
+        </ol>
+        <p>@Html(Messages("principal.confirmation.subsection_2.line_1", appConfig.btaUrl))</p>
+    </section>
+
+    <div class = "form-group">
+        @signOutButton()
+    </div>
+
+}

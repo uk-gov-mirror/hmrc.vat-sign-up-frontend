@@ -1,0 +1,52 @@
+@*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
+@import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.play.views.html.helpers._
+
+
+@(businessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-other-entity.js")></script>
+}
+
+@agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts)) {
+
+    @summaryErrorHelper(businessEntityForm)
+
+    <h1 class="heading-large">@Messages("agent.capture_entity_type.heading")</h1>
+
+    @form(action = postAction) {
+
+        @radioHelper(
+            parentForm = businessEntityForm,
+            inline = false,
+            options = Seq((soleTrader, Messages("agent.capture_entity_type.soleTrader")),
+                          (limitedCompany, Messages("agent.capture_entity_type.limitedCompany")),
+                          (other, Messages("agent.capture_entity_type.other"))),
+            legend = Messages("agent.capture_entity_type.heading"),
+            field = businessEntityForm(businessEntity)
+        )
+
+        @continueButton()
+    }
+}
