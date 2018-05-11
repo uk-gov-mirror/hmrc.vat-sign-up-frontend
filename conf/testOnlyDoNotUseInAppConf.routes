@@ -12,27 +12,27 @@
 # Add all the application routes to the prod.routes file
 
 
-GET         /vat-through-software/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.show
+GET         /vat-through-software/sign-up/test-only/delete-record        uk.gov.hmrc.vatsignupfrontend.testonly.controllers.DeleteRecordController.show
 
 # NOCSRF
-POST        /vat-through-software/sign-up/test-only/delete-record        uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.DeleteRecordController.submit
+POST        /vat-through-software/sign-up/test-only/delete-record        uk.gov.hmrc.vatsignupfrontend.testonly.controllers.DeleteRecordController.submit
 
-GET         /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.show
+GET         /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubCitizenDetailsUserController.show
 
 # NOCSRF
-POST        /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
+POST        /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
 
 
-GET         /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.FeatureSwitchController.show
-
-#NOCSRF
-POST        /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.FeatureSwitchController.submit
-
-
-GET         /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubIssuerController.show
+GET         /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsignupfrontend.testonly.controllers.FeatureSwitchController.show
 
 #NOCSRF
-POST        /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsubscriptionfrontend.testonly.controllers.StubIssuerController.submit
+POST        /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsignupfrontend.testonly.controllers.FeatureSwitchController.submit
+
+
+GET         /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubIssuerController.show
+
+#NOCSRF
+POST        /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubIssuerController.submit
 
 
 

@@ -7,7 +7,7 @@ lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
   Seq(
     // Semicolon-separated list of regexs matching classes to exclude
-    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;core.config.*;com.*;uk.gov.hmrc.vatsubscriptionfrontend.views.html.*;testonly.*;business.*;testOnlyDoNotUseInAppConf.*;",
+    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;core.config.*;com.*;uk.gov.hmrc.vatsignupfrontend.views.html.*;testonly.*;business.*;testOnlyDoNotUseInAppConf.*;",
     ScoverageKeys.coverageMinimum := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
