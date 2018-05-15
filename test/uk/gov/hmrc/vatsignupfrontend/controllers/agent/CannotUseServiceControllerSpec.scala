@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -35,8 +34,6 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the show action of the cannot use service controller" should {
     "show the cannot use service page" in {
-
-      enable(KnownFactsJourney)
 
       mockAuthEmptyRetrieval()
       val request = testGetRequest

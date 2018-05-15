@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -26,8 +25,6 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
   "GET /client/cannot-use-service-yet" should {
     "return an OK" in {
 
-      enable(KnownFactsJourney)
-
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/client/cannot-use-service-yet")
@@ -35,20 +32,6 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
       res should have(
         httpStatus(OK)
       )
-    }
-  }
-
-  "Making a request to /client/cannot-use-service-yet when feature switch not enabled" should {
-    "return NotFound" in {
-      disable(KnownFactsJourney)
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/client/cannot-use-service-yet")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-
     }
   }
 
