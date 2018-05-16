@@ -35,7 +35,7 @@ class StubIssuerService @Inject()(issuerConnector: IssuerConnector) {
       issuerConnector.issuerSuccess(
         vatNumber = stubIssuerRequest.vatNumber.replaceAll(" ", "").toUpperCase,
         postCode = stubIssuerRequest.postCode.get.replaceAll(" ", "").toUpperCase,
-        registrationDate = stubIssuerRequest.registrationDate.get.toLocalDate.format(DateTimeFormatter.ofPattern("dd/mm/yy"))
+        registrationDate = stubIssuerRequest.registrationDate.get.toLocalDate.format(DateTimeFormatter.ofPattern("dd/MM/yy"))
       )
     else
       issuerConnector.issuerFail(
