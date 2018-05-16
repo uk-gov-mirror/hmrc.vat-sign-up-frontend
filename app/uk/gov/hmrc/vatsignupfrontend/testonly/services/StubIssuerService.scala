@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.testonly.services
 
-import javax.inject.{Inject, Singleton}
+import java.time.format.DateTimeFormatter
 
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.testonly.connectors.IssuerConnector
 import uk.gov.hmrc.vatsignupfrontend.testonly.httpparsers.IssuerHttpParser.IssuerResponse
@@ -34,7 +35,7 @@ class StubIssuerService @Inject()(issuerConnector: IssuerConnector) {
       issuerConnector.issuerSuccess(
         vatNumber = stubIssuerRequest.vatNumber.replaceAll(" ", "").toUpperCase,
         postCode = stubIssuerRequest.postCode.get.replaceAll(" ", "").toUpperCase,
-        registrationDate = stubIssuerRequest.registrationDate.get.toLocalDate.toString
+        registrationDate = stubIssuerRequest.registrationDate.get.toLocalDate.format(DateTimeFormatter.ofPattern("dd/mm/yy"))
       )
     else
       issuerConnector.issuerFail(
