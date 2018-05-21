@@ -32,30 +32,13 @@ You will need [sbt](http://www.scala-sbt.org/)
 
 
 4) **Start the frontend service:**
+   
+   `sm --stop VAT_SIGN_UP_FRONTEND`
 
    `sbt "run 9566" -Dapplication.router=testOnlyDoNotUseInAppConf.Routes`
 
 
-5) **Clone the protected service:**
-
-  - SSH
-
-     `git clone git@github.com:hmrc/vat-sign-up.git`
-
-  - HTTPS
-
-     `git clone https://github.com/hmrc/vat-sign-up.git`
-
-
-6) **Start the protected service:**
-
-   `sbt "run 9572" -Dapplication.router=testOnlyDoNotUseInAppConf.Routes`
-
-7) **Start the stubbed vat.business.services:**
-
-   `sm --start VAT_SIGN_UP_STUBS -f`
-
-8) **Go to the homepage:**
+5) **Go to the homepage:**
 
    http://localhost:9566/vat-through-software/sign-up/
 
