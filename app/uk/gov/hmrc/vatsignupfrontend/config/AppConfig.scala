@@ -67,8 +67,13 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def storeEmailAddressUrl(vatNumber: String) = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/email"
 
+  def getCompanyName(companyNumber: String)  = s"$protectedMicroServiceUrl/company-number/$companyNumber/company-name"
+
+  // todo feature switch between real and stub
+  def incorporationInformationUrl: String = loadConfig("microservice.services.incorporation-information.url")
+
   def storeIdentityVerificationUrl(vatNumber: String): String =
-    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/identity-verification"
+    s"$incorporationInformationUrl/subscription-request/vat-number/$vatNumber/identity-verification"
 
   lazy val btaUrl = loadConfig("bta.url")
 

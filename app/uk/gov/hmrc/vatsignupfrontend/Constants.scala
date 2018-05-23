@@ -22,6 +22,8 @@ object Constants {
   val StoreVatNumberKnownFactsMismatchCodeValue = "KNOWN_FACTS_MISMATCH"
   val StoreIdentityVerificationUrlKey = "journeyLink"
 
+  val GetCompanyNameCodeKey = "company_name"
+
   object Enrolments {
     val agentEnrolmentKey = "HMRC-AS-AGENT"
     val VatDecEnrolmentKey = "HMCE-VATDEC-ORG"
