@@ -22,6 +22,7 @@ object MessageLookup {
     val continue = "Continue"
     val continueToSignUp = "Continue to sign up"
     val confirmAndContinue = "Confirm and continue"
+    val confirm = "Confirm"
     val acceptAndContinue = "Accept and continue"
     val agreeAndContinue = "Agree and continue"
     val submit = "Submit"
@@ -389,6 +390,12 @@ object MessageLookup {
     val heading: String = title
     val companyNumberHeading = "Company number"
     val link = "Change company number"
+  }
+
+  object PrincipalConfirmCompany {
+    val title = "Confirm your company"
+    val heading: String = title
+    val link = "Change company"
   }
 
   object PrincipalTerms {
