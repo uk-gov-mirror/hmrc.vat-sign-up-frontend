@@ -15,6 +15,10 @@ POST        /your-vat-number                       uk.gov.hmrc.vatsignupfrontend
 GET        /could-not-confirm-vat-number           uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.show
 POST       /could-not-confirm-vat-number           uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.submit
 
+# Company Name not found
+GET        /company-name-not-found                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.show
+POST       /company-name-not-found                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.submit
+
 # Sign in with another login
 GET         /sign-in-with-different-details        uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignInWithDifferentDetailsController.show
 
