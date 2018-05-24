@@ -47,7 +47,8 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
     "microservice.services.vat-sign-up.host" -> mockHost,
     "microservice.services.vat-sign-up.port" -> mockPort,
     "microservice.services.identity-verification-proxy.host" -> mockHost,
-    "microservice.services.identity-verification-proxy.port" -> mockPort
+    "microservice.services.identity-verification-proxy.port" -> mockPort,
+    "microservice.services.incorporation-information.url" -> mockUrl
   )
 
   override def beforeAll(): Unit = {
