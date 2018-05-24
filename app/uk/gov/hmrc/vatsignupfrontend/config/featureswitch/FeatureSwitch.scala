@@ -28,7 +28,8 @@ object FeatureSwitch {
 
   val switches: Set[FeatureSwitch] = Set(
     KnownFactsJourney,
-    CompanyNameJourney
+    CompanyNameJourney,
+    StubIncorporationInformation
   )
 
   def apply(str: String): FeatureSwitch =
@@ -49,4 +50,9 @@ case object KnownFactsJourney extends FeatureSwitch {
 case object CompanyNameJourney extends FeatureSwitch {
   override val name: String = s"$prefix.company-name-journey"
   override val displayText: String = "Enable company name confirmation for principal users"
+}
+
+case object StubIncorporationInformation extends FeatureSwitch {
+  override val name: String = s"$prefix.stub-incorporation-information"
+  override val displayText: String = "Use Stub for Incorporation Information Connection"
 }
