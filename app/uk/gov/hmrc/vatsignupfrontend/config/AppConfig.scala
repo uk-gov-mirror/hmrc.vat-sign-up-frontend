@@ -17,11 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.config
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.Mode.Mode
 import play.api.mvc.Call
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubIncorporationInformation}
 
 @Singleton
 class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig with FeatureSwitching {
@@ -67,13 +68,14 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def storeEmailAddressUrl(vatNumber: String) = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/email"
 
-  def getCompanyName(companyNumber: String)  = s"$protectedMicroServiceUrl/company-number/$companyNumber/company-name"
-
-  // todo feature switch between real and stub
-  def incorporationInformationUrl: String = loadConfig("microservice.services.incorporation-information.url")
-
   def storeIdentityVerificationUrl(vatNumber: String): String =
-    s"$incorporationInformationUrl/subscription-request/vat-number/$vatNumber/identity-verification"
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/identity-verification"
+
+  def incorporationInformationUrl: String =
+    if (isEnabled(StubIncorporationInformation)) loadConfig("microservice.services.incorporation-information.stub-url")
+    else loadConfig("microservice.services.incorporation-information.url")
+
+  def getCompanyName(companyNumber: String) = s"$incorporationInformationUrl/company-number/$companyNumber/company-name"
 
   lazy val btaUrl = loadConfig("bta.url")
 
