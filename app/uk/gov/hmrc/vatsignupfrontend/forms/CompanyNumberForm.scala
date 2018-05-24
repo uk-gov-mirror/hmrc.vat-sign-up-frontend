@@ -22,26 +22,12 @@ import play.api.data.validation.{Constraint, Invalid, Valid}
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PreprocessedForm
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
 
 object CompanyNumberForm {
 
   val companyNumber = "companyNumber"
-  private val allNumbersRegex = "^([0-9]{1,8})$".r
-  private val withPrefixRegex = "^([A-Za-z][A-Za-z0-9])([0-9]{0,6})$".r
   private val maxLength = 8
-
-  // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/426891/uniformResourceIdentifiersCustomerGuide.pdf
-  lazy val validCompanyNumberPrefixes = Set(
-    "AC", "ZC", "FC", "GE",
-    "LP", "OC", "SE", "SA",
-    "SZ", "SF", "GS", "SL",
-    "SO", "SC", "ES", "NA",
-    "NZ", "NF", "GN", "NL",
-    "NC", "R0", "NI", "EN",
-    "IP", "SP", "IC", "SI",
-    "NP", "NV", "RC", "SR",
-    "NR", "NO"
-  )
 
   val withinMaxLength: Constraint[String] = Constraint("companyNumber.maxLength")(
     companyNumber => if (companyNumber.length <= maxLength) Valid else Invalid("error.invalid_company_number")

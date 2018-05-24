@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers
 
-import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm.validCompanyNumberPrefixes
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
 
 import scala.util.Random
 

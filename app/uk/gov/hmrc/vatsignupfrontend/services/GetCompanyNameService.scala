@@ -20,14 +20,23 @@ import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.GetCompanyNameConnector
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameResponse
 
 import scala.concurrent.{ExecutionContext, Future}
+
 
 @Singleton
 class GetCompanyNameService @Inject()(val getCompanyNameConnector: GetCompanyNameConnector) {
 
   def getCompanyName(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[GetCompanyNameResponse] =
-    getCompanyNameConnector.getCompanyName(companyNumber)
+    getCompanyNameConnector.getCompanyName(padCompanyNumber(companyNumber))
+
+  private[services] def padCompanyNumber(companyNumber: String): String =
+    companyNumber match {
+      case allNumbersRegex(numbers) if numbers.length <= 8 => f"${numbers.toInt}%08d"
+      case withPrefixRegex(prefix, numbers) if numbers.length <= 6 => f"$prefix${numbers.toInt}%06d"
+      case _ => throw new IllegalArgumentException("unexpected malformed company number")
+    }
 
 }
