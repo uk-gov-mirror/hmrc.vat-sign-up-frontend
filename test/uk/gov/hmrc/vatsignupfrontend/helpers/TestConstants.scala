@@ -21,10 +21,13 @@ import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments._
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
+import scala.util.Random
+
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
   val testBusinessPostcode: PostCode = PostCode(TestConstantsGenerator.randomPostCode)
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
+  val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testEmail: String = TestConstantsGenerator.randomEmail
   lazy val testNino: String = new Generator().nextNino.nino
   val testUri: String = "/test/uri"

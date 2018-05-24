@@ -11,6 +11,7 @@ service_name.agent_journey                                             = Use sof
 ## Base
 base.continue                                                          = Continue
 base.confirmAndContinue                                                = Confirm and continue
+base.confirm                                                           = Confirm
 base.agree_and_continue                                                = Agree and continue
 base.accept_and_continue                                               = Accept and continue
 base.continue_to_sign_up                                               = Continue to sign up
@@ -374,6 +375,11 @@ principal.confirm_company_number.title                                 = Confirm
 principal.confirm_company_number.heading                               = Confirm your company number
 principal.confirm_company_number.companyNumber.heading                 = Company number
 principal.confirm_company_number.link                                  = Change company number
+
+## Confirm Company page
+principal.confirm_company.title                                        = Confirm your company
+principal.confirm_company.heading                                      = Confirm your company
+principal.confirm_company.link                                         = Change company
 
 ## Principal Incorrect Details page
 principal.failed_matching.title                                        = We couldn''t confirm your details
