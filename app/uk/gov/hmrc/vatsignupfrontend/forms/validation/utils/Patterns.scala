@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.vatsignupfrontend.forms.validation.utils
 
+import scala.util.matching.Regex
+
 object Patterns {
 
   // ISO 8859-1 standard
   // ASCII range {32 to 126} + {160 to 255} all values inclusive
-  val iso8859_1Regex = """^([\x20-\x7E\xA0-\xFF])*$"""
+  val iso8859_1Regex =
+  """^([\x20-\x7E\xA0-\xFF])*$"""
 
   val emailRegex = """(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"""
 
@@ -37,5 +40,23 @@ object Patterns {
   def validNino(text: String): Boolean = text matches ninoRegex
 
   def validPostcode(text: String): Boolean = text matches postcodeRegex
+
+  object CompanyNumber {
+    val allNumbersRegex: Regex = "^([0-9]{1,8})$".r
+    val withPrefixRegex: Regex = "^([A-Za-z][A-Za-z0-9])([0-9]{0,6})$".r
+
+    // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/426891/uniformResourceIdentifiersCustomerGuide.pdf
+    lazy val validCompanyNumberPrefixes = Set(
+      "AC", "ZC", "FC", "GE",
+      "LP", "OC", "SE", "SA",
+      "SZ", "SF", "GS", "SL",
+      "SO", "SC", "ES", "NA",
+      "NZ", "NF", "GN", "NL",
+      "NC", "R0", "NI", "EN",
+      "IP", "SP", "IC", "SI",
+      "NP", "NV", "RC", "SR",
+      "NR", "NO"
+    )
+  }
 
 }
