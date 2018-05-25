@@ -21,6 +21,7 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
@@ -105,7 +106,32 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
           result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
         }
       }
-      // todo tests for when get company name fails
+      "get company name returned not found" should {
+        "goto company name not found page" in {
+          mockAuthAdminRole()
+          enable(CompanyNameJourney)
+
+          mockGetCompanyNameNotFound(testCompanyNumber)
+
+          val request = testPostRequest(testCompanyNumber)
+
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        }
+      }
+      "get company name fails" should {
+        "throw an InternalServerException" in {
+          mockAuthAdminRole()
+          enable(CompanyNameJourney)
+
+          mockGetCompanyNameFailure(testCompanyNumber)
+
+          val request = testPostRequest(testCompanyNumber)
+
+          intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
+        }
+      }
     }
   }
 

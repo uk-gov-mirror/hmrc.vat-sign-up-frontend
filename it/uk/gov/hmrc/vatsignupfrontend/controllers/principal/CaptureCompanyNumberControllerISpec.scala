@@ -17,9 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -35,16 +38,32 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
     }
   }
 
-  "POST /company-number" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse())
+  "POST /company-number" when {
+    "the company name feature switch is enabled" should {
+      "redirect to confirm company name" in {
+        enable(CompanyNameJourney)
+        stubAuth(OK, successfulAuthResponse())
+        stubgetCompanyName(testCompanyNumber)
 
-      val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+        val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmCompanyNumberController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmCompanyController.show().url)
+        )
+      }
+    }
+    "the company name feature switch is disabled" should {
+      "redirect to confirm company number" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmCompanyNumberController.show().url)
+        )
+      }
     }
   }
 }
