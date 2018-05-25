@@ -21,6 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -59,8 +60,13 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
         enable(CompanyNameJourney)
 
         stubAuth(OK, successfulAuthResponse())
+        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
 
-        val res = post("/confirm-company")()
+        val res = post("/confirm-company",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.companyNumberKey -> testCompanyNumber
+          ))()
 
         res should have(
           httpStatus(SEE_OTHER),

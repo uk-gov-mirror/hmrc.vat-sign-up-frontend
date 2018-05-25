@@ -17,18 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
+import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_number
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureCompanyNumberController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
+                                               val getCompanyNameService: GetCompanyNameService
+                                              )
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async {
@@ -49,10 +56,27 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
               BadRequest(capture_company_number(formWithErrors, routes.CaptureCompanyNumberController.submit()))
             ),
           companyNumber =>
-            Future.successful(
-              Redirect(routes.ConfirmCompanyNumberController.show()).addingToSession(SessionKeys.companyNumberKey -> companyNumber)
-            )
+            if (isEnabled(CompanyNameJourney)) {
+              getCompanyNameService.getCompanyName(companyNumber) map {
+                case Right(GetCompanyNameSuccess(companyName)) =>
+                  Redirect(routes.ConfirmCompanyController.show())
+                    .addingToSession(
+                      SessionKeys.companyNumberKey -> companyNumber,
+                      SessionKeys.companyNameKey -> companyName
+                    )
+                case Left(CompanyNumberNotFound) =>
+                  Redirect(routes.CompanyNameNotFoundController.show())
+                    .removingFromSession(SessionKeys.companyNumberKey, SessionKeys.companyNameKey)
+                case Left(GetCompanyNameFailureResponse(status)) =>
+                  throw new InternalServerException(s"getCompanyName failed: status=$status")
+              }
+            } else {
+              Future.successful(
+                Redirect(routes.ConfirmCompanyNumberController.show()).addingToSession(SessionKeys.companyNumberKey -> companyNumber)
+              )
+            }
         )
       }
   }
+
 }
