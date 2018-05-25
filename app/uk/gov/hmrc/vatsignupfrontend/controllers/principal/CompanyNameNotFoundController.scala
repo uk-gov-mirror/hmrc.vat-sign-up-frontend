@@ -22,7 +22,7 @@ import controllers.template.routes
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.company_name_not_found
 
@@ -30,12 +30,14 @@ import scala.concurrent.Future
 
 @Singleton
 class CompanyNameNotFoundController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(CompanyNameJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      //TODO Campany name not found
       Future.successful(
-        Ok(company_name_not_found((routes.CompanyNameNotFoundController.submit()))))
+        Ok
+      )
     }
   }
 
