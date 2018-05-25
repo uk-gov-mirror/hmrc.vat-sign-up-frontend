@@ -20,6 +20,7 @@ package uk.gov.hmrc.vatsignupfrontend
 object SessionKeys {
   val vatNumberKey = "VatNumber"
   val companyNumberKey = "CompanyNumber"
+  val companyNameKey = "CompanyName"
   val emailKey = "Email"
   val userDetailsKey = "UserDetails"
   val businessEntityKey = "BusinessEntity"

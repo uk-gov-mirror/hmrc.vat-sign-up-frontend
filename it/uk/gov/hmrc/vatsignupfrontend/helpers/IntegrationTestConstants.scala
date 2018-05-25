@@ -21,9 +21,12 @@ import java.util.UUID
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
+import scala.util.Random
+
 object IntegrationTestConstants {
   val testVatNumber: String = IntegrationTestConstantsGenerator.randomVatNumber
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
+  val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode)
   val testNino: String = new Generator().nextNino.nino
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
