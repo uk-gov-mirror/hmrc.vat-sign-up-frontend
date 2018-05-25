@@ -43,11 +43,9 @@ class CompanyNameNotFoundControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       val request = testGetRequest
 
       val result = TestCompanyNameNotFoundController.show(request)
-
-      //TODO
-//      status(result) shouldBe Status.OK
-//      contentType(result) shouldBe Some("text/html")
-//      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 

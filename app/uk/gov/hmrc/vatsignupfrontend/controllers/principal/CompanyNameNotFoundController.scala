@@ -34,9 +34,8 @@ class CompanyNameNotFoundController @Inject()(val controllerComponents: Controll
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      //TODO Campany name not found
       Future.successful(
-        Ok
+        Ok(company_name_not_found((routes.CompanyNameNotFoundController.submit())))
       )
     }
   }

@@ -251,6 +251,7 @@ principal.vat_number.line_1                                            = You can
 principal.could_not_confirm_vat_number.title                           = We could not confirm your VAT number
 principal.could_not_confirm_vat_number.heading                         = We could not confirm your VAT number
 principal.could_not_confirm_vat_number.line_1                          = The VAT number you entered is not on our system.
+
 ## Principal VAT Registration Date
 principal.vat_registration_date.title                                  = When did you register for VAT?
 principal.vat_registration_date.heading                                = When did you become VAT registered?
@@ -369,6 +370,11 @@ principal.confirmation.subsection_2.line_1                             = You can
 principal.capture_company_number.title                                 = What is your company number?
 principal.capture_company_number.heading                               = What is your company number?
 principal.capture_company_number.line_1                                = You received this from Companies House when you set up your company. It''s 8 digits and sometimes starts with 2 letters.
+
+## Company Name Not Found page
+principal.company_name_not_found.title                                 = We could not confirm your company
+principal.company_name_not_found.heading                               = We could not confirm your company
+principal.company_name_not_found.line_1                                = The company number you entered is not on our system.
 
 ## Confirm Company Number page
 principal.confirm_company_number.title                                 = Confirm your company number

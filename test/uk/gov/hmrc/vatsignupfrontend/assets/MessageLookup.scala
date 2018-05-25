@@ -82,6 +82,12 @@ object MessageLookup {
     val heading: String = title
   }
 
+  object PrincipalCompanyNameNotFound {
+    val title = "We could not confirm your company"
+    val heading: String = title
+    val line1 = "The company number you entered is not on our system."
+  }
+
   object CaptureBusinessEntity {
     val title = "What type of business is your client registered as?"
     val heading: String = title
