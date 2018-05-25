@@ -38,7 +38,10 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
     enable(CompanyNameJourney)
   }
 
-  object TestConfirmCompanyController extends ConfirmCompanyController(mockControllerComponents)
+  object TestConfirmCompanyController extends ConfirmCompanyController(
+    mockControllerComponents,
+    mockStoreCompanyNumberService
+  )
 
   val testGetRequest = FakeRequest("GET", "/confirm-company")
 
@@ -77,11 +80,19 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   "Calling the submit action of the Confirm Company controller" should {
     "go to the 'agree to receive emails' page" in {
       mockAuthAdminRole()
+      mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
 
-      val result = TestConfirmCompanyController.submit(testPostRequest)
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
     }
+    // todo if store fails
+    // todo if session variables are missing
   }
 
 }

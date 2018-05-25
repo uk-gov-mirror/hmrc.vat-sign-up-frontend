@@ -19,17 +19,22 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company
 
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmCompanyController @Inject()(val controllerComponents: ControllerComponents)
+class ConfirmCompanyController @Inject()(val controllerComponents: ControllerComponents,
+                                         val storeCompanyNumberService: StoreCompanyNumberService
+                                        )
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(CompanyNameJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -53,7 +58,27 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+
+      (optVatNumber, optCompanyNumber) match {
+        case (Some(vatNumber), Some(companyNumber)) =>
+          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber) map {
+            case Right(_) =>
+              Redirect(routes.AgreeCaptureEmailController.show().url)
+            case Left(errResponse) =>
+              throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+          }
+        case (None, _) =>
+          Future.successful(
+            Redirect(routes.YourVatNumberController.show())
+          )
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureCompanyNumberController.show())
+          )
+      }
     }
   }
+
 }
