@@ -23,6 +23,7 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
@@ -91,8 +92,42 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
     }
-    // todo if store fails
-    // todo if session variables are missing
+
+    "throw internal server exception if store company number fails" in {
+      mockAuthAdminRole()
+      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      intercept[InternalServerException] {
+        await(TestConfirmCompanyController.submit(request))
+      }
+    }
+    "go to the 'your vat number' page if vat number is missing" in {
+      mockAuthAdminRole()
+
+      val request = testPostRequest.withSession(
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
+    }
+    "go to the 'capture company number' page if company number is missing" in {
+      mockAuthAdminRole()
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
+    }
   }
 
 }
