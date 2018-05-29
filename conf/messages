@@ -331,6 +331,15 @@ principal.your-details.summary.last_name                               = Last na
 principal.your-details.summary.nino                                    = National Insurance number
 principal.your-details.summary.dob                                     = Date of birth
 
+## Confirm your details page
+principal.confirm-your-details.title                                   = Confirm your details
+principal.confirm-your-details.heading                                 = Confirm your details
+principal.confirm-your-details.first_name                              = First name
+principal.confirm-your-details.last_name                               = Last name
+principal.confirm-your-details.dob                                     = Date of birth
+principal.confirm-your-details.nino                                    = National Insurance number
+principal.confirm-your-details.link                                    = Change details
+
 ## Failed IV page
 principal.failed_identity_verification.title                           = We couldn''t confirm your details
 principal.failed_identity_verification.heading                         = We couldn''t confirm your details

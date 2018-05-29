@@ -358,6 +358,16 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
+  object PrincipalConfirmYourDetails {
+    val title = "Confirm your details"
+    val heading: String = title
+    val firstName = "First name"
+    val lastName = "Last name"
+    val dob = "Date of birth"
+    val nino = "National Insurance number"
+    val link = "Change details"
+  }
+
   object FailedIdentityVerification {
     val title = "We couldn't confirm your details"
     val heading: String = title
