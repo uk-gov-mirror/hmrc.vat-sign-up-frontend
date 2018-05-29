@@ -59,15 +59,15 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
   }
 
-  //todo
   "Calling the submit action of the Invalid Vat Number controller" should {
     "the known facts journey feature switch is enabled" should {
-      "return NotImplemented" in {
+      "return SEE_OTHER" in {
         enable(KnownFactsJourney)
         mockAuthAdminRole()
 
         val result = TestInvalidVatNumberController.submit(testPostRequest)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result).get shouldBe routes.CaptureVatNumberController.show().url
       }
     }
     "the known facts journey feature switch is disabled" should {

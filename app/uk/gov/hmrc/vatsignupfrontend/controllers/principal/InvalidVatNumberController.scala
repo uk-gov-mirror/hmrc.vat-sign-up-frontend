@@ -41,8 +41,7 @@ class InvalidVatNumberController @Inject()(val controllerComponents: ControllerC
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        //todo Redirect to capture vat number
-        NotImplemented
+        Redirect(routes.CaptureVatNumberController.show())
       )
     }
   }
