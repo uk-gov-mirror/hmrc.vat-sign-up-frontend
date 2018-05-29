@@ -29,12 +29,12 @@ import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.ConfirmClientIdConstants._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 
 class CheckYourDetailsViewSpec extends ViewSpec {
 
   val testFirstName = "Test"
   val testLastName = "User"
-  val testNino = "AA111111A"
   val testDob = DateModel.dateConvert(LocalDate.now())
   val testClientDetails = UserDetailsModel(
     testFirstName,
