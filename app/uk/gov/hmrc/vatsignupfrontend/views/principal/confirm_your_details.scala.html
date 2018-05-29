@@ -28,7 +28,7 @@
 @summaryRow(field: String, question: String, answer: String, enableHtml: Boolean = false) = {
         <div class="tabular-data__entry divider--top--thick" id="@field-row">
             <span class="tabular-data__heading tabular-data__heading--label" id="@field-question">
-            @question
+                @question
             </span>
             <div class="tabular-data__data-1" id="@field-answer">
                 @if(enableHtml) {@Html(answer)} else {@answer}
