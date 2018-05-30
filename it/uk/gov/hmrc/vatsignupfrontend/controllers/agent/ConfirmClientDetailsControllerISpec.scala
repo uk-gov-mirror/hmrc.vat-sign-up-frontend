@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel, UserEntered}
 
 class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -55,7 +55,7 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     "store nino is successful" should {
       "redirect to agree capture email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreNinoSuccess(testVatNumber, testUserDetails)
+        stubStoreNinoSuccess(testVatNumber, testUserDetails, Some(UserEntered))
 
         val res = post("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
@@ -69,7 +69,7 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     "store nino returned no match" should {
       "redirect to the failed client matching page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreNinoNoMatch(testVatNumber, testUserDetails)
+        stubStoreNinoNoMatch(testVatNumber, testUserDetails, Some(UserEntered))
 
         val res = post("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
