@@ -18,25 +18,33 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, UseIRSA}
+import uk.gov.hmrc.vatsignupfrontend.models.NinoSource.ninoSourceFrontEndKey
+import uk.gov.hmrc.vatsignupfrontend.models.{NinoSource, UserDetailsModel}
 
-object StoreNinoStub extends WireMockMethods {
+object StoreNinoStub extends WireMockMethods with FeatureSwitching {
 
-  private def toJson(userDetailsModel: UserDetailsModel) = Json.obj(
+  private def toJson(userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource]) = Json.obj(
     "firstName" -> userDetailsModel.firstName,
     "lastName" -> userDetailsModel.lastName,
     "nino" -> userDetailsModel.nino,
     "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate
-  )
+  ).++(ninoSource.map(
+    source =>
+      if (isEnabled(UseIRSA)) Json.obj(ninoSourceFrontEndKey -> ninoSource)
+      else Json.obj()
+  ).getOrElse(Json.obj()))
 
-  def stubStoreNino(vatNumber: String, userDetailsModel: UserDetailsModel)(responseStatus: Int): Unit = {
+  def stubStoreNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource])(responseStatus: Int): Unit = {
     when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/nino",
-      body = toJson(userDetailsModel))
+      body = toJson(userDetailsModel, ninoSource))
       .thenReturn(status = responseStatus)
   }
 
-  def stubStoreNinoSuccess(vatNumber: String, userDetailsModel: UserDetailsModel): Unit = stubStoreNino(vatNumber, userDetailsModel)(NO_CONTENT)
+  def stubStoreNinoSuccess(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+    stubStoreNino(vatNumber, userDetailsModel, ninoSource)(NO_CONTENT)
 
-  def stubStoreNinoNoMatch(vatNumber: String, userDetailsModel: UserDetailsModel): Unit = stubStoreNino(vatNumber, userDetailsModel)(FORBIDDEN)
+  def stubStoreNinoNoMatch(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+    stubStoreNino(vatNumber, userDetailsModel, ninoSource)(FORBIDDEN)
 
 }

@@ -39,21 +39,23 @@ trait MockStoreNinoService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreNinoService)
   }
 
-  private def mockStorNino(vatNumber: String, useDetails: UserDetailsModel)(returnValue: Future[StoreNinoResponse]): Unit = {
-    when(mockStoreNinoService.storeNino(ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(useDetails))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+  private def mockStorNino(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource])(returnValue: Future[StoreNinoResponse]): Unit = {
+    when(mockStoreNinoService.storeNino(
+      ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(useDetails), ArgumentMatchers.eq(ninoSource)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockStoreNinoSuccess(vatNumber: String, useDetails: UserDetailsModel): Unit =
-    mockStorNino(vatNumber, useDetails)(Future.successful(Right(StoreNinoSuccess)))
+  def mockStoreNinoSuccess(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+    mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Right(StoreNinoSuccess)))
 
-  def mockStoreNinoNoMatch(vatNumber: String, useDetails: UserDetailsModel): Unit =
-    mockStorNino(vatNumber, useDetails)(Future.successful(Left(NoMatchFoundFailure)))
+  def mockStoreNinoNoMatch(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+    mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(NoMatchFoundFailure)))
 
-  def mockStoreNinoNoVatStored(vatNumber: String, useDetails: UserDetailsModel): Unit =
-    mockStorNino(vatNumber, useDetails)(Future.successful(Left(NoVATNumberFailure)))
+  def mockStoreNinoNoVatStored(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+    mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(NoVATNumberFailure)))
 
-  def mockStoreNinoFailure(vatNumber: String, useDetails: UserDetailsModel): Unit =
-    mockStorNino(vatNumber, useDetails)(Future.successful(Left(StoreNinoFailureResponse(INTERNAL_SERVER_ERROR))))
+  def mockStoreNinoFailure(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+    mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(StoreNinoFailureResponse(INTERNAL_SERVER_ERROR))))
 
 }

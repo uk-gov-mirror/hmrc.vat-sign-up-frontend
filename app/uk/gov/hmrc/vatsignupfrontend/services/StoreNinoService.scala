@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreNinoConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
+import uk.gov.hmrc.vatsignupfrontend.models.{NinoSource, UserDetailsModel}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +39,7 @@ class StoreNinoService @Inject()(applicationConfig: AppConfig,
     if (applicationConfig.hasEnabledTestOnlyRoutes) hc.copy(trueClientIp = Some("VATSUBSC"))
     else hc
 
-  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
-    storeNinoConnector.storeNino(vatNumber, userDetailsModel)(amendHCForTest, ec)
+  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+    storeNinoConnector.storeNino(vatNumber, userDetailsModel, ninoSource)(amendHCForTest, ec)
 
 }
