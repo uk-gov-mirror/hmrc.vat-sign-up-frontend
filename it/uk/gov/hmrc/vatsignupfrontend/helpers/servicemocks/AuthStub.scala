@@ -64,6 +64,17 @@ object AuthStub extends WireMockMethods {
     )
   )
 
+  val irsaEnrolment: JsObject = Json.obj(
+    "key" -> IRSAEnrolmentKey,
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> IRSAReferenceKey,
+        "value" -> testUtr
+      )
+    )
+  )
+
+
   def confidenceLevel(confidenceLevel: ConfidenceLevel): JsValue =
     Json.obj(
       "credentialRole" -> "Admin",
