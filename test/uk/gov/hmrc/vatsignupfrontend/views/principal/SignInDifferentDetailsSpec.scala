@@ -34,7 +34,7 @@ class SignInDifferentDetailsSpec extends ViewSpec {
   val testChangeLink = "testhref"
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_in_different_details(
-    changeLink = testChangeLink, postAction = testCall)(
+    changeLink = testChangeLink)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
