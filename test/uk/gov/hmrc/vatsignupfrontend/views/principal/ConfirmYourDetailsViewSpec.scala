@@ -46,7 +46,7 @@ class ConfirmYourDetailsViewSpec extends ViewSpec {
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_your_details(
+  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_your_user_details(
     userDetailsModel = testClientDetails,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))

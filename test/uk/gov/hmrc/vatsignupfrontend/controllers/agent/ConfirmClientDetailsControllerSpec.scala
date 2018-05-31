@@ -43,14 +43,6 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-client")
 
-  val testUserDetails: UserDetailsModel =
-    UserDetailsModel(
-      firstName = UUID.randomUUID().toString,
-      lastName = UUID.randomUUID().toString,
-      nino = testNino,
-      dateOfBirth = DateModel.dateConvert(LocalDate.now())
-    )
-  val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
 
   "Calling the show action of the Confirm Client Details controller" when {
     "there is a vrn and clientDetails in the session" should {

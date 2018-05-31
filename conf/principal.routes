@@ -93,6 +93,10 @@ POST        /confirmed-identity                    uk.gov.hmrc.vatsignupfrontend
 GET         /your-details                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.show
 POST        /your-details                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.submit
 
+# Confirm your Retrieved User details
+GET         /confirm-your-details                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.show
+POST        /confirm-your-details                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.submit
+
 # Confirm your details
 GET         /confirm-details                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.show
 POST        /confirm-details                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.submit
