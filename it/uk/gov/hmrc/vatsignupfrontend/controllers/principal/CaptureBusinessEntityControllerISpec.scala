@@ -17,13 +17,21 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testSaUtr, testUserDetails}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CitizenDetailsStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    disable(UseIRSA)
+  }
+
   "GET /business-type" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
@@ -51,16 +59,51 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a SEE_OTHER status and go to capture your details" when {
-      "the business type is sole trader" in {
-        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+    "Use IRSA is disabled" should {
+      "return a SEE_OTHER status and go to capture your details" when {
+        "the business type is sole trader" in {
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
+          val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureYourDetailsController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureYourDetailsController.show().url)
+          )
+        }
+      }
+    }
+
+    "Use IRSA is enabled" when {
+      "the user has an IRSA enrolment" should {
+        "return a SEE_OTHER status and go to Confirm your retrieved details" when {
+          "the business type is sole trader" in {
+            enable(UseIRSA)
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment, irsaEnrolment))
+            stubGetCitizenDetails(testSaUtr)(OK, testUserDetails)
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.ConfirmYourRetrievedUserDetailsController.show().url)
+            )
+          }
+        }
+      }
+      "the user does not have an IRSA enrolment" should {
+        "return a SEE_OTHER status and go to capture your details" when {
+          "the business type is sole trader" in {
+            enable(UseIRSA)
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureYourDetailsController.show().url)
+            )
+          }
+        }
       }
     }
 

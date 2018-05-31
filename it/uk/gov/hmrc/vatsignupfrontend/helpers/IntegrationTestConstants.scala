@@ -28,10 +28,10 @@ import scala.util.Random
 object IntegrationTestConstants {
   val testVatNumber: String = IntegrationTestConstantsGenerator.randomVatNumber
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
-  val testUtr: String = IntegrationTestConstantsGenerator.randomUtr
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode)
   val testNino: String = new Generator().nextNino.nino
+  val testSaUtr: String = new Generator().nextAtedUtr.utr
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
   val testArn: String = UUID.randomUUID().toString
   val testUri: String = "/test/url"

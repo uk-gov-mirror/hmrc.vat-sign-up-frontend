@@ -27,6 +27,12 @@ object EnrolmentUtils {
         vatDecEnrolment =>
           vatDecEnrolment getIdentifier VatReferenceKey map (_.value)
       }
+
+    def selfAssessmentUniqueTaxReferenceNumber: Option[String] =
+      enrolments getEnrolment IRSAEnrolmentKey flatMap {
+        vatDecEnrolment =>
+          vatDecEnrolment getIdentifier IRSAReferenceKey map (_.value)
+      }
   }
 
 }

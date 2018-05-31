@@ -24,7 +24,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, Retrievals, ~}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testAgentEnrolment, testVatDecEnrolment}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testAgentEnrolment, testVatDecEnrolment, testIRSAEnrolment}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,11 +55,14 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
   def mockAuthRetrieveAgentEnrolment(): Unit =
     mockAuthorise(retrievals = Retrievals.allEnrolments)(Future.successful(Enrolments(Set(testAgentEnrolment))))
 
-  def mockAuthRetrieveVatDecEnrolment(): Unit = {
+  def mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment: Boolean = false): Unit = {
     mockAuthorise(
       retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
     )(
-      Future.successful(new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment))))
+      Future.successful {
+        if (hasIRSAEnrolment) new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, testIRSAEnrolment)))
+        else new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment)))
+      }
     )
   }
 

@@ -35,7 +35,7 @@ object CitizenDetailsHttpParser {
       response.status match {
         case OK => parseCitizenDetails match {
           case JsSuccess(userDetails,  _) => Right(CitizenDetailsRetrievalSuccess(userDetails))
-          case JsError(_) => Left(CitizenDetailsRetrievalFailureResponse(INTERNAL_SERVER_ERROR))
+          case JsError(_) => Left(CitizenDetailsRetrievalFailureResponse(OK))
         }
         case NOT_FOUND => Left(NoCitizenRecord)
         case INTERNAL_SERVER_ERROR => Left(MoreThanOneCitizenMatched)

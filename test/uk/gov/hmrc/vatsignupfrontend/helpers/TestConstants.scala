@@ -33,11 +33,13 @@ object TestConstants {
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testEmail: String = TestConstantsGenerator.randomEmail
-  lazy val testNino: String = new Generator().nextNino.nino
+  val testNino: String = new Generator().nextNino.nino
+  val testSaUtr: String = new Generator().nextAtedUtr.utr
   val testUri: String = "/test/uri"
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)
+  val testIRSAEnrolment: Enrolment = Enrolment(IRSAEnrolmentKey) withIdentifier(IRSAReferenceKey, testSaUtr)
 
   val testUserDetails: UserDetailsModel =
     UserDetailsModel(

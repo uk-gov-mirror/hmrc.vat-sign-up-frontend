@@ -17,14 +17,20 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+
+import play.api.mvc.{Action, AnyContent, Request, Result}
+import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.models.Other
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
+import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.services.CitizenDetailsService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity
@@ -32,7 +38,8 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entit
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents,
+                                                citizenDetailsService: CitizenDetailsService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -43,25 +50,40 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
     }
   }
 
-  val submit: Action[AnyContent] = Action.async { implicit request =>
+  def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
       businessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
           ),
-        businessEntity =>
-          Future.successful(
-            {
-              (businessEntity, enrolments.vatNumber) match {
-                case (Other, _) => Redirect(routes.CannotUseServiceController.show())
-                case (_, Some(_)) => Redirect(routes.CaptureYourDetailsController.show())
-                case _ => Redirect(routes.CheckYourAnswersController.show())
-              }
-            }.addingToSession(SessionKeys.businessEntityKey, businessEntity)
-          )
+        businessEntity => {
+          {
+            (businessEntity, enrolments.vatNumber) match {
+              case (Other, _) => Future.successful(Redirect(routes.CannotUseServiceController.show()))
+              case (LimitedCompany, Some(_)) => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+              case (SoleTrader, Some(_)) => gotoSoleTraderFlow(enrolments)
+              case _ => Future.successful(Redirect(routes.CheckYourAnswersController.show()))
+            }
+          } map (_.addingToSession(SessionKeys.businessEntityKey, businessEntity))
+        }
       )
     }
+  }
+
+  private def gotoSoleTraderFlow(enrolments: Enrolments)(implicit request: Request[_]): Future[Result] = {
+    if (isEnabled(UseIRSA)) {
+      enrolments.selfAssessmentUniqueTaxReferenceNumber match {
+        case None => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+        case Some(utr) => citizenDetailsService.getCitizenDetails(utr) map {
+          case Right(CitizenDetailsRetrievalSuccess(detailsModel)) =>
+            Redirect(routes.ConfirmYourRetrievedUserDetailsController.show()).addingToSession(SessionKeys.userDetailsKey, detailsModel)
+          case Left(reason) =>
+            throw new InternalServerException(s"calls to CID received unexpected failure $reason")
+        }
+      }
+    }
+    else Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
   }
 
 }
