@@ -24,14 +24,15 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ConfirmDetails => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalConfirmYourDetails => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.ConfirmClientIdConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 
-class CheckYourDetailsViewSpec extends ViewSpec {
+
+class ConfirmYourDetailsViewSpec extends ViewSpec {
 
   val testFirstName = "Test"
   val testLastName = "User"
@@ -45,7 +46,7 @@ class CheckYourDetailsViewSpec extends ViewSpec {
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_details(
+  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_your_user_details(
     userDetailsModel = testClientDetails,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
@@ -54,7 +55,6 @@ class CheckYourDetailsViewSpec extends ViewSpec {
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
-  val editLinkId: String => String = (sectionId: String) => s"$sectionId-edit"
 
   def questionStyleCorrectness(section: Element): Unit = {
     section.attr("class") shouldBe "tabular-data__heading tabular-data__heading--label"
@@ -64,54 +64,47 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     section.attr("class") shouldBe "tabular-data__data-1"
   }
 
-  def editLinkStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__data-2"
-  }
 
   "Confirm Your Details page view" should {
 
     val testPage = TestView(
-      name = "Your Details View",
+      name = "Confirm Your Details View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH2(messages.subHeading)
+    testPage.shouldHaveForm("Confirm Your Details Form")(actionCall = testCall)
 
-    testPage.shouldHaveForm("Your Details Form")(actionCall = testCall)
+//    TODO: Update change link once controller created
+//    testPage.shouldHaveALink(
+//      id = "changeLink",
+//      text = messages.link,
+//      href = routes.CaptureEmailController.show().url
+//    )
+
   }
 
-  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
+  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String) = {
     val accountingPeriod = doc.getElementById(sectionId)
     val question = doc.getElementById(questionId(sectionId))
     val answer = doc.getElementById(answerId(sectionId))
-    val editLink = doc.getElementById(editLinkId(sectionId))
 
     questionStyleCorrectness(question)
     answerStyleCorrectness(answer)
-    if (expectedEditLink.nonEmpty) editLinkStyleCorrectness(editLink)
-
     question.text() shouldBe expectedQuestion
     answer.text() shouldBe expectedAnswer
-    if (expectedEditLink.nonEmpty) {
-      editLink.attr("href") shouldBe expectedEditLink.get
-      editLink.select("span").text() shouldBe expectedQuestion
-      editLink.select("span").hasClass("visuallyhidden") shouldBe true
-    }
   }
 
   "display the correct info for firstName" in {
     val sectionId = FirstNameId
     val expectedQuestion = messages.firstName
     val expectedAnswer = testFirstName
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
       expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
+      expectedAnswer = expectedAnswer
     )
   }
 
@@ -119,27 +112,11 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     val sectionId = LastNameId
     val expectedQuestion = messages.lastName
     val expectedAnswer = testLastName
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
       expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "display the correct info for nino" in {
-    val sectionId = NinoId
-    val expectedQuestion = messages.nino
-    val expectedAnswer = testNino
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
-
-    sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
+      expectedAnswer = expectedAnswer
     )
   }
 
@@ -147,14 +124,26 @@ class CheckYourDetailsViewSpec extends ViewSpec {
     val sectionId = DobId
     val expectedQuestion = messages.dob
     val expectedAnswer = testDob.toCheckYourAnswersDateFormat
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureYourDetailsController.show().url
 
     sectionTest(
       sectionId = sectionId,
       expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
+      expectedAnswer = expectedAnswer
     )
   }
+
+  "display the correct info for nino" in {
+    val sectionId = NinoId
+    val expectedQuestion = messages.nino
+    val expectedAnswer = testNino
+
+    sectionTest(
+      sectionId = sectionId,
+      expectedQuestion = expectedQuestion,
+      expectedAnswer = expectedAnswer
+
+    )
+  }
+
 
 }

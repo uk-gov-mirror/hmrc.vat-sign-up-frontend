@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
-import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
+import uk.gov.hmrc.vatsignupfrontend.models.{UserDetailsModel, UserEntered}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_client_details
@@ -62,7 +62,7 @@ class ConfirmClientDetailsController @Inject()(val controllerComponents: Control
         case (None, _) => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
         case (_, None) => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
         case (Some(vatNumber), Some(userDetails)) => {
-          storeNinoService.storeNino(vatNumber, userDetails) map {
+          storeNinoService.storeNino(vatNumber, userDetails, Some(UserEntered)) map {
             case Right(_) => Redirect(routes.AgreeCaptureEmailController.show())
             case Left(NoMatchFoundFailure) => Redirect(routes.FailedClientMatchingController.show())
             case Left(NoVATNumberFailure) => throw new InternalServerException(s"Failure calling store nino: vat number is not found")

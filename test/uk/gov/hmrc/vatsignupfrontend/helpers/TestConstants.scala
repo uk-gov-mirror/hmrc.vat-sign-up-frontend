@@ -16,15 +16,19 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers
 
+import java.time.LocalDate
+import java.util.UUID
+import play.api.libs.json.Json
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments._
-import uk.gov.hmrc.vatsignupfrontend.models.PostCode
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode, UserDetailsModel}
 
 import scala.util.Random
 
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
+  val testName: String = UUID.randomUUID().toString
   val testBusinessPostcode: PostCode = PostCode(TestConstantsGenerator.randomPostCode)
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
@@ -34,4 +38,13 @@ object TestConstants {
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)
+
+  val testUserDetails: UserDetailsModel =
+    UserDetailsModel(
+      firstName = UUID.randomUUID().toString,
+      lastName = UUID.randomUUID().toString,
+      nino = testNino,
+      dateOfBirth = DateModel.dateConvert(LocalDate.now())
+    )
+  val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
 }
