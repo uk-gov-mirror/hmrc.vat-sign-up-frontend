@@ -376,6 +376,12 @@ principal.company_name_not_found.title                                 = We coul
 principal.company_name_not_found.heading                               = We could not confirm your company
 principal.company_name_not_found.line_1                                = The company number you entered is not on our system.
 
+## Sign in different details page
+principal.sign_in_different_details.title                              = You need to sign in with different details
+principal.sign_in_different_details.heading                            = You need to sign in with different details
+principal.sign_in_different_details.line_1                             = The details you have used to sign in are for a different sole trader. You need to sign out, then sign in with the correct Government Gateway details.
+principal.sign_in_different_details.line_2                             = You can <a id="diff-details" href="{0}">change your answer</a>.
+
 ## Confirm Company Number page
 principal.confirm_company_number.title                                 = Confirm your company number
 principal.confirm_company_number.heading                               = Confirm your company number
