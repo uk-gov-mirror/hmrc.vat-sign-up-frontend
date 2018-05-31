@@ -88,6 +88,14 @@ object MessageLookup {
     val line1 = "The company number you entered is not on our system."
   }
 
+  object PrincipalSignInDifferentDetails{
+    val title = "You need to sign in with different details"
+    val heading: String = title
+    val line1 = "The details you have used to sign in are for a different sole trader. You need to sign out, then sign in with the correct Government Gateway details."
+    val linkText = "change your answer"
+    val line2 = s"You can $linkText."
+  }
+
   object CaptureBusinessEntity {
     val title = "What type of business is your client registered as?"
     val heading: String = title
