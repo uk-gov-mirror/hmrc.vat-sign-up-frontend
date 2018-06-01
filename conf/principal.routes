@@ -1,116 +1,119 @@
 # microservice specific routes
 
 # Guidance page
-GET         /                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.GuidanceController.show
+GET         /                                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.GuidanceController.show
 
 # Capture Vat number
-GET         /vat-number                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.show
-POST        /vat-number                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.submit
+GET         /vat-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.show
+POST        /vat-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.submit
 
 # Confirm Vat number
-GET         /your-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.YourVatNumberController.show
-POST        /your-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.YourVatNumberController.submit
+GET         /your-vat-number                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.YourVatNumberController.show
+POST        /your-vat-number                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.YourVatNumberController.submit
 
 # Invalid Vat Number
-GET        /could-not-confirm-vat-number           uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.show
-POST       /could-not-confirm-vat-number           uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.submit
+GET        /could-not-confirm-vat-number                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.show
+POST       /could-not-confirm-vat-number                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.submit
 
 # Company Name not found
-GET        /company-name-not-found                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.show
-POST       /company-name-not-found                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.submit
+GET        /company-name-not-found                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.show
+POST       /company-name-not-found                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.submit
 
 # Sign in with another login
-GET         /sign-in-with-different-details        uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignInWithDifferentDetailsController.show
+GET         /sign-in-with-different-details                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignInWithDifferentDetailsController.show
 
 # Cannot use service yet
-GET         /cannot-use-service-yet                uk.gov.hmrc.vatsignupfrontend.controllers.principal.CannotUseServiceController.show
+GET         /cannot-use-service-yet                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CannotUseServiceController.show
 
 # Already signed up
-GET         /error/already-signed-up               uk.gov.hmrc.vatsignupfrontend.controllers.principal.AlreadySignedUpController.show
+GET         /error/already-signed-up                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.AlreadySignedUpController.show
 
 # Capture VAT Registration Date
-GET         /vat-registration-date                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatRegistrationDateController.show
-POST        /vat-registration-date                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatRegistrationDateController.submit
+GET         /vat-registration-date                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatRegistrationDateController.show
+POST        /vat-registration-date                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatRegistrationDateController.submit
 
 # Capture Company Number
-GET         /company-number                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.show
-POST        /company-number                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.submit
+GET         /company-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.show
+POST        /company-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.submit
 
 # Confirm Company Number
-GET         /confirm-company-number                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.show
-POST        /confirm-company-number                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.submit
+GET         /confirm-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.show
+POST        /confirm-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.submit
 
 # Confirm Company name
-GET         /confirm-company                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.show
-POST        /confirm-company                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
+GET         /confirm-company                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.show
+POST        /confirm-company                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
 
 
 #Agree Capture Email
-GET         /receive-emails                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.show
-POST        /receive-emails                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.submit
+GET         /receive-emails                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.show
+POST        /receive-emails                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.submit
 
 # Capture Email
-GET         /email-address                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.show
-POST        /email-address                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.submit
+GET         /email-address                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.show
+POST        /email-address                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.submit
 
 # Confirm Email
-GET         /confirm-email                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmEmailController.show
-POST        /confirm-email                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmEmailController.submit
+GET         /confirm-email                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmEmailController.show
+POST        /confirm-email                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmEmailController.submit
 
 # Verify Email
-GET         /verify-email                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifyEmailController.show
+GET         /verify-email                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifyEmailController.show
 
 # Email Verified
-GET         /email-verified                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.EmailVerifiedController.show
+GET         /email-verified                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.EmailVerifiedController.show
 
 # Business PostCode
-GET         /business-postcode                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.BusinessPostCodeController.show
-POST        /business-postcode                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.BusinessPostCodeController.submit
+GET         /business-postcode                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.BusinessPostCodeController.show
+POST        /business-postcode                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.BusinessPostCodeController.submit
 
 # Business Type
-GET         /business-type                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityController.show
-POST        /business-type                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityController.submit
+GET         /business-type                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityController.show
+POST        /business-type                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityController.submit
 
 # Check your answers
-GET         /check-your-answers                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersController.show
-POST        /check-your-answers                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersController.submit
+GET         /check-your-answers                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersController.show
+POST        /check-your-answers                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersController.submit
 
-GET         /identity-verified                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationCallbackController.continue
+GET         /identity-verified                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationCallbackController.continue
 
 # Could not confirm business
-GET         /could-not-confirm-business            uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.show
-POST        /could-not-confirm-business            uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.submit
+GET         /could-not-confirm-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.show
+POST        /could-not-confirm-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.submit
 
 # Failed Identity Verification
-GET         /could-not-confirm-identity            uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.show
-POST        /could-not-confirm-identity            uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.submit
+GET         /could-not-confirm-identity                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.show
+POST        /could-not-confirm-identity                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.submit
 
 # Success Identity Verification
-GET         /confirmed-identity                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationSuccessController.show
-POST        /confirmed-identity                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationSuccessController.submit
+GET         /confirmed-identity                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationSuccessController.show
+POST        /confirmed-identity                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationSuccessController.submit
 
 # Capture your details
-GET         /your-details                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.show
-POST        /your-details                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.submit
+GET         /your-details                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.show
+POST        /your-details                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.submit
 
 # Confirm your Retrieved User details
-GET         /confirm-your-details                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.show
-POST        /confirm-your-details                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.submit
+GET         /confirm-your-details                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.show
+POST        /confirm-your-details                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.submit
+
+# Sign In With Different Details Sole Trader
+GET         /sign-in-with-different-details-sole-trader     uk.gov.hmrc.vatsignupfrontend.controllers.principal.SoleTraderDifferentDetailsController.show
 
 # Confirm your details
-GET         /confirm-details                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.show
-POST        /confirm-details                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.submit
+GET         /confirm-details                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.show
+POST        /confirm-details                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.submit
 
 # Failed User Matching
-GET         /error/incorrect-details               uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.show
-POST        /error/incorrect-details               uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.submit
+GET         /error/incorrect-details                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.show
+POST        /error/incorrect-details                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.submit
 
 #Terms
-GET         /terms-of-participation                uk.gov.hmrc.vatsignupfrontend.controllers.principal.TermsController.show
-POST        /terms-of-participation                uk.gov.hmrc.vatsignupfrontend.controllers.principal.TermsController.submit
+GET         /terms-of-participation                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.TermsController.show
+POST        /terms-of-participation                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.TermsController.submit
 
 #Confirmation
-GET         /information-received                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.InformationReceivedController.show
+GET         /information-received                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.InformationReceivedController.show
 
 #Assistant Credential Role
-GET         /not-administrator                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.AssistantCredentialErrorController.show
+GET         /not-administrator                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.AssistantCredentialErrorController.show

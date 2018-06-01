@@ -77,11 +77,11 @@
         <div class="divider--top--thick"></div>
     </div>
 
+    <p><a id="changeLink" href="@routes.SoleTraderDifferentDetailsController.show().url">@Messages("principal.confirm-your-details.link")</a></p>
+
+
     @form(action = postAction) {
         @continueButton()
     }
-
-    <!--TODO: Update change link when controller created-->
-    <!--<p><a id="changeLink" href="@routes.CaptureEmailController.show().url">@Messages("principal.confirm-your-details.link")</a></p>-->
 
 }
