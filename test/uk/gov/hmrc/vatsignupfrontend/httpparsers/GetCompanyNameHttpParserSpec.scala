@@ -51,6 +51,13 @@ class GetCompanyNameHttpParserSpec extends UnitSpec {
 
         res shouldBe Left(GetCompanyNameFailureResponse(httpResponse.status))
       }
+      "parse empty body response as an StoreCompanyNumberFailure" in {
+        val httpResponse = HttpResponse(OK)
+
+        val res = GetCompanyNameHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(GetCompanyNameFailureResponse(httpResponse.status))
+      }
     }
   }
 }

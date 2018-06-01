@@ -20,16 +20,18 @@ import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import uk.gov.hmrc.vatsignupfrontend.Constants._
 
+import scala.util.{Success, Try}
+
 object GetCompanyNameHttpParser {
   type GetCompanyNameResponse = Either[GetCompanyNameFailure, GetCompanyNameSuccess]
 
   implicit object GetCompanyNameHttpReads extends HttpReads[GetCompanyNameResponse] {
     override def read(method: String, url: String, response: HttpResponse): GetCompanyNameResponse = {
 
-      def parseBody: Option[String] = (response.json \ GetCompanyNameCodeKey).asOpt[String]
+      def parseBody: Try[String] = Try((response.json \ GetCompanyNameCodeKey).as[String])
 
       (response.status, parseBody) match {
-        case (OK, Some(companyName)) => Right(GetCompanyNameSuccess(companyName))
+        case (OK, Success(companyName)) => Right(GetCompanyNameSuccess(companyName))
         case (NOT_FOUND, _) => Left(CompanyNumberNotFound)
         case (status, _) => Left(GetCompanyNameFailureResponse(status))
       }
