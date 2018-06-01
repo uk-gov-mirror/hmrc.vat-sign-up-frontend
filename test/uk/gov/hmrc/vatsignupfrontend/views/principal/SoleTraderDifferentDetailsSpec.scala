@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalSignInDiffer
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class SignInDifferentDetailsSpec extends ViewSpec {
+class SoleTraderDifferentDetailsSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
@@ -33,7 +33,7 @@ class SignInDifferentDetailsSpec extends ViewSpec {
 
   val testChangeLink = "testhref"
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_in_different_details(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sole_trader_different_details(
     changeLink = testChangeLink)(
     FakeRequest(),
     applicationMessages,
