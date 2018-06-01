@@ -69,7 +69,7 @@ object AuthStub extends WireMockMethods {
     "identifiers" -> Json.arr(
       Json.obj(
         "key" -> IRSAReferenceKey,
-        "value" -> testUtr
+        "value" -> testSaUtr
       )
     )
   )

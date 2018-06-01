@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.models
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel._
 
 
@@ -32,11 +32,11 @@ object UserDetailsModel {
   implicit val writes = Json.writes[UserDetailsModel]
 
   val matchingStubWrites = new OWrites[UserDetailsModel] {
-    def writes(userDetails: UserDetailsModel) = Json.obj(
+    def writes(userDetails: UserDetailsModel): JsObject = Json.obj(
       "firstname" -> Json.obj("value" -> userDetails.firstName),
-      "lastName"  -> Json.obj("value" -> userDetails.lastName),
-      "nino"  -> Json.obj("value" -> userDetails.nino),
-      "dob"  -> Json.obj("value" -> userDetails.dateOfBirth.toLocalDate.format(citizenDetailsFormat))
+      "lastName" -> Json.obj("value" -> userDetails.lastName),
+      "nino" -> Json.obj("value" -> userDetails.nino),
+      "dob" -> Json.obj("value" -> userDetails.dateOfBirth.toLocalDate.format(citizenDetailsFormat))
     )
   }
 
@@ -45,6 +45,20 @@ object UserDetailsModel {
       (JsPath \ "name" \ "current" \ "lastName").read[String] and
       (JsPath \ "ids" \ "nino").read[String] and
       (JsPath \ "dateOfBirth").read[String].map(convertCitizenDetailsDate _)
-      )(UserDetailsModel.apply _)
+      ) (UserDetailsModel.apply _)
+
+  val citizenDetailsWrites: OWrites[UserDetailsModel] = new OWrites[UserDetailsModel] {
+    def writes(userDetails: UserDetailsModel): JsObject =
+      Json.obj(
+        "name" -> Json.obj(
+          "current" -> Json.obj(
+            "firstName" -> userDetails.firstName,
+            "lastName" -> userDetails.lastName
+          )
+        ),
+        "ids" -> Json.obj("nino" -> userDetails.nino),
+        "dateOfBirth" -> userDetails.dateOfBirth.toLocalDate.format(citizenDetailsFormat)
+      )
+  }
 
 }

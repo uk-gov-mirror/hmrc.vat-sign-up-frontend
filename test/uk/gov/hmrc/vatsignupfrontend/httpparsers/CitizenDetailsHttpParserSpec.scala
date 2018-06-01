@@ -67,7 +67,7 @@ class CitizenDetailsHttpParserSpec extends UnitSpec {
       "an instance of Citizen Details cannot be parsed from the response body" in {
         val httpResponse = HttpResponse(OK, Some(invalidJson))
 
-        res(httpResponse) shouldBe Left(CitizenDetailsRetrievalFailureResponse(INTERNAL_SERVER_ERROR))
+        res(httpResponse) shouldBe Left(CitizenDetailsRetrievalFailureResponse(OK))
       }
     }
     "parse a NOT_FOUND response as an NoCitizenRecord" in {
