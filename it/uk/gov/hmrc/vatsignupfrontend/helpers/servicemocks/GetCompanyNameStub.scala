@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testCompan
 
 object GetCompanyNameStub extends WireMockMethods {
   def stubgetCompanyName(companyNumber: String): Unit = {
-    when(method = GET, uri = s"/company-number/$companyNumber/company-name")
+    when(method = GET, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
       .thenReturn(status = OK, body = Json.obj("company_name" -> testCompanyName))
   }
 }

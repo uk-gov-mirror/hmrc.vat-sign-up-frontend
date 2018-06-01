@@ -21,7 +21,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.Mode.Mode
 import play.api.mvc.Call
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.domain.{SaUtr, TaxIds}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubIncorporationInformation}
 
@@ -42,9 +41,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MTDVAT"
 
-  lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
-  lazy val analyticsToken = loadConfig(s"google-analytics.token")
-  lazy val analyticsHost = loadConfig(s"google-analytics.host")
+  lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version")
+  lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
+  lazy val analyticsHost: String = loadConfig(s"google-analytics.host")
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   // $COVERAGE-ON$
@@ -59,7 +58,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val whitelistIps: Seq[String] = whitelistConfig("ip-whitelist.urls")
   lazy val ipExclusionList: Seq[Call] = whitelistConfig("ip-whitelist.excludeCalls").map(ip => Call("GET", ip))
 
-  lazy val protectedMicroServiceUrl = baseUrl("vat-sign-up") + "/vat-sign-up"
+  lazy val protectedMicroServiceUrl: String = baseUrl("vat-sign-up") + "/vat-sign-up"
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/subscription-request/vat-number"
 
   def vatNumberEligibilityUrl(vatNumber: String): String =
@@ -76,37 +75,37 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
     if (isEnabled(StubIncorporationInformation)) loadConfig("microservice.services.incorporation-information.stub-url")
     else loadConfig("microservice.services.incorporation-information.url")
 
-  def getCompanyName(companyNumber: String) = s"$incorporationInformationUrl/company-number/$companyNumber/company-name"
+  def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
 
-  def getCitizenDetailsUrl(sautr: String) = s"$citizenDetailsUrl/citizen-details/sautr/$sautr/"
+  def getCitizenDetailsUrl(sautr: String): String = s"$citizenDetailsUrl/citizen-details/sautr/$sautr/"
 
-  lazy val btaUrl = loadConfig("bta.url")
+  lazy val btaUrl: String = loadConfig("bta.url")
 
-  lazy val agentServicesUrl = loadConfig("agent-services.url")
+  lazy val agentServicesUrl: String = loadConfig("agent-services.url")
 
   // TODO confirm url
-  lazy val authoriseAgentUrl = loadConfig("agent-services.url")
-  lazy val matchingStubUrl = baseUrl("matching-stub")
+  lazy val authoriseAgentUrl: String = loadConfig("agent-services.url")
+  lazy val matchingStubUrl: String = baseUrl("matching-stub")
 
-  lazy val stubCitizenDetailsUserUrl = s"$matchingStubUrl/dynamic-cid"
+  lazy val stubCitizenDetailsUserUrl: String = s"$matchingStubUrl/dynamic-cid"
 
-  lazy val citizenDetailsUrl = baseUrl("citizen-details")
+  lazy val citizenDetailsUrl: String = baseUrl("citizen-details")
 
-  lazy val identityVerificationProxyUrl = baseUrl("identity-verification-proxy")
+  lazy val identityVerificationProxyUrl: String = baseUrl("identity-verification-proxy")
 
-  lazy val identityVerificationStartUrl = identityVerificationProxyUrl + "/identity-verification-proxy/journey/start"
+  lazy val identityVerificationStartUrl: String = identityVerificationProxyUrl + "/identity-verification-proxy/journey/start"
 
-  lazy val identityVerificationFrontendUrl = loadConfig("identity-verification-frontend.url")
+  lazy val identityVerificationFrontendUrl: String = loadConfig("identity-verification-frontend.url")
 
-  def identityVerificationFrontendRedirectionUrl(link: String) = s"$identityVerificationFrontendUrl$link"
+  def identityVerificationFrontendRedirectionUrl(link: String): String = s"$identityVerificationFrontendUrl$link"
 
-  lazy val contactFrontendUrl = loadConfig("contact-frontend.host")
+  lazy val contactFrontendUrl: String = loadConfig("contact-frontend.host")
 
-  lazy val betaFeedbackUrl = s"$contactFrontendUrl/contact/beta-feedback?service=$contactFormServiceIdentifier"
+  lazy val betaFeedbackUrl: String = s"$contactFrontendUrl/contact/beta-feedback?service=$contactFormServiceIdentifier"
 
-  lazy val betaFeedbackUnauthenticatedUrl = s"$contactFrontendUrl/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  lazy val betaFeedbackUnauthenticatedUrl: String = s"$contactFrontendUrl/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
-  lazy val taxEnrolmentsUrl = baseUrl("tax-enrolments")
+  lazy val taxEnrolmentsUrl: String = baseUrl("tax-enrolments")
 
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes
