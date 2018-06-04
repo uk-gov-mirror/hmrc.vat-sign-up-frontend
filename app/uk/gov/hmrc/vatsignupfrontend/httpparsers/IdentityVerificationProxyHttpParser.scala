@@ -32,13 +32,13 @@ object IdentityVerificationProxyHttpParser {
       }
   }
 
+  case class IdentityVerificationProxySuccessResponse(link: String, journeyLink: String)
+
+  object IdentityVerificationProxySuccessResponse {
+    implicit val reader: Reads[IdentityVerificationProxySuccessResponse] = Json.reads[IdentityVerificationProxySuccessResponse]
+    implicit val writer: OWrites[IdentityVerificationProxySuccessResponse] = Json.writes[IdentityVerificationProxySuccessResponse]
+  }
+
+  case class IdentityVerificationProxyFailureResponse(status: Int)
+
 }
-
-case class IdentityVerificationProxySuccessResponse(link: String, journeyLink: String)
-
-object IdentityVerificationProxySuccessResponse {
-  implicit val reader: Reads[IdentityVerificationProxySuccessResponse] = Json.reads[IdentityVerificationProxySuccessResponse]
-  implicit val writer: OWrites[IdentityVerificationProxySuccessResponse] = Json.writes[IdentityVerificationProxySuccessResponse]
-}
-
-case class IdentityVerificationProxyFailureResponse(status: Int)

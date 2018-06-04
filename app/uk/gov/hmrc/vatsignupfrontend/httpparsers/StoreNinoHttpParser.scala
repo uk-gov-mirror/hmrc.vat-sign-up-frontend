@@ -32,15 +32,14 @@ object StoreNinoHttpParser {
       }
   }
 
+  case object StoreNinoSuccess
+
+  sealed trait StoreNinoFailure
+
+  case object NoMatchFoundFailure extends StoreNinoFailure
+
+  case object NoVATNumberFailure extends StoreNinoFailure
+
+  case class StoreNinoFailureResponse(status: Int) extends StoreNinoFailure
+
 }
-
-
-case object StoreNinoSuccess
-
-sealed trait StoreNinoFailure
-
-case object NoMatchFoundFailure extends StoreNinoFailure
-
-case object NoVATNumberFailure extends StoreNinoFailure
-
-case class StoreNinoFailureResponse(status: Int) extends StoreNinoFailure

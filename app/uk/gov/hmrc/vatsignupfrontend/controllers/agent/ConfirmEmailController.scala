@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressSuccess
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_email
 

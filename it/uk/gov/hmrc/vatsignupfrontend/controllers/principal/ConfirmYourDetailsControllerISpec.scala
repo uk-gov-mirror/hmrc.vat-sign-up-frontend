@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel, UserEntered}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.IdentityVerificationStub._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxySuccessResponse
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxySuccessResponse
 
 class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
 

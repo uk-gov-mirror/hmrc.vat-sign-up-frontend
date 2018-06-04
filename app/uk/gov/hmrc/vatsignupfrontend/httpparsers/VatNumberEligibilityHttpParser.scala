@@ -33,18 +33,17 @@ object VatNumberEligibilityHttpParser {
       }
     }
   }
+
+  case object VatNumberEligible
+
+  sealed trait VatNumberIneligible
+
+  case object IneligibleForMtdVatNumber extends VatNumberIneligible
+
+  case object VatNumberAlreadySubscribed extends VatNumberIneligible
+
+  case object InvalidVatNumber extends VatNumberIneligible
+
+  case class VatNumberEligibilityFailureResponse(status: Int) extends VatNumberIneligible
+
 }
-
-case object VatNumberEligible
-
-sealed trait VatNumberIneligible
-
-case object IneligibleForMtdVatNumber extends VatNumberIneligible
-
-case object VatNumberAlreadySubscribed extends VatNumberIneligible
-
-case object InvalidVatNumber extends VatNumberIneligible
-
-case class VatNumberEligibilityFailureResponse(status: Int) extends VatNumberIneligible
-
-

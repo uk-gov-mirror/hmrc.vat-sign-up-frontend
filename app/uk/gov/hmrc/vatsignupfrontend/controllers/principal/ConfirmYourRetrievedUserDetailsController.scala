@@ -21,18 +21,18 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.userDetailsKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.models.{IRSA, UserDetailsModel, UserEntered}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_your_user_details
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.userDetailsKey
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{NoVATNumberFailure, StoreNinoFailureResponse}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoVATNumberFailure, StoreNinoFailureResponse}
+import uk.gov.hmrc.vatsignupfrontend.models.{IRSA, UserDetailsModel}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_your_user_details
 
 import scala.concurrent.Future
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 
 
 @Singleton
@@ -69,7 +69,7 @@ class ConfirmYourRetrievedUserDetailsController @Inject()(val controllerComponen
               Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))
             case Left(StoreNinoFailureResponse(status)) =>
               Future.failed(new InternalServerException(s"Failure calling store nino: status=$status"))
-            case Left(_) =>  Future.failed(new InternalServerException(s"Failure calling store nino: failed matching when no matching call required"))
+            case Left(_) => Future.failed(new InternalServerException(s"Failure calling store nino: failed matching when no matching call required"))
           }
         case (None, _) =>
           Future.successful(Redirect(routes.YourVatNumberController.show()))

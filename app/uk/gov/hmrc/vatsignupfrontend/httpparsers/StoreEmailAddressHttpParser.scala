@@ -36,9 +36,9 @@ object StoreEmailAddressHttpParser {
     }
   }
 
+  case class StoreEmailAddressSuccess(emailVerified: Boolean)
+
+  case class StoreEmailAddressFailure(status: Int)
+
 }
 
-
-case class StoreEmailAddressSuccess(emailVerified: Boolean)
-
-case class StoreEmailAddressFailure(status: Int)

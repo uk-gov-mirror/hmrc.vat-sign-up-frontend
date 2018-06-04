@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.CREATED
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxySuccessResponse
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxySuccessResponse
 import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
 
 object IdentityVerificationStub extends WireMockMethods {

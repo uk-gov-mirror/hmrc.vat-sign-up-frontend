@@ -21,8 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionResponse
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{SubmissionFailureResponse, SubmissionSuccessResponse}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.{SubmissionFailureResponse, SubmissionResponse, SubmissionSuccessResponse}
 import uk.gov.hmrc.vatsignupfrontend.services.SubmissionService
 
 import scala.concurrent.Future

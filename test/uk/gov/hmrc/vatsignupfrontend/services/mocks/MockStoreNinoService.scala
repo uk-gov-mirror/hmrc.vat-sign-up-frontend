@@ -21,8 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.StoreNinoResponse
-import uk.gov.hmrc.vatsignupfrontend.httpparsers._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 

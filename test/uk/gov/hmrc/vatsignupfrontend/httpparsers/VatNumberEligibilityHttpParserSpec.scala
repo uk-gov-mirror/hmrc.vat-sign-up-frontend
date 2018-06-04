@@ -20,7 +20,7 @@ import org.scalatest.EitherValues
 import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, NO_CONTENT, NOT_FOUND}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityHttpReads
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 
 class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
