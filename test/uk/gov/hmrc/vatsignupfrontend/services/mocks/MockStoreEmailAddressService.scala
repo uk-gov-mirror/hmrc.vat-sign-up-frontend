@@ -20,8 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressResponse
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{StoreEmailAddressFailure, StoreEmailAddressSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.{StoreEmailAddressFailure, StoreEmailAddressResponse, StoreEmailAddressSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
 
 import scala.concurrent.Future

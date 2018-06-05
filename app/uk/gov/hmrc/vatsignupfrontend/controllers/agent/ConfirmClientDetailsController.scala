@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys.userDetailsKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
 import uk.gov.hmrc.vatsignupfrontend.models.{UserDetailsModel, UserEntered}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._

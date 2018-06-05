@@ -31,8 +31,8 @@ object SubmissionHttpParser {
 
   }
 
+  case object SubmissionSuccessResponse
+
+  case class SubmissionFailureResponse(status: Int)
+
 }
-
-case object SubmissionSuccessResponse
-
-case class SubmissionFailureResponse(status: Int)

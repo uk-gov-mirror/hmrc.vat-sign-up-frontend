@@ -32,7 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxySuccessResponse
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxySuccessResponse
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel, UserEntered}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockIdentityVerificationService, MockStoreNinoService}
 

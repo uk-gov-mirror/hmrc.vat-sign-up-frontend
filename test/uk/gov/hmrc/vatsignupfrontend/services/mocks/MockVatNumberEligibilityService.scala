@@ -20,11 +20,9 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityResponse
-import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
 import play.api.http.Status.INTERNAL_SERVER_ERROR
-import uk.gov.hmrc.vatsignupfrontend.httpparsers._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{VatNumberEligibilityResponse, _}
+import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
 
 import scala.concurrent.Future
 

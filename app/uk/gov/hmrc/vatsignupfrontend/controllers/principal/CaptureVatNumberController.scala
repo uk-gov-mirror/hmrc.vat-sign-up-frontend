@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -25,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
 

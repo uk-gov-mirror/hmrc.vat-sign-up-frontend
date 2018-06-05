@@ -19,18 +19,18 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 
-import uk.gov.hmrc.vatsignupfrontend.Constants.skipIvJourneyValue
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
+import uk.gov.hmrc.vatsignupfrontend.Constants.skipIvJourneyValue
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{identityVerificationContinueUrlKey, userDetailsKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
 import uk.gov.hmrc.vatsignupfrontend.models.{UserDetailsModel, UserEntered}
 import uk.gov.hmrc.vatsignupfrontend.services.{IdentityVerificationService, StoreNinoService}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._

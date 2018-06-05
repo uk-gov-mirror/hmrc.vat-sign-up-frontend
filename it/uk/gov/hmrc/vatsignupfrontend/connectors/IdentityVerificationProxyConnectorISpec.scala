@@ -24,11 +24,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.helpers.ComponentSpecBase
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.IdentityVerificationStub
-import uk.gov.hmrc.vatsignupfrontend.httpparsers._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
-import play.api.mvc.{AnyContent, Headers, Request, RequestHeader}
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class IdentityVerificationProxyConnectorISpec extends ComponentSpecBase {
 
