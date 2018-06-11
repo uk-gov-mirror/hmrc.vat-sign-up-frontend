@@ -30,7 +30,8 @@ object FeatureSwitch {
     KnownFactsJourney,
     CompanyNameJourney,
     StubIncorporationInformation,
-    UseIRSA
+    UseIRSA,
+    VerifyAgentEmail
   )
 
   def apply(str: String): FeatureSwitch =
@@ -61,4 +62,9 @@ case object StubIncorporationInformation extends FeatureSwitch {
 case object UseIRSA extends FeatureSwitch {
   override val name: String = s"$prefix.use-ir-sa"
   override val displayText: String = "Use UTR from IR-SA to retrieve NINO"
+}
+
+case object VerifyAgentEmail extends FeatureSwitch {
+  override val name: String = s"$prefix.verify-agent-email"
+  override val displayText: String = "Enable agent email verification flow"
 }
