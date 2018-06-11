@@ -55,12 +55,11 @@ class ConfirmAgentEmailSpec extends ViewSpec {
 
     testPage.shouldHaveConfirmButton()
 
-//    TODO: Update once Agent controller exists for Capture email
-//    testPage.shouldHaveALink(
-//      id = "changeLink",
-//      text = messages.link,
-//      href = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureEmailController.show().url
-//    )
+    testPage.shouldHaveALink(
+      id = "changeLink",
+      text = messages.link,
+      href = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureAgentEmailController.show().url
+    )
   }
 
 }

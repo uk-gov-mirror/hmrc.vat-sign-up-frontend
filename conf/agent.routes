@@ -58,6 +58,10 @@ POST        /receive-emails                uk.gov.hmrc.vatsignupfrontend.control
 GET         /email-address                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureEmailController.show
 POST        /email-address                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureEmailController.submit
 
+#Capture Agent Email
+GET         /your-email-address            uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.show
+POST        /your-email-address            uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.submit
+
 #Confirm Email
 GET         /confirm-email                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmEmailController.show
 POST        /confirm-email                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmEmailController.submit
