@@ -143,6 +143,12 @@ object MessageLookup {
     val link = "Change email address"
   }
 
+  object ConfirmAgentEmail {
+    val title = "Check your email address"
+    val heading: String = title
+    val link = "Change email address"
+  }
+
   object VerifyEmail {
     val title = "We've sent your client an email"
     val heading: String = title
