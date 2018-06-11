@@ -144,6 +144,12 @@ agent.capture_email.title                                              = What is
 agent.capture_email.heading                                            = What is your client''s email address?
 agent.capture_email.hint                                               = For example, me@me.com
 
+## Agent Capture Agent Email page
+agent.capture_agent_email.title                                        = What is your email address?
+agent.capture_agent_email.heading                                      = What is your email address?
+agent.capture_agent_email.line_1                                       = We need this to send you a confirmation message after you sign up this client.
+agent.capture_agent_email.hint                                         = For example, me@me.com
+
 ## Agent Confirm Email page
 agent.confirm_email.title                                              = Check your client''s email address
 agent.confirm_email.heading                                            = Check your client''s email address
