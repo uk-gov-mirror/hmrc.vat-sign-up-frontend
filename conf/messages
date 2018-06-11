@@ -150,6 +150,11 @@ agent.confirm_email.heading                                            = Check y
 agent.confirm_email.email.heading                                      = Email address
 agent.confirm_email.link                                               = Change email address
 
+## Agent Confirm Agent Email page
+agent.confirm_agent_email.title                                        = Check your email address
+agent.confirm_agent_email.heading                                      = Check your email address
+agent.confirm_agent_email.link                                         = Change email address
+
 ## Agent verify email page
 agent.verify_email.title                                               = We''ve sent your client an email
 agent.verify_email.heading                                             = We''ve sent your client an email
