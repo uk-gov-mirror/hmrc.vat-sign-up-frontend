@@ -53,6 +53,8 @@ class CaptureAgentEmailSpec extends ViewSpec {
       messages.hint
     )
 
+    testPage.shouldHavePara(messages.line1)
+
     testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
     testPage.shouldHaveTextField(email, messages.heading)
