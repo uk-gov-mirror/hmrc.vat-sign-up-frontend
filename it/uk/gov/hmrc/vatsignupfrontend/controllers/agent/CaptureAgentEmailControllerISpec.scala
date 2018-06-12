@@ -42,16 +42,13 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
 
       val res = post("/client/your-email-address")(EmailForm.email -> testEmail)
 
-      //  TODO: Update tests once confirm agent email controller exists
       res should have(
-        httpStatus(NOT_IMPLEMENTED))
-      //        httpStatus(SEE_OTHER),
-      //        redirectUri(routes.ConfirmEmailController.show().url)
-      //      )
-      //
-      //      val session = SessionCookieCrumbler.getSessionMap(res)
-      //      session.keys should contain(emailKey)
-      //    }
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmAgentEmailController.show().url)
+      )
+
+      val session = SessionCookieCrumbler.getSessionMap(res)
+      session.keys should contain(emailKey)
     }
   }
 }

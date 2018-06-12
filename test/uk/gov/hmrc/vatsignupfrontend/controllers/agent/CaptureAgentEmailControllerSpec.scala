@@ -57,11 +57,8 @@ class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
         val result = TestCaptureAgentEmailController.submit(request)
 
-        //TODO: Update tests once Agent confirm email controller exists
-
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        //        status(result) shouldBe Status.SEE_OTHER
-        //        redirectLocation(result) shouldBe Some(routes.ConfirmEmailController.show().url)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmAgentEmailController.show().url)
 
         await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
       }
