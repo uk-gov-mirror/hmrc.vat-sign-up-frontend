@@ -18,18 +18,38 @@ package uk.gov.hmrc.vatsignupfrontend.helpers
 
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
 
+import scala.annotation.tailrec
 import scala.util.Random
 
 object TestConstantsGenerator {
 
   private val rand = new Random()
 
-  private val UPPER_BOUND_9_DIGIT_NUMBER = 1000000000
   private val UPPER_BOUND_8_DIGIT_NUMBER = 99999999
   private val UPPER_BOUND_7_DIGIT_NUMBER = 9999999
   private val UPPER_BOUND_6_DIGIT_NUMBER = 999999
 
-  def randomVatNumber: String = "%09d".format(rand.nextInt(UPPER_BOUND_9_DIGIT_NUMBER))
+  private def calcVatCheckSum(value: String): String = {
+    val intValue = value.toInt
+
+    // not efficient but saves writing out a hardcoded calculation or another recursive function
+    val constants = (2 to 8).reverse
+    val initSum = value.map(_.asDigit).zip(constants)
+      .map { case (digit, constant) => digit * constant }.sum
+
+    @tailrec
+    def deduct(num: Int): Int = num - 97 match {
+      case res if res > 0 => deduct(res)
+      case res => res * -1
+    }
+
+    f"${deduct(initSum)}%02d"
+  }
+
+  def randomVatNumber: String = {
+    val randomLead = f"${rand.nextInt(UPPER_BOUND_7_DIGIT_NUMBER + 1)}%07d"
+    randomLead + calcVatCheckSum(randomLead)
+  }
 
   def randomCrn: String = rand.nextInt(2) match {
     case 0 => randomCrnNumeric
@@ -70,4 +90,5 @@ object TestConstantsGenerator {
     randomAlpha(2) +
       randomNumeric(1) + randomNumeric(1) + // must have 2 numeric
       randomAlpha(1) + randomAlpha(1) // must end with 2 alphas
+
 }

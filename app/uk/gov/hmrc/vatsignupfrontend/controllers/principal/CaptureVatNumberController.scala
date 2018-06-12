@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
+import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
 
 import scala.concurrent.Future
@@ -53,17 +54,20 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
           ),
         vatNumber =>
-          vatNumberEligibilityService.checkVatNumberEligibility(vatNumber) map {
-            case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-            case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
-            case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
-            case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
-            case Left(VatNumberEligibilityFailureResponse(status)) => {
-              throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
+          if (VatNumberChecksumValidation.isValid(vatNumber)) {
+            vatNumberEligibilityService.checkVatNumberEligibility(vatNumber) map {
+              case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(SessionKeys.vatNumberKey -> vatNumber)
+              case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
+              case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
+              case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
+              case Left(VatNumberEligibilityFailureResponse(status)) => {
+                throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
+              }
             }
           }
-
+          else Future.successful(Redirect(routes.InvalidVatNumberController.show()))
       )
     }
   }
+
 }

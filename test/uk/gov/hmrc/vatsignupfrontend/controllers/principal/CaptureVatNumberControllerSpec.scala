@@ -54,67 +54,81 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
   }
 
-
   "Calling the submit action of the Capture Vat Number controller" when {
-    "form successfully submitted" should {
-      "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
-        enable(KnownFactsJourney)
-        mockAuthAdminRole()
-        mockVatNumberEligibilitySuccess(testVatNumber)
+    "form successfully submitted" when {
+      "the vat number passes checksum validation" should {
+        "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
+          enable(KnownFactsJourney)
+          mockAuthAdminRole()
+          mockVatNumberEligibilitySuccess(testVatNumber)
 
-        implicit val request = testPostRequest(testVatNumber)
+          implicit val request = testPostRequest(testVatNumber)
 
-        val result = TestCaptureVatNumberController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+          val result = TestCaptureVatNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-        result.session get SessionKeys.vatNumberKey should contain(testVatNumber)
+          result.session get SessionKeys.vatNumberKey should contain(testVatNumber)
+        }
+
+        "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
+          enable(KnownFactsJourney)
+          mockAuthAdminRole()
+          mockVatNumberIneligibleForMtd(testVatNumber)
+
+          val request = testPostRequest(testVatNumber)
+
+          val result = TestCaptureVatNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+        }
+
+        "redirect to Invalid Vat Number page when the vat number is invalid" in {
+          enable(KnownFactsJourney)
+          mockAuthAdminRole()
+          mockVatNumberEligibilityInvalid(testVatNumber)
+
+          val request = testPostRequest(testVatNumber)
+
+          val result = TestCaptureVatNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
+        }
+
+        "redirect to Already Signed Up page when the vat number has already been subscribed" in {
+          enable(KnownFactsJourney)
+          mockAuthAdminRole()
+          mockVatNumberEligibilityAlreadySubscribed(testVatNumber)
+
+          val request = testPostRequest(testVatNumber)
+
+          val result = TestCaptureVatNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+        }
+
+        "throw an exception for any other scenario" in {
+          enable(KnownFactsJourney)
+          mockAuthAdminRole()
+          mockVatNumberEligibilityFailure(testVatNumber)
+
+          val request = testPostRequest(testVatNumber)
+          intercept[InternalServerException] {
+            await(TestCaptureVatNumberController.submit(request))
+          }
+        }
       }
+      "the vat number fails checksum validation" should {
+        "redirect to Invalid Vat Number page" in {
+          enable(KnownFactsJourney)
+          mockAuthAdminRole()
+          mockVatNumberEligibilitySuccess(testInvalidVatNumber)
 
-      "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
-        enable(KnownFactsJourney)
-        mockAuthAdminRole()
-        mockVatNumberIneligibleForMtd(testVatNumber)
+          implicit val request = testPostRequest(testInvalidVatNumber)
 
-        val request = testPostRequest(testVatNumber)
-
-        val result = TestCaptureVatNumberController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
-      }
-
-      "redirect to Invalid Vat Number page when the vat number is invalid" in {
-        enable(KnownFactsJourney)
-        mockAuthAdminRole()
-        mockVatNumberEligibilityInvalid(testVatNumber)
-
-        val request = testPostRequest(testVatNumber)
-
-        val result = TestCaptureVatNumberController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
-      }
-
-      "redirect to Already Signed Up page when the vat number has already been subscribed" in {
-        enable(KnownFactsJourney)
-        mockAuthAdminRole()
-        mockVatNumberEligibilityAlreadySubscribed(testVatNumber)
-
-        val request = testPostRequest(testVatNumber)
-
-        val result = TestCaptureVatNumberController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
-      }
-
-      "throw an exception for any other scenario" in {
-        enable(KnownFactsJourney)
-        mockAuthAdminRole()
-        mockVatNumberEligibilityFailure(testVatNumber)
-
-        val request = testPostRequest(testVatNumber)
-        intercept[InternalServerException] {
-          await(TestCaptureVatNumberController.submit(request))
+          val result = TestCaptureVatNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
         }
       }
     }
@@ -131,4 +145,5 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
   }
+
 }

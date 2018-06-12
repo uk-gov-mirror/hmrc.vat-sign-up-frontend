@@ -28,6 +28,7 @@ import scala.util.Random
 
 object TestConstants {
   val testVatNumber: String = TestConstantsGenerator.randomVatNumber
+  val testInvalidVatNumber: String = "999999999"
   val testName: String = UUID.randomUUID().toString
   val testBusinessPostcode: PostCode = PostCode(TestConstantsGenerator.randomPostCode)
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
