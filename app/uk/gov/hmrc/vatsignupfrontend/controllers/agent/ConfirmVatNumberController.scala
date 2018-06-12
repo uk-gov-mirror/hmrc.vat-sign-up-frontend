@@ -54,6 +54,7 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
     authorised() {
       request.session.get(SessionKeys.vatNumberKey) match {
         case Some(vatNumber) if vatNumber.nonEmpty =>
+          // todo checksum  validation
           storeVatNumberService.storeVatNumber(vatNumber) map {
             case Right(StoreVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())

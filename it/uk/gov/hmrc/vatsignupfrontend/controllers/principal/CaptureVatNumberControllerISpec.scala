@@ -59,7 +59,21 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     }
 
     "redirect to the invalid vat number page" when {
-      "the vat number is invalid" in {
+      "the vat number is fails the checksum validation" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubVatNumberEligibilitySuccess(testInvalidVatNumber)
+
+        val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.InvalidVatNumberController.show().url)
+        )
+      }
+    }
+
+    "redirect to the invalid vat number page" when {
+      "the eligibility returns the vat number as invalid" in {
         stubAuth(OK, successfulAuthResponse())
         stubVatNumberEligibilityInvalid(testVatNumber)
 

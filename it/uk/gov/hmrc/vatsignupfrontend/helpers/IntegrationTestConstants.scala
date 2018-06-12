@@ -27,6 +27,7 @@ import scala.util.Random
 
 object IntegrationTestConstants {
   val testVatNumber: String = IntegrationTestConstantsGenerator.randomVatNumber
+  val testInvalidVatNumber: String = "999999999"
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode)
