@@ -48,9 +48,8 @@ class CaptureAgentEmailController @Inject()(val controllerComponents: Controller
           Future.successful(
             BadRequest(capture_agent_email(formWithErrors, routes.CaptureAgentEmailController.submit()))
           ),
-        // TODO: Update to use new Confirm Agent Controller
         email =>
-          Future.successful(NotImplemented.addingToSession(SessionKeys.emailKey -> email))
+          Future.successful(Redirect(routes.ConfirmAgentEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
       )
     }
   }
