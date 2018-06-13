@@ -106,6 +106,25 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())
     }
 
+    def shouldHaveAccordion(heading: String, text: String): Unit = {
+      s"$name should have an accordion with heading $heading and $text" in {
+        val accordions = element.getElementsByTag("details")
+        if (accordions == null) fail(s"Unable to find any details tag")
+        if (accordions.size() > 1) fail(s"found multiple accordions, need to specify an id")
+        val targetAccordion = accordions.get(0)
+
+        val targetHeading = targetAccordion.getElementsByClass("summary").text()
+        withClue(s"accordion heading '$targetHeading' does not match '$heading'\n") {
+          targetHeading shouldBe heading
+        }
+
+        val targetText = targetAccordion.select(".panel.panel-border-narrow").text()
+        withClue(s"accordion text '$targetText' does not match '$text'\n") {
+          targetText shouldBe text
+        }
+      }
+    }
+
     def shouldHaveSignOutButton(text: String = common.signOut): Unit = {
       val id = "sign-out-button"
       shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())

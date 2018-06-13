@@ -167,6 +167,13 @@ agent.verify_email.heading                                             = We''ve 
 agent.verify_email.line_1                                              = We''ve sent an email to {0}. Your client needs to click on the link in the email to verify their email address.
 agent.verify_email.line_2                                              = They need to verify their email address to get VAT emails from HMRC.
 
+## Agent verify agent email page
+agent.verify_agent_email.title                                         = Verify your email address
+agent.verify_agent_email.heading                                       = Verify your email address
+agent.verify_agent_email.line_1                                        = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
+agent.verify_agent_email.line_2                                        = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
+agent.verify_agent_email.hidden_text                                   = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+
 # When client verified their email requested by an agent
 client.verified_email.title                                            = You''ve verified your email address
 client.verified_email.heading                                          = You''ve verified your email address
