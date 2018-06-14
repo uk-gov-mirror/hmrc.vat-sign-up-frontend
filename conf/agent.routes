@@ -79,6 +79,8 @@ GET         /verify-your-email             uk.gov.hmrc.vatsignupfrontend.control
 
 GET         /email-verified                uk.gov.hmrc.vatsignupfrontend.controllers.agent.ClientVerifiedEmailController.show
 
+GET         /verified-your-email           uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentVerifiedEmailController.show
+
 #Terms
 GET         /terms-of-participation        uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.show
 POST        /terms-of-participation        uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.submit

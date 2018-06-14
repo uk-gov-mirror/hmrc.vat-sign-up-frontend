@@ -18,12 +18,24 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
 class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(VerifyAgentEmail)
+  }
+
+  override def afterEach(): Unit = {
+    super.afterEach()
+    disable(VerifyAgentEmail)
+  }
+
   "GET /your-email-address" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -32,6 +44,16 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
 
       res should have(
         httpStatus(OK)
+      )
+    }
+    "return an NOT_FOUND if VerifyAgentEmail is disabled" in {
+      disable(VerifyAgentEmail)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/your-email-address")
+
+      res should have(
+        httpStatus(NOT_FOUND)
       )
     }
   }
@@ -50,5 +72,16 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       val session = SessionCookieCrumbler.getSessionMap(res)
       session.keys should contain(emailKey)
     }
+    "return an NOT_FOUND if VerifyAgentEmail is disabled" in {
+      disable(VerifyAgentEmail)
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = post("/client/your-email-address")(EmailForm.email -> testEmail)
+
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
+    }
   }
+
 }

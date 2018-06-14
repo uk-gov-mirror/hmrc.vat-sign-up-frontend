@@ -18,16 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class VerifyAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class AgentVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -39,32 +36,19 @@ class VerifyAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     disable(VerifyAgentEmail)
   }
 
-  object TestVerifyAgentEmailController extends VerifyAgentEmailController(mockControllerComponents)
+  object TestAgentVerifiedEmailController extends AgentVerifiedEmailController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/verify-your-email")
+  "Calling the show action of the AgentVerifiedEmailControllerSpec" should {
+      lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
 
-  "Calling the show action of the verify Agent Email controller" when {
-    "there is a email in the session" should {
-      "show the verify Agent Email page" in {
+      "go to the Agent email Verified page" in {
         mockAuthRetrieveAgentEnrolment()
-        val request = testGetRequest.withSession(SessionKeys.emailKey -> testEmail)
+        val result = TestAgentVerifiedEmailController.show(testGetRequest)
 
-        val result = TestVerifyAgentEmailController.show(request)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
       }
     }
-
-    "there isn't a email in the session" should {
-      "redirect to Capture Agent Email page" in {
-        mockAuthRetrieveAgentEnrolment()
-
-        val result = TestVerifyAgentEmailController.show(testGetRequest)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
-      }
-    }
-  }
 
 }

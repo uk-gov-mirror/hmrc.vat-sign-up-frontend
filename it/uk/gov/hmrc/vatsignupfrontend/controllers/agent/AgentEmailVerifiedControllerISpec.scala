@@ -17,13 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class VerifyAgentEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+class AgentEmailVerifiedControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -35,11 +33,11 @@ class VerifyAgentEmailControllerISpec extends ComponentSpecBase with CustomMatch
     disable(VerifyAgentEmail)
   }
 
-  "GET /client/verify-your-email" should {
+  "GET /client/verified-your-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/verify-your-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/client/verified-your-email")
 
       res should have(
         httpStatus(OK)
@@ -49,7 +47,7 @@ class VerifyAgentEmailControllerISpec extends ComponentSpecBase with CustomMatch
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/verify-your-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/client/verified-your-email")
 
       res should have(
         httpStatus(NOT_FOUND)

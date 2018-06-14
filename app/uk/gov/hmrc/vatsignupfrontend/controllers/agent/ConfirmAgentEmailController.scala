@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
@@ -33,7 +34,7 @@ import scala.concurrent.Future
 @Singleton
 class ConfirmAgentEmailController @Inject()(val controllerComponents: ControllerComponents,
                                             val storeEmailAddressService: StoreEmailAddressService)
-  extends AuthenticatedController(AgentEnrolmentPredicate) {
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(VerifyAgentEmail)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -65,10 +66,8 @@ class ConfirmAgentEmailController @Inject()(val controllerComponents: Controller
       (optVatNumber, optEmail) match {
         case (Some(vatNumber), Some(email)) =>
           storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
-            //TODO: create verify agent email controller.
             case Right(StoreEmailAddressSuccess(false)) =>
-              Status(NOT_IMPLEMENTED)
-            //  Redirect(routes.VerifyAgentEmailController.show().url)
+              Redirect(routes.VerifyAgentEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
               Redirect(routes.TermsController.show().url)
             case Left(errResponse) =>
