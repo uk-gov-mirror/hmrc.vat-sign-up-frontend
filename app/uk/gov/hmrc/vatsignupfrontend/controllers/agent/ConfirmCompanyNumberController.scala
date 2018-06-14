@@ -65,7 +65,7 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
         case (Some(vatNumber), Some(companyNumber)) =>
           storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber) map {
             case Right(_) =>
-              Redirect(routes.AgreeCaptureEmailController.show().url)
+              Redirect(routes.EmailRoutingController.route().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
           }
@@ -80,4 +80,5 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
       }
     }
   }
+
 }

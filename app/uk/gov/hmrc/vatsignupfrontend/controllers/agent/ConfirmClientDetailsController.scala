@@ -63,7 +63,7 @@ class ConfirmClientDetailsController @Inject()(val controllerComponents: Control
         case (_, None) => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
         case (Some(vatNumber), Some(userDetails)) => {
           storeNinoService.storeNino(vatNumber, userDetails, Some(UserEntered)) map {
-            case Right(_) => Redirect(routes.AgreeCaptureEmailController.show())
+            case Right(_) => Redirect(routes.EmailRoutingController.route())
             case Left(NoMatchFoundFailure) => Redirect(routes.FailedClientMatchingController.show())
             case Left(NoVATNumberFailure) => throw new InternalServerException(s"Failure calling store nino: vat number is not found")
             case Left(StoreNinoFailureResponse(status)) => throw new InternalServerException(s"Failure calling store nino: status=$status")
