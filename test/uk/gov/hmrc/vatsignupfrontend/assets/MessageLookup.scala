@@ -177,6 +177,12 @@ object MessageLookup {
     val accordionText = s"Check your junk folder. If it's not there we can $linkText2. If we send your email again, any previous links will stop working."
   }
 
+  object AgentEmailVerified {
+    val title = "You have verified your email address"
+    val heading: String = title
+    val line1 = "You need to continue to sign up your client. We will send you a confirmation message after you sign up this client."
+  }
+
   object ClientVerifiedEmail {
     val title = "You've verified your email address"
     val heading: String = title

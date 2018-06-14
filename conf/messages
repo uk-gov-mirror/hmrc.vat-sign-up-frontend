@@ -180,6 +180,10 @@ client.verified_email.heading                                          = You''ve
 client.verified_email.line_1                                           = HM Revenue and Customs will contact you by email instead of sending letters.
 client.verified_email.return_to_gov_uk                                 = Return to GOV.UK
 
+agent.email_verified.title                                             = You have verified your email address
+agent.email_verified.heading                                           = You have verified your email address
+agent.email_verified.line_1                                            = You need to continue to sign up your client. We will send you a confirmation message after you sign up this client.
+
 ## Terms page
 agent.terms.title                                                      = Terms of participation
 agent.terms.heading                                                    = Terms of participation

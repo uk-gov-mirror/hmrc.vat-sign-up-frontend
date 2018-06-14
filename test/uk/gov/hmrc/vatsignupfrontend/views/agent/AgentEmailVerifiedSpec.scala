@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.agent
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => common, PrincipalEmailVerified => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentEmailVerified => messages, Base => common}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class EmailVerifiedSpec extends ViewSpec {
+class AgentEmailVerifiedSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.email_verified()(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified()(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Email verified view" should {
-
+  "The Agent email verified view" should {
     val testPage = TestView(
-      name = "Email verified View",
+      name = "Agent email verified View",
       title = messages.title,
       heading = messages.heading,
       page = page
@@ -51,9 +50,7 @@ class EmailVerifiedSpec extends ViewSpec {
       messages.line1
     )
 
-    testPage.shouldHaveContinueButtonLink(routes.TermsController.show().url, common.continueToSignUp)
-
+    testPage.shouldHaveContinueButtonLink(routes.TermsController.show().url, common.continue)
   }
 
 }
-
