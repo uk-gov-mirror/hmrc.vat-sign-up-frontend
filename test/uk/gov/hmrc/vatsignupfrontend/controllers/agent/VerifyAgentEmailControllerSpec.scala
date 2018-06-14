@@ -32,9 +32,6 @@ class VerifyAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   lazy val testGetRequest = FakeRequest("GET", "/verify-your-email")
 
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/verify-your-email")
-
   "Calling the show action of the verify Agent Email controller" when {
     "there is a email in the session" should {
       "show the verify Agent Email page" in {
