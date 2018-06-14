@@ -21,7 +21,9 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.{Admin, Enrolments}
+import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
@@ -29,6 +31,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockVatNumberEligibilityService
+
+import scala.concurrent.Future
 
 
 class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
@@ -41,25 +45,78 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   def testPostRequest(vatNumber: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(VatNumberForm.vatNumber -> vatNumber)
 
-  "Calling the show action of the Capture Vat Number controller" should {
-    "go to the Capture Vat Number page" in {
-      enable(KnownFactsJourney)
-      mockAuthAdminRole()
+  "Calling the show action of the Capture Vat Number controller" when {
+    "the known facts journey feature switch is enabled and the user does not have VAT-DEC enrolment" should {
+      "go to the Capture Vat Number page" in {
+        enable(KnownFactsJourney)
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
-      val result = TestCaptureVatNumberController.show(testGetRequest)
 
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+        val result = TestCaptureVatNumberController.show(testGetRequest)
+
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+    "the user has a VAT-DEC enrolment" should {
+      "redirect to resolve VAT number controller" in {
+        enable(KnownFactsJourney)
+        mockAuthRetrieveVatDecEnrolment()
+
+        val result = TestCaptureVatNumberController.show(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
+      }
+    }
+
+    "the known facts journey feature switch is disabled" should {
+      "throw not found exception" in {
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+
+        intercept[NotFoundException] {
+          await(TestCaptureVatNumberController.show(testGetRequest))
+        }
+      }
     }
   }
 
   "Calling the submit action of the Capture Vat Number controller" when {
     "form successfully submitted" when {
       "the vat number passes checksum validation" should {
+        "the user has a VAT-DEC enrolment" should {
+          "redirect to resolve VAT number controller" in {
+            enable(KnownFactsJourney)
+            mockAuthRetrieveVatDecEnrolment()
+
+            val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
+          }
+        }
+
+        "the known facts journey feature switch is disabled" should {
+          "throw not found exception" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+
+            intercept[NotFoundException] {
+              await(TestCaptureVatNumberController.submit(testPostRequest(testVatNumber)))
+            }
+          }
+        }
         "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
           enable(KnownFactsJourney)
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockVatNumberEligibilitySuccess(testVatNumber)
 
           implicit val request = testPostRequest(testVatNumber)
@@ -73,7 +130,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
           enable(KnownFactsJourney)
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockVatNumberIneligibleForMtd(testVatNumber)
 
           val request = testPostRequest(testVatNumber)
@@ -85,7 +144,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "redirect to Invalid Vat Number page when the vat number is invalid" in {
           enable(KnownFactsJourney)
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockVatNumberEligibilityInvalid(testVatNumber)
 
           val request = testPostRequest(testVatNumber)
@@ -97,7 +158,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "redirect to Already Signed Up page when the vat number has already been subscribed" in {
           enable(KnownFactsJourney)
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockVatNumberEligibilityAlreadySubscribed(testVatNumber)
 
           val request = testPostRequest(testVatNumber)
@@ -109,7 +172,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "throw an exception for any other scenario" in {
           enable(KnownFactsJourney)
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockVatNumberEligibilityFailure(testVatNumber)
 
           val request = testPostRequest(testVatNumber)
@@ -121,7 +186,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "the vat number fails checksum validation" should {
         "redirect to Invalid Vat Number page" in {
           enable(KnownFactsJourney)
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockVatNumberEligibilitySuccess(testInvalidVatNumber)
 
           implicit val request = testPostRequest(testInvalidVatNumber)
@@ -136,7 +203,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
         enable(KnownFactsJourney)
-        mockAuthAdminRole()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST

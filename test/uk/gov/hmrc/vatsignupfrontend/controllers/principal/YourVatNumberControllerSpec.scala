@@ -59,7 +59,7 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
 
   "the user does not have a VAT-DEC enrolment" when {
     "the known facts journey feature switch is enabled" should {
-      "redirect to Capture VAT number page" in {
+      "redirect to resolve VAT number controller" in {
         enable(KnownFactsJourney)
 
         mockAuthorise(
@@ -69,12 +69,12 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         val result = TestYourVatNumberController.show(testGetRequest)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+        redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
       }
     }
 
     "the known facts journey feature switch is disabled" should {
-      "redirect to Cannot Use Service page" in {
+      "redirect to resolve VAT number controller" in {
         mockAuthorise(
           retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
         )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -82,7 +82,7 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         val result = TestYourVatNumberController.show(testGetRequest)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
+        redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
       }
     }
   }
@@ -135,7 +135,7 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
     }
     "the user does not have a VAT-DEC enrolment" when {
       "the known facts journey feature switch is enabled" should {
-        "redirect to capture VAT number" in {
+        "redirect to resolve VAT number controller" in {
           enable(KnownFactsJourney)
 
           mockAuthorise(
@@ -145,12 +145,12 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           val result = TestYourVatNumberController.submit(testPostRequest)
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+          redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
         }
       }
 
       "the known facts journey feature switch is disabled" should {
-        "redirect to Cannot Use Service page" in {
+        "redirect to resolve VAT number controller" in {
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -158,9 +158,10 @@ class YourVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           val result = TestYourVatNumberController.submit(testPostRequest)
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
+          redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
         }
       }
     }
   }
+
 }

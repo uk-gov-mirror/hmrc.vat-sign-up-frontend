@@ -24,6 +24,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
@@ -33,39 +34,23 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.your_vat_number
 import scala.concurrent.Future
 
 @Singleton
-class YourVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                        val storeVatNumberService: StoreVatNumberService)
+class ResolveVatNumberController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
+  val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
       enrolments.vatNumber match {
         case Some(vatNumber) =>
-          Future.successful(Ok(your_vat_number(vatNumber, routes.YourVatNumberController.submit())))
-        case _ =>
           Future.successful(
-            Redirect(routes.ResolveVatNumberController.resolve())
+            Redirect(routes.YourVatNumberController.show())
           )
-      }
-    }
-  }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
-      enrolments.vatNumber match {
-        case Some(vatNumber) =>
-          storeVatNumberService.storeVatNumber(vatNumber) map {
-            case Right(StoreVatNumberSuccess) =>
-              Redirect(routes.CaptureBusinessEntityController.show())
-                .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-            case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
-            case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
-            case Left(_) =>
-              throw new InternalServerException("storeVatNumber failed")
-          }
-        case _ =>
+        case None if appConfig.isEnabled(KnownFactsJourney) =>
           Future.successful(
-            Redirect(routes.ResolveVatNumberController.resolve())
+            Redirect(routes.CaptureVatNumberController.show())
+          )
+        case None =>
+          Future.successful(
+            Redirect(routes.CannotUseServiceController.show())
           )
       }
     }
