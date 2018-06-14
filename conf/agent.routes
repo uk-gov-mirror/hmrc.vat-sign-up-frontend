@@ -74,6 +74,9 @@ POST        /confirm-your-email            uk.gov.hmrc.vatsignupfrontend.control
 GET         /verify-email                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyEmailController.show
 POST        /verify-email                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyEmailController.submit
 
+#Verify Agent Email
+GET         /verify-your-email             uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyAgentEmailController.show
+
 GET         /email-verified                uk.gov.hmrc.vatsignupfrontend.controllers.agent.ClientVerifiedEmailController.show
 
 #Terms
