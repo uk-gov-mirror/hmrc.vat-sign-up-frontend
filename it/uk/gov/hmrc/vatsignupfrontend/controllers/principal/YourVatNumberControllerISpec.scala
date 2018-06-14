@@ -37,7 +37,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
     }
     "the vat number is not on the profile" when {
       "the KnownFactsJourney feature switch is enabled" should {
-        "redirect to the capture VAT number page" in {
+        "redirect to resolve VAT number controller" in {
           enable(KnownFactsJourney)
 
           stubAuth(OK, successfulAuthResponse())
@@ -47,13 +47,13 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureVatNumberController.show().url)
+            redirectUri(routes.ResolveVatNumberController.resolve().url)
           )
         }
       }
 
       "the KnownFactsJourney feature switch is disabled" should {
-        "redirect to the Cannot Use Service page" in {
+        "redirect to resolve VAT number controller" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreVatNumberSuccess()
 
@@ -61,7 +61,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(routes.ResolveVatNumberController.resolve().url)
           )
         }
       }
@@ -115,7 +115,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
 
     "the vat number is not on the profile" when {
       "the KnownFactsJourney feature switch is enabled" should {
-        "redirect to the capture VAT number page" in {
+        "redirect to resolve VAT number controller" in {
           enable(KnownFactsJourney)
 
           stubAuth(OK, successfulAuthResponse())
@@ -125,13 +125,13 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureVatNumberController.show().url)
+            redirectUri(routes.ResolveVatNumberController.resolve().url)
           )
         }
       }
 
       "the KnownFactsJourney feature switch is disabled" should {
-        "redirect to the Cannot Use Service page" in {
+        "redirect to resolve VAT number controller" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreVatNumberSuccess()
 
@@ -139,7 +139,7 @@ class YourVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(routes.ResolveVatNumberController.resolve().url)
           )
         }
       }
