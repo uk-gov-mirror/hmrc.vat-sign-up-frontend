@@ -63,6 +63,22 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   }
 
   "Calling the submit action of the Confirm Vat Number controller" when {
+
+    "vat number is in session but it is invalid" should {
+      "go to invalid vat number page" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreVatNumberSuccess(vatNumber = testVatNumber)
+
+        val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testInvalidVatNumber)
+        val result = TestConfirmVatNumberController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CouldNotConfirmVatNumberController.show().url)
+
+        await(result).session(request).get(SessionKeys.vatNumberKey) shouldBe None
+      }
+    }
+
     "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()

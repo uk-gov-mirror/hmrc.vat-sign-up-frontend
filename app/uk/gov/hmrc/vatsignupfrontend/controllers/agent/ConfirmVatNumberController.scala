@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_vat_number
 
 import scala.concurrent.Future
@@ -54,19 +55,20 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
     authorised() {
       request.session.get(SessionKeys.vatNumberKey) match {
         case Some(vatNumber) if vatNumber.nonEmpty =>
-          // todo checksum  validation
-          storeVatNumberService.storeVatNumber(vatNumber) map {
-            case Right(StoreVatNumberSuccess) =>
-              Redirect(routes.CaptureBusinessEntityController.show())
-            case Left(NoAgentClientRelationship) =>
-              Redirect(routes.NoAgentClientRelationshipController.show())
-            case Left(AlreadySubscribed) =>
-              Redirect(routes.AlreadySignedUpController.show())
-            case Left(IneligibleVatNumber) =>
-              Redirect(routes.CannotUseServiceController.show())
-            case Left(errResponse: StoreVatNumberFailureResponse) =>
-              throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
-          }
+          if (VatNumberChecksumValidation.isValid(vatNumber))
+            storeVatNumberService.storeVatNumber(vatNumber) map {
+              case Right(StoreVatNumberSuccess) =>
+                Redirect(routes.CaptureBusinessEntityController.show())
+              case Left(NoAgentClientRelationship) =>
+                Redirect(routes.NoAgentClientRelationshipController.show())
+              case Left(AlreadySubscribed) =>
+                Redirect(routes.AlreadySignedUpController.show())
+              case Left(IneligibleVatNumber) =>
+                Redirect(routes.CannotUseServiceController.show())
+              case Left(errResponse: StoreVatNumberFailureResponse) =>
+                throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
+            }
+          else Future.successful(Redirect(routes.CouldNotConfirmVatNumberController.show())).removeSessionKey(SessionKeys.vatNumberKey)
         case _ =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
