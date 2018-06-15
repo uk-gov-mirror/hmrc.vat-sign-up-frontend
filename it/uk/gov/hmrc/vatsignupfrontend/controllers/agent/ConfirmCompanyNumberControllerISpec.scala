@@ -41,7 +41,7 @@ class ConfirmCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
   "POST /confirm-company-number" should {
 
     "the company number is successfully stored" should {
-      "redirect to agree to receive email page" in {
+      "redirect to EmailRoutingController" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
 
@@ -49,7 +49,7 @@ class ConfirmCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
+          redirectUri(routes.EmailRoutingController.route().url)
         )
 
       }

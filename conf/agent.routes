@@ -50,6 +50,9 @@ POST        /business-type                 uk.gov.hmrc.vatsignupfrontend.control
 GET         /could-not-confirm-VAT-number  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.show
 POST        /could-not-confirm-VAT-number  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.submit
 
+# manage the routing of the email flow
+GET         /email                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
+
 #Agree Capture Email
 GET         /receive-emails                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureEmailController.show
 POST        /receive-emails                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureEmailController.submit

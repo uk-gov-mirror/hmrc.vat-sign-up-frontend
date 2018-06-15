@@ -24,31 +24,33 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
-class AgentVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class EmailRoutingControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(VerifyAgentEmail)
-  }
+  object TestEmailRoutingController extends EmailRoutingController(mockControllerComponents)
 
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(VerifyAgentEmail)
-  }
+  lazy val testGetRequest = FakeRequest("GET", "/email")
 
-  object TestAgentVerifiedEmailController extends AgentVerifiedEmailController(mockControllerComponents)
-
-  "Calling the show action of the AgentVerifiedEmailController" should {
-      lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
-
-      "go to the Agent email Verified page" in {
+  "Calling the route action of the EmailRoutingController" when {
+    "VerifyAgentEmail is disabled" should {
+      "go to AgreeCaptureEmailController" in {
+        disable(VerifyAgentEmail)
         mockAuthRetrieveAgentEnrolment()
-        val result = TestAgentVerifiedEmailController.show(testGetRequest)
+        val result = TestEmailRoutingController.route(testGetRequest)
 
-        status(result) shouldBe Status.OK
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
       }
     }
+    "VerifyAgentEmail is enabled" should {
+      "go to AgreeCaptureEmailController" in {
+        enable(VerifyAgentEmail)
+        mockAuthRetrieveAgentEnrolment()
+        val result = TestEmailRoutingController.route(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
+      }
+    }
+  }
 
 }

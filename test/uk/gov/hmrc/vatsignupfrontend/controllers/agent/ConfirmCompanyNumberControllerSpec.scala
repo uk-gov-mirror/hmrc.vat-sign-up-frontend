@@ -76,7 +76,7 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   "Calling the submit action of the Confirm Company Number controller" when {
     "vat number is in session and store vat is successful" should {
-      "go to the 'agree to receive emails' page" in {
+      "go to EmailRoutingController" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreCompanyNumberSuccess(vatNumber = testVatNumber, companyNumber = testCompanyNumber)
 
@@ -85,7 +85,7 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
           SessionKeys.companyNumberKey -> testCompanyNumber
         ))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
       }
     }
     "vat number is in session but store vat is unsuccessful" should {

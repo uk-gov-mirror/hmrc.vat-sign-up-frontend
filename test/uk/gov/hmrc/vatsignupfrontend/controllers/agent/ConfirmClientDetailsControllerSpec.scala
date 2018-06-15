@@ -16,12 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
-import java.time.LocalDate
-import java.util.UUID
-
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,7 +26,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel, UserEntered}
+import uk.gov.hmrc.vatsignupfrontend.models.UserEntered
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
 
 class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
@@ -85,14 +81,14 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       def callSubmit = TestConfirmClientDetailsController.submit(request)
 
       "and store nino is successful" should {
-        "redirect to agree capture email page" in {
+        "redirect to EmailRoutingController" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreNinoSuccess(testVatNumber, testUserDetails, Some(UserEntered))
 
           val result = callSubmit
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
 
           result.session(request).get(SessionKeys.userDetailsKey) shouldBe None
         }
