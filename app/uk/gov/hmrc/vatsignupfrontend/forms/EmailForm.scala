@@ -45,10 +45,12 @@ object EmailForm {
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
+  import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
 
   val emailForm = PreprocessedForm(
     validation = emailValidationForm,
-    trimRules = Map(email -> all)
+    trimRules = Map(email -> all),
+    caseRules = Map(email -> lower)
   )
 
 }
