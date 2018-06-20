@@ -38,11 +38,47 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     import TestConstantsGenerator._
-    val testEmailDomain: String = "@" + randomAlpha(2).toLowerCase() + "." + randomAlpha(2).toLowerCase()
     val testEmailLocalPart: String = randomAlpha(8).toLowerCase()
+    val testEmailDomain: String = "@" + randomAlpha(2).toLowerCase() + "." + randomAlpha(2).toLowerCase()
 
     "validate our controlled email sections are valid" in {
       val controlledTestEmail = testEmailLocalPart + testEmailDomain
+      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
+      actual shouldBe Some(controlledTestEmail)
+    }
+
+    "validate our controlled email with no separator in the local-part " in {
+      val controlledTestEmail = "test" + testEmailDomain
+      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
+      actual shouldBe Some(controlledTestEmail)
+    }
+
+    "validate our controlled email where the domain is a valid IP format" in {
+      val controlledTestEmail = testEmailLocalPart + "111.222.333.444"
+      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
+      actual shouldBe Some(controlledTestEmail)
+    }
+
+    "validate our controlled email where the local-part contain only numbers" in {
+      val controlledTestEmail = "1234567890" + testEmailDomain
+      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
+      actual shouldBe Some(controlledTestEmail)
+    }
+
+    "validate our controlled email where there are quotes around the local-part" in {
+      val controlledTestEmail = "\"quote!&£+test\"" + testEmailDomain
+      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
+      actual shouldBe Some(controlledTestEmail)
+    }
+
+    "validate our controlled email where the local-part contains legal special characters" in {
+      val controlledTestEmail = "#!$%&'*+-/=?^_`{}|~" + testEmailDomain
+      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
+      actual shouldBe Some(controlledTestEmail)
+    }
+
+    "validate our controlled email when there are separations in the domain name" in {
+      val controlledTestEmail = testEmailLocalPart + "@a.a-a.com"
       val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
       actual shouldBe Some(controlledTestEmail)
     }
@@ -98,9 +134,6 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
       val formWithError = emailForm.bind(Map(email -> testEmail))
       formWithError.errors should contain(FormError(email, error_key))
     }
-
-
-
 
     "validate that email does not exceed max length" in {
       val exceed = emailForm.bind(Map(email -> ("a" * (MaxLengthEmail + 1)))).errors
