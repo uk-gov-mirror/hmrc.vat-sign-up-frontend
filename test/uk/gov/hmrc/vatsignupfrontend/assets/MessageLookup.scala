@@ -88,7 +88,7 @@ object MessageLookup {
     val line1 = "The company number you entered is not on our system."
   }
 
-  object PrincipalSignInDifferentDetails{
+  object PrincipalSignInDifferentDetails {
     val title = "You need to sign in with different details"
     val heading: String = title
     val line1 = "The details you have used to sign in are for a different sole trader. You need to sign out, then sign in with the correct Government Gateway details."
@@ -170,6 +170,7 @@ object MessageLookup {
     val heading: String = title
 
     def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
+
     val linkText1 = "change your email address"
     val line2 = s"You can $linkText1 if it is not correct."
     val accordionHeading = "I did not get an email"
@@ -333,6 +334,15 @@ object MessageLookup {
     val vatRegistrationDate = "What is your VAT registration date?"
     val businessPostCode = "What is your business postcode?"
     val businessEntity = "What type of business are you registered as?"
+  }
+
+  object PrincipalNoCTEnrollmentSummary {
+    val title = "Check your answers"
+    val heading = "Check your answers"
+    val subHeading = "You've told us"
+    val companyNumber = "What is your company number?"
+    val companyUTR = "What is your company Unique Taxpayer Reference?"
+    val businessEntity = "What is your business type?"
   }
 
   object PrincipalCannotUseServiceYet {

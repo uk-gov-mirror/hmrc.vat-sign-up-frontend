@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.helpers
 
-object CheckYourAnswersIdConstants {
+object NoCTEnrolmentSummaryIdConstants {
 
-  val VatNumberId = "your-vat-number"
-  val VatRegistrationDateId = "vat-registration-date"
-  val BusinessPostCodeId = "business-post-code"
+  val CompanyNumberId = "company-number"
+  val CompanyUTRId = "company-utr"
   val BusinessEntityId = "business-entity"
 }

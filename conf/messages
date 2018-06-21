@@ -306,6 +306,14 @@ check-your-answers.vat_registration_date                               = What is
 check-your-answers.business_post_code                                  = What is your business postcode?
 check-your-answers.business_entity                                     = What type of business are you registered as?
 
+# No CT Enrolment Summary page
+no_ct_enrolment_summary.title                                          = Check your answers
+no_ct_enrolment_summary.heading                                        = Check your answers
+no_ct_enrolment_summary.sub_heading                                    = You''ve told us
+no_ct_enrolment_summary.company_number                                 = What is your company number?
+no_ct_enrolment_summary.company_utr                                    = What is your company Unique Taxpayer Reference?
+no_ct_enrolment_summary.business_entity                                = What is your business type?
+
 ## Principal Capture Email page
 principal.capture_email.title                                          = What is your email address?
 principal.capture_email.heading                                        = What is your email address?
