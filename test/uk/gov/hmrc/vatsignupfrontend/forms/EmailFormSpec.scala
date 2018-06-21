@@ -65,12 +65,6 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
       actual shouldBe Some(controlledTestEmail)
     }
 
-    "validate our controlled email where there are quotes around the local-part" in {
-      val controlledTestEmail = "\"quote!&£+test\"" + testEmailDomain
-      val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
-      actual shouldBe Some(controlledTestEmail)
-    }
-
     "validate our controlled email where the local-part contains legal special characters" in {
       val controlledTestEmail = "#!$%&'*+-/=?^_`{}|~" + testEmailDomain
       val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
