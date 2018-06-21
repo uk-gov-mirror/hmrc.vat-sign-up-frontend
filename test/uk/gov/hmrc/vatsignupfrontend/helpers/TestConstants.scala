@@ -32,6 +32,7 @@ object TestConstants {
   val testName: String = UUID.randomUUID().toString
   val testBusinessPostcode: PostCode = PostCode(TestConstantsGenerator.randomPostCode)
   val testCompanyNumber: String = TestConstantsGenerator.randomCrnNumeric
+  val testCompanyUTR: String = TestConstantsGenerator.randomNumeric(10)
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testEmail: String = TestConstantsGenerator.randomEmail
   val testNino: String = new Generator().nextNino.nino
