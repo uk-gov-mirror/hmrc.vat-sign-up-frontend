@@ -79,12 +79,17 @@ object TestConstantsGenerator {
   private def randomAlphaNumericWithAdditional(additionalChars: String)(max: Int): String =
     randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString("") + ('0' to '9').mkString("") + additionalChars)(max)
 
+  def randomAlphaNumeric(max: Int) = randomAlphaNumericWithAdditional("")(max)
+
   def randomEmail: String =
-    randomAlphaNumericWithAdditional(additionalChars = "_.+-")(rand.nextInt(16) + 1) +
-      "@" + randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(10) + 1) +
+    {randomAlphaNumeric(1) +
+      randomAlphaNumericWithAdditional(additionalChars = "_.+-")(rand.nextInt(16) + 1) +
+      randomAlphaNumeric(1) +
+      "@" +
+      randomAlphaNumeric(1) + randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(10) + 1) + randomAlphaNumeric(1) +
       "." + {
-      (0 to rand.nextInt(2)).map(_ => randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(3) + 1)).mkString(".")
-    }
+      (0 to rand.nextInt(2)).map(_ => randomAlphaNumeric(1) + randomAlphaNumericWithAdditional(additionalChars = "-")(rand.nextInt(3) + 1) + randomAlphaNumeric(1)).mkString(".")
+    }}.toLowerCase()
 
   def randomPostCode: String =
     randomAlpha(2) +
