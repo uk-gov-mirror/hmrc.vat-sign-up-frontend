@@ -453,6 +453,12 @@ object MessageLookup {
     val link = "Change company"
   }
 
+  object PrincipalCaptureCompanyUtr {
+    val title = "What is your company's Unique Taxpayer Reference number?"
+    val heading: String = title
+    val line1 = "You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR."
+  }
+
   object PrincipalTerms {
     val title = "Terms of participation"
     val heading: String = title

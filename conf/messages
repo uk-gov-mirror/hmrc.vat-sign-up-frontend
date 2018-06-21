@@ -30,6 +30,8 @@ error.business-entity.field                                            = Please 
 error.business-entity.summary                                          = Please select an option
 error.invalid_company_number.field                                     = Please enter a valid company number
 error.invalid_company_number.summary                                   = Please enter a valid company number
+error.invalid_company_utr.field                                        = Please enter a valid company unique taxpayer reference
+error.invalid_company_utr.summary                                      = Please enter a valid company unique taxpayer reference
 error.invalid_vat_number.field                                         = Please enter a valid vat registration number
 error.invalid_vat_number.summary                                       = Please enter a valid vat registration number
 error.invalid_email.field                                              = Please enter a valid email address
@@ -401,6 +403,11 @@ principal.confirmation.subsection_2.line_1                             = You can
 principal.capture_company_number.title                                 = What is your company number?
 principal.capture_company_number.heading                               = What is your company number?
 principal.capture_company_number.line_1                                = You received this from Companies House when you set up your company. It''s 8 digits and sometimes starts with 2 letters.
+
+## Capture Company UTR page
+principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference number?
+principal.capture_company_utr.heading                                  = What is your company''s Unique Taxpayer Reference number?
+principal.capture_company_utr.line_1                                   = You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR.
 
 ## Company Name Not Found page
 principal.company_name_not_found.title                                 = We could not confirm your company
