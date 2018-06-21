@@ -19,10 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid}
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PreprocessedForm
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.companyUtrRegex
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.companyUtrRegex
 
 
 object CompanyUtrForm {
