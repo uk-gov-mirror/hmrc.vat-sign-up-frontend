@@ -54,7 +54,7 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "validate our controlled email where the domain is a valid IP format" in {
-      val controlledTestEmail = testEmailLocalPart + "111.222.333.444"
+      val controlledTestEmail = testEmailLocalPart + "@111.222.333.444"
       val actual = emailForm.bind(Map(email -> controlledTestEmail)).value
       actual shouldBe Some(controlledTestEmail)
     }
