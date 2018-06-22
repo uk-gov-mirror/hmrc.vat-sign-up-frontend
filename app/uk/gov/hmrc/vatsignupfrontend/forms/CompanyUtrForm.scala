@@ -32,11 +32,9 @@ object CompanyUtrForm {
     companyUtr => if (companyUtr matches companyUtrRegex) Valid else Invalid("error.invalid_company_utr")
   )
 
-  lazy val companyUtrValidation: Constraint[String] = companyUtrInvalid
-
   private val companyUtrValidationForm = Form(
     single(
-      companyUtr -> optText.toText.verifying(companyUtrValidation)
+      companyUtr -> optText.toText.verifying(companyUtrInvalid)
     )
   )
 
