@@ -46,9 +46,9 @@
         </div>
 }
 
-@* TODO link to capture Company UTR controller. *@
-@companyUTR() = @{
-    val rowName = CompanyUTRId
+@* TODO link to capture Company Utr controller. *@
+@companyUtr() = @{
+    val rowName = CompanyUtrId
     val rowQuestion = Messages("no_ct_enrolment_summary.company_utr")
     val rowAnswer = company_utr
     summaryRow(rowName, rowQuestion, rowAnswer, None)
@@ -81,7 +81,7 @@
     <div class="form-group">
         @registeredBusinessEntity()
         @companyNumber()
-        @companyUTR()
+        @companyUtr()
         <div class="divider--top--thick"></div>
     </div>
 

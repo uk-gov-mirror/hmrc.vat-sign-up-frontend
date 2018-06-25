@@ -60,7 +60,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
         enable(CompanyNameJourney)
 
         stubAuth(OK, successfulAuthResponse())
-        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
+        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
 
         val res = post("/confirm-company",
           Map(
