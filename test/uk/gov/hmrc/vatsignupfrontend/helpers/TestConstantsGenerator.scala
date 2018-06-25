@@ -67,14 +67,22 @@ object TestConstantsGenerator {
 
   def randomCrnAlphaNumeric: String = randomPrefix + "%06d".format(rand.nextInt(UPPER_BOUND_6_DIGIT_NUMBER) + 1)
 
-  private def randomString(alphabet: String)(max: Int): String =
-    Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(rand.nextInt(max) + 1).mkString
+  private def randomString(alphabet: String)(max: Int, min: Int = 1): String = {
+    val rdm = rand.nextInt(max) + 1
+    val length = if (rdm < min) min else rdm
+    Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(length).mkString
+  }
 
   def randomAlpha(max: Int): String =
     randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString(""))(max)
 
   def randomNumeric(max: Int): String =
     randomString(('0' to '9').mkString(""))(max)
+
+
+  def randomUTRNumeric(): String =
+    randomString(('0' to '9').mkString(""))(10, 10)
+
 
   private def randomAlphaNumericWithAdditional(additionalChars: String)(max: Int): String =
     randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString("") + ('0' to '9').mkString("") + additionalChars)(max)
