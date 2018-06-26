@@ -56,7 +56,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     }
   }
 
-  "POST /check-your-answersr" when {
+  "POST /check-your-answers" when {
     "store vat is successful" should {
       "redirect to capture your details" in {
         stubAuth(OK, successfulAuthResponse())

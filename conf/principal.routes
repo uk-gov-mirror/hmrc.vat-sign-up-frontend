@@ -122,3 +122,7 @@ GET         /information-received                           uk.gov.hmrc.vatsignu
 
 #Assistant Credential Role
 GET         /not-administrator                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.AssistantCredentialErrorController.show
+
+# No CT Enrolment Summary
+GET         /check-your-answers-company                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.NoCtEnrolmentSummaryController.show
+POST        /check-your-answers-company                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.NoCtEnrolmentSummaryController.submit

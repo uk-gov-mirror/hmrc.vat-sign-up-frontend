@@ -22,14 +22,14 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCaptureBusinessEntity, PrincipalNoCTEnrollmentSummary => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCaptureBusinessEntity, PrincipalNoCtEnrollmentSummary => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
-import uk.gov.hmrc.vatsignupfrontend.views.helpers.NoCTEnrolmentSummaryIdConstants._
+import uk.gov.hmrc.vatsignupfrontend.views.helpers.NoCtEnrolmentSummaryIdConstants._
 
-class NoCTEnrolmentSummarySpec extends ViewSpec {
+class NoCtEnrolmentSummarySpec extends ViewSpec {
 
   val testEntity = SoleTrader
   val env = Environment.simple()
