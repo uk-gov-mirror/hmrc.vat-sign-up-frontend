@@ -51,24 +51,47 @@ class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomM
   }
 
   "POST /check-your-answers-company" when {
-    "store CRN and CTUTR is successful" should {
-      "redirect to agree capture email" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+    "store CRN and" when {
+      "CTUTR is a match" should {
+        "redirect to agree capture email" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
-        val res = post("/check-your-answers-company",
-          Map(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.companyNumberKey -> testCompanyNumber,
-            SessionKeys.companyUtrKey -> testCompanyUtr,
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          val res = post("/check-your-answers-company",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.companyNumberKey -> testCompanyNumber,
+              SessionKeys.companyUtrKey -> testCompanyUtr,
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AgreeCaptureEmailController.show().url)
           )
-        )()
+        }
+      }
+      "CTUTR is a mismatch" should {
+        // TODO confirm redirection location
+        "redirect to could not confirm company" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCompanyUtr)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
-        )
+          val res = post("/check-your-answers-company",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.companyNumberKey -> testCompanyNumber,
+              SessionKeys.companyUtrKey -> testCompanyUtr,
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+          )
+        }
       }
     }
 
@@ -86,4 +109,5 @@ class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomM
       }
     }
   }
+
 }

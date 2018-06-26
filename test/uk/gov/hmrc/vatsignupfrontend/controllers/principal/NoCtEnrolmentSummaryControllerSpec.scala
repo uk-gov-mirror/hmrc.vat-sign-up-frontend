@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -43,7 +42,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
                      businessType: Option[BusinessEntity] = Some(SoleTrader)
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers-company").withSession(
-      SessionKeys.companyUtrKey-> companyUtr.getOrElse(""),
+      SessionKeys.companyUtrKey -> companyUtr.getOrElse(""),
       SessionKeys.companyNumberKey -> companyNumber.getOrElse(""),
       SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
     )
@@ -115,6 +114,17 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
           val result = await(TestNoCtEnrolmentSummaryController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+        }
+      }
+      "store company number returned StoreCompanyNumberSuccess" should {
+        //TODO confirm route
+        "goto could not confirm business controller" in {
+          mockAuthAdminRole()
+          mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCompanyUtr)
+
+          val result = await(TestNoCtEnrolmentSummaryController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CouldNotConfirmBusinessController.show().url)
         }
       }
       "store company number returned a failure" should {

@@ -48,9 +48,9 @@ class CaptureCompanyUtrControllerISpec extends ComponentSpecBase with CustomMatc
 
           val res = post("/company-utr")(CompanyUtrForm.companyUtr -> testCompanyUtr)
 
-          // TODO: Update status and redirect once check your answers controller implemented
           res should have(
-            httpStatus(NOT_IMPLEMENTED)
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.NoCtEnrolmentSummaryController.show().url)
           )
         }
       }

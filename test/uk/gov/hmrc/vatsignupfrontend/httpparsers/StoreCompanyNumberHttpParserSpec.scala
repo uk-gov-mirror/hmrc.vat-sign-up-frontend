@@ -20,8 +20,7 @@ import play.api.http.Status.{BAD_REQUEST, NO_CONTENT}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.StoreCompanyNumberHttpReads
-import uk.gov.hmrc.vatsignupfrontend.models.{StoreCompanyNumberFailure, StoreCompanyNumberSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.{CtReferenceMismatch, StoreCompanyNumberFailureResponse, StoreCompanyNumberHttpReads, StoreCompanyNumberSuccess}
 
 class StoreCompanyNumberHttpParserSpec extends UnitSpec {
   val testHttpVerb = "PUT"
@@ -36,12 +35,19 @@ class StoreCompanyNumberHttpParserSpec extends UnitSpec {
 
         res shouldBe Right(StoreCompanyNumberSuccess)
       }
-      "parse any other response as an StoreCompanyNumberFailure" in {
+      "parse BAD_REQUEST response with the expected body as CtReferenceMismatch" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj("CODE" -> "CtReferenceMismatch")))
+
+        val res = StoreCompanyNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(CtReferenceMismatch)
+      }
+      "parse any other response as an StoreCompanyNumberFailureResponse" in {
         val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
 
         val res = StoreCompanyNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Left(StoreCompanyNumberFailure(httpResponse.status))
+        res shouldBe Left(StoreCompanyNumberFailureResponse(httpResponse.status))
       }
     }
   }

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
@@ -26,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
@@ -37,6 +36,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(CompanyNameJourney)
+    disable(CtKnownFactsIdentityVerification)
   }
 
   object TestConfirmCompanyController extends ConfirmCompanyController(
@@ -79,7 +79,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   }
 
   "Calling the submit action of the Confirm Company controller" should {
-    "go to the 'agree to receive emails' page" in {
+    "go to the 'agree to receive emails' page if CtKnownFactsIdentityVerification is disabled" in {
       mockAuthAdminRole()
       mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
 
@@ -91,6 +91,19 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+    }
+    "go to the 'capture company UTR' page if CtKnownFactsIdentityVerification is enabled" in {
+      enable(CtKnownFactsIdentityVerification)
+      mockAuthAdminRole()
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
     }
 
     "throw internal server exception if store company number fails" in {

@@ -20,8 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.StoreCompanyNumberResponse
-import uk.gov.hmrc.vatsignupfrontend.models.{StoreCompanyNumberFailure, StoreCompanyNumberSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.{CtReferenceMismatch, StoreCompanyNumberFailureResponse, StoreCompanyNumberResponse, StoreCompanyNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 
 import scala.concurrent.Future
@@ -50,7 +49,10 @@ trait MockStoreCompanyNumberService extends BeforeAndAfterEach with MockitoSugar
   def mockStoreCompanyNumberSuccess(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
     mockStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(Future.successful(Right(StoreCompanyNumberSuccess)))
 
+  def mockStoreCompanyNumberCtMismatch(vatNumber: String, companyNumber: String, companyUtr: String): Unit =
+    mockStoreCompanyNumber(vatNumber, companyNumber, Some(companyUtr))(Future.successful(Left(CtReferenceMismatch)))
+
   def mockStoreCompanyNumberFailure(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
-    mockStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(Future.successful(Left(StoreCompanyNumberFailure(500))))
+    mockStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(Future.successful(Left(StoreCompanyNumberFailureResponse(500))))
 
 }

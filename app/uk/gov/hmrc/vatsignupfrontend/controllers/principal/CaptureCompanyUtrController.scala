@@ -52,9 +52,8 @@ class CaptureCompanyUtrController @Inject()(val controllerComponents: Controller
               BadRequest(capture_company_utr(formWithErrors, routes.CaptureCompanyUtrController.submit()))
             ),
           companyUtr =>
-            // TODO: Redirect logic to be updated once check your answers company controller implemented
             Future.successful(
-              NotImplemented.addingToSession(SessionKeys.companyUtrKey -> companyUtr)
+              Redirect(routes.NoCtEnrolmentSummaryController.show()).addingToSession(SessionKeys.companyUtrKey -> companyUtr)
             )
         )
       }

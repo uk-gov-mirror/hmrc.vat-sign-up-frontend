@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -25,6 +26,11 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    disable(CtKnownFactsIdentityVerification)
+  }
 
   "GET /confirm-company-number" should {
     "return an OK" in {
@@ -40,19 +46,34 @@ class ConfirmCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
 
   "POST /confirm-company-number" should {
 
-    "the company number is successfully stored" should {
-      "redirect to agree to receive email page" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
+    "the company number is successfully stored" when {
+      "CtKnownFactsIdentityVerification is disabled" should {
+        "redirect to agree to receive email page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
 
-        val res = post("/confirm-company-number",
-          Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+          val res = post("/confirm-company-number",
+            Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AgreeCaptureEmailController.show().url)
+          )
+        }
+      }
+      "CtKnownFactsIdentityVerification is enabled" should {
+        "redirect to agree to receive email page" in {
+          enable(CtKnownFactsIdentityVerification)
+          stubAuth(OK, successfulAuthResponse())
 
+          val res = post("/confirm-company-number",
+            Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureCompanyUtrController.show().url)
+          )
+        }
       }
     }
 

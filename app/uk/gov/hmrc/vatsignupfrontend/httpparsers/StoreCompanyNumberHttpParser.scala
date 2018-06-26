@@ -18,19 +18,35 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsignupfrontend.models.{StoreCompanyNumberFailure, StoreCompanyNumberSuccess}
+
+import scala.util.Try
 
 object StoreCompanyNumberHttpParser {
-  type StoreCompanyNumberResponse = Either[StoreCompanyNumberFailure , StoreCompanyNumberSuccess.type ]
+  type StoreCompanyNumberResponse = Either[StoreCompanyNumberFailure, StoreCompanyNumberSuccess.type]
 
   implicit object StoreCompanyNumberHttpReads extends HttpReads[StoreCompanyNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreCompanyNumberResponse = {
+      lazy val isCtMismatch = Try((response.json \ "CODE").as[String] == "CtReferenceMismatch").getOrElse(false)
       response.status match {
         case NO_CONTENT => Right(StoreCompanyNumberSuccess)
-        case status => Left(StoreCompanyNumberFailure(status))
+        case BAD_REQUEST if isCtMismatch => Left(CtReferenceMismatch)
+        case status => Left(StoreCompanyNumberFailureResponse(status))
       }
     }
   }
+
+  sealed trait StoreCompanyNumberFailure {
+    def status: Int
+  }
+
+  case object StoreCompanyNumberSuccess
+
+  case object CtReferenceMismatch extends StoreCompanyNumberFailure {
+    override def status = BAD_REQUEST
+  }
+
+  case class StoreCompanyNumberFailureResponse(status: Int) extends StoreCompanyNumberFailure
+
 }
 
 

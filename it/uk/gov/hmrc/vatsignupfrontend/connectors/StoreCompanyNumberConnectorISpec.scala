@@ -21,7 +21,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.helpers.ComponentSpecBase
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumber
-import uk.gov.hmrc.vatsignupfrontend.models.StoreCompanyNumberSuccess
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.StoreCompanyNumberSuccess
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
