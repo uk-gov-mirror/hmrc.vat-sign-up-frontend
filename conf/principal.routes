@@ -38,6 +38,10 @@ POST        /vat-registration-date                          uk.gov.hmrc.vatsignu
 GET         /company-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.show
 POST        /company-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.submit
 
+# Capture Company Utr
+GET         /company-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.show
+POST        /company-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.submit
+
 # Confirm Company Number
 GET         /confirm-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.show
 POST        /confirm-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.submit
@@ -45,7 +49,6 @@ POST        /confirm-company-number                         uk.gov.hmrc.vatsignu
 # Confirm Company name
 GET         /confirm-company                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.show
 POST        /confirm-company                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
-
 
 #Agree Capture Email
 GET         /receive-emails                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.show
