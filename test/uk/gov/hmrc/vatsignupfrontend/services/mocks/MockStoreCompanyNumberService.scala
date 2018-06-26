@@ -37,18 +37,20 @@ trait MockStoreCompanyNumberService extends BeforeAndAfterEach with MockitoSugar
     reset(mockStoreCompanyNumberService)
   }
 
-  private def mockStoreCompanyNumber(vatNumber: String, companyNumber: String)(returnValue: Future[StoreCompanyNumberResponse]): Unit = {
+  private def mockStoreCompanyNumber(vatNumber: String, companyNumber: String, companyUtr: Option[String])
+                                    (returnValue: Future[StoreCompanyNumberResponse]): Unit = {
     when(mockStoreCompanyNumberService.storeCompanyNumber(
       ArgumentMatchers.eq(vatNumber),
-      ArgumentMatchers.eq(companyNumber)
+      ArgumentMatchers.eq(companyNumber),
+      ArgumentMatchers.eq(companyUtr)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockStoreCompanyNumberSuccess(vatNumber: String, companyNumber: String): Unit =
-    mockStoreCompanyNumber(vatNumber, companyNumber)(Future.successful(Right(StoreCompanyNumberSuccess)))
+  def mockStoreCompanyNumberSuccess(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+    mockStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(Future.successful(Right(StoreCompanyNumberSuccess)))
 
-  def mockStoreCompanyNumberFailure(vatNumber: String, companyNumber: String): Unit =
-    mockStoreCompanyNumber(vatNumber, companyNumber)(Future.successful(Left(StoreCompanyNumberFailure(500))))
+  def mockStoreCompanyNumberFailure(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+    mockStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(Future.successful(Left(StoreCompanyNumberFailure(500))))
 
 }

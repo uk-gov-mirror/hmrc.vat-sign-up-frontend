@@ -341,7 +341,7 @@ object MessageLookup {
     val heading = "Check your answers"
     val subHeading = "You've told us"
     val companyNumber = "What is your company number?"
-    val companyUTR = "What is your company Unique Taxpayer Reference?"
+    val companyUtr = "What is your company Unique Taxpayer Reference?"
     val businessEntity = "What is your business type?"
   }
 

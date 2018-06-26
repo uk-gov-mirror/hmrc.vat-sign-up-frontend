@@ -19,6 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.views.helpers
 object NoCTEnrolmentSummaryIdConstants {
 
   val CompanyNumberId = "company-number"
-  val CompanyUTRId = "company-utr"
+  val CompanyUtrId = "company-utr"
   val BusinessEntityId = "business-entity"
 }

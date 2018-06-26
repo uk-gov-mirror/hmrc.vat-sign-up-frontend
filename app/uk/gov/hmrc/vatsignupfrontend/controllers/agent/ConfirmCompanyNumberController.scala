@@ -63,7 +63,7 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
 
       (optVatNumber, optCompanyNumber) match {
         case (Some(vatNumber), Some(companyNumber)) =>
-          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber) map {
+          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
             case Right(_) =>
               Redirect(routes.EmailRoutingController.route().url)
             case Left(errResponse) =>

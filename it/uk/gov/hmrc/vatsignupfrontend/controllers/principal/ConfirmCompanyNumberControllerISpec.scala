@@ -45,7 +45,8 @@ class ConfirmCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
         stubAuth(OK, successfulAuthResponse())
         stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
 
-        val res = post("/confirm-company-number", Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/confirm-company-number",
+          Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -60,7 +61,8 @@ class ConfirmCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
         stubAuth(OK, successfulAuthResponse())
         stubStoreCompanyNumberFailure(testVatNumber, testCompanyNumber)
 
-        val res = post("/confirm-company-number", Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/confirm-company-number",
+          Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)

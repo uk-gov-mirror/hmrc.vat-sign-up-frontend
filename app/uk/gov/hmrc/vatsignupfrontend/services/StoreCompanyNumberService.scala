@@ -27,7 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class StoreCompanyNumberService @Inject()(val storeCompanyNumberConnector: StoreCompanyNumberConnector) {
 
-  def storeCompanyNumber(vatNumber: String, companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] =
-    storeCompanyNumberConnector.storeCompanyNumber(vatNumber, companyNumber)
+  def storeCompanyNumber(vatNumber: String, companyNumber: String, companyUtr: Option[String])
+                        (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] =
+    storeCompanyNumberConnector.storeCompanyNumber(vatNumber, companyNumber, None)
 
 }

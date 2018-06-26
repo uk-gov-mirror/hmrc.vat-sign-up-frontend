@@ -81,7 +81,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   "Calling the submit action of the Confirm Company controller" should {
     "go to the 'agree to receive emails' page" in {
       mockAuthAdminRole()
-      mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
+      mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
@@ -95,7 +95,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
     "throw internal server exception if store company number fails" in {
       mockAuthAdminRole()
-      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber)
+      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, companyUtr = None)
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,

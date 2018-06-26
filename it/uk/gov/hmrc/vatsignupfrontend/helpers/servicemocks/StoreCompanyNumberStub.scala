@@ -29,14 +29,30 @@ object StoreCompanyNumberStub extends WireMockMethods {
     "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate
   )
 
-  def stubStoreCompanyNumber(vatNumber: String, companyNumber: String)(responseStatus: Int): Unit = {
+
+
+
+
+  def stubStoreCompanyNumber(vatNumber: String, companyNumber: String, optCompanyUtr: Option[String])(responseStatus: Int): Unit = {
     when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/company-number",
-      body = Json.obj("companyNumber" -> companyNumber))
-      .thenReturn(status = responseStatus)
+      body = optCompanyUtr match {
+        case Some(companyUtr) =>
+          Json.obj(
+            "companyNumber" -> companyNumber,
+            "ctReference" -> companyUtr
+          )
+        case None =>
+          Json.obj(
+            "companyNumber" -> companyNumber
+          )
+      }
+    ).thenReturn(status = responseStatus)
   }
 
-  def stubStoreCompanyNumberSuccess(vatNumber: String, companyNumber: String): Unit = stubStoreCompanyNumber(vatNumber, companyNumber)(NO_CONTENT)
+  def stubStoreCompanyNumberSuccess(vatNumber: String, companyNumber: String, companyUtr: Option[String] = None):
+  Unit = stubStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(NO_CONTENT)
 
-  def stubStoreCompanyNumberFailure(vatNumber: String, companyNumber: String): Unit = stubStoreCompanyNumber(vatNumber, companyNumber)(INTERNAL_SERVER_ERROR)
+  def stubStoreCompanyNumberFailure(vatNumber: String, companyNumber: String, companyUtr: Option[String] = None):
+  Unit = stubStoreCompanyNumber(vatNumber, companyNumber, companyUtr)(INTERNAL_SERVER_ERROR)
 
 }

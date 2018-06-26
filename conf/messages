@@ -412,7 +412,7 @@ principal.capture_company_number.title                                 = What is
 principal.capture_company_number.heading                               = What is your company number?
 principal.capture_company_number.line_1                                = You received this from Companies House when you set up your company. It''s 8 digits and sometimes starts with 2 letters.
 
-## Capture Company UTR page
+## Capture Company Utr page
 principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference number?
 principal.capture_company_utr.heading                                  = What is your company''s Unique Taxpayer Reference number?
 principal.capture_company_utr.line_1                                   = You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR.

@@ -78,7 +78,7 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
     "vat number is in session and store vat is successful" should {
       "go to EmailRoutingController" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreCompanyNumberSuccess(vatNumber = testVatNumber, companyNumber = testCompanyNumber)
+        mockStoreCompanyNumberSuccess(vatNumber = testVatNumber, companyNumber = testCompanyNumber, companyUtr = None)
 
         val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
@@ -91,7 +91,7 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreCompanyNumberFailure(vatNumber = testVatNumber, companyNumber = testCompanyNumber)
+        mockStoreCompanyNumberFailure(vatNumber = testVatNumber, companyNumber = testCompanyNumber, companyUtr = None)
 
         intercept[InternalServerException] {
           await(TestConfirmCompanyNumberController.submit(testPostRequest.withSession(

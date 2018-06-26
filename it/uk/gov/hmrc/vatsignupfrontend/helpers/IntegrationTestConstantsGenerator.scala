@@ -52,9 +52,6 @@ object IntegrationTestConstantsGenerator {
 
   def randomCompanyNumber: String = "%08d".format(rand.nextInt(UPPER_BOUND_8_DIGIT_NUMBER) + 1)
 
-  private def randomString(alphabet: String)(max: Int): String =
-    Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(rand.nextInt(max) + 1).mkString
-
   private def randomAlpha(max: Int): String =
     randomString(('a' to 'z').mkString("") + ('A' to 'Z').mkString(""))(max)
 
@@ -76,5 +73,13 @@ object IntegrationTestConstantsGenerator {
       randomNumeric(1) + randomNumeric(1) + // must have 2 numeric
       randomAlpha(1) + randomAlpha(1) // must end with 2 alphas
 
+  private def randomString(alphabet: String)(max: Int, min: Int = 1): String = {
+    val rdm = rand.nextInt(max) + 1
+    val length = if (rdm < min) min else rdm
+    Stream.continually(rand.nextInt(alphabet.length)).map(alphabet).take(length).mkString
+  }
+
+  def randomUtrNumeric(): String =
+    randomString(('0' to '9').mkString(""))(10, 10)
 
 }

@@ -37,7 +37,7 @@ class NoCTEnrolmentSummarySpec extends ViewSpec {
 
   def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.no_ct_enrolment_summary(
     company_number = testCompanyNumber,
-    company_utr = testCompanyUTR,
+    company_utr = testCompanyUtr,
     businessEntity = testEntity,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
@@ -107,12 +107,12 @@ class NoCTEnrolmentSummarySpec extends ViewSpec {
     )
   }
 
-  "display the correct info for CompanyUTR" in {
-    val sectionId = CompanyUTRId
-    val expectedQuestion = messages.companyUTR
-    val expectedAnswer = testCompanyUTR
+  "display the correct info for CompanyUtr" in {
+    val sectionId = CompanyUtrId
+    val expectedQuestion = messages.companyUtr
+    val expectedAnswer = testCompanyUtr
     //TODO: link to capture company utr controller
-    //val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyUTRController.show().url
+    //val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyUtrController.show().url
 
     sectionTest(
       sectionId = sectionId,

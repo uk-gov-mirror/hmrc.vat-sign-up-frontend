@@ -30,6 +30,7 @@ object IntegrationTestConstants {
   val testInvalidVatNumber: String = "999999999"
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
+  val testCompanyUtr: String = IntegrationTestConstantsGenerator.randomUtrNumeric()
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode)
   val testNino: String = new Generator().nextNino.nino
   val testSaUtr: String = new Generator().nextAtedUtr.utr

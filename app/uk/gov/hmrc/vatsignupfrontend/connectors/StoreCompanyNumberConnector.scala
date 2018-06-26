@@ -31,9 +31,21 @@ class StoreCompanyNumberConnector @Inject()(val http: HttpClient,
                                             val applicationConfig: AppConfig) {
 
   val companyNumberKey = "companyNumber"
+  val companyUtrKey = "ctReference"
 
-  def storeCompanyNumber(vatNumber: String, companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] = {
-    http.PUT[JsObject, StoreCompanyNumberResponse](applicationConfig.storeCompanyNumberUrl(vatNumber), Json.obj(companyNumberKey -> companyNumber))
-  }
-
+  def storeCompanyNumber(vatNumber: String, companyNumber: String, optCompanyUtr: Option[String])
+                        (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] =
+    http.PUT[JsObject, StoreCompanyNumberResponse](applicationConfig.storeCompanyNumberUrl(vatNumber),
+      optCompanyUtr match {
+        case Some(companyUtr) =>
+          Json.obj(
+            companyNumberKey -> companyNumber,
+            companyUtrKey -> companyUtr
+          )
+        case None =>
+          Json.obj(
+            companyNumberKey -> companyNumber
+          )
+      }
+    )
 }
