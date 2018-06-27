@@ -336,7 +336,7 @@ object MessageLookup {
     val businessEntity = "What type of business are you registered as?"
   }
 
-  object PrincipalNoCTEnrollmentSummary {
+  object PrincipalNoCtEnrolmentSummary {
     val title = "Check your answers"
     val heading = "Check your answers"
     val subHeading = "You've told us"

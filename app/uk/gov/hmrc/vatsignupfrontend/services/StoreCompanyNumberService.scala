@@ -29,6 +29,6 @@ class StoreCompanyNumberService @Inject()(val storeCompanyNumberConnector: Store
 
   def storeCompanyNumber(vatNumber: String, companyNumber: String, companyUtr: Option[String])
                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreCompanyNumberResponse] =
-    storeCompanyNumberConnector.storeCompanyNumber(vatNumber, companyNumber, None)
+    storeCompanyNumberConnector.storeCompanyNumber(vatNumber, companyNumber, companyUtr)
 
 }
