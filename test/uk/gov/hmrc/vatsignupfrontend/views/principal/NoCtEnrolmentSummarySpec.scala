@@ -36,8 +36,8 @@ class NoCtEnrolmentSummarySpec extends ViewSpec {
   val configuration = Configuration.load(env)
 
   def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.no_ct_enrolment_summary(
-    company_number = testCompanyNumber,
-    company_utr = testCompanyUtr,
+    companyNumber = testCompanyNumber,
+    companyUtr = testCompanyUtr,
     businessEntity = testEntity,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))

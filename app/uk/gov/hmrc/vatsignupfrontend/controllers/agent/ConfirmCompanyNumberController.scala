@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.StoreCompanyNumberFailure
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_company_number
 

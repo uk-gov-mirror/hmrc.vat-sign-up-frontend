@@ -61,8 +61,9 @@ class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
       val result = TestCaptureCompanyUtrController.submit(request)
 
-      // TODO: Update redirect location and status once check your answers company controller implemented
-      status(result) shouldBe Status.NOT_IMPLEMENTED
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.NoCtEnrolmentSummaryController.show().url)
+
       result.session(request).get(SessionKeys.companyUtrKey) shouldBe Some(testCompanyUtr)
     }
   }

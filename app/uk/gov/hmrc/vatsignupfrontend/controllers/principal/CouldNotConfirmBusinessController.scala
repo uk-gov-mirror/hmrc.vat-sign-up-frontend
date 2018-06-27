@@ -33,7 +33,7 @@ class CouldNotConfirmBusinessController @Inject()(val controllerComponents: Cont
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_business((routes.CouldNotConfirmBusinessController.submit()))))
+        Ok(could_not_confirm_business(routes.CouldNotConfirmBusinessController.submit())))
     }
   }
 

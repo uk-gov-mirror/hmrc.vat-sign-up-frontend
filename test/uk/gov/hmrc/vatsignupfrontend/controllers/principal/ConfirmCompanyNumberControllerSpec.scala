@@ -24,12 +24,18 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testCompanyNumber, testVatNumber, testCompanyUtr}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testCompanyNumber, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
 
 class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreCompanyNumberService {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    disable(CtKnownFactsIdentityVerification)
+  }
 
   object TestConfirmCompanyNumberController extends ConfirmCompanyNumberController(mockControllerComponents, mockStoreCompanyNumberService)
 
@@ -75,17 +81,32 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
 
   "Calling the submit action of the Confirm Company Number controller" when {
-    "vat number is in session and store vat is successful" should {
-      "go to the 'agree to receive emails' page" in {
-        mockAuthAdminRole()
-        mockStoreCompanyNumberSuccess(vatNumber = testVatNumber, companyNumber = testCompanyNumber, companyUtr = None)
+    "vat number is in session" when {
+      "CtKnownFactsIdentityVerification is disabled and store vat is successful" should {
+        "go to the 'agree to receive emails' page" in {
+          mockAuthAdminRole()
+          mockStoreCompanyNumberSuccess(vatNumber = testVatNumber, companyNumber = testCompanyNumber, companyUtr = None)
 
-        val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        ))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+          val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.companyNumberKey -> testCompanyNumber
+          ))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        }
+      }
+      "CtKnownFactsIdentityVerification is enabeled" should {
+        "go to the 'agree to receive emails' page" in {
+          mockAuthAdminRole()
+          enable(CtKnownFactsIdentityVerification)
+
+          val result = TestConfirmCompanyNumberController.submit(testPostRequest.withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.companyNumberKey -> testCompanyNumber
+          ))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+        }
       }
     }
     "vat number is in session but store vat is unsuccessful" should {

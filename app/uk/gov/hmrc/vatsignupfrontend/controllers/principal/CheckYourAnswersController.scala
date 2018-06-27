@@ -92,7 +92,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBusinessEntity) match {
-        case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode), Some(entity@(SoleTrader | LimitedCompany))) =>
+        case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode), Some(SoleTrader | LimitedCompany)) =>
           storeVatNumber(vatNumber, postCode, vatRegistrationDate)
         case (None, _, _, _) =>
           Future.successful(
