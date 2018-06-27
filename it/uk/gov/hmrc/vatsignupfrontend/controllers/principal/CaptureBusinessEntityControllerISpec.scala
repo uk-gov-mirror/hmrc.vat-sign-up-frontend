@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, UseIRSA}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testSaUtr, testUserDetails}
@@ -30,6 +30,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   override def beforeEach(): Unit = {
     super.beforeEach()
     disable(UseIRSA)
+    disable(CtKnownFactsIdentityVerification)
   }
 
   "GET /business-type" should {
@@ -101,6 +102,29 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
             res should have(
               httpStatus(SEE_OTHER),
               redirectUri(routes.CaptureYourDetailsController.show().url)
+            )
+          }
+          "the business type is limited company and CtKnownFactsIdentityVerification is disabled" in {
+            enable(UseIRSA)
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureYourDetailsController.show().url)
+            )
+          }
+          "the business type is limited company and CtKnownFactsIdentityVerification is enabled" in {
+            enable(UseIRSA)
+            enable(CtKnownFactsIdentityVerification)
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyNumberController.show().url)
             )
           }
         }
