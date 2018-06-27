@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, KnownFactsJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -66,9 +66,11 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
     )
 
-  override def beforeEach(): Unit = enable(KnownFactsJourney)
-
-  override def afterEach(): Unit = disable(KnownFactsJourney)
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(KnownFactsJourney)
+    disable(CtKnownFactsIdentityVerification)
+  }
 
   "Calling the show action of the Check your answers controller" when {
     "all prerequisite data are in session" should {
@@ -130,14 +132,54 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Check your answers controller" when {
     "all prerequisite data are in" when {
-      "store vat number returned StoreVatNumberSuccess" should {
-        "goto capture your details controller" in {
-          mockAuthAdminRole()
-          mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+      "store vat number returned StoreVatNumberSuccess" when {
+        "businessType is sole trader" when {
+          "CtKnownFactsIdentityVerification is disabled" should {
+            "goto capture your details controller" in {
+              mockAuthAdminRole()
+              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
-          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+              val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+            }
+          }
+          "CtKnownFactsIdentityVerification is enabled" should {
+            "goto capture your details controller" in {
+              enable(CtKnownFactsIdentityVerification)
+
+              mockAuthAdminRole()
+              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+
+              val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+            }
+          }
+        }
+        "businessType is limited company" when {
+          "CtKnownFactsIdentityVerification is disabled" should {
+            "goto capture your details controller" in {
+              mockAuthAdminRole()
+              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+
+              val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+            }
+          }
+          "CtKnownFactsIdentityVerification is enabled" should {
+            "goto capture company number controller" in {
+              enable(CtKnownFactsIdentityVerification)
+
+              mockAuthAdminRole()
+              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+
+              val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+            }
+          }
         }
       }
       "store vat number returned KnownFactsMismatch" should {

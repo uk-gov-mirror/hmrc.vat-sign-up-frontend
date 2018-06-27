@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, UseIRSA}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
@@ -61,7 +61,11 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           {
             (businessEntity, enrolments.vatNumber) match {
               case (Other, _) => Future.successful(Redirect(routes.CannotUseServiceController.show()))
-              case (LimitedCompany, Some(_)) => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+              case (LimitedCompany, Some(_)) =>
+                if (isEnabled(CtKnownFactsIdentityVerification))
+                  Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+                else
+                  Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
               case (SoleTrader, Some(_)) => gotoSoleTraderFlow(enrolments)
               case _ => Future.successful(Redirect(routes.CheckYourAnswersController.show()))
             }
