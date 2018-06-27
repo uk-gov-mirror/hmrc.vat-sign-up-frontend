@@ -84,7 +84,7 @@ class NoCtEnrolmentSummaryController @Inject()(val controllerComponents: Control
       val optCompanyUtr = request.session.get(SessionKeys.companyUtrKey).filter(_.nonEmpty)
 
         (optBusinessEntity, optCompanyNumber, optCompanyUtr, optVatNumber) match {
-          case (Some(entity@(SoleTrader | LimitedCompany)), Some(companyNumber), Some(companyUtr) , Some(vatNumber)) =>
+          case (Some(SoleTrader | LimitedCompany), Some(companyNumber), Some(companyUtr) , Some(vatNumber)) =>
             storeCompanyNumber(vatNumber, companyNumber, companyUtr)
           case (None, _, _, _) =>
             Future.successful(

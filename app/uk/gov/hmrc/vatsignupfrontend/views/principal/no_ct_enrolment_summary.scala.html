@@ -51,7 +51,7 @@
     val rowQuestion = Messages("no_ct_enrolment_summary.company_utr")
     val rowAnswer = company_utr
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyUtrController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, None)
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @companyNumber() = @{
