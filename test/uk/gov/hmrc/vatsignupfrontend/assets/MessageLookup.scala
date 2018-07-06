@@ -193,7 +193,6 @@ object MessageLookup {
   object ConfirmClient {
     val title = "Confirm your client's details"
     val heading = "Confirm your client's details"
-    val subHeading = "You've told us"
     val firstName = "First name"
     val lastName = "Last name"
     val nino = "National Insurance number"
