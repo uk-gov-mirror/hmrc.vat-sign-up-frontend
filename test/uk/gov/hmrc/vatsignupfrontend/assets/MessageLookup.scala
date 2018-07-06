@@ -73,7 +73,6 @@ object MessageLookup {
   object ConfirmVatNumber {
     val title = "Confirm your client's VAT number"
     val heading: String = title
-    val vatNumberHeading = "VAT number"
     val link = "Change VAT number"
   }
 

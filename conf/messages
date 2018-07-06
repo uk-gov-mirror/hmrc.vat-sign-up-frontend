@@ -104,7 +104,6 @@ agent.capture_vat_number.hint                                          = For exa
 ## Agent Confirm Vat Number page
 agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
 agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
-agent.confirm_vat_number.vatNumber.heading                             = VAT number
 agent.confirm_vat_number.link                                          = Change VAT number
 
 ## Agent Capture Company Number page
