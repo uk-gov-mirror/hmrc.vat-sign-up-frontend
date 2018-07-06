@@ -253,7 +253,7 @@ object MessageLookup {
   object VatNumber {
     val title = "What is your VAT number?"
     val heading: String = title
-    val line1 = "You can find this 9-digit number on your VAT registration certificate."
+    val line1 = "This is the 9-digit number on your VAT registration certificate."
   }
 
   object CouldNotConfirmVatNumber {
