@@ -173,7 +173,9 @@ agent.verify_agent_email.title                                         = Verify 
 agent.verify_agent_email.heading                                       = Verify your email address
 agent.verify_agent_email.line_1                                        = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
 agent.verify_agent_email.line_2                                        = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
-agent.verify_agent_email.hidden_text                                   = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+agent.verify_email.accordion.heading                                   = I did not get an email
+agent.verify_email.accordion.line_1                                    = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+
 
 # When client verified their email requested by an agent
 client.verified_email.title                                            = You''ve verified your email address
@@ -335,6 +337,9 @@ principal.agree_capture_email.line_2                                   = You''ll
 principal.verify_email.title                                           = Verify your email address
 principal.verify_email.heading                                         = Verify your email address
 principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
+principal.verify_email.line_2                                          = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
+principal.verify_email.accordion.heading                               = I did not get an email
+principal.verify_email.accordion.line_1                                = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 ## Principal Email verified page
 principal.email_verified.title                                         = You''ve verified your email address

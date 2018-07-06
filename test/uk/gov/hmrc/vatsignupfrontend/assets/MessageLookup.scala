@@ -375,6 +375,11 @@ object MessageLookup {
     val heading: String = title
 
     def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
+    val linkText1 = "change your email address"
+    val line2 = s"You can $linkText1 if it is not correct."
+    val accordionHeading = "I did not get an email"
+    val linkText2 = "send it again"
+    val accordionText = s"Check your junk folder. If it's not there we can $linkText2. If we send your email again, any previous links will stop working."
   }
 
   object PrincipalEmailVerified {
