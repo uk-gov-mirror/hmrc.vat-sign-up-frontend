@@ -42,6 +42,8 @@ error.invalid_vat_registration_date.field                              = Please 
 error.invalid_vat_registration_date.summary                            = Please enter a valid vat registration date
 error.exceeds_max_length_email.field                                   = Email address must be 132 characters or less
 error.exceeds_max_length_email.summary                                 = Email address must be 132 characters or less
+error.yes_no.field                                                     = Please select an option
+error.yes_no.summary                                                   = Please select an option
 
 
 error.invalid_first_name.field                                         = Please enter a valid first name
@@ -463,3 +465,9 @@ principal.already_signed_up.line_1                                     = Your si
 principal.assistant_credential.title                                   = You cannot use this service
 principal.assistant_credential.heading                                 = You cannot use this service
 principal.assistant_credential.line_1                                  = You can only sign up this business if you are an administrator.
+
+## Principal Multiple Vat Check
+principal.multiple_vat_check.title                                     = Do you have more than one VAT registered business?
+principal.multiple_vat_check.heading                                   = Do you have more than one VAT registered business?
+principal.multiple_vat_check.radio_input.yes                           = Yes
+principal.multiple_vat_check.radio_input.no                            = No

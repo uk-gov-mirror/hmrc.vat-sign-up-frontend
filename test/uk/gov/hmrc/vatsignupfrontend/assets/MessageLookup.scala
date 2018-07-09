@@ -103,6 +103,13 @@ object MessageLookup {
     val radioOther: String = "Other"
   }
 
+  object YesNo {
+    val title = "Do you have more than one VAT registered business?"
+    val heading: String = title
+    val radioYes: String = "yes"
+    val radioNo: String = "no"
+  }
+
   object ClientDetails {
     val title = "Enter your client's details"
     val heading = "Enter your client's details"
