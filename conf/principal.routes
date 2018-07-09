@@ -126,3 +126,7 @@ GET         /not-administrator                              uk.gov.hmrc.vatsignu
 # No CT Enrolment Summary
 GET         /check-your-answers-company                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.NoCtEnrolmentSummaryController.show
 POST        /check-your-answers-company                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.NoCtEnrolmentSummaryController.submit
+
+# Multiple Vat Check
+GET         /more-than-one-vat-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.MultipleVatCheckController.show
+POST        /more-than-one-vat-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.MultipleVatCheckController.submit

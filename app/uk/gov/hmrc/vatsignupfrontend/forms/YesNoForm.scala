@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.vatsignupfrontend.forms
 
+import play.api.data.{Form, FormError}
 import play.api.data.Forms._
 import play.api.data.format.Formatter
-import play.api.data.{Form, FormError}
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
+import uk.gov.hmrc.vatsignupfrontend.models.{Yes, No, YesNo}
 
 object YesNoForm {
 
