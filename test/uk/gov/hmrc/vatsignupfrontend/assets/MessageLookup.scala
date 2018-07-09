@@ -282,9 +282,12 @@ object MessageLookup {
     val line1 = "You need to sign in with the Government Gateway details for the business you want to sign up."
   }
 
-  object PrincipalBusinessPostCode {
-    val title = "What is your business's postcode?"
-    val heading = "What is the postcode of your business address?"
+  object PrincipalPlaceOfBusiness {
+    val title = "Where is the principal place of business?"
+    val heading = title
+    val line1 = "This is where the company carries out most of its business activities."
+    val line2 = "If the company does business in different places or contract work on client premises, it is where the company keeps its financial and business records."
+    val label = "UK postcode"
   }
 
   object PrincipalGuidance {

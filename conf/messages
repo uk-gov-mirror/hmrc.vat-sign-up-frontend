@@ -287,9 +287,12 @@ principal.sign_in_with_different_details.title                         = You nee
 principal.sign_in_with_different_details.heading                       = You need to sign in with different details
 principal.sign_in_with_different_details.line_1                        = You need to sign in with the Government Gateway details for the business you want to sign up.
 
-## Principal Business Postcode
-principal.business_postcode.title                                      = What is your business''s postcode?
-principal.business_postcode.heading                                    = What is the postcode of your business address?
+# Principal place of Business Postcode
+principal.principal_place_of_business.title                            = Where is the principal place of business?
+principal.principal_place_of_business.heading                          = Where is the principal place of business?
+principal.principal_place_of_business.line_1                           = This is where the company carries out most of its business activities.
+principal.principal_place_of_business.line_2                           = If the company does business in different places or contract work on client premises, it is where the company keeps its financial and business records.
+principal.principal_place_of_business.label                            = UK postcode
 
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = What type of business are you registered as?
