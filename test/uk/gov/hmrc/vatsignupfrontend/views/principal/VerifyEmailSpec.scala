@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalVerifyEmail => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
@@ -51,6 +52,20 @@ class VerifyEmailSpec extends ViewSpec {
     testPage.shouldHaveParaSeq(
       messages.line1(testEmail)
     )
+
+    testPage.shouldHaveParaSeq(
+      messages.line1(testEmail),
+      messages.line2
+    )
+
+    testPage.shouldHaveAccordion(
+      heading = messages.accordionHeading,
+      text = messages.accordionText
+    )
+
+    testPage.shouldHaveALink("change", messages.linkText1, routes.CaptureEmailController.show().url)
+
+    testPage.shouldHaveALink("resend", messages.linkText2, routes.ConfirmEmailController.show().url)
 
   }
 

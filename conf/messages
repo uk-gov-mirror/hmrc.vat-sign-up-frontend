@@ -106,7 +106,6 @@ agent.capture_vat_number.hint                                          = For exa
 ## Agent Confirm Vat Number page
 agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
 agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
-agent.confirm_vat_number.vatNumber.heading                             = VAT number
 agent.confirm_vat_number.link                                          = Change VAT number
 
 ## Agent Capture Company Number page
@@ -176,7 +175,9 @@ agent.verify_agent_email.title                                         = Verify 
 agent.verify_agent_email.heading                                       = Verify your email address
 agent.verify_agent_email.line_1                                        = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
 agent.verify_agent_email.line_2                                        = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
-agent.verify_agent_email.hidden_text                                   = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+agent.verify_email.accordion.heading                                   = I did not get an email
+agent.verify_email.accordion.line_1                                    = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+
 
 # When client verified their email requested by an agent
 client.verified_email.title                                            = You''ve verified your email address
@@ -214,7 +215,6 @@ agent.confirmation.subsection_2.line_2                                 = Your cl
 # Check your client's details page
 agent.client-details.summary.title                                     = Confirm your client''s details
 agent.client-details.summary.heading                                   = Confirm your client''s details
-agent.client-details.summary.sub_heading                               = You''ve told us
 agent.client-details.summary.first_name                                = First name
 agent.client-details.summary.last_name                                 = Last name
 agent.client-details.summary.nino                                      = National Insurance number
@@ -271,7 +271,7 @@ principal.your_vat_number.link                                         = I want 
 ## VAT number page
 principal.vat_number.title                                             = What is your VAT number?
 principal.vat_number.heading                                           = What is your VAT number?
-principal.vat_number.line_1                                            = You can find this 9-digit number on your VAT registration certificate.
+principal.vat_number.line_1                                            = This is the 9-digit number on your VAT registration certificate.
 
 ## Principal Could not confirm VAT number
 principal.could_not_confirm_vat_number.title                           = We could not confirm your VAT number
@@ -339,6 +339,9 @@ principal.agree_capture_email.line_2                                   = You''ll
 principal.verify_email.title                                           = Verify your email address
 principal.verify_email.heading                                         = Verify your email address
 principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
+principal.verify_email.line_2                                          = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
+principal.verify_email.accordion.heading                               = I did not get an email
+principal.verify_email.accordion.line_1                                = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 ## Principal Email verified page
 principal.email_verified.title                                         = You''ve verified your email address

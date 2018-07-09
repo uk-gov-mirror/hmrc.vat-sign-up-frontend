@@ -49,8 +49,6 @@ class ConfirmVatNumberSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH2(messages.vatNumberHeading)
-
     testPage.shouldHavePara(testVatNumber)
 
     testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)

@@ -73,7 +73,6 @@ object MessageLookup {
   object ConfirmVatNumber {
     val title = "Confirm your client's VAT number"
     val heading: String = title
-    val vatNumberHeading = "VAT number"
     val link = "Change VAT number"
   }
 
@@ -201,7 +200,6 @@ object MessageLookup {
   object ConfirmClient {
     val title = "Confirm your client's details"
     val heading = "Confirm your client's details"
-    val subHeading = "You've told us"
     val firstName = "First name"
     val lastName = "Last name"
     val nino = "National Insurance number"
@@ -262,7 +260,7 @@ object MessageLookup {
   object VatNumber {
     val title = "What is your VAT number?"
     val heading: String = title
-    val line1 = "You can find this 9-digit number on your VAT registration certificate."
+    val line1 = "This is the 9-digit number on your VAT registration certificate."
   }
 
   object CouldNotConfirmVatNumber {
@@ -384,6 +382,11 @@ object MessageLookup {
     val heading: String = title
 
     def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
+    val linkText1 = "change your email address"
+    val line2 = s"You can $linkText1 if it is not correct."
+    val accordionHeading = "I did not get an email"
+    val linkText2 = "send it again"
+    val accordionText = s"Check your junk folder. If it's not there we can $linkText2. If we send your email again, any previous links will stop working."
   }
 
   object PrincipalEmailVerified {
