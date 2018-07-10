@@ -95,6 +95,14 @@ object MessageLookup {
     val line2 = s"You can $linkText."
   }
 
+  object PrincipalIncorrectEnrolmentVatNumber {
+    val title = "You need to sign in with different details"
+    val heading: String = title
+    val line1 = "The VAT number you entered is for a different business that has its own Government Gateway account. Once you've signed out, you need to sign in with the correct details."
+    val linkText = "change your answer"
+    val line2 = s"If you've entered the wrong VAT number, you can $linkText."
+  }
+
   object CaptureBusinessEntity {
     val title = "What type of business is your client registered as?"
     val heading: String = title

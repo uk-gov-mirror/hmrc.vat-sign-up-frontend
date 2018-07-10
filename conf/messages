@@ -235,7 +235,6 @@ agent.could_not_confirm_vat_number.title                               = We coul
 agent.could_not_confirm_vat_number.heading                             = We could not confirm your client''s VAT number
 agent.could_not_confirm_vat_number.line_1                              = The information you provided does not match the details on our system.
 
-
 # Could not confirm business
 principal.could_not_confirm_business.title                             = We could not confirm your business
 principal.could_not_confirm_business.heading                           = We could not confirm your business
@@ -432,6 +431,12 @@ principal.sign_in_different_details.title                              = You nee
 principal.sign_in_different_details.heading                            = You need to sign in with different details
 principal.sign_in_different_details.line_1                             = The details you have used to sign in are for a different sole trader. You need to sign out, then sign in with the correct Government Gateway details.
 principal.sign_in_different_details.line_2                             = You can <a id="diff-details" href="{0}">change your answer</a>.
+
+## Incorrect Enrolment Vat Number page
+principal.incorrect_enrolment_vat_number.title                         = You need to sign in with different details
+principal.incorrect_enrolment_vat_number.heading                       = You need to sign in with different details
+principal.incorrect_enrolment_vat_number.line_1                        = The VAT number you entered is for a different business that has its own Government Gateway account. Once you''ve signed out, you need to sign in with the correct details.
+principal.incorrect_enrolment_vat_number.line_2                        = If you''ve entered the wrong VAT number, you can <a id="diff-details" href="{0}">change your answer</a>.
 
 ## Confirm Company Number page
 principal.confirm_company_number.title                                 = Confirm your company number
