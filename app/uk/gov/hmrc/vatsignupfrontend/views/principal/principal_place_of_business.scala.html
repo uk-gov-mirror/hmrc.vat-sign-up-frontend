@@ -14,26 +14,29 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, continueButton}
-@import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
+@import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 @import uk.gov.hmrc.vatsignupfrontend.models.PostCode
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, inputHelper}
 
 @(businessPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.business_postcode.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.principal_place_of_business.title"), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("principal.business_postcode.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
+
+    <p>@Messages("principal.principal_place_of_business.line_1")</p>
+    <p>@Messages("principal.principal_place_of_business.line_2")</p>
 
     @form(action = postAction) {
         <div class="form-group">
             @inputHelper(
                 field = businessPostCodeForm(businessPostCode),
-                label = Messages("principal.business_postcode.heading"),
-                parentForm = businessPostCodeForm
+                label = Messages("principal.principal_place_of_business.label"),
+                parentForm = businessPostCodeForm,
+                hideLabel = false
             )
         </div>
 
