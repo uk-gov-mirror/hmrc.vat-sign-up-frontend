@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.business_postcode
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.principal_place_of_business
 
 import scala.concurrent.Future
 
@@ -37,7 +37,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(business_postcode(businessPostCodeForm.form, routes.BusinessPostCodeController.submit()))
+          Ok(principal_place_of_business(businessPostCodeForm.form, routes.BusinessPostCodeController.submit()))
         )
       }
   }
@@ -48,7 +48,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
         businessPostCodeForm.bindFromRequest.fold(
           formWithErrors =>
             Future.successful(
-              BadRequest(business_postcode(formWithErrors, routes.BusinessPostCodeController.submit()))
+              BadRequest(principal_place_of_business(formWithErrors, routes.BusinessPostCodeController.submit()))
             ),
           businessPostCode =>
             Future.successful(
@@ -57,4 +57,5 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
         )
       }
   }
+
 }
