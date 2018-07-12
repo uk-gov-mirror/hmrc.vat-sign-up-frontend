@@ -20,20 +20,20 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalBusinessPostCode => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalPlaceOfBusiness => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class BusinessPostCodeSpec extends ViewSpec {
+class PrincipalPlaceOfBusinessSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.business_postcode(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.principal_place_of_business(
     businessPostCodeForm = businessPostCodeForm.form,
     postAction = testCall)(
     FakeRequest(),
@@ -41,18 +41,23 @@ class BusinessPostCodeSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Business PostCode view" should {
+  "The Principal Place of Business view" should {
 
     val testPage = TestView(
-      name = "Business Postcode View",
+      name = "Principal Place of Business View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveForm("Business PostCode Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Principal Place of Business Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(businessPostCode, messages.heading)
+    testPage.shouldHaveParaSeq(
+      messages.line1,
+      messages.line2
+    )
+
+    testPage.shouldHaveTextField(businessPostCode, messages.label, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
   }
