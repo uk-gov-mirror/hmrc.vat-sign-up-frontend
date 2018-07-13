@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
@@ -37,6 +38,7 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) =>
           Future.successful(
             Redirect(routes.MultipleVatCheckController.show())
+              .addingToSession(vatNumberKey -> vatNumber)
           )
         case None if appConfig.isEnabled(KnownFactsJourney) =>
           Future.successful(

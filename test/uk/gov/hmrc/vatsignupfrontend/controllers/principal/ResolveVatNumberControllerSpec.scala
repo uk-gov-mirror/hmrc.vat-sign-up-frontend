@@ -23,8 +23,10 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
@@ -43,6 +45,7 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val result = TestResolveVatNumberController.resolve(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
+        session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
 
       }
     }
