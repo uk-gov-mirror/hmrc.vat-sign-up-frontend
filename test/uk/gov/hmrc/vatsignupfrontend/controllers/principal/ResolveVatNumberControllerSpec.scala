@@ -45,7 +45,6 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val result = TestResolveVatNumberController.resolve(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
-        session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
 
       }
     }

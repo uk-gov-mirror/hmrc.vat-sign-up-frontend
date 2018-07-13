@@ -19,17 +19,23 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, StoreVatNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check
+import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
 import scala.concurrent.Future
 
 @Singleton
-class MultipleVatCheckController @Inject()(val controllerComponents: ControllerComponents)
+class MultipleVatCheckController @Inject()(val controllerComponents: ControllerComponents,
+                                           storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -39,19 +45,36 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      yesNoForm.bindFromRequest.fold(
-        formWithErrors =>
+    authorised()(Retrievals.allEnrolments) { enrolments =>
+      enrolments.vatNumber match {
+        case Some(vatNumber) =>
+          yesNoForm.bindFromRequest.fold(
+            formWithErrors =>
+              Future.successful(
+                BadRequest(multiple_vat_check(formWithErrors, routes.MultipleVatCheckController.submit()))
+              ),
+            {
+              case Yes =>
+                Future.successful(Redirect(routes.CaptureVatNumberController.show()))
+              case No =>
+
+                storeVatNumberService.storeVatNumber(vatNumber) map {
+                  case Right(StoreVatNumberSuccess) =>
+                    Redirect(routes.CaptureBusinessEntityController.show())
+                      .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
+                  case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
+                  case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
+                  case Left(_) =>
+                    throw new InternalServerException("storeVatNumber failed")
+                }
+
+            }
+          )
+        case _ =>
           Future.successful(
-            BadRequest(multiple_vat_check(formWithErrors, routes.MultipleVatCheckController.submit()))
-          ),
-        {
-          case Yes =>
-            Future.successful(Redirect(routes.CaptureVatNumberController.show()))
-          case No =>
-            Future.successful(Redirect(routes.CaptureBusinessEntityController.show()))
-        }
-      )
+            Redirect(routes.ResolveVatNumberController.resolve())
+          )
+      }
     }
   }
 }

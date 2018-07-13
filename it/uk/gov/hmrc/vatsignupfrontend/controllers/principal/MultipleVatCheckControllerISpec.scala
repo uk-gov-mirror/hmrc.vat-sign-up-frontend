@@ -19,6 +19,8 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -38,7 +40,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
   "POST /more-than-one-vat-business" should {
     "return a redirect to vat number" when {
       "form value is YES" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
         val res = post("/more-than-one-vat-business")(YesNoForm.yesNo -> YesNoForm.yes)
 
@@ -51,7 +53,8 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
     "return a redirect to business type" when {
       "form value is NO" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubStoreVatNumberSuccess()
 
         val res = post("/more-than-one-vat-business")(YesNoForm.yesNo -> YesNoForm.no)
 

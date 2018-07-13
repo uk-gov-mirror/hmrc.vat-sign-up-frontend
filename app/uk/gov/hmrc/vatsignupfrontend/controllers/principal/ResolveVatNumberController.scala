@@ -38,7 +38,6 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) =>
           Future.successful(
             Redirect(routes.MultipleVatCheckController.show())
-              .addingToSession(vatNumberKey -> vatNumber)
           )
         case None if appConfig.isEnabled(KnownFactsJourney) =>
           Future.successful(
