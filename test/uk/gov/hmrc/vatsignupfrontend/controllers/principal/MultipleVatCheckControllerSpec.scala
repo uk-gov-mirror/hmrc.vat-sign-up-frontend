@@ -20,13 +20,20 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
 
-class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerComponents {
+class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerComponents with MockStoreVatNumberService {
 
-  object TestMultipleVatCheckController extends MultipleVatCheckController(mockControllerComponents)
+  object TestMultipleVatCheckController extends MultipleVatCheckController(
+    mockControllerComponents,
+    mockStoreVatNumberService
+  )
 
   val testGetRequest = FakeRequest("GET", "/more-than-one-vat-business")
 
@@ -48,7 +55,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
     "form successfully submitted" should {
       "the choice is YES" should {
         "go to vat number" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveVatDecEnrolment()
 
           val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "yes"))
           status(result) shouldBe Status.SEE_OTHER
@@ -56,20 +63,55 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         }
       }
 
-      "the choice is NO" should {
-        "go to business-type" in {
-          mockAuthAdminRole()
+      "the choice is NO" when {
+        "the VAT number is stored successfully" should {
+          "go to business-type" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberSuccess(testVatNumber)
 
-          val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+            session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
+          }
+        }
+        "vat number is already subscribed" should {
+          "redirect to the already subscribed page" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+          }
+        }
+        "the vat number is ineligible" should {
+          "redirect to the already subscribed page" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberIneligible(vatNumber = testVatNumber)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+          }
+        }
+
+        "store vat returns any other error" should {
+          "throw internal server exception" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberFailure(vatNumber = testVatNumber)
+
+            intercept[InternalServerException] {
+              await(TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no")))
+            }
+          }
         }
       }
     }
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveVatDecEnrolment()
 
         val result = TestMultipleVatCheckController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
