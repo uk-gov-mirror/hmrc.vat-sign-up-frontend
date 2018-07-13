@@ -36,13 +36,14 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "Calling the resolve action of the Resolve Vat Number controller" when {
     "the user has a VAT-DEC enrolment" should {
-      "redirect to Your Vat number page" in {
+      "redirect to Multiple Vat Check page" in {
         mockAuthRetrieveVatDecEnrolment()
         val request = testGetRequest
 
         val result = TestResolveVatNumberController.resolve(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.YourVatNumberController.show().url)
+        redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
+
       }
     }
   }

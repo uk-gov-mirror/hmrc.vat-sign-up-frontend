@@ -25,14 +25,14 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /resolve-vat-number" when {
     "the vat number is on the profile" should {
-      "redirect to the your VAT number page" in {
+      "redirect to the Multiple Vat Check page" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
         val res = get("/resolve-vat-number")
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.YourVatNumberController.show().url)
+          redirectUri(routes.MultipleVatCheckController.show().url)
         )
       }
     }

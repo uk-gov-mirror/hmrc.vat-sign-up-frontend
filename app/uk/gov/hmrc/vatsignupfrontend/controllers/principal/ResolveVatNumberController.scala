@@ -17,19 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.your_vat_number
 
 import scala.concurrent.Future
 
@@ -42,7 +36,7 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
       enrolments.vatNumber match {
         case Some(vatNumber) =>
           Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+            Redirect(routes.MultipleVatCheckController.show())
           )
         case None if appConfig.isEnabled(KnownFactsJourney) =>
           Future.successful(
