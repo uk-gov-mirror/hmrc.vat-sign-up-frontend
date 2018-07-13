@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -44,7 +45,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
           Future.successful(
             BadRequest(multiple_vat_check(formWithErrors, routes.MultipleVatCheckController.submit()))
           ),
-        yesNo => yesNo match {
+        {
           case Yes =>
             Future.successful(Redirect(routes.CaptureVatNumberController.show()))
           case No =>
