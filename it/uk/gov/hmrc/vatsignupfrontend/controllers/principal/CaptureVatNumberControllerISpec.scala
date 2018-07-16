@@ -21,6 +21,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, Kno
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator}
 
@@ -65,7 +67,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "the enrolment vat number matches the inserted one" should {
             "redirect to the business entity type page" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilitySuccess(testVatNumber)
+              stubStoreVatNumberSuccess()
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -81,7 +83,6 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             "redirect to error page" in {
               val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilitySuccess(nonMatchingVat)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
 
@@ -97,7 +98,6 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the invalid vat number page" when {
             "the vat number is fails the checksum validation" in {
               stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibilitySuccess(testInvalidVatNumber)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
 
