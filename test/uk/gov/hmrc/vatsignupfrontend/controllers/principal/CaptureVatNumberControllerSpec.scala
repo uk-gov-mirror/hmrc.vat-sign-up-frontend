@@ -25,21 +25,25 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockVatNumberEligibilityService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
 
 import scala.concurrent.Future
 
 
 class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockVatNumberEligibilityService with FeatureSwitching {
+  with MockControllerComponents with MockVatNumberEligibilityService with MockStoreVatNumberService with FeatureSwitching {
 
-  object TestCaptureVatNumberController extends CaptureVatNumberController(mockControllerComponents, mockVatNumberEligibilityService)
+  object TestCaptureVatNumberController extends CaptureVatNumberController(
+    mockControllerComponents,
+    mockVatNumberEligibilityService,
+    mockStoreVatNumberService
+  )
 
   lazy val testGetRequest = FakeRequest("GET", "/vat-number")
 
@@ -82,12 +86,13 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               "redirect to the business entity type page" in {
                 enable(KnownFactsJourney)
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockVatNumberEligibilitySuccess(testVatNumber)
+                mockStoreVatNumberSuccess(testVatNumber)
 
                 val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+                session(result) get vatNumberKey should contain(testVatNumber)
               }
             }
 
@@ -96,7 +101,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 val testNonMatchingVat = TestConstantsGenerator.randomVatNumber
                 enable(KnownFactsJourney)
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockVatNumberEligibilitySuccess(testNonMatchingVat)
 
                 val result = TestCaptureVatNumberController.submit(testPostRequest(testNonMatchingVat))
 
@@ -110,7 +114,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
               enable(KnownFactsJourney)
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockVatNumberIneligibleForMtd(testVatNumber)
+              mockStoreVatNumberIneligible(testVatNumber)
 
               val request = testPostRequest(testVatNumber)
 
@@ -119,22 +123,10 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
             }
 
-            "redirect to Invalid Vat Number page when the vat number is invalid" in {
-              enable(KnownFactsJourney)
-              mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockVatNumberEligibilityInvalid(testVatNumber)
-
-              val request = testPostRequest(testVatNumber)
-
-              val result = TestCaptureVatNumberController.submit(request)
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
-            }
-
             "redirect to Already Signed Up page when the vat number has already been subscribed" in {
               enable(KnownFactsJourney)
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockVatNumberEligibilityAlreadySubscribed(testVatNumber)
+              mockStoreVatNumberAlreadySubscribed(testVatNumber)
 
               val request = testPostRequest(testVatNumber)
 
@@ -146,7 +138,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             "throw an exception for any other scenario" in {
               enable(KnownFactsJourney)
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockVatNumberEligibilityFailure(testVatNumber)
+              mockStoreVatNumberFailure(testVatNumber)
 
               val request = testPostRequest(testVatNumber)
               intercept[InternalServerException] {
@@ -184,7 +176,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-            result.session get SessionKeys.vatNumberKey should contain(testVatNumber)
+            result.session get vatNumberKey should contain(testVatNumber)
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {

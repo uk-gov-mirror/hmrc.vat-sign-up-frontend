@@ -21,13 +21,15 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, StoreVatNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
@@ -36,7 +38,8 @@ import scala.concurrent.Future
 
 @Singleton
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           vatNumberEligibilityService: VatNumberEligibilityService)
+                                           vatNumberEligibilityService: VatNumberEligibilityService,
+                                           storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
@@ -58,24 +61,21 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
         , formVatNumber =>
           if (VatNumberChecksumValidation.isValid(formVatNumber)) {
             enrolments.vatNumber match {
-              case Some(enrolmentVatNumber) =>
-                vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
-                  case Right(VatNumberEligible) => {
-                    if (enrolmentVatNumber == formVatNumber)
-                      Redirect(routes.CaptureBusinessEntityController.show())
-                    else
-                      Redirect(routes.IncorrectEnrolmentVatNumberController.show())
-                  }
-                  case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
-                  case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
-                  case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
-                  case Left(VatNumberEligibilityFailureResponse(status)) => {
-                    throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
-                  }
+              case Some(enrolmentVatNumber) if enrolmentVatNumber == formVatNumber =>
+                storeVatNumberService.storeVatNumber(formVatNumber) map {
+                  case Right(StoreVatNumberSuccess) =>
+                    Redirect(routes.CaptureBusinessEntityController.show())
+                      .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
+                  case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
+                  case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
+                  case Left(_) =>
+                    throw new InternalServerException("storeVatNumber failed")
                 }
+              case Some(_) =>
+                Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
               case None =>
                 vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
-                  case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
+                  case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(vatNumberKey -> formVatNumber)
                   case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
                   case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
                   case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())

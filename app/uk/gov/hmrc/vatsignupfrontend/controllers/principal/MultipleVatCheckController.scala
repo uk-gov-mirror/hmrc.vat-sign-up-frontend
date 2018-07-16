@@ -57,7 +57,6 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
               case Yes =>
                 Future.successful(Redirect(routes.CaptureVatNumberController.show()))
               case No =>
-
                 storeVatNumberService.storeVatNumber(vatNumber) map {
                   case Right(StoreVatNumberSuccess) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
@@ -67,7 +66,6 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")
                 }
-
             }
           )
         case _ =>
