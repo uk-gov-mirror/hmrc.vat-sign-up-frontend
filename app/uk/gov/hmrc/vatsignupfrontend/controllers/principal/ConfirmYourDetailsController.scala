@@ -90,7 +90,7 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
                 Future.failed(new InternalServerException(s"Failure calling store nino: status=$status"))
             }
           case (None, _) =>
-            Future.successful(Redirect(routes.YourVatNumberController.show()))
+            Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
           case (_, None) =>
             Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
         }

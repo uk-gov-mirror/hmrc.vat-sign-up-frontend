@@ -47,7 +47,7 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
           )
         case (None, _) =>
           Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+            Redirect(routes.ResolveVatNumberController.resolve())
           )
         case _ =>
           Future.successful(
@@ -75,7 +75,7 @@ class ConfirmCompanyNumberController @Inject()(val controllerComponents: Control
             }
         case (None, _) =>
           Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+            Redirect(routes.ResolveVatNumberController.resolve())
           )
         case _ =>
           Future.successful(

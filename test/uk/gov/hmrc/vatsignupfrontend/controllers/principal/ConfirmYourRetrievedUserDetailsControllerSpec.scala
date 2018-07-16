@@ -89,7 +89,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
         .withSession(SessionKeys.userDetailsKey -> testUserDetailsJson))
 
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.YourVatNumberController.show().url)
+      redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve.url)
     }
 
     "redirect to capture business entity page when no user details in session" in {

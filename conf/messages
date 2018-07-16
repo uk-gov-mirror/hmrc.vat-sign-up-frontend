@@ -261,12 +261,6 @@ principal.guidance.subsection_2.sub_heading_2                          = Sign up
 principal.guidance.subsection_2.line_1                                 = To sign up you''ll need the Government Gateway details you got when you registered for VAT.
 principal.guidance.subsection_2.line_2                                 = If you haven''t submitted a VAT Return online before, then you''ll also need your VAT registration certificate.
 
-## Your VAT number page
-principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.heading                                      = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.vatNumber.heading                            = VAT number
-principal.your_vat_number.link                                         = I want to use a different VAT number
-
 ## VAT number page
 principal.vat_number.title                                             = What is your VAT number?
 principal.vat_number.heading                                           = What is your VAT number?

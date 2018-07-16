@@ -72,7 +72,7 @@ class ConfirmYourRetrievedUserDetailsController @Inject()(val controllerComponen
             case Left(_) => Future.failed(new InternalServerException(s"Failure calling store nino: failed matching when no matching call required"))
           }
         case (None, _) =>
-          Future.successful(Redirect(routes.YourVatNumberController.show()))
+          Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
         case (_, None) =>
           Future.successful(Redirect(routes.CaptureBusinessEntityController.show()))
       }
