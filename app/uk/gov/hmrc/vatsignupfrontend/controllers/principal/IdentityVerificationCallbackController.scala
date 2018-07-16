@@ -59,7 +59,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
           }
         case (None, _, _) =>
           Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+            Redirect(routes.ResolveVatNumberController.resolve())
           )
         case (_, None, _) =>
           Future.successful(

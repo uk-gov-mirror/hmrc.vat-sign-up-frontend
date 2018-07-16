@@ -74,7 +74,7 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
             }
         case (None, _) =>
           Future.successful(
-            Redirect(routes.YourVatNumberController.show())
+            Redirect(routes.ResolveVatNumberController.resolve())
           )
         case _ =>
           Future.successful(

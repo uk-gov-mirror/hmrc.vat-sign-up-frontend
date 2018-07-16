@@ -209,7 +209,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         val result = TestConfirmYourDetailsController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
+        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
       }
     }
 

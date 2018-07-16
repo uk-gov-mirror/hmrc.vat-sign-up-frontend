@@ -128,7 +128,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
       val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
+      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
     }
     "go to the 'capture company number' page if company number is missing" in {
       mockAuthAdminRole()
