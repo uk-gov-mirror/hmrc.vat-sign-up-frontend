@@ -50,13 +50,11 @@ class ConfirmEmailSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHaveH2(messages.emailHeading)
-
     testPage.shouldHavePara(testEmail)
 
     testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
-    testPage.shouldHaveConfirmAndContinueButton()
+    testPage.shouldHaveContinueButton()
 
     testPage.shouldHaveALink(
       id = "changeLink",

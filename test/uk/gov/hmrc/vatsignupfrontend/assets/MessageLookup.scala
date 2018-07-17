@@ -25,6 +25,7 @@ object MessageLookup {
     val confirm = "Confirm"
     val acceptAndContinue = "Accept and continue"
     val agreeAndContinue = "Agree and continue"
+    val agree = "Agree"
     val submit = "Submit"
     val update = "Update"
     val signOut = "Sign out"

@@ -12,6 +12,7 @@ service_name.agent_journey                                             = Use sof
 base.continue                                                          = Continue
 base.confirmAndContinue                                                = Confirm and continue
 base.confirm                                                           = Confirm
+base.agree                                                             = Agree
 base.agree_and_continue                                                = Agree and continue
 base.accept_and_continue                                               = Accept and continue
 base.continue_to_sign_up                                               = Continue to sign up
