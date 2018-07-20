@@ -22,18 +22,18 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
-import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrievals, ~}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, UseIRSA}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockCitizenDetailsService
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockCitizenDetailsService
 
 import scala.concurrent.Future
 
@@ -68,24 +68,9 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
   "Calling the submit action of the Capture Business Entity controller" when {
     "form successfully submitted" should {
       "the business entity is limited company" when {
-        "CtKnownFactsIdentityVerification is disabled" should {
-          "go to Identity Verification with limited company stored in session" in {
+        "there is a VATDEC enrolment" should {
+          "go to Capture Number controller" in {
             mockAuthRetrieveVatDecEnrolment()
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-          }
-        }
-        "CtKnownFactsIdentityVerification is enabled" should {
-          "go to Identity Verification with limited company stored in session" in {
-            enable(CtKnownFactsIdentityVerification)
-            mockAuthRetrieveVatDecEnrolment()
-
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
 
             val result = await(TestCaptureBusinessEntityController.submit(request))
@@ -93,6 +78,22 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
             redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
 
             result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+
+          }
+        }
+        "there is no VATDEC enrolment" should {
+          "go to Check Your Answers controller" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+
+            val result = await(TestCaptureBusinessEntityController.submit(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CheckYourAnswersController.show().url)
+
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+
           }
         }
       }
