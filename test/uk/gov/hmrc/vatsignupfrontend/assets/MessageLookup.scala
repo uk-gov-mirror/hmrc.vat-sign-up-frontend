@@ -199,6 +199,12 @@ object MessageLookup {
     val line1 = "You need to continue to sign up your client. We will send you a confirmation message after you sign up this client."
   }
 
+  object AgentConfirmCompany {
+    val title = "Confirm your client's company"
+    val heading: String = title
+    val link = "Change company"
+  }
+
   object ClientVerifiedEmail {
     val title = "You've verified your email address"
     val heading: String = title
