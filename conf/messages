@@ -109,11 +109,6 @@ agent.confirm_company.title                                            = Confirm
 agent.confirm_company.heading                                          = Confirm your client''s company
 agent.confirm_company.link                                             = Change company
 
-## Agent Confirm Company page
-agent.confirm_company.title                                            = Confirm your client''s company
-agent.confirm_company.heading                                          = Confirm your client''s company
-agent.confirm_company.link                                             = Change company
-
 ## Agent Confirm Vat Number page
 agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
 agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
