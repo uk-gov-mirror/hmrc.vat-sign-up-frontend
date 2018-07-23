@@ -109,6 +109,11 @@ agent.confirm_vat_number.title                                         = Confirm
 agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
 agent.confirm_vat_number.link                                          = Change VAT number
 
+## Confirm Company page
+agent.confirm_company.title                                            = Confirm your client''s company
+agent.confirm_company.heading                                          = Confirm your client''s company
+agent.confirm_company.link                                             = Change company
+
 ## Agent Capture Company Number page
 agent.capture_company_number.title                                     = What is your client''s company number?
 agent.capture_company_number.heading                                   = What is your client''s company number?
