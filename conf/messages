@@ -104,15 +104,15 @@ agent.capture_vat_number.heading                                       = What is
 agent.capture_vat_number.line_1                                        = This is the 9-digit number they received when they registered for VAT.
 agent.capture_vat_number.hint                                          = For example, 123456789
 
+## Agent Confirm Company page
+agent.confirm_company.title                                            = Confirm your client''s company
+agent.confirm_company.heading                                          = Confirm your client''s company
+agent.confirm_company.link                                             = Change company
+
 ## Agent Confirm Vat Number page
 agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
 agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
 agent.confirm_vat_number.link                                          = Change VAT number
-
-## Confirm Company page
-agent.confirm_company.title                                            = Confirm your client''s company
-agent.confirm_company.heading                                          = Confirm your client''s company
-agent.confirm_company.link                                             = Change company
 
 ## Agent Capture Company Number page
 agent.capture_company_number.title                                     = What is your client''s company number?
