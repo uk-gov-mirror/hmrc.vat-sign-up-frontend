@@ -54,6 +54,10 @@ POST        /business-type                 uk.gov.hmrc.vatsignupfrontend.control
 GET         /could-not-confirm-VAT-number  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.show
 POST        /could-not-confirm-VAT-number  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.submit
 
+# Could not confirm Company name
+GET         /could-not-confirm-company     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.show
+POST        /could-not-confirm-company     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.submit
+
 # manage the routing of the email flow
 GET         /email                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
 
