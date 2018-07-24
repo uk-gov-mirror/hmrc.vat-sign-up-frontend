@@ -51,7 +51,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
             ),
           businessPostCode =>
             Future.successful(
-              Redirect(routes.CaptureBusinessEntityController.show()).addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+              Redirect(routes.CheckYourAnswersController.show()).addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
             )
         )
       }

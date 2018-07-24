@@ -46,19 +46,17 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
-
   }
-
 
   "Calling the submit action of the Business PostCode controller" when {
     "form successfully submitted" should {
-      "goto capture Business Entity page" in {
+      "goto check your answers page" in {
         mockAuthAdminRole()
 
         implicit val request = testPostRequest(testBusinessPostcode.postCode)
         val result = TestBusinessPostCodeController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
 
         result.session get SessionKeys.businessPostCodeKey should contain(
           Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
@@ -76,6 +74,6 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         charset(result) shouldBe Some("utf-8")
       }
     }
-
   }
+
 }

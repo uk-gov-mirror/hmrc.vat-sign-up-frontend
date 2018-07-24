@@ -39,7 +39,7 @@ class CompanyNameNotFoundControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
       enable(CompanyNameJourney)
 
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
       val result = TestCompanyNameNotFoundController.show(request)
@@ -54,7 +54,7 @@ class CompanyNameNotFoundControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
       enable(CompanyNameJourney)
 
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestCompanyNameNotFoundController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

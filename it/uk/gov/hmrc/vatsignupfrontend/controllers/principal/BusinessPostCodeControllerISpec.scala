@@ -43,7 +43,7 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureBusinessEntityController.show().url)
+        redirectUri(routes.CheckYourAnswersController.show().url)
       )
     }
   }

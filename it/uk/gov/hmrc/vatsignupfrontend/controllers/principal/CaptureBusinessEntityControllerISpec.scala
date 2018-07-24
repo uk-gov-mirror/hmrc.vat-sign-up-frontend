@@ -45,11 +45,11 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     }
   }
 
-  "POST /business-type" should {
+  "POST /business-type" when {
 
-    "Use IRSA is disabled" should {
-      "return a SEE_OTHER status and go to capture your details" when {
-        "the business type is sole trader" in {
+    "the business type is sole trader" when {
+      "Use IRSA is disabled" should {
+        "return a SEE_OTHER status and go to capture your details" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
           val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
@@ -60,27 +60,9 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
           )
         }
       }
-    }
-
-    "Use IRSA is enabled" when {
-      "the user has an IRSA enrolment" should {
-        "return a SEE_OTHER status and go to Confirm your retrieved details" when {
-          "the business type is sole trader" in {
-            enable(UseIRSA)
-            stubAuth(OK, successfulAuthResponse(vatDecEnrolment, irsaEnrolment))
-            stubGetCitizenDetails(testSaUtr)(OK, testUserDetails)
-            val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.ConfirmYourRetrievedUserDetailsController.show().url)
-            )
-          }
-        }
-      }
-      "the user does not have an IRSA enrolment" should {
-        "return a SEE_OTHER status and go to capture your details" when {
-          "the business type is sole trader" in {
+      "Use IRSA is enabled" when {
+        "the user does not have an IRSA enrolment" should {
+          "return a SEE_OTHER status and go to capture your details" in {
             enable(UseIRSA)
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
@@ -91,48 +73,68 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
               redirectUri(routes.CaptureYourDetailsController.show().url)
             )
           }
-          "the business type is limited company" when {
-            "CtKnownFactsIdentityVerification is disabled and no enrolment" in {
-              enable(UseIRSA)
-              stubAuth(OK, successfulAuthResponse())
-              val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+        }
+        "the user has an IRSA enrolment" should {
+          "return a SEE_OTHER status and go to Confirm your retrieved details" in {
+            enable(UseIRSA)
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment, irsaEnrolment))
+            stubGetCitizenDetails(testSaUtr)(OK, testUserDetails)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CheckYourAnswersController.show().url)
-              )
-            }
-            "CtKnownFactsIdentityVerification is disabled and there is an enrolment" in {
-              enable(UseIRSA)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
-              val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureCompanyNumberController.show().url)
-              )
-            }
-            "CtKnownFactsIdentityVerification is enabled" in {
-              enable(UseIRSA)
-              enable(CtKnownFactsIdentityVerification)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-
-              val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureCompanyNumberController.show().url)
-              )
-            }
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.ConfirmYourRetrievedUserDetailsController.show().url)
+            )
           }
-
         }
       }
     }
 
-    "return a SEE_OTHER status and go to cannot use service" when {
-      "the business type is other" in {
+    "the business type is limited company" when {
+      "CtKnownFactsIdentityVerification is disabled" when {
+        "the user has a VAT DEC enrolment" should {
+          "return a SEE_OTHER status and go to capture company number" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyNumberController.show().url)
+            )
+          }
+        }
+        "the user does not have a VAT DEC enrolment" should {
+          "return a SEE_OTHER status and go to caputure your details" in {
+            stubAuth(OK, successfulAuthResponse())
+
+            val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureYourDetailsController.show().url)
+            )
+          }
+        }
+      }
+      "CtKnownFactsIdentityVerification is enabled" should {
+        "return a SEE_OTHER status and go to capture company number" in {
+          enable(CtKnownFactsIdentityVerification)
+          stubAuth(OK, successfulAuthResponse())
+
+          val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureCompanyNumberController.show().url)
+          )
+        }
+      }
+    }
+
+    "the business type is other" should {
+      "return a SEE_OTHER status and go to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> other)
@@ -144,28 +146,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a SEE_OTHER status and go to check your answers" when {
-      "the business type is sole trader and a vat number is not on the enrolment" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CheckYourAnswersController.show().url)
-        )
-      }
-
-      "the business type is limited company and a vat number is not on the enrolment" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedCompany)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CheckYourAnswersController.show().url)
-        )
-      }
-    }
   }
+
 }
