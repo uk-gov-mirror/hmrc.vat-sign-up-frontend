@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
@@ -36,7 +36,6 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(CompanyNameJourney)
-    disable(CtKnownFactsIdentityVerification)
   }
 
   object TestConfirmCompanyController extends ConfirmCompanyController(
@@ -52,7 +51,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   "Calling the show action of the Confirm Company controller" when {
     "there is a company name in the session" should {
       "go to the Confirm Company page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val request = testGetRequest.withSession(
           SessionKeys.companyNameKey -> testCompanyName
         )
@@ -69,7 +68,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
     "there isn't a company name in the session" should {
       "go to the capture company name page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestConfirmCompanyController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
@@ -79,8 +78,8 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   }
 
   "Calling the submit action of the Confirm Company controller" should {
-    "go to the 'agree to receive emails' page if CtKnownFactsIdentityVerification is disabled" in {
-      mockAuthAdminRole()
+    "go to the 'emails' router" in {
+      mockAuthRetrieveAgentEnrolment()
       mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
 
       val request = testPostRequest.withSession(
@@ -90,24 +89,11 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
       val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
-    }
-    "go to the 'capture company UTR' page if CtKnownFactsIdentityVerification is enabled" in {
-      enable(CtKnownFactsIdentityVerification)
-      mockAuthAdminRole()
-
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.companyNumberKey -> testCompanyNumber
-      )
-
-      val result = TestConfirmCompanyController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+      redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
     }
 
     "throw internal server exception if store company number fails" in {
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
       mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, companyUtr = None)
 
       val request = testPostRequest.withSession(
@@ -119,8 +105,8 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
         await(TestConfirmCompanyController.submit(request))
       }
     }
-    "go to the 'your vat number' page if vat number is missing" in {
-      mockAuthAdminRole()
+    "go to the 'capture vat number' page if vat number is missing" in {
+      mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.companyNumberKey -> testCompanyNumber
@@ -128,10 +114,10 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
       val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+      redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
     }
     "go to the 'capture company number' page if company number is missing" in {
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber

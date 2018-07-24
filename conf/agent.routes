@@ -42,6 +42,10 @@ POST        /company-number                uk.gov.hmrc.vatsignupfrontend.control
 GET         /confirm-company-number        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyNumberController.show
 POST        /confirm-company-number        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyNumberController.submit
 
+# Confirm Company name
+GET         /confirm-company               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
+POST        /confirm-company               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.submit
+
 #Capture Business Entity
 GET         /business-type                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityController.show
 POST        /business-type                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityController.submit

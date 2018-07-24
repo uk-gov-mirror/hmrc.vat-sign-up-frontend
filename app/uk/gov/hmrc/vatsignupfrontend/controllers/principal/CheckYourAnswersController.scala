@@ -17,17 +17,19 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, InvalidVatNumber, KnownFactsMismatch}
-import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, _}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers
 
@@ -36,7 +38,7 @@ import scala.concurrent.Future
 @Singleton
 class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents,
                                            val storeVatNumberService: StoreVatNumberService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -75,11 +77,11 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     }
   }
 
-  private def storeVatNumber(entity: BusinessEntity, vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel)(implicit hc: HeaderCarrier) =
+  private def storeVatNumber(entity: BusinessEntity, vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel, enrolments: Enrolments)(implicit hc: HeaderCarrier) =
     storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate).map {
       case Right(_) =>
         entity match {
-          case LimitedCompany if isEnabled(CtKnownFactsIdentityVerification) =>
+          case LimitedCompany if isEnabled(CtKnownFactsIdentityVerification) || enrolments.vatNumber.isDefined =>
             Redirect(routes.CaptureCompanyNumberController.show())
           case _ =>
             Redirect(routes.CaptureYourDetailsController.show())
@@ -92,7 +94,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
+    authorised()(Retrievals.allEnrolments) { enrolments =>
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
@@ -100,7 +102,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBusinessEntity) match {
         case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode), Some(entity@(SoleTrader | LimitedCompany))) =>
-          storeVatNumber(entity, vatNumber, postCode, vatRegistrationDate)
+          storeVatNumber(entity, vatNumber, postCode, vatRegistrationDate, enrolments)
         case (None, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())

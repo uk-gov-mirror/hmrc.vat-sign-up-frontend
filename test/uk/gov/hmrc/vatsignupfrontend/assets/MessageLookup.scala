@@ -25,6 +25,7 @@ object MessageLookup {
     val confirm = "Confirm"
     val acceptAndContinue = "Accept and continue"
     val agreeAndContinue = "Agree and continue"
+    val agree = "Agree"
     val submit = "Submit"
     val update = "Update"
     val signOut = "Sign out"
@@ -196,6 +197,12 @@ object MessageLookup {
     val title = "You have verified your email address"
     val heading: String = title
     val line1 = "You need to continue to sign up your client. We will send you a confirmation message after you sign up this client."
+  }
+
+  object AgentConfirmCompany {
+    val title = "Confirm your client's company"
+    val heading: String = title
+    val link = "Change company"
   }
 
   object ClientVerifiedEmail {

@@ -65,7 +65,7 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         val result = TestConfirmCompanyNumberController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
+        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
       }
     }
     "there isn't a company number in the session" should {
@@ -128,7 +128,7 @@ class ConfirmCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         val result = TestConfirmCompanyNumberController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.YourVatNumberController.show().url)
+        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
       }
     }
     "company number is not in session" should {

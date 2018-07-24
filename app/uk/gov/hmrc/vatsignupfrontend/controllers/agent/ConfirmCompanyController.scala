@@ -14,32 +14,31 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
+import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_company
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 
 import scala.concurrent.Future
 
 @Singleton
 class ConfirmCompanyController @Inject()(val controllerComponents: ControllerComponents,
-                                         val storeCompanyNumberService: StoreCompanyNumberService
-                                        )
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(CompanyNameJourney)) {
+                                         val storeCompanyNumberService: StoreCompanyNumberService)
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(CompanyNameJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optCompanyName = request.session.get(companyNameKey).filter(_.nonEmpty)
+
       Future.successful(
         optCompanyName match {
           case Some(companyName) =>
@@ -58,29 +57,27 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val optVatNumber = request.session.get(vatNumberKey).filter(_.nonEmpty)
+      val optCompanyNumber = request.session.get(companyNumberKey).filter(_.nonEmpty)
 
       (optVatNumber, optCompanyNumber) match {
         case (Some(vatNumber), Some(companyNumber)) =>
-          if (isEnabled(CtKnownFactsIdentityVerification))
-            Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-          else
-            storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
-              case Right(_) =>
-                Redirect(routes.AgreeCaptureEmailController.show())
-              case Left(errResponse) =>
-                throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-            }
+          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
+            case Right(_) =>
+              Redirect(routes.EmailRoutingController.route().url)
+            case Left(errResponse) =>
+              throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+          }
         case (None, _) =>
           Future.successful(
-            Redirect(routes.ResolveVatNumberController.resolve())
+            Redirect(routes.CaptureVatNumberController.show())
           )
         case _ =>
           Future.successful(
             Redirect(routes.CaptureCompanyNumberController.show())
           )
       }
+
     }
   }
 

@@ -22,9 +22,8 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
@@ -41,7 +40,6 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the show action of the Invalid Vat Number controller" when {
     "the known facts journey feature switch is enabled" should {
       "show the page" in {
-        enable(KnownFactsJourney)
         mockAuthAdminRole()
         val request = testGetRequest
 
@@ -51,29 +49,16 @@ class InvalidVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         charset(result) shouldBe Some("utf-8")
       }
     }
-    "the known facts journey feature switch is disabled" should {
-      "throw a NotFoundException" in {
-        disable(KnownFactsJourney)
-        intercept[NotFoundException](await(TestInvalidVatNumberController.show(testGetRequest)))
-      }
-    }
   }
 
   "Calling the submit action of the Invalid Vat Number controller" should {
     "the known facts journey feature switch is enabled" should {
       "return SEE_OTHER" in {
-        enable(KnownFactsJourney)
         mockAuthAdminRole()
 
         val result = TestInvalidVatNumberController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result).get shouldBe routes.CaptureVatNumberController.show().url
-      }
-    }
-    "the known facts journey feature switch is disabled" should {
-      "throw a NotFoundException" in {
-        disable(KnownFactsJourney)
-        intercept[NotFoundException](await(TestInvalidVatNumberController.submit(testPostRequest)))
       }
     }
   }

@@ -26,7 +26,7 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -51,30 +51,16 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(VatNumberForm.vatNumber -> vatNumber)
 
   "Calling the show action of the Capture Vat Number controller" when {
-    "the known facts journey feature switch is enabled" should {
-      "redirect to resolve VAT number controller" in {
-        enable(KnownFactsJourney)
-        mockAuthRetrieveVatDecEnrolment()
+    "redirect to resolve VAT number controller" in {
+      mockAuthAdminRole()
 
-        val result = TestCaptureVatNumberController.show(testGetRequest)
+      val result = TestCaptureVatNumberController.show(testGetRequest)
 
-        status(result) shouldBe Status.OK
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
-      }
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
 
-    "the known facts journey feature switch is disabled" should {
-      "throw not found exception" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-        intercept[NotFoundException] {
-          await(TestCaptureVatNumberController.show(testGetRequest))
-        }
-      }
-    }
   }
 
   "Calling the submit action of the Capture Vat Number controller" when {
@@ -84,7 +70,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           "the vat eligibility is successful" when {
             "the inserted vat number matches the enrolment one" should {
               "redirect to the business entity type page" in {
-                enable(KnownFactsJourney)
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
                 mockStoreVatNumberSuccess(testVatNumber)
 
@@ -99,7 +84,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             "the inserted vat number doesn't match the enrolment one" should {
               "redirect to error page" in {
                 val testNonMatchingVat = TestConstantsGenerator.randomVatNumber
-                enable(KnownFactsJourney)
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
 
                 val result = TestCaptureVatNumberController.submit(testPostRequest(testNonMatchingVat))
@@ -112,7 +96,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
           "the vat eligibility is unsuccessful" should {
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
-              enable(KnownFactsJourney)
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
               mockStoreVatNumberIneligible(testVatNumber)
 
@@ -124,7 +107,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             }
 
             "redirect to Already Signed Up page when the vat number has already been subscribed" in {
-              enable(KnownFactsJourney)
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
               mockStoreVatNumberAlreadySubscribed(testVatNumber)
 
@@ -136,7 +118,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             }
 
             "throw an exception for any other scenario" in {
-              enable(KnownFactsJourney)
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
               mockStoreVatNumberFailure(testVatNumber)
 
@@ -151,20 +132,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
 
         "the user does not have a VAT-DEC enrolment" when {
-          "the known facts journey feature switch is disabled" should {
-            "throw not found exception" in {
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-              intercept[NotFoundException] {
-                await(TestCaptureVatNumberController.submit(testPostRequest(testVatNumber)))
-              }
-            }
-          }
 
           "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
-            enable(KnownFactsJourney)
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
             )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -180,7 +149,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
-            enable(KnownFactsJourney)
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
             )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -194,7 +162,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to Invalid Vat Number page when the vat number is invalid" in {
-            enable(KnownFactsJourney)
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
             )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -208,7 +175,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to Already Signed Up page when the vat number has already been subscribed" in {
-            enable(KnownFactsJourney)
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
             )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -222,7 +188,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "throw an exception for any other scenario" in {
-            enable(KnownFactsJourney)
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
             )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -238,7 +203,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "the vat number fails checksum validation" should {
         "redirect to Invalid Vat Number page" in {
-          enable(KnownFactsJourney)
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -255,7 +219,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        enable(KnownFactsJourney)
         mockAuthorise(
           retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
         )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))

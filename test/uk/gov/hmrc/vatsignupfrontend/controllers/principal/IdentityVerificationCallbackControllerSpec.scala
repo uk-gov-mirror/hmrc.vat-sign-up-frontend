@@ -20,8 +20,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.Constants.skipIvJourneyValue
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -29,7 +29,6 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreIdentityVerificationHttpPa
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, Other, SoleTrader}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreIdentityVerificationService
-import uk.gov.hmrc.vatsignupfrontend.Constants.skipIvJourneyValue
 
 import scala.concurrent.Future
 
@@ -142,7 +141,7 @@ class IdentityVerificationCallbackControllerSpec extends UnitSpec with GuiceOneA
         val result = await(TestIdentityVerificationCallbackController.continue(FakeRequest()))
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.YourVatNumberController.show().url)
+        redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve.url)
       }
     }
 

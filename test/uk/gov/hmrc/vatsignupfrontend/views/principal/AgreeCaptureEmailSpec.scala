@@ -55,7 +55,7 @@ class AgreeCaptureEmailSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Capture email Form")(actionCall = testCall)
 
-    testPage.shouldHaveAgreeAndContinueButton()
+    testPage.shouldHaveAgreeButton()
 
     testPage.shouldHaveSignOutLink()
   }

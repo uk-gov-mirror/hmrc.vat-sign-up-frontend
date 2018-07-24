@@ -14,52 +14,53 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.agent
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{YourVatNumber => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentConfirmCompany => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class YourVatNumberSpec extends ViewSpec {
+class ConfirmCompanySpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.your_vat_number(
-    vatNumber = testVatNumber,
-    postAction = testCall)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_company(
+    companyName = testCompanyName,
+    postAction = testCall,
+    changeLink = testUri)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Your Vat Number view" should {
+  "The Confirm Company view" should {
 
     val testPage = TestView(
-      name = "Your Vat Number View",
+      name = "Confirm Company View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH2(messages.vatNumberHeading)
+    testPage.shouldHavePara(testCompanyName)
 
-    testPage.shouldHavePara(testVatNumber)
-
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Confirm Company Form")(actionCall = testCall)
 
     testPage.shouldHaveConfirmAndContinueButton()
 
-    testPage.shouldHaveALink("changeLink", messages.link, routes.SignInWithDifferentDetailsController.show().url)
-
+    testPage.shouldHaveALink(
+      id = "changeLink",
+      text = messages.link,
+      href = testUri
+    )
   }
 
 }

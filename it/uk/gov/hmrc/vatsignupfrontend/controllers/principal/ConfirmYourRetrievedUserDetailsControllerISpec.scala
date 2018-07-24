@@ -92,7 +92,7 @@ class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase w
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.YourVatNumberController.show().url)
+        redirectUri(routes.ResolveVatNumberController.resolve.url)
       )
 
     }

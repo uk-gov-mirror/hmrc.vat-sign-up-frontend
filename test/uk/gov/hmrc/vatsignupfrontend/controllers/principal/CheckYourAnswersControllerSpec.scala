@@ -24,15 +24,19 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+
+import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
@@ -68,7 +72,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(KnownFactsJourney)
     disable(CtKnownFactsIdentityVerification)
   }
 
@@ -136,7 +139,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         "businessType is sole trader" when {
           "CtKnownFactsIdentityVerification is disabled" should {
             "goto capture your details controller" in {
-              mockAuthAdminRole()
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
               mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
@@ -148,7 +153,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             "goto capture your details controller" in {
               enable(CtKnownFactsIdentityVerification)
 
-              mockAuthAdminRole()
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
               mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
@@ -158,21 +165,38 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
         }
         "businessType is limited company" when {
-          "CtKnownFactsIdentityVerification is disabled" should {
-            "goto capture your details controller" in {
-              mockAuthAdminRole()
-              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+          "CtKnownFactsIdentityVerification is disabled" when {
+            "there is an enrolment" should {
+              "goto capture company number controller" in {
 
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+                mockAuthRetrieveVatDecEnrolment()
+                mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+
+                val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
+                status(result) shouldBe Status.SEE_OTHER
+                redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+              }
+            }
+            "there is no enrolment" should {
+              "goto capture your details controller" in {
+                mockAuthorise(
+                  retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+                )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+                mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+
+                val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
+                status(result) shouldBe Status.SEE_OTHER
+                redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+              }
             }
           }
-          "CtKnownFactsIdentityVerification is enabled" should {
+          "CtKnownFactsIdentityVerification is enabled and there is no enrolment" should {
             "goto capture company number controller" in {
               enable(CtKnownFactsIdentityVerification)
 
-              mockAuthAdminRole()
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
               mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
@@ -184,7 +208,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned KnownFactsMismatch" should {
         "go to the could not confirm business page" in {
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -194,7 +220,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned InvalidVatNumber" should {
         "go to the invalid vat number page" in {
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -204,7 +232,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned IneligibleVatNumber" should {
         "go to the could not use service page" in {
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -214,7 +244,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned AlreadySubscribed" should {
         "go to the already signed up page" in {
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberAlreadySubscribed(testVatNumber, testBusinessPostcode, testDate)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
@@ -224,7 +256,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned a failure" should {
         "throw internal server exception" in {
-          mockAuthAdminRole()
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate)
 
           intercept[InternalServerException] {
@@ -236,7 +270,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat number is missing" should {
       "go to capture vat number page" in {
-        mockAuthAdminRole()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = await(TestCheckYourAnswersController.submit(testPostRequest(vatNumber = None)))
 
@@ -246,7 +282,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat registration date is missing" should {
       "go to capture vat registration date page" in {
-        mockAuthAdminRole()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(registrationDate = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -255,7 +293,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "post code is missing" should {
       "go to business post code page" in {
-        mockAuthAdminRole()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(postCode = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -264,7 +304,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "business entity is missing" should {
       "go to business entity page" in {
-        mockAuthAdminRole()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(businessType = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -273,7 +315,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "business entity is Other" should {
       "go to business entity page" in {
-        mockAuthAdminRole()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(Other)))
         status(result) shouldBe Status.SEE_OTHER

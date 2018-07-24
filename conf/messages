@@ -12,6 +12,7 @@ service_name.agent_journey                                             = Use sof
 base.continue                                                          = Continue
 base.confirmAndContinue                                                = Confirm and continue
 base.confirm                                                           = Confirm
+base.agree                                                             = Agree
 base.agree_and_continue                                                = Agree and continue
 base.accept_and_continue                                               = Accept and continue
 base.continue_to_sign_up                                               = Continue to sign up
@@ -108,6 +109,11 @@ agent.capture_vat_number.title                                         = What is
 agent.capture_vat_number.heading                                       = What is your client''s VAT number?
 agent.capture_vat_number.line_1                                        = This is the 9-digit number they received when they registered for VAT.
 agent.capture_vat_number.hint                                          = For example, 123456789
+
+## Agent Confirm Company page
+agent.confirm_company.title                                            = Confirm your client''s company
+agent.confirm_company.heading                                          = Confirm your client''s company
+agent.confirm_company.link                                             = Change company
 
 ## Agent Confirm Vat Number page
 agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
@@ -266,12 +272,6 @@ principal.guidance.subsection_1.bullet_3                               = view yo
 principal.guidance.subsection_2.sub_heading_2                          = Sign up
 principal.guidance.subsection_2.line_1                                 = To sign up you''ll need the Government Gateway details you got when you registered for VAT.
 principal.guidance.subsection_2.line_2                                 = If you haven''t submitted a VAT Return online before, then you''ll also need your VAT registration certificate.
-
-## Your VAT number page
-principal.your_vat_number.title                                        = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.heading                                      = Confirm you want to use this VAT number to sign up
-principal.your_vat_number.vatNumber.heading                            = VAT number
-principal.your_vat_number.link                                         = I want to use a different VAT number
 
 ## VAT number page
 principal.vat_number.title                                             = What is your VAT number?

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
@@ -39,8 +38,6 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "the vat number is not on the profile" when {
       "the KnownFactsJourney feature switch is enabled" should {
         "redirect to the capture VAT number page" in {
-          enable(KnownFactsJourney)
-
           stubAuth(OK, successfulAuthResponse())
           stubStoreVatNumberSuccess()
 
@@ -49,20 +46,6 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           res should have(
             httpStatus(SEE_OTHER),
             redirectUri(routes.CaptureVatNumberController.show().url)
-          )
-        }
-      }
-
-      "the KnownFactsJourney feature switch is disabled" should {
-        "redirect to the Cannot Use Service page" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreVatNumberSuccess()
-
-          val res = get("/resolve-vat-number")
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
           )
         }
       }
