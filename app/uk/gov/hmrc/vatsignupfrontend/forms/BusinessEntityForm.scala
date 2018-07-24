@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.forms
 
-import play.api.data.{Form, FormError}
 import play.api.data.Forms._
 import play.api.data.format.Formatter
+import play.api.data.{Form, FormError}
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 
 object BusinessEntityForm {
@@ -31,15 +31,18 @@ object BusinessEntityForm {
 
   val other: String = "other"
 
-  val businessEntityError: String = "error.business-entity"
+  val agentBusinessEntityError: String = "error.agent.business-entity"
 
-  private val formatter: Formatter[BusinessEntity] = new Formatter[BusinessEntity] {
+  val principalBusinessEntityError: String = "error.principal.business-entity"
+
+
+  private def formatter(isAgent: Boolean): Formatter[BusinessEntity] = new Formatter[BusinessEntity] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BusinessEntity] = {
       data.get(key) match {
         case Some(`soleTrader`) => Right(SoleTrader)
         case Some(`limitedCompany`) => Right(LimitedCompany)
         case Some(`other`) => Right(Other)
-        case _ => Left(Seq(FormError(key, businessEntityError)))
+        case _ => Left(Seq(FormError(key, if (isAgent) agentBusinessEntityError else principalBusinessEntityError)))
       }
     }
 
@@ -54,9 +57,9 @@ object BusinessEntityForm {
     }
   }
 
-  val businessEntityForm: Form[BusinessEntity] = Form(
+  def businessEntityForm(isAgent: Boolean): Form[BusinessEntity] = Form(
     single(
-      businessEntity -> of(formatter)
+      businessEntity -> of(formatter(isAgent = isAgent))
     )
   )
 }

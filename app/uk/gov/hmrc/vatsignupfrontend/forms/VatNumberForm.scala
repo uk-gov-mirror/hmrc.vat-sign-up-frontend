@@ -18,26 +18,42 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid}
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.vatNumberRegex
 
 object VatNumberForm {
 
   val vatNumber = "vatNumber"
 
-  private def vatNumberValidFormat(vatNumber: String) = vatNumber matches vatNumberRegex
+  val vatNumberLength: Constraint[String] = Constraint("vat_number.length")(
+    vatNumber => if (vatNumber.length != 9) Invalid("error.invalid_vat_number_length") else Valid
+  )
 
-  private val vatNumberValidationForm = Form(
+  def vatNumberEntered(isAgent: Boolean): Constraint[String] = Constraint("vat_number.entered")(
+    vatNumber => if (vatNumber.isEmpty && isAgent)
+      Invalid("error.agent.no_vat_number_entered")
+    else if (vatNumber.isEmpty && !isAgent)
+      Invalid("error.principal.no_vat_number_entered")
+    else Valid
+  )
+
+  val vatNumberFormat: Constraint[String] = Constraint("vat_number.format")(
+    vatNumber => if (!(vatNumber matches vatNumberRegex)) Invalid("error.invalid_vat_number") else Valid
+  )
+
+  private def vatNumberValidationForm(isAgent: Boolean) = Form(
     single(
-      vatNumber -> text.verifying("error.invalid_vat_number", vatNumberValidFormat _)
+      vatNumber -> text.verifying(vatNumberEntered(isAgent = isAgent) andThen vatNumberFormat andThen vatNumberLength)
     )
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  val vatNumberForm = PreprocessedForm(
-    validation = vatNumberValidationForm,
+  def vatNumberForm(isAgent: Boolean) = PreprocessedForm(
+    validation = vatNumberValidationForm(isAgent = isAgent),
     trimRules = Map(vatNumber -> all),
     caseRules = Map(vatNumber -> upper)
   )

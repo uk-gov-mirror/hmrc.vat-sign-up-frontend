@@ -18,33 +18,35 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, Other, SoleTrader}
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity
 
 import scala.concurrent.Future
 
 @Singleton
 class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
+  val validateBusinessEntityForm: Form[BusinessEntity] = businessEntityForm(isAgent = true)
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit()))
+        Ok(capture_business_entity(validateBusinessEntityForm, routes.CaptureBusinessEntityController.submit()))
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      businessEntityForm.bindFromRequest.fold(
+      validateBusinessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))

@@ -28,36 +28,37 @@ class BusinessPostCodeFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "The BusinessPostCodeForm" should {
 
-    val error_key = "error.invalid_postcode"
+    val invalid_postcode_error_key = "error.invalid_postcode"
+    val postcode_not_entered_error_key = "error.postcode_not_entered"
 
     "validate that data containing a valid post code passes" in {
       val actual = businessPostCodeForm.bind(Map(businessPostCode -> testBusinessPostcode.postCode)).value
-      actual shouldBe Some(PostCode(testBusinessPostcode.postCode.replaceAll(" ","").toUpperCase()))
+      actual shouldBe Some(PostCode(testBusinessPostcode.postCode.replaceAll(" ", "").toUpperCase()))
     }
 
     "validate that data starts with either 1 or 2 letters" in {
       val formWithError = businessPostCodeForm.bind(Map(businessPostCode -> "1A11AA"))
-      formWithError.errors should contain(FormError(businessPostCode, error_key))
+      formWithError.errors should contain(FormError(businessPostCode, invalid_postcode_error_key))
     }
 
     "validate that data ends with two letters" in {
       val formWithError = businessPostCodeForm.bind(Map(businessPostCode -> "A1111A"))
-      formWithError.errors should contain(FormError(businessPostCode, error_key))
+      formWithError.errors should contain(FormError(businessPostCode, invalid_postcode_error_key))
     }
 
     "validate that data is not longer than 7 alphanumeric characters" in {
       val formWithError = businessPostCodeForm.bind(Map(businessPostCode -> "A1111AAA"))
-      formWithError.errors should contain(FormError(businessPostCode, error_key))
+      formWithError.errors should contain(FormError(businessPostCode, invalid_postcode_error_key))
     }
 
     "validate that data is not less than 5 alphanumeric characters" in {
       val formWithError = businessPostCodeForm.bind(Map(businessPostCode -> "A1AA"))
-        formWithError.errors should contain(FormError(businessPostCode, error_key))
+      formWithError.errors should contain(FormError(businessPostCode, invalid_postcode_error_key))
     }
 
     "validate that data has been entered" in {
       val formWithError = businessPostCodeForm.bind(Map(businessPostCode -> ""))
-      formWithError.errors should contain(FormError(businessPostCode, error_key))
+      formWithError.errors should contain(FormError(businessPostCode, postcode_not_entered_error_key))
     }
 
   }

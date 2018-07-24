@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.forms
 
+import java.time.LocalDate
+
 import org.scalatest.Matchers._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -27,7 +29,10 @@ class VatRegistrationDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   "The vatRegistrationDateForm" when {
 
     "validating the vat registration date" should {
-      val invalid_error_key = "error.invalid_vat_registration_date"
+      val no_date_entered_error_key = "error.no_vat_registration_date_entered"
+      val invalid_characters_error_key = "error.invalid_vat_registration_date_characters"
+      val invalid_date_error_key = "error.invalid_vat_registration_date"
+      val date_in_future_key = "error.vat_registration_date_future"
 
       def dateMap(day: String, month: String, year: String) =
         Map(
@@ -37,13 +42,28 @@ class VatRegistrationDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
 
       "ensure the vat registration date exists" in {
-        val actual = vatRegistrationDateForm.bind(dateMap("", "", "")).errors
-        actual should contain(FormError(vatRegistrationDate, invalid_error_key))
+        val actual = vatRegistrationDateForm.bind(Map.empty[String, String]).errors
+        actual should contain(FormError(vatRegistrationDate, no_date_entered_error_key))
+      }
+
+      "ensure the vat registration date is in the past" in {
+        val today = LocalDate.now()
+        val today_day = today.getDayOfMonth.toString
+        val today_month = today.getMonthValue.toString
+        val today_year = today.getYear.toString
+
+        val actual = vatRegistrationDateForm.bind(dateMap(today_day, today_month, today_year)).errors
+        actual should contain(FormError(vatRegistrationDate, date_in_future_key))
       }
 
       "ensure the vat registration date is a valid date" in {
         val actual = vatRegistrationDateForm.bind(dateMap("29", "2", "2018")).errors
-        actual should contain(FormError(vatRegistrationDate, invalid_error_key))
+        actual should contain(FormError(vatRegistrationDate, invalid_date_error_key))
+      }
+
+      "ensure the vat registration date contains valid characters" in {
+        val actual = vatRegistrationDateForm.bind(dateMap("A", "!", "b")).errors
+        actual should contain(FormError(vatRegistrationDate, invalid_characters_error_key))
       }
 
       "ensure a valid date scenario does not generate errors" in {
