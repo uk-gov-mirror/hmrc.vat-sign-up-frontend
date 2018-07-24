@@ -23,16 +23,16 @@
 
 @principal_main_template(title = Messages("principal.company_name_not_found.title"), bodyClasses = None, showSignOutLink = false) {
 
-<h1 class="heading-large">@Messages("principal.company_name_not_found.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.company_name_not_found.heading")</h1>
 
-<p>@Messages("principal.company_name_not_found.line_1")</p>
+    <p>@Messages("principal.company_name_not_found.line_1")</p>
 
-<div class="form-group">
- @form(action = postAction) {
- @continueButton(Some(Messages("base.try_again")))
- }
-</div>
+    <div class="form-group">
+        @form(action = postAction) {
+            @continueButton(Some(Messages("base.try_again")))
+        }
+    </div>
 
-@signOutLink()
+    @signOutLink()
 
 }
