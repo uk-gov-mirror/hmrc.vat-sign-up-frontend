@@ -20,7 +20,6 @@ import java.time.LocalDate
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatRegistrationDateKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
@@ -31,7 +30,6 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
 
   "GET /vat-registration-date" should {
     "return an OK" in {
-      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/vat-registration-date")
@@ -44,7 +42,6 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
 
   "POST /vat-registration-date" should {
     "return a redirect" in {
-      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
@@ -63,17 +60,4 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
     }
   }
 
-  "Making a request to /vat-registration-date when not enabled" should {
-    "return NotFound" in {
-      disable(KnownFactsJourney)
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/vat-registration-date")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-
-    }
-  }
 }

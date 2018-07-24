@@ -24,7 +24,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, StoreVatNumberSuccess}
@@ -40,14 +39,11 @@ import scala.concurrent.Future
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
                                            vatNumberEligibilityService: VatNumberEligibilityService,
                                            storeVatNumberService: StoreVatNumberService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
-      if (appConfig.isEnabled(KnownFactsJourney))
+    authorised() {
         Future.successful(Ok(capture_vat_number(vatNumberForm.form, routes.CaptureVatNumberController.submit())))
-      else
-        Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
     }
   }
 
