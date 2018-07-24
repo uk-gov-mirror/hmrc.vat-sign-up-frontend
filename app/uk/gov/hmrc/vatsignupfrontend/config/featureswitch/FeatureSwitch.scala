@@ -27,7 +27,6 @@ object FeatureSwitch {
   val prefix = "feature-switch"
 
   val switches: Set[FeatureSwitch] = Set(
-    KnownFactsJourney,
     CompanyNameJourney,
     StubIncorporationInformation,
     UseIRSA,
@@ -43,11 +42,6 @@ object FeatureSwitch {
 
   def get(str: String): Option[FeatureSwitch] = switches find (_.name == str)
 
-}
-
-case object KnownFactsJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.known-facts-journey"
-  override val displayText: String = "Enable known facts confirmation of VAT number for principal users"
 }
 
 case object CompanyNameJourney extends FeatureSwitch {

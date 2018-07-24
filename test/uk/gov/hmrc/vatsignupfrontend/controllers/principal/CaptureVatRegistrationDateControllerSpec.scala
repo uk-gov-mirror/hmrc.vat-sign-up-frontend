@@ -26,10 +26,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneAppPerSuite
@@ -48,7 +47,6 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
 
   "Calling the show action of the Capture Vat Registration Date controller" should {
     "go to the Capture Vat Registration Date page" in {
-      enable(KnownFactsJourney)
       mockAuthAdminRole()
 
       val result = TestCaptureVatNumberController.show(testGetRequest)
@@ -62,7 +60,6 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
   "Calling the submit action of the Capture Vat Registration Date controller" when {
     "form successfully submitted" should {
       "redirect to the Business Postcode page" in {
-        enable(KnownFactsJourney)
         mockAuthAdminRole()
 
         val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
@@ -78,7 +75,6 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
 
     "form unsuccessfully submitted" should {
       "reload the page with errors" in {
-        enable(KnownFactsJourney)
         mockAuthAdminRole()
 
         val invalidRequest = FakeRequest("POST", "/vat-registration-date")

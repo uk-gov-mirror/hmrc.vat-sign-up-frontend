@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, InvalidVatNumber, KnownFactsMismatch}
 import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, _}
@@ -38,7 +38,7 @@ import scala.concurrent.Future
 @Singleton
 class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents,
                                            val storeVatNumberService: StoreVatNumberService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -81,7 +81,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate).map {
       case Right(_) =>
         entity match {
-          case LimitedCompany if (isEnabled(CtKnownFactsIdentityVerification) || enrolments.vatNumber.isDefined) =>
+          case LimitedCompany if isEnabled(CtKnownFactsIdentityVerification) || enrolments.vatNumber.isDefined =>
             Redirect(routes.CaptureCompanyNumberController.show())
           case _ =>
             Redirect(routes.CaptureYourDetailsController.show())

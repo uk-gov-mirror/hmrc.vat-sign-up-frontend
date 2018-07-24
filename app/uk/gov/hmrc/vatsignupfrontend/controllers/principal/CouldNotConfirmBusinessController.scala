@@ -20,7 +20,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.could_not_confirm_business
 
@@ -28,7 +27,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CouldNotConfirmBusinessController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

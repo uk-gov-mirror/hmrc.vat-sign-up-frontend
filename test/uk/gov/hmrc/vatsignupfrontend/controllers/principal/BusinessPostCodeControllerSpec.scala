@@ -22,10 +22,8 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -40,68 +38,44 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     FakeRequest("POST", "/business-postcode").withFormUrlEncodedBody(businessPostCode -> businessPostCodeVal)
 
   "Calling the show action of the Business PostCode controller" when {
-    "the known facts journey feature switch is enabled" should {
-      "go to the Business PostCode page" in {
-        enable(KnownFactsJourney)
+    "go to the Business PostCode page" in {
+      mockAuthAdminRole()
 
-        mockAuthAdminRole()
-
-        val result = TestBusinessPostCodeController.show(testGetRequest)
-        status(result) shouldBe Status.OK
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
-      }
+      val result = TestBusinessPostCodeController.show(testGetRequest)
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
-    "the known facts journey feature switch is disabled" should {
-      "throw a NotFoundException" in {
-        disable(KnownFactsJourney)
 
-        intercept[NotFoundException](await(TestBusinessPostCodeController.show(testGetRequest)))
-
-      }
-    }
   }
 
 
   "Calling the submit action of the Business PostCode controller" when {
-    "the known facts journey feature switch is enabled" when {
-      "form successfully submitted" should {
-        "goto capture Business Entity page" in {
-          enable(KnownFactsJourney)
+    "form successfully submitted" should {
+      "goto capture Business Entity page" in {
+        mockAuthAdminRole()
 
-          mockAuthAdminRole()
+        implicit val request = testPostRequest(testBusinessPostcode.postCode)
+        val result = TestBusinessPostCodeController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
 
-          implicit val request = testPostRequest(testBusinessPostcode.postCode)
-          val result = TestBusinessPostCodeController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
-
-          result.session get SessionKeys.businessPostCodeKey should contain(
-            Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ",""))).toString
-          )
-        }
-      }
-
-      "form unsuccessfully submitted" should {
-        "reload the page with errors" in {
-          enable(KnownFactsJourney)
-
-          mockAuthAdminRole()
-
-          val result = TestBusinessPostCodeController.submit(testPostRequest(""))
-          status(result) shouldBe Status.BAD_REQUEST
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
+        result.session get SessionKeys.businessPostCodeKey should contain(
+          Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
+        )
       }
     }
-    "the known facts journey feature switch is disabled" should {
-      "throw a NotFoundException" in {
-        disable(KnownFactsJourney)
 
-        intercept[NotFoundException](await(TestBusinessPostCodeController.submit(testPostRequest(""))))
+    "form unsuccessfully submitted" should {
+      "reload the page with errors" in {
+        mockAuthAdminRole()
 
+        val result = TestBusinessPostCodeController.submit(testPostRequest(""))
+        status(result) shouldBe Status.BAD_REQUEST
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
       }
     }
+
   }
 }
