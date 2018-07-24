@@ -24,7 +24,7 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCaptureBusinessEntity, PrincipalCheckYourAnswers => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAnswers => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, SoleTrader}
@@ -44,7 +44,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     vatNumber = testVatNumber,
     registrationDate = testRegistrationDate,
     postCode = testBusinessPostcode,
-    businessEntity = testEntity,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
@@ -132,20 +131,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     val expectedQuestion = messages.businessPostCode
     val expectedAnswer = testBusinessPostcode.checkYourAnswersFormat
     val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
-
-    sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "display the correct info for BusinessEntity" in {
-    val sectionId = BusinessEntityId
-    val expectedQuestion = messages.businessEntity
-    val expectedAnswer = PrincipalCaptureBusinessEntity.radioSoleTrader
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
 
     sectionTest(
       sectionId = sectionId,
