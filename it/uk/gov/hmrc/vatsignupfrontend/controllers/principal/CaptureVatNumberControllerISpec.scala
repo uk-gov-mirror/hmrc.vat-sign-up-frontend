@@ -17,20 +17,15 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator}
 
 class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = enable(KnownFactsJourney)
-
-  override def afterEach(): Unit = disable(KnownFactsJourney)
 
   "GET /vat-number" when {
     "the KnownFactsJourney feature switch is enabled" should {
@@ -44,24 +39,11 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
-    "the KnownFactsJourney feature switch is disabled" should {
-      "return NOT_FOUND" in {
-        stubAuth(OK, successfulAuthResponse())
-        disable(KnownFactsJourney)
-
-        val res = get("/vat-number")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
 
   }
 
   "POST /vat-number" when {
 
-    "the known facts journey is enabled" when {
       "we have an enrolment" when {
         "the vat eligibility is successful" when {
           "the enrolment vat number matches the inserted one" should {
@@ -250,34 +232,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           }
         }
       }
-    }
 
-    "the KnownFactsJourney feature switch is disabled" should {
-      "return NOT_FOUND" in {
-        stubAuth(OK, successfulAuthResponse())
-        disable(KnownFactsJourney)
-
-        val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
-  }
-
-  "Making a request to /vat-number when not enabled" should {
-    "return NotFound" in {
-      disable(KnownFactsJourney)
-
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/vat-number")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-    }
   }
 
 }
