@@ -29,7 +29,6 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   "The emailForm" should {
 
     val error_key = "error.invalid_email"
-
     val maxlength_error_key = "error.exceeds_max_length_email"
 
     "validate that testEmail is valid" in {

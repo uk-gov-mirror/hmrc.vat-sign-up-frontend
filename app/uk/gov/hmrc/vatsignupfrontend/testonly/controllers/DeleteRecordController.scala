@@ -36,18 +36,20 @@ class DeleteRecordController @Inject()(val controllerComponents: ControllerCompo
                                        deleteRecordConnector: DeleteRecordConnector
                                       ) extends FrontendController with I18nSupport {
 
+  private val validateVatNumberForm = vatNumberForm(isAgent = false)
+
   override val messagesApi: MessagesApi = controllerComponents.messagesApi
 
   implicit val appConfig: AppConfig = controllerComponents.appConfig
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(
-      Ok(delete_record(vatNumberForm.form, routes.DeleteRecordController.submit()))
+      Ok(delete_record(validateVatNumberForm.form, routes.DeleteRecordController.submit()))
     )
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    vatNumberForm.bindFromRequest.fold(
+    validateVatNumberForm.bindFromRequest.fold(
       formWithErrors =>
         Future.successful(
           BadRequest(delete_record(formWithErrors, routes.DeleteRecordController.submit()))

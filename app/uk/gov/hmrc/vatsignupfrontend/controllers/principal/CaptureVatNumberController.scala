@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -41,15 +42,17 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                                            storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
+  private val validateVatNumberForm = vatNumberForm(isAgent = false)
+
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-        Future.successful(Ok(capture_vat_number(vatNumberForm.form, routes.CaptureVatNumberController.submit())))
+      Future.successful(Ok(capture_vat_number(validateVatNumberForm.form, routes.CaptureVatNumberController.submit())))
     }
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
-      vatNumberForm.bindFromRequest.fold(
+      validateVatNumberForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))

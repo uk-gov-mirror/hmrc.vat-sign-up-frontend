@@ -35,7 +35,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity(
-    businessEntityForm,
+    businessEntityForm(isAgent = false),
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

@@ -17,6 +17,8 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
@@ -28,7 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
-import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
 import uk.gov.hmrc.vatsignupfrontend.services.CitizenDetailsService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
@@ -40,18 +42,19 @@ import scala.concurrent.Future
 class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents,
                                                 citizenDetailsService: CitizenDetailsService)
   extends AuthenticatedController(AdministratorRolePredicate) {
+  val validateBusinessEntityForm: Form[BusinessEntity] = businessEntityForm(isAgent = false)
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit()))
+        Ok(capture_business_entity(validateBusinessEntityForm, routes.CaptureBusinessEntityController.submit()))
       )
     }
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
-      businessEntityForm.bindFromRequest.fold(
+      validateBusinessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))

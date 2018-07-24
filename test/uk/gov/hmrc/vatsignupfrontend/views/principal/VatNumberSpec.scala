@@ -33,7 +33,7 @@ class VatNumberSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number(
-    vatNumberForm = vatNumberForm.form,
+    vatNumberForm = vatNumberForm(isAgent = false).form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
