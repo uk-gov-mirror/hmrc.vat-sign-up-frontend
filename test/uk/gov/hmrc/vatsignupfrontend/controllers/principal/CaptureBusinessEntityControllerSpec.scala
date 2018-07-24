@@ -66,41 +66,11 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
   }
 
   "Calling the submit action of the Capture Business Entity controller" when {
-    "form successfully submitted" should {
-      "the business entity is limited company" when {
-        "there is a VATDEC enrolment" should {
-          "go to Capture Number controller" in {
-            mockAuthRetrieveVatDecEnrolment()
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-
-          }
-        }
-        "there is no VATDEC enrolment" should {
-          "go to Check Your Answers controller" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CheckYourAnswersController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-
-          }
-        }
-      }
+    "form successfully submitted" when {
 
       "the business entity is sole trader" when {
         "Use IRSA is disabled" should {
-          "go to Identity Verification with sole trader stored in session" in {
+          "go to capture your details with sole trader stored in session" in {
             mockAuthRetrieveVatDecEnrolment()
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
@@ -130,7 +100,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
                 result.session get SessionKeys.userDetailsKey should contain(Json.toJson(testUserDetails).toString)
               }
             }
-
             "CID returns NoCitizenRecord" should {
               "throw Internal server exception" in {
                 enable(UseIRSA)
@@ -173,7 +142,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           }
         }
         "the user does not have IRSA enrolment" when {
-          "go to Identity Verification with sole trader stored in session" in {
+          "go to capture your details with sole trader stored in session" in {
             mockAuthRetrieveVatDecEnrolment()
             enable(UseIRSA)
 
@@ -188,8 +157,54 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "go to Cannot use service yet page" when {
-        "the business entity is other" in {
+      "the business entity is limited company" when {
+        "there is a VATDEC enrolment" should {
+          "go to capture company number controller" in {
+            mockAuthRetrieveVatDecEnrolment()
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+
+            val result = await(TestCaptureBusinessEntityController.submit(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+          }
+        }
+        "there is not a VATDEC enrolment and" when {
+          "CtKnownFactsIdentityVerification is disabled" should {
+            "go to capture your details controller" in {
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+
+              val result = await(TestCaptureBusinessEntityController.submit(request))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+
+              result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+            }
+          }
+          "CtKnownFactsIdentityVerification is enabled" should {
+            "go to capture company number controller" in {
+              enable(CtKnownFactsIdentityVerification)
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+
+              val result = await(TestCaptureBusinessEntityController.submit(request))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+
+              result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+            }
+          }
+        }
+      }
+
+      "the business entity is other" should {
+        "go to Cannot use service yet page" in {
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -204,57 +219,21 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "go to check your answers" when {
-        "no vat enrolment is on the profile" when {
-          "the business entity is sole trader" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+      "form unsuccessfully submitted" should {
+        "reload the page with errors" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
 
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-
-            status(result) shouldBe Status.SEE_OTHER
-
-            redirectLocation(result) should contain(routes.CheckYourAnswersController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
-          }
-
-          "the business entity is limited company" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CheckYourAnswersController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-          }
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
+          status(result) shouldBe Status.BAD_REQUEST
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
       }
-
     }
 
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-
-        val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
-        status(result) shouldBe Status.BAD_REQUEST
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
-      }
-    }
   }
+
 }

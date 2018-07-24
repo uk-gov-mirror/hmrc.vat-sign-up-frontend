@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.Enrolments
@@ -26,7 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, UseIRSA}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
@@ -60,33 +59,30 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
           ),
         businessEntity => {
-          {
-            (businessEntity, enrolments.vatNumber) match {
-              case (Other, _) => Future.successful(Redirect(routes.CannotUseServiceController.show()))
-              case (LimitedCompany, Some(_)) =>
-                Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
-              case (SoleTrader, Some(_)) => gotoSoleTraderFlow(enrolments)
-              case _ => Future.successful(Redirect(routes.CheckYourAnswersController.show()))
-            }
-          } map (_.addingToSession(SessionKeys.businessEntityKey, businessEntity))
-        }
+          businessEntity match {
+            case SoleTrader if isEnabled(UseIRSA) =>
+              soleTraderCheckIRSA(enrolments)
+            case LimitedCompany if enrolments.vatNumber.isDefined || isEnabled(CtKnownFactsIdentityVerification) =>
+              Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+            case SoleTrader | LimitedCompany =>
+              Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+            case Other =>
+              Future.successful(Redirect(routes.CannotUseServiceController.show()))
+          }
+        } map (_.addingToSession(SessionKeys.businessEntityKey, businessEntity))
       )
     }
   }
 
-  private def gotoSoleTraderFlow(enrolments: Enrolments)(implicit request: Request[_]): Future[Result] = {
-    if (isEnabled(UseIRSA)) {
-      enrolments.selfAssessmentUniqueTaxReferenceNumber match {
-        case None => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
-        case Some(utr) => citizenDetailsService.getCitizenDetails(utr) map {
-          case Right(CitizenDetailsRetrievalSuccess(detailsModel)) =>
-            Redirect(routes.ConfirmYourRetrievedUserDetailsController.show()).addingToSession(SessionKeys.userDetailsKey, detailsModel)
-          case Left(reason) =>
-            throw new InternalServerException(s"calls to CID received unexpected failure $reason")
-        }
+  private def soleTraderCheckIRSA(enrolments: Enrolments)(implicit request: Request[_]): Future[Result] =
+    enrolments.selfAssessmentUniqueTaxReferenceNumber match {
+      case None => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+      case Some(utr) => citizenDetailsService.getCitizenDetails(utr) map {
+        case Right(CitizenDetailsRetrievalSuccess(detailsModel)) =>
+          Redirect(routes.ConfirmYourRetrievedUserDetailsController.show()).addingToSession(SessionKeys.userDetailsKey, detailsModel)
+        case Left(reason) =>
+          throw new InternalServerException(s"calls to CID received unexpected failure $reason")
       }
     }
-    else Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
-  }
 
 }
