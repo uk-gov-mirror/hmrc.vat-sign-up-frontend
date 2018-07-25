@@ -27,7 +27,7 @@ class CompanyNameNotFoundControllerISpec extends ComponentSpecBase with CustomMa
     "return an OK" in {
       enable(CompanyNameJourney)
 
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/could-not-confirm-company")
 
@@ -41,7 +41,7 @@ class CompanyNameNotFoundControllerISpec extends ComponentSpecBase with CustomMa
     "redirect to the capture company number page" in {
       enable(CompanyNameJourney)
 
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/client/could-not-confirm-company")()
 
