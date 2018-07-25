@@ -47,4 +47,16 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
       )
     }
   }
+  "the company name feature switch is disabled" should {
+    "redirect to confirm company number" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmCompanyNumberController.show().url)
+      )
+    }
+  }
 }
