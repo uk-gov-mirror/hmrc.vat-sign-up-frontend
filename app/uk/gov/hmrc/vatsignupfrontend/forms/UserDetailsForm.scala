@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PreprocessedForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.DateMapping
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
 
 import scala.util.Try
@@ -37,20 +37,40 @@ object UserDetailsForm {
 
   val nameMaxLength = 105
 
-  val firstNameInvalid: Constraint[String] = Constraint("first_name.invalid")(
-    x => if (x.isEmpty || !Patterns.validText(x.trim)) Invalid("error.invalid_first_name") else Valid
+  val firstNameNotEntered: Constraint[String] = Constraint("first_name.not_entered")(
+    firstName => if (firstName.isEmpty) Invalid("error.no_entry_first_name") else Valid
   )
 
-  val lastNameInvalid: Constraint[String] = Constraint("last_name.invalid")(
-    x => if (x.isEmpty || !Patterns.validText(x.trim)) Invalid("error.invalid_last_name") else Valid
+  val firstNameInvalid: Constraint[String] = Constraint("first_name.invalid")(
+    firstName => if (!validText(firstName.trim)) Invalid("error.invalid_first_name") else Valid
   )
 
   val firstNameMaxLength: Constraint[String] = Constraint("first_name.maxLength")(
-    x => if (x.trim.length > nameMaxLength) Invalid("error.exceeds_max_first_name") else Valid
+    firstName => if (firstName.trim.length > nameMaxLength) Invalid("error.exceeds_max_first_name") else Valid
+  )
+
+  val lastNameNotEntered: Constraint[String] = Constraint("last_name.not_entered")(
+    lastName => if (lastName.isEmpty) Invalid("error.no_entry_last_name") else Valid
+  )
+
+  val lastNameInvalid: Constraint[String] = Constraint("last_name.invalid")(
+    lastName => if (!validText(lastName.trim)) Invalid("error.invalid_last_name") else Valid
   )
 
   val lastNameMaxLength: Constraint[String] = Constraint("last_name.maxLength")(
-    x => if (x.trim.length > nameMaxLength) Invalid("error.exceeds_max_last_name") else Valid
+    lastName => if (lastName.trim.length > nameMaxLength) Invalid("error.exceeds_max_last_name") else Valid
+  )
+
+  val ninoEntered: Constraint[String] = Constraint("nino.not_entered")(
+    nino => if (nino.isEmpty) Invalid("error.no_entry_nino") else Valid
+  )
+
+  val invalidNino: Constraint[String] = Constraint("nino.invalid")(
+    nino => if (!validNino(nino)) Invalid("error.invalid_nino") else Valid
+  )
+
+  val ninoLength: Constraint[String] = Constraint("nino.invalid_length")(
+    nino => if (nino.length < 9) Invalid("error.character_limit_nino") else Valid
   )
 
   val dobInvalid: Constraint[DateModel] = constraint[DateModel](
@@ -62,12 +82,27 @@ object UserDetailsForm {
     }
   )
 
+  val dobInvalidCharacters: Constraint[DateModel] = constraint[DateModel](
+    date => if (
+      (date.day matches dateRegex) &&
+        (date.month matches dateRegex) &&
+        (date.year matches dateRegex)
+    ) Valid else Invalid("error.invalid_characters_dob")
+  )
+
+  val dobEntered: Constraint[DateModel] = constraint[DateModel](
+    date => if (
+      date.day.nonEmpty &&
+        date.month.nonEmpty &&
+        date.year.nonEmpty
+    ) Valid else Invalid("error.no_entry_dob")
+  )
   val userValidationDetailsForm = Form(
     mapping(
-      userFirstName -> optText.toText.verifying(firstNameInvalid andThen firstNameMaxLength),
-      userLastName -> optText.toText.verifying(lastNameInvalid andThen lastNameMaxLength),
-      userNino -> optText.toText.verifying("error.invalid_nino", Patterns.validNino _),
-      userDateOfBirth -> DateMapping.dateMapping.verifying(dobInvalid)
+      userFirstName -> optText.toText.verifying(firstNameNotEntered andThen firstNameInvalid andThen firstNameMaxLength),
+      userLastName -> optText.toText.verifying(lastNameNotEntered andThen lastNameInvalid andThen lastNameMaxLength),
+      userNino -> optText.toText.verifying(ninoEntered andThen ninoLength andThen invalidNino),
+      userDateOfBirth -> DateMapping.dateMapping.verifying(dobEntered andThen dobInvalidCharacters andThen dobInvalid)
     )(UserDetailsModel.apply)(UserDetailsModel.unapply)
   )
 

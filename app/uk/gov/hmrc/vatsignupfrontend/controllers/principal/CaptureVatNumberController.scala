@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -24,7 +25,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, StoreVatNumberSuccess}
@@ -40,20 +40,19 @@ import scala.concurrent.Future
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
                                            vatNumberEligibilityService: VatNumberEligibilityService,
                                            storeVatNumberService: StoreVatNumberService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(KnownFactsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
+
+  private val validateVatNumberForm = vatNumberForm(isAgent = false)
 
   def show: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
-      if (appConfig.isEnabled(KnownFactsJourney))
-        Future.successful(Ok(capture_vat_number(vatNumberForm.form, routes.CaptureVatNumberController.submit())))
-      else
-        Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+    authorised() {
+      Future.successful(Ok(capture_vat_number(validateVatNumberForm.form, routes.CaptureVatNumberController.submit())))
     }
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
-      vatNumberForm.bindFromRequest.fold(
+      validateVatNumberForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))

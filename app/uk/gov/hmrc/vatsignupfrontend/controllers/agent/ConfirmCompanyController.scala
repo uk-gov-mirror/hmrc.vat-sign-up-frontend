@@ -61,17 +61,12 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
 
       (optVatNumber, optCompanyNumber) match {
         case (Some(vatNumber), Some(companyNumber)) =>
-          if (isEnabled(CtKnownFactsIdentityVerification))
-            Future.successful(
-              Redirect(routes.CaptureCompanyNumberController.show())
-            )
-          else
-            storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
-              case Right(_) =>
-                Redirect(routes.EmailRoutingController.route().url)
-              case Left(errResponse) =>
-                throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-            }
+          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
+            case Right(_) =>
+              Redirect(routes.EmailRoutingController.route().url)
+            case Left(errResponse) =>
+              throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+          }
         case (None, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())

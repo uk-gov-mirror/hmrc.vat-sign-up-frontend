@@ -23,10 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
@@ -51,10 +48,7 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   }
 
   "the user does not have a VAT-DEC enrolment" when {
-    "the known facts journey feature switch is enabled" should {
       "redirect to Capture VAT number page" in {
-        enable(KnownFactsJourney)
-
         mockAuthorise(
           retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
         )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -64,20 +58,7 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
       }
-    }
 
-    "the known facts journey feature switch is disabled" should {
-      "redirect to Cannot Use Service page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-        val result = TestResolveVatNumberController.resolve(testGetRequest)
-
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
-      }
-    }
   }
 
 }

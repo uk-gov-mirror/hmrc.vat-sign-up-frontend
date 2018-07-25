@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.KnownFactsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class CouldNotConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -36,9 +35,6 @@ class CouldNotConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPe
 
   "Calling the show action of the Could not confirm VAT Number controller" should {
     "show the could not confirm VAT Number page" in {
-
-      enable(KnownFactsJourney)
-
       mockAuthEmptyRetrieval()
       val request = testGetRequest
 
@@ -51,9 +47,6 @@ class CouldNotConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPe
 
   "Calling the submit action of the Could not confirm VAT Number controller" should {
     "redirect to capture your vat number page" in {
-
-      enable(KnownFactsJourney)
-
       mockAuthEmptyRetrieval()
 
       val result = TestCouldNotConfirmVatNumberController.submit(testPostRequest)

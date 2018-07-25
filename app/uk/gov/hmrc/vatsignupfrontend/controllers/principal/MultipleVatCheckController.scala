@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -28,8 +29,8 @@ import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, StoreVatNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check
 
 import scala.concurrent.Future
 
@@ -52,8 +53,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
             formWithErrors =>
               Future.successful(
                 BadRequest(multiple_vat_check(formWithErrors, routes.MultipleVatCheckController.submit()))
-              ),
-            {
+              ), {
               case Yes =>
                 Future.successful(Redirect(routes.CaptureVatNumberController.show()))
               case No =>

@@ -24,15 +24,14 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
 
@@ -48,31 +47,26 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      registrationDate: Option[DateModel] = Some(testDate),
-                     postCode: Option[PostCode] = Some(testBusinessPostcode),
-                     businessType: Option[BusinessEntity] = Some(SoleTrader)
+                     postCode: Option[PostCode] = Some(testBusinessPostcode)
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
+      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse("")
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
                       registrationDate: Option[DateModel] = Some(testDate),
-                      postCode: Option[PostCode] = Some(testBusinessPostcode),
-                      businessType: Option[BusinessEntity] = Some(SoleTrader)
+                      postCode: Option[PostCode] = Some(testBusinessPostcode)
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
+      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse("")
     )
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(KnownFactsJourney)
     disable(CtKnownFactsIdentityVerification)
   }
 
@@ -114,97 +108,20 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
       }
     }
-    "business entity is missing" should {
-      "go to business entity page" in {
-        mockAuthAdminRole()
-
-        val result = TestCheckYourAnswersController.show(testGetRequest(businessType = None))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
-      }
-    }
-    "business entity is Other" should {
-      "go to business entity page" in {
-        mockAuthAdminRole()
-
-        val result = TestCheckYourAnswersController.show(testGetRequest(businessType = Some(Other)))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
-      }
-    }
   }
 
   "Calling the submit action of the Check your answers controller" when {
     "all prerequisite data are in" when {
       "store vat number returned StoreVatNumberSuccess" when {
-        "businessType is sole trader" when {
-          "CtKnownFactsIdentityVerification is disabled" should {
-            "goto capture your details controller" in {
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+        "goto business entity controller" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
 
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
-            }
-          }
-          "CtKnownFactsIdentityVerification is enabled" should {
-            "goto capture your details controller" in {
-              enable(CtKnownFactsIdentityVerification)
-
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
-
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
-            }
-          }
-        }
-        "businessType is limited company" when {
-          "CtKnownFactsIdentityVerification is disabled" when {
-            "there is an enrolment" should {
-              "goto capture company number controller" in {
-
-                mockAuthRetrieveVatDecEnrolment()
-                mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
-
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
-              }
-            }
-            "there is no enrolment" should {
-              "goto capture your details controller" in {
-                mockAuthorise(
-                  retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-                )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-                mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
-
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
-              }
-            }
-          }
-          "CtKnownFactsIdentityVerification is enabled and there is no enrolment" should {
-            "goto capture company number controller" in {
-              enable(CtKnownFactsIdentityVerification)
-
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-              mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
-
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(LimitedCompany))))
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
-            }
-          }
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
         }
       }
       "store vat number returned KnownFactsMismatch" should {
@@ -301,28 +218,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         val result = TestCheckYourAnswersController.submit(testPostRequest(postCode = None))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
-      }
-    }
-    "business entity is missing" should {
-      "go to business entity page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-        val result = TestCheckYourAnswersController.submit(testPostRequest(businessType = None))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
-      }
-    }
-    "business entity is Other" should {
-      "go to business entity page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-
-        val result = TestCheckYourAnswersController.submit(testPostRequest(businessType = Some(Other)))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
       }
     }
   }

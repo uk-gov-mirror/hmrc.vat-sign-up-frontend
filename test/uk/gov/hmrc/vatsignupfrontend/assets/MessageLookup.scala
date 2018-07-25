@@ -205,6 +205,12 @@ object MessageLookup {
     val link = "Change company"
   }
 
+  object AgentCompanyNameNotFound {
+    val title = "We could not confirm your client's company"
+    val heading: String = title
+    val line1 = "The company number you entered is not on our system."
+  }
+
   object ClientVerifiedEmail {
     val title = "You've verified your email address"
     val heading: String = title

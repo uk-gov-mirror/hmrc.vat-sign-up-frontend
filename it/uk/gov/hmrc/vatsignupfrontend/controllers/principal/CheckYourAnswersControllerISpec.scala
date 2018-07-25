@@ -21,19 +21,14 @@ import java.time.LocalDate
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = enable(KnownFactsJourney)
-
-  override def afterEach(): Unit = disable(KnownFactsJourney)
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -45,8 +40,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
         )
       )
 
@@ -58,7 +52,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
   "POST /check-your-answers" when {
     "store vat is successful" should {
-      "redirect to capture your details" in {
+      "redirect to business entity" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberSuccess(testBusinessPostCode, testDate)
 
@@ -66,14 +60,13 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
           )
         )()
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureYourDetailsController.show().url)
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
     }
@@ -86,8 +79,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
           )
         )()
 
@@ -106,8 +98,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
           )
         )()
 
@@ -126,8 +117,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
           )
         )()
 
@@ -146,8 +136,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
           )
         )()
 
@@ -156,21 +145,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.AlreadySignedUpController.show().url)
         )
       }
-    }
-  }
-
-  "Making a request to /check-your-answers when not enabled" should {
-    "return NotFound" in {
-      disable(KnownFactsJourney)
-
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/check-your-answers")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-
     }
   }
 

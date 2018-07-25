@@ -17,16 +17,19 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class CouldNotConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
+class CompanyNameNotFoundControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  "GET /could-not-confirm-VAT-number" should {
+  "GET /could-not-confirm-company" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
+      enable(CompanyNameJourney)
 
-      val res = get("/client/could-not-confirm-VAT-number")
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/could-not-confirm-company")
 
       res should have(
         httpStatus(OK)
@@ -34,16 +37,33 @@ class CouldNotConfirmVatNumberControllerISpec extends ComponentSpecBase with Cus
     }
   }
 
-  "POST /could-not-confirm-VAT-number" should {
-    "redirect to the capture vat number page" in {
-      stubAuth(OK, successfulAuthResponse())
+  "POST /could-not-confirm-company" should {
+    "redirect to the capture company number page" in {
+      enable(CompanyNameJourney)
 
-      val res = post("/client/could-not-confirm-VAT-number")()
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = post("/client/could-not-confirm-company")()
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureVatNumberController.show().url)
+        redirectUri(routes.CaptureCompanyNumberController.show().url)
       )
+    }
+  }
+
+  "Making a request to /company-name-not-found when not enabled" should {
+    "return NotFound" in {
+      disable(CompanyNameJourney)
+
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/client/could-not-confirm-company")
+
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
+
     }
   }
 

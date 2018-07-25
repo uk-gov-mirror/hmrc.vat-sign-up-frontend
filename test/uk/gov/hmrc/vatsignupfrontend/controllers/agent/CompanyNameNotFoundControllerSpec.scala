@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
@@ -22,36 +22,43 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
-class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CompanyNameNotFoundControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestCouldNotConfirmBusinessController extends CouldNotConfirmBusinessController(mockControllerComponents)
+  object TestCompanyNameNotFoundController extends CompanyNameNotFoundController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/could-not-confirm-business")
+  lazy val testGetRequest = FakeRequest("GET", "/could-not-confirm-company")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/could-not-confirm-business")
+    FakeRequest("POST", "/could-not-confirm-company")
 
-  "Calling the show action of the Could not confirm business controller" should {
-    "show the could not confirm business page" in {
-      mockAuthAdminRole()
+  "Calling the show action of the Company Name not found controller" should {
+    "show the company name not found page" in {
+
+      enable(CompanyNameJourney)
+
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
-      val result = TestCouldNotConfirmBusinessController.show(request)
+      val result = TestCompanyNameNotFoundController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
 
-  "Calling the submit action of the Could not confirm business controller" should {
-    "redirect to capture your vat number page" in {
-      mockAuthAdminRole()
+  "Calling the submit action of the Company Name not found controller" should {
+    "redirect to capture your company number page" in {
 
-      val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
+      enable(CompanyNameJourney)
+
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestCompanyNameNotFoundController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+      redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
     }
   }
 

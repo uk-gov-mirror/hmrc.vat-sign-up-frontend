@@ -20,48 +20,42 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureVatNumber => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCompanyNameNotFound => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CaptureVatNumberSpec extends ViewSpec {
+class CompanyNameNotFoundSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_vat_number(
-    vatNumberForm = vatNumberForm(isAgent = true).form,
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.company_name_not_found(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Vat Number view" should {
+  "The Agent Company Name Not Found view" should {
 
     val testPage = TestView(
-      name = "Capture Vat Number View",
+      name = "Agent Company Name Not Found view",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
 
-    testPage.shouldHavePara(
-      messages.description
+    testPage.shouldHaveParaSeq(
+      messages.line1
     )
 
-    testPage.shouldHaveHint(
-      messages.hint
-    )
+    testPage.shouldHaveTryAgainButton()
 
-    testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
+    testPage.shouldHaveSignOutLink()
 
-    testPage.shouldHaveTextField(vatNumber, messages.heading)
-
-    testPage.shouldHaveContinueButton()
   }
 
 }

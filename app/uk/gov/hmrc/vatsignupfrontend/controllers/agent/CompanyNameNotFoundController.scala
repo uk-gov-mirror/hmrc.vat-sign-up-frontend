@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
+import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.could_not_confirm_vat_number
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.company_name_not_found
 
 import scala.concurrent.Future
 
 @Singleton
-class InvalidVatNumberController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+class CompanyNameNotFoundController @Inject()(val controllerComponents: ControllerComponents)
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(CompanyNameJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_vat_number(routes.InvalidVatNumberController.submit()))
+        Ok(company_name_not_found(routes.CompanyNameNotFoundController.submit()))
       )
     }
   }
@@ -41,8 +41,9 @@ class InvalidVatNumberController @Inject()(val controllerComponents: ControllerC
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Redirect(routes.CaptureVatNumberController.show())
+        Redirect(routes.CaptureCompanyNumberController.show())
       )
     }
   }
+
 }

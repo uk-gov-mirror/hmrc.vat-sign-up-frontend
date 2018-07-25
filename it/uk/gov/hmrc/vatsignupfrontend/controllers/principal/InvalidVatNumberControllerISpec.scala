@@ -17,8 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, KnownFactsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
@@ -26,7 +25,6 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
   "GET /could-not-confirm-vat-number" should {
     "return an OK" in {
-      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/could-not-confirm-vat-number")
@@ -39,7 +37,6 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
   "POST /could-not-confirm-vat-number" should {
     "redirect to capture vat number" in {
-      enable(KnownFactsJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/could-not-confirm-vat-number")()
@@ -51,18 +48,4 @@ class InvalidVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     }
   }
 
-
-  "Making a request to /could-not-confirm-vat-number when not enabled" should {
-    "return NotFound" in {
-      disable(KnownFactsJourney)
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/could-not-confirm-vat-number")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-
-    }
-  }
 }

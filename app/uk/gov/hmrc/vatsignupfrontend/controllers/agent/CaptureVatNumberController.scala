@@ -32,17 +32,19 @@ import scala.concurrent.Future
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
+  private val validateVatNumberForm = vatNumberForm(isAgent = true)
+
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_vat_number(vatNumberForm.form, routes.CaptureVatNumberController.submit()))
+        Ok(capture_vat_number(validateVatNumberForm.form, routes.CaptureVatNumberController.submit()))
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      vatNumberForm.bindFromRequest.fold(
+      validateVatNumberForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
