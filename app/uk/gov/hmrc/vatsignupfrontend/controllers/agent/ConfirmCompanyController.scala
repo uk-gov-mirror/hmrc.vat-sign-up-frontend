@@ -17,16 +17,15 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_company
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 
 import scala.concurrent.Future
 
@@ -62,12 +61,17 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
 
       (optVatNumber, optCompanyNumber) match {
         case (Some(vatNumber), Some(companyNumber)) =>
-          storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
-            case Right(_) =>
-              Redirect(routes.EmailRoutingController.route().url)
-            case Left(errResponse) =>
-              throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-          }
+          if (isEnabled(CtKnownFactsIdentityVerification))
+            Future.successful(
+              Redirect(routes.CaptureCompanyNumberController.show())
+            )
+          else
+            storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
+              case Right(_) =>
+                Redirect(routes.EmailRoutingController.route().url)
+              case Left(errResponse) =>
+                throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+            }
         case (None, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())

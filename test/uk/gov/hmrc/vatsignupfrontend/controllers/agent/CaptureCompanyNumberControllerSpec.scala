@@ -21,15 +21,21 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyNumber
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
-class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockGetCompanyNameService {
 
-  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(mockControllerComponents)
+  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(
+    mockControllerComponents,
+    mockGetCompanyNameService
+  )
 
   lazy val testGetRequest = FakeRequest("GET", "/company-number")
 
@@ -49,29 +55,84 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
 
   "Calling the submit action of the Capture Company Number controller" when {
-    "form successfully submitted" should {
-      "go to the new page" in {
-        mockAuthRetrieveAgentEnrolment()
+    "when Company Name Journey is disabled" when {
+      "form successfully submitted" should {
+        "go to the new page" in {
+          mockAuthRetrieveAgentEnrolment()
 
-        val request = testPostRequest(testCompanyNumber)
+          val request = testPostRequest(testCompanyNumber)
 
-        val result = TestCaptureCompanyNumberController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ConfirmCompanyNumberController.show().url)
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ConfirmCompanyNumberController.show().url)
 
-        result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
+          result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
+        }
+      }
+
+      "form unsuccessfully submitted" should {
+        "reload the page with errors" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          val result = TestCaptureCompanyNumberController.submit(testPostRequest("invalid"))
+          status(result) shouldBe Status.BAD_REQUEST
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
       }
     }
+    "when Company Name Journey is enabled" when {
+      "company was found" should {
+        "redirect to Company Name page" in {
+          enable(CompanyNameJourney)
 
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
-        mockAuthRetrieveAgentEnrolment()
+          mockAuthRetrieveAgentEnrolment()
+          mockGetCompanyNameSuccess(testCompanyNumber)
 
-        val result = TestCaptureCompanyNumberController.submit(testPostRequest("invalid"))
-        status(result) shouldBe Status.BAD_REQUEST
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+          val request = testPostRequest(testCompanyNumber)
+
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ConfirmCompanyController.show().url)
+
+          result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
+
+        }
       }
+      "company was not found" should {
+        "redirect to Company Name Not Found page" in {
+          enable(CompanyNameJourney)
+
+          mockAuthRetrieveAgentEnrolment()
+          mockGetCompanyNameNotFound(testCompanyNumber)
+
+          val request = testPostRequest(testCompanyNumber)
+
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+
+          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+
+        }
+
+      }
+      "company search failed" should {
+        "throw Internal Server Exception" in {
+          enable(CompanyNameJourney)
+
+          mockAuthRetrieveAgentEnrolment()
+          mockGetCompanyNameFailure(testCompanyNumber)
+
+          val request = testPostRequest(testCompanyNumber)
+
+          intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
+
+        }
+
+      }
+
     }
+
   }
 }
