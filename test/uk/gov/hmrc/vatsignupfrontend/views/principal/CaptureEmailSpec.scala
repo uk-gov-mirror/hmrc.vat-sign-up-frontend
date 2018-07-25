@@ -33,7 +33,7 @@ class CaptureEmailSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email(
-    emailForm = emailForm.form,
+    emailForm = emailForm(isAgent = false).form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

@@ -18,10 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.validation.Constraint
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.postcodeRegex
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 object BusinessPostCodeForm {
@@ -29,11 +30,17 @@ object BusinessPostCodeForm {
   val businessPostCode = "businessPostCode"
 
   val postCodeInvalid: Constraint[String] = Constraint("businessPostCode.invalid")(
-    postCode => if (postCode matches postcodeRegex) Valid else Invalid("error.invalid_postcode")
+    postCode => validateNot(
+      constraint = postCode matches postcodeRegex,
+      principalErrMsg = "error.invalid_postcode"
+    )
   )
 
   val businessPostCodeNotEntered: Constraint[String] = Constraint("postcode.notEntered")(
-    postCode => if (postCode.nonEmpty) Valid else Invalid("error.postcode_not_entered")
+    postCode => validate(
+      constraint = postCode.isEmpty,
+      principalErrMsg = "error.postcode_not_entered"
+    )
   )
 
   private val businessPostCodeValidationForm = Form(

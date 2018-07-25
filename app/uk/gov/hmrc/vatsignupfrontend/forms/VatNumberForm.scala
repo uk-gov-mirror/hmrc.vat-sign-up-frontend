@@ -18,34 +18,44 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.validation.Constraint
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.vatNumberRegex
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 
 object VatNumberForm {
 
   val vatNumber = "vatNumber"
 
-  val vatNumberLength: Constraint[String] = Constraint("vat_number.length")(
-    vatNumber => if (vatNumber.length != 9) Invalid("error.invalid_vat_number_length") else Valid
+  val vatNumberLength = 9
+
+  val vatNumberValidLength: Constraint[String] = Constraint("vat_number.length")(
+    vatNumber => validateNot(
+      constraint = vatNumber.length == vatNumberLength,
+      principalErrMsg = "error.invalid_vat_number_length"
+    )
   )
 
   def vatNumberEntered(isAgent: Boolean): Constraint[String] = Constraint("vat_number.entered")(
-    vatNumber => if (vatNumber.isEmpty && isAgent)
-      Invalid("error.agent.no_vat_number_entered")
-    else if (vatNumber.isEmpty && !isAgent)
-      Invalid("error.principal.no_vat_number_entered")
-    else Valid
+    vatNumber => validate(
+      constraint = vatNumber.isEmpty,
+      principalErrMsg = "error.principal.no_vat_number_entered",
+      agentErrMsg = Some("error.agent.no_vat_number_entered"),
+      isAgent = isAgent
+    )
   )
 
   val vatNumberFormat: Constraint[String] = Constraint("vat_number.format")(
-    vatNumber => if (!(vatNumber matches vatNumberRegex)) Invalid("error.invalid_vat_number") else Valid
+    vatNumber => validateNot(
+      constraint = vatNumber matches vatNumberRegex,
+      principalErrMsg = "error.invalid_vat_number"
+    )
   )
 
   private def vatNumberValidationForm(isAgent: Boolean) = Form(
     single(
-      vatNumber -> text.verifying(vatNumberEntered(isAgent = isAgent) andThen vatNumberFormat andThen vatNumberLength)
+      vatNumber -> text.verifying(vatNumberEntered(isAgent = isAgent) andThen vatNumberValidLength andThen vatNumberFormat)
     )
   )
 

@@ -38,20 +38,22 @@ class StubCitizenDetailsUserController @Inject()(val controllerComponents: Contr
                                                  matchingStubConnector: MatchingStubConnector
                                                 ) extends FrontendController with I18nSupport {
 
+  val validateUserDetailsForm = userDetailsForm(isAgent = false)
+
   override val messagesApi: MessagesApi = controllerComponents.messagesApi
 
   implicit val appConfig: AppConfig = controllerComponents.appConfig
 
   val show: Action[AnyContent] = Action.async { implicit request =>
       Future.successful(
-        Ok(client_details(userDetailsForm.form.fill(UserDetailsModel("Test", "User", "AA111111A", DateModel("01","01","1980"))),
+        Ok(client_details(validateUserDetailsForm.form.fill(UserDetailsModel("Test", "User", "AA111111A", DateModel("01","01","1980"))),
           routes.StubCitizenDetailsUserController.submit()))
       )
   }
 
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
-    userDetailsForm.bindFromRequest.fold(
+    validateUserDetailsForm.bindFromRequest.fold(
       formWithErrors =>
         Future.successful(
           BadRequest(client_details(formWithErrors, routes.StubCitizenDetailsUserController.submit()))
