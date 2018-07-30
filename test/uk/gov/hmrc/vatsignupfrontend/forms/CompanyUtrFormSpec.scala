@@ -28,7 +28,9 @@ class CompanyUtrFormSpec extends PlaySpec {
 
   "The companyUtrForm" should {
 
-    val errorKey = "error.invalid_company_utr"
+    val no_entry_error_key = "error.no_entry_company_utr"
+    val exceeds_characters_limit_error_key = "error.character_limit_company_utr"
+    val invalid_characters_error_key = "error.invalid_company_utr"
 
     "validate that data containing 10 digits passes" in {
       val testUtr = TestConstantsGenerator.randomUTRNumeric()
@@ -38,23 +40,23 @@ class CompanyUtrFormSpec extends PlaySpec {
 
     "validate that no data has been entered" in {
       val formWithError = companyUtrForm.bind(Map(companyUtr -> ""))
-      formWithError.errors should contain(FormError(companyUtr, errorKey))
+      formWithError.errors should contain(FormError(companyUtr, no_entry_error_key))
     }
 
     "validate that data containing incorrect format of non numeric data fails" in {
-      val formWithError = companyUtrForm.bind(Map(companyUtr -> "123A456 A"))
-      formWithError.errors should contain(FormError(companyUtr, errorKey))
+      val formWithError = companyUtrForm.bind(Map(companyUtr -> "A2345A789A"))
+      formWithError.errors should contain(FormError(companyUtr, invalid_characters_error_key))
     }
 
     "validate that data containing more than 10 digits fails" in {
       val formWithError = companyUtrForm.bind(Map(companyUtr -> "123 456 789 10"))
-      formWithError.errors should contain(FormError(companyUtr, errorKey))
+      formWithError.errors should contain(FormError(companyUtr, exceeds_characters_limit_error_key))
     }
 
     "validate that data containing fewer than 10 digits but greater than 0 fails" in {
       val testUtr = "1"
       val formWithError = companyUtrForm.bind(Map(companyUtr -> testUtr))
-      formWithError.errors should contain(FormError(companyUtr, errorKey))
+      formWithError.errors should contain(FormError(companyUtr, exceeds_characters_limit_error_key))
     }
 
   }

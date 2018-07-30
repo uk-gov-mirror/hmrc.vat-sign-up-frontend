@@ -18,11 +18,12 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.validation.Constraint
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PreprocessedForm
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.emailRegex
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.emailRegex
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 
 object EmailForm {
 
@@ -30,25 +31,40 @@ object EmailForm {
 
   val MaxLengthEmail = 132
 
-  val emailMaxLength: Constraint[String] = Constraint("email.maxLength")(
-    email => if (email.trim.length > MaxLengthEmail) Invalid("error.exceeds_max_length_email") else Valid
-  )
-  val emailInvalid: Constraint[String] = Constraint("email.invalid")(
-    email => if (email matches emailRegex) Valid else Invalid("error.invalid_email")
-  )
-
-
-  private val emailValidationForm = Form(
-    single(
-      email -> optText.toText.verifying(emailMaxLength andThen emailInvalid)
+  val emailExceedsMaxLength: Constraint[String] = Constraint("email.maxLength")(
+    email => validate(
+      constraint = email.trim.length > MaxLengthEmail,
+      principalErrMsg = "error.exceeds_max_length_email"
     )
   )
 
-  import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
-  import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
+  val emailInvalid: Constraint[String] = Constraint("email.invalid")(
+    email => validateNot(
+      constraint = email matches emailRegex,
+      principalErrMsg = "error.invalid_email"
+    )
+  )
 
-  val emailForm = PreprocessedForm(
-    validation = emailValidationForm,
+  def emailNotEntered(isAgent: Boolean): Constraint[String] = Constraint("email.not_entered")(
+    email => validate(
+      constraint = email.isEmpty,
+      principalErrMsg = "error.principal.email_no_entry",
+      agentErrMsg = Some("error.agent.email_no_entry"),
+      isAgent = isAgent
+    )
+  )
+
+  private def emailValidationForm(isAgent: Boolean) = Form(
+    single(
+      email -> optText.toText.verifying(emailNotEntered(isAgent = isAgent) andThen emailExceedsMaxLength andThen emailInvalid)
+    )
+  )
+
+  import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
+  import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
+
+  def emailForm(isAgent: Boolean) = PreprocessedForm(
+    validation = emailValidationForm(isAgent = isAgent),
     trimRules = Map(email -> all),
     caseRules = Map(email -> lower)
   )
