@@ -74,7 +74,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         "reload the page with errors" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = TestCaptureCompanyNumberController.submit(testPostRequest("invalid"))
+          val result = TestCaptureCompanyNumberController.submit(testPostRequest("123456789"))
           status(result) shouldBe Status.BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
@@ -99,6 +99,59 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         }
       }
+
+      "company number failed prefix validation - invalid prefix" should {
+        "redirect to Company Name Not Found page" in {
+          enable(CompanyNameJourney)
+          mockAuthRetrieveAgentEnrolment()
+
+          val testCrn = "ZZ12345"
+          val request = testPostRequest(testCrn)
+
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+
+          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+
+        }
+      }
+
+      "company number failed validation - invalid format" should {
+        "redirect to Company Name Not Found page" in {
+          enable(CompanyNameJourney)
+          mockAuthRetrieveAgentEnrolment()
+
+          val testCrn = "123A456 A"
+          val request = testPostRequest(testCrn)
+
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+
+          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+
+        }
+      }
+
+      "company number failed validation - zero is invalid" should {
+        "redirect to Company Name Not Found page" in {
+          enable(CompanyNameJourney)
+          mockAuthRetrieveAgentEnrolment()
+
+          val testCrn = "0"
+          val request = testPostRequest(testCrn)
+
+          val result = TestCaptureCompanyNumberController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+
+          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+
+        }
+      }
+
+
       "company was not found" should {
         "redirect to Company Name Not Found page" in {
           enable(CompanyNameJourney)
