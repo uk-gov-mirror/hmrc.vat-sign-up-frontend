@@ -68,11 +68,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
             ),
           companyNumber =>
             if (isEnabled(CompanyNameJourney)) {
-              if (!validateCrnPrefix(companyNumber)) {
-                Future.successful(
-                  Redirect(routes.CompanyNameNotFoundController.show())
-                )
-              } else {
+              if (validateCrnPrefix(companyNumber)) {
                 getCompanyNameService.getCompanyName(companyNumber) map {
                   case Right(GetCompanyNameSuccess(companyName)) =>
                     Redirect(routes.ConfirmCompanyController.show())
@@ -82,10 +78,13 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                       )
                   case Left(CompanyNumberNotFound) =>
                     Redirect(routes.CompanyNameNotFoundController.show())
-                      .removingFromSession(SessionKeys.companyNumberKey, SessionKeys.companyNameKey)
                   case Left(GetCompanyNameFailureResponse(status)) =>
                     throw new InternalServerException(s"getCompanyName failed: status=$status")
                 }
+              } else {
+                Future.successful(
+                  Redirect(routes.CompanyNameNotFoundController.show())
+                )
               }
             } else
               Future.successful(
