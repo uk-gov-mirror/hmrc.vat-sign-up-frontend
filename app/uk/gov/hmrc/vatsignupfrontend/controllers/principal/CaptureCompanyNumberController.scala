@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -26,6 +25,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_number
@@ -38,11 +39,21 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                                               )
   extends AuthenticatedController(AdministratorRolePredicate) {
 
+  val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false)
+
+  def validateCrnPrefix(companyNumber: String): Boolean = {
+    companyNumber match {
+      case CompanyNumber.allNumbersRegex(numbers) if numbers.toInt > 0 => true
+      case CompanyNumber.withPrefixRegex(prefix, numbers) if CompanyNumber.validCompanyNumberPrefixes.contains(prefix) && numbers.toInt > 0 => true
+      case _ => false
+    }
+  }
+
   val show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(capture_company_number(companyNumberForm.form, routes.CaptureCompanyNumberController.submit()))
+          Ok(capture_company_number(validateCompanyNumberForm.form, routes.CaptureCompanyNumberController.submit()))
         )
       }
   }
@@ -50,31 +61,36 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
   val submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        companyNumberForm.bindFromRequest.fold(
+        validateCompanyNumberForm.bindFromRequest.fold(
           formWithErrors =>
             Future.successful(
               BadRequest(capture_company_number(formWithErrors, routes.CaptureCompanyNumberController.submit()))
             ),
           companyNumber =>
             if (isEnabled(CompanyNameJourney)) {
-              getCompanyNameService.getCompanyName(companyNumber) map {
-                case Right(GetCompanyNameSuccess(companyName)) =>
-                  Redirect(routes.ConfirmCompanyController.show())
-                    .addingToSession(
-                      SessionKeys.companyNumberKey -> companyNumber,
-                      SessionKeys.companyNameKey -> companyName
-                    )
-                case Left(CompanyNumberNotFound) =>
+              if (validateCrnPrefix(companyNumber)) {
+                getCompanyNameService.getCompanyName(companyNumber) map {
+                  case Right(GetCompanyNameSuccess(companyName)) =>
+                    Redirect(routes.ConfirmCompanyController.show())
+                      .addingToSession(
+                        SessionKeys.companyNumberKey -> companyNumber,
+                        SessionKeys.companyNameKey -> companyName
+                      )
+                  case Left(CompanyNumberNotFound) =>
+                    Redirect(routes.CompanyNameNotFoundController.show())
+                  case Left(GetCompanyNameFailureResponse(status)) =>
+                    throw new InternalServerException(s"getCompanyName failed: status=$status")
+                }
+              } else {
+                Future.successful(
                   Redirect(routes.CompanyNameNotFoundController.show())
-                    .removingFromSession(SessionKeys.companyNumberKey, SessionKeys.companyNameKey)
-                case Left(GetCompanyNameFailureResponse(status)) =>
-                  throw new InternalServerException(s"getCompanyName failed: status=$status")
+                )
               }
-            } else {
+            } else
               Future.successful(
                 Redirect(routes.ConfirmCompanyNumberController.show()).addingToSession(SessionKeys.companyNumberKey -> companyNumber)
               )
-            }
+
         )
       }
   }

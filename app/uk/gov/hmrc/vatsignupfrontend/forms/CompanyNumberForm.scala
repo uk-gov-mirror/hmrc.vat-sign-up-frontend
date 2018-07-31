@@ -18,44 +18,45 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.validation.Constraint
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PreprocessedForm
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 
 object CompanyNumberForm {
 
   val companyNumber = "companyNumber"
   private val maxLength = 8
+  private val minLength = 1
 
-  val withinMaxLength: Constraint[String] = Constraint("companyNumber.maxLength")(
-    companyNumber => if (companyNumber.length <= maxLength) Valid else Invalid("error.invalid_company_number")
+  def withinMinAndMaxLength: Constraint[String] = Constraint("companyNumber.maxLength")(
+    companyNumber => validateNot(
+      constraint = (companyNumber.length >= minLength) && (companyNumber.length <= maxLength),
+      principalErrMsg = "error.invalid_company_number_length"
+    )
   )
 
-  val allNumbers: Constraint[String] = Constraint("companyNumber.allNumbers") {
-    case allNumbersRegex(numbers) if numbers.toInt > 0 => Valid
-    case x => Invalid("error.invalid_company_number")
-  }
+  def crnNotEntered(isAgent: Boolean): Constraint[String] = Constraint("companyNumber.maxLength")(
+    companyNumber => validate(
+      constraint = companyNumber.isEmpty,
+      principalErrMsg = "error.principal.company_number_not_entered",
+      agentErrMsg = Some("error.agent.company_number_not_entered"),
+      isAgent = isAgent
+    )
+  )
 
-  lazy val numbersWithValidPrefix: Constraint[String] = Constraint("companyNumber.prefix") {
-    case withPrefixRegex(prefix, numbers) if validCompanyNumberPrefixes.contains(prefix) && numbers.toInt > 0 => Valid
-    case x => Invalid("error.invalid_company_number")
-  }
-
-  lazy val companyNumberValidation: Constraint[String] = withinMaxLength andThen (numbersWithValidPrefix or allNumbers)
-
-  private val companyNumberValidationForm = Form(
+  private def companyNumberValidationForm(isAgent:Boolean) = Form(
     single(
-      companyNumber -> optText.toText.verifying(companyNumberValidation)
+      companyNumber -> optText.toText.verifying(crnNotEntered(isAgent = isAgent) andThen withinMinAndMaxLength)
     )
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  lazy val companyNumberForm = PreprocessedForm(
-    validation = companyNumberValidationForm,
+  def companyNumberForm(isAgent: Boolean) = PreprocessedForm(
+    validation = companyNumberValidationForm(isAgent = isAgent),
     trimRules = Map(companyNumber -> all),
     caseRules = Map(companyNumber -> upper)
   )
