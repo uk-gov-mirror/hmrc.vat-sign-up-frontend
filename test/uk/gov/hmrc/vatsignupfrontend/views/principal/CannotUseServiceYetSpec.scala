@@ -53,7 +53,7 @@ class CannotUseServiceYetSpec extends ViewSpec {
       messages.line2
     )
 
-    testPage.shouldHaveSignOutButton()
+    testPage.shouldHaveSignOutButton(isAgent = false)
   }
 
 }

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.config
 
+import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
 
 import play.api.Mode.Mode
@@ -33,10 +34,18 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val baseUrl: String = loadConfig("base.url")
   val contextRoute = "/vat-through-software/sign-up"
-  lazy val ggUrl = loadConfig(s"government-gateway.url")
+  lazy val ggUrl: String = loadConfig(s"government-gateway.url")
   lazy val ggSignInContinueUrl = s"$baseUrl$contextRoute"
 
-  def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl) = s"$ggUrl/gg/sign-out?continue=$redirectionUrl"
+  lazy val feedbackSurveyUrl: String = loadConfig("feedback-survey.url")
+  lazy val exitSurveyAgentOrigin = "MTDfB-VAT-agent-led-sign-up"
+  lazy val exitSurveyPrincipalOrigin = "MTDfB-VAT-sign-up"
+  lazy val agentFeedbackSurveyUrl = s"$feedbackSurveyUrl/feedback-survey/?origin=$exitSurveyAgentOrigin"
+  lazy val principalFeedbackSurveyUrl = s"$feedbackSurveyUrl/feedback-survey/?origin=$exitSurveyPrincipalOrigin"
+
+  private def encodeUrl(url: String): String = URLEncoder.encode(url, "UTF-8")
+
+  def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-out?continue=${encodeUrl(redirectionUrl)}"
 
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MTDVAT"
