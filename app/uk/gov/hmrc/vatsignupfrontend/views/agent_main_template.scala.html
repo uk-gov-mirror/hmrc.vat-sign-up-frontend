@@ -22,7 +22,8 @@
   mainClass: Option[String] = None,
   articleLayout: Boolean = true,
   scriptElem: Option[Html] = None,
-  showSignOutLink: Boolean = true
+  showSignOutLink: Boolean = true,
+  isAgent: Boolean = true
 )(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(title, Some(Messages("service_name.agent_journey")), sidebarLinks, contentHeader, bodyClasses, mainClass, articleLayout, scriptElem, showSignOutLink)(mainContent)(request, messages, appConfig)
+@main_template(title, Some(Messages("service_name.agent_journey")), sidebarLinks, contentHeader, bodyClasses, mainClass, articleLayout, scriptElem, showSignOutLink, isAgent)(mainContent)(request, messages, appConfig)
