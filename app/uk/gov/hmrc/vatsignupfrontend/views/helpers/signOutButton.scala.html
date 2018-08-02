@@ -16,10 +16,6 @@
 
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
-@(alternativeText: Option[String] = None, isAgent: Boolean)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
+@(alternativeText: Option[String] = None)(implicit appConfig: AppConfig, request: Request[_], messages: Messages)
 
-@if(isAgent) {
-    <a id="sign-out-button-agent" class="button" role="button" href="@{appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)}">@alternativeText.getOrElse(Messages("base.sign_out"))</a>
-    } else {
-    <a id="sign-out-button-principal" class="button" role="button" href="@{appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)}">@alternativeText.getOrElse(Messages("base.sign_out"))</a>
-}
+<a id="sign-out-button" class="button" role="button" href="@{appConfig.ggSignOutUrl()}">@alternativeText.getOrElse(Messages("base.sign_out"))</a>
