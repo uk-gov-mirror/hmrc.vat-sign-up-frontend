@@ -45,19 +45,15 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents,
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-
       request.session.get(SessionKeys.vatNumberKey) match {
-             case Some(vatNumber) => submissionService.submit(vatNumber).map {
-               case Right(_) => {
-                  Redirect(routes.InformationReceivedController.show())
-               }
-               case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
-             }
-             case None => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
-           }
-
-
+        case Some(vatNumber) => submissionService.submit(vatNumber).map {
+          case Right(_) => {
+            Redirect(routes.InformationReceivedController.show())
+          }
+          case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
+        }
+        case None => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+      }
     }
   }
-
 }

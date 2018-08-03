@@ -63,6 +63,17 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
         )
       }
     }
-  }
+    "Vat number key missing from session" should {
+      "redirect to resolve-vat-number" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubSubmissionFailure()
 
+        val res = post("/terms-of-participation")()
+
+          res should have(
+          httpStatus(SEE_OTHER)
+        )
+      }
+    }
+  }
 }
