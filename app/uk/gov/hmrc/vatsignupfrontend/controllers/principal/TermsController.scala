@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.services.SubmissionService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.terms
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils
 
 import scala.concurrent.Future
 
@@ -44,11 +45,15 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents,
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      submissionService.submit(request.session(SessionKeys.vatNumberKey)).map {
-        case Right(_) => Redirect(routes.InformationReceivedController.show())
-        case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
+      request.session.get(SessionKeys.vatNumberKey) match {
+        case Some(vatNumber) => submissionService.submit(vatNumber).map {
+          case Right(_) => {
+            Redirect(routes.InformationReceivedController.show())
+          }
+          case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
+        }
+        case None => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
       }
     }
   }
-
 }
