@@ -26,7 +26,8 @@
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
-  showSignOutLink: Boolean = true
+  showSignOutLink: Boolean = true,
+  isAgent: Boolean = false
 )(implicit request: Request[_], messages: Messages)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
@@ -40,9 +41,17 @@
     <meta name="format-detection" content="telephone=no" />
 }
 
+@href = @{
+    if(isAgent) {
+        appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)
+    } else {
+        appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)
+    }
+}
+
 @headerNavLinks = {
     @if(showSignOutLink) {
-        <li><a id="logOutNavHref" href=@appConfig.ggSignOutUrl()>@Messages("base.sign_out")</a></li>
+        <li><a id="logOutNavHref" href=@href>@Messages("base.sign_out")</a></li>
     }
 }
 

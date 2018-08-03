@@ -57,7 +57,7 @@ class IncorrectEnrolmentVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveALink("diff-details", messages.linkText, testChangeLink)
 
-    testPage.shouldHaveSignOutButton()
+    testPage.shouldHaveSignOutButton(isAgent = false)
 
   }
 

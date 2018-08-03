@@ -54,7 +54,7 @@ class FailedClientMatchingSpec extends ViewSpec {
 
     testPage.shouldHaveTryAgainButton()
 
-    testPage.shouldHaveSignOutLink()
+    testPage.shouldHaveSignOutLink(isAgent = true)
   }
 
 }

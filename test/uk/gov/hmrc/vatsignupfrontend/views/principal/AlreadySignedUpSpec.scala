@@ -52,7 +52,7 @@ class AlreadySignedUpSpec extends ViewSpec {
       messages.line1
     )
 
-    testPage.shouldHaveSignOutButton()
+    testPage.shouldHaveSignOutButton(isAgent = false)
   }
 
 }

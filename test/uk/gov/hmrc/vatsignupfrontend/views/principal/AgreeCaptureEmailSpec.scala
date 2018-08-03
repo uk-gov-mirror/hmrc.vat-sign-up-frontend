@@ -57,7 +57,7 @@ class AgreeCaptureEmailSpec extends ViewSpec {
 
     testPage.shouldHaveAgreeButton()
 
-    testPage.shouldHaveSignOutLink()
+    testPage.shouldHaveSignOutLink(isAgent = false)
   }
 
 }

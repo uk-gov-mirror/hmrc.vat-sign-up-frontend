@@ -101,9 +101,13 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         link.text() shouldBe text
       }
 
-    def shouldHaveSignOutLink(text: String = common.signOut): Unit = {
-      val id = "sign-out"
-      shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())
+    def shouldHaveSignOutLink(isAgent: Boolean, text: String = common.signOut): Unit = {
+      val signOutId = "sign-out"
+      val appConfig = app.injector.instanceOf[AppConfig]
+      val expectedHref =
+        if (isAgent) appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)
+        else appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)
+      shouldHaveALink(signOutId, text, expectedHref)
     }
 
     def shouldHaveAccordion(heading: String, text: String): Unit = {
@@ -125,9 +129,13 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       }
     }
 
-    def shouldHaveSignOutButton(text: String = common.signOut): Unit = {
+    def shouldHaveSignOutButton(isAgent: Boolean, text: String = common.signOut): Unit = {
       val id = "sign-out-button"
-      shouldHaveALink(id, text, app.injector.instanceOf[AppConfig].ggSignOutUrl())
+      val appConfig = app.injector.instanceOf[AppConfig]
+      val expectedHref =
+        if (isAgent) appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)
+        else appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)
+      shouldHaveALink(id, text, expectedHref)
     }
 
     def shouldHaveTextField(name: String,

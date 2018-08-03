@@ -46,7 +46,7 @@ class SignInWithDifferentDetailsSpec extends ViewSpec {
 
     testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHaveSignOutButton()
+    testPage.shouldHaveSignOutButton(isAgent = false)
 
   }
 
