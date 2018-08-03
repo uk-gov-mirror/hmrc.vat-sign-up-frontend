@@ -57,7 +57,6 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Terms controller" when {
 
-
     "submission is successful" should {
       "goto information received" in {
         mockAuthAdminRole()

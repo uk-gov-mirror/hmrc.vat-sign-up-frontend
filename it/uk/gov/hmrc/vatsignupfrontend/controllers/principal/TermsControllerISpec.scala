@@ -70,8 +70,9 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
         val res = post("/terms-of-participation")()
 
-          res should have(
-          httpStatus(SEE_OTHER)
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ResolveVatNumberController.resolve().url)
         )
       }
     }
