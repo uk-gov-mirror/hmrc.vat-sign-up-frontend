@@ -27,6 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockSubmissionService
+import play.api.mvc.Results
 
 class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
@@ -38,6 +39,9 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/terms-of-participation").withSession(SessionKeys.vatNumberKey -> testVatNumber)
+
+  lazy val testPostRequestWithoutSession: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest("POST", "/terms-of-participation")
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
@@ -52,6 +56,8 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   }
 
   "Calling the submit action of the Terms controller" when {
+
+
     "submission is successful" should {
       "goto information received" in {
         mockAuthAdminRole()
@@ -63,16 +69,29 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
 
-    "submission is unsuccessful" should {
-      "throw internal server exception" in {
-        mockAuthAdminRole()
-        mockSubmitFailure(testVatNumber)
+    "submission is unsuccessful" when {
+      "not in session" should {
+        "goto resolve vat number" in {
+          mockAuthAdminRole()
+          val result = TestTermsController.submit(testPostRequestWithoutSession)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
 
-        intercept[InternalServerException] {
-          await(TestTermsController.submit(testPostRequest))
         }
       }
+
+      "submission service fails" should {
+        "goto technical difficulties" in {
+          mockAuthAdminRole()
+          mockSubmitFailure(testVatNumber)
+          intercept[InternalServerException] {
+            await(TestTermsController.submit(testPostRequest))
+      }
     }
-  }
+
+        }
+      }
+
+    }
 
 }
