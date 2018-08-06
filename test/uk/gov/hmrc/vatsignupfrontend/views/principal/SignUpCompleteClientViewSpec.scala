@@ -34,7 +34,7 @@ class SignUpCompleteClientViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_complete_client(SoleTrader)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_complete_client()(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -46,10 +46,6 @@ class SignUpCompleteClientViewSpec extends ViewSpec {
 
     s"have the title '${messages.title}'" in {
       document.title() should be(messages.title)
-    }
-
-    "have the business entity type on a data attribute embedded exactly once" in {
-      document.select(s"""[data-entity-type="${SoleTrader.toString}"]""").size() shouldBe 1
     }
 
     "have a confirmation banner" which {

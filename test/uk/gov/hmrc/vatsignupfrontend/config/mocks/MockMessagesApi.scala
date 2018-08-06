@@ -25,5 +25,6 @@ trait MockMessagesApi extends MockitoSugar with BeforeAndAfterEach with GuiceOne
   this: TestSuite =>
 
   //TODO: Create a mock for this if possible
-  lazy val mockMessagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val mockMessagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
 }
