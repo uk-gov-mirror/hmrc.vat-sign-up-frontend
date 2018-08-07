@@ -21,7 +21,6 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.Constants.{StoreVatNumberKnownFactsMismatchCodeValue, StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 
 class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
@@ -30,16 +29,24 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
   "StoreVatNumberHttpReads" when {
     "read" should {
-      "parse a CREATED response as an StoreVatNumberSuccess" in {
+      "parse a CREATED response as a VatNumberStored" in {
         val httpResponse = HttpResponse(CREATED)
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe StoreVatNumberSuccess
+        res.right.value shouldBe VatNumberStored
+      }
+
+      "parse an OK response as a SubscriptionClaimed when the response code matches" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(CodeKey -> SubscriptionClaimedCode)))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.right.value shouldBe SubscriptionClaimed
       }
 
       "parse a FORBIDDEN response as a NoAgentClientRelationship when the response code matches" in {
-        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue)))
+        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(CodeKey -> NoRelationshipCode)))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
@@ -47,7 +54,7 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
       }
 
       "parse a FORBIDDEN response as a KnownFactsMismatch when the response code matches" in {
-        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberKnownFactsMismatchCodeValue)))
+        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(CodeKey -> KnownFactsMismatchCode)))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
@@ -55,7 +62,7 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
       }
 
       "parse a FORBIDDEN response as a StoreVatNumberFailureResponse when the response code does not match" in {
-        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(StoreVatNumberNoRelationshipCodeKey -> "INCORRECT_CODE")))
+        val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(CodeKey -> "INCORRECT_CODE")))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 

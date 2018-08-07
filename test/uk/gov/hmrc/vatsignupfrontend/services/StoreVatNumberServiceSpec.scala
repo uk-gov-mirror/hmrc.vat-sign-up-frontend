@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreVatNumberConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberSuccess
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.VatNumberStored
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class StoreVatNumberServiceSpec extends UnitSpec with MockitoSugar {
 
-  val mockConnector = mock[StoreVatNumberConnector]
+  val mockConnector: StoreVatNumberConnector = mock[StoreVatNumberConnector]
 
   object TestStoreVatNumberService extends StoreVatNumberService(mockConnector)
 
@@ -48,12 +48,12 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockitoSugar {
         ArgumentMatchers.eq(testBusinessPostcode.postCode),
         ArgumentMatchers.eq(testDate.toLocalDate.toString)
       )(ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(Future.successful(Right(StoreVatNumberSuccess)))
+        .thenReturn(Future.successful(Right(VatNumberStored)))
 
       val r = TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDate)
 
       // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
-      await(r) shouldBe Right(StoreVatNumberSuccess)
+      await(r) shouldBe Right(VatNumberStored)
     }
   }
 

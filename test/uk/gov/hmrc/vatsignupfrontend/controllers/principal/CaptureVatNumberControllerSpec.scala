@@ -68,16 +68,29 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "the vat number passes checksum validation" when {
         "the user has a VAT-DEC enrolment" when {
           "the vat eligibility is successful" when {
-            "the inserted vat number matches the enrolment one" should {
-              "redirect to the business entity type page" in {
-                mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockStoreVatNumberSuccess(testVatNumber)
+            "the inserted vat number matches the enrolment one" when {
+              "the VAT number is stored successfully" should {
+                "redirect to the business entity type page" in {
+                  mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                  mockStoreVatNumberSuccess(testVatNumber)
 
-                val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
-                session(result) get vatNumberKey should contain(testVatNumber)
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+                  session(result) get vatNumberKey should contain(testVatNumber)
+                }
+              }
+              "the user's subscription has been claimed" should {
+                "redirect to claimed subscription confirmation page" in {
+                  mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                  mockStoreVatNumberSubscriptionClaimed(testVatNumber)
+
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
+                }
               }
             }
 

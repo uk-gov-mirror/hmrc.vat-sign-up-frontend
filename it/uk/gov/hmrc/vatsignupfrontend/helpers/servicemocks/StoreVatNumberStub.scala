@@ -18,8 +18,8 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.vatsignupfrontend.Constants.{StoreVatNumberKnownFactsMismatchCodeValue, StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 
 object StoreVatNumberStub extends WireMockMethods {
@@ -31,7 +31,7 @@ object StoreVatNumberStub extends WireMockMethods {
 
   def stubStoreVatNumberNoRelationship(): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
-      .thenReturn(status = FORBIDDEN, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue))
+      .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> NoRelationshipCode))
   }
 
   def stubStoreVatNumberIneligible(): Unit = {
@@ -61,6 +61,16 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = CREATED)
   }
 
+  def stubStoreVatNumberSubscriptionClaimed(postCode: PostCode, registrationDate: DateModel): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
+      Json.obj(
+        "vatNumber" -> testVatNumber,
+        "postCode" -> postCode.postCode,
+        "registrationDate" -> registrationDate.toLocalDate.toString
+      ))
+      .thenReturn(status = OK, body = Json.obj(CodeKey -> SubscriptionClaimedCode))
+  }
+
   def stubStoreVatNumberKnownFactsMismatch(postCode: PostCode, registrationDate: DateModel): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       Json.obj(
@@ -68,7 +78,7 @@ object StoreVatNumberStub extends WireMockMethods {
         "postCode" -> postCode.postCode,
         "registrationDate" -> registrationDate.toLocalDate.toString
       ))
-      .thenReturn(status = FORBIDDEN, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberKnownFactsMismatchCodeValue))
+      .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> KnownFactsMismatchCode))
   }
 
   def stubStoreVatNumberInvalid(postCode: PostCode, registrationDate: DateModel): Unit = {
