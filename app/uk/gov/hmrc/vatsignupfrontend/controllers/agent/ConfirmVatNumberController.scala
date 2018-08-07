@@ -57,7 +57,7 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) if vatNumber.nonEmpty =>
           if (VatNumberChecksumValidation.isValid(vatNumber))
             storeVatNumberService.storeVatNumber(vatNumber) map {
-              case Right(StoreVatNumberSuccess) =>
+              case Right(VatNumberStored) =>
                 Redirect(routes.CaptureBusinessEntityController.show())
               case Left(NoAgentClientRelationship) =>
                 Redirect(routes.NoAgentClientRelationshipController.show())

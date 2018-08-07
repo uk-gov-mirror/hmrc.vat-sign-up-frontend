@@ -70,6 +70,25 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+    "the VAT subscription has been claimed" should {
+      "redirect to sign up complete client" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberSubscriptionClaimed(testBusinessPostCode, testDate)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.SignUpCompleteClientController.show().url)
+        )
+      }
+    }
     "store vat returned known facts mismatch" should {
       "redirect to could not confirm business" in {
         stubAuth(OK, successfulAuthResponse())

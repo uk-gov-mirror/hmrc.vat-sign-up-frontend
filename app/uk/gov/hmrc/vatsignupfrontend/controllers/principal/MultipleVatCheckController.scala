@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -26,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, StoreVatNumberSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, SubscriptionClaimed, VatNumberStored}
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -58,9 +57,10 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                 Future.successful(Redirect(routes.CaptureVatNumberController.show()))
               case No =>
                 storeVatNumberService.storeVatNumber(vatNumber) map {
-                  case Right(StoreVatNumberSuccess) =>
+                  case Right(VatNumberStored) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
+                  case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
                   case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
                   case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
                   case Left(_) =>

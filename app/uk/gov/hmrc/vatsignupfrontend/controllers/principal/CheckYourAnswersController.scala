@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
@@ -26,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, InvalidVatNumber, KnownFactsMismatch}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, InvalidVatNumber, KnownFactsMismatch, SubscriptionClaimed, VatNumberStored}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
@@ -71,8 +70,9 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
   }
 
   private def storeVatNumber(vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel, enrolments: Enrolments)(implicit hc: HeaderCarrier) =
-    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate).map {
-      case Right(_) => Redirect(routes.CaptureBusinessEntityController.show())
+    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate) map {
+      case Right(VatNumberStored) => Redirect(routes.CaptureBusinessEntityController.show())
+      case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
       case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())

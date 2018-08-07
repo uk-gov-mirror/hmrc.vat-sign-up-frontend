@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, CONFLICT, NO_CONTENT}
-import play.api.libs.json.Json
-import uk.gov.hmrc.vatsignupfrontend.Constants.{StoreVatNumberNoRelationshipCodeKey, StoreVatNumberNoRelationshipCodeValue}
+import play.api.http.Status._
 
 object VatEligibilityStub extends WireMockMethods {
 
@@ -29,7 +27,7 @@ object VatEligibilityStub extends WireMockMethods {
 
   def stubVatNumberEligibilityFailure(vatNumber: String): Unit = {
     when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
-      .thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj(StoreVatNumberNoRelationshipCodeKey -> StoreVatNumberNoRelationshipCodeValue))
+      .thenReturn(status = INTERNAL_SERVER_ERROR)
   }
 
   def stubVatNumberIneligibleForMtd(vatNumber: String): Unit = {
