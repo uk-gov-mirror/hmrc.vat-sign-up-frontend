@@ -111,14 +111,13 @@ class NoCtEnrolmentSummarySpec extends ViewSpec {
     val sectionId = CompanyUtrId
     val expectedQuestion = messages.companyUtr
     val expectedAnswer = testCompanyUtr
-    //TODO: link to capture company utr controller
-    //val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyUtrController.show().url
+    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyUtrController.show().url
 
     sectionTest(
       sectionId = sectionId,
       expectedQuestion = expectedQuestion,
       expectedAnswer = expectedAnswer,
-      expectedEditLink = None
+      expectedEditLink = Some(expectedEditLink)
     )
   }
 
