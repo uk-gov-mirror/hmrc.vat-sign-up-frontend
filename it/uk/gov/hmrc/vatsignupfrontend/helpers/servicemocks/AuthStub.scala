@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json, Writes}
+import play.api.libs.json._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -74,6 +74,15 @@ object AuthStub extends WireMockMethods {
     )
   )
 
+  val irctEnrolment: JsObject = Json.obj(
+    "key" -> IRCTEnrolmentKey,
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> IRCTReferenceKey,
+        "value" -> testSaUtr
+      )
+    )
+  )
 
   def confidenceLevel(confidenceLevel: ConfidenceLevel): JsValue =
     Json.obj(

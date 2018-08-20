@@ -22,9 +22,9 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
-import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, Retrievals, ~}
+import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testAgentEnrolment, testVatDecEnrolment, testIRSAEnrolment}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -50,7 +50,8 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
     mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
   def mockAuthConfidenceLevelRetrieval(confidenceLevel: ConfidenceLevel): Unit =
-    mockAuthorise(retrievals = Retrievals.credentialRole and Retrievals.confidenceLevel)(Future.successful(new ~(Some(Admin), confidenceLevel)))
+    mockAuthorise(retrievals = Retrievals.credentialRole and Retrievals.confidenceLevel)(Future.successful(new ~(Some
+    (Admin), confidenceLevel)))
 
   def mockAuthRetrieveAgentEnrolment(): Unit =
     mockAuthorise(retrievals = Retrievals.allEnrolments)(Future.successful(Enrolments(Set(testAgentEnrolment))))
@@ -60,15 +61,19 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
       retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
     )(
       Future.successful {
-        if (hasIRSAEnrolment) new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, testIRSAEnrolment)))
+        if(hasIRSAEnrolment) new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, testIRSAEnrolment)))
         else new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment)))
       }
     )
   }
 
+  def mockAuthRetrieveIRCTEnrolment(): Unit =
+    mockAuthorise(
+      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+    )(Future.successful(new ~(Some(Admin), Enrolments(Set(testIRCTEnrolment)))))
+
   def mockAuthAdminRole(): Unit =
     mockAuthorise(retrievals = Retrievals.credentialRole)(Future.successful(Some(Admin)))
-
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

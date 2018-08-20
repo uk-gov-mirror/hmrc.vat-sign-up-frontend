@@ -32,7 +32,17 @@ object EnrolmentUtils {
       enrolments getEnrolment IRSAEnrolmentKey flatMap {
         vatDecEnrolment =>
           vatDecEnrolment getIdentifier IRSAReferenceKey map (_.value)
+
       }
+
+    def companyUtr: Option[String] = {
+      enrolments getEnrolment IRCTEnrolmentKey flatMap {
+        IRCTEnrolment =>
+          IRCTEnrolment getIdentifier IRCTReferenceKey map {
+            _.value
+          }
+      }
+    }
   }
 
 }

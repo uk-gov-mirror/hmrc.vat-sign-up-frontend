@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
@@ -61,13 +61,17 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
   "POST /confirm-company" should {
 
     "the company number is successfully stored" when {
-      "CtKnownFactsIdentityVerification is disabled" should {
+      "IRCT Journey is enabled" should {
         "redirect to agree to receive email page" in {
+          enable(IRCTJourney)
           enable(CompanyNameJourney)
-          disable(CtKnownFactsIdentityVerification)
 
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
+          stubAuth(OK, successfulAuthResponse(irctEnrolment))
+          stubStoreCompanyNumberSuccess(
+            vatNumber = testVatNumber,
+            companyNumber = testCompanyNumber,
+            companyUtr = Some(testSaUtr)
+          )
 
           val res = post("/confirm-company",
             Map(
@@ -81,30 +85,59 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
           )
 
         }
+
       }
+      "IRCT Journey is disabled" when {
+        "CtKnownFactsIdentityVerification is disabled" should {
+          "redirect to agree to receive email page" in {
+            disable(IRCTJourney)
+            enable(CompanyNameJourney)
+            disable(CtKnownFactsIdentityVerification)
 
-      "CtKnownFactsIdentityVerification is enabled" should {
-        "redirect to capture company UTR page" in {
-          enable(CompanyNameJourney)
-          enable(CtKnownFactsIdentityVerification)
+            stubAuth(OK, successfulAuthResponse())
+            stubStoreCompanyNumberSuccess(
+              vatNumber = testVatNumber,
+              companyNumber = testCompanyNumber,
+              companyUtr = None
+            )
 
-          stubAuth(OK, successfulAuthResponse())
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
 
-          val res = post("/confirm-company",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.companyNumberKey -> testCompanyNumber
-            ))()
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.AgreeCaptureEmailController.show().url)
+            )
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureCompanyUtrController.show().url)
-          )
+          }
         }
+
+        "CtKnownFactsIdentityVerification is enabled" should {
+          "redirect to capture company UTR page" in {
+            disable(IRCTJourney)
+            enable(CompanyNameJourney)
+            enable(CtKnownFactsIdentityVerification)
+
+            stubAuth(OK, successfulAuthResponse())
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
+        }
+
       }
-
     }
-
   }
 
 }

@@ -30,6 +30,8 @@ object Constants {
     val VatReferenceKey = "VATRegNo"
     val IRSAEnrolmentKey = "IR-SA"
     val IRSAReferenceKey = "UTR"
+    val IRCTReferenceKey = "UTR"
+    val IRCTEnrolmentKey = "ctReference"
   }
 
   object TaxEnrolments {
