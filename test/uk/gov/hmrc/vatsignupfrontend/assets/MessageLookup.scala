@@ -576,4 +576,20 @@ object MessageLookup {
     val line1 = "You can only sign up this business if you are an administrator."
   }
 
+  object SignUpCompleteClient {
+    val title = "Sign up complete"
+    val heading = "Sign up complete"
+    val subheadingWhn = "What happens next"
+    val whnLine1 = "You do not need to do anything if your agent is responsible for all of your VAT."
+    val whnLine2 = s"If you and your agent will use software, you need to choose a software package that interacts with theirs."
+    val subheadingBta = "Business tax account"
+    val linkText = "business tax account"
+    val btaLine1 = s"We have set up your $linkText."
+    val btaLine2 = "This is where you can see what information your agent has given to us. You can also:"
+    val bullet1 = "see what you owe"
+    val bullet2 = "check your deadlines"
+    val bullet3 = "pay your VAT"
+    val bullet4 = "tell us about any changes to your business"
+  }
+
 }

@@ -129,3 +129,6 @@ POST        /check-your-answers-company                     uk.gov.hmrc.vatsignu
 # Multiple Vat Check
 GET         /more-than-one-vat-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.MultipleVatCheckController.show
 POST        /more-than-one-vat-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.MultipleVatCheckController.submit
+
+#Sign Up Complete Client
+GET         /sign-up-complete-client                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignUpCompleteClientController.show

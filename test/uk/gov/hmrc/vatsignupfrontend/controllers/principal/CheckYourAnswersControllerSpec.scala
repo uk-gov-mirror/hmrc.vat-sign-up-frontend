@@ -112,7 +112,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Check your answers controller" when {
     "all prerequisite data are in" when {
-      "store vat number returned StoreVatNumberSuccess" when {
+      "store vat number returned VatNumberStored" when {
         "goto business entity controller" in {
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
@@ -122,6 +122,18 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+        }
+      }
+      "store vat number returned SubscriptionClaimed" when {
+        "goto business entity controller" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockStoreVatNumberSubscriptionClaimed(testVatNumber, testBusinessPostcode, testDate)
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.SignUpCompleteClientController.show().url)
         }
       }
       "store vat number returned KnownFactsMismatch" should {

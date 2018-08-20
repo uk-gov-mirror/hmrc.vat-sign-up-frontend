@@ -24,6 +24,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.DateMapping
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 import scala.util.Try
@@ -42,25 +43,24 @@ object VatRegistrationDateForm {
   )
 
   val vatRegistrationDateCharacters: Constraint[DateModel] = constraint[DateModel](
-    date => if (
-      (date.day matches dateRegex) &&
-        (date.month matches dateRegex) &&
-        (date.year matches dateRegex)
-    ) Valid else Invalid("error.invalid_vat_registration_date_characters")
+    date => validateNot(
+      constraint = (date.day matches dateRegex) && (date.month matches dateRegex) && (date.year matches dateRegex),
+      principalErrMsg = "error.invalid_vat_registration_date_characters"
+    )
   )
 
   val vatRegistrationDateEntered: Constraint[DateModel] = constraint[DateModel](
-    date => if (
-      date.day.nonEmpty &&
-        date.month.nonEmpty &&
-        date.year.nonEmpty
-    ) Valid else Invalid("error.no_vat_registration_date_entered")
+    date => validateNot(
+      constraint = date.day.nonEmpty && date.month.nonEmpty && date.year.nonEmpty,
+      principalErrMsg = "error.no_vat_registration_date_entered"
+    )
   )
 
   val vatRegistrationDateIsInPast: Constraint[DateModel] = constraint[DateModel](
-    date => if (
-      date.toLocalDate.isBefore(LocalDate.now)
-    ) Valid else Invalid("error.vat_registration_date_future")
+    date => validateNot(
+      constraint = date.toLocalDate.isBefore(LocalDate.now),
+      principalErrMsg = "error.vat_registration_date_future"
+    )
   )
 
   val vatRegistrationDateForm = Form(

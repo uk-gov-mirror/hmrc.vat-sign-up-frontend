@@ -18,39 +18,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_complete_client
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureEmailController @Inject()(val controllerComponents: ControllerComponents)
+class SignUpCompleteClientController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
-
-  val validateEmailForm = emailForm(isAgent = false)
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(capture_email(validateEmailForm.form, routes.CaptureEmailController.submit()))
-      )
-    }
-  }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      validateEmailForm.bindFromRequest.fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))
-          ),
-        email =>
-          Future.successful(Redirect(routes.ConfirmEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
-      )
+      Future.successful(Ok(sign_up_complete_client()))
     }
   }
 }
+

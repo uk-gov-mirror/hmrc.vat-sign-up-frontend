@@ -18,23 +18,25 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsignupfrontend.Constants._
 
 object StoreVatNumberHttpParser {
-  type StoreVatNumberResponse = Either[StoreVatNumberFailure, StoreVatNumberSuccess.type]
+  type StoreVatNumberResponse = Either[StoreVatNumberFailure, StoreVatNumberSuccess]
+
+  val CodeKey = "CODE"
+  val NoRelationshipCode = "RELATIONSHIP_NOT_FOUND"
+  val KnownFactsMismatchCode = "KNOWN_FACTS_MISMATCH"
+  val SubscriptionClaimedCode = "SUBSCRIPTION_CLAIMED"
 
   implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
 
-      def parseBody: Option[String] = (response.json \ StoreVatNumberNoRelationshipCodeKey).asOpt[String]
+      def responseCode: Option[String] = (response.json \ CodeKey).asOpt[String]
 
       response.status match {
-        case CREATED => Right(StoreVatNumberSuccess)
-        case FORBIDDEN => parseBody match {
-          case Some(code) if code.matches(StoreVatNumberNoRelationshipCodeValue) => Left(NoAgentClientRelationship)
-          case Some(code) if code.matches(StoreVatNumberKnownFactsMismatchCodeValue) => Left(KnownFactsMismatch)
-          case _ => Left(StoreVatNumberFailureResponse(FORBIDDEN))
-        }
+        case CREATED  => Right(VatNumberStored)
+        case OK if responseCode contains SubscriptionClaimedCode => Right(SubscriptionClaimed)
+        case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)
+        case FORBIDDEN if responseCode contains KnownFactsMismatchCode => Left(KnownFactsMismatch)
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
         case UNPROCESSABLE_ENTITY => Left(IneligibleVatNumber)
         case CONFLICT => Left(AlreadySubscribed)
@@ -43,7 +45,11 @@ object StoreVatNumberHttpParser {
     }
   }
 
-  case object StoreVatNumberSuccess
+  sealed trait StoreVatNumberSuccess
+
+  case object VatNumberStored extends StoreVatNumberSuccess
+
+  case object SubscriptionClaimed extends StoreVatNumberSuccess
 
   sealed trait StoreVatNumberFailure
 

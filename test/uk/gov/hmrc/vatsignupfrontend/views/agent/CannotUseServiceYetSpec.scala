@@ -55,7 +55,7 @@ class CannotUseServiceYetSpec extends ViewSpec {
 
     testPage.shouldHaveSignUpAnotherClientButton()
 
-    testPage.shouldHaveSignOutLink()
+    testPage.shouldHaveSignOutLink(isAgent = true)
   }
 
 }

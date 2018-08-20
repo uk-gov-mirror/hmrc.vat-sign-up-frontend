@@ -24,7 +24,10 @@ import uk.gov.hmrc.vatsignupfrontend.forms.submapping.DateMapping
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
+
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
+
 
 import scala.util.Try
 
@@ -32,45 +35,79 @@ object UserDetailsForm {
 
   val userFirstName = "firstName"
   val userLastName = "lastName"
+  val nameMaxLength = 105
   val userNino = "nino"
+  val userNinoLength = 9
   val userDateOfBirth = "dateOfBirth"
 
-  val nameMaxLength = 105
 
-  val firstNameNotEntered: Constraint[String] = Constraint("first_name.not_entered")(
-    firstName => if (firstName.isEmpty) Invalid("error.no_entry_first_name") else Valid
+  def firstNameNotEntered(isAgent: Boolean): Constraint[String] = Constraint("first_name.not_entered")(
+    firstName => validate(
+      constraint = firstName.isEmpty,
+      principalErrMsg = "error.principal.no_entry_first_name",
+      agentErrMsg = Some("error.agent.no_entry_first_name"),
+      isAgent = isAgent
+    )
   )
 
   val firstNameInvalid: Constraint[String] = Constraint("first_name.invalid")(
-    firstName => if (!validText(firstName.trim)) Invalid("error.invalid_first_name") else Valid
+    firstName => validateNot(
+      constraint = validText(firstName.trim),
+      principalErrMsg = "error.invalid_first_name"
+    )
   )
 
   val firstNameMaxLength: Constraint[String] = Constraint("first_name.maxLength")(
-    firstName => if (firstName.trim.length > nameMaxLength) Invalid("error.exceeds_max_first_name") else Valid
+    firstName => validate(
+      constraint = firstName.trim.length > nameMaxLength,
+      principalErrMsg = "error.exceeds_max_first_name"
+    )
   )
 
-  val lastNameNotEntered: Constraint[String] = Constraint("last_name.not_entered")(
-    lastName => if (lastName.isEmpty) Invalid("error.no_entry_last_name") else Valid
+  def lastNameNotEntered(isAgent: Boolean): Constraint[String] = Constraint("last_name.not_entered")(
+    lastName => validate(
+      constraint = lastName.isEmpty,
+      principalErrMsg = "error.principal.no_entry_last_name",
+      agentErrMsg = Some("error.agent.no_entry_last_name"),
+      isAgent = isAgent
+    )
   )
 
   val lastNameInvalid: Constraint[String] = Constraint("last_name.invalid")(
-    lastName => if (!validText(lastName.trim)) Invalid("error.invalid_last_name") else Valid
+    lastName => validateNot(
+      constraint = validText(lastName.trim),
+      principalErrMsg = "error.invalid_last_name"
+    )
   )
 
   val lastNameMaxLength: Constraint[String] = Constraint("last_name.maxLength")(
-    lastName => if (lastName.trim.length > nameMaxLength) Invalid("error.exceeds_max_last_name") else Valid
+    lastName => validate(
+      constraint = lastName.trim.length > nameMaxLength,
+      principalErrMsg = "error.exceeds_max_last_name"
+    )
   )
 
-  val ninoEntered: Constraint[String] = Constraint("nino.not_entered")(
-    nino => if (nino.isEmpty) Invalid("error.no_entry_nino") else Valid
+  def ninoNotEntered(isAgent: Boolean): Constraint[String] = Constraint("nino.not_entered")(
+    nino => validate(
+      constraint = nino.isEmpty,
+      principalErrMsg = "error.principal.no_entry_nino",
+      agentErrMsg = Some("error.agent.no_entry_nino"),
+      isAgent = isAgent
+    )
   )
 
   val invalidNino: Constraint[String] = Constraint("nino.invalid")(
-    nino => if (!validNino(nino)) Invalid("error.invalid_nino") else Valid
+    nino => validateNot(
+      constraint = validNino(nino),
+      principalErrMsg = "error.invalid_nino"
+    )
   )
 
   val ninoLength: Constraint[String] = Constraint("nino.invalid_length")(
-    nino => if (nino.length < 9) Invalid("error.character_limit_nino") else Valid
+    nino => validate(
+      constraint = nino.length < userNinoLength,
+      principalErrMsg = "error.character_limit_nino"
+    )
   )
 
   val dobInvalid: Constraint[DateModel] = constraint[DateModel](
@@ -83,34 +120,35 @@ object UserDetailsForm {
   )
 
   val dobInvalidCharacters: Constraint[DateModel] = constraint[DateModel](
-    date => if (
-      (date.day matches dateRegex) &&
-        (date.month matches dateRegex) &&
-        (date.year matches dateRegex)
-    ) Valid else Invalid("error.invalid_characters_dob")
+    date => validateNot(
+      constraint = (date.day matches dateRegex) && (date.month matches dateRegex) && (date.year matches dateRegex),
+      principalErrMsg = "error.invalid_characters_dob"
+    )
   )
 
-  val dobEntered: Constraint[DateModel] = constraint[DateModel](
-    date => if (
-      date.day.nonEmpty &&
-        date.month.nonEmpty &&
-        date.year.nonEmpty
-    ) Valid else Invalid("error.no_entry_dob")
+  def dobNotEntered(isAgent: Boolean): Constraint[DateModel] = constraint[DateModel](
+    date => validate(
+      constraint = date.day.isEmpty && date.month.isEmpty && date.year.isEmpty,
+      principalErrMsg = "error.principal.no_entry_dob",
+      agentErrMsg = Some("error.agent.no_entry_dob"),
+      isAgent = isAgent
+    )
   )
-  val userValidationDetailsForm = Form(
+
+  def userValidationDetailsForm(isAgent: Boolean) = Form(
     mapping(
-      userFirstName -> optText.toText.verifying(firstNameNotEntered andThen firstNameInvalid andThen firstNameMaxLength),
-      userLastName -> optText.toText.verifying(lastNameNotEntered andThen lastNameInvalid andThen lastNameMaxLength),
-      userNino -> optText.toText.verifying(ninoEntered andThen ninoLength andThen invalidNino),
-      userDateOfBirth -> DateMapping.dateMapping.verifying(dobEntered andThen dobInvalidCharacters andThen dobInvalid)
+      userFirstName -> optText.toText.verifying(firstNameNotEntered(isAgent) andThen firstNameInvalid andThen firstNameMaxLength),
+      userLastName -> optText.toText.verifying(lastNameNotEntered(isAgent) andThen lastNameInvalid andThen lastNameMaxLength),
+      userNino -> optText.toText.verifying(ninoNotEntered(isAgent) andThen ninoLength andThen invalidNino),
+      userDateOfBirth -> DateMapping.dateMapping.verifying(dobNotEntered(isAgent) andThen dobInvalidCharacters andThen dobInvalid)
     )(UserDetailsModel.apply)(UserDetailsModel.unapply)
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  val userDetailsForm = PreprocessedForm(
-    validation = userValidationDetailsForm,
+  def userDetailsForm(isAgent: Boolean) = PreprocessedForm(
+    validation = userValidationDetailsForm(isAgent = isAgent),
     trimRules = Map(
       userFirstName -> both,
       userLastName -> both,

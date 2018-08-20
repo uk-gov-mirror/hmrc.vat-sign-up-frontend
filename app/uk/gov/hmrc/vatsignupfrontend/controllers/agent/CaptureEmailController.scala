@@ -32,17 +32,19 @@ import scala.concurrent.Future
 class CaptureEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
+  val validateEmailForm = emailForm(isAgent = true)
+
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_email(emailForm.form, routes.CaptureEmailController.submit()))
+        Ok(capture_email(validateEmailForm.form, routes.CaptureEmailController.submit()))
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      emailForm.bindFromRequest.fold(
+      validateEmailForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))

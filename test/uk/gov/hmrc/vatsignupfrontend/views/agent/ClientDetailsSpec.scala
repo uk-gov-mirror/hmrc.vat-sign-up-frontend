@@ -34,7 +34,7 @@ class ClientDetailsSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.client_details(
-    userDetailsForm = userDetailsForm.form,
+    userDetailsForm = userDetailsForm(isAgent = true).form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

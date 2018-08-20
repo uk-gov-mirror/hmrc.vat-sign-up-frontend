@@ -75,6 +75,16 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
           }
         }
+        "the VAT subscription has been claimed" should {
+          "go to sign-up-complete-client" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberSubscriptionClaimed(testVatNumber)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
+          }
+        }
         "vat number is already subscribed" should {
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()

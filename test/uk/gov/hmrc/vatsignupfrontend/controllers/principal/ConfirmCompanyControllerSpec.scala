@@ -78,101 +78,87 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
     }
   }
 
-  "Calling the submit action of the Confirm Company controller" when {
-    "IRCT Journey is enabled" should {
-      "go to the 'agree to receive emails' page" in {
-        enable(IRCTJourney)
-        mockAuthRetrieveIRCTEnrolment()
-        mockStoreCompanyNumberSuccess(
-          vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber,
-          companyUtr = Some(testSaUtr)
-        )
+  "Calling the submit action of the Confirm Company controller" should {
+    "go to the 'agree to receive emails' page if CtKnownFactsIdentityVerification is disabled" in {
+      mockAuthRetrieveIRCTEnrolment()
+      mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
 
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
 
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
-      }
-      "go to Technical Error page if storing fails" in {
-        enable(IRCTJourney)
-        mockAuthRetrieveIRCTEnrolment()
-        mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, Some(testSaUtr))
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+    }
+    "go to the 'agree to receive emails' page if CtKnownFactsIdentityVerification is enabled and CT enrolled" in {
+      enable(CtKnownFactsIdentityVerification)
+      mockAuthRetrieveIRCTEnrolment()
+      mockStoreCompanyNumberSuccess(
+        vatNumber = testVatNumber,
+        companyNumber = testCompanyNumber,
+        companyUtr = Some(testSaUtr)
+      )
 
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
 
-        intercept[InternalServerException] {
-          await(TestConfirmCompanyController.submit(request))
-        }
-      }
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+    }
+    "go to the 'capture company UTR' page if CtKnownFactsIdentityVerification is enabled and not CT enrolled" in {
+      enable(CtKnownFactsIdentityVerification)
+      mockAuthRetrieveVatDecEnrolment()
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
     }
 
-    "CtKnownFactsIdentityVerification is enabled" should {
-      "go to the 'capture company UTR' page" in {
-        enable(CtKnownFactsIdentityVerification)
-        mockAuthRetrieveIRCTEnrolment()
+    "throw internal server exception if store company number fails" in {
+      mockAuthRetrieveIRCTEnrolment()
+      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, companyUtr = None)
 
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
 
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
-
+      intercept[InternalServerException] {
+        await(TestConfirmCompanyController.submit(request))
       }
     }
+    "go to the 'your vat number' page if vat number is missing" in {
+      mockAuthRetrieveIRCTEnrolment()
 
-    "CtKnownFactsIdentityVerification and IRCT Journey are disabled" should {
-      "go to the 'agree to receive emails' page" in {
-        mockAuthRetrieveIRCTEnrolment()
-        mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
+      val request = testPostRequest.withSession(
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
 
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
 
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
-      }
     }
-    "vat number is missing" should {
-      "go to the 'your vat number' page" in {
-        mockAuthRetrieveIRCTEnrolment()
+    "go to the 'capture company number' page if company number is missing" in {
+      mockAuthRetrieveIRCTEnrolment()
 
-        val request = testPostRequest.withSession(
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber
+      )
 
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-
-      }
-    }
-    "company number is missing" should {
-      "go to the 'capture company number' page" in {
-        mockAuthRetrieveIRCTEnrolment()
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber
-        )
-
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
-
-      }
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
     }
   }
 

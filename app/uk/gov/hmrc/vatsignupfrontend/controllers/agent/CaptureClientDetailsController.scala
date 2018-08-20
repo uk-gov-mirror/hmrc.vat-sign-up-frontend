@@ -33,18 +33,19 @@ import scala.concurrent.Future
 @Singleton
 class CaptureClientDetailsController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
+  val validateUserDetailsForm = userDetailsForm(isAgent = true)
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(client_details(userDetailsForm.form, routes.CaptureClientDetailsController.submit()))
+        Ok(client_details(validateUserDetailsForm.form, routes.CaptureClientDetailsController.submit()))
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      userDetailsForm.bindFromRequest.fold(
+      validateUserDetailsForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(client_details(formWithErrors, routes.CaptureClientDetailsController.submit()))

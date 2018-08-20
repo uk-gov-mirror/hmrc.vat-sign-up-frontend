@@ -44,7 +44,10 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   }
 
   def mockStoreVatNumberSuccess(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Right(StoreVatNumberSuccess)))
+    mockStoreVatNumber(vatNumber)(Future.successful(Right(VatNumberStored)))
+
+  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String): Unit =
+    mockStoreVatNumber(vatNumber)(Future.successful(Right(SubscriptionClaimed)))
 
   def mockStoreVatNumberFailure(vatNumber: String): Unit =
     mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
@@ -71,7 +74,10 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   }
 
   def mockStoreVatNumberSuccess(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Right(StoreVatNumberSuccess)))
+    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Right(VatNumberStored)))
+
+  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Right(SubscriptionClaimed)))
 
   def mockStoreVatNumberFailure(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))

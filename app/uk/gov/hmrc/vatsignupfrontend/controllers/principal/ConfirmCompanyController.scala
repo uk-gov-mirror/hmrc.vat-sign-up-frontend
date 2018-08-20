@@ -43,17 +43,15 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
       val optCompanyName = request.session.get(companyNameKey).filter(_.nonEmpty)
       Future.successful(
         optCompanyName match {
-          case Some(companyName) => {
+          case Some(companyName) =>
             val changeLink = routes.CaptureCompanyNumberController.show().url
             Ok(confirm_company(
               companyName = companyName,
               postAction = routes.ConfirmCompanyController.submit(),
               changeLink = changeLink
             ))
-          }
-          case _ => {
+          case _ =>
             Redirect(routes.CaptureCompanyNumberController.show())
-          }
         }
       )
     }
@@ -66,44 +64,34 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
         val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
         val optCompanyUTR = enrolments.companyUtr
         (optVatNumber, optCompanyNumber) match {
-          case (Some(vatNumber), Some(companyNumber)) => {
-            if(isEnabled(IRCTJourney)) {
-              storeCompanyNumberService.storeCompanyNumber(
-                vatNumber = vatNumber,
-                companyNumber = companyNumber,
-                companyUtr = optCompanyUTR
-              ) map {
-                case Right(_) => {
-                  Redirect(routes.AgreeCaptureEmailController.show())
-                }
-                case Left(errResponse) => {
-                  throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-                }
+          case (Some(vatNumber), Some(companyNumber)) =>
+            if(isEnabled(CtKnownFactsIdentityVerification)) {
+              optCompanyUTR match {
+                case Some(ctutr) =>
+                  storeCompanyNumberService.storeCompanyNumber(
+                    vatNumber = vatNumber,
+                    companyNumber = companyNumber,
+                    companyUtr = Some(ctutr)
+                  ) map {
+                    case Right(_) =>
+                      Redirect(routes.AgreeCaptureEmailController.show())
+                    case Left(errResponse) =>
+                      throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+                  }
+                case None =>
+                  Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
               }
-            }
-            else if(isEnabled(CtKnownFactsIdentityVerification))
-              Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-            else
+            } else
               storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
-                case Right(_) => {
+                case Right(_) =>
                   Redirect(routes.AgreeCaptureEmailController.show())
-                }
-                case Left(errResponse) => {
+                case Left(errResponse) =>
                   throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-                }
               }
-          }
-          case (None, _) => {
-            Future.successful(
-              Redirect(routes.ResolveVatNumberController.resolve())
-            )
-          }
-          case _ => {
-            Future.successful(
-              Redirect(routes.CaptureCompanyNumberController.show())
-            )
-          }
-
+          case (None, _) =>
+            Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+          case _ =>
+            Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
         }
       }
     }

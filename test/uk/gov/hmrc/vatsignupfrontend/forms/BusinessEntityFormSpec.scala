@@ -24,8 +24,8 @@ import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, Other, SoleTrader}
 class BusinessEntityFormSpec extends UnitSpec {
   "businessEntityForm" should {
 
-    val agent_business_entity_error_key = "error.agent.business-entity"
-    val principal_business_entity_error_key = "error.principal.business-entity"
+    val agentBusinessEntityErrorKey = "error.agent.business-entity"
+    val principalBusinessEntityErrorKey = "error.principal.business-entity"
     val validateBusinessEntityForm = businessEntityForm(isAgent = false)
 
     "successfully parse a sole trader entity" in {
@@ -46,23 +46,23 @@ class BusinessEntityFormSpec extends UnitSpec {
     "fail when nothing has been entered in agent view" in {
       val validateBusinessEntityForm = businessEntityForm(isAgent = true)
       val res = validateBusinessEntityForm.bind(Map.empty[String, String])
-      res.errors should contain(FormError(businessEntity, agent_business_entity_error_key))
+      res.errors should contain(FormError(businessEntity, agentBusinessEntityErrorKey))
     }
 
     "fail when nothing has been entered in principal view" in {
       val res = validateBusinessEntityForm.bind(Map.empty[String, String])
-      res.errors should contain(FormError(businessEntity, principal_business_entity_error_key))
+      res.errors should contain(FormError(businessEntity, principalBusinessEntityErrorKey))
     }
 
     "fail when it is not an expected value in the agent view" in {
       val validateBusinessEntityForm = businessEntityForm(isAgent = true)
       val res = validateBusinessEntityForm.bind(Map(businessEntity -> "invalid"))
-      res.errors should contain(FormError(businessEntity, agent_business_entity_error_key))
+      res.errors should contain(FormError(businessEntity, agentBusinessEntityErrorKey))
     }
 
     "fail when it is not an expected value in the principal view" in {
       val res = validateBusinessEntityForm.bind(Map(businessEntity -> "invalid"))
-      res.errors should contain(FormError(businessEntity, principal_business_entity_error_key))
+      res.errors should contain(FormError(businessEntity, principalBusinessEntityErrorKey))
     }
   }
 }
