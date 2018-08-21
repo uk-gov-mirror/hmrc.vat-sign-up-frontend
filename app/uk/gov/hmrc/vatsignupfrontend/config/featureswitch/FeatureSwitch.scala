@@ -31,8 +31,7 @@ object FeatureSwitch {
     StubIncorporationInformation,
     UseIRSA,
     VerifyAgentEmail,
-    CtKnownFactsIdentityVerification,
-    IRCTJourney
+    CtKnownFactsIdentityVerification
   )
 
   def apply(str: String): FeatureSwitch =
@@ -68,9 +67,4 @@ case object VerifyAgentEmail extends FeatureSwitch {
 case object CtKnownFactsIdentityVerification extends FeatureSwitch {
   override val name: String = s"$prefix.ct-known-facts-journey"
   override val displayText: String = "Enable CT Known Facts journey to identify limited company authorisation"
-}
-
-case object IRCTJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.ir-ct-enrolment-journey"
-  override val displayText: String = "Allow user with IR-CT enrolment to skip verification"
 }

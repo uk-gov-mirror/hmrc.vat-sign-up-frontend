@@ -17,16 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
+import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company
 
 import scala.concurrent.Future
@@ -57,29 +58,41 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-
-      (optVatNumber, optCompanyNumber) match {
-        case (Some(vatNumber), Some(companyNumber)) =>
-          if (isEnabled(CtKnownFactsIdentityVerification))
-            Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-          else
-            storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
-              case Right(_) =>
-                Redirect(routes.AgreeCaptureEmailController.show())
-              case Left(errResponse) =>
-                throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-            }
-        case (None, _) =>
-          Future.successful(
-            Redirect(routes.ResolveVatNumberController.resolve())
-          )
-        case _ =>
-          Future.successful(
-            Redirect(routes.CaptureCompanyNumberController.show())
-          )
+    authorised()(Retrievals.allEnrolments) {
+      enrolments => {
+        val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+        val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+        val optCompanyUTR = enrolments.companyUtr
+        (optVatNumber, optCompanyNumber) match {
+          case (Some(vatNumber), Some(companyNumber)) =>
+            if(isEnabled(CtKnownFactsIdentityVerification)) {
+              optCompanyUTR match {
+                case Some(ctutr) =>
+                  storeCompanyNumberService.storeCompanyNumber(
+                    vatNumber = vatNumber,
+                    companyNumber = companyNumber,
+                    companyUtr = Some(ctutr)
+                  ) map {
+                    case Right(_) =>
+                      Redirect(routes.AgreeCaptureEmailController.show())
+                    case Left(errResponse) =>
+                      throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+                  }
+                case None =>
+                  Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
+              }
+            } else
+              storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
+                case Right(_) =>
+                  Redirect(routes.AgreeCaptureEmailController.show())
+                case Left(errResponse) =>
+                  throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+              }
+          case (None, _) =>
+            Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+          case _ =>
+            Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+        }
       }
     }
   }

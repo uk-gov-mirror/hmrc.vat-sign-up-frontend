@@ -83,26 +83,49 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
         }
       }
 
-      "CtKnownFactsIdentityVerification is enabled" should {
-        "redirect to capture company UTR page" in {
-          enable(CompanyNameJourney)
-          enable(CtKnownFactsIdentityVerification)
+      "CtKnownFactsIdentityVerification is enabled" when {
+        "if CT enrolled" should {
+          "redirect to agree to receive email page" in {
+            enable(CompanyNameJourney)
+            enable(CtKnownFactsIdentityVerification)
 
-          stubAuth(OK, successfulAuthResponse())
+            stubAuth(OK, successfulAuthResponse(irctEnrolment))
+            stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testSaUtr))
 
-          val res = post("/confirm-company",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.companyNumberKey -> testCompanyNumber
-            ))()
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureCompanyUtrController.show().url)
-          )
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.AgreeCaptureEmailController.show().url)
+            )
+
+          }
+
+        }
+        "if not CT enrolled" should {
+          "redirect to capture company UTR page" in {
+            enable(CompanyNameJourney)
+            enable(CtKnownFactsIdentityVerification)
+
+            stubAuth(OK, successfulAuthResponse())
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
         }
       }
-
     }
 
   }
