@@ -44,7 +44,7 @@ class CaptureClientEmailControllerISpec extends ComponentSpecBase with CustomMat
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmEmailController.show().url)
+        redirectUri(routes.ConfirmClientEmailController.show().url)
       )
 
       val session = SessionCookieCrumbler.getSessionMap(res)
