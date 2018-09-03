@@ -31,6 +31,7 @@ object FeatureSwitch {
     StubIncorporationInformation,
     UseIRSA,
     VerifyAgentEmail,
+    VerifyClientEmail,
     CtKnownFactsIdentityVerification
   )
 
@@ -61,7 +62,12 @@ case object UseIRSA extends FeatureSwitch {
 
 case object VerifyAgentEmail extends FeatureSwitch {
   override val name: String = s"$prefix.verify-agent-email"
-  override val displayText: String = "Enable agent email verification flow"
+  override val displayText: String = "Enable agent email verification in agent flow"
+}
+
+case object VerifyClientEmail extends FeatureSwitch {
+  override val name: String = s"$prefix.verify-client-email"
+  override val displayText: String = "Enable client email verification in agent flow"
 }
 
 case object CtKnownFactsIdentityVerification extends FeatureSwitch {
