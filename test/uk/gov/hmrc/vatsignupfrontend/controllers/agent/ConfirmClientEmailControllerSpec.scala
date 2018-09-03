@@ -28,15 +28,15 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
 
-class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreEmailAddressService {
 
-  object TestConfirmEmailController extends ConfirmEmailController(mockControllerComponents, mockStoreEmailAddressService)
+  object TestConfirmEmailController extends ConfirmClientEmailController(mockControllerComponents, mockStoreEmailAddressService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/confirm-email")
+  lazy val testGetRequest = FakeRequest("GET", "/confirm-client-email")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/confirm-email")
+    FakeRequest("POST", "/confirm-client-email")
 
   "Calling the show action of the Confirm Email controller" when {
     "there is a email in the session" should {

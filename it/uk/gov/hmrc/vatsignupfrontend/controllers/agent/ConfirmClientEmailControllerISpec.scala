@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreEmailAddressStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
-class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+class ConfirmClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /confirm-client-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
