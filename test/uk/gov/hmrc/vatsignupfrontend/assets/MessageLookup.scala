@@ -148,7 +148,7 @@ object MessageLookup {
   object CaptureAgentEmail {
     val title = "What is your email address?"
     val heading: String = title
-    val line1 = "We need this to send you a confirmation message after you sign up this client."
+    val line1 = "We will only send you an email to let you know if your client can join the trial."
     val hint = "For example, me@me.com"
   }
 

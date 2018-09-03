@@ -207,7 +207,7 @@ agent.capture_email.hint                                               = For exa
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = What is your email address?
 agent.capture_agent_email.heading                                      = What is your email address?
-agent.capture_agent_email.line_1                                       = We need this to send you a confirmation message after you sign up this client.
+agent.capture_agent_email.line_1                                       = We will only send you an email to let you know if your client can join the trial.
 agent.capture_agent_email.hint                                         = For example, me@me.com
 
 ## Agent Confirm Email page
