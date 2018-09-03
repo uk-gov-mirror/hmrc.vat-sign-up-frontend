@@ -51,7 +51,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
           )
         case _ =>
           Future.successful(
-            Redirect(routes.CaptureEmailController.show())
+            Redirect(routes.CaptureClientEmailController.show())
           )
       }
     }
@@ -78,7 +78,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
           )
         case _ =>
           Future.successful(
-            Redirect(routes.CaptureEmailController.show())
+            Redirect(routes.CaptureClientEmailController.show())
           )
       }
     }

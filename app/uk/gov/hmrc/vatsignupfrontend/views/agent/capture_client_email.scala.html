@@ -22,19 +22,19 @@
 
 @(emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.capture_email.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.capture_client_email.title"), bodyClasses = None) {
 
     @summaryErrorHelper(emailForm)
 
-    <h1 class="heading-large">@Messages("agent.capture_email.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.capture_client_email.heading")</h1>
 
     @form(action = postAction) {
         <div class="form-group">
             @inputHelper(
                 field = emailForm(email),
-                label = Messages("agent.capture_email.heading"),
+                label = Messages("agent.capture_client_email.heading"),
                 parentForm = emailForm,
-                hintText = Some(Html(Messages("agent.capture_email.hint")))
+                hintText = Some(Html(Messages("agent.capture_client_email.hint")))
             )
             @continueButton()
         </div>

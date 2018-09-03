@@ -201,9 +201,9 @@ agent.agree_capture_email.line_1                                       = When yo
 agent.agree_capture_email.line_2                                       = Your client will need to sign in to their business tax account to read their secure messages.
 
 ## Agent Capture Email page
-agent.capture_email.title                                              = What is your client''s email address?
-agent.capture_email.heading                                            = What is your client''s email address?
-agent.capture_email.hint                                               = For example, me@me.com
+agent.capture_client_email.title                                       = What is your client''s email address?
+agent.capture_client_email.heading                                     = What is your client''s email address?
+agent.capture_client_email.hint                                        = For example, me@me.com
 
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = What is your email address?

@@ -20,19 +20,19 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureEmail => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureClientEmail => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CaptureEmailSpec extends ViewSpec {
+class CaptureClientEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_email(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email(
     emailForm = emailForm(isAgent = true).form,
     postAction = testCall)(
     FakeRequest(),
@@ -40,10 +40,10 @@ class CaptureEmailSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Capture Email view" should {
+  "The Capture Client Email view" should {
 
     val testPage = TestView(
-      name = "Capture Email View",
+      name = "Capture Client Email View",
       title = messages.title,
       heading = messages.heading,
       page = page

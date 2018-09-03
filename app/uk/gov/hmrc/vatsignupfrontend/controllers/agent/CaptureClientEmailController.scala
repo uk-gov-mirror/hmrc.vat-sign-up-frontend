@@ -24,12 +24,12 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_email
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureEmailController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureClientEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateEmailForm = emailForm(isAgent = true)
@@ -37,7 +37,7 @@ class CaptureEmailController @Inject()(val controllerComponents: ControllerCompo
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_email(validateEmailForm.form, routes.CaptureEmailController.submit()))
+        Ok(capture_client_email(validateEmailForm.form, routes.CaptureClientEmailController.submit()))
       )
     }
   }
@@ -47,7 +47,7 @@ class CaptureEmailController @Inject()(val controllerComponents: ControllerCompo
       validateEmailForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))
+            BadRequest(capture_client_email(formWithErrors, routes.CaptureClientEmailController.submit()))
           ),
         email =>
           Future.successful(Redirect(routes.ConfirmEmailController.show()).addingToSession(SessionKeys.emailKey -> email))

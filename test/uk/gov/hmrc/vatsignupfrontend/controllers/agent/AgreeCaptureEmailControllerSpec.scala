@@ -51,7 +51,7 @@ class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
       val result = TestAgreeCaptureEmailController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.CaptureEmailController.show().url)
+      redirectLocation(result) should contain(routes.CaptureClientEmailController.show().url)
     }
   }
 

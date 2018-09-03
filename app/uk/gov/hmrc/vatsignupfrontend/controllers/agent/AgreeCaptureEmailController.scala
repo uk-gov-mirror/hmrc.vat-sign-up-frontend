@@ -41,7 +41,7 @@ class AgreeCaptureEmailController @Inject()(val controllerComponents: Controller
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Redirect(routes.CaptureEmailController.show())
+        Redirect(routes.CaptureClientEmailController.show())
       )
     }
   }

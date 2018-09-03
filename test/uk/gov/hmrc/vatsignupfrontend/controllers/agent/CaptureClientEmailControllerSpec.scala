@@ -27,9 +27,9 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestCaptureEmailController extends CaptureEmailController(mockControllerComponents)
+  object TestCaptureClientEmailController extends CaptureClientEmailController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/email-address")
 
@@ -40,7 +40,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "go to the Capture Email page" in {
       mockAuthRetrieveAgentEnrolment()
 
-      val result = TestCaptureEmailController.show(testGetRequest)
+      val result = TestCaptureClientEmailController.show(testGetRequest)
 
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
@@ -56,7 +56,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
         val request = testPostRequest(testEmail)
 
-        val result = TestCaptureEmailController.submit(request)
+        val result = TestCaptureClientEmailController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmEmailController.show().url)
 
@@ -68,7 +68,7 @@ class CaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
       "reload the page with errors" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestCaptureEmailController.submit(testPostRequest("invalid"))
+        val result = TestCaptureClientEmailController.submit(testPostRequest("invalid"))
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")

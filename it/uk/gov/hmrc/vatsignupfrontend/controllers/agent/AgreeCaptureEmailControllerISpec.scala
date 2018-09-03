@@ -41,7 +41,7 @@ class AgreeCaptureEmailControllerISpec extends ComponentSpecBase with CustomMatc
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureEmailController.show().url)
+        redirectUri(routes.CaptureClientEmailController.show().url)
       )
     }
   }

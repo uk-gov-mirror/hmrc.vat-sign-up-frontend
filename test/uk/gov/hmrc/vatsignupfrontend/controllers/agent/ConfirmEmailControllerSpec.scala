@@ -58,7 +58,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
         val result = TestConfirmEmailController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
       }
     }
   }
@@ -118,7 +118,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
       }
     }
   }
