@@ -70,8 +70,8 @@ GET         /client-email-address          uk.gov.hmrc.vatsignupfrontend.control
 POST        /client-email-address          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.submit
 
 #Capture Agent Email
-GET         /your-email-address            uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.show
-POST        /your-email-address            uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.submit
+GET         /email-address                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.show
+POST        /email-address                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.submit
 
 #Confirm Email
 GET         /confirm-client-email          uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientEmailController.show

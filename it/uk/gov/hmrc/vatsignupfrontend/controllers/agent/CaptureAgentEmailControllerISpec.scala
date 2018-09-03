@@ -36,11 +36,11 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
     disable(VerifyAgentEmail)
   }
 
-  "GET /your-email-address" should {
+  "GET /email-address" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/your-email-address")
+      val res = get("/client/email-address")
 
       res should have(
         httpStatus(OK)
@@ -50,7 +50,7 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/your-email-address")
+      val res = get("/client/email-address")
 
       res should have(
         httpStatus(NOT_FOUND)
@@ -58,11 +58,11 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
     }
   }
 
-  "POST /your-email-address" should {
+  "POST /email-address" should {
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/your-email-address")(EmailForm.email -> testEmail)
+      val res = post("/client/email-address")(EmailForm.email -> testEmail)
 
       res should have(
         httpStatus(SEE_OTHER),
@@ -76,7 +76,7 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/your-email-address")(EmailForm.email -> testEmail)
+      val res = post("/client/email-address")(EmailForm.email -> testEmail)
 
       res should have(
         httpStatus(NOT_FOUND)
