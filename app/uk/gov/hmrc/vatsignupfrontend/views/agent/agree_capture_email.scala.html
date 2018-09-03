@@ -29,13 +29,17 @@
 
     <h1 class="heading-large">@Messages("agent.agree_capture_email.heading")</h1>
 
+    <div class="panel panel-border-wide">
+        <p>@Messages("agent.agree_capture_email.inset_text")</p>
+    </div>
+
     <p>@Messages("agent.agree_capture_email.line_1")</p>
 
     <p>@Messages("agent.agree_capture_email.line_2")</p>
 
     @form(action = postAction) {
         <div class="form-group">
-            @continueButton(Some(Messages("base.agree_and_continue")))
+            @continueButton(Some(Messages("base.agree")))
         </div>
     }
 

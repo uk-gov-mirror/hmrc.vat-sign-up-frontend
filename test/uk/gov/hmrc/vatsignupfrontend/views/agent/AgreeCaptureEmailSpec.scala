@@ -49,13 +49,14 @@ class AgreeCaptureEmailSpec extends ViewSpec {
     )
 
     testPage.shouldHaveParaSeq(
+      messages.insetText,
       messages.line1,
       messages.line2
     )
 
     testPage.shouldHaveForm("Capture email Form")(actionCall = testCall)
 
-    testPage.shouldHaveAgreeAndContinueButton()
+    testPage.shouldHaveAgreeButton()
 
     testPage.shouldHaveSignOutLink(isAgent = true)
   }
