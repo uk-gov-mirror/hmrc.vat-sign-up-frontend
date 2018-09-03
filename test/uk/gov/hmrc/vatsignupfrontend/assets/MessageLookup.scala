@@ -139,10 +139,11 @@ object MessageLookup {
   }
 
   object AgreeCaptureEmail {
-    val title = "Agree to get emails instead of letters"
+    val title = "Agree for your client to get secure messages from HMRC"
     val heading: String = title
-    val line1 = "When your client has a new message about VAT in their HMRC account, we'll send an email to let them know."
-    val line2 = "They'll need to sign in to their account account to read the message."
+    val insetText = "To join this trial, your client must agree to get secure messages instead of letters."
+    val line1 = "When your client has a new message about VAT in their business tax account, we will send an email notification to let them know."
+    val line2 = "Your client will need to sign in to their business tax account to read their secure messages."
   }
 
   object CaptureAgentEmail {
