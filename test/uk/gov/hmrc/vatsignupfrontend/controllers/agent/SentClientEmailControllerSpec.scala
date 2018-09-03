@@ -54,7 +54,7 @@ class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
         val result = TestSentClientEmailController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
       }
     }
   }
@@ -76,7 +76,7 @@ class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
         val result = TestSentClientEmailController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
       }
     }
   }

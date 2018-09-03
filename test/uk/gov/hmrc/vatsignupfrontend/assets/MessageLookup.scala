@@ -153,7 +153,7 @@ object MessageLookup {
     val hint = "For example, me@me.com"
   }
 
-  object CaptureEmail {
+  object CaptureClientEmail {
     val title = "What is your client's email address?"
     val heading: String = title
     val hint = "For example, me@me.com"

@@ -23,12 +23,12 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
-class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /email-address" should {
+class CaptureClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /client-email-address" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/email-address")
+      val res = get("/client/client-email-address")
 
       res should have(
         httpStatus(OK)
@@ -36,11 +36,11 @@ class CaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-  "POST /email-address" should {
+  "POST /client-email-address" should {
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/email-address")(EmailForm.email -> testEmail)
+      val res = post("/client/client-email-address")(EmailForm.email -> testEmail)
 
       res should have(
         httpStatus(SEE_OTHER),

@@ -40,7 +40,7 @@ class SentClientEmailController @Inject()(val controllerComponents: ControllerCo
           )
         case _ =>
           Future.successful(
-            Redirect(routes.CaptureEmailController.show())
+            Redirect(routes.CaptureClientEmailController.show())
           )
       }
     }
@@ -55,7 +55,7 @@ class SentClientEmailController @Inject()(val controllerComponents: ControllerCo
           )
         case _ =>
           Future.successful(
-            Redirect(routes.CaptureEmailController.show())
+            Redirect(routes.CaptureClientEmailController.show())
           )
       }
     }
