@@ -217,8 +217,8 @@ agent.confirm_email.email.heading                                      = Email a
 agent.confirm_email.link                                               = Change email address
 
 ## Agent Confirm Agent Email page
-agent.confirm_agent_email.title                                        = Check your email address
-agent.confirm_agent_email.heading                                      = Check your email address
+agent.confirm_agent_email.title                                        = Confirm your email address
+agent.confirm_agent_email.heading                                      = Confirm your email address
 agent.confirm_agent_email.link                                         = Change email address
 
 ## Agent verify email page
