@@ -223,10 +223,10 @@ agent.confirm_agent_email.heading                                      = Confirm
 agent.confirm_agent_email.link                                         = Change email address
 
 ## Agent verify email page
-agent.verify_email.title                                               = We''ve sent your client an email
-agent.verify_email.heading                                             = We''ve sent your client an email
-agent.verify_email.line_1                                              = We''ve sent an email to {0}. Your client needs to click on the link in the email to verify their email address.
-agent.verify_email.line_2                                              = They need to verify their email address to get VAT emails from HMRC.
+agent.sent_client_email.title                                          = We have sent your client an email
+agent.sent_client_email.heading                                        = We have sent your client an email
+agent.sent_client_email.line_1                                         = We have sent an email to {0}. Your client needs to click on the link in the email to verify their email address.
+agent.sent_client_email.line_2                                         = They must verify their email address to get secure message notifications and other VAT emails from HMRC.
 
 ## Agent verify agent email page
 agent.verify_agent_email.title                                         = Verify your email address

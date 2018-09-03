@@ -24,12 +24,12 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
-class VerifyEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /verify-email" should {
+class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /sent-client-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/verify-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/client/sent-client-email", Map(SessionKeys.emailKey -> testEmail))
 
       res should have(
         httpStatus(OK)
@@ -37,11 +37,11 @@ class VerifyEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
     }
   }
 
-  "POST /verify-email" should {
+  "POST /sent-client-email" should {
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/verify-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
+      val res = post("/client/sent-client-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
 
       res should have(
         httpStatus(SEE_OTHER),

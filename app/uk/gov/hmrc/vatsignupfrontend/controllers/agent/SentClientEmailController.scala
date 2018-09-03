@@ -23,12 +23,12 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.verify_email
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.sent_client_email
 
 import scala.concurrent.Future
 
 @Singleton
-class VerifyEmailController @Inject()(val controllerComponents: ControllerComponents)
+class SentClientEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -36,7 +36,7 @@ class VerifyEmailController @Inject()(val controllerComponents: ControllerCompon
       request.session.get(SessionKeys.emailKey) match {
         case Some(email) if email.nonEmpty =>
           Future.successful(
-            Ok(verify_email(email, routes.VerifyEmailController.submit()))
+            Ok(sent_client_email(email, routes.SentClientEmailController.submit()))
           )
         case _ =>
           Future.successful(

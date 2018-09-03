@@ -20,19 +20,19 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{VerifyEmail => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SentClientEmail => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class VerifyEmailSpec extends ViewSpec {
+class SentClientEmailSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.verify_email(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.sent_client_email(
     email = testEmail,
     postAction = testCall)(
     FakeRequest(),
@@ -40,10 +40,10 @@ class VerifyEmailSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Verify email view" should {
+  "The Sent client email view" should {
 
     val testPage = TestView(
-      name = "Verify Email View",
+      name = "Sent client Email View",
       title = messages.title,
       heading = messages.heading,
       page = page

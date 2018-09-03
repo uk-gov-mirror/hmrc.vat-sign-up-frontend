@@ -26,9 +26,9 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestVerifyEmailController extends VerifyEmailController(mockControllerComponents)
+  object TestSentClientEmailController extends SentClientEmailController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/verify-email")
 
@@ -41,7 +41,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
         mockAuthRetrieveAgentEnrolment()
         val request = testGetRequest.withSession(SessionKeys.emailKey -> testEmail)
 
-        val result = TestVerifyEmailController.show(request)
+        val result = TestSentClientEmailController.show(request)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -52,7 +52,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
       "redirect to Capture Email page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestVerifyEmailController.show(testGetRequest)
+        val result = TestSentClientEmailController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
       }
@@ -64,7 +64,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
       "redirect to Terms of participation page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestVerifyEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
+        val result = TestSentClientEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
       }
@@ -74,7 +74,7 @@ class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
       "redirect to Capture Email page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestVerifyEmailController.submit(testPostRequest)
+        val result = TestSentClientEmailController.submit(testPostRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
       }

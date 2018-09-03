@@ -66,7 +66,7 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
         case (Some(vatNumber), Some(email)) =>
           storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
             case Right(StoreEmailAddressSuccess(false)) =>
-              Redirect(routes.VerifyEmailController.show().url)
+              Redirect(routes.SentClientEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
               Redirect(routes.TermsController.show().url)
             case Left(errResponse) =>

@@ -74,7 +74,7 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
             SessionKeys.vatNumberKey -> testVatNumber))
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+          redirectLocation(result) shouldBe Some(routes.SentClientEmailController.show().url)
         }
       }
       "email is verified" should {
