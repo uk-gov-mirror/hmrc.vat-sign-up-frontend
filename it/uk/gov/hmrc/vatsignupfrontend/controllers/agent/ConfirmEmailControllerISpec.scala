@@ -49,7 +49,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.VerifyEmailController.show().url)
+          redirectUri(routes.SentClientEmailController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
@@ -66,7 +66,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.VerifyEmailController.show().url)
+          redirectUri(routes.SentClientEmailController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
@@ -83,8 +83,8 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
-
       }
     }
   }
+
 }
