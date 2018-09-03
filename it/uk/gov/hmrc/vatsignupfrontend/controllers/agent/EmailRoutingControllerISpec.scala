@@ -32,7 +32,7 @@ class EmailRoutingControllerISpec extends ComponentSpecBase with CustomMatchers 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
+          redirectUri(routes.AgreeCaptureClientEmailController.show().url)
         )
       }
     }

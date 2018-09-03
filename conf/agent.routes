@@ -62,8 +62,8 @@ POST        /could-not-confirm-company     uk.gov.hmrc.vatsignupfrontend.control
 GET         /email                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
 
 #Agree Capture Email
-GET         /receive-emails                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureEmailController.show
-POST        /receive-emails                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureEmailController.submit
+GET         /receive-emails                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.show
+POST        /receive-emails                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.submit
 
 #Capture Email
 GET         /client-email-address          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.show

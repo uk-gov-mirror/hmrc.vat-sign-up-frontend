@@ -35,7 +35,7 @@ class EmailRoutingController @Inject()(val controllerComponents: ControllerCompo
       if (isEnabled(VerifyAgentEmail))
         Future.successful(Redirect(routes.CaptureAgentEmailController.show()))
       else
-        Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+        Future.successful(Redirect(routes.AgreeCaptureClientEmailController.show()))
     }
   }
 

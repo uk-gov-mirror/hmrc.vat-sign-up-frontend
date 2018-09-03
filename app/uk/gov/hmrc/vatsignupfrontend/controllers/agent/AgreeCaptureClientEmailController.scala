@@ -27,13 +27,13 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.agent.agree_capture_email
 import scala.concurrent.Future
 
 @Singleton
-class AgreeCaptureEmailController @Inject()(val controllerComponents: ControllerComponents)
+class AgreeCaptureClientEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(agree_capture_email(routes.AgreeCaptureEmailController.submit()))
+        Ok(agree_capture_email(routes.AgreeCaptureClientEmailController.submit()))
       )
     }
   }

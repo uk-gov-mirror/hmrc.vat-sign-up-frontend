@@ -32,13 +32,13 @@ class EmailRoutingControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
   "Calling the route action of the EmailRoutingController" when {
     "VerifyAgentEmail is disabled" should {
-      "go to AgreeCaptureEmailController" in {
+      "go to AgreeCaptureClientEmailController" in {
         disable(VerifyAgentEmail)
         mockAuthRetrieveAgentEnrolment()
         val result = TestEmailRoutingController.route(testGetRequest)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.AgreeCaptureClientEmailController.show().url)
       }
     }
     "VerifyAgentEmail is enabled" should {
