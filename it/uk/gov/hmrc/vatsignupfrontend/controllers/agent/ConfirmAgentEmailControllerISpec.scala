@@ -38,11 +38,11 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
     disable(VerifyAgentEmail)
   }
 
-  "GET /confirm-your-email" should {
+  "GET /confirm-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/confirm-your-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
+      val res = get("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
 
       res should have(
         httpStatus(OK)
@@ -52,7 +52,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/confirm-your-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
+      val res = get("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
 
       res should have(
         httpStatus(NOT_FOUND)
@@ -67,7 +67,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess(emailVerified = false)
 
-        val res = post("/client/confirm-your-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
         res should have(
           redirectUri(routes.VerifyAgentEmailController.show().url)
         )
@@ -82,7 +82,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess(emailVerified = false)
 
-        val res = post("/client/confirm-your-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
         res should have(
           redirectUri(routes.VerifyAgentEmailController.show().url)
         )
@@ -96,7 +96,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/confirm-your-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+      val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
       res should have(
         httpStatus(NOT_FOUND)
@@ -108,7 +108,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressFailure()
 
-        val res = post("/client/confirm-your-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )

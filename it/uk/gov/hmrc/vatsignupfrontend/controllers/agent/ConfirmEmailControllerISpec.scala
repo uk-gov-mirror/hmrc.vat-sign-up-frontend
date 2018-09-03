@@ -26,11 +26,11 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreEmailAddressStub.
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
 class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /confirm-email" should {
+  "GET /confirm-client-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
+      val res = get("/client/confirm-client-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))
 
       res should have(
         httpStatus(OK)
@@ -39,13 +39,13 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
   }
 
 
-  "POST /confirm-email" should {
+  "POST /confirm-client-email" should {
     "redirect to verify email page" when {
       "the email is successfully stored and returned with email not verified" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess(emailVerified = false)
 
-        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/client/confirm-client-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -62,7 +62,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess(emailVerified = false)
 
-        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/client/confirm-client-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -79,7 +79,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressFailure()
 
-        val res = post("/client/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+        val res = post("/client/confirm-client-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
