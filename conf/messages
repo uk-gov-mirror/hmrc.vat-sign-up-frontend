@@ -231,10 +231,10 @@ agent.sent_client_email.line_2                                         = They mu
 ## Agent verify agent email page
 agent.verify_agent_email.title                                         = Verify your email address
 agent.verify_agent_email.heading                                       = Verify your email address
-agent.verify_agent_email.line_1                                        = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
+agent.verify_agent_email.line_1                                        = We have sent an email to {0}. Click on the link in the email to verify your email address.
 agent.verify_agent_email.line_2                                        = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
 agent.verify_email.accordion.heading                                   = I did not get an email
-agent.verify_email.accordion.line_1                                    = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+agent.verify_email.accordion.line_1                                    = Check your junk folder. If it is not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 
 # When client verified their email requested by an agent

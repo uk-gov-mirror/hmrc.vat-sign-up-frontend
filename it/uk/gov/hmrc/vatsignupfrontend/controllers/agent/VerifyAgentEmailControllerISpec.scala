@@ -35,11 +35,11 @@ class VerifyAgentEmailControllerISpec extends ComponentSpecBase with CustomMatch
     disable(VerifyAgentEmail)
   }
 
-  "GET /client/verify-your-email" should {
+  "GET /client/verify-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/verify-your-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/client/verify-email", Map(SessionKeys.emailKey -> testEmail))
 
       res should have(
         httpStatus(OK)
@@ -49,7 +49,7 @@ class VerifyAgentEmailControllerISpec extends ComponentSpecBase with CustomMatch
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/verify-your-email", Map(SessionKeys.emailKey -> testEmail))
+      val res = get("/client/verify-email", Map(SessionKeys.emailKey -> testEmail))
 
       res should have(
         httpStatus(NOT_FOUND)
