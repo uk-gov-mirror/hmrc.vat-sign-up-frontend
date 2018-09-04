@@ -200,6 +200,12 @@ object MessageLookup {
     val line1 = "You need to continue to sign up your client. We will send you a confirmation message after you sign up this client."
   }
 
+  object UseDifferentEmailAddress {
+    val title = "You need to enter a different email address"
+    val heading: String = title
+    val line1 = "The email address you entered for your client is the same as your own email address."
+  }
+
   object AgentConfirmCompany {
     val title = "Confirm your client's company"
     val heading: String = title

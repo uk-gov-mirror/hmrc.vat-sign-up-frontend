@@ -85,6 +85,10 @@ POST        /confirm-email                 uk.gov.hmrc.vatsignupfrontend.control
 GET         /sent-client-email             uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.show
 POST        /sent-client-email             uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.submit
 
+# Use different email address
+GET         /use-different-email-address   uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.show
+POST        /use-different-email-address   uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.submit
+
 #Verify Agent Email
 GET         /verify-email                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyAgentEmailController.show
 
