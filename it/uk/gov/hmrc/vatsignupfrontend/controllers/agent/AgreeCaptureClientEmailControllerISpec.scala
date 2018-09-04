@@ -20,7 +20,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class AgreeCaptureEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+class AgreeCaptureClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /receive-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))

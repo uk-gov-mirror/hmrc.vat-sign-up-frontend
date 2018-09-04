@@ -24,16 +24,16 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
-class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class AgreeCaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  object TestAgreeCaptureEmailController extends AgreeCaptureEmailController(mockControllerComponents)
+  object TestAgreeCaptureEmailController extends AgreeCaptureClientEmailController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/receive-emails")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/receive-emails")
 
-  "Calling the show action of the Agree Capture Email controller" should {
+  "Calling the show action of the Agree Capture Client Email controller" should {
     "show the Agree Capture Email page" in {
       mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
@@ -45,7 +45,7 @@ class AgreeCaptureEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
     }
   }
 
-  "Calling the submit action of the Agree Capture Email controller" should {
+  "Calling the submit action of the Agree Capture Client Email controller" should {
     "go to the business entity type page" in {
       mockAuthRetrieveAgentEnrolment()
 
