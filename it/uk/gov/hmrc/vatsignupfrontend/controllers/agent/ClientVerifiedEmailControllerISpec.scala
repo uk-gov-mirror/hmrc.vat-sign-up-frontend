@@ -23,7 +23,7 @@ class ClientVerifiedEmailControllerISpec extends ComponentSpecBase with CustomMa
 
   "GET /client/email-verified" should {
     "return an OK" in {
-      val res = get("/client/email-verified")
+      val res = get("/client/client-email-verified")
 
       res should have(
         httpStatus(OK)
