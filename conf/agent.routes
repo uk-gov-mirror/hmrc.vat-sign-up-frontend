@@ -92,9 +92,9 @@ POST        /use-different-email-address   uk.gov.hmrc.vatsignupfrontend.control
 #Verify Agent Email
 GET         /verify-email                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyAgentEmailController.show
 
-GET         /email-verified                uk.gov.hmrc.vatsignupfrontend.controllers.agent.ClientVerifiedEmailController.show
+GET         /client-email-verified         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ClientVerifiedEmailController.show
 
-GET         /verified-your-email           uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentVerifiedEmailController.show
+GET         /email-verified                uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentVerifiedEmailController.show
 
 #Terms
 GET         /terms-of-participation        uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.show
