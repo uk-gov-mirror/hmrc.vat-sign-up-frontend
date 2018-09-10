@@ -53,7 +53,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
     "there is a email in the session" should {
       "show the Confirm Your Email page" in {
         mockAuthRetrieveAgentEnrolment()
-        val request = testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.emailKey -> testEmail)
+        val request = testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.transactionEmailKey -> testEmail)
 
         val result = TestConfirmAgentEmailController.show(request)
 
@@ -81,7 +81,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
           mockAuthRetrieveAgentEnrolment()
           mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = false)
 
-          val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+          val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(SessionKeys.transactionEmailKey -> testEmail,
             SessionKeys.vatNumberKey -> testVatNumber))
           redirectLocation(result) shouldBe Some(routes.VerifyAgentEmailController.show().url)
         }
@@ -91,7 +91,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
           mockAuthRetrieveAgentEnrolment()
           mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
 
-          val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+          val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(SessionKeys.transactionEmailKey -> testEmail,
             SessionKeys.vatNumberKey -> testVatNumber))
 
           status(result) shouldBe Status.SEE_OTHER
@@ -107,7 +107,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         intercept[InternalServerException] {
           await(TestConfirmAgentEmailController.submit(testPostRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.emailKey -> testEmail
+            SessionKeys.transactionEmailKey -> testEmail
           )))
         }
       }
@@ -116,7 +116,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
       "redirect to Capture Vat number page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
+        val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(SessionKeys.transactionEmailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
       }

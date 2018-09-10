@@ -17,13 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email
 
 import scala.concurrent.Future
@@ -32,7 +32,7 @@ import scala.concurrent.Future
 class CaptureClientEmailController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
-  val validateEmailForm = emailForm(isAgent = true)
+  val validateEmailForm: PrevalidationAPI[String] = emailForm(isAgent = true)
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -49,8 +49,14 @@ class CaptureClientEmailController @Inject()(val controllerComponents: Controlle
           Future.successful(
             BadRequest(capture_client_email(formWithErrors, routes.CaptureClientEmailController.submit()))
           ),
-        email =>
-          Future.successful(Redirect(routes.ConfirmClientEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
+        clientEmail =>
+          request.session.get(SessionKeys.transactionEmailKey) match {
+            case Some(agentEmail) if agentEmail == clientEmail =>
+              Future.successful(Redirect(routes.UseDifferentEmailAddressController.show()))
+            case _ =>
+              Future.successful(Redirect(routes.ConfirmClientEmailController.show())
+                .addingToSession(SessionKeys.emailKey -> clientEmail))
+          }
       )
     }
   }
