@@ -23,6 +23,7 @@ object SessionKeys {
   val companyNameKey = "CompanyName"
   val companyUtrKey = "CompanyUtr"
   val emailKey = "Email"
+  val transactionEmailKey = "TransactionEmail"
   val userDetailsKey = "UserDetails"
   val businessEntityKey = "BusinessEntity"
   val identityVerificationContinueUrlKey = "IdentityVerification"
