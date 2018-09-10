@@ -30,4 +30,10 @@ class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEm
   def storeEmailAddress(vatNumber: String, email: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
     storeEmailAddressConnector.storeEmailAddress(vatNumber, email)
 
+  def storeTransactionEmailAddress(
+    vatNumber: String,
+    transactionEmail: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
+    storeEmailAddressConnector.storeTransactionEmailAddress(vatNumber, transactionEmail)
+
 }

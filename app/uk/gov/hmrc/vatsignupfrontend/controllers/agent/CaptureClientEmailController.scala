@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
@@ -50,7 +49,9 @@ class CaptureClientEmailController @Inject()(val controllerComponents: Controlle
             BadRequest(capture_client_email(formWithErrors, routes.CaptureClientEmailController.submit()))
           ),
         email =>
-          Future.successful(Redirect(routes.ConfirmClientEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
+          Future.successful(
+            Redirect(routes.ConfirmClientEmailController.show()).addingToSession(SessionKeys.emailKey -> email)
+          )
       )
     }
   }

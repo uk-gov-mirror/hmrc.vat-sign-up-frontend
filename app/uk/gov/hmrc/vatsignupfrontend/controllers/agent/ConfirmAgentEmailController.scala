@@ -17,13 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
@@ -39,12 +38,12 @@ class ConfirmAgentEmailController @Inject()(val controllerComponents: Controller
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optEmail = request.session.get(SessionKeys.emailKey).filter(_.nonEmpty)
+      val optTransactionEmail = request.session.get(SessionKeys.transactionEmailKey).filter(_.nonEmpty)
 
-      (optVatNumber, optEmail) match {
-        case (Some(_), Some(email)) =>
+      (optVatNumber, optTransactionEmail) match {
+        case (Some(_), Some(transactionEmail)) =>
           Future.successful(
-            Ok(confirm_agent_email(email, routes.ConfirmAgentEmailController.submit()))
+            Ok(confirm_agent_email(transactionEmail, routes.ConfirmAgentEmailController.submit()))
           )
         case (None, _) =>
           Future.successful(
@@ -61,13 +60,15 @@ class ConfirmAgentEmailController @Inject()(val controllerComponents: Controller
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optEmail = request.session.get(SessionKeys.emailKey).filter(_.nonEmpty)
+      val optTransactionEmail = request.session.get(SessionKeys.transactionEmailKey).filter(_.nonEmpty)
 
-      (optVatNumber, optEmail) match {
-        case (Some(vatNumber), Some(email)) =>
-          storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
+      (optVatNumber, optTransactionEmail) match {
+        case (Some(vatNumber), Some(transactionEmail)) =>
+          storeEmailAddressService.storeTransactionEmailAddress(vatNumber, transactionEmail) map {
             case Right(StoreEmailAddressSuccess(false)) =>
               Redirect(routes.VerifyAgentEmailController.show().url)
+            case Right(StoreEmailAddressSuccess(true)) if (isEnabled(VerifyClientEmail)) =>
+              Redirect(routes.AgreeCaptureClientEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
               Redirect(routes.TermsController.show().url)
             case Left(errResponse) =>

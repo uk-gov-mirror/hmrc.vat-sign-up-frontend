@@ -24,13 +24,35 @@ import play.api.libs.json.Json
 object StoreEmailAddressStub extends WireMockMethods {
 
   def stubStoreEmailAddressSuccess(emailVerified: Boolean): Unit = {
-    when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/email", body = Json.obj("email" -> testEmail))
-      .thenReturn(status = OK, Json.parse(s"""{"emailVerified":$emailVerified}"""))
+    when(
+      method = PUT,
+      uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/email",
+      body = Json.obj("email" -> testEmail)
+    ).thenReturn(status = OK, Json.parse(s"""{"emailVerified":$emailVerified}"""))
   }
 
   def stubStoreEmailAddressFailure(): Unit = {
-    when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/email", body = Json.obj("email" -> testEmail))
-      .thenReturn(status = BAD_REQUEST)
+    when(
+      method = PUT,
+      uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/email",
+      body = Json.obj("email" -> testEmail)
+    ).thenReturn(status = BAD_REQUEST)
+  }
+
+  def stubStoreTransactionEmailAddressSuccess(emailVerified: Boolean): Unit = {
+    when(
+      method = PUT,
+      uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/transaction-email",
+      body = Json.obj("email" -> testEmail)
+    ).thenReturn(status = OK, Json.parse(s"""{"emailVerified":$emailVerified}"""))
+  }
+
+  def stubStoreTransactionEmailAddressFailure(): Unit = {
+    when(
+      method = PUT,
+      uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/transaction-email",
+      body = Json.obj("email" -> testEmail)
+    ).thenReturn(status = BAD_REQUEST)
   }
 
 }

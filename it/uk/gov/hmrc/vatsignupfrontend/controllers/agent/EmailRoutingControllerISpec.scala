@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -27,6 +27,7 @@ class EmailRoutingControllerISpec extends ComponentSpecBase with CustomMatchers 
       "return redirect to agree capture email" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         disable(VerifyAgentEmail)
+        enable(VerifyClientEmail)
 
         val res = get("/client/email")
 
@@ -40,6 +41,21 @@ class EmailRoutingControllerISpec extends ComponentSpecBase with CustomMatchers 
       "return redirect to Capture Agent Email" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(VerifyAgentEmail)
+        disable(VerifyClientEmail)
+
+        val res = get("/client/email")
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureAgentEmailController.show().url)
+        )
+      }
+    }
+    "when VerifyAgentEmail and VerifyClientEmail is enabled" should {
+      "return redirect to Capture Agent Email" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(VerifyAgentEmail)
+        enable(VerifyClientEmail)
 
         val res = get("/client/email")
 

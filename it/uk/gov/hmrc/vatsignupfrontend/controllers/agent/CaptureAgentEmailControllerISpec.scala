@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -58,20 +59,23 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
     }
   }
 
-  "POST /email-address" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+  "POST /email-address" when {
+    "client email fs is enabled" should  {
+      "return a redirect" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/email-address")(EmailForm.email -> testEmail)
+        val res = post("/client/email-address")(EmailForm.email -> testEmail)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmAgentEmailController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmAgentEmailController.show().url)
+        )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
-      session.keys should contain(emailKey)
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(transactionEmailKey)
+      }
     }
+
     "return an NOT_FOUND if VerifyAgentEmail is disabled" in {
       disable(VerifyAgentEmail)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
