@@ -31,7 +31,7 @@ class StoreEmailAddressConnector @Inject()(val http: HttpClient,
                                         val applicationConfig: AppConfig) {
 
   val emailAddressKey = "email"
-  val transactionEmailKey = ""
+  val transactionEmailKey = "transactionEmail"
 
   def storeEmailAddress(
     vatNumber: String,

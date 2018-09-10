@@ -34,10 +34,10 @@ class VerifyAgentEmailController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.emailKey) match {
-        case Some(email) if email.nonEmpty =>
+      request.session.get(SessionKeys.transactionEmailKey) match {
+        case Some(transactionEmail) if transactionEmail.nonEmpty =>
           Future.successful(
-            Ok(verify_agent_email(email))
+            Ok(verify_agent_email(transactionEmail))
           )
         case _ =>
           Future.successful(
