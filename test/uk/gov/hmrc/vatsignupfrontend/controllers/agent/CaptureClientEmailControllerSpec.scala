@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 
 class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -50,17 +51,46 @@ class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
 
   "Calling the submit action of the Capture Email controller" when {
-    "form successfully submitted" should {
-      "go to the Confirm Email page" in {
-        mockAuthRetrieveAgentEnrolment()
+    "form successfully submitted" when {
+      "there is no provided agent e-mail address" should {
+        "go to the Confirm Email page" in {
+          mockAuthRetrieveAgentEnrolment()
 
-        val request = testPostRequest(testEmail)
+          val request = testPostRequest(testEmail)
 
-        val result = TestCaptureClientEmailController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ConfirmClientEmailController.show().url)
+          val result = TestCaptureClientEmailController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ConfirmClientEmailController.show().url)
 
-        await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
+          await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
+        }
+      }
+      "the provided e-mail address does not match the provided agent e-mail address" should {
+        "go to the Confirm Email page" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          val nonMatchingEmail = TestConstantsGenerator.randomEmail
+
+          val request = testPostRequest(testEmail).withSession(SessionKeys.transactionEmailKey -> nonMatchingEmail)
+
+          val result = TestCaptureClientEmailController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ConfirmClientEmailController.show().url)
+
+          await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
+        }
+      }
+
+      "the provided e-mail address matches the provided agent e-mail address" should {
+        "go to the use different email address page" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          val request = testPostRequest(testEmail).withSession(SessionKeys.transactionEmailKey -> testEmail)
+
+          val result = TestCaptureClientEmailController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.UseDifferentEmailAddressController.show().url)
+        }
       }
     }
 

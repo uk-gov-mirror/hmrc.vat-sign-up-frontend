@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.emailKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.transactionEmailKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -56,7 +56,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/confirm-email", Map(
-        SessionKeys.emailKey -> testEmail,
+        SessionKeys.transactionEmailKey -> testEmail,
         SessionKeys.vatNumberKey -> testVatNumber
       ))
 
@@ -78,12 +78,13 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
           SessionKeys.transactionEmailKey -> testEmail,
           SessionKeys.vatNumberKey -> testVatNumber
         ))(EmailForm.email -> testEmail)
+
         res should have(
           redirectUri(routes.VerifyAgentEmailController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
+        session.keys should contain(transactionEmailKey)
       }
     }
 
@@ -91,7 +92,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       "the email is successfully stored and returned with email verified flag" in {
         enable(VerifyClientEmail)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreTransactionEmailAddressSuccess(emailVerified = false)
+        stubStoreTransactionEmailAddressSuccess(emailVerified = true)
 
         val res = post("/client/confirm-email", Map(
           SessionKeys.transactionEmailKey -> testEmail,
@@ -102,7 +103,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
+        session.keys should contain(transactionEmailKey)
       }
     }
 
@@ -116,12 +117,13 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
           SessionKeys.transactionEmailKey -> testEmail,
           SessionKeys.vatNumberKey -> testVatNumber
         ))(EmailForm.email -> testEmail)
+
         res should have(
           redirectUri(routes.VerifyAgentEmailController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
+        session.keys should contain(transactionEmailKey)
       }
     }
 
@@ -148,6 +150,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
           SessionKeys.transactionEmailKey -> testEmail,
           SessionKeys.vatNumberKey -> testVatNumber
         ))(EmailForm.email -> testEmail)
+
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )

@@ -43,7 +43,7 @@ object StoreEmailAddressStub extends WireMockMethods {
     when(
       method = PUT,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/transaction-email",
-      body = Json.obj("email" -> testEmail)
+      body = Json.obj("transactionEmail" -> testEmail)
     ).thenReturn(status = OK, Json.parse(s"""{"emailVerified":$emailVerified}"""))
   }
 
@@ -51,7 +51,7 @@ object StoreEmailAddressStub extends WireMockMethods {
     when(
       method = PUT,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/transaction-email",
-      body = Json.obj("email" -> testEmail)
+      body = Json.obj("transactionEmail" -> testEmail)
     ).thenReturn(status = BAD_REQUEST)
   }
 
