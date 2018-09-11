@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
@@ -47,7 +46,7 @@ class VerifyAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "there is a email in the session" should {
       "show the verify Agent Email page" in {
         mockAuthRetrieveAgentEnrolment()
-        val request = testGetRequest.withSession(SessionKeys.emailKey -> testEmail)
+        val request = testGetRequest.withSession(SessionKeys.transactionEmailKey -> testEmail)
 
         val result = TestVerifyAgentEmailController.show(request)
         status(result) shouldBe Status.OK
