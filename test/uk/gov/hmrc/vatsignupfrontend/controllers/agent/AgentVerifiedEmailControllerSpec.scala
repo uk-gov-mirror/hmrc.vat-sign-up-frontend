@@ -21,34 +21,42 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified
+import play.api.i18n.Messages.Implicits._
+
 
 class AgentVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(VerifyAgentEmail)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(VerifyAgentEmail)
-  }
-
   object TestAgentVerifiedEmailController extends AgentVerifiedEmailController(mockControllerComponents)
 
-  "Calling the show action of the AgentVerifiedEmailController" should {
-      lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
+  "Calling the show action of the AgentVerifiedEmailController" when {
+      implicit lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
+      "the capture client email feature switch is disabled" should {
+        "go to the Agent email Verified page with a link to the terms of participation page" in {
+          enable(VerifyAgentEmail)
 
-      "go to the Agent email Verified page" in {
+          mockAuthRetrieveAgentEnrolment()
+          val result = await(TestAgentVerifiedEmailController.show(testGetRequest))
+
+          status(result) shouldBe Status.OK
+          contentAsString(result) shouldBe agent_email_verified(routes.TermsController.show().url).body
+        }
+      }
+
+    "the capture client email feature switch is enabled" should {
+      "go to the Agent email Verified page with a link to the agree to capture client email page" in {
+        enable(VerifyAgentEmail)
+        enable(VerifyClientEmail)
+
         mockAuthRetrieveAgentEnrolment()
-        val result = TestAgentVerifiedEmailController.show(testGetRequest)
+        val result = await(TestAgentVerifiedEmailController.show(testGetRequest))
 
         status(result) shouldBe Status.OK
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+        contentAsString(result) shouldBe agent_email_verified(routes.AgreeCaptureClientEmailController.show().url).body
       }
+    }
     }
 
 }

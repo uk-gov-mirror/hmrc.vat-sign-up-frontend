@@ -31,8 +31,25 @@ class StoreEmailAddressConnector @Inject()(val http: HttpClient,
                                         val applicationConfig: AppConfig) {
 
   val emailAddressKey = "email"
+  val transactionEmailKey = "transactionEmail"
 
-  def storeEmailAddress(vatNumber: String, email: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] = {
-    http.PUT[JsObject, StoreEmailAddressResponse](applicationConfig.storeEmailAddressUrl(vatNumber), Json.obj(emailAddressKey -> email))
+  def storeEmailAddress(
+    vatNumber: String,
+    email: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] = {
+    http.PUT[JsObject, StoreEmailAddressResponse](
+      applicationConfig.storeEmailAddressUrl(vatNumber),
+      Json.obj(emailAddressKey -> email)
+    )
+  }
+
+  def storeTransactionEmailAddress(
+    vatNumber: String,
+    transactionEmail: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] = {
+    http.PUT[JsObject, StoreEmailAddressResponse](
+      applicationConfig.storeTransactionEmailAddressUrl(vatNumber),
+      Json.obj(transactionEmailKey -> transactionEmail)
+    )
   }
 }

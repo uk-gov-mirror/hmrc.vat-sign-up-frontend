@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButtonLink
 @import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(continueLink: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @agent_main_template(title = Messages("agent.email_verified.title"), bodyClasses = None) {
 
@@ -28,7 +28,7 @@
     <p>@Messages("agent.email_verified.line_1")</p>
 
     <div class="form-group">
-        @continueButtonLink(href = routes.TermsController.show().url)
+        @continueButtonLink(href = continueLink)
     </div>
 
 }

@@ -64,10 +64,10 @@ class ConfirmAgentEmailController @Inject()(val controllerComponents: Controller
 
       (optVatNumber, optTransactionEmail) match {
         case (Some(vatNumber), Some(transactionEmail)) =>
-          storeEmailAddressService.storeEmailAddress(vatNumber, transactionEmail) map {
+          storeEmailAddressService.storeTransactionEmailAddress(vatNumber, transactionEmail) map {
             case Right(StoreEmailAddressSuccess(false)) =>
               Redirect(routes.VerifyAgentEmailController.show().url)
-            case Right(StoreEmailAddressSuccess(true)) if isEnabled(VerifyClientEmail) =>
+            case Right(StoreEmailAddressSuccess(true)) if (isEnabled(VerifyClientEmail)) =>
               Redirect(routes.AgreeCaptureClientEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
               Redirect(routes.TermsController.show().url)

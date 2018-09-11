@@ -21,8 +21,10 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.http.InternalServerException
+
 
 class EmailRoutingControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -31,9 +33,10 @@ class EmailRoutingControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   lazy val testGetRequest = FakeRequest("GET", "/email")
 
   "Calling the route action of the EmailRoutingController" when {
-    "VerifyAgentEmail is disabled" should {
+    "VerifyClientEmail is enabled" should {
       "go to AgreeCaptureClientEmailController" in {
         disable(VerifyAgentEmail)
+        enable(VerifyClientEmail)
         mockAuthRetrieveAgentEnrolment()
         val result = TestEmailRoutingController.route(testGetRequest)
 
@@ -44,11 +47,34 @@ class EmailRoutingControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "VerifyAgentEmail is enabled" should {
       "go to AgreeCaptureEmailController" in {
         enable(VerifyAgentEmail)
+        disable(VerifyClientEmail)
         mockAuthRetrieveAgentEnrolment()
         val result = TestEmailRoutingController.route(testGetRequest)
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
+      }
+    }
+
+    "Both are enabled" should {
+      "go to AgreeCaptureEmailController" in {
+        enable(VerifyAgentEmail)
+        enable(VerifyClientEmail)
+        mockAuthRetrieveAgentEnrolment()
+        val result = TestEmailRoutingController.route(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
+      }
+    }
+
+    "Both are disabled" should {
+      "Return technical difficulties" in {
+        disable(VerifyAgentEmail)
+        disable(VerifyClientEmail)
+        mockAuthRetrieveAgentEnrolment()
+
+        intercept[InternalServerException](await(TestEmailRoutingController.route(testGetRequest)))
       }
     }
   }

@@ -44,10 +44,28 @@ trait MockStoreEmailAddressService extends BeforeAndAfterEach with MockitoSugar 
       .thenReturn(returnValue)
   }
 
+  private def mockStoreTransactionEmailAddress(
+    vatNumber: String,
+    transactionEmail: String
+  )(returnValue: Future[StoreEmailAddressResponse]): Unit = {
+    when(mockStoreEmailAddressService.storeTransactionEmailAddress(
+      ArgumentMatchers.eq(vatNumber),
+      ArgumentMatchers.eq(transactionEmail)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .thenReturn(returnValue)
+  }
+
   def mockStoreEmailAddressSuccess(vatNumber: String, email: String)(emailVerified: Boolean): Unit =
     mockStoreEmailAddress(vatNumber, email)(Future.successful(Right(StoreEmailAddressSuccess(emailVerified))))
 
   def mockStoreEmailAddressFailure(vatNumber: String, email: String): Unit =
     mockStoreEmailAddress(vatNumber, email)(Future.successful(Left(StoreEmailAddressFailure(500))))
+
+  def mockStoreTransactionEmailAddressSuccess(vatNumber: String, transactionEmail: String)(emailVerified: Boolean): Unit =
+    mockStoreTransactionEmailAddress(vatNumber, transactionEmail)(Future.successful(Right(StoreEmailAddressSuccess(emailVerified))))
+
+  def mockStoreTransactionEmailAddressFailure(vatNumber: String, transactionEmail: String): Unit =
+    mockStoreTransactionEmailAddress(vatNumber, transactionEmail)(Future.successful(Left(StoreEmailAddressFailure(500))))
+
 
 }

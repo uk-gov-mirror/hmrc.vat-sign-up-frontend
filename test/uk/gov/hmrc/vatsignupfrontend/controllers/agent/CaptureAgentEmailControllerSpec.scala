@@ -71,7 +71,7 @@ class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmAgentEmailController.show().url)
 
-        await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
+        await(result).session(request).get(SessionKeys.transactionEmailKey) shouldBe Some(testEmail)
       }
     }
 

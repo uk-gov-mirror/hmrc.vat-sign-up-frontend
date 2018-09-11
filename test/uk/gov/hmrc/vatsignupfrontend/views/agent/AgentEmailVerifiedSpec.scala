@@ -32,7 +32,9 @@ class AgentEmailVerifiedSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified()(
+  val continueLink = ""
+
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified(continueLink)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -50,7 +52,7 @@ class AgentEmailVerifiedSpec extends ViewSpec {
       messages.line1
     )
 
-    testPage.shouldHaveContinueButtonLink(routes.TermsController.show().url, common.continue)
+    testPage.shouldHaveContinueButtonLink(continueLink, common.continue)
   }
 
 }

@@ -17,11 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified
 
@@ -33,8 +32,11 @@ class AgentVerifiedEmailController @Inject()(val controllerComponents: Controlle
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      val continueLink = if(isEnabled(VerifyClientEmail)) routes.AgreeCaptureClientEmailController.show().url
+      else routes.TermsController.show().url
+
       Future.successful(
-        Ok(agent_email_verified())
+        Ok(agent_email_verified(continueLink))
       )
     }
   }
