@@ -50,6 +50,11 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = BAD_REQUEST)
   }
 
+  def stubStoreVatNumberSubscriptionClaimed(): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+      .thenReturn(status = OK, body = Json.obj(CodeKey -> SubscriptionClaimedCode))
+  }
+
 
   def stubStoreVatNumberSuccess(postCode: PostCode, registrationDate: DateModel): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =

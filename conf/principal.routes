@@ -132,3 +132,6 @@ POST        /more-than-one-vat-business                     uk.gov.hmrc.vatsignu
 
 #Sign Up Complete Client
 GET         /sign-up-complete-client                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignUpCompleteClientController.show
+
+#BTA Claim Subscription
+GET         /claim-subscription/:vatNumber                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.ClaimSubscriptionController.show(vatNumber: String)
