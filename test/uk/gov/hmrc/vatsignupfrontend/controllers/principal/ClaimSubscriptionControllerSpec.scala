@@ -82,18 +82,35 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
         }
       }
-      "the user does not have a VATDEC enrolment" should {
-        "redirect to Capture VAT registration date" in {
-          enable(BTAClaimSubscription)
+      "the user does not have a VATDEC enrolment" when {
+        "the VAT number is valid" should {
+          "redirect to Capture VAT registration date" in {
+            enable(BTAClaimSubscription)
 
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set.empty))))
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set.empty))))
 
-          val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
+            val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) should contain(routes.CaptureVatRegistrationDateController.show().url)
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureVatRegistrationDateController.show().url)
+          }
+        }
+        "the VAT number is invalid" should {
+          "throw an Internal Server Exception" in {
+            enable(BTAClaimSubscription)
+
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set.empty))))
+
+            val invalidVatNumber = "1"
+
+            val result = TestClaimSubscriptionController.show(invalidVatNumber)(testGetRequest)
+
+            intercept[InternalServerException](await(result))
+          }
         }
       }
     }

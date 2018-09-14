@@ -26,7 +26,7 @@ object VatNumberChecksumValidation {
       .map { case (digit, constant) => digit * constant }.sum
   }
 
-  def isValid(vatNumber: String): Boolean = {
+  def isValidChecksum(vatNumber: String): Boolean = {
     val leading = vatNumber.substring(0, vatNumber.length - 2)
     val checksum = vatNumber.substring(vatNumber.length - 2).toInt
 
