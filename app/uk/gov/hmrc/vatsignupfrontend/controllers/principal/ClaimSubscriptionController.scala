@@ -28,6 +28,8 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.SubscriptionClaimed
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
+import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
+import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidChecksum
 
 import scala.concurrent.Future
 
@@ -50,9 +52,13 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
             Future.failed(
               new InternalServerException("Supplied VAT number did not match enrolment")
             )
-          case None =>
+          case None if btaVatNumber.length == 9 && isValidChecksum(btaVatNumber) =>
             Future.successful(
               Redirect(routes.CaptureVatRegistrationDateController.show()) addingToSession (vatNumberKey -> btaVatNumber)
+            )
+          case None =>
+            Future.failed(
+              new InternalServerException("Supplied VAT number was invalid")
             )
         }
     }

@@ -57,7 +57,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
             BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
           )
         , formVatNumber =>
-          if (VatNumberChecksumValidation.isValid(formVatNumber)) {
+          if (VatNumberChecksumValidation.isValidChecksum(formVatNumber)) {
             enrolments.vatNumber match {
               case Some(enrolmentVatNumber) if enrolmentVatNumber == formVatNumber =>
                 storeVatNumberService.storeVatNumber(formVatNumber) map {

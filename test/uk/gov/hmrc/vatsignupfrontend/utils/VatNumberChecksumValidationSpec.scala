@@ -25,17 +25,17 @@ class VatNumberChecksumValidationSpec extends UnitSpec with MockitoSugar {
   "VatNumberChecksumValidation.isValid" should {
     "return true if the checksum is correct for a mod 97 number" in {
        val testValue = "011000084"
-      VatNumberChecksumValidation.isValid(testValue) shouldBe true
+      VatNumberChecksumValidation.isValidChecksum(testValue) shouldBe true
     }
 
     "return true if the checksum is correct for a mod 9755 number" in {
       val testValue = "011000029"
-      VatNumberChecksumValidation.isValid(testValue) shouldBe true
+      VatNumberChecksumValidation.isValidChecksum(testValue) shouldBe true
     }
 
     "return false if the checksum is incorrect" in {
       val testValue = "999999999"
-      VatNumberChecksumValidation.isValid(testValue) shouldBe false
+      VatNumberChecksumValidation.isValidChecksum(testValue) shouldBe false
     }
   }
 
