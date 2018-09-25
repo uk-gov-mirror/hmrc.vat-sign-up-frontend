@@ -19,10 +19,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{isFromBtaKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -95,6 +96,11 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             status(result) shouldBe SEE_OTHER
             redirectLocation(result) should contain(routes.CaptureVatRegistrationDateController.show().url)
+
+            val session = await(result).session(testGetRequest)
+
+            session.get(vatNumberKey) should contain(testVatNumber)
+            session.get(isFromBtaKey) should contain("true")
           }
         }
         "the VAT number is invalid" should {
@@ -115,4 +121,5 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
   }
+
 }
