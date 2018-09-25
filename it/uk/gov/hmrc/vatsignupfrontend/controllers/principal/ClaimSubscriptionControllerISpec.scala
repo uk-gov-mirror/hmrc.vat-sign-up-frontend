@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 
 class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+
   "GET /claim-subscription/:vat-number" when {
     "the user has a matching VATDEC enrolment" when {
       "store VAT number returns subscription claimed" should {
@@ -43,5 +44,20 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
         }
       }
     }
+    "the user does not have a VATDEC enrolment" when {
+      "return a redirect to kown facts page" in {
+        enable(BTAClaimSubscription)
+
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = get(s"/claim-subscription/$testVatNumber")
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+        )
+      }
+    }
   }
+
 }

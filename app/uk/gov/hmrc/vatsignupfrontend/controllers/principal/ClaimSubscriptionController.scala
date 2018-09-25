@@ -17,10 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.Inject
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{isFromBtaKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
@@ -28,7 +29,6 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.SubscriptionClaimed
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
-import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidChecksum
 
 import scala.concurrent.Future
@@ -54,7 +54,10 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
             )
           case None if btaVatNumber.length == 9 && isValidChecksum(btaVatNumber) =>
             Future.successful(
-              Redirect(routes.CaptureVatRegistrationDateController.show()) addingToSession (vatNumberKey -> btaVatNumber)
+              Redirect(routes.CaptureVatRegistrationDateController.show()) addingToSession(
+                vatNumberKey -> btaVatNumber,
+                isFromBtaKey -> "true"
+              )
             )
           case None =>
             Future.failed(

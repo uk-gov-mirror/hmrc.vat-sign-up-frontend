@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend
 
 object SessionKeys {
   val vatNumberKey = "VatNumber"
+  val isFromBtaKey = "BTA"
   val companyNumberKey = "CompanyNumber"
   val companyNameKey = "CompanyName"
   val companyUtrKey = "CompanyUtr"
