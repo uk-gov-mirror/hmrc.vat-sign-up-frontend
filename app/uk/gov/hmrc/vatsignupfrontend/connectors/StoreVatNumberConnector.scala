@@ -33,18 +33,29 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
   val vatNumberKey = "vatNumber"
   val postCodeKey = "postCode"
   val registrationDateKey = "registrationDate"
+  val isFromBtaKey = "isFromBta"
 
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] = {
-    http.POST[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
-  }
+  def storeVatNumber(vatNumber: String, isFromBta: Option[Boolean])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+    http.POST[JsObject, StoreVatNumberResponse](
+      applicationConfig.storeVatNumberUrl, Json.obj(
+        vatNumberKey -> vatNumber
+      ).++(
+        isFromBta match {
+          case Some(boolean) => Json.obj(isFromBtaKey -> boolean)
+          case _ => Json.obj()
+        }
+      )
+    )
 
   def storeVatNumber(vatNumber: String,
                      postCode: String,
-                     registrationDate: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+                     registrationDate: String,
+                     isFromBta: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
     http.POST[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl,
       Json.obj(vatNumberKey -> vatNumber,
         postCodeKey -> postCode,
-        registrationDateKey -> registrationDate
+        registrationDateKey -> registrationDate,
+        isFromBtaKey -> isFromBta
       )
     )
 

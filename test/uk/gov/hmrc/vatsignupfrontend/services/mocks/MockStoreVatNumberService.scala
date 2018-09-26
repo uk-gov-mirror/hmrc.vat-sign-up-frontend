@@ -20,10 +20,10 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import play.api.http.Status.INTERNAL_SERVER_ERROR
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 
 import scala.concurrent.Future
 
@@ -38,60 +38,63 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreVatNumberService)
   }
 
-  private def mockStoreVatNumber(vatNumber: String)(returnValue: Future[StoreVatNumberResponse]): Unit = {
-    when(mockStoreVatNumberService.storeVatNumber(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+  private def mockStoreVatNumber(vatNumber: String, isFromBta: Option[Boolean])(returnValue: Future[StoreVatNumberResponse]): Unit =
+    when(mockStoreVatNumberService.storeVatNumber(
+      ArgumentMatchers.eq(vatNumber),
+      ArgumentMatchers.eq(isFromBta)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
-  }
 
-  def mockStoreVatNumberSuccess(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Right(VatNumberStored)))
+  def mockStoreVatNumberSuccess(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored)))
 
-  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Right(SubscriptionClaimed)))
+  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
 
-  def mockStoreVatNumberFailure(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
+  def mockStoreVatNumberFailure(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
 
-  def mockStoreVatNumberNoRelationship(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Left(NoAgentClientRelationship)))
+  def mockStoreVatNumberNoRelationship(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(NoAgentClientRelationship)))
 
-  def mockStoreVatNumberInvalid(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Left(InvalidVatNumber)))
+  def mockStoreVatNumberInvalid(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(InvalidVatNumber)))
 
-  def mockStoreVatNumberIneligible(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Left(IneligibleVatNumber)))
+  def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber)))
 
-  def mockStoreVatNumberAlreadySubscribed(vatNumber: String): Unit =
-    mockStoreVatNumber(vatNumber)(Future.successful(Left(AlreadySubscribed)))
+  def mockStoreVatNumberAlreadySubscribed(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(AlreadySubscribed)))
 
-  private def mockStoreVatNumber(vatNumber: String, postCode: PostCode, registrationDate: DateModel)(returnValue: Future[StoreVatNumberResponse]): Unit = {
+  private def mockStoreVatNumber(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean
+                                )(returnValue: Future[StoreVatNumberResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(postCode),
-      ArgumentMatchers.eq(registrationDate)
+      ArgumentMatchers.eq(registrationDate),
+      ArgumentMatchers.eq(isFromBta)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
-  }
 
-  def mockStoreVatNumberSuccess(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Right(VatNumberStored)))
+  def mockStoreVatNumberSuccess(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Right(VatNumberStored)))
 
-  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Right(SubscriptionClaimed)))
+  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
 
-  def mockStoreVatNumberFailure(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
+  def mockStoreVatNumberFailure(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
 
-  def mockStoreVatNumberKnownFactsMismatch(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(KnownFactsMismatch)))
+  def mockStoreVatNumberKnownFactsMismatch(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(KnownFactsMismatch)))
 
-  def mockStoreVatNumberInvalid(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(InvalidVatNumber)))
+  def mockStoreVatNumberInvalid(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(InvalidVatNumber)))
 
-  def mockStoreVatNumberIneligible(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(IneligibleVatNumber)))
+  def mockStoreVatNumberIneligible(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(IneligibleVatNumber)))
 
-  def mockStoreVatNumberAlreadySubscribed(vatNumber: String, postCode: PostCode, registrationDate: DateModel): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate)(Future.successful(Left(AlreadySubscribed)))
+  def mockStoreVatNumberAlreadySubscribed(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(AlreadySubscribed)))
 
 }

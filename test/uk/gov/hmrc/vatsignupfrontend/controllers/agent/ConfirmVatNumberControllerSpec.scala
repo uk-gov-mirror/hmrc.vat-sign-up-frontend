@@ -67,7 +67,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but it is invalid" should {
       "go to invalid vat number page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberSuccess(vatNumber = testVatNumber)
+        mockStoreVatNumberSuccess(vatNumber = testVatNumber, isFromBta = None)
 
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testInvalidVatNumber)
         val result = TestConfirmVatNumberController.submit(request)
@@ -82,7 +82,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberSuccess(vatNumber = testVatNumber)
+        mockStoreVatNumberSuccess(vatNumber = testVatNumber, isFromBta = None)
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -92,7 +92,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but store vat is unsuccessful as no agent client relationship" should {
       "go to the no agent client relationship page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberNoRelationship(vatNumber = testVatNumber)
+        mockStoreVatNumberNoRelationship(vatNumber = testVatNumber, isFromBta = None)
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -102,7 +102,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but store vat is unsuccessful as client is ineligible" should {
       "go to the cannot use service page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberIneligible(vatNumber = testVatNumber)
+        mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = None)
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -112,9 +112,9 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberFailure(vatNumber = testVatNumber)
+        mockStoreVatNumberFailure(vatNumber = testVatNumber, isFromBta = None)
 
-        intercept[InternalServerException]{
+        intercept[InternalServerException] {
           await(TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)))
         }
       }
@@ -124,14 +124,14 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       "vat number is already subscribed" should {
         "redirect to the already subscribed page" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber)
+          mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber, isFromBta = None)
 
-         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
-         status(result) shouldBe Status.SEE_OTHER
-         redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+          val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+        }
       }
     }
-  }
 
     "vat number is not in session" should {
       "redirect to capture vat number" in {

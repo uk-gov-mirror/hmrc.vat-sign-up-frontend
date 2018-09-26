@@ -46,11 +46,12 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockitoSugar {
       when(mockConnector.storeVatNumber(
         ArgumentMatchers.eq(testVatNumber),
         ArgumentMatchers.eq(testBusinessPostcode.postCode),
-        ArgumentMatchers.eq(testDate.toLocalDate.toString)
+        ArgumentMatchers.eq(testDate.toLocalDate.toString),
+        ArgumentMatchers.eq(false)
       )(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Right(VatNumberStored)))
 
-      val r = TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDate)
+      val r = TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
       // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
       await(r) shouldBe Right(VatNumberStored)

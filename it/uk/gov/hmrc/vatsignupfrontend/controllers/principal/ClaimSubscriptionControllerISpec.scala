@@ -33,7 +33,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
           enable(BTAClaimSubscription)
 
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubStoreVatNumberSubscriptionClaimed()
+          stubStoreVatNumberSubscriptionClaimed(isFromBta = Some(true))
 
           val res = get(s"/claim-subscription/$testVatNumber")
 

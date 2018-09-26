@@ -113,15 +113,29 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the submit action of the Check your answers controller" when {
     "all prerequisite data are in" when {
       "store vat number returned VatNumberStored" when {
-        "goto business entity controller" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate)
+        "isFromBta is in session" should {
+          "goto business entity controller" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)
 
-          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+            val result = await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isFromBtaKey -> "true")))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+          }
+        }
+        "isFromBta is not in session" should {
+          "goto business entity controller" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+
+            val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+          }
         }
       }
       "store vat number returned SubscriptionClaimed" when {
@@ -129,7 +143,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberSubscriptionClaimed(testVatNumber, testBusinessPostcode, testDate)
+          mockStoreVatNumberSubscriptionClaimed(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
@@ -141,7 +155,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate)
+          mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -153,7 +167,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate)
+          mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -165,7 +179,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate)
+          mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -177,7 +191,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberAlreadySubscribed(testVatNumber, testBusinessPostcode, testDate)
+          mockStoreVatNumberAlreadySubscribed(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           val result = TestCheckYourAnswersController.submit(testGetRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -189,7 +203,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate)
+          mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testGetRequest()))

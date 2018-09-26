@@ -49,7 +49,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "the enrolment vat number matches the inserted one" should {
             "redirect to the business entity type page" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubStoreVatNumberSuccess()
+              stubStoreVatNumberSuccess(isFromBta = Some(false))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 

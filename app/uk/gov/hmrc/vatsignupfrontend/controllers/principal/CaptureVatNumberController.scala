@@ -60,7 +60,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           if (VatNumberChecksumValidation.isValidChecksum(formVatNumber)) {
             enrolments.vatNumber match {
               case Some(enrolmentVatNumber) if enrolmentVatNumber == formVatNumber =>
-                storeVatNumberService.storeVatNumber(formVatNumber) map {
+                storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = Some(false)) map {
                   case Right(VatNumberStored) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)

@@ -39,7 +39,6 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       "the KnownFactsJourney feature switch is enabled" should {
         "redirect to the capture VAT number page" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreVatNumberSuccess()
 
           val res = get("/resolve-vat-number")
 
