@@ -39,7 +39,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.SignUpCompleteClientController.show().url)
+            redirectUri(appConfig.btaRedirectUrl)
           )
         }
       }
