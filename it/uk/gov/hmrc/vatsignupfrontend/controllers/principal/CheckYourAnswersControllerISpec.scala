@@ -54,7 +54,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat is successful" should {
       "redirect to business entity" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberSuccess(testBusinessPostCode, testDate)
+        stubStoreVatNumberSuccess(testBusinessPostCode, testDate, isFromBta = false)
 
         val res = post("/check-your-answers",
           Map(
@@ -73,7 +73,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "the VAT subscription has been claimed" should {
       "redirect to sign up complete client" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberSubscriptionClaimed(testBusinessPostCode, testDate)
+        stubStoreVatNumberSubscriptionClaimed(testBusinessPostCode, testDate, isFromBta = false)
 
         val res = post("/check-your-answers",
           Map(
@@ -92,7 +92,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned known facts mismatch" should {
       "redirect to could not confirm business" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate)
+        stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate, isFromBta = false)
 
         val res = post("/check-your-answers",
           Map(
@@ -111,7 +111,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned invalid vat number" should {
       "redirect to invalid vat number" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberInvalid(testBusinessPostCode, testDate)
+        stubStoreVatNumberInvalid(testBusinessPostCode, testDate, isFromBta = false)
 
         val res = post("/check-your-answers",
           Map(
@@ -130,7 +130,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned ineligible vat number" should {
       "redirect to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberIneligible(testBusinessPostCode, testDate)
+        stubStoreVatNumberIneligible(testBusinessPostCode, testDate, isFromBta = false)
 
         val res = post("/check-your-answers",
           Map(
@@ -149,7 +149,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned already signed up" should {
       "redirect to already signed up" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate)
+        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate, isFromBta = false)
 
         val res = post("/check-your-answers",
           Map(
@@ -162,6 +162,27 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.AlreadySignedUpController.show().url)
+        )
+      }
+    }
+
+    "isFromBta is in session" should {
+      "redirect to business entity and pass the correct flag" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberSuccess(testBusinessPostCode, testDate, isFromBta = true)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.isFromBtaKey -> "true",
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
     }

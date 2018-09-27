@@ -42,7 +42,7 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
       enrolments =>
         enrolments.vatNumber match {
           case Some(enrolmentVatNumber) if enrolmentVatNumber == btaVatNumber =>
-            storeVatNumberService.storeVatNumber(enrolmentVatNumber) map {
+            storeVatNumberService.storeVatNumber(enrolmentVatNumber, isFromBta = Some(true)) map {
               case Right(SubscriptionClaimed) =>
                 Redirect(routes.SignUpCompleteClientController.show())
               case subscriptionNotClaimedReason =>

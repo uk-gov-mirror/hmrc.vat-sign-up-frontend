@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
@@ -72,7 +72,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               "the VAT number is stored successfully" should {
                 "redirect to the business entity type page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                  mockStoreVatNumberSuccess(testVatNumber)
+                  mockStoreVatNumberSuccess(testVatNumber, isFromBta = Some(false))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
@@ -84,7 +84,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               "the user's subscription has been claimed" should {
                 "redirect to claimed subscription confirmation page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                  mockStoreVatNumberSubscriptionClaimed(testVatNumber)
+                  mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = Some(false))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
@@ -110,7 +110,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           "the vat eligibility is unsuccessful" should {
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockStoreVatNumberIneligible(testVatNumber)
+              mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false))
 
               val request = testPostRequest(testVatNumber)
 
@@ -121,7 +121,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             "redirect to Already Signed Up page when the vat number has already been subscribed" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockStoreVatNumberAlreadySubscribed(testVatNumber)
+              mockStoreVatNumberAlreadySubscribed(testVatNumber, isFromBta = Some(false))
 
               val request = testPostRequest(testVatNumber)
 
@@ -132,7 +132,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             "throw an exception for any other scenario" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockStoreVatNumberFailure(testVatNumber)
+              mockStoreVatNumberFailure(testVatNumber, isFromBta = Some(false))
 
               val request = testPostRequest(testVatNumber)
               intercept[InternalServerException] {

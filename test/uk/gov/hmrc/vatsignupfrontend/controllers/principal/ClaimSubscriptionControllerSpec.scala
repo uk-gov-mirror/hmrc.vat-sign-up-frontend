@@ -48,7 +48,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
-              mockStoreVatNumberSubscriptionClaimed(testVatNumber)
+              mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = Some(true))
 
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
@@ -61,7 +61,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
-              mockStoreVatNumberSuccess(testVatNumber)
+              mockStoreVatNumberInvalid(testVatNumber, isFromBta = Some(true))
 
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 

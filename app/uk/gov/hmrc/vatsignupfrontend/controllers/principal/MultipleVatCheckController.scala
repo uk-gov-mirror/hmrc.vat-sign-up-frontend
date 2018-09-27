@@ -56,7 +56,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
               case Yes =>
                 Future.successful(Redirect(routes.CaptureVatNumberController.show()))
               case No =>
-                storeVatNumberService.storeVatNumber(vatNumber) map {
+                storeVatNumberService.storeVatNumber(vatNumber, isFromBta = Some(false)) map {
                   case Right(VatNumberStored) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)

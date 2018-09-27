@@ -24,95 +24,90 @@ import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 
 object StoreVatNumberStub extends WireMockMethods {
 
-  def stubStoreVatNumberSuccess(): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+  private def requestJson(isFromBta: Option[Boolean]) =
+    isFromBta match {
+      case Some(bool) =>
+        Json.obj(
+          "vatNumber" -> testVatNumber,
+          "isFromBta" -> bool
+        )
+      case _ =>
+        Json.obj("vatNumber" -> testVatNumber)
+    }
+
+  def stubStoreVatNumberSuccess(isFromBta: Option[Boolean]): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = CREATED)
   }
 
-  def stubStoreVatNumberNoRelationship(): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+  def stubStoreVatNumberNoRelationship(isFromBta: Option[Boolean]): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> NoRelationshipCode))
   }
 
-  def stubStoreVatNumberIneligible(): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+  def stubStoreVatNumberIneligible(isFromBta: Option[Boolean]): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = UNPROCESSABLE_ENTITY)
   }
 
 
-  def stubStoreVatNumberAlreadySignedUp(): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+  def stubStoreVatNumberAlreadySignedUp(isFromBta: Option[Boolean]): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = CONFLICT)
   }
 
-  def stubStoreVatNumberFailure(): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+  def stubStoreVatNumberFailure(isFromBta: Option[Boolean]): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = BAD_REQUEST)
   }
 
-  def stubStoreVatNumberSubscriptionClaimed(): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body = Json.obj("vatNumber" -> testVatNumber))
+  def stubStoreVatNumberSubscriptionClaimed(isFromBta: Option[Boolean]): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = OK, body = Json.obj(CodeKey -> SubscriptionClaimedCode))
   }
 
 
-  def stubStoreVatNumberSuccess(postCode: PostCode, registrationDate: DateModel): Unit = {
+  private def requestJson(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean) =
+    Json.obj(
+      "vatNumber" -> testVatNumber,
+      "postCode" -> postCode.postCode,
+      "registrationDate" -> registrationDate.toLocalDate.toString,
+      "isFromBta" -> isFromBta
+    )
+
+  def stubStoreVatNumberSuccess(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
-      Json.obj(
-        "vatNumber" -> testVatNumber,
-        "postCode" -> postCode.postCode,
-        "registrationDate" -> registrationDate.toLocalDate.toString
-      ))
+      requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = CREATED)
   }
 
-  def stubStoreVatNumberSubscriptionClaimed(postCode: PostCode, registrationDate: DateModel): Unit = {
+  def stubStoreVatNumberSubscriptionClaimed(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
-      Json.obj(
-        "vatNumber" -> testVatNumber,
-        "postCode" -> postCode.postCode,
-        "registrationDate" -> registrationDate.toLocalDate.toString
-      ))
+      requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = OK, body = Json.obj(CodeKey -> SubscriptionClaimedCode))
   }
 
-  def stubStoreVatNumberKnownFactsMismatch(postCode: PostCode, registrationDate: DateModel): Unit = {
+  def stubStoreVatNumberKnownFactsMismatch(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
-      Json.obj(
-        "vatNumber" -> testVatNumber,
-        "postCode" -> postCode.postCode,
-        "registrationDate" -> registrationDate.toLocalDate.toString
-      ))
+      requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> KnownFactsMismatchCode))
   }
 
-  def stubStoreVatNumberInvalid(postCode: PostCode, registrationDate: DateModel): Unit = {
+  def stubStoreVatNumberInvalid(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
-      Json.obj(
-        "vatNumber" -> testVatNumber,
-        "postCode" -> postCode.postCode,
-        "registrationDate" -> registrationDate.toLocalDate.toString
-      ))
+      requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = PRECONDITION_FAILED)
   }
 
-  def stubStoreVatNumberIneligible(postCode: PostCode, registrationDate: DateModel): Unit = {
+  def stubStoreVatNumberIneligible(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
-      Json.obj(
-        "vatNumber" -> testVatNumber,
-        "postCode" -> postCode.postCode,
-        "registrationDate" -> registrationDate.toLocalDate.toString
-      ))
+      requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = UNPROCESSABLE_ENTITY)
   }
 
-  def stubStoreVatNumberAlreadySignedUp(postCode: PostCode, registrationDate: DateModel): Unit = {
+  def stubStoreVatNumberAlreadySignedUp(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
-      Json.obj(
-        "vatNumber" -> testVatNumber,
-        "postCode" -> postCode.postCode,
-        "registrationDate" -> registrationDate.toLocalDate.toString
-      ))
+      requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = CONFLICT)
   }
 

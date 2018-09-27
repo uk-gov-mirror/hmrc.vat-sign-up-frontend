@@ -67,7 +67,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "the VAT number is stored successfully" should {
           "go to business-type" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberSuccess(testVatNumber)
+            mockStoreVatNumberSuccess(testVatNumber, isFromBta = Some(false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
@@ -78,7 +78,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "the VAT subscription has been claimed" should {
           "go to sign-up-complete-client" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberSubscriptionClaimed(testVatNumber)
+            mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = Some(false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
@@ -88,7 +88,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "vat number is already subscribed" should {
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber)
+            mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber, isFromBta = Some(false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
@@ -98,7 +98,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "the vat number is ineligible" should {
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberIneligible(vatNumber = testVatNumber)
+            mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = Some(false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
@@ -109,7 +109,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "store vat returns any other error" should {
           "throw internal server exception" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberFailure(vatNumber = testVatNumber)
+            mockStoreVatNumberFailure(vatNumber = testVatNumber, isFromBta = Some(false))
 
             intercept[InternalServerException] {
               await(TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no")))

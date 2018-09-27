@@ -69,8 +69,8 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     }
   }
 
-  private def storeVatNumber(vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel, enrolments: Enrolments)(implicit hc: HeaderCarrier) =
-    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate) map {
+  private def storeVatNumber(vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel, enrolments: Enrolments, isFromBta: Boolean)(implicit hc: HeaderCarrier) =
+    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate, isFromBta) map {
       case Right(VatNumberStored) => Redirect(routes.CaptureBusinessEntityController.show())
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
@@ -88,7 +88,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode) match {
         case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode)) =>
-          storeVatNumber(vatNumber, postCode, vatRegistrationDate, enrolments)
+          storeVatNumber(vatNumber, postCode, vatRegistrationDate, enrolments, isFromBta = request.session.get(SessionKeys.isFromBtaKey).isDefined)
         case (None, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())

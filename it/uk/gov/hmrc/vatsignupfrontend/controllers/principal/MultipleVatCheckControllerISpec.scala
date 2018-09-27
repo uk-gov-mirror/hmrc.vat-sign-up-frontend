@@ -54,7 +54,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
     "return a redirect to business type" when {
       "form value is NO" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubStoreVatNumberSuccess()
+        stubStoreVatNumberSuccess(isFromBta = Some(false))
 
         val res = post("/more-than-one-vat-business")(YesNoForm.yesNo -> YesNoForm.no)
 

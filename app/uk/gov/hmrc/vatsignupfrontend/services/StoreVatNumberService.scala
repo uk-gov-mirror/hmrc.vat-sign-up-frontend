@@ -28,12 +28,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class StoreVatNumberService @Inject()(val storeVatNumberConnector: StoreVatNumberConnector) {
 
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
-    storeVatNumberConnector.storeVatNumber(vatNumber)
+  def storeVatNumber(vatNumber: String, isFromBta: Option[Boolean])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta)
 
   def storeVatNumber(vatNumber: String,
                      postCode: PostCode,
-                     registrationDate: DateModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
-    storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString)
+                     registrationDate: DateModel,
+                     isFromBta: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta)
 
 }
