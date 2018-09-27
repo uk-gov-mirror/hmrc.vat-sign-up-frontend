@@ -53,7 +53,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
               status(result) shouldBe SEE_OTHER
-              redirectLocation(result) should contain(routes.SignUpCompleteClientController.show().url)
+              redirectLocation(result) should contain(mockAppConfig.btaRedirectUrl)
             }
           }
           "store VAT returns anything else" should {

@@ -44,7 +44,7 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
           case Some(enrolmentVatNumber) if enrolmentVatNumber == btaVatNumber =>
             storeVatNumberService.storeVatNumber(enrolmentVatNumber, isFromBta = Some(true)) map {
               case Right(SubscriptionClaimed) =>
-                Redirect(routes.SignUpCompleteClientController.show())
+                Redirect(appConfig.btaRedirectUrl)
               case subscriptionNotClaimedReason =>
                 throw new InternalServerException(s"Claim subscription was not successful, result was $subscriptionNotClaimedReason")
             }
