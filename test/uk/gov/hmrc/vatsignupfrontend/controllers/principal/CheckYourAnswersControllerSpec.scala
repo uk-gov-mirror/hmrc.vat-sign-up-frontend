@@ -150,16 +150,30 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) should contain(routes.SignUpCompleteClientController.show().url)
         }
       }
-      "store vat number returned KnownFactsMismatch" should {
-        "go to the could not confirm business page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+      "store vat number returned KnownFactsMismatch" when {
+        "isFromBta is in session" should {
+          "go to the could not confirm business page" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)
 
-          val result = TestCheckYourAnswersController.submit(testGetRequest())
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmBusinessController.show().url)
+            val result = TestCheckYourAnswersController.submit(testGetRequest().withSession(SessionKeys.isFromBtaKey -> "true"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(mockAppConfig.btaAddVatUrl)
+          }
+        }
+        "isFromBta is not in session" should {
+          "go to the could not confirm business page" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+
+            val result = TestCheckYourAnswersController.submit(testGetRequest())
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CouldNotConfirmBusinessController.show().url)
+          }
         }
       }
       "store vat number returned InvalidVatNumber" should {
