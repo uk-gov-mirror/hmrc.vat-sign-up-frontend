@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
@@ -70,15 +69,10 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
     }
   }
 
-  private def storeVatNumber(vatNumber: String,
-                             postCode: PostCode,
-                             vatRegistrationDate: DateModel,
-                             enrolments: Enrolments,
-                             isFromBta: Boolean)(implicit hc: HeaderCarrier) =
+  private def storeVatNumber(vatNumber: String, postCode: PostCode, vatRegistrationDate: DateModel, enrolments: Enrolments, isFromBta: Boolean)(implicit hc: HeaderCarrier) =
     storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate, isFromBta) map {
       case Right(VatNumberStored) => Redirect(routes.CaptureBusinessEntityController.show())
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
-      case Left(KnownFactsMismatch) if isFromBta => Redirect(appConfig.btaAddVatUrl)
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
       case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
