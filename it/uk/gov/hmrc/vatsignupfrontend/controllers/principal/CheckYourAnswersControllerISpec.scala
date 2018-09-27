@@ -89,23 +89,45 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
-    "store vat returned known facts mismatch" should {
-      "redirect to could not confirm business" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate, isFromBta = false)
+    "store vat returned known facts mismatch" when {
+      "isFromBTA is in session" should {
+        "redirect BTA where they re-enter the VAT number" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate, isFromBta = true)
 
-        val res = post("/check-your-answers",
-          Map(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          val res = post("/check-your-answers",
+            Map(
+              SessionKeys.isFromBtaKey -> "true",
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+              SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(appConfig.btaAddVatUrl)
           )
-        )()
+        }
+      }
+      "isFromBTA is not in session" should {
+        "redirect to could not confirm business" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate, isFromBta = false)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CouldNotConfirmBusinessController.show().url)
-        )
+          val res = post("/check-your-answers",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+              SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+          )
+        }
       }
     }
     "store vat returned invalid vat number" should {
