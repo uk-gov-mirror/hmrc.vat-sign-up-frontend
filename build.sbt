@@ -1,5 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 name := "vat-sign-up-frontend"
 
@@ -15,7 +16,7 @@ lazy val scoverageSettings = {
 }
 
 lazy val root = (project in file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
 
@@ -39,6 +40,7 @@ unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTe
 javaOptions in IntegrationTest += "-Dlogger.resource=logback-test.xml"
 addTestReportOption(IntegrationTest, "int-test-reports")
 parallelExecution in IntegrationTest := false
+majorVersion := 1
 
 resolvers ++= Seq(
   Resolver.bintrayRepo("hmrc", "releases"),
