@@ -591,15 +591,9 @@ object MessageLookup {
   }
 
   object SignUpCompleteClient {
-    val title = "Sign up complete"
-    val heading = "Sign up complete"
-    val subheadingWhn = "What happens next"
-    val whnLine1 = "You do not need to do anything if your agent is responsible for all of your VAT."
-    val whnLine2 = s"If you and your agent will use software, you need to choose a software package that interacts with theirs."
-    val subheadingBta = "Business tax account"
-    val linkText = "business tax account"
-    val btaLine1 = s"We have set up your $linkText."
-    val btaLine2 = "This is where you can see what information your agent has given to us. You can also:"
+    val title = "You have added VAT to your business tax account"
+    val heading = "You have added VAT to your business tax account"
+    val line1 = "You can now use your business tax account to:"
     val bullet1 = "see what you owe"
     val bullet2 = "check your deadlines"
     val bullet3 = "pay your VAT"

@@ -26,13 +26,18 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{BTAClaimSubscription, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class CaptureBtaVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents with FeatureSwitching {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(BTAClaimSubscription)
+  }
 
   object TestCaptureBtaVatNumberController extends CaptureBtaVatRegistrationDateController(mockControllerComponents)
 
@@ -59,7 +64,7 @@ class CaptureBtaVatRegistrationDateControllerSpec extends UnitSpec with GuiceOne
 
   "Calling the submit action of the Capture Vat Registration Date controller" when {
     "form successfully submitted" should {
-      "redirect to the Business Postcode page" in {
+      "not implemented" in { //TODO change to redirect
         mockAuthAdminRole()
 
         val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))

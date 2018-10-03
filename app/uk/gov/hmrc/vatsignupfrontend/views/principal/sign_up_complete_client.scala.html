@@ -17,7 +17,6 @@
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
-@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -25,35 +24,21 @@
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-complete.js")></script>
 }
 
-@principal_main_template(title = Messages("sign_up_complete_client.title"), scriptElem = Some(scripts), showSignOutLink = false) {
+@principal_main_template(title = Messages("sign_up_complete_client.title"), scriptElem = Some(scripts)) {
 
-    <div class="govuk-box-highlight">
-        <section id="confirmation-heading">
-            <h1 class="heading-xlarge">@Messages("sign_up_complete_client.heading")</h1>
-        </section>
-    </div>
+    <h1 class="heading-large">@Messages("sign_up_complete_client.heading")</h1>
 
-    <section id="what-happens-next">
-        <h2 class="heading-medium">@Messages("sign_up_complete_client.subheadingWhn")</h2>
-        <p>@Messages("sign_up_complete_client.whnLine1")</p>
-        <p>@Messages("sign_up_complete_client.whnLine2")</p>
-    </section>
+    <p>@Messages("sign_up_complete_client.line_1")</p>
 
-    <section id="business-tax-account">
-        <h2 class="heading-medium">@Messages("sign_up_complete_client.subheadingBta")</h2>
-        <p>@Html(Messages("sign_up_complete_client.btaLine1", appConfig.btaUrl))</p>
-        <p>@Messages("sign_up_complete_client.btaLine2")</p>
-        <ol class="list list-number">
-            <li>@Messages("sign_up_complete_client.btaBullet1")</li>
-            <li>@Messages("sign_up_complete_client.btaBullet2")</li>
-            <li>@Messages("sign_up_complete_client.btaBullet3")</li>
-            <li>@Messages("sign_up_complete_client.btaBullet4")</li>
-        </ol>
-
-    </section>
+     <ul class="list list-bullet">
+        <li>@Messages("sign_up_complete_client.bullet_1")</li>
+        <li>@Messages("sign_up_complete_client.bullet_2")</li>
+        <li>@Messages("sign_up_complete_client.bullet_3")</li>
+        <li>@Messages("sign_up_complete_client.bullet_4")</li>
+    </ul>
 
     <div class = "form-group">
-        @signOutButton(isAgent = false)
+        @continueButtonLink(appConfig.btaUrl)
     </div>
 
 }

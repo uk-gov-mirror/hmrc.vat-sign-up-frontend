@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatRegistrationDateKey
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
@@ -27,6 +28,10 @@ import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with CustomMatchers {
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(BTAClaimSubscription)
+  }
 
   "GET /bta/vat-registration-date" should {
     "return an OK" in {
@@ -40,8 +45,20 @@ class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with Cu
     }
   }
 
+  "if feature switch is disabled" should {
+    "return a not found" in {
+      disable(BTAClaimSubscription)
+
+      val res = get("/bta/vat-registration-date")
+
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
+    }
+  }
+
   "POST /vat-registration-date" should {
-    "return a redirect" in {
+    "return a not implemented" in {//TODO Change to redirect
       stubAuth(OK, successfulAuthResponse())
 
       val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
