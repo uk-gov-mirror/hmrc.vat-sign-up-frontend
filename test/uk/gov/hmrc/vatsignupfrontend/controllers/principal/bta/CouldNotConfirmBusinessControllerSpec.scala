@@ -22,6 +22,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => superRoutes}
 
@@ -33,6 +34,11 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/bta/could-not-confirm-business")
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(BTAClaimSubscription)
+  }
 
   "Calling the show action of the Could not confirm business controller" should {
     "show the could not confirm business page" in {

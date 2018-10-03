@@ -17,11 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => superRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(BTAClaimSubscription)
+  }
 
   "GET /bta/could-not-confirm-business" should {
     "return an OK" in {
@@ -32,6 +38,18 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
 
       res should have(
         httpStatus(OK)
+      )
+    }
+  }
+
+  "if feature switch is disabled" should {
+    "return a not found" in {
+      disable(BTAClaimSubscription)
+
+      val res = get("/bta/could-not-confirm-business")
+
+      res should have(
+        httpStatus(NOT_FOUND)
       )
     }
   }
