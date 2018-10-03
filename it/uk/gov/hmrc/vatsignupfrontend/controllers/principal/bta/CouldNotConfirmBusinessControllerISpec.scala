@@ -62,8 +62,8 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
       val res = post("/bta/could-not-confirm-business")()
 
       res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(superRoutes.CaptureVatNumberController.show().url)
+        httpStatus(NOT_IMPLEMENTED)
+        // TODO redirectUri(BTA?)
       )
     }
   }

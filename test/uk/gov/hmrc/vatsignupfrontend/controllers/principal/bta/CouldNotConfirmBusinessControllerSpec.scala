@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => superRoutes}
 
 class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -57,8 +56,8 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
       mockAuthAdminRole()
 
       val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(superRoutes.CaptureVatNumberController.show().url)
+      status(result) shouldBe Status.NOT_IMPLEMENTED
+      // TODO redirectLocation(result) should contain(BTA?) and SEE_OTHER
     }
   }
 
