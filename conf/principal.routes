@@ -139,3 +139,7 @@ GET         /claim-subscription/:vatNumber                  uk.gov.hmrc.vatsignu
 # Capture BTA VAT Registration Date
 GET         /bta/vat-registration-date                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.CaptureBtaVatRegistrationDateController.show
 POST        /bta/vat-registration-date                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.CaptureBtaVatRegistrationDateController.submit
+
+#BTA Could Not Confirm Business
+GET         /bta/could-not-confirm-business                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.CouldNotConfirmBusinessController.show
+POST        /bta/could-not-confirm-business                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.CouldNotConfirmBusinessController.submit
