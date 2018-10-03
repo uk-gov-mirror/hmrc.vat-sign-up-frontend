@@ -41,7 +41,7 @@ class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with Cu
   }
 
   "POST /vat-registration-date" should {
-    "return a redirect" in {
+    "return a not implemented" in {//TODO Change to redirect
       stubAuth(OK, successfulAuthResponse())
 
       val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))

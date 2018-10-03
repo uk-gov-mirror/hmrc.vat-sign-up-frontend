@@ -59,7 +59,7 @@ class CaptureBtaVatRegistrationDateControllerSpec extends UnitSpec with GuiceOne
 
   "Calling the submit action of the Capture Vat Registration Date controller" when {
     "form successfully submitted" should {
-      "redirect to the Business Postcode page" in {
+      "not implemented" in { //TODO change to redirect
         mockAuthAdminRole()
 
         val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
