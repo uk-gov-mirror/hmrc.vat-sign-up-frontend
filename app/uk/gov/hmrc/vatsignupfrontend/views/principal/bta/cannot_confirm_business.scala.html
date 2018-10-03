@@ -21,17 +21,19 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.bta.could_not_confirm_business.title"), bodyClasses = None, showSignOutLink = false) {
+@principal_main_template(title = Messages("principal.bta.cannot_confirm_business.title"),
+                         bodyClasses = None,
+                         showSignOutLink = false) {
 
-<h1 class="heading-large">@Messages("principal.bta.could_not_confirm_business.heading")</h1>
+  <h1 class="heading-large">@Messages("principal.bta.cannot_confirm_business.heading")</h1>
 
-<p>@Messages("principal.bta.could_not_confirm_business.line_1")</p>
+  <p>@Messages("principal.bta.cannot_confirm_business.line_1")</p>
 
-@form(action = postAction) {
-<div class="form-group">
-    @continueButton(Some(Messages("base.try_again")))
-</div>
-}
+  @form(action = postAction) {
+    <div class="form-group">
+      @continueButton(Some(Messages("base.try_again")))
+    </div>
+  }
 
-@signOutLink(isAgent = false)
+  @signOutLink(isAgent = false)
 }

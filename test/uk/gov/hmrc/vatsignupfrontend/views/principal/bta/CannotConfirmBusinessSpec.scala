@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{BTACannotConfirmBusin
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CannotNotConfirmBusinessSpec extends ViewSpec {
+class CannotConfirmBusinessSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
