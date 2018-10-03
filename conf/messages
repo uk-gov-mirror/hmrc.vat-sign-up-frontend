@@ -538,15 +538,10 @@ principal.multiple_vat_check.radio_input.yes                           = Yes
 principal.multiple_vat_check.radio_input.no                            = No
 
 ## Sign Up Complete Client
-sign_up_complete_client.title                                          = Sign up complete
-sign_up_complete_client.heading                                        = Sign up complete
-sign_up_complete_client.subheadingWhn                                  = What happens next
-sign_up_complete_client.whnLine1                                       = You do not need to do anything if your agent is responsible for all of your VAT.
-sign_up_complete_client.whnLine2                                       = If you and your agent will use software, you need to choose a software package that interacts with theirs.
-sign_up_complete_client.subheadingBta                                  = Business tax account
-sign_up_complete_client.btaLine1                                       = We have set up your <a id="bta" href="{0}">business tax account</a>.
-sign_up_complete_client.btaLine2                                       = This is where you can see what information your agent has given to us. You can also:
-sign_up_complete_client.btaBullet1                                     = see what you owe
-sign_up_complete_client.btaBullet2                                     = check your deadlines
-sign_up_complete_client.btaBullet3                                     = pay your VAT
-sign_up_complete_client.btaBullet4                                     = tell us about any changes to your business
+sign_up_complete_client.title                                          = You have added VAT to your business tax account
+sign_up_complete_client.heading                                        = You have added VAT to your business tax account
+sign_up_complete_client.line_1                                         = You can now use your business tax account to:
+sign_up_complete_client.bullet_1                                       = see what you owe
+sign_up_complete_client.bullet_2                                       = check your deadlines
+sign_up_complete_client.bullet_3                                       = pay your VAT
+sign_up_complete_client.bullet_4                                       = tell us about any changes to your business

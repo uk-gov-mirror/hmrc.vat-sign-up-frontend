@@ -23,7 +23,6 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base, SignUpCompleteClient => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
@@ -40,77 +39,31 @@ class SignUpCompleteClientViewSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
+  lazy val appConfig = app.injector.instanceOf[AppConfig]
+
   lazy val document = Jsoup.parse(page.body)
 
-  "The information received view" should {
+  "Sign up complete client view" should {
 
-    s"have the title '${messages.title}'" in {
-      document.title() should be(messages.title)
-    }
+    val testPage = TestView(
+      name = "Sign up complete client View",
+      title = messages.title,
+      heading = messages.heading,
+      page = page
+    )
 
-    "have a confirmation banner" which {
+    testPage.shouldHaveParaSeq(
+      messages.line1
+    )
 
-      s"has a heading (H1)" which {
+    testPage.shouldHaveBulletSeq(
+      messages.bullet1,
+      messages.bullet2,
+      messages.bullet3,
+      messages.bullet4
+    )
 
-        s"has the text '${messages.heading}'" in {
-          document.select("h1").text() shouldBe messages.heading
-        }
-      }
-
-    }
-
-    "have a 'What happens next' section" which {
-
-      s"has the section heading '${messages.subheadingWhn}'" in {
-        document.select("#what-happens-next h2").text() shouldBe messages.subheadingWhn
-      }
-
-      s"has a paragraph ${messages.whnLine1}'" in {
-        document.select("#what-happens-next p").text() should include(messages.whnLine1)
-      }
-
-      s"has a paragraph '${messages.whnLine2}'" in {
-        document.select("#what-happens-next p").text() should include(messages.whnLine2)
-      }
-
-    }
-
-    "have a 'business tax account' section" which {
-
-      s"has the section heading '${messages.subheadingBta}'" in {
-        document.select("#business-tax-account h2").text() shouldBe messages.subheadingBta
-      }
-
-      s"has a paragraph that contains '${messages.btaLine1}'" in {
-        document.select("#business-tax-account p").text() should include(messages.btaLine1)
-      }
-
-      s"has a paragraph that contains '${messages.btaLine2}'" in {
-        document.select("#business-tax-account p").text() should include(messages.btaLine2)
-      }
-
-      s"has a bullet point '${messages.bullet1}'" in {
-        document.select("#business-tax-account li").text() should include(messages.bullet1)
-      }
-
-      s"has a bullet point '${messages.bullet2}'" in {
-        document.select("#business-tax-account li").text() should include(messages.bullet2)
-      }
-
-      s"has a bullet point '${messages.bullet3}'" in {
-        document.select("#business-tax-account li").text() should include(messages.bullet3)
-      }
-
-      s"has a bullet point '${messages.bullet4}'" in {
-        document.select("#business-tax-account li").text() should include(messages.bullet4)
-      }
-
-    }
-
-    "have a sign out button" in {
-      val b = document.getElementById("sign-out-button")
-      b.text shouldBe Base.signOut
-    }
-
+    testPage.shouldHaveContinueButtonLink(appConfig.btaUrl, Base.continue)
   }
+
 }
