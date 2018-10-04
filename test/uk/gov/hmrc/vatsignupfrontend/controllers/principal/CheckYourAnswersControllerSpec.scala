@@ -112,30 +112,16 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Check your answers controller" when {
     "all prerequisite data are in" when {
-      "store vat number returned VatNumberStored" when {
-        "isFromBta is in session" should {
-          "goto business entity controller" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-            mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)
+      "store vat number returned VatNumberStored" should {
+        "goto business entity controller" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isFromBtaKey -> "true")))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
-          }
-        }
-        "isFromBta is not in session" should {
-          "goto business entity controller" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-            mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
-
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
-          }
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
         }
       }
       "store vat number returned SubscriptionClaimed" when {
