@@ -165,27 +165,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
-
-    "isFromBta is in session" should {
-      "redirect to business entity and pass the correct flag" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberSuccess(testBusinessPostCode, testDate, isFromBta = true)
-
-        val res = post("/check-your-answers",
-          Map(
-            SessionKeys.isFromBtaKey -> "true",
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
-          )
-        )()
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureBusinessEntityController.show().url)
-        )
-      }
-    }
   }
 
 }

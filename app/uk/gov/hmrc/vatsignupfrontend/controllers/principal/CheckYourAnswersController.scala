@@ -88,7 +88,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode) match {
         case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode)) =>
-          storeVatNumber(vatNumber, postCode, vatRegistrationDate, enrolments, isFromBta = request.session.get(SessionKeys.isFromBtaKey).isDefined)
+          storeVatNumber(vatNumber, postCode, vatRegistrationDate, enrolments, isFromBta = false)
         case (None, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())

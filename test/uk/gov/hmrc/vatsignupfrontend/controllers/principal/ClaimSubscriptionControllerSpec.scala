@@ -23,12 +23,13 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{isFromBtaKey, vatNumberKey}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 
 import scala.concurrent.Future
 
@@ -85,7 +86,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "the user does not have a VATDEC enrolment" when {
         "the VAT number is valid" should {
-          "redirect to Capture VAT registration date" in {
+          "redirect to BTA Capture VAT registration date" in {
             enable(BTAClaimSubscription)
 
             mockAuthorise(
@@ -95,12 +96,11 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
             status(result) shouldBe SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureVatRegistrationDateController.show().url)
+            redirectLocation(result) should contain(btaRoutes.CaptureBtaVatRegistrationDateController.show().url)
 
             val session = await(result).session(testGetRequest)
 
             session.get(vatNumberKey) should contain(testVatNumber)
-            session.get(isFromBtaKey) should contain("true")
           }
         }
         "the VAT number is invalid" should {

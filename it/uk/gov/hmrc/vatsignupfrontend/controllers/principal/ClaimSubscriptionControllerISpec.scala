@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{BTAClaimSubscription, FeatureSwitching}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSubscriptionClaimed
@@ -45,7 +46,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
       }
     }
     "the user does not have a VATDEC enrolment" when {
-      "return a redirect to kown facts page" in {
+      "return a redirect to known facts page" in {
         enable(BTAClaimSubscription)
 
         stubAuth(OK, successfulAuthResponse())
@@ -54,7 +55,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+          redirectUri(btaRoutes.CaptureBtaVatRegistrationDateController.show().url)
         )
       }
     }
