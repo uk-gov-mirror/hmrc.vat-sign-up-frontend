@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.services.mocks
 
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.mockito.{ArgumentMatcher, ArgumentMatchers}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -70,7 +70,11 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
                                 )(returnValue: Future[StoreVatNumberResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
-      ArgumentMatchers.eq(postCode),
+      ArgumentMatchers.argThat[PostCode](
+        new ArgumentMatcher[PostCode] {
+          override def matches(argument: PostCode): Boolean =
+            postCode.postCode.filterNot(_.isWhitespace).equalsIgnoreCase(argument.postCode.filterNot(_.isWhitespace))
+        }),
       ArgumentMatchers.eq(registrationDate),
       ArgumentMatchers.eq(isFromBta)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))

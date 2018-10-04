@@ -57,8 +57,8 @@ class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with Cu
     }
   }
 
-  "POST /vat-registration-date" should {
-    "return a not implemented" in {//TODO Change to redirect
+  "POST /bta/vat-registration-date" should {
+    "return a redirect" in {
       stubAuth(OK, successfulAuthResponse())
 
       val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
@@ -68,8 +68,8 @@ class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with Cu
         vatRegistrationDate + ".dateYear" -> yesterday.year)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
-        //TODO redirectUrl(routes.BusinessPostCodeController.show().url)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.BtaBusinessPostCodeController.show().url)
       )
 
       val session = SessionCookieCrumbler.getSessionMap(res)

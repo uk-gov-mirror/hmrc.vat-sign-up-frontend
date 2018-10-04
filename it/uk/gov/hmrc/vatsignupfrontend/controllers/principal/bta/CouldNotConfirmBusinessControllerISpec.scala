@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => superRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 

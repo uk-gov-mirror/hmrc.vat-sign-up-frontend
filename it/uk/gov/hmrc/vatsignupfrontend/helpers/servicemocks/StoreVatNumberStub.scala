@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
@@ -67,7 +67,7 @@ object StoreVatNumberStub extends WireMockMethods {
   }
 
 
-  private def requestJson(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean) =
+  private def requestJson(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): JsObject =
     Json.obj(
       "vatNumber" -> testVatNumber,
       "postCode" -> postCode.postCode,
