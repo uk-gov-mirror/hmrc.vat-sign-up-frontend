@@ -40,9 +40,7 @@ class CouldNotConfirmBusinessController @Inject()(val controllerComponents: Cont
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful( //TODO Redirect(BTA?)
-        NotImplemented
-      )
+      Future.successful(Redirect(appConfig.btaAddVatUrl))
     }
   }
 

@@ -56,8 +56,8 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
       mockAuthAdminRole()
 
       val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-      // TODO redirectLocation(result) should contain(BTA?) and SEE_OTHER
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(mockAppConfig.btaAddVatUrl)
     }
   }
 
