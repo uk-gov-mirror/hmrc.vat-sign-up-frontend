@@ -31,7 +31,7 @@ object IntegrationTestConstants {
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testCompanyUtr: String = IntegrationTestConstantsGenerator.randomUtrNumeric()
-  val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode)
+  val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode.toUpperCase.filterNot(_.isWhitespace))
   val testNino: String = new Generator().nextNino.nino
   val testSaUtr: String = new Generator().nextAtedUtr.utr
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail

@@ -143,3 +143,7 @@ POST        /bta/vat-registration-date                      uk.gov.hmrc.vatsignu
 #BTA Could Not Confirm Business
 GET         /bta/could-not-confirm-business                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.CouldNotConfirmBusinessController.show
 POST        /bta/could-not-confirm-business                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.CouldNotConfirmBusinessController.submit
+
+# Capture BTA Business Postcode
+GET         /bta/business-postcode                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BtaBusinessPostCodeController.show
+POST        /bta/business-postcode                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BtaBusinessPostCodeController.submit

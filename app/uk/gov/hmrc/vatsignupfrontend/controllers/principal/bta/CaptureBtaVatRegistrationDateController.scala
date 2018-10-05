@@ -23,7 +23,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.vat_registration_date
@@ -49,8 +48,9 @@ class CaptureBtaVatRegistrationDateController @Inject()(val controllerComponents
           Future.successful(
             BadRequest(vat_registration_date(formWithErrors, routes.CaptureBtaVatRegistrationDateController.submit()))
           ),
-        vatRegistrationDate => //TODO Redirect(routes.BtaBusinessPostCodeController.show().url)
-          Future.successful(NotImplemented.addingToSession(SessionKeys.vatRegistrationDateKey, vatRegistrationDate))
+        vatRegistrationDate =>
+          Future.successful(Redirect(routes.BtaBusinessPostCodeController.show().url)
+            .addingToSession(SessionKeys.vatRegistrationDateKey, vatRegistrationDate))
       )
     }
   }
