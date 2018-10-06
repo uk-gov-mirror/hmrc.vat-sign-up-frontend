@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, SubscriptionClaimed, VatNumberStored}
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
@@ -40,7 +40,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(multiple_vat_check(yesNoForm, routes.MultipleVatCheckController.submit())))
+      Future.successful(Ok(multiple_vat_check(multipleVatCheckForm, routes.MultipleVatCheckController.submit())))
     }
   }
 
@@ -48,7 +48,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
     authorised()(Retrievals.allEnrolments) { enrolments =>
       enrolments.vatNumber match {
         case Some(vatNumber) =>
-          yesNoForm.bindFromRequest.fold(
+          multipleVatCheckForm.bindFromRequest.fold(
             formWithErrors =>
               Future.successful(
                 BadRequest(multiple_vat_check(formWithErrors, routes.MultipleVatCheckController.submit()))

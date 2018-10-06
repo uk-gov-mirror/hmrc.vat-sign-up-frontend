@@ -38,6 +38,8 @@ object MessageLookup {
     val change = "Change"
     val tryAgain = "Try again"
     val startNow = "Start now"
+    val yes = "Yes"
+    val no = "No"
   }
 
   object ErrorMessage {
@@ -598,6 +600,13 @@ object MessageLookup {
     val bullet2 = "check your deadlines"
     val bullet3 = "pay your VAT"
     val bullet4 = "tell us about any changes to your business"
+  }
+
+  object ConfirmGeneralPartnershipUtr {
+    val title = "Is this the right Unique Taxpayer Reference for the partnership?"
+    val heading = "Is this the right Unique Taxpayer Reference (UTR) for the partnership?"
+    val line1 = "We hold the following information:"
+    val line2 = "Unique Taxpayer Reference (UTR)"
   }
 
 }

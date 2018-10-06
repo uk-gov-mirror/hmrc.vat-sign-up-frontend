@@ -17,9 +17,9 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm
+import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -42,7 +42,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "form value is YES" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-        val res = post("/more-than-one-vat-business")(YesNoForm.yesNo -> YesNoForm.yes)
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -56,7 +56,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubStoreVatNumberSuccess(isFromBta = Some(false))
 
-        val res = post("/more-than-one-vat-business")(YesNoForm.yesNo -> YesNoForm.no)
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
 
         res should have(
           httpStatus(SEE_OTHER),
