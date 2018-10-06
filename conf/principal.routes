@@ -147,3 +147,7 @@ POST        /bta/could-not-confirm-business                 uk.gov.hmrc.vatsignu
 # Capture BTA Business Postcode
 GET         /bta/business-postcode                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BtaBusinessPostCodeController.show
 POST        /bta/business-postcode                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BtaBusinessPostCodeController.submit
+
+# Confirm General Partnership Sautr
+GET         /confirm-partnership-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmGeneralPartnershipController.show
+POST        /confirm-partnership-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmGeneralPartnershipController.submit
