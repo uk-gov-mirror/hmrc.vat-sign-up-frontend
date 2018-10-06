@@ -18,26 +18,27 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.FormError
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
-class YesNoFormSpec extends UnitSpec {
+class ConfirmGeneralPartnershipFormSpec extends UnitSpec {
 
-  val error = "please select an option"
+  val error = "error.confirm_general_partnership_sautr"
 
   "YesNoForm" should {
     "successfully parse a Yes" in {
-      val res = yesNoForm(error).bind(Map(yesNo -> YesNoForm.yes))
+      val res = confirmGeneralPartnershipForm.bind(Map(yesNo -> option_yes))
       res.value should contain(Yes)
     }
 
     "successfully parse a No" in {
-      val res = yesNoForm(error).bind(Map(yesNo -> YesNoForm.no))
+      val res = confirmGeneralPartnershipForm.bind(Map(yesNo -> option_no))
       res.value should contain(No)
     }
 
     "fail when nothing has been entered" in {
-      val res = yesNoForm(error).bind(Map.empty[String, String])
+      val res = confirmGeneralPartnershipForm.bind(Map.empty[String, String])
       res.errors should contain(FormError(yesNo, error))
     }
   }

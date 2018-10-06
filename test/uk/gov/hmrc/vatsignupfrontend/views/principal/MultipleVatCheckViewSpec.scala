@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.agent
+package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{YesNo => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
@@ -36,7 +36,7 @@ class MultipleVatCheckViewSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check(
-    yesNoForm(error),
+    multipleVatCheckForm,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

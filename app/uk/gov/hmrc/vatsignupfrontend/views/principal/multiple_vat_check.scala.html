@@ -14,33 +14,34 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsignupfrontend.models._
-@import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+@import uk.gov.hmrc.vatsignupfrontend.models.YesNo
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.html.helpers._
+@import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
+@import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 
-@(yesNoForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(multipleVatCheckForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @principal_main_template(title = Messages("principal.multiple_vat_check.title"), bodyClasses = None) {
 
-    @summaryErrorHelper(yesNoForm)
+    @summaryErrorHelper(multipleVatCheckForm)
 
     <h1 class="heading-large">@Messages("principal.multiple_vat_check.heading")</h1>
 
     @form(action = postAction) {
 
         @radioHelper(
-            parentForm = yesNoForm,
+            parentForm = multipleVatCheckForm,
             inline = true,
             options = Seq(
-                (yes, Messages("principal.multiple_vat_check.radio_input.yes")),
-                (no, Messages("principal.multiple_vat_check.radio_input.no"))
+                (option_yes, Messages("base.yes")),
+                (option_no, Messages("base.no"))
             ),
             legend = Messages("principal.multiple_vat_check.heading"),
-            field = yesNoForm(yesNo)
+            field = multipleVatCheckForm(yesNo)
         )
 
         @continueButton()

@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ConfirmGeneralPartnershipUtr => messages, Base => baseMessages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
@@ -38,7 +38,7 @@ class ConfirmGeneralPartnershipSautrViewSpec extends ViewSpec {
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_general_partnership_sautr(
     testSaUtr,
-    yesNoForm(error),
+    confirmGeneralPartnershipForm,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

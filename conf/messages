@@ -543,8 +543,6 @@ principal.assistant_credential.line_1                                  = You can
 ## Principal Multiple Vat Check
 principal.multiple_vat_check.title                                     = Do you have more than one VAT registered business?
 principal.multiple_vat_check.heading                                   = Do you have more than one VAT registered business?
-principal.multiple_vat_check.radio_input.yes                           = Yes
-principal.multiple_vat_check.radio_input.no                            = No
 
 ## Sign Up Complete Client
 sign_up_complete_client.title                                          = You have added VAT to your business tax account

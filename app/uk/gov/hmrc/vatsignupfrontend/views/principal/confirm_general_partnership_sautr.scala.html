@@ -17,9 +17,10 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
-@import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
 @import uk.gov.hmrc.vatsignupfrontend.models.YesNo
+@import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 
 @(generalPartnershipSautr: String, yesNoForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -41,8 +42,8 @@
             parentForm = yesNoForm,
             inline = true,
             options = Seq(
-                (yes, Messages("base.yes")),
-                (no, Messages("base.no"))
+                (option_yes, Messages("base.yes")),
+                (option_no, Messages("base.no"))
             ),
             legend = Messages("principal.confirm_general_partnership_sautr.heading"),
             field = yesNoForm(yesNo)
