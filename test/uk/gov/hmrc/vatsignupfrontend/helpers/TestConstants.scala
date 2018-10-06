@@ -43,6 +43,7 @@ object TestConstants {
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)
   val testIRSAEnrolment: Enrolment = Enrolment(IRSAEnrolmentKey) withIdentifier(IRSAReferenceKey, testSaUtr)
   val testIRCTEnrolment: Enrolment = Enrolment(IRCTEnrolmentKey) withIdentifier(IRCTReferenceKey, testSaUtr)
+  val testPartnershipEnrolment: Enrolment = Enrolment(PartnershipEnrolmentKey) withIdentifier(PartnershipReferenceKey, testSaUtr)
 
   val testUserDetails: UserDetailsModel =
     UserDetailsModel(

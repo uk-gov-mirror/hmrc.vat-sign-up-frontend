@@ -107,8 +107,8 @@ error.invalid_characters_dob.field                                     = Enter y
 error.invalid_characters_dob.summary                                   = Enter your date of birth using numbers 0 to 9
 error.invalid_dob.field                                                = Enter a real date of birth
 error.invalid_dob.summary                                              = Enter a real date of birth
-error.confirm_general_partnership_sautr.field                          = Tell us if this is the right UTR for the partnership
-error.confirm_general_partnership_sautr.summary                        = Tell us if this is the right UTR for the partnership
+error.confirm_general_partnership_utr.field                            = Tell us if this is the right UTR for the partnership
+error.confirm_general_partnership_utr.summary                          = Tell us if this is the right UTR for the partnership
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -554,7 +554,7 @@ sign_up_complete_client.bullet_3                                       = pay you
 sign_up_complete_client.bullet_4                                       = tell us about any changes to your business
 
 ## Confirm General Partnership Sautr
-principal.confirm_general_partnership_sautr.title                      = Is this the right Unique Taxpayer Reference for the partnership?
-principal.confirm_general_partnership_sautr.heading                    = Is this the right Unique Taxpayer Reference (UTR) for the partnership?
-principal.confirm_general_partnership_sautr.line_1                     = We hold the following information:
-principal.confirm_general_partnership_sautr.line_2                     = Unique Taxpayer Reference (UTR)
+principal.confirm_general_partnership_utr.title                        = Is this the right Unique Taxpayer Reference for the partnership?
+principal.confirm_general_partnership_utr.heading                      = Is this the right Unique Taxpayer Reference (UTR) for the partnership?
+principal.confirm_general_partnership_utr.line_1                       = We hold the following information:
+principal.confirm_general_partnership_utr.line_2                       = Unique Taxpayer Reference (UTR)

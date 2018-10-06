@@ -72,6 +72,12 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
       retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
     )(Future.successful(new ~(Some(Admin), Enrolments(Set(testIRCTEnrolment)))))
 
+  def mockAuthRetrievePartnershipEnrolment(): Unit =
+    mockAuthorise(
+      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+    )(Future.successful(new ~(Some(Admin), Enrolments(Set(testPartnershipEnrolment)))))
+
+
   def mockAuthAdminRole(): Unit =
     mockAuthorise(retrievals = Retrievals.credentialRole)(Future.successful(Some(Admin)))
 

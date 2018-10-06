@@ -74,6 +74,16 @@ object AuthStub extends WireMockMethods {
     )
   )
 
+  val partnershipEnrolment: JsObject = Json.obj(
+    "key" -> PartnershipEnrolmentKey,
+    "identifiers" -> Json.arr(
+      Json.obj(
+        "key" -> PartnershipReferenceKey,
+        "value" -> testSaUtr
+      )
+    )
+  )
+
   val irctEnrolment: JsObject = Json.obj(
     "key" -> IRCTEnrolmentKey,
     "identifiers" -> Json.arr(

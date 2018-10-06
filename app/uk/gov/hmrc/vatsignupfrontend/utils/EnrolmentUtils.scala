@@ -43,6 +43,13 @@ object EnrolmentUtils {
           }
       }
     }
+
+    def partnershipUtr: Option[String] =
+      enrolments getEnrolment PartnershipEnrolmentKey flatMap {
+        vatDecEnrolment =>
+          vatDecEnrolment getIdentifier PartnershipReferenceKey map (_.value)
+
+      }
   }
 
 }
