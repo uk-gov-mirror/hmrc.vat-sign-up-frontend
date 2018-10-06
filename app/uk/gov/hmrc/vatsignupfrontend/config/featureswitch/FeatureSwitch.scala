@@ -33,7 +33,8 @@ object FeatureSwitch {
     VerifyAgentEmail,
     VerifyClientEmail,
     CtKnownFactsIdentityVerification,
-    BTAClaimSubscription
+    BTAClaimSubscription,
+    GeneralPartnership
   )
 
   def apply(str: String): FeatureSwitch =
@@ -79,4 +80,9 @@ case object CtKnownFactsIdentityVerification extends FeatureSwitch {
 case object BTAClaimSubscription extends FeatureSwitch {
   override val name: String = s"$prefix.bta-claim-subscription"
   override val displayText: String = "Enable users from BTA to claim their subscription through VAT sign up"
+}
+
+case object GeneralPartnership extends FeatureSwitch {
+  override val name: String = s"$prefix.general-partnership-journey"
+  override val displayText: String = "Enable users to enter general partnership flow"
 }
