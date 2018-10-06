@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.agent
+package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{YesNo => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ConfirmGeneralPartnershipUtr => messages, Base => baseMessages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 
-class MultipleVatCheckViewSpec extends ViewSpec {
+class ConfirmGeneralPartnershipSautrViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val error = "error.multiple_vat_check"
+  val error = "error.confirm_general_partnership_sautr"
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_general_partnership_sautr(
+    testSaUtr,
     yesNoForm(error),
     postAction = testCall)(
     FakeRequest(),
@@ -43,15 +45,21 @@ class MultipleVatCheckViewSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Multiple Vat check view" should {
+  "The Confirm General Partnership Sautr view" should {
 
     val testPage = TestView(
-      name = "Multiple Vat Check View",
+      name = "Confirm General Partnership Sautr View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
     testPage.shouldHaveForm("Yes No Form")(actionCall = testCall)
+
+    testPage.shouldHavePara(testSaUtr)
+
+    testPage.shouldHavePara(messages.line1)
+
+    testPage.shouldHavePara(messages.line2)
 
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
@@ -59,7 +67,7 @@ class MultipleVatCheckViewSpec extends ViewSpec {
       "for the option 'Yes'" should {
 
         "have the text 'yes'" in {
-          messages.radioYes shouldEqual "yes"
+          baseMessages.yes shouldEqual "Yes"
         }
 
         "have an input under the label that" should {
@@ -79,7 +87,7 @@ class MultipleVatCheckViewSpec extends ViewSpec {
       "for the option 'No'" should {
 
         "have the text 'no'" in {
-          messages.radioNo shouldEqual "no"
+          baseMessages.no shouldEqual "No"
         }
 
         "have an input under the label that" should {

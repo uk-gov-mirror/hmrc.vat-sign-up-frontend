@@ -22,20 +22,23 @@ import uk.gov.hmrc.vatsignupfrontend.forms.YesNoForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
 class YesNoFormSpec extends UnitSpec {
+
+  val error = "please select an option"
+
   "YesNoForm" should {
     "successfully parse a Yes" in {
-      val res = yesNoForm.bind(Map(yesNo -> YesNoForm.yes))
+      val res = yesNoForm(error).bind(Map(yesNo -> YesNoForm.yes))
       res.value should contain(Yes)
     }
 
     "successfully parse a No" in {
-      val res = yesNoForm.bind(Map(yesNo -> YesNoForm.no))
+      val res = yesNoForm(error).bind(Map(yesNo -> YesNoForm.no))
       res.value should contain(No)
     }
 
     "fail when nothing has been entered" in {
-      val res = yesNoForm.bind(Map.empty[String, String])
-      res.errors should contain(FormError(yesNo, yesNoError))
+      val res = yesNoForm(error).bind(Map.empty[String, String])
+      res.errors should contain(FormError(yesNo, error))
     }
   }
 }

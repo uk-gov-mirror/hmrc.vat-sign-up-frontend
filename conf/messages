@@ -25,6 +25,8 @@ base.year                                                              = Year
 base.change                                                            = Change
 base.try_again                                                         = Try again
 base.start_now                                                         = Start now
+base.yes                                                               = Yes
+base.no                                                                = No
 
 ## Errors
 error.principal.business-entity.field                                  = Select if you are registered as a sole trader or limited company
@@ -87,8 +89,8 @@ error.agent.no_entry_last_name.field                                   = Enter y
 error.agent.no_entry_last_name.summary                                 = Enter your client''s last name
 error.exceeds_max_last_name.field                                      = Last name must be 105 characters or less
 error.exceeds_max_last_name.summary                                    = Last name must be 105 characters or less
-error.invalid_first_name.field                                         = Last name must only include letters a to z, hyphens, spaces and apostrophes
-error.invalid_first_name.summary                                       = Last name must only include letters a to z, hyphens, spaces and apostrophes
+error.invalid_last_name.field                                          = Last name must only include letters a to z, hyphens, spaces and apostrophes
+error.invalid_last_name.summary                                        = Last name must only include letters a to z, hyphens, spaces and apostrophes
 error.principal.no_entry_nino.field                                    = Enter your National Insurance number
 error.principal.no_entry_nino.summary                                  = Enter your National Insurance number
 error.agent.no_entry_nino.field                                        = Enter your client''s National Insurance number
@@ -105,6 +107,8 @@ error.invalid_characters_dob.field                                     = Enter y
 error.invalid_characters_dob.summary                                   = Enter your date of birth using numbers 0 to 9
 error.invalid_dob.field                                                = Enter a real date of birth
 error.invalid_dob.summary                                              = Enter a real date of birth
+error.confirm_general_partnership_sautr.field                          = Tell us if this is the right UTR for the partnership
+error.confirm_general_partnership_sautr.summary                        = Tell us if this is the right UTR for the partnership
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -550,3 +554,9 @@ sign_up_complete_client.bullet_1                                       = see wha
 sign_up_complete_client.bullet_2                                       = check your deadlines
 sign_up_complete_client.bullet_3                                       = pay your VAT
 sign_up_complete_client.bullet_4                                       = tell us about any changes to your business
+
+## Confirm General Partnership Sautr
+principal.confirm_general_partnership_sautr.title                      = Is this the right Unique Taxpayer Reference for the partnership?
+principal.confirm_general_partnership_sautr.heading                    = Is this the right Unique Taxpayer Reference (UTR) for the partnership?
+principal.confirm_general_partnership_sautr.line_1                     = We hold the following information:
+principal.confirm_general_partnership_sautr.line_2                     = Unique Taxpayer Reference (UTR)

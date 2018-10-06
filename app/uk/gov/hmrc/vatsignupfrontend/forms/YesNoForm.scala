@@ -29,14 +29,12 @@ object YesNoForm {
 
   val no: String = "no"
 
-  val yesNoError: String = "error.multiple_vat_check"
-
-  private val formatter: Formatter[YesNo] = new Formatter[YesNo] {
+  private def formatter(error: String): Formatter[YesNo] = new Formatter[YesNo] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], YesNo] = {
       data.get(key) match {
         case Some(`yes`) => Right(Yes)
         case Some(`no`) => Right(No)
-        case _ => Left(Seq(FormError(key, yesNoError)))
+        case _ => Left(Seq(FormError(key, error)))
       }
     }
 
@@ -50,9 +48,9 @@ object YesNoForm {
     }
   }
 
-  val yesNoForm: Form[YesNo] = Form(
+  def yesNoForm(error: String): Form[YesNo] = Form(
     single(
-      yesNo -> of(formatter)
+      yesNo -> of(formatter(error))
     )
   )
 }

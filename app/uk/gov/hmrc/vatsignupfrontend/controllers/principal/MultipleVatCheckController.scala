@@ -38,9 +38,11 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                                            storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
+  val formError = "error.multiple_vat_check"
+
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(multiple_vat_check(yesNoForm, routes.MultipleVatCheckController.submit())))
+      Future.successful(Ok(multiple_vat_check(yesNoForm(formError), routes.MultipleVatCheckController.submit())))
     }
   }
 
@@ -48,7 +50,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
     authorised()(Retrievals.allEnrolments) { enrolments =>
       enrolments.vatNumber match {
         case Some(vatNumber) =>
-          yesNoForm.bindFromRequest.fold(
+          yesNoForm(formError).bindFromRequest.fold(
             formWithErrors =>
               Future.successful(
                 BadRequest(multiple_vat_check(formWithErrors, routes.MultipleVatCheckController.submit()))
