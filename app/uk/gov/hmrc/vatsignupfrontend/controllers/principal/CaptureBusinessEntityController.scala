@@ -25,11 +25,11 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, UseIRSA}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, GeneralPartnershipJourney, UseIRSA}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.CitizenDetailsService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
@@ -46,7 +46,11 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_business_entity(validateBusinessEntityForm, routes.CaptureBusinessEntityController.submit()))
+        Ok(capture_business_entity(
+          businessEntityForm = validateBusinessEntityForm,
+          postAction = routes.CaptureBusinessEntityController.submit(),
+          generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney)
+        ))
       )
     }
   }
@@ -56,7 +60,11 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
       validateBusinessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
+            BadRequest(capture_business_entity(
+              formWithErrors,
+              routes.CaptureBusinessEntityController.submit(),
+              isEnabled(GeneralPartnershipJourney)
+            ))
           ),
         businessEntity => {
           businessEntity match {
@@ -66,6 +74,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case SoleTrader | LimitedCompany =>
               Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+            case GeneralPartnership =>
+              Future.successful(Redirect(partnerships.routes.ResolvePartnershipUtrController.resolve()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }

@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StorePartnershipInformationConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationResponse
-import uk.gov.hmrc.vatsignupfrontend.models.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
 
 import scala.concurrent.Future
 

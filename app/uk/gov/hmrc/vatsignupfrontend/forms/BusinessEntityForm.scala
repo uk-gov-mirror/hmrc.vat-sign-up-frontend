@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models._
 
 object BusinessEntityForm {
 
@@ -28,6 +28,8 @@ object BusinessEntityForm {
   val soleTrader: String = "sole-trader"
 
   val limitedCompany: String = "limited-company"
+
+  val generalPartnership: String = "general-partnership"
 
   val other: String = "other"
 
@@ -41,6 +43,7 @@ object BusinessEntityForm {
       data.get(key) match {
         case Some(`soleTrader`) => Right(SoleTrader)
         case Some(`limitedCompany`) => Right(LimitedCompany)
+        case Some(`generalPartnership`) => Right(GeneralPartnership)
         case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, if (isAgent) agentBusinessEntityError else principalBusinessEntityError)))
       }

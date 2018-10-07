@@ -25,9 +25,12 @@ sealed trait BusinessEntity {
   override def toString: String = this match {
     case LimitedCompany => LimitedCompanyKey
     case SoleTrader => SoleTraderKey
+    case GeneralPartnership => GeneralPartnershipKey
     case Other => OtherKey
   }
 }
+
+object GeneralPartnership extends BusinessEntity
 
 object LimitedCompany extends BusinessEntity
 
@@ -38,12 +41,14 @@ object Other extends BusinessEntity
 object BusinessEntity {
   val LimitedCompanyKey = "limited-company"
   val SoleTraderKey = "sole-trader"
+  val GeneralPartnershipKey = "general-partnership"
   val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
     override def fromString(string: String): Option[BusinessEntity] = string match {
       case LimitedCompanyKey => Some(LimitedCompany)
       case SoleTraderKey => Some(SoleTrader)
+      case GeneralPartnershipKey => Some(GeneralPartnership)
       case OtherKey => Some(Other)
       case _ => None
     }
@@ -51,6 +56,7 @@ object BusinessEntity {
     override def toString(entity: BusinessEntity): String = entity match {
       case LimitedCompany => LimitedCompanyKey
       case SoleTrader => SoleTraderKey
+      case GeneralPartnership => GeneralPartnershipKey
       case Other => OtherKey
     }
   }
