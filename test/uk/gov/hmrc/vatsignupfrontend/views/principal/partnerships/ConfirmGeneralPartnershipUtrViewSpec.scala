@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ConfirmGeneralPartnershipUtr => messages, Base => baseMessages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => baseMessages, ConfirmGeneralPartnershipUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
-import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class ConfirmGeneralPartnershipSautrViewSpec extends ViewSpec {
+class ConfirmGeneralPartnershipUtrViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val error = "error.confirm_general_partnership_sautr"
+  val error = "error.confirm_general_partnership_utr"
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_general_partnership_sautr(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_general_partnership_utr(
     testSaUtr,
     confirmGeneralPartnershipForm,
     postAction = testCall)(

@@ -3,7 +3,11 @@
 # Guidance page
 GET         /                                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.GuidanceController.show
 
+# Resolve Vat Number
 GET        /resolve-vat-number                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.ResolveVatNumberController.resolve
+
+# Resolve Partnership Utr
+GET        /resolve-partnership-utr                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ResolvePartnershipUtrController.resolve
 
 # Capture Vat number
 GET         /vat-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.show

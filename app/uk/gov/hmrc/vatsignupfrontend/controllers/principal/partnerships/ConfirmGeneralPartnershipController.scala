@@ -26,23 +26,23 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnership
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_general_partnership_sautr
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_general_partnership_utr
 
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: ControllerComponents) // TODO add StorePartnershipSautrService
+class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: ControllerComponents) // TODO add StorePartnershipUtrService
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnership)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optPartnershipSautr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+      val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
 
-      (optVatNumber, optPartnershipSautr) match {
-        case (Some(_), Some(partnershipSautr)) =>
+      (optVatNumber, optPartnershipUtr) match {
+        case (Some(_), Some(partnershipUtr)) =>
           Future.successful(
-            Ok(confirm_general_partnership_sautr(partnershipSautr, confirmGeneralPartnershipForm, routes.ConfirmGeneralPartnershipController.submit()))
+            Ok(confirm_general_partnership_utr(partnershipUtr, confirmGeneralPartnershipForm, routes.ConfirmGeneralPartnershipController.submit()))
           )
         case (None, _) =>
           Future.successful(
@@ -50,7 +50,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
           )
         case _ =>
           Future.successful(
-            throw new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership SAUTR flow
+            throw new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
           )
       }
     }
@@ -58,11 +58,11 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-    val optPartnershipSautr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+    val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
 
     authorised() {
-      (optVatNumber, optPartnershipSautr) match {
-        case (Some(vatNumber), Some(partnershipSautr)) => // TODO Create storePartnershipSautrService
+      (optVatNumber, optPartnershipUtr) match {
+        case (Some(vatNumber), Some(partnershipUtr)) => // TODO Create storePartnershipUtrService
           Future.successful(NotImplemented)
         case (None, _) =>
           Future.successful(
@@ -70,7 +70,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
           )
         case _ =>
           Future.failed(
-            throw new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership SAUTR flow
+            throw new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
           )
       }
     }
