@@ -20,9 +20,10 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
@@ -30,7 +31,7 @@ import scala.concurrent.Future
 
 @Singleton
 class ResolvePartnershipUtrController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnership)) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
@@ -38,6 +39,7 @@ class ResolvePartnershipUtrController @Inject()(val controllerComponents: Contro
         case Some(partnershipUtr) =>
           Future.successful(
             Redirect(routes.ConfirmGeneralPartnershipController.show())
+              addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
           )
         case None =>
           Future.failed(

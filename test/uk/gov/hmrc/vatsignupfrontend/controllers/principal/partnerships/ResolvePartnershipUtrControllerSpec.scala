@@ -24,8 +24,10 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
@@ -33,7 +35,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(GeneralPartnership)
+    enable(GeneralPartnershipJourney)
   }
 
   object TestResolvePartnershipUtrController extends ResolvePartnershipUtrController(mockControllerComponents)
@@ -48,6 +50,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         val result = TestResolvePartnershipUtrController.resolve(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.ConfirmGeneralPartnershipController.show().url)
+        session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
 
       }
     }

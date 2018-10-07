@@ -59,7 +59,7 @@ class ConfirmGeneralPartnershipUtrViewSpec extends ViewSpec {
 
     testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHavePara(messages.line2)
+    testPage.shouldHaveH2(messages.line2)
 
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
