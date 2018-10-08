@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -27,6 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationSuccess
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_general_partnership_utr
 
@@ -53,8 +55,8 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
             Redirect(principalRoutes.ResolveVatNumberController.resolve())
           )
         case _ =>
-          Future.successful(
-            throw new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
+          Future.failed(
+            new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
           )
       }
     }
@@ -67,19 +69,28 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
     authorised() {
       (optVatNumber, optPartnershipUtr) match {
         case (Some(vatNumber), Some(partnershipUtr)) =>
-          storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr) map {
-            case Right(StorePartnershipInformationSuccess) =>
-              Redirect(principalRoutes.AgreeCaptureEmailController.show())
-            case Left(_) =>
-              throw new BadGatewayException("Store partnership information failed")
-          }
+          confirmGeneralPartnershipForm.bindFromRequest().fold(
+            error => Future.successful(BadRequest(confirm_general_partnership_utr(partnershipUtr, error, routes.ConfirmGeneralPartnershipController.submit())))
+            , {
+              case Yes =>
+                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr) flatMap {
+                  case Right(StorePartnershipInformationSuccess) =>
+                    Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
+                  case Left(_) =>
+                    Future.failed(new BadGatewayException("Store partnership information failed"))
+                }
+              case No =>
+                // todo goto error page once it's defined
+                Future.failed(new InternalServerException("User signed in with the wrong partnership cred"))
+            }
+          )
         case (None, _) =>
           Future.successful(
             Redirect(principalRoutes.ResolveVatNumberController.resolve())
           )
         case _ =>
           Future.failed(
-            throw new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
+            new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
           )
       }
     }
