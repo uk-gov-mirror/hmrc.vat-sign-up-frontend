@@ -18,21 +18,25 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationSuccess
+import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_general_partnership_utr
 
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: ControllerComponents) // TODO add StorePartnershipUtrService
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnership)) {
+class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: ControllerComponents,
+                                                    storePartnershipInformationService: StorePartnershipInformationService
+                                                   )
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -62,8 +66,13 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
 
     authorised() {
       (optVatNumber, optPartnershipUtr) match {
-        case (Some(vatNumber), Some(partnershipUtr)) => // TODO Create storePartnershipUtrService
-          Future.successful(NotImplemented)
+        case (Some(vatNumber), Some(partnershipUtr)) =>
+          storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr) map {
+            case Right(StorePartnershipInformationSuccess) =>
+              Redirect(principalRoutes.AgreeCaptureEmailController.show())
+            case Left(_) =>
+              throw new BadGatewayException("Store partnership information failed")
+          }
         case (None, _) =>
           Future.successful(
             Redirect(principalRoutes.ResolveVatNumberController.resolve())

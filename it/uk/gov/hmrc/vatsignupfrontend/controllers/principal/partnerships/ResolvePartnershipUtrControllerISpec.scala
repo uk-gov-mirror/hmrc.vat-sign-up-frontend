@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -26,7 +26,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(GeneralPartnership)
+    enable(GeneralPartnershipJourney)
   }
 
   "GET /resolve-partnership-utr" when {
