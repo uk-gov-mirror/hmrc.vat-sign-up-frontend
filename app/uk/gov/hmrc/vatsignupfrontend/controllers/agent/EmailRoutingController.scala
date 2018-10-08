@@ -37,7 +37,7 @@ class EmailRoutingController @Inject()(val controllerComponents: ControllerCompo
       else if (isEnabled(VerifyClientEmail))
         Future.successful(Redirect(routes.AgreeCaptureClientEmailController.show()))
       else
-        Future.successful(throw new InternalServerException("Both feature switches are disabled"))
+        Future.failed(new InternalServerException("Both feature switches are disabled"))
     }
   }
 
