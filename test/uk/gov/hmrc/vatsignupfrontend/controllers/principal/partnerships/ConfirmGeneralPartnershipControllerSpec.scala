@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
@@ -27,8 +27,10 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
+import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmGeneralPartnershipForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 
 import scala.concurrent.Future
@@ -49,8 +51,8 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
 
   val testGetRequest = FakeRequest("GET", "/confirm-partnership-utr")
 
-  val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/confirm-partnership-utr")
+  def testPostRequest(answer: YesNo = Yes): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest("POST", "/confirm-partnership-utr").withFormUrlEncodedBody(confirmGeneralPartnershipForm.fill(answer).data.toSeq: _*)
 
   "Calling the show action of the Confirm General Partnership controller" when {
     "there is a company number in the session" should {
@@ -81,7 +83,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         mockAuthAdminRole()
 
         intercept[InternalServerException] {
-          await(TestConfirmGeneralPartnershipController.submit(testPostRequest.withSession(
+          await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
         }
@@ -89,29 +91,46 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
     }
   }
 
-
   "Calling the submit action of the Confirm General Partnership controller" when {
     "vat number is in session" when {
-      "go to the 'agree to receive emails' page" in {
-        mockAuthAdminRole()
-        mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Right(StorePartnershipInformationSuccess)))
+      "User answered Yes" should {
+        "go to the 'agree to receive emails' page" in {
+          mockAuthAdminRole()
+          mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Right(StorePartnershipInformationSuccess)))
 
-        val result = TestConfirmGeneralPartnershipController.submit(testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.partnershipSautrKey -> testSaUtr
-        ))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(principalRoutes.AgreeCaptureEmailController.show().url)
+          val result = TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.partnershipSautrKey -> testSaUtr
+          ))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(principalRoutes.AgreeCaptureEmailController.show().url)
+        }
+      }
+      "User answered No" should {
+        // TOOD goto the error page once it's defined
+        "throw internal server exception" in {
+          mockAuthAdminRole()
+          mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Right(StorePartnershipInformationSuccess)))
+
+          val result = TestConfirmGeneralPartnershipController.submit(testPostRequest(No).withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.partnershipSautrKey -> testSaUtr
+          ))
+
+          intercept[InternalServerException] {
+            await(result)
+          }
+        }
       }
     }
   }
   "vat number is in session but store partnership information is unsuccessful" should {
-    "throw internal server exception" in {
+    "throw bad gateway exception" in {
       mockAuthAdminRole()
       mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
       intercept[BadGatewayException] {
-        await(TestConfirmGeneralPartnershipController.submit(testPostRequest.withSession(
+        await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr
         )))
@@ -122,7 +141,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
     "redirect to your vat number" in {
       mockAuthAdminRole()
 
-      val result = TestConfirmGeneralPartnershipController.submit(testPostRequest)
+      val result = TestConfirmGeneralPartnershipController.submit(testPostRequest())
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(principalRoutes.ResolveVatNumberController.resolve().url)
     }
@@ -132,7 +151,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       mockAuthAdminRole()
 
       intercept[InternalServerException] {
-        await(TestConfirmGeneralPartnershipController.submit(testPostRequest.withSession(
+        await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
           SessionKeys.vatNumberKey -> testVatNumber
         )))
       }

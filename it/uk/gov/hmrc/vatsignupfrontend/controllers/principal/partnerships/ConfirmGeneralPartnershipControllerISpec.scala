@@ -20,11 +20,13 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
+import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping.{option_no, option_yes}
 
 
 class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -58,15 +60,28 @@ class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with Cu
     }
   }
 
-  "POST /confirm-partnership-utr" should {
+  "POST /confirm-partnership-utr" when {
+    "the user answered No" should {
+      // TOOD goto the error page once it's defined
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse())
 
-    "the partnership sautr is successfully stored" when {
+        val res = post("/confirm-partnership-utr",
+          Map(SessionKeys.partnershipSautrKey -> testSaUtr, SessionKeys.vatNumberKey -> testVatNumber))(yesNo -> option_no)
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+    }
+    "the user answered Yes" when {
+      "the partnership sautr is successfully stored" when {
         "redirect to agree to receive email page" in {
           stubAuth(OK, successfulAuthResponse())
           stubStorePartnershipInformation(testVatNumber, testSaUtr, GeneralPartnership)(NO_CONTENT)
 
           val res = post("/confirm-partnership-utr",
-            Map(SessionKeys.partnershipSautrKey -> testSaUtr, SessionKeys.vatNumberKey -> testVatNumber))()
+            Map(SessionKeys.partnershipSautrKey -> testSaUtr, SessionKeys.vatNumberKey -> testVatNumber))(yesNo -> option_yes)
 
           res should have(
             httpStatus(SEE_OTHER),
@@ -75,19 +90,20 @@ class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with Cu
         }
       }
     }
+  }
 
-    "store partnership sautr service returned an error" should {
-      "INTERNAL_SERVER_ERROR" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStorePartnershipInformation(testVatNumber, testSaUtr, GeneralPartnership)(BAD_REQUEST)
+  "store partnership sautr service returned an error" should {
+    "INTERNAL_SERVER_ERROR" in {
+      stubAuth(OK, successfulAuthResponse())
+      stubStorePartnershipInformation(testVatNumber, testSaUtr, GeneralPartnership)(BAD_REQUEST)
 
-        val res = post("/confirm-partnership-utr",
-          Map(SessionKeys.partnershipSautrKey -> testSaUtr, SessionKeys.vatNumberKey -> testVatNumber))()
+      val res = post("/confirm-partnership-utr",
+        Map(SessionKeys.partnershipSautrKey -> testSaUtr, SessionKeys.vatNumberKey -> testVatNumber))(yesNo -> option_yes)
 
-        res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
-        )
-      }
+      res should have(
+        httpStatus(INTERNAL_SERVER_ERROR)
+      )
     }
+  }
 
 }
