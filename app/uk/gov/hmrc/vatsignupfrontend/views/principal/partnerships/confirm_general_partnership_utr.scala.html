@@ -32,15 +32,16 @@
 
     <p>@Messages("principal.confirm_general_partnership_utr.line_1")</p>
 
-    <h2 class="heading-medium">@Messages("principal.confirm_general_partnership_utr.line_2")</h2>
-
-    <p class="lede">@generalPartnershipUtr</p>
+    <p class="lede">
+        <span class="bold-small">@Messages("principal.confirm_general_partnership_utr.line_2")</span>
+        <br>
+        @generalPartnershipUtr</p>
 
     @form(action = postAction) {
 
         @radioHelper(
             parentForm = yesNoForm,
-            inline = false,
+            inline = true,
             options = Seq(
                 (option_yes, Messages("base.yes")),
                 (option_no, Messages("base.no"))
