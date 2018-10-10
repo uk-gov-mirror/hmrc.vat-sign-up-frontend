@@ -35,6 +35,8 @@ GET         /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.
 POST        /vat-through-software/sign-up/test-only/stub-issuer          uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubIssuerController.submit
 
 
+GET         /vat-through-software/sign-up/test-only/dd-config            uk.gov.hmrc.vatsignupfrontend.testonly.controllers.DDConfigController.show
+
 
 ->          /                                                            prod.Routes
 
