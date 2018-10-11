@@ -17,7 +17,9 @@
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
+import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 object VatNumberEligibilityHttpParser {
   type VatNumberEligibilityResponse = Either[VatNumberIneligible, VatNumberEligible.type]
@@ -26,7 +28,10 @@ object VatNumberEligibilityHttpParser {
     override def read(method: String, url: String, response: HttpResponse): VatNumberEligibilityResponse = {
       response.status match {
         case NO_CONTENT => Right(VatNumberEligible)
-        case BAD_REQUEST => Left(IneligibleForMtdVatNumber)
+        case BAD_REQUEST =>
+          response.json.validate[MigratableDates] match {
+            case JsSuccess(dates, _) => Left(IneligibleForMtdVatNumber(dates))
+          }
         case NOT_FOUND => Left(InvalidVatNumber)
         case CONFLICT => Left(VatNumberAlreadySubscribed)
         case status => Left(VatNumberEligibilityFailureResponse(status))
@@ -38,7 +43,7 @@ object VatNumberEligibilityHttpParser {
 
   sealed trait VatNumberIneligible
 
-  case object IneligibleForMtdVatNumber extends VatNumberIneligible
+  case class IneligibleForMtdVatNumber(migratableDates: MigratableDates) extends VatNumberIneligible
 
   case object VatNumberAlreadySubscribed extends VatNumberIneligible
 

@@ -16,15 +16,20 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
+import java.time.LocalDate
+
 import org.scalatest.EitherValues
-import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, NO_CONTENT, NOT_FOUND}
+import play.api.http.Status._
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
   val testUri = "/"
+  val testMigratableDates = MigratableDates(Some(LocalDate.now()), Some(LocalDate.now()))
 
   "VatNumberEligibilityHttpReads" when {
     "read" should {
@@ -36,12 +41,28 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
         res.right.value shouldBe VatNumberEligible
       }
 
-      "parse a BAD_REQUEST response as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
-        val httpResponse = HttpResponse(BAD_REQUEST)
+      "parse a BAD_REQUEST response with no body as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe IneligibleForMtdVatNumber
+        res.left.value shouldBe IneligibleForMtdVatNumber(MigratableDates())
+      }
+
+      "parse a BAD_REQUEST response with a json as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.toJson(testMigratableDates)))
+
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe IneligibleForMtdVatNumber(testMigratableDates)
+      }
+
+      "parse a BAD_REQUEST response with an invalid json as a IneligibleForMtdVatNumber" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.toJson(testMigratableDates)))
+
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe IneligibleForMtdVatNumber(testMigratableDates)
       }
 
       "parse a NOT_FOUND response as a InvalidVatNumber when the vat number is not on the control list" in {

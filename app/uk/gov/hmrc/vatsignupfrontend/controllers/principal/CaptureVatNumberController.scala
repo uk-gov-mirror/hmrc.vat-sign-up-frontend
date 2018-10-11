@@ -76,7 +76,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
               case None =>
                 vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
                   case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(vatNumberKey -> formVatNumber)
-                  case Left(IneligibleForMtdVatNumber) => Redirect(routes.CannotUseServiceController.show())
+                  case Left(IneligibleForMtdVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
                   case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
                   case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
                   case Left(VatNumberEligibilityFailureResponse(status)) => {
