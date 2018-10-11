@@ -16,16 +16,22 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
+import java.time.LocalDate
+
 import org.scalatest.EitherValues
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
   val testUri = "/"
+
+  val currentDate = LocalDate.now()
+  val testMigratableDates = MigratableDates(Some(currentDate), Some(currentDate))
 
   "StoreVatNumberHttpReads" when {
     "read" should {
@@ -85,13 +91,23 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe StoreVatNumberHttpParser.InvalidVatNumber
       }
 
-      "parse a UNPROCESSABLE_ENTITY response as a IneligibleVatNumber when the vat number is already subscribed" in {
-        val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY)
+      "parse an UNPROCESSABLE_ENTITY response as an IneligibleVatNumber when the vat number is already subscribed and " +
+        "we have a date on which to migrate" in {
+        val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY, Some(Json.toJson(testMigratableDates)))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe StoreVatNumberHttpParser.IneligibleVatNumber
+        res.left.value shouldBe StoreVatNumberHttpParser.IneligibleVatNumber(testMigratableDates)
       }
+
+      "parse an UNPROCESSABLE_ENTITY response as an IneligibleVatNumber when the vat number is already subscribed" in {
+        val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY, Some(Json.obj()))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe StoreVatNumberHttpParser.IneligibleVatNumber(MigratableDates())
+      }
+
 
       "parse any other response as a StoreVatNumberFailureResponse" in {
         val httpResponse = HttpResponse(INTERNAL_SERVER_ERROR)

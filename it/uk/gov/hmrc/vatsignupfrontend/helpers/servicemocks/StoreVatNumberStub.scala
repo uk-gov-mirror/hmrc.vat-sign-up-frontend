@@ -20,7 +20,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
 
 object StoreVatNumberStub extends WireMockMethods {
 
@@ -45,9 +45,10 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> NoRelationshipCode))
   }
 
-  def stubStoreVatNumberIneligible(isFromBta: Option[Boolean]): Unit = {
+  def stubStoreVatNumberIneligible(isFromBta: Option[Boolean],
+                                   migratableDates: MigratableDates): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
-      .thenReturn(status = UNPROCESSABLE_ENTITY)
+      .thenReturn(status = UNPROCESSABLE_ENTITY, Json.toJson(migratableDates))
   }
 
 
@@ -99,10 +100,13 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = PRECONDITION_FAILED)
   }
 
-  def stubStoreVatNumberIneligible(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
+  def stubStoreVatNumberIneligible(postCode: PostCode,
+                                   registrationDate: DateModel,
+                                   isFromBta: Boolean,
+                                   migratableDates: MigratableDates = MigratableDates()): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       requestJson(postCode, registrationDate, isFromBta))
-      .thenReturn(status = UNPROCESSABLE_ENTITY)
+      .thenReturn(status = UNPROCESSABLE_ENTITY, Json.toJson(migratableDates))
   }
 
   def stubStoreVatNumberAlreadySignedUp(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {

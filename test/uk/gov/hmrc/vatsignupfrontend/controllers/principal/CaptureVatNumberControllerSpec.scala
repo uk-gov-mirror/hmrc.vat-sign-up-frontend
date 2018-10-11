@@ -31,6 +31,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
 
 import scala.concurrent.Future
@@ -110,7 +111,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           "the vat eligibility is unsuccessful" should {
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false))
+              mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = MigratableDates())
 
               val request = testPostRequest(testVatNumber)
 

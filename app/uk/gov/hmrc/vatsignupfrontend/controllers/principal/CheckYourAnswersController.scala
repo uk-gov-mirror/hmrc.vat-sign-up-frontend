@@ -75,7 +75,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
-      case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
+      case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
       case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
       case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
     }
