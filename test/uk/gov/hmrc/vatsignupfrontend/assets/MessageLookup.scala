@@ -416,6 +416,7 @@ object MessageLookup {
     val heading: String = title
 
     def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
+
     val linkText1 = "change your email address"
     val line2 = s"You can $linkText1 if it is not correct."
     val accordionHeading = "I did not get an email"
@@ -608,6 +609,13 @@ object MessageLookup {
     val heading = "Is this the right Unique Taxpayer Reference (UTR) for the partnership?"
     val line1 = "We hold the following information:"
     val line2 = "Unique Taxpayer Reference (UTR)"
+  }
+
+  object SignUpAfterThisDate {
+    val title = "You must come back later to sign up"
+    val heading = "You must come back later to sign up"
+    val line1 = "There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due."
+    def line2(date: String) = s"Please come back and sign up after $date."
   }
 
 }
