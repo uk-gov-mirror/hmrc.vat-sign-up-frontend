@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
+package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import java.time.LocalDate
 
@@ -22,26 +22,23 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SignUpBetweenTheseDates=> messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SignUpAfterThisDate => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class SignUpBetweenTheseDatesSpec extends ViewSpec {
+class SignUpAfterThisDateSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  val testStartDate: LocalDate = LocalDate.now()
-  val testEndDate: LocalDate = testStartDate.plusMonths(3)
-  val expectedFormattedStartDate: String = DateModel.dateConvert(testStartDate).toOutputDateFormat
-  val expectedFormattedEndDate: String = DateModel.dateConvert(testEndDate).toOutputDateFormat
+  val testDate: LocalDate = LocalDate.now()
+  val expectedFormattedDate: String = DateModel.dateConvert(testDate).toOutputDateFormat
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.sign_up_between_these_dates(
-    startDate = testStartDate,
-    endDate = testEndDate)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_after_this_date(
+    date = testDate)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -59,7 +56,7 @@ class SignUpBetweenTheseDatesSpec extends ViewSpec {
 
     testPage.shouldHaveParaSeq(
       messages.line1,
-      messages.line2(expectedFormattedStartDate, expectedFormattedEndDate)
+      messages.line2(expectedFormattedDate)
     )
 
     testPage.shouldHaveSignOutButton(isAgent = false)
