@@ -17,6 +17,8 @@
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
+import play.api.libs.json.Json
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 object VatEligibilityStub extends WireMockMethods {
 
@@ -30,9 +32,9 @@ object VatEligibilityStub extends WireMockMethods {
       .thenReturn(status = INTERNAL_SERVER_ERROR)
   }
 
-  def stubVatNumberIneligibleForMtd(vatNumber: String): Unit = {
+  def stubVatNumberIneligibleForMtd(vatNumber: String, migratableDates: MigratableDates = MigratableDates()): Unit = {
     when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
-      .thenReturn(status = BAD_REQUEST)
+      .thenReturn(status = BAD_REQUEST, Json.toJson(migratableDates))
   }
 
   def stubVatNumberEligibilityInvalid(vatNumber: String): Unit = {

@@ -22,6 +22,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{VatNumberEligibilityResponse, _}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
 
 import scala.concurrent.Future
@@ -48,8 +49,8 @@ trait MockVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSug
   def mockVatNumberEligibilityFailure(vatNumber: String): Unit =
     mockVatNumberEligibility(vatNumber)(Future.successful(Left(VatNumberEligibilityFailureResponse(INTERNAL_SERVER_ERROR))))
 
-  def mockVatNumberIneligibleForMtd(vatNumber: String): Unit =
-    mockVatNumberEligibility(vatNumber)(Future.successful(Left(IneligibleForMtdVatNumber)))
+  def mockVatNumberIneligibleForMtd(vatNumber: String, migratableDates: MigratableDates = MigratableDates()): Unit =
+    mockVatNumberEligibility(vatNumber)(Future.successful(Left(IneligibleForMtdVatNumber(migratableDates))))
 
   def mockVatNumberEligibilityInvalid(vatNumber: String): Unit =
     mockVatNumberEligibility(vatNumber)(Future.successful(Left(InvalidVatNumber)))
