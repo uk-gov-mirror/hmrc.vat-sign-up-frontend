@@ -22,7 +22,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 
 import scala.concurrent.Future
@@ -60,8 +60,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberInvalid(vatNumber: String, isFromBta: Option[Boolean]): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(InvalidVatNumber)))
 
-  def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Option[Boolean]): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber)))
+  def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Option[Boolean], migratableDates: MigratableDates): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber(migratableDates))))
 
   def mockStoreVatNumberAlreadySubscribed(vatNumber: String, isFromBta: Option[Boolean]): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(AlreadySubscribed)))
@@ -95,8 +95,14 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberInvalid(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(InvalidVatNumber)))
 
-  def mockStoreVatNumberIneligible(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(IneligibleVatNumber)))
+  def mockStoreVatNumberIneligible(vatNumber: String,
+                                   postCode: PostCode,
+                                   registrationDate: DateModel,
+                                   isFromBta: Boolean,
+                                   migratableDates: MigratableDates = MigratableDates()): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(
+      Future.successful(Left(IneligibleVatNumber(migratableDates)))
+    )
 
   def mockStoreVatNumberAlreadySubscribed(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(AlreadySubscribed)))

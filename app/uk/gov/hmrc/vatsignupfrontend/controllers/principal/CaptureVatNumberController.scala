@@ -67,7 +67,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                   case Right(SubscriptionClaimed) =>
                     Redirect(routes.SignUpCompleteClientController.show())
                   case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
-                  case Left(IneligibleVatNumber) => Redirect(routes.CannotUseServiceController.show())
+                  case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")
                 }

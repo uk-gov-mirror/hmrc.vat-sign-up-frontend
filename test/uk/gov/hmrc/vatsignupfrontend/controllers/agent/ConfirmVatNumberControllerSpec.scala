@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
 
 class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
@@ -102,7 +103,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but store vat is unsuccessful as client is ineligible" should {
       "go to the cannot use service page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = None)
+        mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = None, migratableDates = MigratableDates())
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
