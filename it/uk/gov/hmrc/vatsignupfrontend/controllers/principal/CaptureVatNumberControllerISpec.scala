@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -132,6 +133,34 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             }
           }
 
+          "redirect to the sign up after this date page" when {
+            "the vat number is ineligible for mtd vat and one date is available" in {
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.MigratableDatesController.show().url)
+              )
+            }
+          }
+
+          "redirect to the sign up between these dates page" when {
+            "the vat number is ineligible for mtd vat and two dates are available" in {
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.MigratableDatesController.show().url)
+              )
+            }
+          }
+
           "throw an internal server error" when {
             "any other failure occurs" in {
               stubAuth(OK, successfulAuthResponse())
@@ -214,6 +243,34 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               res should have(
                 httpStatus(SEE_OTHER),
                 redirectUri(routes.CannotUseServiceController.show().url)
+              )
+            }
+          }
+
+          "redirect to the sign up after this date page" when {
+            "the vat number is ineligible for mtd vat and one date is available" in {
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.MigratableDatesController.show().url)
+              )
+            }
+          }
+
+          "redirect to the sign up between these dates page" when {
+            "the vat number is ineligible for mtd vat and two dates are available" in {
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.MigratableDatesController.show().url)
               )
             }
           }
