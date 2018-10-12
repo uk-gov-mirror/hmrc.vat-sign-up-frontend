@@ -31,4 +31,5 @@ object SessionKeys {
   val vatRegistrationDateKey = "VatRegistrationDate"
   val businessPostCodeKey = "BusinessPostCode"
   val partnershipSautrKey = "PartnershipSautr"
+  val migratableDatesKey = "MigratableDates"
 }

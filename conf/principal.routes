@@ -155,3 +155,6 @@ POST        /bta/business-postcode                          uk.gov.hmrc.vatsignu
 # Confirm General Partnership Sautr
 GET         /confirm-partnership-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmGeneralPartnershipController.show
 POST        /confirm-partnership-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmGeneralPartnershipController.submit
+
+# Sign up later
+GET         /error/sign-up-later                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.MigratableDatesController.show
