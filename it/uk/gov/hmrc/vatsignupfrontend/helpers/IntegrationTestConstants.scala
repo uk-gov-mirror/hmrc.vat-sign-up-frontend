@@ -45,4 +45,6 @@ object IntegrationTestConstants {
       dateOfBirth = DateModel.dateConvert(LocalDate.now())
     )
   val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
+  val testStartDate: LocalDate = LocalDate.now()
+  val testEndDate: LocalDate = testStartDate.plusMonths(3)
 }
