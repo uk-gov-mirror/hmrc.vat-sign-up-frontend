@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
