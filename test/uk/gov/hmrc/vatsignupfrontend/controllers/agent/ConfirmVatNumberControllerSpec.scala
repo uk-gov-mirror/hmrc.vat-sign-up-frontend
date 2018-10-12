@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -100,8 +101,10 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         redirectLocation(result) shouldBe Some(routes.NoAgentClientRelationshipController.show().url)
       }
     }
-    "vat number is in session but store vat is unsuccessful as client is ineligible" should {
-      "go to the cannot use service page" in {
+
+    "vat number is in session but store vat is unsuccessful as client is ineligible" when {
+
+      "go to the cannot use service page when no dates are given" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = None, migratableDates = MigratableDates())
 
@@ -109,7 +112,41 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
       }
+
+      "redirect to sign up after this date page when one date is available" in {
+        val testDates = MigratableDates(Some(testStartDate))
+
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreVatNumberIneligible(testVatNumber, isFromBta = None, migratableDates = testDates)
+
+        val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
+
+        val result = TestConfirmVatNumberController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+
+        await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
+      }
+
+      "redirect to sign up between these dates page when two dates are available" in {
+        val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
+
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreVatNumberIneligible(testVatNumber, isFromBta = None, migratableDates = testDates)
+
+        val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
+
+        val result = TestConfirmVatNumberController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+
+        await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
+      }
+
     }
+
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthRetrieveAgentEnrolment()
