@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import java.time.LocalDate
 
@@ -27,10 +27,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SignUpAfterThisDate => messagesAfter, SignUpBetweenTheseDates => messagesBetween}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentSignUpAfterThisDate => messagesAfter, AgentSignUpBetweenTheseDates => messagesBetween}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates._
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates}
 
 class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -44,7 +44,7 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
   "Calling the show action of the migratable dates controller" should {
     "redirect to the capture vat number page" when {
       "no migratable dates are available" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val request = testGetRequest()
 
         val result = TestMigratableDatesController.show(request)
@@ -55,7 +55,7 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
     "show the sign up after this date page" when {
       "one migratable date is available" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val testDate = LocalDate.now()
         val request = testGetRequest(date = Some(testDate))
 
@@ -70,7 +70,7 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
     "show the sign up between these dates page" when {
       "two migratable dates are available" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val testDate = LocalDate.now()
         val testDate2 = testDate.plusDays(1)
 
@@ -85,5 +85,5 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
       }
     }
   }
-}
 
+}
