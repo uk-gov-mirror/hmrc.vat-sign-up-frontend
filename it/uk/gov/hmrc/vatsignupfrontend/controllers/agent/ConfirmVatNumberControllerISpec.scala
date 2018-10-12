@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -69,7 +70,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to cannot use service page" when {
       "the vat number is unsuccessfully stored as the client is ineligible" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberIneligible(isFromBta = None)
+        stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates())
 
         val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
 

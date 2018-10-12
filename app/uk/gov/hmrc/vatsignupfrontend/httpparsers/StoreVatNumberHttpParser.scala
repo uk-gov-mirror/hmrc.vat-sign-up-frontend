@@ -17,7 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
+import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+
 
 object StoreVatNumberHttpParser {
   type StoreVatNumberResponse = Either[StoreVatNumberFailure, StoreVatNumberSuccess]
@@ -38,7 +41,9 @@ object StoreVatNumberHttpParser {
         case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)
         case FORBIDDEN if responseCode contains KnownFactsMismatchCode => Left(KnownFactsMismatch)
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
-        case UNPROCESSABLE_ENTITY => Left(IneligibleVatNumber)
+        case UNPROCESSABLE_ENTITY => response.json.validate[MigratableDates] match {
+          case JsSuccess(dates, _) => Left(IneligibleVatNumber(dates))
+        }
         case CONFLICT => Left(AlreadySubscribed)
         case status => Left(StoreVatNumberFailureResponse(status))
       }
@@ -61,7 +66,7 @@ object StoreVatNumberHttpParser {
 
   case object InvalidVatNumber extends StoreVatNumberFailure
 
-  case object IneligibleVatNumber extends StoreVatNumberFailure
+  case class IneligibleVatNumber(migratableDates: MigratableDates) extends StoreVatNumberFailure
 
   case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberFailure
 

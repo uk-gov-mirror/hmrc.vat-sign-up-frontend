@@ -57,14 +57,6 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe IneligibleForMtdVatNumber(testMigratableDates)
       }
 
-      "parse a BAD_REQUEST response with an invalid json as a IneligibleForMtdVatNumber" in {
-        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.toJson(testMigratableDates)))
-
-        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
-
-        res.left.value shouldBe IneligibleForMtdVatNumber(testMigratableDates)
-      }
-
       "parse a NOT_FOUND response as a InvalidVatNumber when the vat number is not on the control list" in {
         val httpResponse = HttpResponse(NOT_FOUND)
 

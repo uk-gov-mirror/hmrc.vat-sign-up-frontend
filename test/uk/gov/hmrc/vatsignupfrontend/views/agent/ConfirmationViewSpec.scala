@@ -21,7 +21,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base, Confirmation => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base, AgentInformationReceived => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
@@ -74,36 +74,32 @@ class ConfirmationViewSpec extends ViewSpec {
         document.select("#what-happens-next p").text() should include(messages.Section1.line1)
       }
 
-    }
-
-    "have a 'When your client’s information is approved' section" which {
-
-      s"has the section heading '${messages.Section2.heading}'" in {
-        document.select("#when-client-is-approved h2").text() shouldBe messages.Section2.heading
+      s"has a paragraph '${messages.Section1.line2}'" in {
+        document.select("#what-happens-next p").text() should include (messages.Section1.line2)
       }
 
-      s"has a paragraph '${messages.Section2.line1}'" in {
-        document.select("#when-client-is-approved p").text() should include(messages.Section2.line1)
+      s"has a bullet point '${messages.Section1.bullet1}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section1.bullet1)
       }
 
-      s"has a bullet point '${messages.Section2.bullet1}'" in {
-        document.select("#when-client-is-approved li").text() should include(messages.Section2.bullet1)
+      s"has a bullet point '${messages.Section1.bullet2}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section1.bullet2)
       }
 
-      s"has a bullet point '${messages.Section2.bullet2}'" in {
-        document.select("#when-client-is-approved li").text() should include(messages.Section2.bullet2)
+      s"has a bullet point '${messages.Section1.bullet3}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section1.bullet3)
       }
 
-      s"has a bullet point '${messages.Section2.bullet3}'" in {
-        document.select("#when-client-is-approved li").text() should include(messages.Section2.bullet3)
+      s"has a bullet point '${messages.Section1.bullet4}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section1.bullet4)
       }
 
-      s"has a bullet point '${messages.Section2.bullet4}'" in {
-        document.select("#when-client-is-approved li").text() should include(messages.Section2.bullet4)
+      s"has a bullet point '${messages.Section1.bullet5}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section1.bullet5)
       }
 
-      s"has a paragraph '${messages.Section2.line2}'" in {
-        document.select("#when-client-is-approved p").text() should include(messages.Section2.line2)
+      s"has a paragraph '${messages.Section1.line3}'" in {
+        document.select("#what-happens-next p").text() should include(messages.Section1.line3)
       }
 
     }
@@ -111,6 +107,11 @@ class ConfirmationViewSpec extends ViewSpec {
     "have a add another client button" in {
       val b = document.getElementById("add-another-button")
       b.attr("value") shouldBe Base.signUpAnotherClient
+    }
+
+    "have a signout link" in {
+      val c = document.getElementById("sign-out")
+        c.text() shouldBe Base.signOut
     }
 
   }

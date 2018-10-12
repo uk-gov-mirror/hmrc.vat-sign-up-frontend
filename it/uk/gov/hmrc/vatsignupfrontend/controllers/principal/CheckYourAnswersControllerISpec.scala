@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.DateModel
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates}
 
 class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -130,7 +130,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned ineligible vat number" should {
       "redirect to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberIneligible(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberIneligible(testBusinessPostCode, testDate, isFromBta = false, MigratableDates())
 
         val res = post("/check-your-answers",
           Map(

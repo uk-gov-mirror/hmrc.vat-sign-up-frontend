@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
 
 class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerComponents with MockStoreVatNumberService {
@@ -98,7 +99,9 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "the vat number is ineligible" should {
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = Some(false))
+            mockStoreVatNumberIneligible(vatNumber = testVatNumber,
+                                         isFromBta = Some(false),
+                                         migratableDates = MigratableDates())
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER

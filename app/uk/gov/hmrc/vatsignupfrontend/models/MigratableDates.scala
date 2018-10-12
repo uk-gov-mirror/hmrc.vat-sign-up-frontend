@@ -24,7 +24,7 @@ case class MigratableDates(migratableDate: Option[LocalDate] = None,
                            migratableCutoffDate: Option[LocalDate] = None)
 
 object MigratableDates {
-  implicit val format = Json.format[MigratableDates]
+  implicit val format: OFormat[MigratableDates] = Json.format[MigratableDates]
 
   val empty = MigratableDates()
 }
