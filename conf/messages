@@ -563,8 +563,8 @@ principal.confirm_partnership_utr.line_1                               = We hold
 principal.confirm_partnership_utr.line_2                               = Unique Taxpayer Reference (UTR)
 
 ## Capture Partnership Company Number
-principal.capture_partnership_company_number.title                     = What is your company number?
-principal.capture_partnership_company_number.heading                   = What is your company number?
+principal.capture_partnership_company_number.title                     = What is the partnership''s company number?
+principal.capture_partnership_company_number.heading                   = What is the partnership''s company number?
 principal.capture_partnership_company_number.line_1                    = You can <a id="companiesHouse" href={0} target="_blank">search for your company number (opens in a window or tab)</a> on Companies House.
 
 ## Sign Up After This Date
