@@ -601,9 +601,12 @@ object MessageLookup {
     val bullet4 = "tell us about any changes to your business"
   }
 
-  object ConfirmGeneralPartnershipUtr {
+  object ConfirmPartnershipUtr {
     val title = "Is this the right Unique Taxpayer Reference for the partnership?"
-    val heading = "Is this the right Unique Taxpayer Reference (UTR) for the partnership?"
+    val headingGeneralPartnership = "Is this the right Unique Taxpayer Reference (UTR) for the partnership?"
+
+    def headingLimitedPartnership(name: String) = s"Is this the right Unique Taxpayer Reference (UTR) for $name?"
+
     val line1 = "We hold the following information:"
     val line2 = "Unique Taxpayer Reference (UTR)"
   }
@@ -619,6 +622,7 @@ object MessageLookup {
     val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
     val line1 = "There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due."
+
     def line2(date: String) = s"Please come back and sign up after $date."
   }
 
@@ -626,6 +630,7 @@ object MessageLookup {
     val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
     val line1 = "There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due."
+
     def line2(startDate: String, endDate: String) = s"Please come back and sign up between $startDate and $endDate."
   }
 

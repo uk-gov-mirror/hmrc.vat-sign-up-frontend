@@ -30,7 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationSuccess
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_general_partnership_utr
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_partnership_utr
 
 import scala.concurrent.Future
 
@@ -48,7 +48,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
       (optVatNumber, optPartnershipUtr) match {
         case (Some(_), Some(partnershipUtr)) =>
           Future.successful(
-            Ok(confirm_general_partnership_utr(partnershipUtr, confirmGeneralPartnershipForm, routes.ConfirmGeneralPartnershipController.submit()))
+            Ok(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, confirmGeneralPartnershipForm, routes.ConfirmGeneralPartnershipController.submit()))
           )
         case (None, _) =>
           Future.successful(
@@ -70,7 +70,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
       (optVatNumber, optPartnershipUtr) match {
         case (Some(vatNumber), Some(partnershipUtr)) =>
           confirmGeneralPartnershipForm.bindFromRequest().fold(
-            error => Future.successful(BadRequest(confirm_general_partnership_utr(partnershipUtr, error, routes.ConfirmGeneralPartnershipController.submit())))
+            error => Future.successful(BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, error, routes.ConfirmGeneralPartnershipController.submit())))
             , {
               case Yes =>
                 storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr) flatMap {

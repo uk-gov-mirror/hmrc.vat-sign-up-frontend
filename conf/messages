@@ -556,10 +556,11 @@ sign_up_complete_client.bullet_3                                       = pay you
 sign_up_complete_client.bullet_4                                       = tell us about any changes to your business
 
 ## Confirm General Partnership Sautr
-principal.confirm_general_partnership_utr.title                        = Is this the right Unique Taxpayer Reference for the partnership?
-principal.confirm_general_partnership_utr.heading                      = Is this the right Unique Taxpayer Reference (UTR) for the partnership?
-principal.confirm_general_partnership_utr.line_1                       = We hold the following information:
-principal.confirm_general_partnership_utr.line_2                       = Unique Taxpayer Reference (UTR)
+principal.confirm_partnership_utr.title                                = Is this the right Unique Taxpayer Reference for the partnership?
+principal.confirm_partnership_utr.general_partnership.heading          = Is this the right Unique Taxpayer Reference (UTR) for the partnership?
+principal.confirm_partnership_utr.limited_partnership.heading          = Is this the right Unique Taxpayer Reference (UTR) for {0}?
+principal.confirm_partnership_utr.line_1                               = We hold the following information:
+principal.confirm_partnership_utr.line_2                               = Unique Taxpayer Reference (UTR)
 
 ## Capture Partnership Company Number
 principal.capture_partnership_company_number.title                     = What is your company number?

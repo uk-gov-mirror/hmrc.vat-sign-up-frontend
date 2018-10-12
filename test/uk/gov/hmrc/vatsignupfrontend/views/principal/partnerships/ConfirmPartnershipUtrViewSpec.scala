@@ -21,23 +21,23 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => baseMessages, ConfirmGeneralPartnershipUtr => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => baseMessages, ConfirmPartnershipUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class ConfirmGeneralPartnershipUtrViewSpec extends ViewSpec {
+class ConfirmPartnershipUtrViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  val error = "error.confirm_general_partnership_utr"
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_general_partnership_utr(
+  def page(name: Option[String]) = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_partnership_utr(
     testSaUtr,
+    name,
     confirmGeneralPartnershipForm,
     postAction = testCall)(
     FakeRequest(),
@@ -45,13 +45,13 @@ class ConfirmGeneralPartnershipUtrViewSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Confirm General Partnership Sautr view" should {
+  "The Confirm General Partnership utr view" should {
 
     val testPage = TestView(
-      name = "Confirm General Partnership Sautr View",
+      name = "Confirm Partnership utr View",
       title = messages.title,
-      heading = messages.heading,
-      page = page
+      heading = messages.headingGeneralPartnership,
+      page = page(name = None)
     )
     testPage.shouldHaveForm("Yes No Form")(actionCall = testCall)
 
@@ -62,7 +62,7 @@ class ConfirmGeneralPartnershipUtrViewSpec extends ViewSpec {
     testPage.shouldHavePara(messages.line2)
 
     "have a set of radio inputs" which {
-      lazy val doc = Jsoup.parse(page.body)
+      lazy val doc = testPage.document
 
       "for the option 'Yes'" should {
 
@@ -107,4 +107,17 @@ class ConfirmGeneralPartnershipUtrViewSpec extends ViewSpec {
 
     testPage.shouldHaveContinueButton()
   }
+
+  "The Confirm Limited Partnership utr view" should {
+
+    val testName = "test name"
+
+    val testPage = TestView(
+      name = "Confirm Partnership utr View",
+      title = messages.title,
+      heading = messages.headingLimitedPartnership(testName),
+      page = page(name = Some(testName))
+    )
+  }
+
 }
