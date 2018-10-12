@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
@@ -120,6 +122,30 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
             }
 
+            "the vat eligibility is unsuccessful" should {
+              "redirect to sign up after this date page when the vat number is ineligible and one date is available" in {
+                mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate)))
+
+                val request = testPostRequest(testVatNumber)
+
+                val result = TestCaptureVatNumberController.submit(request)
+                status(result) shouldBe Status.SEE_OTHER
+                redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+              }
+
+              "the vat eligibility is unsuccessful" should {
+                "redirect to sign up between these dates page when the vat number is ineligible and two dates are available" in {
+                  mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                  mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+
+                  val request = testPostRequest(testVatNumber)
+
+                  val result = TestCaptureVatNumberController.submit(request)
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+                }
+
             "redirect to Already Signed Up page when the vat number has already been subscribed" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
               mockStoreVatNumberAlreadySubscribed(testVatNumber, isFromBta = Some(false))
@@ -173,6 +199,32 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+          }
+
+          "redirect to sign up after this date when the vat number is ineligible and one date is available" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
+
+            val request = testPostRequest(testVatNumber)
+
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+          }
+
+          "redirect to sign up between these dates when the vat number is ineligible and two dates are available" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+
+            val request = testPostRequest(testVatNumber)
+
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
           }
 
           "redirect to Invalid Vat Number page when the vat number is invalid" in {
