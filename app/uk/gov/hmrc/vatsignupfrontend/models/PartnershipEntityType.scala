@@ -28,6 +28,10 @@ object PartnershipEntityType {
     val StringValue = "ordinaryPartnership"
   }
 
+  case object LimitedPartnership extends PartnershipEntityType {
+    val StringValue = "limitedPartnership"
+  }
+
   val partnershipEntityTypeFrontEndKey = "entityType"
 
   import play.api.libs.json._
@@ -36,4 +40,5 @@ object PartnershipEntityType {
     def writes(partnershipEntityType: PartnershipEntityType): JsValue =
       JsString(partnershipEntityType.toString)
   }
+
 }

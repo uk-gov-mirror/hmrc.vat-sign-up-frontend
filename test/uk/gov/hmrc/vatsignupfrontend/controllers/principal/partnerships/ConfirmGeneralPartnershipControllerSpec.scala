@@ -96,7 +96,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       "User answered Yes" should {
         "go to the 'agree to receive emails' page" in {
           mockAuthAdminRole()
-          mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Right(StorePartnershipInformationSuccess)))
+          mockStorePartnershipInformation(testVatNumber, testSaUtr, companyNumber = None)(Future.successful(Right(StorePartnershipInformationSuccess)))
 
           val result = TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
             SessionKeys.vatNumberKey -> testVatNumber,
@@ -110,7 +110,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         // TOOD goto the error page once it's defined
         "throw internal server exception" in {
           mockAuthAdminRole()
-          mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Right(StorePartnershipInformationSuccess)))
+          mockStorePartnershipInformation(testVatNumber, testSaUtr, companyNumber = None)(Future.successful(Right(StorePartnershipInformationSuccess)))
 
           val result = TestConfirmGeneralPartnershipController.submit(testPostRequest(No).withSession(
             SessionKeys.vatNumberKey -> testVatNumber,
@@ -127,7 +127,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
   "vat number is in session but store partnership information is unsuccessful" should {
     "throw bad gateway exception" in {
       mockAuthAdminRole()
-      mockStorePartnershipInformation(testVatNumber, testSaUtr)(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
+      mockStorePartnershipInformation(testVatNumber, testSaUtr, companyNumber = None)(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
       intercept[BadGatewayException] {
         await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(

@@ -73,7 +73,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
             error => Future.successful(BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, error, routes.ConfirmGeneralPartnershipController.submit())))
             , {
               case Yes =>
-                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr) flatMap {
+                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr, companyNumber = None) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
                     Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
                   case Left(_) =>
