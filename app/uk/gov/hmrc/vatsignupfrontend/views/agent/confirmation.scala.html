@@ -39,15 +39,13 @@
 
         <p>@Messages("agent.confirmation.subsection_1.line_1")</p>
 
-        <p>@Messages("agent.confirmation.subsection_1.line_2")</p>
         <ol class="list list-number">
-            <li>@Messages("agent.confirmation.subsection_1.bullet_1")</li>
+            <li>@Html(Messages("agent.confirmation.subsection_1.bullet_1", appConfig.softwareOptionsUrl))</li>
             <li>@Messages("agent.confirmation.subsection_1.bullet_2")</li>
             <li>@Messages("agent.confirmation.subsection_1.bullet_3")</li>
             <li>@Messages("agent.confirmation.subsection_1.bullet_4")</li>
-            <li>@Messages("agent.confirmation.subsection_1.bullet_5")</li>
         </ol>
-        <p>@Messages("agent.confirmation.subsection_1.line_3")</p>
+        <p>@Messages("agent.confirmation.subsection_1.line_2")</p>
     </section>
 
     <div class = "form-group">

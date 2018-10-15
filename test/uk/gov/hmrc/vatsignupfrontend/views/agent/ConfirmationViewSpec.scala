@@ -74,10 +74,6 @@ class ConfirmationViewSpec extends ViewSpec {
         document.select("#what-happens-next p").text() should include(messages.Section1.line1)
       }
 
-      s"has a paragraph '${messages.Section1.line2}'" in {
-        document.select("#what-happens-next p").text() should include (messages.Section1.line2)
-      }
-
       s"has a bullet point '${messages.Section1.bullet1}'" in {
         document.select("#what-happens-next li").text() should include(messages.Section1.bullet1)
       }
@@ -94,12 +90,8 @@ class ConfirmationViewSpec extends ViewSpec {
         document.select("#what-happens-next li").text() should include(messages.Section1.bullet4)
       }
 
-      s"has a bullet point '${messages.Section1.bullet5}'" in {
-        document.select("#what-happens-next li").text() should include(messages.Section1.bullet5)
-      }
-
-      s"has a paragraph '${messages.Section1.line3}'" in {
-        document.select("#what-happens-next p").text() should include(messages.Section1.line3)
+      s"has a paragraph '${messages.Section1.line2}'" in {
+        document.select("#what-happens-next p").text() should include(messages.Section1.line2)
       }
 
     }

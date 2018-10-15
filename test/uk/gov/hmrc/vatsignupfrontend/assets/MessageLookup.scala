@@ -265,14 +265,12 @@ object MessageLookup {
 
     object Section1 {
       val heading = "What happens next"
-      val line1 = "As this service is currently a trial, it is only available to some limited companies, sole traders and partnerships."
-      val line2 = "You must tell your client if they can take part in the trial."
-      val bullet1 = "We will let you know whether your client can take part in this trial, usually within 24 hours."
-      val bullet2 = "Choose relevant third party software. If your client will use software, it is important they choose a package that can interact with yours."
-      val bullet3 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
-      val bullet4 = "Use software to record your client's sales and purchases."
-      val bullet5 = "Submit your client's VAT Returns before their deadlines."
-      val line3 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
+      val line1 = "We will let you know when you can report your client's VAT through compatible software. This usually takes 24 hours."
+      val bullet1 = "Choose your software (opens in a new window or tab). If your client will also use software, it is important they choose a package that can interact with yours."
+      val bullet2 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
+      val bullet3 = "Use software to record your client's sales and purchases."
+      val bullet4 = "Submit your client's VAT Returns before their deadlines."
+      val line2 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
     }
 
   }
@@ -541,7 +539,7 @@ object MessageLookup {
 
     object Section2 {
       val heading = "After your application is approved"
-      val bullet1 = "Choose accounting software that supports this service if you haven't already."
+      val bullet1 = "Choose accounting software (opens in a new window or tab) that supports this service if you haven't already."
       val bullet2 = "Sign in to the software with your Government Gateway details and authorise it to interact with HMRC."
       val bullet3 = "Add any sales and purchases that you've already received or paid out."
       val bullet4 = "Record your future sales and purchases using the software."
