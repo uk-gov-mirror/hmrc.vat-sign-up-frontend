@@ -17,13 +17,14 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
@@ -258,6 +259,8 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               httpStatus(SEE_OTHER),
               redirectUri(routes.MigratableDatesController.show().url)
             )
+
+            SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
           }
         }
 
@@ -272,6 +275,8 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               httpStatus(SEE_OTHER),
               redirectUri(routes.MigratableDatesController.show().url)
             )
+
+            SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
           }
         }
 

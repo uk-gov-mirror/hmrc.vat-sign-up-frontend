@@ -632,4 +632,20 @@ object MessageLookup {
     def line2(startDate: String, endDate: String) = s"Please come back and sign up between $startDate and $endDate."
   }
 
+  object AgentSignUpAfterThisDate {
+    val title = "You must come back later to sign up"
+    val heading = "You must come back later to sign up"
+    val line1 = "There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due."
+
+    def line2(date: String) = s"Please come back and sign them up after $date."
+  }
+
+  object AgentSignUpBetweenTheseDates {
+    val title = "You must come back later to sign up"
+    val heading = "You must come back later to sign up"
+    val line1 = "There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due."
+
+    def line2(startDate: String, endDate: String) = s"Please come back and sign them up between $startDate and $endDate."
+  }
+
 }

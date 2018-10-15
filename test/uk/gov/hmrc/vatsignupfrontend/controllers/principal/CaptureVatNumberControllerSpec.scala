@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -25,6 +26,7 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
@@ -122,26 +124,34 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             "the vat eligibility is unsuccessful" should {
               "redirect to sign up after this date page when the vat number is ineligible and one date is available" in {
+                val testDates = MigratableDates(Some(testStartDate))
+
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate)))
+                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = testDates)
 
                 val request = testPostRequest(testVatNumber)
 
                 val result = TestCaptureVatNumberController.submit(request)
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+
+                await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
               }
             }
             "the vat eligibility is unsuccessful" should {
               "redirect to sign up between these dates page when the vat number is ineligible and two dates are available" in {
+                val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
+
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = testDates)
 
                 val request = testPostRequest(testVatNumber)
 
                 val result = TestCaptureVatNumberController.submit(request)
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+
+                await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
               }
             }
             "redirect to Already Signed Up page when the vat number has already been subscribed" in {

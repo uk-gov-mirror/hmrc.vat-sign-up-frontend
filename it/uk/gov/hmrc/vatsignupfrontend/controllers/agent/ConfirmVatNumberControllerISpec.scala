@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
+import java.time.LocalDate
+
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -44,7 +46,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberSuccess(isFromBta = None)
 
-        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -58,7 +60,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberNoRelationship(isFromBta = None)
 
-        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -72,7 +74,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates())
 
-        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -81,12 +83,44 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "redirect to the sign up after this date page" when {
+      "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and one date is available" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates(Some(LocalDate.now())))
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.MigratableDatesController.show().url)
+        )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+      }
+    }
+
+    "redirect to the sign up after this date page" when {
+      "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and two dates is available" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates(Some(LocalDate.now()), Some(LocalDate.now())))
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.MigratableDatesController.show().url)
+        )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+      }
+    }
+
     "redirect to the already signed up page" when {
       "the vat number has already been signed up" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberAlreadySignedUp(isFromBta = None)
 
-        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -100,7 +134,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberFailure(isFromBta = None)
 
-        val res = post("/client/confirm-vat-number",  Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)

@@ -105,3 +105,6 @@ GET         /information-received          uk.gov.hmrc.vatsignupfrontend.control
 
 #Sign Up Another Client
 POST        /information-received          uk.gov.hmrc.vatsignupfrontend.controllers.agent.SignUpAnotherClientController.submit
+
+# Sign up later
+GET         /error/sign-up-later           uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigratableDatesController.show

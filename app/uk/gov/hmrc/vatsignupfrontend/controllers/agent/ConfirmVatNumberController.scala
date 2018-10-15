@@ -25,9 +25,11 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_vat_number
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 
 import scala.concurrent.Future
 
@@ -63,8 +65,9 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                 Redirect(routes.NoAgentClientRelationshipController.show())
               case Left(AlreadySubscribed) =>
                 Redirect(routes.AlreadySignedUpController.show())
-              case Left(IneligibleVatNumber(migratableDates)) =>
-                Redirect(routes.CannotUseServiceController.show())
+              case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
+              case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
+                .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
               case Left(errResponse: StoreVatNumberFailureResponse) =>
                 throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
             }
