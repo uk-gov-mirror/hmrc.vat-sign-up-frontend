@@ -568,11 +568,11 @@ principal.capture_partnership_company_number.line_1                    = You can
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
 principal.sign_up_after_this_date.heading                              = You must come back later to sign up
-principal.sign_up_after_this_date.line_1                               = There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due.
+principal.sign_up_after_this_date.line_1                               = There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due.
 principal.sign_up_after_this_date.line_2                               = Please come back and sign up after {0}.
 
 ## Sign Up Between These Dates
 principal.sign_up_between_these_dates.title                            = You must come back later to sign up
 principal.sign_up_between_these_dates.heading                          = You must come back later to sign up
-principal.sign_up_between_these_dates.line_1                           = There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due.
+principal.sign_up_between_these_dates.line_1                           = There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due.
 principal.sign_up_between_these_dates.line_2                           = Please come back and sign up between {0} and {1}.
