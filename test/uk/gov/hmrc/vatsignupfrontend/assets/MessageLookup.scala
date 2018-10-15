@@ -621,7 +621,7 @@ object MessageLookup {
   object SignUpAfterThisDate {
     val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
-    val line1 = "There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due."
+    val line1 = "There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due."
 
     def line2(date: String) = s"Please come back and sign up after $date."
   }
@@ -629,7 +629,7 @@ object MessageLookup {
   object SignUpBetweenTheseDates {
     val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
-    val line1 = "There is not enough time for us to set you up with Making Tax Digital before your next direct debit payment is due."
+    val line1 = "There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due."
 
     def line2(startDate: String, endDate: String) = s"Please come back and sign up between $startDate and $endDate."
   }
