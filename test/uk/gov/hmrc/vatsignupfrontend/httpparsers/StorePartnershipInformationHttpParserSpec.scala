@@ -45,4 +45,5 @@ class StorePartnershipInformationHttpParserSpec extends UnitSpec {
 
     }
   }
+
 }

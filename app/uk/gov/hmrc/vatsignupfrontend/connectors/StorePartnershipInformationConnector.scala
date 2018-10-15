@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -32,16 +33,24 @@ class StorePartnershipInformationConnector @Inject()(val http: HttpClient,
                                                     )(implicit ec: ExecutionContext) {
   val sautrKey = "sautr"
   val partnershipTypeKey = "partnershipType"
+  val CompanyNumberKey = "crn"
 
   def storePartnershipInformation(vatNumber: String,
                                   sautr: String,
-                                  partnershipType: PartnershipEntityType
+                                  partnershipType: PartnershipEntityType,
+                                  companyNumber: Option[String]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] = {
     val body = Json.obj(
       partnershipTypeKey -> partnershipType,
       sautrKey -> sautr
+    ).++(
+      companyNumber match {
+        case Some(crn) => Json.obj(CompanyNumberKey -> crn)
+        case _ => Json.obj()
+      }
     )
 
     http.POST[JsObject, StorePartnershipInformationResponse](applicationConfig.storePartnershipInformationUrl(vatNumber), body)
   }
+
 }

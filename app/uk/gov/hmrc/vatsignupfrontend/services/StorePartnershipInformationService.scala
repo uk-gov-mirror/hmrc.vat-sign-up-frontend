@@ -17,17 +17,27 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
+
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StorePartnershipInformationConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationResponse
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{GeneralPartnership, LimitedPartnership}
 
 import scala.concurrent.Future
 
 @Singleton
-class StorePartnershipInformationService @Inject()(storePartnershipInformationConnector: StorePartnershipInformationConnector){
+class StorePartnershipInformationService @Inject()(storePartnershipInformationConnector: StorePartnershipInformationConnector) {
 
-  def storePartnershipInformation(vatNumber: String, sautr: String
+  def storePartnershipInformation(vatNumber: String, sautr: String, companyNumber: Option[String]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] =
-    storePartnershipInformationConnector.storePartnershipInformation(vatNumber, sautr, GeneralPartnership)
+    storePartnershipInformationConnector.storePartnershipInformation(
+      vatNumber = vatNumber,
+      sautr = sautr,
+      partnershipType = companyNumber match {
+        case Some(_) => LimitedPartnership
+        case _ => GeneralPartnership
+      },
+      companyNumber = companyNumber
+    )
+
 }
