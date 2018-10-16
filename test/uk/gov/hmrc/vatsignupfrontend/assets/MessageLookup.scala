@@ -649,4 +649,10 @@ object MessageLookup {
     def line2(startDate: String, endDate: String) = s"Please come back and sign them up between $startDate and $endDate."
   }
 
+  object ConfirmPartnership {
+    val title = "Confirm the partnership"
+    val heading = title
+    val link = "Change the partnership"
+  }
+
 }
