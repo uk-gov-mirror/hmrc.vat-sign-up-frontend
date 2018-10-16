@@ -70,7 +70,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
             if (isEnabled(CompanyNameJourney)) {
               if (validateCrnPrefix(companyNumber)) {
                 getCompanyNameService.getCompanyName(companyNumber) map {
-                  case Right(GetCompanyNameSuccess(companyName)) =>
+                  case Right(GetCompanyNameSuccess(companyName, _)) =>
                     Redirect(routes.ConfirmCompanyController.show())
                       .addingToSession(
                         SessionKeys.companyNumberKey -> companyNumber,

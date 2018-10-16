@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,7 +41,7 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
   implicit val hc = HeaderCarrier()
 
   "getCompanyName" should {
-    val result = Right(GetCompanyNameSuccess(testCompanyName))
+    val result = Right(GetCompanyNameSuccess(testCompanyName, NonPartnershipEntity))
 
     "return the result of the connector" in {
       when(mockConnector.getCompanyName(ArgumentMatchers.eq(testCompanyNumber))(ArgumentMatchers.any()))

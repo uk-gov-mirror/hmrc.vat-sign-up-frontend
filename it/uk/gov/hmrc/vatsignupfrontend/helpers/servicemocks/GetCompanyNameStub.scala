@@ -19,10 +19,14 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testCompanyName
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.CompanyType
 
 object GetCompanyNameStub extends WireMockMethods {
-  def stubgetCompanyName(companyNumber: String): Unit = {
+  def stubgetCompanyName(companyNumber: String, companyType: CompanyType): Unit = {
     when(method = GET, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
-      .thenReturn(status = OK, body = Json.obj("company_name" -> testCompanyName))
+      .thenReturn(status = OK, body = Json.obj(
+        "company_name" -> testCompanyName,
+        "company_type" -> companyType.toString
+      ))
   }
 }

@@ -17,28 +17,39 @@
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
+import play.api.libs.json.{JsResult, JsSuccess, JsValue, Reads}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import uk.gov.hmrc.vatsignupfrontend.Constants._
-
-import scala.util.{Success, Try}
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse._
 
 object GetCompanyNameHttpParser {
   type GetCompanyNameResponse = Either[GetCompanyNameFailure, GetCompanyNameSuccess]
 
+  val LimitedPartnershipKey = "limited-partnership"
+  val LimitedLiabilityPartnershipKey = "llp"
+  val ScottishPartnershipKey = "scottish-partnership"
+
   implicit object GetCompanyNameHttpReads extends HttpReads[GetCompanyNameResponse] {
     override def read(method: String, url: String, response: HttpResponse): GetCompanyNameResponse = {
+      val optCompanyName = (response.json \ GetCompanyNameCodeKey).asOpt[String]
+      val optCompanyType = (response.json \ GetCompanyTypeCodeKey).asOpt[CompanyType](new Reads[CompanyType] {
+        override def reads(json: JsValue): JsResult[CompanyType] = json.validate[String] match {
+          case JsSuccess(LimitedPartnershipKey, _) => JsSuccess(LimitedPartnership)
+          case JsSuccess(LimitedLiabilityPartnershipKey, _) => JsSuccess(LimitedLiabilityPartnership)
+          case JsSuccess(ScottishPartnershipKey, _) => JsSuccess(ScottishPartnership)
+          case JsSuccess(_, _) => JsSuccess(NonPartnershipEntity)
+        }
+      })
 
-      def parseBody: Try[String] = Try((response.json \ GetCompanyNameCodeKey).as[String])
-
-      (response.status, parseBody) match {
-        case (OK, Success(companyName)) => Right(GetCompanyNameSuccess(companyName))
-        case (NOT_FOUND, _) => Left(CompanyNumberNotFound)
-        case (status, _) => Left(GetCompanyNameFailureResponse(status))
+      (response.status, optCompanyName, optCompanyType) match {
+        case (OK, Some(companyName), Some(companyType)) => Right(GetCompanyNameSuccess(companyName, companyType))
+        case (NOT_FOUND, _, _) => Left(CompanyNumberNotFound)
+        case (status, _, _) => Left(GetCompanyNameFailureResponse(status))
       }
     }
   }
 
-  case class GetCompanyNameSuccess(companyName: String)
+  case class GetCompanyNameSuccess(companyName: String, companyType: CompanyType)
 
   sealed trait GetCompanyNameFailure
 

@@ -27,6 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJour
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
@@ -65,7 +66,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         //TODO Redirect(routes.ConfirmPartnershipNameController.show())
         mockAuthAdminRole()
 
-        mockGetCompanyNameSuccess(testCompanyNumber)
+        mockGetCompanyNameSuccess(testCompanyNumber, LimitedPartnership)
 
         val request = testPostRequest(testCompanyNumber)
 
