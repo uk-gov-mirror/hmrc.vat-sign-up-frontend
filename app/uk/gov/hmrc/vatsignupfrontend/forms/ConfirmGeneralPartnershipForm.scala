@@ -25,9 +25,9 @@ object ConfirmGeneralPartnershipForm {
 
   val yesNo: String = "yes_no"
 
-  val confirmGeneralPartnershipForm: Form[YesNo] = Form(
+  val confirmPartnershipForm: Form[YesNo] = Form(
     single(
-      yesNo -> of(yesNoMapping("error.confirm_general_partnership_sautr"))
+      yesNo -> of(yesNoMapping("error.confirm_partnership_utr"))
     )
   )
 

@@ -23,14 +23,26 @@ import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType._
 
 object StorePartnershipInformationStub extends WireMockMethods with FeatureSwitching {
 
-  private def toJson(sautr: String, partnershipType: PartnershipEntityType) = Json.obj(
+  private def toJson(sautr: String,
+                     partnershipType: PartnershipEntityType,
+                     companyNumber: Option[String]
+                    ) = Json.obj(
     "partnershipType" -> Json.toJson(partnershipType),
     "sautr" -> sautr
+  ).++(
+    companyNumber match {
+      case Some(crn) => Json.obj("crn" -> crn)
+      case _ => Json.obj()
+    }
   )
 
-  def stubStorePartnershipInformation(vatNumber: String, sautr: String, partnershipEntityType: PartnershipEntityType)(responseStatus: Int): Unit = {
+  def stubStorePartnershipInformation(vatNumber: String,
+                                      sautr: String,
+                                      partnershipEntityType: PartnershipEntityType,
+                                      companyNumber: Option[String]
+                                     )(responseStatus: Int): Unit = {
     when(method = POST, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/partnership-information",
-      body = toJson(sautr, partnershipEntityType))
+      body = toJson(sautr, partnershipEntityType, companyNumber))
       .thenReturn(status = responseStatus)
   }
 }

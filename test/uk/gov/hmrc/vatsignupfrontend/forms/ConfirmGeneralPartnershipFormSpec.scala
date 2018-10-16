@@ -24,22 +24,23 @@ import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
 class ConfirmGeneralPartnershipFormSpec extends UnitSpec {
 
-  val error = "error.confirm_general_partnership_sautr"
+  val error = "error.confirm_partnership_utr"
 
   "YesNoForm" should {
     "successfully parse a Yes" in {
-      val res = confirmGeneralPartnershipForm.bind(Map(yesNo -> option_yes))
+      val res = confirmPartnershipForm.bind(Map(yesNo -> option_yes))
       res.value should contain(Yes)
     }
 
     "successfully parse a No" in {
-      val res = confirmGeneralPartnershipForm.bind(Map(yesNo -> option_no))
+      val res = confirmPartnershipForm.bind(Map(yesNo -> option_no))
       res.value should contain(No)
     }
 
     "fail when nothing has been entered" in {
-      val res = confirmGeneralPartnershipForm.bind(Map.empty[String, String])
+      val res = confirmPartnershipForm.bind(Map.empty[String, String])
       res.errors should contain(FormError(yesNo, error))
     }
   }
+
 }

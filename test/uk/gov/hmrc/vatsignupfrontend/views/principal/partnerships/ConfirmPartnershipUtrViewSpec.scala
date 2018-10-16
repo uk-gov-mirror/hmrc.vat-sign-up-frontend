@@ -38,7 +38,7 @@ class ConfirmPartnershipUtrViewSpec extends ViewSpec {
   def page(name: Option[String]) = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_partnership_utr(
     testSaUtr,
     name,
-    confirmGeneralPartnershipForm,
+    confirmPartnershipForm,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

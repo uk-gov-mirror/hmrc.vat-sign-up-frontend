@@ -17,9 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 
 class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -30,16 +32,64 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
   }
 
   "GET /resolve-partnership-utr" when {
-    "the partnership utr is on the profile" should {
-      "redirect to the confirm general partnership page" in {
-        stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
+    "the partnership utr is on the profile" when {
+      "company name and company number are not in session" should {
+        "redirect to the confirm general partnership page" in {
+          stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
-        val res = get("/resolve-partnership-utr")
+          val res = get("/resolve-partnership-utr")
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.ConfirmGeneralPartnershipController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmGeneralPartnershipController.show().url)
+          )
+        }
+      }
+      "company name and company number are in session" should {
+        "redirect to the confirm limited partnership page" in {
+          stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
+
+          val res = get("/resolve-partnership-utr",
+            Map(
+            SessionKeys.companyNumberKey->testCompanyNumber,
+            SessionKeys.companyNameKey->testCompanyName
+          ))
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmLimitedPartnershipController.show().url)
+          )
+        }
+      }
+      "only company number is in session" should {
+        "redirect to the confirm limited partnership page" in {
+          stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
+
+          val res = get("/resolve-partnership-utr",
+            Map(
+              SessionKeys.companyNumberKey->testCompanyNumber
+            ))
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CapturePartnershipCompanyNumberController.show().url)
+          )
+        }
+      }
+      "only company name is in session" should {
+        "redirect to the confirm limited partnership page" in {
+          stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
+
+          val res = get("/resolve-partnership-utr",
+            Map(
+              SessionKeys.companyNameKey->testCompanyName
+            ))
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CapturePartnershipCompanyNumberController.show().url)
+          )
+        }
       }
     }
 
@@ -51,7 +101,6 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
-
         )
       }
     }
