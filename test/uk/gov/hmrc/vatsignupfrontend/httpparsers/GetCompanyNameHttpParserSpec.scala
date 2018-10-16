@@ -20,9 +20,10 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.Constants.GetCompanyNameCodeKey
+import uk.gov.hmrc.vatsignupfrontend.Constants.{GetCompanyNameCodeKey, GetCompanyTypeCodeKey}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 
 class GetCompanyNameHttpParserSpec extends UnitSpec {
   val testHttpVerb = "GET"
@@ -31,11 +32,11 @@ class GetCompanyNameHttpParserSpec extends UnitSpec {
   "GetCompanyNameHttpReads" when {
     "read" should {
       "parse a OK response as an GetCompanyNameSuccess" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(GetCompanyNameCodeKey -> testCompanyNumber)))
+        val httpResponse = HttpResponse(OK, Some(Json.obj(GetCompanyNameCodeKey -> testCompanyNumber, GetCompanyTypeCodeKey -> GetCompanyNameHttpParser.LimitedPartnershipKey)))
 
         val res = GetCompanyNameHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(GetCompanyNameSuccess(testCompanyNumber))
+        res shouldBe Right(GetCompanyNameSuccess(testCompanyNumber, companieshouse.LimitedPartnership))
       }
       "parse a NOT_FOUND response as an CompanyNumberNotFound" in {
         val httpResponse = HttpResponse(NOT_FOUND)

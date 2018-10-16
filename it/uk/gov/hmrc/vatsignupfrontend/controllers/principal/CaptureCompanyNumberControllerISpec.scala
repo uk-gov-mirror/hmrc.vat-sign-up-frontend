@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
 class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /company-number" should {
@@ -43,7 +44,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
       "redirect to confirm company name" in {
         enable(CompanyNameJourney)
         stubAuth(OK, successfulAuthResponse())
-        stubgetCompanyName(testCompanyNumber)
+        stubgetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
         val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 

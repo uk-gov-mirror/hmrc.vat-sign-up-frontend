@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyNumber
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockGetCompanyNameService {
@@ -87,7 +88,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
           enable(CompanyNameJourney)
 
           mockAuthRetrieveAgentEnrolment()
-          mockGetCompanyNameSuccess(testCompanyNumber)
+          mockGetCompanyNameSuccess(testCompanyNumber, NonPartnershipEntity)
 
           val request = testPostRequest(testCompanyNumber)
 

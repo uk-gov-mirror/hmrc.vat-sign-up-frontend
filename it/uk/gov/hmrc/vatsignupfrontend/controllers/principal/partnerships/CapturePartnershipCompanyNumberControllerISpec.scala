@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
 
 class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -47,7 +48,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
       "Not Implemented" in {
         //TODO Redirect(routes.ConfirmPartnershipNameController.show())
         stubAuth(OK, successfulAuthResponse())
-        stubgetCompanyName(testCompanyNumber)
+        stubgetCompanyName(testCompanyNumber, LimitedPartnership)
 
         val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 

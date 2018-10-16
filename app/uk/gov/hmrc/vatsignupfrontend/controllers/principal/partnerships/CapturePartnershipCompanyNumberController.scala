@@ -68,7 +68,7 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
           companyNumber =>
             if (validateCrnPrefix(companyNumber)) {
               getCompanyNameService.getCompanyName(companyNumber) map {
-                case Right(GetCompanyNameSuccess(companyName)) =>
+                case Right(GetCompanyNameSuccess(companyName, companyType)) =>
                   //TODO Redirect(routes.ConfirmPartnershipNameController.show())
                   NotImplemented
                 case Left(CompanyNumberNotFound) =>
