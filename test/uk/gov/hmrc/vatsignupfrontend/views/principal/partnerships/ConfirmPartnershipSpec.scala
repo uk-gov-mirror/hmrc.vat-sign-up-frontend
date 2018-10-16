@@ -41,10 +41,10 @@ class ConfirmPartnershipSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Company view" should {
+  "The Confirm Partnership view" should {
 
     val testPage = TestView(
-      name = "Confirm Company View",
+      name = "Confirm Partnership View",
       title = messages.title,
       heading = messages.heading,
       page = page
@@ -52,7 +52,7 @@ class ConfirmPartnershipSpec extends ViewSpec {
 
     testPage.shouldHavePara(testCompanyName)
 
-    testPage.shouldHaveForm("Confirm Company Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Confirm Partnership Form")(actionCall = testCall)
 
     testPage.shouldHaveConfirmAndContinueButton()
 
