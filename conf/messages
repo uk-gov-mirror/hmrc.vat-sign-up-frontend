@@ -107,8 +107,8 @@ error.invalid_characters_dob.field                                     = Enter y
 error.invalid_characters_dob.summary                                   = Enter your date of birth using numbers 0 to 9
 error.invalid_dob.field                                                = Enter a real date of birth
 error.invalid_dob.summary                                              = Enter a real date of birth
-error.confirm_general_partnership_utr.field                            = Tell us if this is the right UTR for the partnership
-error.confirm_general_partnership_utr.summary                          = Tell us if this is the right UTR for the partnership
+error.confirm_partnership_utr.field                                    = Tell us if this is the right UTR for the partnership
+error.confirm_partnership_utr.summary                                  = Tell us if this is the right UTR for the partnership
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet

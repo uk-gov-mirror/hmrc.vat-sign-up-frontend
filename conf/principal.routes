@@ -156,6 +156,10 @@ POST        /bta/business-postcode                          uk.gov.hmrc.vatsignu
 GET         /confirm-partnership-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmGeneralPartnershipController.show
 POST        /confirm-partnership-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmGeneralPartnershipController.submit
 
+# Confirm Limited Partnership Sautr
+GET         /confirm-partnership                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmLimitedPartnershipController.show
+POST        /confirm-partnership                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmLimitedPartnershipController.submit
+
 # Sign up later
 GET         /error/sign-up-later                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.MigratableDatesController.show
 

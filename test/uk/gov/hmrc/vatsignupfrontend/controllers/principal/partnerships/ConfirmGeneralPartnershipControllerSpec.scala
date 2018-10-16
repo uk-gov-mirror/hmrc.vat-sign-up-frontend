@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
-import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmGeneralPartnershipForm
+import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
@@ -52,7 +52,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
   val testGetRequest = FakeRequest("GET", "/confirm-partnership-utr")
 
   def testPostRequest(answer: YesNo = Yes): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/confirm-partnership-utr").withFormUrlEncodedBody(confirmGeneralPartnershipForm.fill(answer).data.toSeq: _*)
+    FakeRequest("POST", "/confirm-partnership-utr").withFormUrlEncodedBody(confirmPartnershipForm.fill(answer).data.toSeq: _*)
 
   "Calling the show action of the Confirm General Partnership controller" when {
     "there is a company number in the session" should {

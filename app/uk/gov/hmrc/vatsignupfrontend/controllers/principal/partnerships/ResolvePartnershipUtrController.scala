@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -35,13 +36,26 @@ class ResolvePartnershipUtrController @Inject()(val controllerComponents: Contro
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
-      enrolments.partnershipUtr match {
-        case Some(partnershipUtr) =>
+
+      val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
+      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+
+      (enrolments.partnershipUtr, optCompanyName, optCompanyNumber) match {
+        case (Some(partnershipUtr), Some(_), Some(_)) =>
+          Future.successful(
+            Redirect(routes.ConfirmLimitedPartnershipController.show())
+              addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
+          )
+        case (Some(partnershipUtr), None, None) =>
           Future.successful(
             Redirect(routes.ConfirmGeneralPartnershipController.show())
               addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
           )
-        case None =>
+        case (Some(_), _, _) =>
+          Future.successful(
+            Redirect(routes.CapturePartnershipCompanyNumberController.show())
+          )
+        case _ =>
           Future.failed(
             throw new InternalServerException("Cannot redirect to capture partnership SAUTR")
           )

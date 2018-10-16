@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
@@ -35,28 +35,34 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_p
 import scala.concurrent.Future
 
 @Singleton
-class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: ControllerComponents,
+class ConfirmLimitedPartnershipController @Inject()(val controllerComponents: ControllerComponents,
                                                     storePartnershipInformationService: StorePartnershipInformationService
                                                    )
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(LimitedPartnershipJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+      val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
+      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
-      (optVatNumber, optPartnershipUtr) match {
-        case (Some(_), Some(partnershipUtr)) =>
+      (optVatNumber, optPartnershipUtr, optCompanyName, optCompanyNumber) match {
+        case (Some(_), Some(partnershipUtr), Some(_), Some(_)) =>
           Future.successful(
-            Ok(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, confirmPartnershipForm, routes.ConfirmGeneralPartnershipController.submit()))
+            Ok(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = optCompanyName, confirmPartnershipForm, routes.ConfirmLimitedPartnershipController.submit()))
           )
-        case (None, _) =>
+        case (None, _, _, _) =>
           Future.successful(
             Redirect(principalRoutes.ResolveVatNumberController.resolve())
           )
-        case _ =>
+        case (_, None, _, _) =>
           Future.failed(
             new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
+          )
+        case (_, _, None, _) | (_, _, _, None) =>
+          Future.successful(
+            Redirect(routes.CapturePartnershipCompanyNumberController.show())
           )
       }
     }
@@ -65,15 +71,17 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
   val submit: Action[AnyContent] = Action.async { implicit request =>
     val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
     val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+    val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
+    val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
     authorised() {
-      (optVatNumber, optPartnershipUtr) match {
-        case (Some(vatNumber), Some(partnershipUtr)) =>
-          confirmPartnershipForm.bindFromRequest().fold(
-            error => Future.successful(BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, error, routes.ConfirmGeneralPartnershipController.submit())))
+      (optVatNumber, optPartnershipUtr, optCompanyName, optCompanyNumber) match {
+        case (Some(vatNumber), Some(partnershipUtr), Some(_), Some(_)) =>
+        confirmPartnershipForm.bindFromRequest().fold(
+            error => Future.successful(BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = optCompanyName, error, routes.ConfirmLimitedPartnershipController.submit())))
             , {
               case Yes =>
-                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr, companyNumber = None) flatMap {
+                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr, companyNumber = optCompanyNumber) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
                     Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
                   case Left(_) =>
@@ -84,13 +92,17 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
                 Future.failed(new InternalServerException("User signed in with the wrong partnership cred"))
             }
           )
-        case (None, _) =>
+        case (None, _, _, _) =>
           Future.successful(
             Redirect(principalRoutes.ResolveVatNumberController.resolve())
           )
-        case _ =>
+        case (_, None, _, _) =>
           Future.failed(
             new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
+          )
+        case (_, _, None, _) | (_, _, _, None) =>
+          Future.successful(
+            Redirect(routes.CapturePartnershipCompanyNumberController.show())
           )
       }
     }
