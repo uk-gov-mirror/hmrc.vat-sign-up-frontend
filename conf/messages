@@ -366,6 +366,7 @@ principal.capture_entity_type.heading                                  = What ty
 principal.capture_entity_type.soleTrader                               = Sole trader
 principal.capture_entity_type.limitedCompany                           = Limited company
 principal.capture_entity_type.generalPartnership                       = General partnership
+principal.capture_entity_type.limitedPartnership                       = Limited partnership (including limited liability partnerships)
 principal.capture_entity_type.other                                    = Other
 
 

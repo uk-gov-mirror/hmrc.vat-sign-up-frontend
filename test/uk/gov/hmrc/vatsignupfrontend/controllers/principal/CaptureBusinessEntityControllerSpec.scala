@@ -32,7 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockCitizenDetailsService
 
 import scala.concurrent.Future
@@ -204,8 +204,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
 
       "the business entity is general partnership" when {
-        "there is a VATDEC enrolment" should {
-          "go to capture company number controller" in {
+          "go to resolve partnership utr controller" in {
             mockAuthRetrieveVatDecEnrolment()
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(generalPartnership)
 
@@ -214,6 +213,20 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
             redirectLocation(result) should contain(partnerships.routes.ResolvePartnershipUtrController.resolve().url)
 
             result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
+          }
+      }
+
+      "the business entity is limited partnership" when {
+        "there is a VATDEC enrolment" should {
+          "go to capture partnership company number controller" in {
+            mockAuthRetrieveVatDecEnrolment()
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedPartnership)
+
+            val result = await(TestCaptureBusinessEntityController.submit(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(partnerships.routes.CapturePartnershipCompanyNumberController.show().url)
+
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
           }
         }
       }
