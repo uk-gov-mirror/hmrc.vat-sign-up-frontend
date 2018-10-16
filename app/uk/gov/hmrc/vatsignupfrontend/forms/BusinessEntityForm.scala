@@ -31,6 +31,8 @@ object BusinessEntityForm {
 
   val generalPartnership: String = "general-partnership"
 
+  val limitedPartnership: String = "limited-partnership"
+
   val other: String = "other"
 
   val agentBusinessEntityError: String = "error.agent.business-entity"
@@ -44,6 +46,7 @@ object BusinessEntityForm {
         case Some(`soleTrader`) => Right(SoleTrader)
         case Some(`limitedCompany`) => Right(LimitedCompany)
         case Some(`generalPartnership`) => Right(GeneralPartnership)
+        case Some(`limitedPartnership`) => Right(LimitedPartnership)
         case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, if (isAgent) agentBusinessEntityError else principalBusinessEntityError)))
       }

@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, GeneralPartnershipJourney, UseIRSA}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, GeneralPartnershipJourney, LimitedPartnershipJourney, UseIRSA}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
@@ -49,7 +49,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         Ok(capture_business_entity(
           businessEntityForm = validateBusinessEntityForm,
           postAction = routes.CaptureBusinessEntityController.submit(),
-          generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney)
+          generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney),
+          limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney)
         ))
       )
     }
@@ -63,7 +64,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             BadRequest(capture_business_entity(
               formWithErrors,
               routes.CaptureBusinessEntityController.submit(),
-              isEnabled(GeneralPartnershipJourney)
+              isEnabled(GeneralPartnershipJourney),
+              isEnabled(LimitedPartnershipJourney)
             ))
           ),
         businessEntity => {
@@ -76,6 +78,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
             case GeneralPartnership =>
               Future.successful(Redirect(partnerships.routes.ResolvePartnershipUtrController.resolve()))
+            case LimitedPartnership =>
+              Future.successful(Redirect(partnerships.routes.CapturePartnershipCompanyNumberController.show()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }

@@ -133,6 +133,32 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "the business type is general partnership" should {
+      "return a SEE_OTHER status and go to resolve partnership utr controller" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(partnerships.routes.ResolvePartnershipUtrController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is limited partnership" should {
+      "return a SEE_OTHER status and go to capture partnership company number" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> limitedPartnership)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(partnerships.routes.CapturePartnershipCompanyNumberController.show().url)
+        )
+      }
+    }
+
     "the business type is other" should {
       "return a SEE_OTHER status and go to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
