@@ -166,3 +166,7 @@ GET         /error/sign-up-later                            uk.gov.hmrc.vatsignu
 # Capture Partnership Company Number
 GET         /partnership-company-number                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipCompanyNumberController.show
 POST        /partnership-company-number                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipCompanyNumberController.submit
+
+# Confirm Partnership
+GET         /confirm-partnership-company                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmPartnershipController.show
+POST        /confirm-partnership-company                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmPartnershipController.submit
