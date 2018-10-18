@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models
 
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionFormatter
+
 sealed trait PartnershipEntityType {
   val StringValue: String
 
@@ -25,11 +27,19 @@ sealed trait PartnershipEntityType {
 object PartnershipEntityType {
 
   case object GeneralPartnership extends PartnershipEntityType {
-    val StringValue = "ordinaryPartnership"
+    val StringValue = "generalPartnership"
   }
 
   case object LimitedPartnership extends PartnershipEntityType {
     val StringValue = "limitedPartnership"
+  }
+
+  case object LimitedLiabilityPartnership extends PartnershipEntityType {
+    val StringValue = "limitedLiabilityPartnership"
+  }
+
+  case object ScottishPartnership extends PartnershipEntityType {
+    val StringValue = "scottishPartnership"
   }
 
   val partnershipEntityTypeFrontEndKey = "entityType"
@@ -39,6 +49,21 @@ object PartnershipEntityType {
   implicit val writer: Writes[PartnershipEntityType] = new Writes[PartnershipEntityType] {
     def writes(partnershipEntityType: PartnershipEntityType): JsValue =
       JsString(partnershipEntityType.toString)
+  }
+
+  implicit object CompanyTypeSessionFormatter extends SessionFormatter[PartnershipEntityType] {
+
+    val LimitedPartnershipKey: String = LimitedPartnership.toString
+    val LimitedLiabilityPartnershipKey: String = LimitedLiabilityPartnership.toString
+    val ScottishPartnershipKey: String = ScottishPartnership.toString
+
+    override def toString(entity: PartnershipEntityType): String = entity.toString
+
+    override def fromString(string: String): Option[PartnershipEntityType] = string match {
+      case LimitedPartnershipKey => Some(LimitedPartnership)
+      case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
+      case ScottishPartnershipKey => Some(ScottishPartnership)
+    }
   }
 
 }
