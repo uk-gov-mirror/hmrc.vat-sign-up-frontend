@@ -32,6 +32,11 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
     enable(LimitedPartnershipJourney)
   }
 
+  override def afterEach(): Unit = {
+    super.afterEach()
+    enable(LimitedPartnershipJourney)
+  }
+
   "GET /partnership-company-number" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
@@ -42,18 +47,29 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
         httpStatus(OK)
       )
     }
+
+      "return an NOT FOUND" in {
+        disable(LimitedPartnershipJourney)
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = get("/partnership-company-number")
+
+        res should have(
+          httpStatus(NOT_FOUND)
+        )
+      }
   }
 
-  "POST /company-number" when {
-      "Not Implemented" in {
-        //TODO Redirect(routes.ConfirmPartnershipNameController.show())
+  "POST /partnership-company-number" when {
+      "redirect to Confirm Partnership page" in {
         stubAuth(OK, successfulAuthResponse())
         stubgetCompanyName(testCompanyNumber, LimitedPartnership)
 
         val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmPartnershipController.show().url)
         )
       }
     }

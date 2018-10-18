@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
@@ -27,7 +28,11 @@ import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{LimitedLiabilityPartnership, LimitedPartnership, ScottishPartnership}
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{NonPartnershipEntity, PartnershipCompanyType}
+import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, companieshouse}
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_company_number
 
 import scala.concurrent.Future
@@ -39,6 +44,14 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(LimitedPartnershipJourney)) {
 
   val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false)
+
+  private def toPartnershipEntityType(companyType: PartnershipCompanyType): PartnershipEntityType = {
+    companyType match {
+      case companieshouse.LimitedPartnership => LimitedPartnership
+      case companieshouse.LimitedLiabilityPartnership => LimitedLiabilityPartnership
+      case companieshouse.ScottishPartnership => ScottishPartnership
+    }
+  }
 
   def validateCrnPrefix(companyNumber: String): Boolean = {
     companyNumber match {
@@ -52,7 +65,10 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(capture_partnership_company_number(validateCompanyNumberForm.form, routes.CapturePartnershipCompanyNumberController.submit()))
+          Ok(capture_partnership_company_number(
+            validateCompanyNumberForm.form,
+            routes.CapturePartnershipCompanyNumberController.submit())
+          )
         )
       }
   }
@@ -63,14 +79,23 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
         validateCompanyNumberForm.bindFromRequest.fold(
           formWithErrors =>
             Future.successful(
-              BadRequest(capture_partnership_company_number(formWithErrors, routes.CapturePartnershipCompanyNumberController.submit()))
+              BadRequest(capture_partnership_company_number(
+                formWithErrors,
+                routes.CapturePartnershipCompanyNumberController.submit()
+              ))
             ),
           companyNumber =>
             if (validateCrnPrefix(companyNumber)) {
               getCompanyNameService.getCompanyName(companyNumber) map {
-                case Right(GetCompanyNameSuccess(companyName, companyType)) =>
-                  //TODO Redirect(routes.ConfirmPartnershipNameController.show())
-                  NotImplemented
+                case Right(GetCompanyNameSuccess(companyName, companyType: PartnershipCompanyType)) =>
+                  val partnershipEntity = toPartnershipEntityType(companyType)
+                  Redirect(routes.ConfirmPartnershipController.show())
+                    .addingToSession(
+                      SessionKeys.companyNumberKey -> companyNumber,
+                      SessionKeys.companyNameKey -> companyName
+                    ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
+                case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
+                  throw new InternalServerException("A none partnership company type returned from companies house")
                 case Left(CompanyNumberNotFound) =>
                   throw new InternalServerException("CRN not found in Companies House")
                 // Redirect to error page

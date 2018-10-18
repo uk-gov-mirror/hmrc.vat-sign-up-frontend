@@ -23,11 +23,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
@@ -35,6 +37,11 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
 
   override def beforeEach(): Unit = {
     super.beforeEach()
+    enable(LimitedPartnershipJourney)
+  }
+
+  override def afterEach(): Unit = {
+    super.afterEach()
     enable(LimitedPartnershipJourney)
   }
 
@@ -62,16 +69,19 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
 
   "Calling the submit action of the Capture Partnership Company Number controller" when {
     "get company name returned successfully" should {
-      "Not implemented" in {
-        //TODO Redirect(routes.ConfirmPartnershipNameController.show())
+      "Redirect to Confirm Partnership page" in {
         mockAuthAdminRole()
 
-        mockGetCompanyNameSuccess(testCompanyNumber, LimitedPartnership)
+        mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.LimitedPartnership)
 
         val request = testPostRequest(testCompanyNumber)
 
         val result = TestCaptureCompanyNumberController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmPartnershipController.show().url)
+        session(result) get SessionKeys.partnershipTypeKey should contain(PartnershipEntityType.LimitedPartnership.toString)
+        session(result) get SessionKeys.companyNumberKey should contain(testCompanyNumber)
+        session(result) get SessionKeys.companyNameKey should contain(testCompanyName)
       }
     }
 
@@ -86,22 +96,19 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
       }
     }
 
-
-
     "company number failed prefix validation" should {
       "throw an InternalServerException" in {
         mockAuthAdminRole()
-        // Redirect to error page
+        // TODO Redirect to error page
 
         val testCrn = "ZZ12345"
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
-        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
 
+        intercept[InternalServerException](await(result))
       }
     }
-
 
     "company number failed validation - invalid format" should {
       "throw an InternalServerException" in {
@@ -112,8 +119,8 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
-        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
 
+        intercept[InternalServerException](await(result))
       }
     }
 
@@ -126,7 +133,8 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
-        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
+
+        intercept[InternalServerException](await(result))
 
       }
     }
@@ -141,7 +149,8 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val request = testPostRequest(testCompanyNumber)
 
         val result = TestCaptureCompanyNumberController.submit(request)
-        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
+
+        intercept[InternalServerException](await(result))
       }
     }
 
@@ -153,7 +162,9 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
 
         val request = testPostRequest(testCompanyNumber)
 
-        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
+        val result = TestCaptureCompanyNumberController.submit(request)
+
+        intercept[InternalServerException](await(result))
       }
     }
   }

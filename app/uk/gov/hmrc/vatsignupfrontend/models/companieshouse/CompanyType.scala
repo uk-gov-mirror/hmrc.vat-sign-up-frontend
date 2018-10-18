@@ -16,35 +16,14 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionFormatter
-
 sealed trait CompanyType
 
-case object LimitedPartnership extends CompanyType
+sealed trait PartnershipCompanyType
 
-case object LimitedLiabilityPartnership extends CompanyType
+case object LimitedPartnership extends CompanyType with PartnershipCompanyType
 
-case object ScottishPartnership extends CompanyType
+case object LimitedLiabilityPartnership extends CompanyType with PartnershipCompanyType
+
+case object ScottishPartnership extends CompanyType with PartnershipCompanyType
 
 case object NonPartnershipEntity extends CompanyType
-
-object CompanyType {
-
-  implicit object CompanyTypeSessionFormatter extends SessionFormatter[CompanyType] {
-
-    val LimitedPartnershipKey: String = LimitedPartnership.toString
-    val LimitedLiabilityPartnershipKey: String = LimitedLiabilityPartnership.toString
-    val ScottishPartnershipKey: String = ScottishPartnership.toString
-    val NonPartnershipEntityKey: String = NonPartnershipEntity.toString
-
-    override def toString(entity: CompanyType): String = entity.toString
-
-    override def fromString(string: String): Option[CompanyType] = string match {
-      case LimitedPartnershipKey => Some(LimitedPartnership)
-      case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
-      case ScottishPartnershipKey => Some(ScottishPartnership)
-      case _ => Some(NonPartnershipEntity)
-    }
-  }
-
-}
