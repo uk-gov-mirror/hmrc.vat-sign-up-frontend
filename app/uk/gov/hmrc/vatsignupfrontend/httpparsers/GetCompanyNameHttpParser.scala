@@ -31,20 +31,25 @@ object GetCompanyNameHttpParser {
 
   implicit object GetCompanyNameHttpReads extends HttpReads[GetCompanyNameResponse] {
     override def read(method: String, url: String, response: HttpResponse): GetCompanyNameResponse = {
-      val optCompanyName = (response.json \ GetCompanyNameCodeKey).asOpt[String]
-      val optCompanyType = (response.json \ GetCompanyTypeCodeKey).asOpt[CompanyType](new Reads[CompanyType] {
-        override def reads(json: JsValue): JsResult[CompanyType] = json.validate[String] match {
-          case JsSuccess(LimitedPartnershipKey, _) => JsSuccess(LimitedPartnership)
-          case JsSuccess(LimitedLiabilityPartnershipKey, _) => JsSuccess(LimitedLiabilityPartnership)
-          case JsSuccess(ScottishLimitedPartnershipKey, _) => JsSuccess(ScottishLimitedPartnership)
-          case JsSuccess(_, _) => JsSuccess(NonPartnershipEntity)
-        }
-      })
+      response.status match {
+        case OK =>
+          val optCompanyName = (response.json \ GetCompanyNameCodeKey).asOpt[String]
+          val optCompanyType = (response.json \ GetCompanyTypeCodeKey).asOpt[CompanyType](new Reads[CompanyType] {
+            override def reads(json: JsValue): JsResult[CompanyType] = json.validate[String] match {
+              case JsSuccess(LimitedPartnershipKey, _) => JsSuccess(LimitedPartnership)
+              case JsSuccess(LimitedLiabilityPartnershipKey, _) => JsSuccess(LimitedLiabilityPartnership)
+              case JsSuccess(ScottishLimitedPartnershipKey, _) => JsSuccess(ScottishLimitedPartnership)
+              case JsSuccess(_, _) => JsSuccess(NonPartnershipEntity)
+            }
+          })
 
-      (response.status, optCompanyName, optCompanyType) match {
-        case (OK, Some(companyName), Some(companyType)) => Right(GetCompanyNameSuccess(companyName, companyType))
-        case (NOT_FOUND, _, _) => Left(CompanyNumberNotFound)
-        case (status, _, _) => Left(GetCompanyNameFailureResponse(status))
+
+          (optCompanyName, optCompanyType) match {
+            case (Some(companyName), Some(companyType)) => Right(GetCompanyNameSuccess(companyName, companyType))
+            case (_, _) => Left(GetCompanyNameFailureResponse(OK))
+          }
+        case NOT_FOUND => Left(CompanyNumberNotFound)
+        case status => Left(GetCompanyNameFailureResponse(status))
       }
     }
   }
