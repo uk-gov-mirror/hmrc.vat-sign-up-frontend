@@ -27,7 +27,7 @@ object GetCompanyNameStub extends WireMockMethods {
     when(method = GET, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
       .thenReturn(status = OK, body = Json.obj(
         "company_name" -> testCompanyName,
-        "company_type" -> {companyType match {
+        "type" -> {companyType match {
           case LimitedPartnership => LimitedPartnershipKey
           case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
           case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
