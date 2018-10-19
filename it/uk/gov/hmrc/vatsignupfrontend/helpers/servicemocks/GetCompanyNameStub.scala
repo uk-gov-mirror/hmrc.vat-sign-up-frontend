@@ -30,7 +30,7 @@ object GetCompanyNameStub extends WireMockMethods {
         "company_type" -> {companyType match {
           case LimitedPartnership => LimitedPartnershipKey
           case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
-          case ScottishPartnership => ScottishPartnershipKey
+          case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
           case NonPartnershipEntity => "ltd"
         }}
       ))

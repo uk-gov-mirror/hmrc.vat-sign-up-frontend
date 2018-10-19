@@ -27,7 +27,7 @@ object GetCompanyNameHttpParser {
 
   val LimitedPartnershipKey = "limited-partnership"
   val LimitedLiabilityPartnershipKey = "llp"
-  val ScottishPartnershipKey = "scottish-partnership"
+  val ScottishLimitedPartnershipKey = "scottish-partnership"
 
   implicit object GetCompanyNameHttpReads extends HttpReads[GetCompanyNameResponse] {
     override def read(method: String, url: String, response: HttpResponse): GetCompanyNameResponse = {
@@ -36,7 +36,7 @@ object GetCompanyNameHttpParser {
         override def reads(json: JsValue): JsResult[CompanyType] = json.validate[String] match {
           case JsSuccess(LimitedPartnershipKey, _) => JsSuccess(LimitedPartnership)
           case JsSuccess(LimitedLiabilityPartnershipKey, _) => JsSuccess(LimitedLiabilityPartnership)
-          case JsSuccess(ScottishPartnershipKey, _) => JsSuccess(ScottishPartnership)
+          case JsSuccess(ScottishLimitedPartnershipKey, _) => JsSuccess(ScottishLimitedPartnership)
           case JsSuccess(_, _) => JsSuccess(NonPartnershipEntity)
         }
       })
