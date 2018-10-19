@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{LimitedLiabilityPartnership, LimitedPartnership, ScottishPartnership}
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{NonPartnershipEntity, PartnershipCompanyType}
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, companieshouse}
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
@@ -49,7 +49,7 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
     companyType match {
       case companieshouse.LimitedPartnership => LimitedPartnership
       case companieshouse.LimitedLiabilityPartnership => LimitedLiabilityPartnership
-      case companieshouse.ScottishPartnership => ScottishPartnership
+      case companieshouse.ScottishLimitedPartnership => ScottishLimitedPartnership
     }
   }
 

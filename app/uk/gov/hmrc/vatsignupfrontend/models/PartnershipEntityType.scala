@@ -38,8 +38,8 @@ object PartnershipEntityType {
     val StringValue = "limitedLiabilityPartnership"
   }
 
-  case object ScottishPartnership extends PartnershipEntityType {
-    val StringValue = "scottishPartnership"
+  case object ScottishLimitedPartnership extends PartnershipEntityType {
+    val StringValue = "scottishLimitedPartnership"
   }
 
   val partnershipEntityTypeFrontEndKey = "entityType"
@@ -55,14 +55,14 @@ object PartnershipEntityType {
 
     val LimitedPartnershipKey: String = LimitedPartnership.toString
     val LimitedLiabilityPartnershipKey: String = LimitedLiabilityPartnership.toString
-    val ScottishPartnershipKey: String = ScottishPartnership.toString
+    val ScottishLimitedPartnershipKey: String = ScottishLimitedPartnership.toString
 
     override def toString(entity: PartnershipEntityType): String = entity.toString
 
     override def fromString(string: String): Option[PartnershipEntityType] = string match {
       case LimitedPartnershipKey => Some(LimitedPartnership)
       case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
-      case ScottishPartnershipKey => Some(ScottishPartnership)
+      case ScottishLimitedPartnershipKey => Some(ScottishLimitedPartnership)
     }
   }
 
