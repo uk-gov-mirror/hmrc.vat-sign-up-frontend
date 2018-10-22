@@ -28,7 +28,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJour
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
@@ -79,7 +78,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val result = TestCaptureCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmPartnershipController.show().url)
-        session(result) get SessionKeys.partnershipTypeKey should contain(PartnershipEntityType.LimitedPartnership.toString)
+        session(result) get SessionKeys.partnershipTypeKey should contain(testPartnershipType)
         session(result) get SessionKeys.companyNumberKey should contain(testCompanyNumber)
         session(result) get SessionKeys.companyNameKey should contain(testCompanyName)
       }

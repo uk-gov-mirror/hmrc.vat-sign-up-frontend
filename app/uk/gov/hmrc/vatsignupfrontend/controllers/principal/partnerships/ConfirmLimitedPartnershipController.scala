@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationSuccess
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_partnership_utr
@@ -46,24 +47,21 @@ class ConfirmLimitedPartnershipController @Inject()(val controllerComponents: Co
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
       val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
 
-      (optVatNumber, optPartnershipUtr, optCompanyName, optCompanyNumber) match {
-        case (Some(_), Some(partnershipUtr), Some(_), Some(_)) =>
+      (optVatNumber, optPartnershipUtr, optCompanyName, optCompanyNumber, optPartnershipType) match {
+        case (Some(_), Some(partnershipUtr), Some(_), Some(_), Some(_)) =>
           Future.successful(
-            Ok(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = optCompanyName, confirmPartnershipForm, routes.ConfirmLimitedPartnershipController.submit()))
+            Ok(confirm_partnership_utr(
+              partnershipUtr, limitedPartnershipName = optCompanyName, confirmPartnershipForm, routes.ConfirmLimitedPartnershipController.submit()
+            ))
           )
-        case (None, _, _, _) =>
-          Future.successful(
-            Redirect(principalRoutes.ResolveVatNumberController.resolve())
-          )
-        case (_, None, _, _) =>
-          Future.failed(
-            new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
-          )
-        case (_, _, None, _) | (_, _, _, None) =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipCompanyNumberController.show())
-          )
+        case (None, _, _, _, _) =>
+          Future.successful(Redirect(principalRoutes.ResolveVatNumberController.resolve()))
+        case (_, None, _, _, _) =>
+          Future.failed(new InternalServerException("Cannot capture user's UTR")) // TODO Create Capture partnership Utr flow
+        case (_, _, None, _, _) | (_, _, _, None, _) | (_, _, _, _, None) =>
+          Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
       }
     }
   }
@@ -73,15 +71,23 @@ class ConfirmLimitedPartnershipController @Inject()(val controllerComponents: Co
     val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
     val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
     val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+    val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
 
     authorised() {
-      (optVatNumber, optPartnershipUtr, optCompanyName, optCompanyNumber) match {
-        case (Some(vatNumber), Some(partnershipUtr), Some(_), Some(_)) =>
-        confirmPartnershipForm.bindFromRequest().fold(
-            error => Future.successful(BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = optCompanyName, error, routes.ConfirmLimitedPartnershipController.submit())))
+      (optVatNumber, optPartnershipUtr, optCompanyName, optCompanyNumber, optPartnershipType) match {
+        case (Some(vatNumber), Some(partnershipUtr), Some(_), Some(_), Some(_)) =>
+          confirmPartnershipForm.bindFromRequest().fold(
+            error => Future.successful(BadRequest(
+              confirm_partnership_utr(partnershipUtr, limitedPartnershipName = optCompanyName, error, routes.ConfirmLimitedPartnershipController.submit())
+            ))
             , {
               case Yes =>
-                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr, companyNumber = optCompanyNumber) flatMap {
+                storePartnershipInformationService.storePartnershipInformation(
+                  vatNumber = vatNumber,
+                  sautr = partnershipUtr,
+                  companyNumber = optCompanyNumber,
+                  partnershipEntity = optPartnershipType
+                ) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
                     Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
                   case Left(_) =>
@@ -92,18 +98,12 @@ class ConfirmLimitedPartnershipController @Inject()(val controllerComponents: Co
                 Future.failed(new InternalServerException("User signed in with the wrong partnership cred"))
             }
           )
-        case (None, _, _, _) =>
-          Future.successful(
-            Redirect(principalRoutes.ResolveVatNumberController.resolve())
-          )
-        case (_, None, _, _) =>
-          Future.failed(
-            new InternalServerException("Cannot capture user's UTR") // TODO Create Capture partnership Utr flow
-          )
-        case (_, _, None, _) | (_, _, _, None) =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipCompanyNumberController.show())
-          )
+        case (None, _, _, _, _) =>
+          Future.successful(Redirect(principalRoutes.ResolveVatNumberController.resolve()))
+        case (_, None, _, _, _) =>
+          Future.failed(new InternalServerException("Cannot capture user's UTR")) // TODO Create Capture partnership Utr flow
+        case (_, _, None, _, _) | (_, _, _, None, _) | (_, _, _, _, None) =>
+          Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
       }
     }
   }

@@ -38,6 +38,7 @@ object TestConstants {
   val testNino: String = new Generator().nextNino.nino
   val testSaUtr: String = new Generator().nextAtedUtr.utr
   val testUri: String = "/test/uri"
+  val testPartnershipType: String = "limitedPartnership"
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)

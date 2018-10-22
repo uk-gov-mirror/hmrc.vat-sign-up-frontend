@@ -45,7 +45,8 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
           SessionKeys.partnershipSautrKey -> testSaUtr,
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.companyNameKey -> testCompanyName
+          SessionKeys.companyNameKey -> testCompanyName,
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         ))
 
       res should have(
@@ -77,7 +78,8 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.companyNumberKey -> testCompanyNumber,
-            SessionKeys.companyNameKey -> testCompanyName
+            SessionKeys.companyNameKey -> testCompanyName,
+            SessionKeys.partnershipTypeKey -> testPartnershipType
           ))(yesNo -> option_no)
 
         res should have(
@@ -96,7 +98,8 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
               SessionKeys.partnershipSautrKey -> testSaUtr,
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.companyNumberKey -> testCompanyNumber,
-              SessionKeys.companyNameKey -> testCompanyName
+              SessionKeys.companyNameKey -> testCompanyName,
+              SessionKeys.partnershipTypeKey -> testPartnershipType
             ))(yesNo -> option_yes)
 
           res should have(
@@ -118,7 +121,8 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
           SessionKeys.partnershipSautrKey -> testSaUtr,
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.companyNameKey -> testCompanyName
+          SessionKeys.companyNameKey -> testCompanyName,
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         ))(yesNo -> option_yes)
 
       res should have(

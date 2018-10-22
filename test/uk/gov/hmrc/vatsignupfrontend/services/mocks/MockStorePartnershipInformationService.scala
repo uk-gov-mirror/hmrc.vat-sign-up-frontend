@@ -35,11 +35,15 @@ trait MockStorePartnershipInformationService extends BeforeAndAfterEach with Moc
     reset(mockStorePartnershipInformationService)
   }
 
-  def mockStorePartnershipInformation(vatNumber: String, sautr: String, companyNumber: Option[String])(returnValue: Future[StorePartnershipInformationResponse]): Unit = {
+  def mockStorePartnershipInformation(vatNumber: String,
+                                      sautr: String,
+                                      companyNumber: Option[String],
+                                      partnershipEntity: Option[String])(returnValue: Future[StorePartnershipInformationResponse]): Unit = {
     when(mockStorePartnershipInformationService.storePartnershipInformation(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(sautr),
-      ArgumentMatchers.eq(companyNumber)
+      ArgumentMatchers.eq(companyNumber),
+      ArgumentMatchers.eq(partnershipEntity)
     )(ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
