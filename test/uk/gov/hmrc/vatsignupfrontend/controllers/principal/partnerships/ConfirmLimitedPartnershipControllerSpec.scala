@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJour
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testCompanyName, testCompanyNumber, testSaUtr, testVatNumber}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
@@ -61,6 +61,7 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         val request = testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr,
+          SessionKeys.partnershipTypeKey -> testPartnershipType,
           SessionKeys.companyNameKey -> testCompanyName,
           SessionKeys.companyNumberKey -> testCompanyNumber
         )
@@ -124,20 +125,26 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       "User answered Yes" should {
         "go to the 'agree to receive emails' page" in {
           mockAuthAdminRole()
-          mockStorePartnershipInformation(testVatNumber, testSaUtr, companyNumber = Some(testCompanyNumber))(Future.successful(Right(StorePartnershipInformationSuccess)))
+          mockStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            sautr = testSaUtr,
+            companyNumber = Some(testCompanyNumber),
+            partnershipEntity = Some(testPartnershipType)
+          )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
           val result = TestConfirmLimitedPartnershipController.submit(testPostRequest().withSession(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.companyNameKey -> testCompanyName,
-            SessionKeys.companyNumberKey -> testCompanyNumber
+            SessionKeys.companyNumberKey -> testCompanyNumber,
+            SessionKeys.partnershipTypeKey -> testPartnershipType
           ))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(principalRoutes.AgreeCaptureEmailController.show().url)
         }
       }
       "User answered No" should {
-        // TOOD goto the error page once it's defined
+        // TODO goto the error page once it's defined
         "throw internal server exception" in {
           mockAuthAdminRole()
 
@@ -145,7 +152,8 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.companyNameKey -> testCompanyName,
-            SessionKeys.companyNumberKey -> testCompanyNumber
+            SessionKeys.companyNumberKey -> testCompanyNumber,
+            SessionKeys.partnershipTypeKey -> testPartnershipType
           ))
 
           intercept[InternalServerException] {
@@ -158,14 +166,20 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
   "vat number is in session but store partnership information is unsuccessful" should {
     "throw bad gateway exception" in {
       mockAuthAdminRole()
-      mockStorePartnershipInformation(testVatNumber, testSaUtr, companyNumber = Some(testCompanyNumber))(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
+      mockStorePartnershipInformation(
+        vatNumber = testVatNumber,
+        sautr = testSaUtr,
+        companyNumber = Some(testCompanyNumber),
+        partnershipEntity = Some(testPartnershipType)
+      )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
       intercept[BadGatewayException] {
         await(TestConfirmLimitedPartnershipController.submit(testPostRequest().withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr,
           SessionKeys.companyNameKey -> testCompanyName,
-          SessionKeys.companyNumberKey -> testCompanyNumber
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         )))
       }
     }

@@ -19,9 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 
 class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -49,10 +49,10 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
         "redirect to the confirm limited partnership page" in {
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
-          val res = get("/resolve-partnership-utr",
-            Map(
-            SessionKeys.companyNumberKey->testCompanyNumber,
-            SessionKeys.companyNameKey->testCompanyName
+          val res = get("/resolve-partnership-utr", Map(
+            SessionKeys.companyNumberKey -> testCompanyNumber,
+            SessionKeys.companyNameKey -> testCompanyName,
+            SessionKeys.partnershipTypeKey -> testPartnershipType
           ))
 
           res should have(
@@ -65,10 +65,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
         "redirect to the confirm limited partnership page" in {
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
-          val res = get("/resolve-partnership-utr",
-            Map(
-              SessionKeys.companyNumberKey->testCompanyNumber
-            ))
+          val res = get("/resolve-partnership-utr", Map(SessionKeys.companyNumberKey -> testCompanyNumber))
 
           res should have(
             httpStatus(SEE_OTHER),
@@ -80,10 +77,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
         "redirect to the confirm limited partnership page" in {
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
-          val res = get("/resolve-partnership-utr",
-            Map(
-              SessionKeys.companyNameKey->testCompanyName
-            ))
+          val res = get("/resolve-partnership-utr", Map(SessionKeys.companyNameKey->testCompanyName))
 
           res should have(
             httpStatus(SEE_OTHER),

@@ -70,10 +70,17 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
       (optVatNumber, optPartnershipUtr) match {
         case (Some(vatNumber), Some(partnershipUtr)) =>
           confirmPartnershipForm.bindFromRequest().fold(
-            error => Future.successful(BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, error, routes.ConfirmGeneralPartnershipController.submit())))
+            error => Future.successful(
+              BadRequest(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, error, routes.ConfirmGeneralPartnershipController.submit()))
+            )
             , {
               case Yes =>
-                storePartnershipInformationService.storePartnershipInformation(vatNumber, partnershipUtr, companyNumber = None) flatMap {
+                storePartnershipInformationService.storePartnershipInformation(
+                  vatNumber = vatNumber,
+                  sautr = partnershipUtr,
+                  companyNumber = None,
+                  partnershipEntity = None
+                ) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
                     Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
                   case Left(_) =>

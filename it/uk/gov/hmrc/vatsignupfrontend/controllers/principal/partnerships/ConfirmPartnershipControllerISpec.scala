@@ -23,7 +23,6 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalR
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.LimitedPartnership
 
 class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -59,8 +58,8 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
           SessionKeys.companyNameKey -> testCompanyName,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString)
-        )
+          SessionKeys.partnershipTypeKey -> testPartnershipType
+        ))
 
         res should have(
           httpStatus(OK)
@@ -74,8 +73,8 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
           val res = get("/confirm-partnership-company", Map(
             SessionKeys.companyNameKey -> testCompanyName,
             SessionKeys.companyNumberKey -> testCompanyNumber,
-            SessionKeys.partnershipTypeKey -> LimitedPartnership.toString)
-          )
+            SessionKeys.partnershipTypeKey -> testPartnershipType
+          ))
 
           res should have(
             httpStatus(SEE_OTHER),
@@ -91,8 +90,8 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
           val res = get("/confirm-partnership-company", Map(
             SessionKeys.companyNumberKey -> testCompanyNumber,
             SessionKeys.companyNameKey -> testCompanyName,
-            SessionKeys.partnershipTypeKey -> LimitedPartnership.toString)
-          )
+            SessionKeys.partnershipTypeKey -> testPartnershipType
+          ))
 
           res should have(
             httpStatus(SEE_OTHER),
@@ -127,7 +126,7 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
           SessionKeys.companyNameKey -> testCompanyName,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         ))()
 
       res should have(
@@ -147,7 +146,7 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         ))()
 
       res should have(

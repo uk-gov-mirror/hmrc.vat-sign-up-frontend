@@ -17,14 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
@@ -32,34 +31,34 @@ import scala.concurrent.Future
 
 @Singleton
 class ResolvePartnershipUtrController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
 
       val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
       val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
 
-      (enrolments.partnershipUtr, optCompanyName, optCompanyNumber) match {
-        case (Some(partnershipUtr), Some(_), Some(_)) =>
-          Future.successful(
-            Redirect(routes.ConfirmLimitedPartnershipController.show())
-              addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
-          )
-        case (Some(partnershipUtr), None, None) =>
-          Future.successful(
-            Redirect(routes.ConfirmGeneralPartnershipController.show())
-              addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
-          )
-        case (Some(_), _, _) =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipCompanyNumberController.show())
-          )
-        case _ =>
-          Future.failed(
-            throw new InternalServerException("Cannot redirect to capture partnership SAUTR")
-          )
-      }
+      if (isEnabled(GeneralPartnershipJourney) || isEnabled(LimitedPartnershipJourney)) {
+        (enrolments.partnershipUtr, optCompanyName, optCompanyNumber, optPartnershipType) match {
+          case (Some(partnershipUtr), Some(_), Some(_), Some(_)) =>
+            Future.successful(
+              Redirect(routes.ConfirmLimitedPartnershipController.show())
+                addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
+            )
+          case (Some(partnershipUtr), None, None, None) =>
+            Future.successful(
+              Redirect(routes.ConfirmGeneralPartnershipController.show())
+                addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
+            )
+          case (Some(_), _, _, _) =>
+            Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
+          case _ =>
+            Future.failed(throw new InternalServerException("Cannot redirect to capture partnership SAUTR"))
+        }
+      } else
+        Future.failed(new InternalServerException("Both feature switches are disabled"))
     }
   }
 

@@ -47,4 +47,5 @@ object IntegrationTestConstants {
   val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
   val testStartDate: LocalDate = LocalDate.now()
   val testEndDate: LocalDate = testStartDate.plusMonths(3)
+  val testPartnershipType: String = "limitedPartnership"
 }

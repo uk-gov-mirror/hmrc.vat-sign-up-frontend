@@ -28,7 +28,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.LimitedPartnership
 
 class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -57,7 +56,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
           SessionKeys.companyNameKey -> testCompanyName,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         )
 
         val result = TestConfirmPartnershipController.show(request)
@@ -77,7 +76,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         val request = testGetRequest.withSession(
           SessionKeys.companyNumberKey -> testCompanyNumber,
           SessionKeys.companyNameKey -> testCompanyName,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         )
 
         val result = TestConfirmPartnershipController.show(request)
@@ -93,7 +92,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         )
 
         val result = TestConfirmPartnershipController.show(request)
@@ -110,7 +109,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNameKey -> testCompanyName,
-          SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+          SessionKeys.partnershipTypeKey -> testPartnershipType
         )
 
         val result = TestConfirmPartnershipController.show(request)
@@ -127,7 +126,6 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
           SessionKeys.companyNameKey -> testCompanyName
-
         )
 
         val result = TestConfirmPartnershipController.show(request)
@@ -145,7 +143,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         SessionKeys.vatNumberKey -> testVatNumber,
         SessionKeys.companyNumberKey -> testCompanyNumber,
         SessionKeys.companyNameKey -> testCompanyName,
-        SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+        SessionKeys.partnershipTypeKey -> testPartnershipType
       )
 
       val result = TestConfirmPartnershipController.submit(request)
@@ -159,7 +157,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       val request = testPostRequest.withSession(
         SessionKeys.companyNumberKey -> testCompanyNumber,
         SessionKeys.companyNameKey -> testCompanyName,
-        SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+        SessionKeys.partnershipTypeKey -> testPartnershipType
       )
 
       val result = TestConfirmPartnershipController.submit(request)
@@ -174,7 +172,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
         SessionKeys.companyNameKey -> testCompanyName,
-        SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+        SessionKeys.partnershipTypeKey -> testPartnershipType
       )
 
       val result = TestConfirmPartnershipController.submit(request)
@@ -189,7 +187,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
         SessionKeys.companyNumberKey -> testCompanyNumber,
-        SessionKeys.partnershipTypeKey -> LimitedPartnership.toString
+        SessionKeys.partnershipTypeKey -> testPartnershipType
       )
 
       val result = TestConfirmPartnershipController.submit(request)
