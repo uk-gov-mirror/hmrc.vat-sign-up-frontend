@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
-import javax.inject.Inject
-
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -27,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.Citize
 
 import scala.concurrent.Future
 
-
+@Singleton
 class CitizenDetailsConnector @Inject()(val http: HttpClient,
                                         val applicationConfig: AppConfig) {
 

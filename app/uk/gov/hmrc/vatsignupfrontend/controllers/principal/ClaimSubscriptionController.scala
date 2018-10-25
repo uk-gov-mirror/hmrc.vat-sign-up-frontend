@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -33,6 +33,7 @@ import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidCh
 
 import scala.concurrent.Future
 
+@Singleton
 class ClaimSubscriptionController @Inject()(val controllerComponents: ControllerComponents,
                                             storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(BTAClaimSubscription)) {
