@@ -17,12 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
@@ -39,7 +39,11 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_business_entity(validateBusinessEntityForm, routes.CaptureBusinessEntityController.submit()))
+        Ok(capture_business_entity(
+          validateBusinessEntityForm,
+          routes.CaptureBusinessEntityController.submit(),
+          isEnabled(GeneralPartnershipJourney)
+        ))
       )
     }
   }
@@ -49,7 +53,11 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
       validateBusinessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_business_entity(formWithErrors, routes.CaptureBusinessEntityController.submit()))
+            BadRequest(capture_business_entity(
+              formWithErrors,
+              routes.CaptureBusinessEntityController.submit(),
+              isEnabled(GeneralPartnershipJourney)
+            ))
           ),
         entityType => {
           entityType match {
