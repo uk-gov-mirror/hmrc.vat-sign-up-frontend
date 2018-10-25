@@ -21,6 +21,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StorePartnershipInformationConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationResponse
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{CompanyTypeSessionFormatter, GeneralPartnership}
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 import scala.concurrent.Future
 
@@ -30,7 +31,8 @@ class StorePartnershipInformationService @Inject()(storePartnershipInformationCo
   def storePartnershipInformation(vatNumber: String,
                                   sautr: String,
                                   companyNumber: Option[String],
-                                  partnershipEntity: Option[String]
+                                  partnershipEntity: Option[String],
+                                  postCode: Option[PostCode]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] =
     storePartnershipInformationConnector.storePartnershipInformation(
       vatNumber = vatNumber,
@@ -39,7 +41,8 @@ class StorePartnershipInformationService @Inject()(storePartnershipInformationCo
         case None => GeneralPartnership
         case Some(_) => CompanyTypeSessionFormatter.fromString(partnershipEntity.get).get
       },
-      companyNumber = companyNumber
+      companyNumber = companyNumber,
+      postCode = postCode
     )
 
 }

@@ -100,7 +100,8 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
             vatNumber = testVatNumber,
             sautr = testSaUtr,
             companyNumber = None,
-            partnershipEntity = None
+            partnershipEntity = None,
+            postCode = None
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
           val result = TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
@@ -119,7 +120,8 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
             vatNumber = testVatNumber,
             sautr = testSaUtr,
             companyNumber = None,
-            partnershipEntity = None
+            partnershipEntity = None,
+            postCode = None
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
           val result = TestConfirmGeneralPartnershipController.submit(testPostRequest(No).withSession(
@@ -141,7 +143,8 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         vatNumber = testVatNumber,
         sautr = testSaUtr,
         companyNumber = None,
-        partnershipEntity = None
+        partnershipEntity = None,
+        postCode = None
       )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
       intercept[BadGatewayException] {

@@ -48,7 +48,12 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
       (optVatNumber, optPartnershipUtr) match {
         case (Some(_), Some(partnershipUtr)) =>
           Future.successful(
-            Ok(confirm_partnership_utr(partnershipUtr, limitedPartnershipName = None, confirmPartnershipForm, routes.ConfirmGeneralPartnershipController.submit()))
+            Ok(confirm_partnership_utr(
+              partnershipUtr,
+              limitedPartnershipName = None,
+              confirmPartnershipForm,
+              routes.ConfirmGeneralPartnershipController.submit()
+            ))
           )
         case (None, _) =>
           Future.successful(
@@ -79,7 +84,8 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
                   vatNumber = vatNumber,
                   sautr = partnershipUtr,
                   companyNumber = None,
-                  partnershipEntity = None
+                  partnershipEntity = None,
+                  postCode = None
                 ) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
                     Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))

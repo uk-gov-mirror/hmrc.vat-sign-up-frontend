@@ -21,6 +21,7 @@ import org.mockito.Mockito.{reset, when}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationResponse
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 
 import scala.concurrent.Future
@@ -38,12 +39,14 @@ trait MockStorePartnershipInformationService extends BeforeAndAfterEach with Moc
   def mockStorePartnershipInformation(vatNumber: String,
                                       sautr: String,
                                       companyNumber: Option[String],
-                                      partnershipEntity: Option[String])(returnValue: Future[StorePartnershipInformationResponse]): Unit = {
+                                      partnershipEntity: Option[String],
+                                      postCode: Option[PostCode])(returnValue: Future[StorePartnershipInformationResponse]): Unit = {
     when(mockStorePartnershipInformationService.storePartnershipInformation(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(sautr),
       ArgumentMatchers.eq(companyNumber),
-      ArgumentMatchers.eq(partnershipEntity)
+      ArgumentMatchers.eq(partnershipEntity),
+      ArgumentMatchers.eq(postCode)
     )(ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }

@@ -86,7 +86,8 @@ class ConfirmLimitedPartnershipController @Inject()(val controllerComponents: Co
                   vatNumber = vatNumber,
                   sautr = partnershipUtr,
                   companyNumber = optCompanyNumber,
-                  partnershipEntity = optPartnershipType
+                  partnershipEntity = optPartnershipType,
+                  postCode = None
                 ) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
                     Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
