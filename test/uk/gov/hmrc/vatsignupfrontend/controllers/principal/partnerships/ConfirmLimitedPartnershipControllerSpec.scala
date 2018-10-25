@@ -129,7 +129,8 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
             vatNumber = testVatNumber,
             sautr = testSaUtr,
             companyNumber = Some(testCompanyNumber),
-            partnershipEntity = Some(testPartnershipType)
+            partnershipEntity = Some(testPartnershipType),
+            postCode = None
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
           val result = TestConfirmLimitedPartnershipController.submit(testPostRequest().withSession(
@@ -170,7 +171,8 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         vatNumber = testVatNumber,
         sautr = testSaUtr,
         companyNumber = Some(testCompanyNumber),
-        partnershipEntity = Some(testPartnershipType)
+        partnershipEntity = Some(testPartnershipType),
+        postCode = None
       )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
       intercept[BadGatewayException] {

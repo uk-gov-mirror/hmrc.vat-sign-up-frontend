@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.connectors.StorePartnershipInformationConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationSuccess
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType
+import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{GeneralPartnership, LimitedPartnership}
 
 import scala.concurrent.Future
@@ -41,12 +41,14 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
   def mockConnector(vatNumber: String,
                     sautr: String,
                     partnershipType: PartnershipEntityType,
-                    companyNumber: Option[String]): Unit = {
+                    companyNumber: Option[String],
+                    postCode:Option[PostCode]): Unit = {
     when(connector.storePartnershipInformation(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(sautr),
       ArgumentMatchers.eq(partnershipType),
-      ArgumentMatchers.eq(companyNumber)
+      ArgumentMatchers.eq(companyNumber),
+      ArgumentMatchers.eq(postCode)
     )(ArgumentMatchers.any()))
       .thenReturn(Future.successful(successResult))
   }
@@ -54,40 +56,88 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
   object TestStorePartnershipInformationService extends StorePartnershipInformationService(connector)
 
   "storePartnershipInformation" when {
-    "crn is not defined" should {
+    "crn and postcode are not defined" should {
       "call store partnership connector with general partnership" in {
         mockConnector(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
           partnershipType = GeneralPartnership,
-          companyNumber = None
+          companyNumber = None,
+          postCode = None
         )
 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
           partnershipEntity = Some(GeneralPartnership.StringValue),
-          companyNumber = None
+          companyNumber = None,
+          postCode = None
         )
 
         await(res) shouldBe successResult
       }
     }
 
-    "crn is defined" should {
+    "crn is defined but postcode is not" should {
       "call store partnership connector with limited partnership" in {
         mockConnector(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
           partnershipType = LimitedPartnership,
-          companyNumber = Some(testCompanyNumber)
+          companyNumber = Some(testCompanyNumber),
+          postCode = None
         )
 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
           partnershipEntity = Some(LimitedPartnership.StringValue),
-          companyNumber = Some(testCompanyNumber)
+          companyNumber = Some(testCompanyNumber),
+          postCode = None
+        )
+
+        await(res) shouldBe successResult
+      }
+    }
+
+    "postcode is defined but crn is not" should {
+      "call store partnership connector with general partnership" in {
+        mockConnector(
+          vatNumber = testVatNumber,
+          sautr = testSaUtr,
+          partnershipType = GeneralPartnership,
+          companyNumber = None,
+          postCode = Some(testBusinessPostcode)
+        )
+
+        val res = TestStorePartnershipInformationService.storePartnershipInformation(
+          vatNumber = testVatNumber,
+          sautr = testSaUtr,
+          partnershipEntity = Some(GeneralPartnership.StringValue),
+          companyNumber = None,
+          postCode = Some(testBusinessPostcode)
+        )
+
+        await(res) shouldBe successResult
+      }
+    }
+
+    "crn and postcode are defined" should {
+      "call store partnership connector with limited partnership" in {
+        mockConnector(
+          vatNumber = testVatNumber,
+          sautr = testSaUtr,
+          partnershipType = LimitedPartnership,
+          companyNumber = Some(testCompanyNumber),
+          postCode = Some(testBusinessPostcode)
+        )
+
+        val res = TestStorePartnershipInformationService.storePartnershipInformation(
+          vatNumber = testVatNumber,
+          sautr = testSaUtr,
+          partnershipEntity = Some(LimitedPartnership.StringValue),
+          companyNumber = Some(testCompanyNumber),
+          postCode = Some(testBusinessPostcode)
         )
 
         await(res) shouldBe successResult

@@ -17,13 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType
+import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, PostCode}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,11 +33,13 @@ class StorePartnershipInformationConnector @Inject()(val http: HttpClient,
   val sautrKey = "sautr"
   val partnershipTypeKey = "partnershipType"
   val CompanyNumberKey = "crn"
+  val postCodeKey = "postCode"
 
   def storePartnershipInformation(vatNumber: String,
                                   sautr: String,
                                   partnershipType: PartnershipEntityType,
-                                  companyNumber: Option[String]
+                                  companyNumber: Option[String],
+                                  postCode: Option[PostCode]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] = {
     val body = Json.obj(
       partnershipTypeKey -> partnershipType,
@@ -46,6 +47,11 @@ class StorePartnershipInformationConnector @Inject()(val http: HttpClient,
     ).++(
       companyNumber match {
         case Some(crn) => Json.obj(CompanyNumberKey -> crn)
+        case _ => Json.obj()
+      }
+    ).++(
+      postCode match {
+        case Some(pc) => Json.obj(postCodeKey -> pc)
         case _ => Json.obj()
       }
     )
