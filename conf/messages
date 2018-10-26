@@ -109,6 +109,9 @@ error.invalid_dob.field                                                = Enter a
 error.invalid_dob.summary                                              = Enter a real date of birth
 error.confirm_partnership_utr.field                                    = Tell us if this is the right UTR for the partnership
 error.confirm_partnership_utr.summary                                  = Tell us if this is the right UTR for the partnership
+error.partnership_postcode.invalid                                     = Enter a valid postcode
+error.partnership_postcode.invalid_characters                          = Enter a postcode using only letters and numbers
+error.partnership_postcode.not_entered                                 = Tell us where the partnership is registered for Self Assessment
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -595,3 +598,8 @@ agent.sign_up_between_these_dates.title                                = You mus
 agent.sign_up_between_these_dates.heading                              = You must come back later to sign up
 agent.sign_up_between_these_dates.line_1                               = There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due.
 agent.sign_up_between_these_dates.line_2                               = Please come back and sign them up between {0} and {1}.
+
+## Agent Partnership Postcode
+agent.partnership_postcode.title                                       = Where is the partnership registered for Self Assessment?
+agent.partnership_postcode.heading                                     = Where is the partnership registered for Self Assessment?
+agent.partnership_postcode.label                                       = UK postcode
