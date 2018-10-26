@@ -86,6 +86,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def storePartnershipInformationUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/partnership-information"
 
+  def storeVatGroupInformationUrl(vatNumber: String) =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/vat-group"
+
   def incorporationInformationUrl: String =
     if (isEnabled(StubIncorporationInformation)) loadConfig("microservice.services.incorporation-information.stub-url")
     else loadConfig("microservice.services.incorporation-information.url")
