@@ -649,6 +649,11 @@ object MessageLookup {
     def line2(startDate: String, endDate: String) = s"Please come back and sign them up between $startDate and $endDate."
   }
 
+  object AgentCapturePartnershipUtr {
+    val title = "What is your client's Unique Taxpayer Reference (UTR)?"
+    val heading: String = title
+  }
+
   object ConfirmPartnership {
     val title = "Confirm the partnership"
     val heading = title

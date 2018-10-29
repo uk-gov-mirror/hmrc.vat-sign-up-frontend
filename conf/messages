@@ -109,6 +109,10 @@ error.invalid_dob.field                                                = Enter a
 error.invalid_dob.summary                                              = Enter a real date of birth
 error.confirm_partnership_utr.field                                    = Tell us if this is the right UTR for the partnership
 error.confirm_partnership_utr.summary                                  = Tell us if this is the right UTR for the partnership
+error.character_limit_partnership_utr                                  = Enter a UTR that has 10 numbers
+error.invalid_partnership_utr                                          = Enter a UTR using only numbers
+error.no_entry_partnership_utr                                         = Enter the partnership''s UTR
+
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -196,6 +200,10 @@ agent.confirm_company_number.title                                     = Confirm
 agent.confirm_company_number.heading                                   = Confirm your client''s company number
 agent.confirm_company_number.companyNumber.heading                     = Company number
 agent.confirm_company_number.link                                      = Change company number
+
+## Agent Capture Partnership UTR
+agent.capture_partnership_utr.title                                    = What is your client''s Unique Taxpayer Reference (UTR)?
+agent.capture_partnership_utr.heading                                  = What is your client''s Unique Taxpayer Reference (UTR)?
 
 ## Agent Agree Receive Email page
 agent.agree_capture_email.title                                        = Agree for your client to get secure messages from HMRC
