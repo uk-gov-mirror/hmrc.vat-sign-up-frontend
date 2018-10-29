@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -42,7 +42,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         Ok(capture_business_entity(
           validateBusinessEntityForm,
           routes.CaptureBusinessEntityController.submit(),
-          isEnabled(GeneralPartnershipJourney)
+          isEnabled(GeneralPartnershipJourney),
+          isEnabled(LimitedPartnershipJourney)
         ))
       )
     }
@@ -56,7 +57,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             BadRequest(capture_business_entity(
               formWithErrors,
               routes.CaptureBusinessEntityController.submit(),
-              isEnabled(GeneralPartnershipJourney)
+              isEnabled(GeneralPartnershipJourney),
+              isEnabled(LimitedPartnershipJourney)
             ))
           ),
         entityType => {
@@ -64,6 +66,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
             case GeneralPartnership => Future.successful(Redirect(partnerships.routes.CapturePartnershipUtrController.show()))
+            case LimitedPartnership => Future.successful(NotImplemented)
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
         }.map(_.addingToSession(SessionKeys.businessEntityKey, entityType))

@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -35,6 +35,11 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   implicit val testGetRequest = FakeRequest("GET", "/business-type")
 
+  override def afterEach(): Unit = {
+    super.afterEach()
+    disable(GeneralPartnershipJourney)
+    disable(LimitedPartnershipJourney)
+  }
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
@@ -93,6 +98,17 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "return not implemented" when {
+        "the business entity is limited partnership" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          enable(LimitedPartnershipJourney)
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedPartnership))
+          status(result) shouldBe Status.NOT_IMPLEMENTED
+        }
+      }
+
       "go to the cannot use service yet page" when {
         "the business entity is other" in {
           mockAuthRetrieveAgentEnrolment()
@@ -116,5 +132,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         charset(result) shouldBe Some("utf-8")
       }
     }
+
   }
+
 }

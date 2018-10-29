@@ -37,7 +37,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity(
     businessEntityForm(isAgent = true),
     postAction = testCall,
-    generalPartnershipEnabled = true)(
+    generalPartnershipEnabled = true,
+    limitedPartnershipEnabled = true)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -54,18 +55,13 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
     testPage.shouldHaveForm("Business Entity Form")(actionCall = testCall)
 
-    soleTrader -> messages.radioSoleTrader
-    limitedCompany -> messages.radioLimitedCompany
-    generalPartnership -> messages.radioGeneralPartnership
-    other -> messages.radioOther
-
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
 
       "for the option 'Sole Trader'" should {
 
         "have the text 'Sole trader'" in {
-          messages.radioSoleTrader shouldEqual "Sole trader"
+          doc.select("label[for=sole-trader]").text() shouldEqual messages.radioSoleTrader
         }
 
         "have an input under the label that" should {
@@ -85,7 +81,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'Limited company'" should {
 
         "have the text 'Limited company'" in {
-          messages.radioLimitedCompany shouldEqual "Limited company"
+          doc.select("label[for=limited-company]").text() shouldEqual messages.radioLimitedCompany
         }
 
         "have an input under the label that" should {
@@ -105,7 +101,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'General Partnership'" should {
 
         "have the text 'General Partnership'" in {
-          messages.radioGeneralPartnership shouldEqual "General partnership"
+          doc.select("label[for=general-partnership]").text() shouldEqual messages.radioGeneralPartnership
         }
 
         "have an input under the label that" should {
@@ -122,10 +118,30 @@ class CaptureBusinessEntitySpec extends ViewSpec {
         }
       }
 
+      "for the option 'Limited Partnership'" should {
+
+        "have the text 'Limited Partnership'" in {
+          doc.select("label[for=limited-partnership]").text() shouldEqual messages.radioLimitedPartnership
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#limited-partnership")
+
+          "have the id 'limited-partnership'" in {
+            optionLabel.attr("id") shouldEqual "limited-partnership"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
       "for the option 'Other'" should {
 
         "have the text 'Other'" in {
-          messages.radioOther shouldEqual "Other"
+          doc.select("label[for=other]").text() shouldEqual messages.radioOther
         }
 
         "have an input under the label that" should {

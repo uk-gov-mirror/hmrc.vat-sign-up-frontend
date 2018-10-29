@@ -25,13 +25,13 @@
 }
 
 <div class="form-group@if(hasError){ form-field--error}">
-    <fieldset @if(inline) { class="inline" }>
+    <fieldset id="@{field.name}" @if(inline) { class="inline" }>
         <legend class="visuallyhidden">@legend</legend>
         @if(hasError){
             <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
         @for(option <- options) {
-            <div id="@{field.name}" class="multiple-choice">
+            <div class="multiple-choice">
                 <input id="@option._1" type="radio" name="@field.name" value="@option._1">
                 <label for="@option._1">@option._2</label>
             </div>
