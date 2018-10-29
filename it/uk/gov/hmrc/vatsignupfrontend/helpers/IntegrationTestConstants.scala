@@ -33,7 +33,7 @@ object IntegrationTestConstants {
   val testCompanyUtr: String = IntegrationTestConstantsGenerator.randomUtrNumeric()
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode.toUpperCase.filterNot(_.isWhitespace))
   val testNino: String = new Generator().nextNino.nino
-  val testSaUtr: String = new Generator().nextAtedUtr.utr
+  val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
   val testArn: String = UUID.randomUUID().toString
   val testUri: String = "/test/url"

@@ -62,7 +62,7 @@ object PartnershipUtrForm {
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  lazy val partnershipUtrForm = PreprocessedForm(
+  val partnershipUtrForm = PreprocessedForm(
     validation = partnershipUtrValidationForm,
     trimRules = Map(partnershipUtr -> all),
     caseRules = Map(partnershipUtr -> upper)
