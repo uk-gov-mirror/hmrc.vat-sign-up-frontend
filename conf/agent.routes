@@ -116,3 +116,7 @@ POST        /partnership-utr               uk.gov.hmrc.vatsignupfrontend.control
 # Partnership PPOB
 GET         /principal-place-postcode      uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.show
 POST        /principal-place-postcode      uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.submit
+
+# Confirm Partnership Name
+GET         /confirm-partnership-company   uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.show
+POST        /confirm-partnership-company   uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.submit

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
@@ -36,12 +36,12 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
     disable(LimitedPartnershipJourney)
   }
 
-  "GET /confirm-partnership-company" when {
+  "GET /client/confirm-partnership-company" when {
     "LimitedPartnershipJourney is disabled" should {
       "return an NOT_FOUND" in {
         disable(LimitedPartnershipJourney)
 
-        val res = get("/confirm-partnership-company")
+        val res = get("/client/confirm-partnership-company")
 
         res should have(
           httpStatus(NOT_FOUND)
@@ -52,9 +52,9 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
     "LimitedPartnershipJourney is enabled" should {
       "return an OK" in {
 
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get("/confirm-partnership-company", Map(
+        val res = get("/client/confirm-partnership-company", Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
           SessionKeys.companyNameKey -> testCompanyName,
@@ -66,11 +66,11 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         )
       }
 
-      "redirect to resolve vat number" when {
+      "redirect to capture vat number" when {
         "there is no vat number in session" in{
-          stubAuth(OK, successfulAuthResponse())
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-          val res = get("/confirm-partnership-company", Map(
+          val res = get("/client/confirm-partnership-company", Map(
             SessionKeys.companyNameKey -> testCompanyName,
             SessionKeys.companyNumberKey -> testCompanyNumber,
             SessionKeys.partnershipTypeKey -> testPartnershipType
@@ -78,24 +78,24 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
 
           res should have(
             httpStatus(SEE_OTHER),
-              redirectUri(principalRoutes.ResolveVatNumberController.resolve().url)
+              redirectUri(agentRoutes.CaptureVatNumberController.show().url)
           )
         }
       }
 
-      "redirect to capture partnership company number page" when {
+      "throw internal server error" when {
         "there is no company name in session" in{
-          stubAuth(OK, successfulAuthResponse())
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-          val res = get("/confirm-partnership-company", Map(
+          val res = get("/client/confirm-partnership-company", Map(
             SessionKeys.companyNumberKey -> testCompanyNumber,
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipTypeKey -> testPartnershipType
           ))
 
           res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CapturePartnershipCompanyNumberController.show().url)
+            httpStatus(INTERNAL_SERVER_ERROR)
+            //TODO redirect to capture partnership crn
           )
         }
       }
@@ -109,7 +109,7 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         "return an NOT_FOUND" in {
           disable(LimitedPartnershipJourney)
 
-          val res = post("/confirm-partnership-company")()
+          val res = post("/client/confirm-partnership-company")()
 
           res should have(
             httpStatus(NOT_FOUND)
@@ -117,11 +117,11 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         }
       }
 
-    "redirect to resolve partnership utr" in {
+    "redirect to capture partnership utr" in {
 
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/confirm-partnership-company",
+      val res = post("/client/confirm-partnership-company",
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
@@ -131,18 +131,18 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.ResolvePartnershipUtrController.resolve().url)
+        redirectUri(routes.CapturePartnershipUtrController.show().url)
       )
 
     }
   }
 
   "if there is not company name in session" should {
-    "redirect to capture partnership company number page" in {
+    "throw internal server error" in {
 
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/confirm-partnership-company",
+      val res = post("/client/confirm-partnership-company",
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.companyNumberKey -> testCompanyNumber,
@@ -150,8 +150,8 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         ))()
 
       res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CapturePartnershipCompanyNumberController.show().url)
+        httpStatus(INTERNAL_SERVER_ERROR)
+        //TODO redirect to capture partnership crn
       )
     }
   }

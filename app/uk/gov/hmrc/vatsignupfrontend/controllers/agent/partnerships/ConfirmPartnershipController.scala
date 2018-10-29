@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.confirm_partnership
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.confirm_partnership
 
 import scala.concurrent.Future
 
 @Singleton
 class ConfirmPartnershipController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(LimitedPartnershipJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(LimitedPartnershipJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -40,16 +41,17 @@ class ConfirmPartnershipController @Inject()(val controllerComponents: Controlle
       val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
       Future.successful(
         (optVatNumber, optCompanyNumber, optCompanyName, optPartnershipType) match {
-          case (Some(vatNumber), Some(companyNumber), Some(companyName), Some(partnershipType)) =>
+          case (Some(_), Some(_), Some(companyName), Some(_)) =>
             Ok(confirm_partnership(
               companyName = companyName,
               postAction = routes.ConfirmPartnershipController.submit(),
-              changeLink = principalRoutes.CaptureBusinessEntityController.show().url
+              changeLink = agentRoutes.CaptureBusinessEntityController.show().url
             ))
           case (None, _, _, _) =>
-            Redirect(principalRoutes.ResolveVatNumberController.resolve())
+            Redirect(agentRoutes.CaptureVatNumberController.show())
           case _ =>
-            Redirect(routes.CapturePartnershipCompanyNumberController.show())
+            throw new InternalServerException("Capture CRN flow not implemented yet")
+          // TODO Redirect to CapturePartnershipCompanyNumberController
         }
       )
     }
@@ -61,13 +63,15 @@ class ConfirmPartnershipController @Inject()(val controllerComponents: Controlle
       val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
       val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
+
       (optVatNumber, optCompanyNumber, optCompanyName, optPartnershipType) match {
-        case (Some(vatNumber), Some(companyNumber), Some(companyName), Some(partnershipType)) =>
-          Future.successful(Redirect(routes.ResolvePartnershipUtrController.resolve()))
+        case (Some(_), Some(_), Some(_), Some(_)) =>
+          Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
         case (None, _, _, _) =>
-          Future.successful(Redirect(principalRoutes.ResolveVatNumberController.resolve()))
+          Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
         case _ =>
-          Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
+          throw new InternalServerException("Capture CRN flow not implemented yet")
+        // TODO Redirect to CapturePartnershipCompanyNumberController
       }
     }
   }
