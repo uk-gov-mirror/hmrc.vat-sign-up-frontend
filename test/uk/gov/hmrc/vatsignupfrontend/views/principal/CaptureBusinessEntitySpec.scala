@@ -67,7 +67,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'Sole Trader'" should {
 
         "have the text 'Sole trader'" in {
-          messages.radioSoleTrader shouldEqual "Sole trader"
+          doc.select("label[for=sole-trader]").text() shouldEqual  messages.radioSoleTrader
         }
 
         "have an input under the label that" should {
@@ -87,7 +87,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'Limited company'" should {
 
         "have the text 'Limited company'" in {
-          messages.radioLimitedCompany shouldEqual "Limited company"
+          doc.select("label[for=limited-company]").text() shouldEqual messages.radioLimitedCompany
         }
 
         "have an input under the label that" should {
@@ -107,7 +107,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'General partnership'" should {
 
         "have the text 'General partnership'" in {
-          messages.radioGeneralPartnership shouldEqual "General partnership"
+          doc.select("label[for=general-partnership]").text() shouldEqual  messages.radioGeneralPartnership
         }
 
         "have an input under the label that" should {
@@ -127,7 +127,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'Limited partnership'" should {
 
         "have the text 'Limited partnership'" in {
-          messages.radioLimitedPartnership shouldEqual "Limited partnership (including limited liability partnerships)"
+          doc.select("label[for=limited-partnership]").text() shouldEqual messages.radioLimitedPartnership
         }
 
         "have an input under the label that" should {
@@ -147,7 +147,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'Other'" should {
 
         "have the text 'Other'" in {
-          messages.radioOther shouldEqual "Other"
+          doc.select("label[for=other]").text() shouldEqual messages.radioOther
         }
 
         "have an input under the label that" should {

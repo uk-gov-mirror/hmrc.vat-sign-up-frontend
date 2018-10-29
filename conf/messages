@@ -191,6 +191,7 @@ agent.capture_entity_type.title                                        = What ty
 agent.capture_entity_type.heading                                      = What type of business is your client registered as?
 agent.capture_entity_type.soleTrader                                   = Sole trader
 agent.capture_entity_type.generalPartnership                           = General partnership
+agent.capture_entity_type.limitedPartnership                           = Limited partnership (including limited liability partnerships)
 agent.capture_entity_type.limitedCompany                               = Limited company
 agent.capture_entity_type.other                                        = Other
 
