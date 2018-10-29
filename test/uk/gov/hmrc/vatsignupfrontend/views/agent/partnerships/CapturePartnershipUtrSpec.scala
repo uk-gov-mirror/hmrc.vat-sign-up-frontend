@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.agent.partnership
+package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
@@ -33,7 +33,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnership.capture_partnership_utr(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.capture_partnership_utr(
     partnershipUtrForm = partnershipUtrForm.form,
     postAction = testCall)(
     FakeRequest(),
