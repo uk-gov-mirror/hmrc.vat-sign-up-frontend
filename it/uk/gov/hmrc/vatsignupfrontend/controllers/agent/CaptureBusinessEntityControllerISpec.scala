@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -24,6 +25,8 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+
   "GET /business-type" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -59,6 +62,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.CaptureClientDetailsController.show().url)
+        )
+      }
+    }
+
+    "redirect to capture partnership utr " when {
+      "the business entity is general partnership" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(GeneralPartnershipJourney)
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(partnerships.routes.CapturePartnershipUtrController.show().url)
         )
       }
     }

@@ -23,13 +23,14 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 
-class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents{
-  
+class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+
   object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents)
 
   implicit val testGetRequest = FakeRequest("GET", "/business-type")
@@ -37,6 +38,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
+
 
   "Calling the show action of the Capture Entity Type controller" should {
     "go to the Capture Entity Type page" in {
@@ -74,6 +76,20 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           redirectLocation(result) shouldBe Some(routes.CaptureClientDetailsController.show().url)
 
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+        }
+      }
+
+      "redirect to capture partnership utr" when {
+        "the business entity is general partnership" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          enable(GeneralPartnershipJourney)
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(partnerships.routes.CapturePartnershipUtrController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
         }
       }
 
