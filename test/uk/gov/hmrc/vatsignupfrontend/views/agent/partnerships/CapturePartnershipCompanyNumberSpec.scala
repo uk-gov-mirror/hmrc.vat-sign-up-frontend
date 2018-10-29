@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
+package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCapturePartnershipCompanyNumber => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCapturePartnershipCompanyNumber => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
@@ -34,30 +34,30 @@ class CapturePartnershipCompanyNumberSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
   lazy val appConfig = app.injector.instanceOf[AppConfig]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_company_number(
-    companyNumberForm = companyNumberForm(isAgent = false, isPartnership = true).form,
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.capture_partnership_company_number(
+    partnershipCompanyNumberForm = companyNumberForm(isAgent = true, isPartnership = true).form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Partnership Company Number view" should {
+  "The Capture Partnership company number view" should {
 
     val testPage = TestView(
-      name = "Capture Partnership Company Number View",
+      name = "Capture Partnership company number View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Partnership company number Form")(actionCall = testCall)
 
     testPage.shouldHaveTextField(companyNumber, messages.heading)
 
     testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHaveALink("companiesHouse", messages.linkText, appConfig.companiesHouse)
+    testPage.shouldHaveALink("companiesHouse", messages.link, appConfig.companiesHouse)
 
     testPage.shouldHaveContinueButton()
   }

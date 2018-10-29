@@ -43,7 +43,7 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
                                                          )
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(LimitedPartnershipJourney)) {
 
-  val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false)
+  val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false, isPartnership = true)
 
   private def toPartnershipEntityType(companyType: PartnershipCompanyType): PartnershipEntityType = {
     companyType match {
