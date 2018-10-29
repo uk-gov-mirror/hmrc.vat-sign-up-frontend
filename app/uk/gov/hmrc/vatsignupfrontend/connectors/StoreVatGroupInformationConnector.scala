@@ -16,21 +16,19 @@
 
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsResponse
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsHttpReads
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatGroupInformationHttpParser.StoreVatGroupInformationResponse
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class CitizenDetailsConnector @Inject()(val http: HttpClient,
-                                        val applicationConfig: AppConfig) {
-
-  def getCitizenDetails(sautr: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] =
-    http.GET[CitizenDetailsResponse](applicationConfig.getCitizenDetailsUrl(sautr))
+class StoreVatGroupInformationConnector @Inject()(val http: HttpClient,
+                                                  val applicationConfig: AppConfig
+                                                 )(implicit ec: ExecutionContext) {
+  def storeVatGroupInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatGroupInformationResponse] =
+    http.POST[JsObject, StoreVatGroupInformationResponse](applicationConfig.storeVatGroupInformationUrl(vatNumber), Json.obj())
 
 }

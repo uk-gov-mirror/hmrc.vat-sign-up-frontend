@@ -111,6 +111,7 @@ object MessageLookup {
     val heading: String = title
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
+    val radioGeneralPartnership: String = "General partnership"
     val radioOther: String = "Other"
   }
 
@@ -660,4 +661,9 @@ object MessageLookup {
     val link = "Change the partnership"
   }
 
+  object PartnershipPostcode {
+    val title = "Where is the partnership registered for Self Assessment?"
+    val heading = title
+    val label = "UK postcode"
+  }
 }

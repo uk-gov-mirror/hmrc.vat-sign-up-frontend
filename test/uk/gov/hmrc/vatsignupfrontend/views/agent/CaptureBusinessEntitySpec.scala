@@ -36,7 +36,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity(
     businessEntityForm(isAgent = true),
-    postAction = testCall)(
+    postAction = testCall,
+    generalPartnershipEnabled = true)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -55,6 +56,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
     soleTrader -> messages.radioSoleTrader
     limitedCompany -> messages.radioLimitedCompany
+    generalPartnership -> messages.radioGeneralPartnership
     other -> messages.radioOther
 
     "have a set of radio inputs" which {
@@ -92,6 +94,26 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'limited-company'" in {
             optionLabel.attr("id") shouldEqual "limited-company"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'General Partnership'" should {
+
+        "have the text 'General Partnership'" in {
+          messages.radioGeneralPartnership shouldEqual "General partnership"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#general-partnership")
+
+          "have the id 'general-partnership'" in {
+            optionLabel.attr("id") shouldEqual "general-partnership"
           }
 
           "be of type radio" in {

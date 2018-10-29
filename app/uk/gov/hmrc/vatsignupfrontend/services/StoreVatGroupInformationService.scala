@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.connectors
+package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameResponse
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import uk.gov.hmrc.vatsignupfrontend.connectors.StoreVatGroupInformationConnector
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatGroupInformationHttpParser.StoreVatGroupInformationResponse
 
 import scala.concurrent.Future
 
 @Singleton
-class GetCompanyNameConnector @Inject()(val http: HttpClient,
-                                        val applicationConfig: AppConfig) {
+class StoreVatGroupInformationService @Inject()(storeVatGroupInformationConnector: StoreVatGroupInformationConnector) {
 
-  def getCompanyName(companyNumber: String)(implicit hc: HeaderCarrier): Future[GetCompanyNameResponse] =
-    http.GET[GetCompanyNameResponse](applicationConfig.getCompanyName(companyNumber))
-
+  def storeVatGroupInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatGroupInformationResponse] =
+    storeVatGroupInformationConnector.storeVatGroupInformation(vatNumber)
 }

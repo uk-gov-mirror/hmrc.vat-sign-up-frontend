@@ -41,6 +41,8 @@ object Patterns {
 
   val companyUtrRegex = "[0-9]{10}"
 
+  val capitalisedAlphanumericRegex = "^[A-Z0-9]*$"
+
   val postcodeRegex = """^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$|BFPO\s?[0-9]{1,3}$"""
 
   def validText(text: String): Boolean = text matches iso8859_1Regex

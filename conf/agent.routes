@@ -108,3 +108,7 @@ POST        /information-received          uk.gov.hmrc.vatsignupfrontend.control
 
 # Sign up later
 GET         /error/sign-up-later           uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigratableDatesController.show
+
+# Partnership PPOB
+GET         /principal-place-postcode      uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.show
+POST        /principal-place-postcode      uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.submit
