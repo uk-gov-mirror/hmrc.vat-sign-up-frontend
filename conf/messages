@@ -238,6 +238,11 @@ agent.confirm_agent_email.title                                        = Confirm
 agent.confirm_agent_email.heading                                      = Confirm your email address
 agent.confirm_agent_email.link                                         = Change email address
 
+## Agent Confirm Partnership Company Name
+agent.confirm_partnership.title                                        = Confirm the partnership
+agent.confirm_partnership.heading                                      = Confirm the partnership
+agent.confirm_partnership.link                                         = Change the partnership
+
 ## Agent entered their email for their client
 agent.use_different_email_address.title                                = You need to enter a different email address
 agent.use_different_email_address.heading                              = You need to enter a different email address
