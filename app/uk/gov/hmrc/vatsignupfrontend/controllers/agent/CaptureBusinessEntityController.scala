@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, Other, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity
 
@@ -63,6 +63,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           entityType match {
             case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
+            case GeneralPartnership => Future.successful(Redirect(partnerships.routes.CapturePartnershipUtrController.show()))
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
         }.map(_.addingToSession(SessionKeys.businessEntityKey, entityType))
