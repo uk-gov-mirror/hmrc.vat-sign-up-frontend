@@ -55,7 +55,7 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
   }
 
   def validateCompanyNumber(companyNumber: String): Unit = {
-    val validation = CompanyNumberForm.companyNumberForm(isAgent = false).bind(Map("companyNumber" -> companyNumber))
+    val validation = CompanyNumberForm.companyNumberForm(isAgent = false, isPartnership = false).bind(Map("companyNumber" -> companyNumber))
     validation.errors shouldBe Seq.empty
     validation.get shouldBe companyNumber
   }

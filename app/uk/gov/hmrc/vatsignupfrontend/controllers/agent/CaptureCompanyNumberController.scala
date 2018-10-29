@@ -39,7 +39,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                                               )
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
-  val validateCompanyNumberForm = companyNumberForm(isAgent = true)
+  val validateCompanyNumberForm = companyNumberForm(isAgent = true, isPartnership = false)
 
   def validateCrnPrefix(companyNumber: String): Boolean = {
     companyNumber match {

@@ -39,7 +39,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                                               )
   extends AuthenticatedController(AdministratorRolePredicate) {
 
-  val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false)
+  val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false, isPartnership = false)
 
   def validateCrnPrefix(companyNumber: String): Boolean = {
     companyNumber match {

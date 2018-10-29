@@ -37,26 +37,32 @@ object CompanyNumberForm {
     )
   )
 
-  def crnNotEntered(isAgent: Boolean): Constraint[String] = Constraint("companyNumber.maxLength")(
-    companyNumber => validate(
-      constraint = companyNumber.isEmpty,
-      principalErrMsg = "error.principal.company_number_not_entered",
-      agentErrMsg = Some("error.agent.company_number_not_entered"),
-      isAgent = isAgent
-    )
+  def crnNotEntered(isAgent: Boolean, isPartnership: Boolean): Constraint[String] = Constraint("companyNumber.maxLength")(
+    companyNumber => {
+
+      val principalErrMsg = if (isPartnership) "error.principal.partnership_company_number_not_entered" else "error.principal.company_number_not_entered"
+      val agentErrMsg = if (isPartnership) "error.agent.partnership_company_number_not_entered" else "error.agent.company_number_not_entered"
+
+      validate(
+        constraint = companyNumber.isEmpty,
+        principalErrMsg = principalErrMsg,
+        agentErrMsg = Some(agentErrMsg),
+        isAgent = isAgent
+      )
+    }
   )
 
-  private def companyNumberValidationForm(isAgent:Boolean) = Form(
+  private def companyNumberValidationForm(isAgent: Boolean, isPartnership: Boolean) = Form(
     single(
-      companyNumber -> optText.toText.verifying(crnNotEntered(isAgent = isAgent) andThen withinMinAndMaxLength)
+      companyNumber -> optText.toText.verifying(crnNotEntered(isAgent = isAgent, isPartnership = isPartnership) andThen withinMinAndMaxLength)
     )
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  def companyNumberForm(isAgent: Boolean) = PreprocessedForm(
-    validation = companyNumberValidationForm(isAgent = isAgent),
+  def companyNumberForm(isAgent: Boolean, isPartnership: Boolean) = PreprocessedForm(
+    validation = companyNumberValidationForm(isAgent = isAgent, isPartnership = isPartnership),
     trimRules = Map(companyNumber -> all),
     caseRules = Map(companyNumber -> upper)
   )

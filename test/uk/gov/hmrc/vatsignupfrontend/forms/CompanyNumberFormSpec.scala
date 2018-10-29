@@ -26,9 +26,37 @@ class CompanyNumberFormSpec extends PlaySpec {
 
   import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 
-  val validateCompanyNumberForm = companyNumberForm(isAgent = false)
+  val validateCompanyNumberForm = companyNumberForm(isAgent = false, isPartnership = false)
 
   "The companyNumberForm" should {
+
+    "validate that data had been entered - none-partnership" in {
+      val validateCompanyNumberForm = companyNumberForm(isAgent = false, isPartnership = false)
+      val notEnteredErrorKey = "error.principal.company_number_not_entered"
+      val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> ""))
+      formWithError.errors should contain(FormError(companyNumber, notEnteredErrorKey))
+    }
+
+    "validate that data had been entered - partnership" in {
+      val validateCompanyNumberForm = companyNumberForm(isAgent = false, isPartnership = true)
+      val notEnteredErrorKey = "error.principal.partnership_company_number_not_entered"
+      val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> ""))
+      formWithError.errors should contain(FormError(companyNumber, notEnteredErrorKey))
+    }
+
+    "validate that data had been entered - agent none-partnership client" in {
+      val validateCompanyNumberForm = companyNumberForm(isAgent = true, isPartnership = false)
+      val notEnteredErrorKey = "error.agent.company_number_not_entered"
+      val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> ""))
+      formWithError.errors should contain(FormError(companyNumber, notEnteredErrorKey))
+    }
+
+    "validate that data had been entered - agent partnership client" in {
+      val validateCompanyNumberForm = companyNumberForm(isAgent = true, isPartnership = true)
+      val notEnteredErrorKey = "error.agent.partnership_company_number_not_entered"
+      val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> ""))
+      formWithError.errors should contain(FormError(companyNumber, notEnteredErrorKey))
+    }
 
     "validate that data containing 8 digits passes" in {
       val testCrn = TestConstantsGenerator.randomCrnNumeric
@@ -41,19 +69,6 @@ class CompanyNumberFormSpec extends PlaySpec {
       val testCrn = TestConstantsGenerator.randomCrnNumeric + "1"
       val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> testCrn))
       formWithError.errors should contain(FormError(companyNumber, invalidLengthErrorKey))
-    }
-
-    "validate that data had been entered - agent" in {
-      val validateCompanyNumberForm = companyNumberForm(isAgent = true)
-      val notEnteredErrorKey = "error.agent.company_number_not_entered"
-      val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> ""))
-      formWithError.errors should contain(FormError(companyNumber, notEnteredErrorKey))
-    }
-
-    "validate that data had been entered" in {
-      val notEnteredErrorKey = "error.principal.company_number_not_entered"
-      val formWithError = validateCompanyNumberForm.bind(Map(companyNumber -> ""))
-      formWithError.errors should contain(FormError(companyNumber, notEnteredErrorKey))
     }
 
     "validate that data containing fewer than 8 digits but greater than 0 passes" in {
