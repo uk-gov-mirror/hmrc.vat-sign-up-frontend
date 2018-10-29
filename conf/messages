@@ -112,9 +112,12 @@ error.confirm_partnership_utr.summary                                  = Tell us
 error.partnership_postcode.invalid                                     = Enter a valid postcode
 error.partnership_postcode.invalid_characters                          = Enter a postcode using only letters and numbers
 error.partnership_postcode.not_entered                                 = Tell us where the partnership is registered for Self Assessment
-error.character_limit_partnership_utr                                  = Enter a UTR that has 10 numbers
-error.invalid_partnership_utr                                          = Enter a UTR using only numbers
-error.no_entry_partnership_utr                                         = Enter the partnership''s UTR
+error.character_limit_partnership_utr.summary                          = Enter a UTR that has 10 numbers
+error.character_limit_partnership_utr.field                            = Enter a UTR that has 10 numbers
+error.invalid_partnership_utr.summary                                  = Enter a UTR using only numbers
+error.invalid_partnership_utr.field                                    = Enter a UTR using only numbers
+error.no_entry_partnership_utr.summary                                 = Enter the partnership''s UTR
+error.no_entry_partnership_utr.field                                   = Enter the partnership''s UTR
 
 
 ## Not enrolled to Agent Services page
