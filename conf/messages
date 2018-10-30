@@ -632,3 +632,8 @@ agent.capture_partnership_company_number.line_1                        = If you 
 agent.partnership_postcode.title                                       = Where is the client''s principal place of business?
 agent.partnership_postcode.heading                                     = Where is the client''s principal place of business?
 agent.partnership_postcode.label                                       = UK postcode
+
+## Principal Capture Partnership UTR
+principal.capture_partnership_utr.title                                = What is the partnership''s Unique Taxpayer Reference (UTR)?
+principal.capture_partnership_utr.heading                              = What is the partnership''s Unique Taxpayer Reference (UTR)?
+principal.capture_partnership_utr.line_1                               = This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs.
