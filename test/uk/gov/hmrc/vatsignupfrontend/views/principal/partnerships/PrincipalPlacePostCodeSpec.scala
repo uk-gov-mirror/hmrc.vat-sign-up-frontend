@@ -14,43 +14,43 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
+package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentPartnershipPostcode => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PartnershipPrincipalPlaceOfBusiness => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class PartnershipPPOBSpec extends ViewSpec {
+class PrincipalPlacePostCodeSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.partnership_ppob(
-    partnershipPostCodeForm = partnershipPostCodeForm(isAgent = false).form,
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.principal_place_post_code(
+    businessPostCodeForm = partnershipPostCodeForm(isAgent = false).form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Partnership Postcode view" should {
+  "The Partnership Principal Place Post Code view" should {
 
     val testPage = TestView(
-      name = "Partnership Postcode View",
+      name = "Partnership Principal Place Post Code View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveForm("Partnership Postcode Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Partnership Principal Place Post Code Form")(actionCall = testCall)
 
     testPage.shouldHaveTextField(partnershipPostCode, messages.label, hideLabel = false)
 
@@ -58,3 +58,4 @@ class PartnershipPPOBSpec extends ViewSpec {
   }
 
 }
+

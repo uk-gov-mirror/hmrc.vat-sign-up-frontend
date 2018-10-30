@@ -687,4 +687,10 @@ object MessageLookup {
     val line1 = "This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs."
   }
 
+  object PartnershipPrincipalPlaceOfBusiness {
+    val title = "Where is the partnership registered for Self Assessment?"
+    val heading = title
+    val label = "UK postcode"
+  }
+
 }
