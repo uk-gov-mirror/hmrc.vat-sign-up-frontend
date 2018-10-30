@@ -675,8 +675,8 @@ object MessageLookup {
     val link = "Change the partnership"
   }
 
-  object PartnershipPostcode {
-    val title = "Where is the partnership registered for Self Assessment?"
+  object AgentPartnershipPostcode {
+    val title = "Where is the client's principal place of business?"
     val heading = title
     val label = "UK postcode"
   }
