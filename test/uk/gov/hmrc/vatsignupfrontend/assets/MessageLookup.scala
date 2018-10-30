@@ -680,4 +680,11 @@ object MessageLookup {
     val heading = title
     val label = "UK postcode"
   }
+
+  object CapturePartnershipUtr {
+    val title = "What is the partnership's Unique Taxpayer Reference (UTR)?"
+    val heading = title
+    val line1 = "This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs."
+  }
+
 }
