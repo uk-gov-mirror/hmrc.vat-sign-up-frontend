@@ -22,4 +22,6 @@ object CheckYourAnswersIdConstants {
   val VatRegistrationDateId = "vat-registration-date"
   val BusinessPostCodeId = "business-post-code"
   val BusinessEntityId = "business-entity"
+  val CrnId = "company-number"
+  val UtrId = "utr"
 }
