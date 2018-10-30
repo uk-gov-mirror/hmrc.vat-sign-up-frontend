@@ -652,3 +652,11 @@ agent.partnership_postcode.label                                       = UK post
 principal.capture_partnership_utr.title                                = What is the partnership''s Unique Taxpayer Reference (UTR)?
 principal.capture_partnership_utr.heading                              = What is the partnership''s Unique Taxpayer Reference (UTR)?
 principal.capture_partnership_utr.line_1                               = This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs.
+
+## Principal Partnerships CYA
+principal.check_your_answers_partnerships.title                        = Check your answers
+principal.check_your_answers_partnerships.heading                      = Check your answers
+principal.check_your_answers_partnerships.business_entity              = What type of business or group are you signing up?
+principal.check_your_answers_partnerships.company_number               = What is the partnership''s company number?
+principal.check_your_answers_partnerships.company_utr                  = What is the partnership''s Unique Taxpayer Reference?
+principal.check_your_answers_partnerships.post_code                    = Where is the partnership registered for Self Assessment?
