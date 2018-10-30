@@ -29,7 +29,7 @@ class PartnershipPostCodeFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   "The PartnershipPostCodeForm" should {
 
     val invalid_postcode_error_key = "error.partnership_postcode.invalid"
-    val postcode_not_entered_error_key = "error.partnership_postcode.not_entered"
+    val postcode_not_entered_error_key = "error.agent.partnership_postcode.not_entered"
     val invalid_characters_key = "error.partnership_postcode.invalid_characters"
 
     "validate that data containing a valid post code passes" in {

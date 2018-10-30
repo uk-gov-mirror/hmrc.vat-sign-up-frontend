@@ -32,13 +32,13 @@ object PartnershipPostCodeForm {
   val postCodeNotEntered: Constraint[String] = Constraint("postcode.notEntered")(
     postCode => validate(
       constraint = postCode.isEmpty,
-      principalErrMsg = "error.partnership_postcode.not_entered"
+      principalErrMsg = "error.agent.partnership_postcode.not_entered"
     )
   )
 
   val postCodeInvalidCharacters: Constraint[String] = Constraint("postcode.invalid-characters")(
     postCode => validateNot(
-      constraint = postCode matches Patterns.capitalisedAlphanumericRegex,
+      constraint = postCode.toUpperCase matches Patterns.alphanumericRegex,
       principalErrMsg = "error.partnership_postcode.invalid_characters"
     )
   )
