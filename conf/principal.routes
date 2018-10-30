@@ -170,3 +170,7 @@ POST        /partnership-company-number                     uk.gov.hmrc.vatsignu
 # Confirm Partnership
 GET         /confirm-partnership-company                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmPartnershipController.show
 POST        /confirm-partnership-company                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.ConfirmPartnershipController.submit
+
+# Capture Partnership Utr
+GET         /partnership-utr                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipUtrController.show
+POST        /partnership-utr                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipUtrController.submit
