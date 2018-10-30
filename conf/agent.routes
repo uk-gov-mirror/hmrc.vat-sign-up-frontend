@@ -120,3 +120,7 @@ POST        /principal-place-postcode      uk.gov.hmrc.vatsignupfrontend.control
 # Confirm Partnership Name
 GET         /confirm-partnership-company   uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.show
 POST        /confirm-partnership-company   uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.submit
+
+# Capture Partnership Company Number
+GET         /partnership-company-number    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.show
+POST        /partnership-company-number    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.submit
