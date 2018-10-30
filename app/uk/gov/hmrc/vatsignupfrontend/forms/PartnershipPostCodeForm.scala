@@ -29,16 +29,18 @@ object PartnershipPostCodeForm {
 
   val partnershipPostCode = "partnershipPostCode"
 
-  val postCodeNotEntered: Constraint[String] = Constraint("postcode.notEntered")(
+  def postCodeNotEntered(isAgent: Boolean): Constraint[String] = Constraint("postcode.notEntered")(
     postCode => validate(
       constraint = postCode.isEmpty,
-      principalErrMsg = "error.agent.partnership_postcode.not_entered"
+      principalErrMsg =
+        if (isAgent) "error.agent.partnership_postcode.not_entered"
+        else "error.principal.partnership_postcode.not_entered"
     )
   )
 
   val postCodeInvalidCharacters: Constraint[String] = Constraint("postcode.invalid-characters")(
     postCode => validateNot(
-      constraint = postCode.toUpperCase matches Patterns.alphanumericRegex,
+      constraint = postCode matches Patterns.alphanumericRegex,
       principalErrMsg = "error.partnership_postcode.invalid_characters"
     )
   )
@@ -50,17 +52,17 @@ object PartnershipPostCodeForm {
     )
   )
 
-  val businessPostCodeValidationForm = Form(
+  def businessPostCodeValidationForm(isAgent: Boolean) = Form(
     mapping(
-      partnershipPostCode -> text.verifying(postCodeNotEntered andThen postCodeInvalidCharacters andThen postCodeInvalid)
+      partnershipPostCode -> text.verifying(postCodeNotEntered(isAgent) andThen postCodeInvalidCharacters andThen postCodeInvalid)
     )(PostCode.apply)(PostCode.unapply)
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  def partnershipPostCodeForm: PrevalidationAPI[PostCode] = PreprocessedForm(
-    validation = businessPostCodeValidationForm,
+  def partnershipPostCodeForm(isAgent: Boolean): PrevalidationAPI[PostCode] = PreprocessedForm(
+    validation = businessPostCodeValidationForm(isAgent),
     trimRules = Map(partnershipPostCode -> all),
     caseRules = Map(partnershipPostCode -> upper)
   )

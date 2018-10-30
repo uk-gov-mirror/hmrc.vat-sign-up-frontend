@@ -17,12 +17,15 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.partnership_ppob
 
 import scala.concurrent.Future
@@ -31,11 +34,13 @@ import scala.concurrent.Future
 class PartnershipPostCodeController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
 
+  val postCodeForm: PrevalidationAPI[PostCode] = partnershipPostCodeForm(isAgent = true)
+
   def show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(partnership_ppob(partnershipPostCodeForm.form, routes.PartnershipPostCodeController.submit()))
+          Ok(partnership_ppob(postCodeForm.form, routes.PartnershipPostCodeController.submit()))
         )
       }
   }
@@ -43,7 +48,7 @@ class PartnershipPostCodeController @Inject()(val controllerComponents: Controll
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        partnershipPostCodeForm.bindFromRequest.fold(
+        postCodeForm.bindFromRequest.fold(
           formWithErrors =>
             Future.successful(
               BadRequest(partnership_ppob(formWithErrors, routes.PartnershipPostCodeController.submit()))
