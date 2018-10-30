@@ -693,4 +693,12 @@ object MessageLookup {
     val label = "UK postcode"
   }
 
+  object AgentCheckYourAnswers {
+    val title = "Check your answers"
+    val heading = "Check your answers"
+    val subHeading = "You've told us"
+    val yourUtr = "What is your client's Unique Taxpayer Reference (UTR)?"
+    val yourCompanyNumber = "What is your client's company number?"
+    val yourBusinessPostCode = "Where is your client's principal place of business?"
+  }
 }

@@ -606,6 +606,14 @@ principal.confirm_partnership.title                                    = Confirm
 principal.confirm_partnership.heading                                  = Confirm the partnership
 principal.confirm_partnership.link                                     = Change the partnership
 
+# Check your answers page Partnership
+agent.check-your-answers.title                                         = Check your answers
+agent.check-your-answers.heading                                       = Check your answers
+agent.check-your-answers.sub_heading                                   = You''ve told us
+agent.check-your-answers.utr                                           = What is your client''s Unique Taxpayer Reference (UTR)?
+agent.check-your-answers.crn                                           = What is your client''s company number?
+agent.check-your-answers.business_post_code                            = Where is your client''s principal place of business?
+
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
 principal.sign_up_after_this_date.heading                              = You must come back later to sign up
