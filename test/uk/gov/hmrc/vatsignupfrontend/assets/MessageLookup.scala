@@ -693,6 +693,15 @@ object MessageLookup {
     val label = "UK postcode"
   }
 
+  object PartnershipsCYA {
+    val title = "Check your answers"
+    val heading = title
+    val businessEntity = "What type of business or group are you signing up?"
+    val companyNumber = "What is the partnership's company number?"
+    val companyUtr = "What is the partnership's Unique Taxpayer Reference?"
+    val postCode = "Where is the partnership registered for Self Assessment?"
+  }
+
   object AgentCheckYourAnswers {
     val title = "Check your answers"
     val heading = "Check your answers"
@@ -701,4 +710,5 @@ object MessageLookup {
     val yourCompanyNumber = "What is your client's company number?"
     val yourBusinessPostCode = "Where is your client's principal place of business?"
   }
+
 }
