@@ -87,17 +87,17 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "the partnership utr is not on the profile" when {
-      "throw Internal Server Error" in {
+    "the partnership utr is not on the profile" should {
+      "go to Capture Partnership UTR page" in {
         stubAuth(OK, successfulAuthResponse())
 
         val res = get("/resolve-partnership-utr")
 
         res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
       }
     }
   }
-
 }
