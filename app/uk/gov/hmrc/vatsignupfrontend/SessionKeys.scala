@@ -30,6 +30,7 @@ object SessionKeys {
   val identityVerificationContinueUrlKey = "IdentityVerification"
   val vatRegistrationDateKey = "VatRegistrationDate"
   val businessPostCodeKey = "BusinessPostCode"
+  val partnershipPostCodeKey = "PartnershipPostCode"
   val partnershipSautrKey = "PartnershipSautr"
   val partnershipTypeKey = "PartnershipType"
   val migratableDatesKey = "MigratableDates"

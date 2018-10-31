@@ -18,14 +18,15 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType._
+import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, PostCode}
 
 object StorePartnershipInformationStub extends WireMockMethods with FeatureSwitching {
 
   private def toJson(sautr: String,
                      partnershipType: PartnershipEntityType,
-                     companyNumber: Option[String]
+                     companyNumber: Option[String],
+                     postCode: Option[PostCode]
                     ) = Json.obj(
     "partnershipType" -> Json.toJson(partnershipType),
     "sautr" -> sautr
@@ -34,15 +35,21 @@ object StorePartnershipInformationStub extends WireMockMethods with FeatureSwitc
       case Some(crn) => Json.obj("crn" -> crn)
       case _ => Json.obj()
     }
+  ).++(
+    postCode match {
+      case Some(pc) => Json.obj("postCode" -> pc)
+      case _ => Json.obj()
+    }
   )
 
   def stubStorePartnershipInformation(vatNumber: String,
                                       sautr: String,
                                       partnershipEntityType: PartnershipEntityType,
-                                      companyNumber: Option[String]
+                                      companyNumber: Option[String],
+                                      postCode: Option[PostCode]
                                      )(responseStatus: Int): Unit = {
     when(method = POST, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/partnership-information",
-      body = toJson(sautr, partnershipEntityType, companyNumber))
+      body = toJson(sautr, partnershipEntityType, companyNumber, postCode))
       .thenReturn(status = responseStatus)
   }
 }

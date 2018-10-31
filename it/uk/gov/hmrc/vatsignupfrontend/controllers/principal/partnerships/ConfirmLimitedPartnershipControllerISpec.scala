@@ -91,7 +91,13 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
       "the partnership sautr is successfully stored" when {
         "redirect to agree to receive email page" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStorePartnershipInformation(testVatNumber, testSaUtr, LimitedPartnership, companyNumber = Some(testCompanyNumber))(NO_CONTENT)
+          stubStorePartnershipInformation(
+            testVatNumber,
+            testSaUtr,
+            LimitedPartnership,
+            companyNumber = Some(testCompanyNumber),
+            postCode = None
+          )(NO_CONTENT)
 
           val res = post("/confirm-partnership",
             Map(
@@ -114,7 +120,13 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
   "store partnership sautr service returned an error" should {
     "INTERNAL_SERVER_ERROR" in {
       stubAuth(OK, successfulAuthResponse())
-      stubStorePartnershipInformation(testVatNumber, testSaUtr, LimitedPartnership, companyNumber = Some(testCompanyNumber))(BAD_REQUEST)
+      stubStorePartnershipInformation(
+        testVatNumber,
+        testSaUtr,
+        LimitedPartnership,
+        companyNumber = Some(testCompanyNumber),
+        postCode = None
+      )(BAD_REQUEST)
 
       val res = post("/confirm-partnership",
         Map(

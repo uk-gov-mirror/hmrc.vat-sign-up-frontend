@@ -18,14 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 class PrincipalPlacePostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -59,13 +62,16 @@ class PrincipalPlacePostCodeControllerSpec extends UnitSpec with GuiceOneAppPerS
 
   "Calling the submit action of the Principal Place PostCode controller" when {
     "form successfully submitted" should {
-      "Not implemented" in {
+      "redirect to partnership CYA page" in {
         mockAuthAdminRole()
 
         implicit val request = testPostRequest(testBusinessPostcode.postCode)
         val result = TestPrincipalPlacePostCodeController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        //TODO redirect to partnership cya page
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
+
+        val expectedSessionPostCode = PostCode(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ",""))
+        session(result) get SessionKeys.partnershipPostCodeKey should contain(Json.toJson(expectedSessionPostCode).toString())
       }
     }
 
