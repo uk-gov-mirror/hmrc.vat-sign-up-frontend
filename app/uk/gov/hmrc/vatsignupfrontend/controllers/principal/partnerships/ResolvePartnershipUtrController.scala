@@ -55,7 +55,7 @@ class ResolvePartnershipUtrController @Inject()(val controllerComponents: Contro
           case (Some(_), _, _, _) =>
             Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
           case _ =>
-            Future.failed(throw new InternalServerException("Cannot redirect to capture partnership SAUTR"))
+            Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
         }
       } else
         Future.failed(new InternalServerException("Both feature switches are disabled"))

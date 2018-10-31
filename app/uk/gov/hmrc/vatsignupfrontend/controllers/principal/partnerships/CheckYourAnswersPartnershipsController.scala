@@ -46,6 +46,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
       (optPartnershipType, optPartnershipUtr, optPartnershipPostCode) match {
+        //TODO match on crn as well for the limited partnership cya page
         case (Some(partnershipType), Some(partnershipUtr), Some(partnershipPostCode)) =>
           Future.successful(
             Ok(check_your_answers_partnerships(
@@ -54,7 +55,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
               companyNumber = None,
               postCode = partnershipPostCode,
               postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-          ) //TODO add crn for limited partnership flow
+          )
         case (None, _, _) =>
           Future.successful(
             Redirect(principalRoutes.CaptureBusinessEntityController.show())
@@ -99,6 +100,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
       (optVatNumber, optPartnershipUtr, optPartnershipType, optPartnershipPostCode) match {
+        //TODO match on crn as well for the limited partnership cya page
         case (Some(vatNumber), Some(partnershipUtr), Some(partnershipType), Some(partnershipPostCode)) =>
          storePartnershipInformation(
             vatNumber = vatNumber,
@@ -107,7 +109,6 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             partnershipEntity = Some(partnershipType),
             postCode = Some(partnershipPostCode)
           )
-        //TODO add crn for limited partnership flow
         case (None, _, _, _) =>
           Future.successful(
             Redirect(principalRoutes.ResolveVatNumberController.resolve())

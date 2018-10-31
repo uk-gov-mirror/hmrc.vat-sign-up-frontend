@@ -87,7 +87,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
 
     "there isn't a company name in the session" should {
-      "throw internal server error" in {
+      "redirect to Capture Partnership Company Number" in {
         mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest.withSession(
@@ -97,16 +97,14 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         )
 
         val result = TestConfirmPartnershipController.show(request)
-        intercept[InternalServerException] {
-          await(result)
-        }
-        //TODO redirect to capture partnership crn
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
     }
 
 
     "there isn't a company number in the session" should {
-      "throw internal server error" in {
+      "redirect to Capture Partnership Company Number" in {
         mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest.withSession(
@@ -116,15 +114,13 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         )
 
         val result = TestConfirmPartnershipController.show(request)
-        intercept[InternalServerException] {
-          await(result)
-        }
-        //TODO redirect to capture partnership crn
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
     }
 
     "there isn't a partnership type in the session" should {
-      "throw internal server error" in {
+      "redirect to Capture Partnership Company Number" in {
         mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest.withSession(
@@ -134,10 +130,8 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         )
 
         val result = TestConfirmPartnershipController.show(request)
-        intercept[InternalServerException] {
-          await(result)
-        }
-        //TODO redirect to capture partnership crn
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
     }
   }
@@ -173,7 +167,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     }
 
-    "throw internal server error if company number is missing" in {
+    "redirect to Capture Partnership Company Number if company number is missing" in {
       mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
@@ -183,14 +177,13 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       )
 
       val result = TestConfirmPartnershipController.submit(request)
-
-      intercept[InternalServerException] {
-        await(result)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
     }
 
 
-    "throw internal server error if company name is missing" in {
+    "redirect to Capture Partnership Company Number if company name is missing" in {
       mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
@@ -200,13 +193,12 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       )
 
       val result = TestConfirmPartnershipController.submit(request)
-
-      intercept[InternalServerException] {
-        await(result)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
-    }
 
-    "throw internal server error if partnership type is missing" in {
+
+    "redirect to Capture Partnership Company Number if partnership type is missing" in {
       mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
@@ -216,11 +208,7 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       )
 
       val result = TestConfirmPartnershipController.submit(request)
-
-      intercept[InternalServerException] {
-        await(result)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
-    }
-
-  }
 }
