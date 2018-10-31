@@ -86,15 +86,15 @@ class CapturePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
   }
 
   "POST /partnership-utr" should {
-    "throw internal server error" in {
+    "go to PPOB page" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/partnership-utr")(PartnershipUtrForm.partnershipUtr-> testSaUtr)
 
       res should have(
-        httpStatus(INTERNAL_SERVER_ERROR)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.PrincipalPlacePostCodeController.show().url)
       )
-      //TODO redirect to principal place of business page
     }
 
     "return an Not Found if the feature switch is for both general and limited partnerships are disabled" in {
