@@ -178,3 +178,7 @@ POST        /partnership-utr                                uk.gov.hmrc.vatsignu
 # Capture Partnership post code
 GET         /principal-place-postcode                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.PrincipalPlacePostCodeController.show
 POST        /principal-place-postcode                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.PrincipalPlacePostCodeController.submit
+
+# Capture Partnership post code
+GET         /check-your-answers-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CheckYourAnswersPartnershipsController.show
+POST        /check-your-answers-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CheckYourAnswersPartnershipsController.submit

@@ -63,14 +63,14 @@ class PrincipalPlacePostCodeControllerISpec extends ComponentSpecBase with Custo
 
   "POST /principal-place-postcode" should {
 
-    "return a not implemented" in {
+    "redirect to partnership CYA page" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/principal-place-postcode")(PartnershipPostCodeForm.partnershipPostCode -> testBusinessPostCode.postCode)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
-        //TODO redirect to partnership cya page
+        httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersPartnershipsController.show().url)
       )
     }
 
