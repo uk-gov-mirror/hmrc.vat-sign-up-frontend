@@ -47,7 +47,7 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
         Future.successful(
           Ok(capture_partnership_utr(
             partnershipUtrForm.form,
-            routes.CapturePartnershipUtrController.show())
+            routes.CapturePartnershipUtrController.submit())
           )
         )
       }
@@ -61,16 +61,14 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
             Future.successful(
               BadRequest(capture_partnership_utr(
                 formWithErrors,
-                routes.CapturePartnershipUtrController.show()
+                routes.CapturePartnershipUtrController.submit()
               ))
             ),
           utr =>
             Future.successful(
-              throw new InternalServerException("Principal partnership postcode not implemented")
-            )
+              Redirect(routes.PrincipalPlacePostCodeController.show())
+              .addingToSession(SessionKeys.partnershipSautrKey -> utr))
         )
-        //TODO redirect to principal place of business page
       }
-
   }
 }

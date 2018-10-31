@@ -65,16 +65,14 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   "Calling the submit action of the Partnership utr controller" when {
     "form successfully submitted" should {
-      "throw internal server error" in {
+      "redirect to PPOB" in {
         mockAuthAdminRole()
 
         implicit val request = testPostRequest(testSaUtr)
         val result = TestCapturePartnershipUtrController.submit(request)
 
-        intercept[InternalServerException] {
-          await(result)
-        }
-        //Todo redirect to principal place of business page
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
       }
     }
 
