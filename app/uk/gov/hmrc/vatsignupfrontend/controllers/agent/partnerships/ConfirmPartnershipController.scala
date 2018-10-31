@@ -50,8 +50,7 @@ class ConfirmPartnershipController @Inject()(val controllerComponents: Controlle
           case (None, _, _, _) =>
             Redirect(agentRoutes.CaptureVatNumberController.show())
           case _ =>
-            throw new InternalServerException("Capture CRN flow not implemented yet")
-          // TODO Redirect to CapturePartnershipCompanyNumberController
+            Redirect(routes.AgentCapturePartnershipCompanyNumberController.show())
         }
       )
     }
@@ -70,8 +69,7 @@ class ConfirmPartnershipController @Inject()(val controllerComponents: Controlle
         case (None, _, _, _) =>
           Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
         case _ =>
-          throw new InternalServerException("Capture CRN flow not implemented yet")
-        // TODO Redirect to CapturePartnershipCompanyNumberController
+          Future.successful(Redirect(routes.AgentCapturePartnershipCompanyNumberController.show()))
       }
     }
   }

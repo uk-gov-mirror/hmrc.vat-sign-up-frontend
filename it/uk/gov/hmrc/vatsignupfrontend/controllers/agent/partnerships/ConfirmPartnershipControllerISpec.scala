@@ -94,8 +94,8 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
           ))
 
           res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-            //TODO redirect to capture partnership crn
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AgentCapturePartnershipCompanyNumberController.show().url)
           )
         }
       }
@@ -138,7 +138,7 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
   }
 
   "if there is not company name in session" should {
-    "throw internal server error" in {
+    "redirect to Capture Partnership Company number" in {
 
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
@@ -150,8 +150,8 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         ))()
 
       res should have(
-        httpStatus(INTERNAL_SERVER_ERROR)
-        //TODO redirect to capture partnership crn
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       )
     }
   }
