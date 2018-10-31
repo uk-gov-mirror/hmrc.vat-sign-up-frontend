@@ -39,7 +39,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   "Calling the resolve action of the Resolve Partnership Sautr controller" when {
     "the user has a IR-SA-PART-ORG enrolment and Limited Partnership FS is enabled" should {
-      "redirect to confirm general partnership page" in {
+      "redirect to confirm limited partnership page" in {
         enable(LimitedPartnershipJourney)
         mockAuthRetrievePartnershipEnrolment()
 
@@ -78,18 +78,18 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
   }
-  "the user does not have a IR-SA-PART-ORG enrolment" when {
-    "throw Internal Server Error" in {
+  "the user does not have a IR-SA-PART-ORG enrolment and General Partnership FS is enabled" should {
+    "go to Capture Partnership SAUTR" in {
+      enable(GeneralPartnershipJourney)
       mockAuthorise(
         retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
       )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
-      intercept[InternalServerException] {
-        await(TestResolvePartnershipUtrController.resolve(testGetRequest))
-        //redirectLocation(result) should contain(routes.CapturePartnershipSautrController.show().url)
+      val result = TestResolvePartnershipUtrController.resolve(testGetRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
       }
     }
 
   }
 
-}
