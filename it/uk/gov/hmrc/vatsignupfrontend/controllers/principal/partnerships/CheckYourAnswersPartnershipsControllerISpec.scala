@@ -19,25 +19,31 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType}
 
 class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(GeneralPartnershipJourney)
+    enable(LimitedPartnershipJourney)
   }
 
   override def afterEach(): Unit = {
     super.afterEach()
     disable(GeneralPartnershipJourney)
+    disable(LimitedPartnershipJourney)
   }
+
+  val generalPartnershipType = PartnershipEntityType.GeneralPartnership
+  val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
 
   "GET /check-your-answers-partnership" should {
     "return an OK" in {
@@ -45,7 +51,8 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
       val res = get("/check-your-answers-partnership",
         Map(
-          SessionKeys.partnershipTypeKey -> testPartnershipType,
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+          SessionKeys.partnershipTypeKey -> generalPartnershipType.toString,
           SessionKeys.partnershipSautrKey -> testSaUtr,
           SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
         )
@@ -58,8 +65,9 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
     "if feature switch is disabled" should {
       "return a not found" in {
         disable(GeneralPartnershipJourney)
+        disable(LimitedPartnershipJourney)
 
-        val res = get("/confirm-partnership-utr")
+        val res = get("/check-your-answers-partnership")
 
         res should have(
           httpStatus(NOT_FOUND)
@@ -69,30 +77,60 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
   }
 
   "POST /check-your-answers-partnership" when {
-    "store partnership information is successful" should {
-      "redirect to agree to receive emails" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStorePartnershipInformation(
-          vatNumber = testVatNumber,
-          partnershipEntityType = GeneralPartnership,
-          sautr = testSaUtr,
-          companyNumber = None,
-          postCode = Some(testBusinessPostCode)
-        )(NO_CONTENT)
+    "store partnership information is successful" when {
+      "the user is a general partnership" should {
+        "redirect to agree to receive emails" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            partnershipEntityType = generalPartnershipType,
+            sautr = testSaUtr,
+            companyNumber = None,
+            postCode = Some(testBusinessPostCode)
+          )(NO_CONTENT)
 
-        val res = post("/check-your-answers-partnership",
-          Map(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.partnershipTypeKey -> testPartnershipType,
-            SessionKeys.partnershipSautrKey -> testSaUtr,
-            SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          val res = post("/check-your-answers-partnership",
+            Map(
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.partnershipSautrKey -> testSaUtr,
+              SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(principalRoutes.AgreeCaptureEmailController.show().url)
           )
-        )()
+        }
+      }
+      "the user is a limited partnership" should {
+        "redirect to agree to receive emails" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            partnershipEntityType = limitedPartnershipType,
+            sautr = testSaUtr,
+            companyNumber = Some(testCompanyNumber),
+            postCode = Some(testBusinessPostCode)
+          )(NO_CONTENT)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(principalRoutes.AgreeCaptureEmailController.show().url)
-        )
+          val res = post("/check-your-answers-partnership",
+            Map(
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership),
+              SessionKeys.partnershipTypeKey -> limitedPartnershipType.toString,
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.companyNumberKey -> testCompanyNumber,
+              SessionKeys.partnershipSautrKey -> testSaUtr,
+              SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(principalRoutes.AgreeCaptureEmailController.show().url)
+          )
+        }
       }
     }
 
@@ -101,7 +139,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         stubAuth(OK, successfulAuthResponse())
         stubStorePartnershipInformation(
           vatNumber = testVatNumber,
-          partnershipEntityType = GeneralPartnership,
+          partnershipEntityType = generalPartnershipType,
           sautr = testSaUtr,
           companyNumber = None,
           postCode = Some(testBusinessPostCode)
@@ -109,8 +147,8 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
         val res = post("/check-your-answers-partnership",
           Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
             SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.partnershipTypeKey -> testPartnershipType,
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
           )
