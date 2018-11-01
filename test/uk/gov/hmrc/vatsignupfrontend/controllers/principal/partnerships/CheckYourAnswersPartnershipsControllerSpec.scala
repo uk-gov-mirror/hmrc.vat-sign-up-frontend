@@ -22,8 +22,6 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
-import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -36,9 +34,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySession
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 
-import scala.concurrent.Future
-import scala.util.Random
-
 class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
   with MockStorePartnershipInformationService {
@@ -47,9 +42,8 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    val enableGeneral = Random.nextBoolean()
-    if (enableGeneral) enable(GeneralPartnershipJourney)
-    if (!enableGeneral | Random.nextBoolean()) enable(LimitedPartnershipJourney)
+    enable(GeneralPartnershipJourney)
+    enable(LimitedPartnershipJourney)
   }
 
   override def afterEach(): Unit = {
@@ -58,8 +52,8 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
     disable(LimitedPartnershipJourney)
   }
 
-  val generalPartnershipType = PartnershipEntityType.GeneralPartnership.toString
-  val limitedPartnershipType = PartnershipEntityType.LimitedPartnership.toString
+  val generalPartnershipType: String = PartnershipEntityType.GeneralPartnership.toString
+  val limitedPartnershipType: String = PartnershipEntityType.LimitedPartnership.toString
 
   def testGetRequest(sautr: Option[String] = Some(testSaUtr),
                      businessEntityType: Option[BusinessEntity] = Some(GeneralPartnership),
