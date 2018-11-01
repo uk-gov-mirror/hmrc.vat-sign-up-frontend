@@ -60,7 +60,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             case (GeneralPartnership, _, _) | (_, Some(_), Some(_)) =>
               Future.successful(
                 Ok(check_your_answers_partnerships(
-                  entityType = entityType.toString, //todo find the text
+                  entityType = entityType,
                   companyUtr = partnershipUtr,
                   companyNumber = optPartnershipCrn,
                   postCode = partnershipPostCode,

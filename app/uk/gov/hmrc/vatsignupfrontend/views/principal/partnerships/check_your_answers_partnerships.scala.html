@@ -19,10 +19,9 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
-@import uk.gov.hmrc.vatsignupfrontend.models.PostCode
+@import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
 
-@(entityType: String, companyUtr: String, companyNumber: Option[String], postCode: PostCode, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(entityType: BusinessEntity, companyUtr: String, companyNumber: Option[String], postCode: PostCode, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
 
@@ -45,10 +44,13 @@
     </div>
 }
 
-@partnershipType() = @{
+@businessEntityType() = @{
     val rowName = BusinessEntityId
     val rowQuestion = Messages("principal.check_your_answers_partnerships.business_entity")
-    val rowAnswer = entityType
+    val rowAnswer = entityType match {
+        case GeneralPartnership => Messages("principal.capture_entity_type.generalPartnership")
+        case LimitedPartnership => Messages("principal.capture_entity_type.limitedPartnership")
+    }
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
     summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
@@ -86,7 +88,7 @@
     <h1 class="heading-large">@Messages("principal.check_your_answers_partnerships.heading")</h1>
 
     <div class="form-group">
-        @partnershipType()
+        @businessEntityType()
         @if(companyNumber.isDefined) {
             @partnershipCompanyNumber()
         }
