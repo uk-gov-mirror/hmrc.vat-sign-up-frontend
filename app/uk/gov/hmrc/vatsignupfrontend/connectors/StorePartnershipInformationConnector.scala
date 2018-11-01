@@ -51,11 +51,10 @@ class StorePartnershipInformationConnector @Inject()(val http: HttpClient,
       }
     ).++(
       postCode match {
-        case Some(pc) => Json.obj(postCodeKey -> pc)
+        case Some(pc) => Json.obj(postCodeKey -> pc.postCode)
         case _ => Json.obj()
       }
     )
-
     http.POST[JsObject, StorePartnershipInformationResponse](applicationConfig.storePartnershipInformationUrl(vatNumber), body)
   }
 
