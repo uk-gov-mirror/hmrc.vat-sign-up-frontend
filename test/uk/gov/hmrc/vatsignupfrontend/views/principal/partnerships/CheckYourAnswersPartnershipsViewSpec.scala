@@ -22,9 +22,10 @@ import org.jsoup.nodes.{Document, Element}
 import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PartnershipsCYA => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PartnershipsCYA => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
 
@@ -33,7 +34,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
   lazy val appConfig = app.injector.instanceOf[AppConfig]
 
   lazy val limitedPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
-    entityType = testPartnershipType,
+    entityType = LimitedPartnership,
     companyUtr = testCompanyUtr,
     companyNumber = Some(testCompanyNumber),
     postCode = testBusinessPostcode,
@@ -90,7 +91,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
     "display the correct info for business entity" in {
       val sectionId = BusinessEntityId
       val expectedQuestion = messages.businessEntity
-      val expectedAnswer = testPartnershipType
+      val expectedAnswer = CaptureBusinessEntity.radioLimitedPartnership
       val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
 
       sectionTest(
@@ -150,7 +151,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
   }
 
   lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
-    entityType = testPartnershipType,
+    entityType = GeneralPartnership,
     companyUtr = testCompanyUtr,
     companyNumber = None,
     postCode = testBusinessPostcode,
@@ -174,7 +175,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
     "display the correct info for business entity" in {
       val sectionId = BusinessEntityId
       val expectedQuestion = messages.businessEntity
-      val expectedAnswer = testPartnershipType
+      val expectedAnswer = CaptureBusinessEntity.radioGeneralPartnership
       val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
 
       sectionTest(

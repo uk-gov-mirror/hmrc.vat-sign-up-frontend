@@ -17,13 +17,15 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.businessEntityKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
@@ -37,25 +39,36 @@ import scala.concurrent.Future
 @Singleton
 class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents: ControllerComponents,
                                                        val storePartnershipInformationService: StorePartnershipInformationService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)) {
+
+  override protected def featureEnabled[T](func: => T): T =
+    if (featureSwitches exists isEnabled) func
+    else throw new NotFoundException(featureSwitchError)
+
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
+      val optBusinessEntityType = request.session.getModel[BusinessEntity](businessEntityKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
+      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
-      (optPartnershipType, optPartnershipUtr, optPartnershipPostCode) match {
-        //TODO match on crn as well for the limited partnership cya page
-        case (Some(partnershipType), Some(partnershipUtr), Some(partnershipPostCode)) =>
-          Future.successful(
-            Ok(check_your_answers_partnerships(
-              entityType = partnershipType,
-              companyUtr = partnershipUtr,
-              companyNumber = None,
-              postCode = partnershipPostCode,
-              postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-          )
+      (optBusinessEntityType, optPartnershipUtr, optPartnershipPostCode) match {
+        case (Some(entityType), Some(partnershipUtr), Some(partnershipPostCode)) =>
+          (entityType, optPartnershipCrn, optPartnershipType) match {
+            case (GeneralPartnership, _, _) | (_, Some(_), Some(_)) =>
+              Future.successful(
+                Ok(check_your_answers_partnerships(
+                  entityType = entityType,
+                  companyUtr = partnershipUtr,
+                  companyNumber = optPartnershipCrn,
+                  postCode = partnershipPostCode,
+                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
+              )
+            case _ =>
+              Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
+          }
         case (None, _, _) =>
           Future.successful(
             Redirect(principalRoutes.CaptureBusinessEntityController.show())
@@ -93,22 +106,36 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
+    authorised() {
+      val optBusinessEntityType = request.session.getModel[BusinessEntity](businessEntityKey)
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
+      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
-      (optVatNumber, optPartnershipUtr, optPartnershipType, optPartnershipPostCode) match {
-        //TODO match on crn as well for the limited partnership cya page
-        case (Some(vatNumber), Some(partnershipUtr), Some(partnershipType), Some(partnershipPostCode)) =>
-         storePartnershipInformation(
-            vatNumber = vatNumber,
-            sautr = partnershipUtr,
-            companyNumber = None,
-            partnershipEntity = Some(partnershipType),
-            postCode = Some(partnershipPostCode)
-          )
+      (optVatNumber, optPartnershipUtr, optBusinessEntityType, optPartnershipPostCode) match {
+        case (Some(vatNumber), Some(partnershipUtr), Some(entityType), Some(partnershipPostCode)) =>
+          (entityType, optPartnershipType, optPartnershipCrn) match {
+            case (GeneralPartnership, _, _) =>
+              storePartnershipInformation(
+                vatNumber = vatNumber,
+                sautr = partnershipUtr,
+                companyNumber = None,
+                partnershipEntity = Some(PartnershipEntityType.GeneralPartnership.toString),
+                postCode = Some(partnershipPostCode)
+              )
+            case (LimitedPartnership, Some(partnershipType), Some(_)) =>
+              storePartnershipInformation(
+                vatNumber = vatNumber,
+                sautr = partnershipUtr,
+                companyNumber = optPartnershipCrn,
+                partnershipEntity = Some(partnershipType),
+                postCode = Some(partnershipPostCode)
+              )
+            case (LimitedPartnership, _,_) =>
+              Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
+          }
         case (None, _, _, _) =>
           Future.successful(
             Redirect(principalRoutes.ResolveVatNumberController.resolve())
