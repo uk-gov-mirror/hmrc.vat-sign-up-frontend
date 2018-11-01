@@ -37,7 +37,7 @@ object StorePartnershipInformationStub extends WireMockMethods with FeatureSwitc
     }
   ).++(
     postCode match {
-      case Some(pc) => Json.obj("postCode" -> pc)
+      case Some(pc) => Json.obj("postCode" -> pc.postCode)
       case _ => Json.obj()
     }
   )
