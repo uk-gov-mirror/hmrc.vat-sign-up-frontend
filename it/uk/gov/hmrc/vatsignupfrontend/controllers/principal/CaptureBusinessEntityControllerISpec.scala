@@ -159,6 +159,19 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "the business type is vat group" should {
+      "return a NOT_IMPLEMENTED" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> vatGroup)
+
+        //TODO should go to vat group resolver page
+        res should have(
+          httpStatus(NOT_IMPLEMENTED)
+        )
+      }
+    }
+
     "the business type is other" should {
       "return a SEE_OTHER status and go to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())

@@ -27,6 +27,7 @@ sealed trait BusinessEntity {
     case SoleTrader => SoleTraderKey
     case GeneralPartnership => GeneralPartnershipKey
     case LimitedPartnership => LimitedPartnershipKey
+    case VatGroup => VatGroupKey
     case Other => OtherKey
   }
 }
@@ -45,6 +46,8 @@ object LimitedCompany extends BusinessEntity
 
 object SoleTrader extends BusinessEntity
 
+object VatGroup extends BusinessEntity
+
 object Other extends BusinessEntity
 
 object BusinessEntity {
@@ -54,6 +57,7 @@ object BusinessEntity {
   val LimitedPartnershipKey = "limited-partnership"
   val LimitedLiabilityPartnershipKey = "llp"
   val ScottishLimitedPartnershipKey = "scottish-partnership"
+  val VatGroupKey = "vat-group"
   val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
@@ -64,6 +68,7 @@ object BusinessEntity {
       case LimitedPartnershipKey => Some(LimitedPartnership)
       case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
       case ScottishLimitedPartnershipKey => Some(ScottishLimitedPartnership)
+      case VatGroupKey => Some(VatGroup)
       case OtherKey => Some(Other)
       case _ => None
     }
@@ -75,6 +80,7 @@ object BusinessEntity {
       case LimitedPartnership => LimitedPartnershipKey
       case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
       case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
+      case VatGroup => VatGroupKey
       case Other => OtherKey
     }
   }

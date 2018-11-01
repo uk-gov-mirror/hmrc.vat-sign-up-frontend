@@ -23,7 +23,7 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 
-@(businessEntityForm: Form[BusinessEntity], postAction: Call, generalPartnershipEnabled: Boolean, limitedPartnershipEnabled: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(businessEntityForm: Form[BusinessEntity], postAction: Call, generalPartnershipEnabled: Boolean, limitedPartnershipEnabled: Boolean, vatGroupEnabled: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-other-entity.js")></script>
@@ -32,6 +32,8 @@
 @generalPartnershipOption = @{ Some((generalPartnership, Messages("principal.capture_entity_type.generalPartnership"))).filter(_ => generalPartnershipEnabled) }
 
 @limitedPartnershipOption = @{ Some((limitedPartnership, Messages("principal.capture_entity_type.limitedPartnership"))).filter(_ => limitedPartnershipEnabled) }
+
+@vatGroupOption = @{ Some((vatGroup, Messages("principal.capture_entity_type.vatGroup"))).filter(_ => vatGroupEnabled) }
 
 @principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts)) {
 
@@ -47,8 +49,7 @@
             options = Seq(
                         (soleTrader, Messages("principal.capture_entity_type.soleTrader")),
                         (limitedCompany, Messages("principal.capture_entity_type.limitedCompany"))
-                    ) ++ generalPartnershipOption
-                    ++ limitedPartnershipOption
+                    ) ++ generalPartnershipOption ++ limitedPartnershipOption ++ vatGroupOption
                     :+ (other, Messages("principal.capture_entity_type.other")),
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity)

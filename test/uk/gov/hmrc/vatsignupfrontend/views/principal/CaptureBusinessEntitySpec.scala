@@ -38,7 +38,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     businessEntityForm(isAgent = false),
     postAction = testCall,
     generalPartnershipEnabled = true,
-    limitedPartnershipEnabled = true
+    limitedPartnershipEnabled = true,
+    vatGroupEnabled = true
   )(
     FakeRequest(),
     applicationMessages,
@@ -136,6 +137,25 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'limited-company'" in {
             optionLabel.attr("id") shouldEqual "limited-partnership"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+      "for the option 'VAT group'" should {
+
+        "have the text 'VAT group'" in {
+          doc.select("label[for=vat-group]").text() shouldEqual messages.radioVatGroup
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#vat-group")
+
+          "have the id 'vat-group'" in {
+            optionLabel.attr("id") shouldEqual "vat-group"
           }
 
           "be of type radio" in {
