@@ -17,11 +17,12 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
 
-@(utr: String, crn: Option[String], postCode: Option[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@(utr: String, entityType: BusinessEntity, postCode: PostCode, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
@@ -43,27 +44,32 @@
         }
     </div>
 }
+@businessEntityCheck() = @{
+    val rowName = BusinessEntityId
+    val rowQuestion = Messages("agent.check-your-answers.business-entity")
+    val rowAnswer = entityType match {
+        case GeneralPartnership => Messages("agent.capture_entity_type.generalPartnership")
+        case LimitedPartnership => Messages("agent.capture_entity_type.limitedPartnership")
+    }
+    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureBusinessEntityController.show().url
 
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+}
 @utrNumber() = @{
     val rowName = UtrId
     val rowQuestion = Messages("agent.check-your-answers.utr")
     val rowAnswer = utr
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
+
     summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
-}
-@companyNumber() = @{
-    val rowName = CrnId
-    val rowQuestion = Messages("agent.check-your-answers.crn")
-    val rowAnswer = crn.getOrElse("")
-    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url
-    crn map { _ => summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl)) }
 }
 @placeOfBusiness() = @{
     val rowName = BusinessPostCodeId
     val rowQuestion = Messages("agent.check-your-answers.business_post_code")
-    val rowAnswer = postCode.getOrElse(PostCode("")).postCode
+    val rowAnswer = postCode.postCode
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.PartnershipPostCodeController.show().url
-    postCode map { _ => summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl)) }
+
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @agent_main_template(title = Messages("agent.check-your-answers.title")) {
@@ -72,8 +78,8 @@
     <h2 class="heading-medium">@Messages("agent.check-your-answers.sub_heading")</h2>
 
     <div class="form-group">
+        @businessEntityCheck()
         @utrNumber()
-        @companyNumber()
         @placeOfBusiness()
         <div class="divider--top--thick"></div>
     </div>

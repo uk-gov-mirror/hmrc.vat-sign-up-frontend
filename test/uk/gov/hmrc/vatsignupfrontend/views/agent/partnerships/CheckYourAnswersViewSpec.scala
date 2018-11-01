@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswers
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
@@ -71,21 +72,21 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
   "the Check Your Answers View" when {
     val utrAnswer = "utr-answer"
+    val businessEntityAnswer = "business-entity-answer"
     val crnAnswer = "company-number-answer"
     val pobAnswer = "business-post-code-answer"
-    val expectedUrlUtr = partnershipRoutes.CapturePartnershipUtrController.show().url
-    val expectedUrlCrn = partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url
-    val expectedUrlPostCode = partnershipRoutes.PartnershipPostCodeController.show().url
+    lazy val expectedUrlUtr = partnershipRoutes.CapturePartnershipUtrController.show().url
+    lazy val expectedUrlPostCode = partnershipRoutes.PartnershipPostCodeController.show().url
 
-    "the saUtr, the crn and the post code are given" should {
+    "the saUtr and the post code are given for a general partnership" should {
       val testPage = TestView(
         name = "Check your answers View",
         title = messages.title,
         heading = messages.heading,
         page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
           utr = testSaUtr,
-          crn = Some(testCompanyNumber),
-          postCode = Some(testBusinessPostcode),
+          entityType = GeneralPartnership,
+          testBusinessPostcode,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
       )
@@ -95,51 +96,10 @@ class CheckYourAnswersViewSpec extends ViewSpec {
       testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
       "render the page correctly" in {
-        def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+        lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
           utr = testSaUtr,
-          crn = Some(testCompanyNumber),
-          postCode = Some(testBusinessPostcode),
-          postAction = testCall
-        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
-
-        lazy val doc = Jsoup.parse(page.body)
-
-        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-        sectionTest(CrnId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCrn), doc)
-        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.postCode, Some(expectedUrlPostCode), doc)
-
-        doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(crnAnswer).text shouldBe testCompanyNumber
-        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.postCode
-      }
-    }
-
-    "the saUtr and the crn are given but the post code isn't" should {
-      "render the page correctly" in {
-        def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = testSaUtr,
-          crn = Some(testCompanyNumber),
-          postCode = None,
-          postAction = testCall
-        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
-
-        lazy val doc = Jsoup.parse(page.body)
-
-        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-        sectionTest(CrnId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCrn), doc)
-
-        doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(crnAnswer).text shouldBe testCompanyNumber
-        doc.getElementById(pobAnswer) shouldBe null
-      }
-    }
-
-    "the saUtr and the post code are given but the crn isn't" should {
-      "render the page correctly" in {
-        def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = testSaUtr,
-          crn = None,
-          postCode = Some(testBusinessPostcode),
+          entityType = GeneralPartnership,
+          postCode = testBusinessPostcode,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
@@ -149,27 +109,8 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.postCode, Some(expectedUrlPostCode), doc)
 
         doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(crnAnswer) shouldBe null
+        doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
         doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.postCode
-      }
-    }
-
-    "the saUtr is given but the crn and the post code aren't" should {
-      "render the page correctly" in {
-        def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = testSaUtr,
-          crn = None,
-          postCode = None,
-          postAction = testCall
-        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
-
-        lazy val doc = Jsoup.parse(page.body)
-
-        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-
-        doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(crnAnswer) shouldBe null
-        doc.getElementById(pobAnswer) shouldBe null
       }
     }
   }

@@ -716,6 +716,8 @@ object MessageLookup {
     val yourUtr = "What is your client's Unique Taxpayer Reference (UTR)?"
     val yourCompanyNumber = "What is your client's company number?"
     val yourBusinessPostCode = "Where is your client's principal place of business?"
+    val generalPartnership: String = "General partnership"
+    val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
   }
 
 }

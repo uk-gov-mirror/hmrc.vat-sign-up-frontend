@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
-import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
@@ -25,7 +24,9 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, PartnershipEntityType, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
 class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -39,9 +40,8 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr,
-          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-          SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.partnershipTypeKey -> GeneralPartnership.StringValue
+          SessionKeys.businessPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode),
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
         )
       )
 
@@ -67,13 +67,21 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
       "redirect to capture email" in {
         enable(GeneralPartnershipJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStorePartnershipInformation(testVatNumber, testSaUtr, GeneralPartnership, None)(NO_CONTENT)
+        stubStorePartnershipInformation(
+          testVatNumber,
+          testSaUtr,
+          PartnershipEntityType.GeneralPartnership,
+          None,
+          Some(testBusinessPostCode)
+        )(
+          NO_CONTENT
+        )
 
         val res = post("/client/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
-            SessionKeys.partnershipTypeKey -> GeneralPartnership.StringValue
+            SessionKeys.businessPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
           )
         )()
 

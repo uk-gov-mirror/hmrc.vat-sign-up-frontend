@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
@@ -40,29 +40,28 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
-      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey) filter (_.nonEmpty)
+      val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey) filter (_.nonEmpty)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
+      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
-      (optVatNumber, optPartnershipType, optSaUtr)  match {
-        case (Some(vatNumber), Some(_), Some(saUtr)) =>
+      (optVatNumber, optBusinessEntity, optSaUtr, optBusinessPostCode) match {
+        case (Some(_), Some(businessEntity), Some(saUtr), Some(postCode)) =>
           Future.successful(
             Ok(check_your_answers(
               saUtr,
-              optCompanyNumber,
-              optBusinessPostCode,
+              businessEntity,
+              postCode,
               routes.CheckYourAnswersPartnershipController.submit())
             )
           )
-        case (None, _, _) =>
+        case (None, _, _, _) =>
           Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
-        case (_, None, _) =>
+        case (_, None, _, _) =>
           Future.successful(
             Redirect(agentRoutes.CaptureBusinessEntityController.show())
           )
-        case (_, _, _) =>
+        case (_, _, _, _) =>
           Future.successful(
             Redirect(routes.CapturePartnershipUtrController.show())
           )
@@ -74,18 +73,16 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
-      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
 
-      (optVatNumber, optPartnershipType, optSaUtr) match {
-        case (Some(vatNumber), Some(_), Some(saUtr)) =>
+      (optVatNumber, optSaUtr, optBusinessPostCode) match {
+        case (Some(vatNumber), Some(saUtr), Some(postCode)) =>
           storePartnershipInformationService.storePartnershipInformation(
             vatNumber = vatNumber,
             sautr = saUtr,
-            companyNumber = optCompanyNumber,
-            partnershipEntity = optPartnershipType,
-            postCode = optBusinessPostCode
+            companyNumber = None,
+            partnershipEntity = None,
+            postCode = Some(postCode)
           ) map {
             case Right(StorePartnershipInformationSuccess) =>
               Redirect(agentRoutes.CaptureAgentEmailController.show())
@@ -95,10 +92,6 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
         case (None, _, _) =>
           Future.successful(
             Redirect(agentRoutes.CaptureVatNumberController.show())
-          )
-        case (_, None, _) =>
-          Future.successful(
-            Redirect(agentRoutes.CaptureBusinessEntityController.show())
           )
         case (_, _, _) =>
           Future.successful(
