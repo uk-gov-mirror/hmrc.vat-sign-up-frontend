@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
+import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -64,8 +65,8 @@ class PartnershipPostCodeControllerISpec extends ComponentSpecBase with CustomMa
       val res = post("/client/principal-place-postcode")(PartnershipPostCodeForm.partnershipPostCode -> testBusinessPostCode.postCode)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
-        //TODO redirect to partnership cya page
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CheckYourAnswersPartnershipController.show().url)
       )
     }
   }

@@ -99,8 +99,6 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
           mockStorePartnershipInformation(
             vatNumber = testVatNumber,
             sautr = testSaUtr,
-            companyNumber = None,
-            partnershipEntity = None,
             postCode = None
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
@@ -133,8 +131,6 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       mockStorePartnershipInformation(
         vatNumber = testVatNumber,
         sautr = testSaUtr,
-        companyNumber = None,
-        partnershipEntity = None,
         postCode = None
       )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 

@@ -24,21 +24,23 @@ sealed trait PartnershipEntityType {
   override def toString: String = StringValue
 }
 
+sealed trait LimitedPartnershipEntityType extends PartnershipEntityType
+
 object PartnershipEntityType {
 
   case object GeneralPartnership extends PartnershipEntityType {
     val StringValue = "generalPartnership"
   }
 
-  case object LimitedPartnership extends PartnershipEntityType {
+  case object LimitedPartnership extends LimitedPartnershipEntityType {
     val StringValue = "limitedPartnership"
   }
 
-  case object LimitedLiabilityPartnership extends PartnershipEntityType {
+  case object LimitedLiabilityPartnership extends LimitedPartnershipEntityType {
     val StringValue = "limitedLiabilityPartnership"
   }
 
-  case object ScottishLimitedPartnership extends PartnershipEntityType {
+  case object ScottishLimitedPartnership extends LimitedPartnershipEntityType {
     val StringValue = "scottishLimitedPartnership"
   }
 

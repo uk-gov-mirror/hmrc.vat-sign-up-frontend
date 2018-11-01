@@ -42,7 +42,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey) filter (_.nonEmpty)
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey) filter (_.nonEmpty)
-      val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
+      val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
       (optVatNumber, optBusinessEntity, optSaUtr, optBusinessPostCode) match {
@@ -73,15 +73,13 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
+      val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
       (optVatNumber, optSaUtr, optBusinessPostCode) match {
         case (Some(vatNumber), Some(saUtr), Some(postCode)) =>
           storePartnershipInformationService.storePartnershipInformation(
             vatNumber = vatNumber,
             sautr = saUtr,
-            companyNumber = None,
-            partnershipEntity = None,
             postCode = Some(postCode)
           ) map {
             case Right(StorePartnershipInformationSuccess) =>

@@ -20,8 +20,8 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StorePartnershipInformationConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationResponse
-import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{CompanyTypeSessionFormatter, GeneralPartnership}
-import uk.gov.hmrc.vatsignupfrontend.models.PostCode
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, PostCode}
 
 import scala.concurrent.Future
 
@@ -30,19 +30,26 @@ class StorePartnershipInformationService @Inject()(storePartnershipInformationCo
 
   def storePartnershipInformation(vatNumber: String,
                                   sautr: String,
-                                  companyNumber: Option[String],
-                                  partnershipEntity: Option[String],
                                   postCode: Option[PostCode]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] =
     storePartnershipInformationConnector.storePartnershipInformation(
       vatNumber = vatNumber,
       sautr = sautr,
-      partnershipType = companyNumber match {
-        case None => GeneralPartnership
-        case Some(_) => CompanyTypeSessionFormatter.fromString(partnershipEntity.get).get
-      },
-      companyNumber = companyNumber,
+      partnershipType = GeneralPartnership,
+      companyNumber = None,
       postCode = postCode
     )
 
+  def storePartnershipInformation(vatNumber: String,
+                                  sautr: String,
+                                  companyNumber: String,
+                                  partnershipEntity: PartnershipEntityType,
+                                  postCode: Option[PostCode])(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] =
+    storePartnershipInformationConnector.storePartnershipInformation(
+      vatNumber = vatNumber,
+      sautr = sautr,
+      partnershipType = partnershipEntity,
+      companyNumber = Some(companyNumber),
+      postCode = postCode
+    )
 }

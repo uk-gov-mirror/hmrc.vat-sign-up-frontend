@@ -40,7 +40,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr,
-          SessionKeys.businessPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode),
+          SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode),
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
         )
       )
@@ -81,7 +81,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
-            SessionKeys.businessPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
+            SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
           )
         )()
 

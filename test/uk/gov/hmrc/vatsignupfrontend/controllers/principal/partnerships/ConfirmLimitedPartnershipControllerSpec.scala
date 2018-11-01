@@ -30,6 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalR
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.LimitedPartnership
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 
@@ -128,8 +129,8 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
           mockStorePartnershipInformation(
             vatNumber = testVatNumber,
             sautr = testSaUtr,
-            companyNumber = Some(testCompanyNumber),
-            partnershipEntity = Some(testPartnershipType),
+            companyNumber = testCompanyNumber,
+            partnershipEntity = LimitedPartnership,
             postCode = None
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
@@ -168,8 +169,8 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       mockStorePartnershipInformation(
         vatNumber = testVatNumber,
         sautr = testSaUtr,
-        companyNumber = Some(testCompanyNumber),
-        partnershipEntity = Some(testPartnershipType),
+        companyNumber = testCompanyNumber,
+        partnershipEntity = LimitedPartnership,
         postCode = None
       )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 

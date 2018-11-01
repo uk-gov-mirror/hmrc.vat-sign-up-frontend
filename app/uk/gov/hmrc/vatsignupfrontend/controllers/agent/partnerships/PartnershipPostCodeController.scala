@@ -17,8 +17,8 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
@@ -27,6 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.partnership_ppob
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
@@ -55,7 +56,7 @@ class PartnershipPostCodeController @Inject()(val controllerComponents: Controll
             ),
           partnershipPostCode =>
             Future.successful(
-              NotImplemented //TODO redirect to partnership cya page
+              Redirect(routes.CheckYourAnswersPartnershipController.show()) addingToSession(SessionKeys.partnershipPostCodeKey, partnershipPostCode)
             )
         )
       }

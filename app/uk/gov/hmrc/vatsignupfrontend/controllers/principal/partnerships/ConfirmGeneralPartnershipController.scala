@@ -83,8 +83,6 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
                 storePartnershipInformationService.storePartnershipInformation(
                   vatNumber = vatNumber,
                   sautr = partnershipUtr,
-                  companyNumber = None,
-                  partnershipEntity = None,
                   postCode = None
                 ) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
