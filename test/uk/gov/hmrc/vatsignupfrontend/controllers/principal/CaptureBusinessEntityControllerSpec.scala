@@ -231,6 +231,19 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "the business entity is vat group" when {
+        "return NOT_IMPLEMENTED" in {
+          mockAuthRetrieveVatDecEnrolment()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(vatGroup)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          //TODO it should go to the vat group resolver page
+          status(result) shouldBe Status.NOT_IMPLEMENTED
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
+        }
+      }
+
       "the business entity is other" should {
         "go to Cannot use service yet page" in {
           mockAuthorise(

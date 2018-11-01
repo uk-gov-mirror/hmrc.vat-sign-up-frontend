@@ -33,6 +33,8 @@ object BusinessEntityForm {
 
   val limitedPartnership: String = "limited-partnership"
 
+  val vatGroup: String = "vat-group"
+
   val other: String = "other"
 
   val agentBusinessEntityError: String = "error.agent.business-entity"
@@ -47,6 +49,7 @@ object BusinessEntityForm {
         case Some(`limitedCompany`) => Right(LimitedCompany)
         case Some(`generalPartnership`) => Right(GeneralPartnership)
         case Some(`limitedPartnership`) => Right(LimitedPartnership)
+        case Some(`vatGroup`) => Right(VatGroup)
         case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, if (isAgent) agentBusinessEntityError else principalBusinessEntityError)))
       }
@@ -56,6 +59,7 @@ object BusinessEntityForm {
       val stringValue = value match {
         case SoleTrader => soleTrader
         case LimitedCompany => limitedCompany
+        case VatGroup => vatGroup
         case Other => other
       }
 

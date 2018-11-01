@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, GeneralPartnershipJourney, LimitedPartnershipJourney, UseIRSA}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
@@ -50,7 +50,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           businessEntityForm = validateBusinessEntityForm,
           postAction = routes.CaptureBusinessEntityController.submit(),
           generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney),
-          limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney)
+          limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney),
+          vatGroupEnabled = isEnabled(VatGroupJourney)
         ))
       )
     }
@@ -65,7 +66,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               formWithErrors,
               routes.CaptureBusinessEntityController.submit(),
               isEnabled(GeneralPartnershipJourney),
-              isEnabled(LimitedPartnershipJourney)
+              isEnabled(LimitedPartnershipJourney),
+              isEnabled(VatGroupJourney)
             ))
           ),
         businessEntity => {
@@ -80,6 +82,9 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(partnerships.routes.ResolvePartnershipUtrController.resolve()))
             case LimitedPartnership =>
               Future.successful(Redirect(partnerships.routes.CapturePartnershipCompanyNumberController.show()))
+            // TODO go to vat group resolver page
+            case VatGroup =>
+              Future.successful(NotImplemented)
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }

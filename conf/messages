@@ -402,8 +402,8 @@ principal.capture_entity_type.soleTrader                               = Sole tr
 principal.capture_entity_type.limitedCompany                           = Limited company
 principal.capture_entity_type.generalPartnership                       = General partnership
 principal.capture_entity_type.limitedPartnership                       = Limited partnership (including limited liability partnerships)
+principal.capture_entity_type.vatGroup                                 = VAT group
 principal.capture_entity_type.other                                    = Other
-
 
 # Check your answers page
 check-your-answers.title                                               = Check your answers
