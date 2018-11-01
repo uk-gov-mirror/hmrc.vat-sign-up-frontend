@@ -185,3 +185,6 @@ POST        /principal-place-postcode                       uk.gov.hmrc.vatsignu
 # Capture Partnership post code
 GET         /check-your-answers-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CheckYourAnswersPartnershipsController.show
 POST        /check-your-answers-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CheckYourAnswersPartnershipsController.submit
+
+# VAT group resolver
+GET         /vat-group-resolver                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.VatGroupResolverController.resolve
