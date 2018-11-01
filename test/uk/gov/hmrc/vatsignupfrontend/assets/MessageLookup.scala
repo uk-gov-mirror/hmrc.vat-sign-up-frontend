@@ -316,6 +316,12 @@ object MessageLookup {
     val line1 = "You need to sign in with the Government Gateway details for the business you want to sign up."
   }
 
+  object SignInWithDifferentDetailsPartnership {
+    val title = "You need to sign in with different details"
+    val heading: String = title
+    val line1 = "You must use a Government Gateway user ID that is linked to the Unique Taxpayer Reference for your partnership."
+  }
+
   object PrincipalPlaceOfBusiness {
     val title = "Where is the principal place of business?"
     val heading = title
