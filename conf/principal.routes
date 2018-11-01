@@ -24,6 +24,9 @@ POST       /company-name-not-found                          uk.gov.hmrc.vatsignu
 # Sign in with another login
 GET         /sign-in-with-different-details                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignInWithDifferentDetailsController.show
 
+# Sign in with another login
+GET         /right-partnership-utr                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.SignInWithDifferentDetailsPartnershipController.show
+
 # Cannot use service yet
 GET         /cannot-use-service-yet                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CannotUseServiceController.show
 

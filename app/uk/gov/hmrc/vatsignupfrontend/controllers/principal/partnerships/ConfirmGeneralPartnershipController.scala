@@ -93,8 +93,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
                     Future.failed(new BadGatewayException("Store partnership information failed"))
                 }
               case No =>
-                // todo goto error page once it's defined
-                Future.failed(new InternalServerException("User signed in with the wrong partnership cred"))
+                Future.successful(Redirect(routes.SignInWithDifferentDetailsPartnershipController.show()))
             }
           )
         case (None, _) =>

@@ -145,8 +145,7 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         }
       }
       "User answered No" should {
-        // TODO goto the error page once it's defined
-        "throw internal server exception" in {
+        "go to 'sign in with different details partnership' page" in {
           mockAuthAdminRole()
 
           val result = TestConfirmLimitedPartnershipController.submit(testPostRequest(No).withSession(
@@ -156,10 +155,9 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
             SessionKeys.companyNumberKey -> testCompanyNumber,
             SessionKeys.partnershipTypeKey -> testPartnershipType
           ))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.SignInWithDifferentDetailsPartnershipController.show().url)
 
-          intercept[InternalServerException] {
-            await(result)
-          }
         }
       }
     }

@@ -69,8 +69,7 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
 
   "POST /confirm-partnership" when {
     "the user answered No" should {
-      // TOOD goto the error page once it's defined
-      "return INTERNAL_SERVER_ERROR" in {
+      "go to 'sign in with different details partnership' page" in {
         stubAuth(OK, successfulAuthResponse())
 
         val res = post("/confirm-partnership",
@@ -83,7 +82,8 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
           ))(yesNo -> option_no)
 
         res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.SignInWithDifferentDetailsPartnershipController.show().url)
         )
       }
     }
