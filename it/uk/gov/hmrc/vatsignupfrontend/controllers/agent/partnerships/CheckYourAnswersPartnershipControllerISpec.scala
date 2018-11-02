@@ -18,13 +18,14 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, PartnershipEntityType, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
@@ -87,7 +88,38 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(agentRoutes.CaptureAgentEmailController.show().url)
+          redirectUri(agentRoutes.EmailRoutingController.route().url)
+        )
+      }
+    }
+
+    "store vat is successful for a limited partnership" should {
+      "redirect to capture email" in {
+        enable(LimitedPartnershipJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStorePartnershipInformation(
+          testVatNumber,
+          testSaUtr,
+          PartnershipEntityType.LimitedPartnership,
+          Some(testCompanyNumber),
+          Some(testBusinessPostCode)
+        )(
+          NO_CONTENT
+        )
+
+        val res = post("/client/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.partnershipSautrKey -> testSaUtr,
+            SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode),
+            SessionKeys.companyNumberKey -> testCompanyNumber,
+            SessionKeys.partnershipTypeKey -> CompanyTypeSessionFormatter.toString(PartnershipEntityType.LimitedPartnership)
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(agentRoutes.EmailRoutingController.route().url)
         )
       }
     }

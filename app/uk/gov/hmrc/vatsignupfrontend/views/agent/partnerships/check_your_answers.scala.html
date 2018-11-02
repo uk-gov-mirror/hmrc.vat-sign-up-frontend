@@ -22,9 +22,10 @@
 @import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
 
 
-@(utr: String, entityType: BusinessEntity, postCode: PostCode, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(utr: String, entityType: BusinessEntity, postCode: PostCode, companyNumber: Option[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
+@import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
 
 @summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
     <div class="tabular-data__entry divider--top--thick" id="@field-row">
@@ -46,7 +47,7 @@
 }
 @businessEntityCheck() = @{
     val rowName = BusinessEntityId
-    val rowQuestion = Messages("agent.check-your-answers.business-entity")
+    val rowQuestion = Messages("agent.check-your-answers.business_entity")
     val rowAnswer = entityType match {
         case GeneralPartnership => Messages("agent.capture_entity_type.generalPartnership")
         case LimitedPartnership => Messages("agent.capture_entity_type.limitedPartnership")
@@ -71,6 +72,17 @@
 
     summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
+@partnershipCompanyNumber() = @{
+    companyNumber match {
+        case Some(crn)=>
+            val rowName = CompanyNumberId
+            val rowQuestion = Messages("agent.check-your-answers.company_number")
+            val rowAnswer = crn
+            val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url
+            summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+        case _ => Html("")
+    }
+}
 
 @agent_main_template(title = Messages("agent.check-your-answers.title")) {
 
@@ -78,6 +90,7 @@
     <h2 class="heading-medium">@Messages("agent.check-your-answers.sub_heading")</h2>
 
     <div class="form-group">
+        @partnershipCompanyNumber()
         @businessEntityCheck()
         @utrNumber()
         @placeOfBusiness()

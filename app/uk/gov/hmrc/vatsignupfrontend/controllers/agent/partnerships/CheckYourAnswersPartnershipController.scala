@@ -18,11 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -36,7 +36,11 @@ import scala.concurrent.Future
 @Singleton
 class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: ControllerComponents,
                                                       val storePartnershipInformationService: StorePartnershipInformationService)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(GeneralPartnershipJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)) {
+
+  override protected def featureEnabled[T](func: => T): T =
+    if (featureSwitches exists isEnabled) func
+    else throw new NotFoundException(featureSwitchError)
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -44,6 +48,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey) filter (_.nonEmpty)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
       (optVatNumber, optBusinessEntity, optSaUtr, optBusinessPostCode) match {
         case (Some(_), Some(businessEntity), Some(saUtr), Some(postCode)) =>
@@ -52,6 +57,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
               saUtr,
               businessEntity,
               postCode,
+              optPartnershipCrn,
               routes.CheckYourAnswersPartnershipController.submit())
             )
           )
@@ -74,24 +80,40 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
+      val optPartnershipEntityType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
+      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
-      (optVatNumber, optSaUtr, optBusinessPostCode) match {
-        case (Some(vatNumber), Some(saUtr), Some(postCode)) =>
+
+      (optVatNumber, optSaUtr, optBusinessPostCode, optPartnershipEntityType, optPartnershipCrn) match {
+        case (Some(vatNumber), Some(saUtr), Some(postCode), Some(partnershipEntityType: LimitedPartnershipEntityType), Some(companyNumber)) =>
+          storePartnershipInformationService.storePartnershipInformation(
+            vatNumber = vatNumber,
+            sautr = saUtr,
+            companyNumber,
+            partnershipEntityType,
+            postCode = Some(postCode)
+          ) map {
+            case Right(StorePartnershipInformationSuccess) =>
+              Redirect(agentRoutes.EmailRoutingController.route())
+            case Left(StorePartnershipInformationFailureResponse(failure)) =>
+              throw new InternalServerException(s"Failed to save partnership information with error $failure")
+          }
+        case (Some(vatNumber), Some(saUtr), Some(postCode), None, None) =>
           storePartnershipInformationService.storePartnershipInformation(
             vatNumber = vatNumber,
             sautr = saUtr,
             postCode = Some(postCode)
           ) map {
             case Right(StorePartnershipInformationSuccess) =>
-              Redirect(agentRoutes.CaptureAgentEmailController.show())
+              Redirect(agentRoutes.EmailRoutingController.route())
             case Left(StorePartnershipInformationFailureResponse(failure)) =>
               throw new InternalServerException(s"Failed to save partnership information with error $failure")
           }
-        case (None, _, _) =>
+        case (None, _, _, _, _) =>
           Future.successful(
             Redirect(agentRoutes.CaptureVatNumberController.show())
           )
-        case (_, _, _) =>
+        case _ =>
           Future.successful(
             Redirect(routes.CapturePartnershipUtrController.show())
           )

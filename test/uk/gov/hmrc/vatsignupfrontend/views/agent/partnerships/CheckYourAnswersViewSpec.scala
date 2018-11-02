@@ -29,6 +29,8 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
+import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
+
 
 class CheckYourAnswersViewSpec extends ViewSpec {
 
@@ -77,6 +79,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     val pobAnswer = "business-post-code-answer"
     lazy val expectedUrlUtr = partnershipRoutes.CapturePartnershipUtrController.show().url
     lazy val expectedUrlPostCode = partnershipRoutes.PartnershipPostCodeController.show().url
+    lazy val expectedUrlCompanyNumber = partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url
 
     "the saUtr and the post code are given for a general partnership" should {
       val testPage = TestView(
@@ -87,6 +90,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           utr = testSaUtr,
           entityType = GeneralPartnership,
           testBusinessPostcode,
+          None,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
       )
@@ -100,6 +104,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           utr = testSaUtr,
           entityType = GeneralPartnership,
           postCode = testBusinessPostcode,
+          companyNumber = None,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
@@ -107,6 +112,27 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
         sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
         sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.postCode, Some(expectedUrlPostCode), doc)
+
+        doc.getElementById(utrAnswer).text shouldBe testSaUtr
+        doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
+        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.postCode
+      }
+    }
+    "the saUtr, company number and the post code are given for a limited partnership" should {
+      "render the page correctly" in {
+        lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+          utr = testSaUtr,
+          entityType = GeneralPartnership,
+          postCode = testBusinessPostcode,
+          companyNumber = Some(testCompanyNumber),
+          postAction = testCall
+        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+
+        lazy val doc = Jsoup.parse(page.body)
+
+        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
+        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.postCode, Some(expectedUrlPostCode), doc)
+        sectionTest(CompanyNumberId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCompanyNumber), doc)
 
         doc.getElementById(utrAnswer).text shouldBe testSaUtr
         doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership

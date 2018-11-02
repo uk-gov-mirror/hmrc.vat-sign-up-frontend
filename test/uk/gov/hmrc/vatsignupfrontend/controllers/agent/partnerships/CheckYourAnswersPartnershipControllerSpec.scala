@@ -30,6 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
@@ -47,31 +48,38 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   private def sessionValues(vatNumber: Option[String] = Some(testVatNumber),
                             sautr: Option[String] = Some(testSaUtr),
                             postCode: Option[PostCode] = Some(testBusinessPostcode),
-                            entityType: Option[BusinessEntity] = None): Iterable[(String, String)] =
+                            entityType: Option[BusinessEntity] = None,
+                            companyNumber: Option[String],
+                            partnershipEntityType: Option[PartnershipEntityType]): Iterable[(String, String)] =
     (
       (vatNumber map (vatNumberKey -> _))
         ++ (sautr map (partnershipSautrKey -> _))
         ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
         ++ (entityType map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
+        ++ (partnershipEntityType map CompanyTypeSessionFormatter.toString map (partnershipTypeKey -> _))
+        ++ (companyNumber map (companyNumberKey -> _))
       )
 
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      sautr: Option[String] = Some(testSaUtr),
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
-                     entityType: Option[BusinessEntity] = Some(GeneralPartnership)
+                     entityType: Option[BusinessEntity] = Some(GeneralPartnership),
+                     companyNumber: Option[String] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
-      sessionValues(vatNumber, sautr, postCode, entityType).toSeq: _*
+      sessionValues(vatNumber, sautr, postCode, entityType, companyNumber, None).toSeq: _*
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
                       sautr: Option[String] = Some(testSaUtr),
                       postCode: Option[PostCode] = Some(testBusinessPostcode),
-                      entityType: Option[BusinessEntity] = Some(GeneralPartnership)
+                      entityType: Option[BusinessEntity] = Some(GeneralPartnership),
+                      companyNumber: Option[String] = None,
+                      partnershipEntityType: Option[PartnershipEntityType] = None
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
-      sessionValues(vatNumber, sautr, postCode, entityType).toSeq: _*
+      sessionValues(vatNumber, sautr, postCode, entityType, companyNumber, partnershipEntityType).toSeq: _*
     )
 
   override def beforeEach(): Unit = {
@@ -80,11 +88,21 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   }
 
   "Calling the show action of the Check your answers controller" when {
-    "all prerequisite data are in session" should {
+    "all prerequisite data are in session for general partnership" should {
       "go to the Check your answers page" in {
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestCheckYourAnswersPartnershipController.show(testGetRequest())
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+    "all prerequisite data are in session" should {
+      "go to the Check your answers page" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(companyNumber = Some(testCompanyNumber)))
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -99,7 +117,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureVatNumberController.show().url)
       }
     }
-    "partnership type is missing" should {
+    "business entity is missing" should {
       "go to capture business entity page" in {
         mockAuthRetrieveAgentEnrolment()
 
@@ -134,7 +152,30 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           )
           val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(agentRoutes.CaptureAgentEmailController.show().url)
+          redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
+
+        }
+      }
+
+      "store partnership info returned StorePartnershipInformationSuccess for a limited partnership" should {
+        "go to Capture Email Page" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          mockStorePartnershipInformation(
+            testVatNumber,
+            testSaUtr,
+            testCompanyNumber,
+            PartnershipEntityType.LimitedPartnership,
+            Some(testBusinessPostcode)
+          )(
+            Future.successful(Right(StorePartnershipInformationSuccess))
+          )
+          val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
+            partnershipEntityType = Some(PartnershipEntityType.LimitedPartnership),
+            companyNumber = Some(testCompanyNumber)
+          ))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
 
         }
       }
