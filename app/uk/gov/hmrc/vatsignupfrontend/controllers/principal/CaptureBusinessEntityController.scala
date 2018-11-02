@@ -82,9 +82,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(partnerships.routes.ResolvePartnershipUtrController.resolve()))
             case LimitedPartnership =>
               Future.successful(Redirect(partnerships.routes.CapturePartnershipCompanyNumberController.show()))
-            // TODO go to vat group resolver page
             case VatGroup =>
-              Future.successful(NotImplemented)
+              Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
