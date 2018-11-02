@@ -60,9 +60,9 @@ object MessageLookup {
   }
 
   object CannotUseServiceYet {
-    val title = "Your client can't use this service yet"
+    val title = "Your client cannot use this service yet"
     val heading: String = title
-    val line1 = "This service is currently only available to certain sole traders and limited companies."
+    val line1 = "This service is currently only available to certain sole traders, limited companies, partnerships and VAT groups."
     val line2 = "Your client must come back and sign up in April 2019, when this service is available to them."
   }
 
