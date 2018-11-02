@@ -23,8 +23,8 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base, PrincipalInformationReceived => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
 class InformationReceivedViewSpec extends ViewSpec {
@@ -34,10 +34,11 @@ class InformationReceivedViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
+  val conf = new AppConfig(configuration, env)
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.information_received(SoleTrader)(
     FakeRequest(),
     applicationMessages,
-    new AppConfig(configuration, env)
+    conf
   )
 
   lazy val document = Jsoup.parse(page.body)
@@ -65,48 +66,46 @@ class InformationReceivedViewSpec extends ViewSpec {
 
     "have a 'What happens next' section" which {
 
-      s"has the section heading '${messages.Section1.heading}'" in {
-        document.select("#what-happens-next h2").text() shouldBe messages.Section1.heading
+      s"has the section heading '${messages.Section.heading}'" in {
+        document.select("#what-happens-next h2").text() shouldBe messages.Section.heading
       }
 
-      s"has a paragraph stating HMRC process '${messages.Section1.line1}'" in {
-        document.select("#what-happens-next p").text() should include(messages.Section1.line1)
+      s"has a paragraph '${messages.Section.line1}'" in {
+        document.select("#what-happens-next p").text() should include(messages.Section.line1)
+      }
+      s"has a paragraph '${messages.Section.line2}'" in {
+        document.select("#what-happens-next p").text() should include(messages.Section.line2)
       }
 
-    }
-
-    "have a 'When your client’s information is approved' section" which {
-
-      s"has the section heading '${messages.Section2.heading}'" in {
-        document.select("#when-your-application-is-approved h2").text() shouldBe messages.Section2.heading
+      s"has a bullet point '${messages.Section.bullet1}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.bullet1)
       }
 
-
-      s"has a bullet point '${messages.Section2.bullet1}'" in {
-        document.select("#when-your-application-is-approved li").text() should include(messages.Section2.bullet1)
+      s"has a bullet point '${messages.Section.bullet2}' which has a link to relevant software options" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.bullet2)
+        val link = document.getElementById("softwareOptionsUrl")
+        link.attr("href") shouldBe conf.govUK + messages.Section.link
+        link.text() shouldBe messages.Section.linkText
       }
 
-      s"has a bullet point '${messages.Section2.bullet2}'" in {
-        document.select("#when-your-application-is-approved li").text() should include(messages.Section2.bullet2)
+      s"has a bullet point '${messages.Section.bullet3}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.bullet3)
       }
 
-      s"has a bullet point '${messages.Section2.bullet3}'" in {
-        document.select("#when-your-application-is-approved li").text() should include(messages.Section2.bullet3)
+      s"has a bullet point '${messages.Section.bullet4}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.bullet4)
       }
 
-      s"has a bullet point '${messages.Section2.bullet4}'" in {
-        document.select("#when-your-application-is-approved li").text() should include(messages.Section2.bullet4)
+      s"has a bullet point '${messages.Section.bullet5}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.bullet5)
       }
 
-      s"has a bullet point '${messages.Section2.bullet5}'" in {
-        document.select("#when-your-application-is-approved li").text() should include(messages.Section2.bullet5)
-      }
-
-      s"has a paragraph '${messages.Section2.line1}'" in {
-        document.select("#when-your-application-is-approved p").text() should include(messages.Section2.line1)
+      s"has a paragraph '${messages.Section.line3}'" in {
+        document.select("#what-happens-next p").text() should include(messages.Section.line3)
       }
 
     }
+
 
     "have a sign out button" in {
       val b = document.getElementById("sign-out-button")
