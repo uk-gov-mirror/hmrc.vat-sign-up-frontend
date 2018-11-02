@@ -44,6 +44,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey) filter (_.nonEmpty)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
       (optVatNumber, optBusinessEntity, optSaUtr, optBusinessPostCode) match {
         case (Some(_), Some(businessEntity), Some(saUtr), Some(postCode)) =>
@@ -52,6 +53,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
               saUtr,
               businessEntity,
               postCode,
+              optPartnershipCrn,
               routes.CheckYourAnswersPartnershipController.submit())
             )
           )
@@ -75,6 +77,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       val optSaUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
+
       (optVatNumber, optSaUtr, optBusinessPostCode) match {
         case (Some(vatNumber), Some(saUtr), Some(postCode)) =>
           storePartnershipInformationService.storePartnershipInformation(
@@ -83,7 +86,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             postCode = Some(postCode)
           ) map {
             case Right(StorePartnershipInformationSuccess) =>
-              Redirect(agentRoutes.CaptureAgentEmailController.show())
+              Redirect(agentRoutes.EmailRoutingController.route())
             case Left(StorePartnershipInformationFailureResponse(failure)) =>
               throw new InternalServerException(s"Failed to save partnership information with error $failure")
           }

@@ -47,22 +47,25 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   private def sessionValues(vatNumber: Option[String] = Some(testVatNumber),
                             sautr: Option[String] = Some(testSaUtr),
                             postCode: Option[PostCode] = Some(testBusinessPostcode),
-                            entityType: Option[BusinessEntity] = None): Iterable[(String, String)] =
+                            entityType: Option[BusinessEntity] = None,
+                            companyNumber: Option[String]): Iterable[(String, String)] =
     (
       (vatNumber map (vatNumberKey -> _))
         ++ (sautr map (partnershipSautrKey -> _))
         ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
         ++ (entityType map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
+        ++ (companyNumber map (companyNumberKey -> _))
       )
 
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      sautr: Option[String] = Some(testSaUtr),
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
-                     entityType: Option[BusinessEntity] = Some(GeneralPartnership)
+                     entityType: Option[BusinessEntity] = Some(GeneralPartnership),
+                     companyNumber: Option[String] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
-      sessionValues(vatNumber, sautr, postCode, entityType).toSeq: _*
+      sessionValues(vatNumber, sautr, postCode, entityType, companyNumber).toSeq: _*
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
@@ -71,7 +74,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
                       entityType: Option[BusinessEntity] = Some(GeneralPartnership)
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
-      sessionValues(vatNumber, sautr, postCode, entityType).toSeq: _*
+      sessionValues(vatNumber, sautr, postCode, entityType, None).toSeq: _*
     )
 
   override def beforeEach(): Unit = {
@@ -80,11 +83,21 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   }
 
   "Calling the show action of the Check your answers controller" when {
-    "all prerequisite data are in session" should {
+    "all prerequisite data are in session for general partnership" should {
       "go to the Check your answers page" in {
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestCheckYourAnswersPartnershipController.show(testGetRequest())
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
+    "all prerequisite data are in session" should {
+      "go to the Check your answers page" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(companyNumber = Some(testCompanyNumber)))
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -134,7 +147,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           )
           val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(agentRoutes.CaptureAgentEmailController.show().url)
+          redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
 
         }
       }
