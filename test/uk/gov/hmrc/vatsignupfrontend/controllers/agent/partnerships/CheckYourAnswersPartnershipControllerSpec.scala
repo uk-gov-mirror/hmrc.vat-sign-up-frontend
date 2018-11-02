@@ -51,7 +51,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
     (
       (vatNumber map (vatNumberKey -> _))
         ++ (sautr map (partnershipSautrKey -> _))
-        ++ (postCode map jsonSessionFormatter[PostCode].toString map (businessPostCodeKey -> _))
+        ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
         ++ (entityType map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
       )
 
@@ -128,8 +128,6 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           mockStorePartnershipInformation(
             testVatNumber,
             testSaUtr,
-            None,
-            None,
             Some(testBusinessPostcode)
           )(
             Future.successful(Right(StorePartnershipInformationSuccess))
@@ -147,8 +145,6 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           mockStorePartnershipInformation(
             testVatNumber,
             testSaUtr,
-            None,
-            None,
             Some(testBusinessPostcode)
           )(
             Future.successful(Left(StorePartnershipInformationFailureResponse(500)))

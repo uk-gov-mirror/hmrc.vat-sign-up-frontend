@@ -69,8 +69,6 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
-          partnershipEntity = Some(GeneralPartnership.StringValue),
-          companyNumber = None,
           postCode = None
         )
 
@@ -91,8 +89,8 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
-          partnershipEntity = Some(LimitedPartnership.StringValue),
-          companyNumber = Some(testCompanyNumber),
+          partnershipEntity = LimitedPartnership,
+          companyNumber = testCompanyNumber,
           postCode = None
         )
 
@@ -113,8 +111,6 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
-          partnershipEntity = Some(GeneralPartnership.StringValue),
-          companyNumber = None,
           postCode = Some(testBusinessPostcode)
         )
 
@@ -135,8 +131,8 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
           sautr = testSaUtr,
-          partnershipEntity = Some(LimitedPartnership.StringValue),
-          companyNumber = Some(testCompanyNumber),
+          partnershipEntity = LimitedPartnership,
+          companyNumber = testCompanyNumber,
           postCode = Some(testBusinessPostcode)
         )
 

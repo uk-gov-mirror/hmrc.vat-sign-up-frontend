@@ -64,8 +64,8 @@ class PartnershipPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
         implicit val request = testPostRequest(testBusinessPostcode.postCode)
         val result = TestPartnershipPostCodeController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        //TODO redirect to partnership cya page
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CheckYourAnswersPartnershipController.show().url)
       }
     }
 
