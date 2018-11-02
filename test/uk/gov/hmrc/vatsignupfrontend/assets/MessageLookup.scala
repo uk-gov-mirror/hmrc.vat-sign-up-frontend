@@ -390,10 +390,10 @@ object MessageLookup {
   }
 
   object PrincipalCannotUseServiceYet {
-    val title = "You can't use this service yet"
+    val title = "You cannot use this service yet"
     val heading: String = title
-    val line1 = "This service is only available to some limited companies and sole traders."
-    val line2 = "You'll be able to sign up for this service by April 2019."
+    val line1 = "This service is only available to some limited companies, sole traders, partnerships and VAT groups."
+    val line2 = "You will be able to sign up for this service from April 2019."
   }
 
   object PrincipalCaptureEmail {
