@@ -88,8 +88,8 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> limitedPartnership)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
-          //TODO redirect to capture partnership company number
+          httpStatus(SEE_OTHER),
+          redirectUri(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url)
         )
       }
     }
