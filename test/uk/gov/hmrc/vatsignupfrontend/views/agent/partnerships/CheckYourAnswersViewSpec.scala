@@ -95,8 +95,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
       )
 
-      testPage.shouldHaveH2(messages.subHeading)
-
       testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
       "render the page correctly" in {

@@ -612,9 +612,8 @@ principal.confirm_partnership.heading                                  = Confirm
 principal.confirm_partnership.link                                     = Change the partnership
 
 # Check your answers page Partnership
-agent.check-your-answers.title                                         = Check your answers
-agent.check-your-answers.heading                                       = Check your answers
-agent.check-your-answers.sub_heading                                   = You''ve told us
+agent.check-your-answers.title                                         = Confirm your client''s details
+agent.check-your-answers.heading                                       = Confirm your client''s details
 agent.check-your-answers.business_entity                               = What type of business is your client registered as?
 agent.check-your-answers.utr                                           = What is your client''s Unique Taxpayer Reference (UTR)?
 agent.check-your-answers.company_number                                = What is your client''s company number?
