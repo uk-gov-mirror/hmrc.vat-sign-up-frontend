@@ -94,6 +94,19 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "the business type is vat group" should {
+      "return a SEE_OTHER status and go to vat group resolver" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> vatGroup)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.VatGroupResolverController.resolve().url)
+        )
+      }
+    }
+
     "redirect to cannot use service" when {
       "the business entity is other" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
