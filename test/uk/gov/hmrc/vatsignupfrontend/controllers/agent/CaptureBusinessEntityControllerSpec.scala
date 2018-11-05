@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney, VatGroupJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -106,6 +106,18 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedPartnership))
           status(result) shouldBe Status.NOT_IMPLEMENTED
+        }
+      }
+
+      "the business entity is vat group" when {
+        "return NOT_IMPLEMENTED" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          enable(VatGroupJourney)
+          val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(vatGroup)))
+          //TODO it should go to the vat group resolver page
+          status(result) shouldBe Status.NOT_IMPLEMENTED
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
         }
       }
 

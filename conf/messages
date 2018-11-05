@@ -199,6 +199,7 @@ agent.capture_entity_type.soleTrader                                   = Sole tr
 agent.capture_entity_type.generalPartnership                           = General partnership
 agent.capture_entity_type.limitedPartnership                           = Limited partnership (including limited liability partnerships)
 agent.capture_entity_type.limitedCompany                               = Limited company
+agent.capture_entity_type.vatGroup                                     = VAT group
 agent.capture_entity_type.other                                        = Other
 
 ## Client Details ##

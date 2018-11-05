@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney, VatGroupJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -43,7 +43,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           validateBusinessEntityForm,
           routes.CaptureBusinessEntityController.submit(),
           isEnabled(GeneralPartnershipJourney),
-          isEnabled(LimitedPartnershipJourney)
+          isEnabled(LimitedPartnershipJourney),
+          isEnabled(VatGroupJourney)
         ))
       )
     }
@@ -58,7 +59,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               formWithErrors,
               routes.CaptureBusinessEntityController.submit(),
               isEnabled(GeneralPartnershipJourney),
-              isEnabled(LimitedPartnershipJourney)
+              isEnabled(LimitedPartnershipJourney),
+              isEnabled(VatGroupJourney)
             ))
           ),
         entityType => {
@@ -67,6 +69,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
             case GeneralPartnership => Future.successful(Redirect(partnerships.routes.CapturePartnershipUtrController.show()))
             case LimitedPartnership => Future.successful(NotImplemented)
+            // TODO go to vat group resolver page
+            case VatGroup => Future.successful(NotImplemented)
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
         }.map(_.addingToSession(SessionKeys.businessEntityKey, entityType))
