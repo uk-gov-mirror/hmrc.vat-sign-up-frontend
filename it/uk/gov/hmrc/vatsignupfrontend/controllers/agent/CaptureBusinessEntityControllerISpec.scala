@@ -80,7 +80,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a not implemented" when {
+    "redirect to the capture partnership company number page" when {
       "the business entity is limited partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(LimitedPartnershipJourney)

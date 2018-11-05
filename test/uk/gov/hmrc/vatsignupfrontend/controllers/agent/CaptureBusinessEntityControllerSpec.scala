@@ -98,7 +98,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "return not implemented" when {
+      "redirect to the capture partnership company number page" when {
         "the business entity is limited partnership" in {
           mockAuthRetrieveAgentEnrolment()
 
