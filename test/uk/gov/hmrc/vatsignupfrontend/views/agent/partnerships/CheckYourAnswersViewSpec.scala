@@ -111,11 +111,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         lazy val doc = Jsoup.parse(page.body)
 
         sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.postCode, Some(expectedUrlPostCode), doc)
+        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), doc)
 
         doc.getElementById(utrAnswer).text shouldBe testSaUtr
         doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
-        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.postCode
+        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
       }
     }
     "the saUtr, company number and the post code are given for a limited partnership" should {
@@ -131,12 +131,12 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         lazy val doc = Jsoup.parse(page.body)
 
         sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.postCode, Some(expectedUrlPostCode), doc)
+        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), doc)
         sectionTest(CompanyNumberId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCompanyNumber), doc)
 
         doc.getElementById(utrAnswer).text shouldBe testSaUtr
         doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
-        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.postCode
+        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
       }
     }
   }

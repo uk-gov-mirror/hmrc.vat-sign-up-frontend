@@ -67,7 +67,7 @@
 @placeOfBusiness() = @{
     val rowName = BusinessPostCodeId
     val rowQuestion = Messages("agent.check-your-answers.business_post_code")
-    val rowAnswer = postCode.postCode
+    val rowAnswer = postCode.checkYourAnswersFormat
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.PartnershipPostCodeController.show().url
 
     summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
