@@ -80,7 +80,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "return a not implemented" when {
+    "redirect to the capture partnership company number page" when {
       "the business entity is limited partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(LimitedPartnershipJourney)
@@ -88,8 +88,21 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> limitedPartnership)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
-          //TODO redirect to capture partnership company number
+          httpStatus(SEE_OTHER),
+          redirectUri(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url)
+        )
+      }
+    }
+
+    "the business type is vat group" should {
+      "return a SEE_OTHER status and go to vat group resolver" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> vatGroup)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.VatGroupResolverController.resolve().url)
         )
       }
     }

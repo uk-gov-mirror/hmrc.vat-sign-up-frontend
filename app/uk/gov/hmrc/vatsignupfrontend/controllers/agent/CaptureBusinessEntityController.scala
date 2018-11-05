@@ -68,12 +68,11 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
             case GeneralPartnership => Future.successful(Redirect(partnerships.routes.CapturePartnershipUtrController.show()))
-            case LimitedPartnership => Future.successful(NotImplemented)
-            // TODO go to vat group resolver page
-            case VatGroup => Future.successful(NotImplemented)
+            case LimitedPartnership => Future.successful(Redirect(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show()))
+            case VatGroup => Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
-        }.map(_.addingToSession(SessionKeys.businessEntityKey, entityType))
+        } map (_.addingToSession(SessionKeys.businessEntityKey, entityType))
       )
     }
   }

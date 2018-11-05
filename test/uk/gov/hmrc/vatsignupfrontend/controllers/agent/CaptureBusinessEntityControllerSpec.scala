@@ -98,25 +98,29 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "return not implemented" when {
+      "redirect to the capture partnership company number page" when {
         "the business entity is limited partnership" in {
           mockAuthRetrieveAgentEnrolment()
 
           enable(LimitedPartnershipJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedPartnership))
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
+
         }
       }
 
       "the business entity is vat group" when {
-        "return NOT_IMPLEMENTED" in {
+        "redirect to Vat Group Resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
           enable(VatGroupJourney)
           val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(vatGroup)))
-          //TODO it should go to the vat group resolver page
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.VatGroupResolverController.resolve().url)
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
         }
       }
