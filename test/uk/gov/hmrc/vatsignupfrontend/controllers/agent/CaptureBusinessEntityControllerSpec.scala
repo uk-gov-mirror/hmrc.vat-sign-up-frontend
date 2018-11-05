@@ -105,7 +105,11 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           enable(LimitedPartnershipJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedPartnership))
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
+
         }
       }
 
