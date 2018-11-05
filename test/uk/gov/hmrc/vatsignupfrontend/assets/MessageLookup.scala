@@ -710,9 +710,8 @@ object MessageLookup {
   }
 
   object AgentCheckYourAnswers {
-    val title = "Check your answers"
-    val heading = "Check your answers"
-    val subHeading = "You've told us"
+    val title = "Confirm your client's details"
+    val heading = "Confirm your client's details"
     val yourUtr = "What is your client's Unique Taxpayer Reference (UTR)?"
     val yourCompanyNumber = "What is your client's company number?"
     val yourBusinessPostCode = "Where is your client's principal place of business?"
