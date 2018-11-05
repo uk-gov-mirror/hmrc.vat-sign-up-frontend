@@ -22,7 +22,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -32,11 +32,13 @@ class PartnershipPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(GeneralPartnershipJourney)
+    enable(LimitedPartnershipJourney)
   }
 
   override def afterEach(): Unit = {
     super.afterEach()
     disable(GeneralPartnershipJourney)
+    disable(LimitedPartnershipJourney)
   }
 
   object TestPartnershipPostCodeController extends PartnershipPostCodeController(mockControllerComponents)
