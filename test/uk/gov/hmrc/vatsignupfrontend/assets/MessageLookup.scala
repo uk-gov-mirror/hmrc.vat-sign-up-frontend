@@ -540,24 +540,24 @@ object MessageLookup {
   }
 
   object PrincipalInformationReceived {
-    val title = "We've received your information"
+
+    val title = "We have received your information"
     val heading: String = title
 
-    object Section1 {
+    object Section {
+      val link = "/guidance/software-for-sending-income-tax-updates"
+      val linkText = "Choose relevant third party software (opens in a new window or tab)"
+
       val heading = "What happens next"
-      val line1 = "We'll let you know whether you can use software to submit your VAT Returns, usually within 24 hours."
-    }
-
-    object Section2 {
-      val heading = "After your application is approved"
-      val bullet1 = "Choose accounting software (opens in a new window or tab) that supports this service if you haven't already."
-      val bullet2 = "Sign in to the software with your Government Gateway details and authorise it to interact with HMRC."
-      val bullet3 = "Add any sales and purchases that you've already received or paid out."
-      val bullet4 = "Record your future sales and purchases using the software."
+      val line1 = "As this service is currently a pilot, it is only available to some limited companies, sole traders, partnerships and VAT groups."
+      val line2 = "We will send you an email to let you know whether you can take part in this trial. You should wait for this email before you choose software."
+      val bullet1 = "We will let you know whether you can take part in this trial, usually within 24 hours."
+      val bullet2 = s"${linkText}."
+      val bullet3 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
+      val bullet4 = "Use software to record your sales and purchases."
       val bullet5 = "Submit your VAT Returns before your deadlines."
-      val line1 = "You can view your VAT Return deadlines in your accounting software or business tax account."
+      val line3 = "You can view your VAT Return deadlines in your accounting software or business tax account."
     }
-
   }
 
   object PrincipalAlreadySignedUp {
