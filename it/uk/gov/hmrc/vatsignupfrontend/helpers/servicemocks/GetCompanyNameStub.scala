@@ -19,8 +19,8 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testCompanyName
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse._
 
 object GetCompanyNameStub extends WireMockMethods {
   def stubgetCompanyName(companyNumber: String, companyType: CompanyType): Unit = {
