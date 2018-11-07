@@ -29,7 +29,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    disable(UseIRSA)
     disable(CtKnownFactsIdentityVerification)
   }
 
@@ -50,7 +49,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "the business type is sole trader" when {
         "the user does not have an IRSA enrolment" should {
           "return a SEE_OTHER status and go to capture your details" in {
-            enable(UseIRSA)
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
             val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
@@ -63,7 +61,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         }
         "the user has an IRSA enrolment" should {
           "return a SEE_OTHER status and go to Confirm your retrieved details" in {
-            enable(UseIRSA)
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment, irsaEnrolment))
             stubGetCitizenDetails(testSaUtr)(OK, testUserDetails)
 

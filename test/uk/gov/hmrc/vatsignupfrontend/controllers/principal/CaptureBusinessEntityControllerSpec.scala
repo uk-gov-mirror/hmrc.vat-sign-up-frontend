@@ -43,7 +43,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    disable(UseIRSA)
     disable(CtKnownFactsIdentityVerification)
   }
 
