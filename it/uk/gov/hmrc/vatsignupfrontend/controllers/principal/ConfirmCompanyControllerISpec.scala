@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CompanyNameJourney, CtKnownFactsIdentityVerification}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
@@ -32,29 +32,14 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
   }
 
   "GET /confirm-company" when {
-    "CompanyNameJourney is disabled" should {
-      "return an NOT_FOUND" in {
-        disable(CompanyNameJourney)
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/confirm-company")
+      val res = get("/confirm-company", Map(SessionKeys.companyNameKey -> testCompanyName))
 
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
-    "CompanyNameJourney is enabled" should {
-      "return an OK" in {
-        enable(CompanyNameJourney)
-
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = get("/confirm-company", Map(SessionKeys.companyNameKey -> testCompanyName))
-
-        res should have(
-          httpStatus(OK)
-        )
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
   }
 
@@ -63,7 +48,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
     "the company number is successfully stored" when {
       "CtKnownFactsIdentityVerification is disabled" should {
         "redirect to agree to receive email page" in {
-          enable(CompanyNameJourney)
           disable(CtKnownFactsIdentityVerification)
 
           stubAuth(OK, successfulAuthResponse())
@@ -86,7 +70,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
       "CtKnownFactsIdentityVerification is enabled" when {
         "if CT enrolled" should {
           "redirect to agree to receive email page" in {
-            enable(CompanyNameJourney)
             enable(CtKnownFactsIdentityVerification)
 
             stubAuth(OK, successfulAuthResponse(irctEnrolment))
@@ -108,7 +91,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
         }
         "if not CT enrolled" should {
           "redirect to capture company UTR page" in {
-            enable(CompanyNameJourney)
             enable(CtKnownFactsIdentityVerification)
 
             stubAuth(OK, successfulAuthResponse())

@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -36,7 +37,7 @@ import scala.concurrent.Future
 class ConfirmCompanyController @Inject()(val controllerComponents: ControllerComponents,
                                          val storeCompanyNumberService: StoreCompanyNumberService
                                         )
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(CompanyNameJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -65,7 +66,7 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
         val optCompanyUTR = enrolments.companyUtr
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-            if(isEnabled(CtKnownFactsIdentityVerification)) {
+            if (isEnabled(CtKnownFactsIdentityVerification)) {
               optCompanyUTR match {
                 case Some(ctutr) =>
                   storeCompanyNumberService.storeCompanyNumber(

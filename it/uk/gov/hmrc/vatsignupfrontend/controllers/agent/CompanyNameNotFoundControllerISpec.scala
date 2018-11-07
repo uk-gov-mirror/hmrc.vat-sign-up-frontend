@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -25,8 +24,6 @@ class CompanyNameNotFoundControllerISpec extends ComponentSpecBase with CustomMa
 
   "GET /could-not-confirm-company" should {
     "return an OK" in {
-      enable(CompanyNameJourney)
-
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/could-not-confirm-company")
@@ -39,8 +36,6 @@ class CompanyNameNotFoundControllerISpec extends ComponentSpecBase with CustomMa
 
   "POST /could-not-confirm-company" should {
     "redirect to the capture company number page" in {
-      enable(CompanyNameJourney)
-
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/client/could-not-confirm-company")()
@@ -49,21 +44,6 @@ class CompanyNameNotFoundControllerISpec extends ComponentSpecBase with CustomMa
         httpStatus(SEE_OTHER),
         redirectUri(routes.CaptureCompanyNumberController.show().url)
       )
-    }
-  }
-
-  "Making a request to /company-name-not-found when not enabled" should {
-    "return NotFound" in {
-      disable(CompanyNameJourney)
-
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/client/could-not-confirm-company")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-
     }
   }
 

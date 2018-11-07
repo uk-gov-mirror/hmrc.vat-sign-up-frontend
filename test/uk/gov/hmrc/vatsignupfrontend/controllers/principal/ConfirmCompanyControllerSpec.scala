@@ -35,7 +35,6 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(CompanyNameJourney)
     disable(CtKnownFactsIdentityVerification)
   }
 
