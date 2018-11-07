@@ -45,10 +45,6 @@ POST        /company-number                                 uk.gov.hmrc.vatsignu
 GET         /company-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.show
 POST        /company-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.submit
 
-# Confirm Company Number
-GET         /confirm-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.show
-POST        /confirm-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyNumberController.submit
-
 # Confirm Company name
 GET         /confirm-company                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.show
 POST        /confirm-company                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
