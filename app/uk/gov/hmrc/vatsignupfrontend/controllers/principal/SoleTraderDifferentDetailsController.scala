@@ -21,7 +21,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.sole_trader_different_details
 
@@ -29,7 +28,7 @@ import scala.concurrent.Future
 
 @Singleton
 class SoleTraderDifferentDetailsController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate,  featureSwitches = Set(UseIRSA)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
