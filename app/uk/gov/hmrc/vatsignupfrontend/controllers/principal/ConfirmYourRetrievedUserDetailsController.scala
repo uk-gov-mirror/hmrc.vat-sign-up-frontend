@@ -17,14 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.userDetailsKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoVATNumberFailure, StoreNinoFailureResponse}
 import uk.gov.hmrc.vatsignupfrontend.models.{IRSA, UserDetailsModel}
@@ -38,7 +36,7 @@ import scala.concurrent.Future
 @Singleton
 class ConfirmYourRetrievedUserDetailsController @Inject()(val controllerComponents: ControllerComponents,
                                                           storeNinoService: StoreNinoService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(UseIRSA)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -63,7 +61,7 @@ class ConfirmYourRetrievedUserDetailsController @Inject()(val controllerComponen
 
       (optVatNumber, optUserDetails) match {
         case (Some(vatNumber), Some(userDetails)) =>
-          storeNinoService.storeNino(vatNumber, userDetails, ninoSource = Some(IRSA)) flatMap {
+          storeNinoService.storeNino(vatNumber, userDetails, IRSA) flatMap {
             case Right(_) => Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
             case Left(NoVATNumberFailure) =>
               Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))

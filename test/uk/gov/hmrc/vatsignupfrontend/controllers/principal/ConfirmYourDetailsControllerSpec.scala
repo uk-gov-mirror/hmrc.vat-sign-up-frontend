@@ -22,14 +22,13 @@ import java.util.UUID
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxySuccessResponse
@@ -49,7 +48,6 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    disable(UseIRSA)
   }
 
   lazy val testGetRequest = FakeRequest("GET", "/confirm-details")
@@ -93,44 +91,25 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "Calling the submit action of the Confirm Your Details controller" when {
     "vat number and your details are in session" when {
-      implicit lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
+      implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
+        testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.userDetailsKey -> testUserDetailsJson
+        )
 
-      def callSubmit = TestConfirmYourDetailsController.submit(request)
+      def callSubmit: Future[Result] = TestConfirmYourDetailsController.submit(request)
 
       "and store nino is successful" when {
         "confidence level is below L200" when {
           "identity verification is successful" when {
-            "Use IRSA is disabled" should {
-              "redirect to identity verification" in {
-                val testRedirectUrl = "/test/redirect/url"
-                val testContinueUrl = "/test/continue/url"
 
-                mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
-                mockStoreNinoSuccess(testVatNumber, testUserDetails, None)
-                mockStart(testUserDetails)(Future.successful(Right(
-                  IdentityVerificationProxySuccessResponse(testRedirectUrl, testContinueUrl)
-                )))
-
-                val result = callSubmit
-
-                val expectedRedirectUrl = mockAppConfig.identityVerificationFrontendRedirectionUrl(testRedirectUrl)
-
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(expectedRedirectUrl)
-
-                result.session.get(SessionKeys.identityVerificationContinueUrlKey) should contain(testContinueUrl)
-                result.session.get(SessionKeys.userDetailsKey) shouldBe empty
-              }
-            }
-            "Use IRSA is disabled" should {
               "also add UserEntered to the store nino request" in {
                 val testRedirectUrl = "/test/redirect/url"
                 val testContinueUrl = "/test/continue/url"
 
-                enable(UseIRSA)
 
                 mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
-                mockStoreNinoSuccess(testVatNumber, testUserDetails, Some(UserEntered))
+                mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
                 mockStart(testUserDetails)(Future.successful(Right(
                   IdentityVerificationProxySuccessResponse(testRedirectUrl, testContinueUrl)
                 )))
@@ -146,13 +125,13 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 result.session.get(SessionKeys.userDetailsKey) shouldBe empty
               }
             }
-          }
+
         }
         "and confidence level is L200 or above" should {
           "redirect to identity verification callback" in {
 
             mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L200)
-            mockStoreNinoSuccess(testVatNumber, testUserDetails, None)
+            mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
 
             val result = callSubmit
 
@@ -167,7 +146,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "but store nino returned no match" should {
         "goto failed matching page" in {
           mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
-          mockStoreNinoNoMatch(testVatNumber, testUserDetails, None)
+          mockStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 
@@ -179,7 +158,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "but store nino returned no vat" should {
         "throw internal server exception" in {
           mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
-          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, None)
+          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 
@@ -192,7 +171,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "but store nino returned failure" should {
         "throw internal server exception" in {
           mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
-          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, None)
+          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 

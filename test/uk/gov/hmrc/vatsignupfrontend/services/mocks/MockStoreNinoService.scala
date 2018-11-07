@@ -38,23 +38,23 @@ trait MockStoreNinoService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreNinoService)
   }
 
-  private def mockStorNino(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource])(returnValue: Future[StoreNinoResponse]): Unit = {
+  private def mockStorNino(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource)(returnValue: Future[StoreNinoResponse]): Unit = {
     when(mockStoreNinoService.storeNino(
       ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(useDetails), ArgumentMatchers.eq(ninoSource)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockStoreNinoSuccess(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+  def mockStoreNinoSuccess(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
     mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Right(StoreNinoSuccess)))
 
-  def mockStoreNinoNoMatch(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+  def mockStoreNinoNoMatch(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
     mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(NoMatchFoundFailure)))
 
-  def mockStoreNinoNoVatStored(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+  def mockStoreNinoNoVatStored(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
     mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(NoVATNumberFailure)))
 
-  def mockStoreNinoFailure(vatNumber: String, useDetails: UserDetailsModel, ninoSource: Option[NinoSource]): Unit =
+  def mockStoreNinoFailure(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
     mockStorNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(StoreNinoFailureResponse(INTERNAL_SERVER_ERROR))))
 
 }
