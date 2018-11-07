@@ -46,9 +46,10 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   "POST /business-type" when {
     "the business type is sole trader" when {
-      "the user does not have an IRSA enrolment" should {
-        "return a SEE_OTHER status and go to capture your details" in {
-          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        "the user does not have an IRSA enrolment" should {
+          "return a SEE_OTHER status and go to capture your details" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
 
           val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
@@ -57,11 +58,12 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
             redirectUri(routes.CaptureYourDetailsController.show().url)
           )
         }
-      }
+        
       "the user has an IRSA enrolment" should {
         "return a SEE_OTHER status and go to Confirm your retrieved details" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment, irsaEnrolment))
           stubGetCitizenDetails(testSaUtr)(OK, testUserDetails)
+
 
           val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
