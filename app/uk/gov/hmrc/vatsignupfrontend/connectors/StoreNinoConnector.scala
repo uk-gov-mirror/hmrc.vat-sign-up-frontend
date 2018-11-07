@@ -17,12 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, UseIRSA}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.NinoSource._
 import uk.gov.hmrc.vatsignupfrontend.models.{NinoSource, UserDetailsModel}
@@ -35,17 +34,15 @@ class StoreNinoConnector @Inject()(val http: HttpClient,
 
   private def storeNinoUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/nino"
 
-  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     http.PUT[JsObject, StoreNinoResponse](storeNinoUrl(vatNumber),
       Json.obj(
         "firstName" -> userDetailsModel.firstName,
         "lastName" -> userDetailsModel.lastName,
         "nino" -> userDetailsModel.nino,
-        "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate
-      ).++(ninoSource.map(source =>
-        if (isEnabled(UseIRSA)) Json.obj(ninoSourceFrontEndKey -> ninoSource)
-        else Json.obj()
-      ).getOrElse(Json.obj()))
+        "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate,
+        ninoSourceFrontEndKey -> ninoSource
+      )
     )
 
 }

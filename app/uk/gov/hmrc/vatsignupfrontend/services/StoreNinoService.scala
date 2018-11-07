@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StoreNinoService @Inject()(applicationConfig: AppConfig,
-                                 val storeNinoConnector: StoreNinoConnector) {
+                                 storeNinoConnector: StoreNinoConnector) {
 
   /* N.B. this is header update is to be used in conjunction with the test only route
   *  StubCitizenDetailsController
@@ -39,7 +39,7 @@ class StoreNinoService @Inject()(applicationConfig: AppConfig,
     if (applicationConfig.hasEnabledTestOnlyRoutes) hc.copy(trueClientIp = Some("VATSUBSC"))
     else hc
 
-  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: Option[NinoSource])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     storeNinoConnector.storeNino(vatNumber, userDetailsModel, ninoSource)(amendHCForTest, ec)
 
 }

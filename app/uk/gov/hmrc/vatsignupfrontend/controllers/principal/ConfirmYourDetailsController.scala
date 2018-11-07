@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
@@ -28,7 +27,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{identityVerificationContinueUrlKey, userDetailsKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse}
 import uk.gov.hmrc.vatsignupfrontend.models.{UserDetailsModel, UserEntered}
@@ -63,11 +61,9 @@ class ConfirmYourDetailsController @Inject()(val controllerComponents: Controlle
         val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
         val optUserDetails = request.session.getModel[UserDetailsModel](userDetailsKey)
 
-        lazy val ninoSource = if (isEnabled(UseIRSA)) Some(UserEntered) else None
-
         (optVatNumber, optUserDetails) match {
           case (Some(vatNumber), Some(userDetails)) =>
-            storeNinoService.storeNino(vatNumber, userDetails, ninoSource) flatMap {
+            storeNinoService.storeNino(vatNumber, userDetails, UserEntered) flatMap {
               case Right(_) =>
                 if (confidenceLevel < ConfidenceLevel.L200) {
                   identityVerificationService.start(userDetails) map {

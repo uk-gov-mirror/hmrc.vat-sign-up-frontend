@@ -25,7 +25,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.IRSA
@@ -43,8 +42,6 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
 
   "Calling the show action of the Confirm Your Retrieved User Details controller" should {
     "show the confirm your retrieved user details page when user details are in session" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
       val request = testGetRequest.withSession(SessionKeys.userDetailsKey -> testUserDetailsJson)
 
@@ -55,9 +52,6 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
     }
 
     "redirect to the capture business entity page when user details are not in session" in {
-
-      enable(UseIRSA)
-
       mockAuthAdminRole()
       val request = testGetRequest
 
@@ -69,10 +63,8 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
 
   "Calling the submit action of the Confirm Your Retrieved User Details controller" should {
     "redirect to agree to capture emails page when nino is successfully stored" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
-      mockStoreNinoSuccess(testVatNumber, testUserDetails, Some(IRSA))
+      mockStoreNinoSuccess(testVatNumber, testUserDetails, IRSA)
 
       val result = TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
       (SessionKeys.userDetailsKey -> testUserDetailsJson, SessionKeys.vatNumberKey -> testVatNumber))
@@ -81,8 +73,6 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
     }
 
     "redirect to capture vat number page when no vat number in session" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
 
       val result = TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest
@@ -93,8 +83,6 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
     }
 
     "redirect to capture business entity page when no user details in session" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
 
       val result = TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest
@@ -105,10 +93,8 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
     }
 
     "throw exception when backend returns NoVATNumberFailure" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
-      mockStoreNinoNoVatStored(testVatNumber, testUserDetails, Some(IRSA))
+      mockStoreNinoNoVatStored(testVatNumber, testUserDetails, IRSA)
 
       intercept[InternalServerException] {
         await(TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
@@ -117,10 +103,8 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
     }
 
     "throw exception when backend returns StoreNinoFailureResponse" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
-      mockStoreNinoFailure(testVatNumber, testUserDetails, Some(IRSA))
+      mockStoreNinoFailure(testVatNumber, testUserDetails, IRSA)
 
       intercept[InternalServerException] {
         await( TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
@@ -129,10 +113,8 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
     }
 
     "throw exception when backend returns any other response" in {
-      enable(UseIRSA)
-
       mockAuthAdminRole()
-      mockStoreNinoNoMatch(testVatNumber, testUserDetails, Some(IRSA))
+      mockStoreNinoNoMatch(testVatNumber, testUserDetails, IRSA)
 
       intercept[InternalServerException] {
         await( TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
