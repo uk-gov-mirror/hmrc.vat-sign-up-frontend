@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -29,7 +28,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(CompanyNameJourney)
   }
 
   "GET /client/confirm-company" should {
@@ -42,33 +40,9 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
         httpStatus(OK)
       )
     }
-
-    "return a NOT_FOUND if CompanyNameJourney is disabled" in {
-      disable(CompanyNameJourney)
-
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-      val res = get("/client/confirm-company", Map(SessionKeys.companyNameKey -> testCompanyName))
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-    }
   }
 
   "POST /client/confirm-company" should {
-    "return a NOT_FOUND if CompanyNameJourney is disabled" in {
-      disable(CompanyNameJourney)
-
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-      stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
-
-      val res = post("/client/confirm-company", Map(SessionKeys.companyNumberKey -> testCompanyNumber, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-    }
 
     "the company number is successfully stored" should {
       "redirect to EmailRoutingController" in {
