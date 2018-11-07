@@ -38,10 +38,6 @@ POST        /error/incorrect-details       uk.gov.hmrc.vatsignupfrontend.control
 GET         /company-number                uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.show
 POST        /company-number                uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.submit
 
-# Confirm Company Number
-GET         /confirm-company-number        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyNumberController.show
-POST        /confirm-company-number        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyNumberController.submit
-
 # Confirm Company name
 GET         /confirm-company               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
 POST        /confirm-company               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.submit
