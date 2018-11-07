@@ -20,13 +20,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-
-import scala.concurrent.Future
 
 class SoleTraderDifferentDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -37,7 +32,6 @@ class SoleTraderDifferentDetailsControllerSpec extends UnitSpec with GuiceOneApp
   "Calling the show action of the Sole Trader Different Details controller" should {
     "return OK when IRSA feature switch is on" in {
       mockAuthAdminRole()
-      enable(UseIRSA)
 
       val request = testGetRequest
 
@@ -45,17 +39,6 @@ class SoleTraderDifferentDetailsControllerSpec extends UnitSpec with GuiceOneApp
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-    }
-
-    "return NOT_FOUND when IRSA feature switch is off" in {
-      mockAuthAdminRole()
-      disable(UseIRSA)
-
-      val request = testGetRequest
-
-      intercept[NotFoundException]{
-        TestSoleTraderDifferentDetailsController.show(request)
-      }
     }
   }
 

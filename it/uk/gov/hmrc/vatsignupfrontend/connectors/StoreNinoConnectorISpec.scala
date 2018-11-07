@@ -21,7 +21,6 @@ import java.util.UUID
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.helpers.ComponentSpecBase
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub
@@ -45,64 +44,47 @@ class StoreNinoConnectorISpec extends ComponentSpecBase {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    disable(UseIRSA)
   }
 
   "storeNino" when {
-    "Use IRSA is disabled" should {
-      "Backend returns a NO_CONTENT response" should {
-        "return StoreNinoSuccess" in {
-          StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, None)(NO_CONTENT)
+    "Backend returns a NO_CONTENT response" should {
+      "return StoreNinoSuccess" in {
+        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(NO_CONTENT)
 
-          val res = connector.storeNino(testVatNumber, testUserDetails, Some(UserEntered))
+        val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
 
-          await(res) shouldBe Right(StoreNinoSuccess)
-        }
+        await(res) shouldBe Right(StoreNinoSuccess)
       }
     }
+  }
 
-    "Use IRSA is enabled" should {
-      "Backend returns a NO_CONTENT response" should {
-        "return StoreNinoSuccess" in {
-          enable(UseIRSA)
+  "Backend returns a FORBIDDEN response" should {
+    "return the nino returned" in {
+      StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(FORBIDDEN)
 
-          StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, Some(UserEntered))(NO_CONTENT)
+      val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
 
-          val res = connector.storeNino(testVatNumber, testUserDetails, Some(UserEntered))
-
-          await(res) shouldBe Right(StoreNinoSuccess)
-        }
-      }
+      await(res) shouldBe Left(NoMatchFoundFailure)
     }
+  }
 
-    "Backend returns a FORBIDDEN response" should {
-      "return the nino returned" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, Some(UserEntered))(FORBIDDEN)
+  "Backend returns a NOT_FOUND response" should {
+    "return the nino returned" in {
+      StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(NOT_FOUND)
 
-        val res = connector.storeNino(testVatNumber, testUserDetails, Some(UserEntered))
+      val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
 
-        await(res) shouldBe Left(NoMatchFoundFailure)
-      }
+      await(res) shouldBe Left(NoVATNumberFailure)
     }
+  }
 
-    "Backend returns a NOT_FOUND response" should {
-      "return the nino returned" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, Some(UserEntered))(NOT_FOUND)
+  "Backend returns a BAD_REQUEST response" should {
+    "return a UserMatchFailureResponseModel" in {
+      StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(BAD_REQUEST)
 
-        val res = connector.storeNino(testVatNumber, testUserDetails, Some(UserEntered))
+      val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
 
-        await(res) shouldBe Left(NoVATNumberFailure)
-      }
-    }
-
-    "Backend returns a BAD_REQUEST response" should {
-      "return a UserMatchFailureResponseModel" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, Some(UserEntered))(BAD_REQUEST)
-
-        val res = connector.storeNino(testVatNumber, testUserDetails, Some(UserEntered))
-
-        await(res) shouldBe Left(StoreNinoFailureResponse(BAD_REQUEST))
-      }
+      await(res) shouldBe Left(StoreNinoFailureResponse(BAD_REQUEST))
     }
   }
 

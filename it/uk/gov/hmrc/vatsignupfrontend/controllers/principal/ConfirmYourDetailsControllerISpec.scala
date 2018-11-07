@@ -61,7 +61,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
           val testContinueUrl = "test/continue/url"
 
           stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
-          stubStoreNinoSuccess(testVatNumber, testUserDetails, Some(UserEntered))
+          stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
           stubIdentityVerificationProxy(testUserDetails)(CREATED, IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
 
           val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
@@ -80,7 +80,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
           val testContinueUrl = "test/continue/url"
 
           stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
-          stubStoreNinoNoMatch(testVatNumber, testUserDetails, Some(UserEntered))
+          stubStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
 
           val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
@@ -96,7 +96,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
       "redirect to identity verification callback url" in {
 
         stubAuth(OK, confidenceLevel(ConfidenceLevel.L200))
-        stubStoreNinoSuccess(testVatNumber, testUserDetails, Some(UserEntered))
+        stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
 
         val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
@@ -110,7 +110,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
     "store nino returned no match" should {
       "INTERNAL_SERVER_ERROR" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreNinoNoMatch(testVatNumber, testUserDetails, Some(UserEntered))
+        stubStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
 
         val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 

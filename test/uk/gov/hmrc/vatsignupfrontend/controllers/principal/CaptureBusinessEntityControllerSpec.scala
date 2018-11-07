@@ -27,7 +27,7 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CtKnownFactsIdentityVerification, UseIRSA}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -68,82 +68,72 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "form successfully submitted" when {
 
       "the business entity is sole trader" when {
-        "go to capture your details with sole trader stored in session" in {
-          mockAuthRetrieveVatDecEnrolment()
+          "the user has IRSA enrolment" when {
+            "calls to CID is successful" should {
+              "go to Confirm your retrieved details with sole trader and user details stored in session" in {
+                mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
+                mockCitizenDetailsSuccess(testSaUtr, testUserDetails)
 
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
+                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
+                val result = await(TestCaptureBusinessEntityController.submit(request))
+                status(result) shouldBe Status.SEE_OTHER
+                redirectLocation(result) should contain(routes.ConfirmYourRetrievedUserDetailsController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+                result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+                result.session get SessionKeys.userDetailsKey should contain(Json.toJson(testUserDetails).toString)
+              }
+            }
+            "CID returns NoCitizenRecord" should {
+              "throw Internal server exception" in {
+                mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
+                mockCitizenDetailsFailure(testSaUtr)
+
+                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
+
+                intercept[InternalServerException] {
+                  await(TestCaptureBusinessEntityController.submit(request))
+                }
+              }
+            }
+            "CID returns MoreThanOneCitizenMatched" should {
+              "throw Internal server exception" in {
+                mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
+                mockCitizenDetailsFailure(testSaUtr)
+
+                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
+
+                intercept[InternalServerException] {
+                  await(TestCaptureBusinessEntityController.submit(request))
+                }
+              }
+            }
+            "calls to CID fails" should {
+              "throw Internal server exception" in {
+                mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
+                mockCitizenDetailsFailure(testSaUtr)
+
+                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
+
+                intercept[InternalServerException] {
+                  await(TestCaptureBusinessEntityController.submit(request))
+                }
+              }
+            }
+
         }
-      }
-      "the user has IRSA enrolment" when {
-        "calls to CID is successful" should {
-          "go to Confirm your retrieved details with sole trader and user details stored in session" in {
-            mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-            mockCitizenDetailsSuccess(testSaUtr, testUserDetails)
+        "the user does not have IRSA enrolment" when {
+          "go to capture your details with sole trader stored in session" in {
+            mockAuthRetrieveVatDecEnrolment()
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
             val result = await(TestCaptureBusinessEntityController.submit(request))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.ConfirmYourRetrievedUserDetailsController.show().url)
+            redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
 
             result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
-            result.session get SessionKeys.userDetailsKey should contain(Json.toJson(testUserDetails).toString)
           }
-        }
-        "CID returns NoCitizenRecord" should {
-          "throw Internal server exception" in {
-            mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-            mockCitizenDetailsFailure(testSaUtr)
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
-
-            intercept[InternalServerException] {
-              await(TestCaptureBusinessEntityController.submit(request))
-            }
-          }
-        }
-        "CID returns MoreThanOneCitizenMatched" should {
-          "throw Internal server exception" in {
-            mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-            mockCitizenDetailsFailure(testSaUtr)
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
-
-            intercept[InternalServerException] {
-              await(TestCaptureBusinessEntityController.submit(request))
-            }
-          }
-        }
-        "calls to CID fails" should {
-          "throw Internal server exception" in {
-            mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-            mockCitizenDetailsFailure(testSaUtr)
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
-
-            intercept[InternalServerException] {
-              await(TestCaptureBusinessEntityController.submit(request))
-            }
-          }
-        }
-      }
-      "the user does not have IRSA enrolment" when {
-        "go to capture your details with sole trader stored in session" in {
-          mockAuthRetrieveVatDecEnrolment()
-
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CaptureYourDetailsController.show().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }
       }
 
@@ -194,16 +184,16 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
 
       "the business entity is general partnership" when {
-        "go to resolve partnership utr controller" in {
-          mockAuthRetrieveVatDecEnrolment()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(generalPartnership)
+          "go to resolve partnership utr controller" in {
+            mockAuthRetrieveVatDecEnrolment()
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(generalPartnership)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(partnerships.routes.ResolvePartnershipUtrController.resolve().url)
+            val result = await(TestCaptureBusinessEntityController.submit(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(partnerships.routes.ResolvePartnershipUtrController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
-        }
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
+          }
       }
 
       "the business entity is limited partnership" when {
@@ -249,19 +239,19 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
         }
       }
-    }
 
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+      "form unsuccessfully submitted" should {
+        "reload the page with errors" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
 
-        val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
-        status(result) shouldBe Status.BAD_REQUEST
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest("invalid"))
+          status(result) shouldBe Status.BAD_REQUEST
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
       }
     }
 

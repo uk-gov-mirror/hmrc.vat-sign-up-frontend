@@ -29,7 +29,6 @@ object FeatureSwitch {
   val switches: Set[FeatureSwitch] = Set(
     CompanyNameJourney,
     StubIncorporationInformation,
-    UseIRSA,
     VerifyAgentEmail,
     VerifyClientEmail,
     CtKnownFactsIdentityVerification,
@@ -57,11 +56,6 @@ case object CompanyNameJourney extends FeatureSwitch {
 case object StubIncorporationInformation extends FeatureSwitch {
   override val name: String = s"$prefix.stub-incorporation-information"
   override val displayText: String = "Use Stub for Incorporation Information Connection"
-}
-
-case object UseIRSA extends FeatureSwitch {
-  override val name: String = s"$prefix.use-ir-sa"
-  override val displayText: String = "Use UTR from IR-SA to retrieve NINO"
 }
 
 case object VerifyAgentEmail extends FeatureSwitch {

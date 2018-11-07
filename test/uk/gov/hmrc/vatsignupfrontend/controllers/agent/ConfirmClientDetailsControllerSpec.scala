@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
@@ -28,6 +28,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.UserEntered
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
+
+import scala.concurrent.Future
 
 class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreNinoService {
@@ -78,12 +80,12 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
     "vat number and client details are in session" when {
       lazy val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson)
 
-      def callSubmit = TestConfirmClientDetailsController.submit(request)
+      def callSubmit: Future[Result] = TestConfirmClientDetailsController.submit(request)
 
       "and store nino is successful" should {
         "redirect to EmailRoutingController" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoSuccess(testVatNumber, testUserDetails, Some(UserEntered))
+          mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 
@@ -97,7 +99,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "but store nino returned no match" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoNoMatch(testVatNumber, testUserDetails, Some(UserEntered))
+          mockStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 
@@ -111,7 +113,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "but store nino returned no vat" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, Some(UserEntered))
+          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 
@@ -124,7 +126,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "but store nino returned failure" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, Some(UserEntered))
+          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 

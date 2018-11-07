@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UseIRSA
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -26,7 +25,6 @@ class SoleTraderDifferentDetailsControllerISpec extends ComponentSpecBase with C
   "GET /sign-in-with-different-details-sole-trader" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
-      enable(UseIRSA)
 
       val res = get("/sign-in-with-different-details-sole-trader")
 
