@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CompanyNameJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -33,11 +32,6 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    disable(CompanyNameJourney)
-  }
 
   object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(
     mockControllerComponents,
@@ -62,130 +56,96 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
   }
 
   "Calling the submit action of the Capture Company Number controller" when {
-    "company name journey is not enabled" should {
-      "form successfully submitted" should {
-        "goto confirm Company number page" in {
-          mockAuthAdminRole()
 
-          val request = testPostRequest(testCompanyNumber)
+    "get company name returned successfully" should {
+      "goto confirm company and store crn and name in session" in {
+        mockAuthAdminRole()
 
-          val result = TestCaptureCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.ConfirmCompanyNumberController.show().url)
+        mockGetCompanyNameSuccess(testCompanyNumber, NonPartnershipEntity)
 
-          result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
-        }
-      }
+        val request = testPostRequest(testCompanyNumber)
 
-      "form unsuccessfully submitted" should {
-        "reload the page with errors" in {
-          mockAuthAdminRole()
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmCompanyController.show().url)
 
-          val result = TestCaptureCompanyNumberController.submit(testPostRequest("123456789"))
-          status(result) shouldBe Status.BAD_REQUEST
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
+        result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
+        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 
-    "company name journey is enabled" when {
-      "get company name returned successfully" should {
-        "goto confirm company and store crn and name in session" in {
-          mockAuthAdminRole()
-          enable(CompanyNameJourney)
+    "company number failed prefix validation" should {
+      "redirect to Company Name Not Found page" in {
+        mockAuthAdminRole()
 
-          mockGetCompanyNameSuccess(testCompanyNumber, NonPartnershipEntity)
+        val testCrn = "ZZ12345"
+        val request = testPostRequest(testCrn)
 
-          val request = testPostRequest(testCompanyNumber)
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.ConfirmCompanyController.show().url)
+        result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
 
-          result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
-          result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
-        }
       }
+    }
 
-      "company number failed prefix validation" should {
-        "redirect to Company Name Not Found page" in {
-          enable(CompanyNameJourney)
-          mockAuthAdminRole()
 
-          val testCrn = "ZZ12345"
-          val request = testPostRequest(testCrn)
+    "company number failed validation - invalid format" should {
+      "redirect to Company Name Not Found page" in {
+        mockAuthAdminRole()
 
-          val result = TestCaptureCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        val testCrn = "123A456 A"
+        val request = testPostRequest(testCrn)
 
-          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-        }
+        result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+
       }
+    }
 
+    "company number failed validation - zero is invalid" should {
+      "redirect to Company Name Not Found page" in {
+        mockAuthAdminRole()
 
-      "company number failed validation - invalid format" should {
-        "redirect to Company Name Not Found page" in {
-          enable(CompanyNameJourney)
-          mockAuthAdminRole()
+        val testCrn = "0"
+        val request = testPostRequest(testCrn)
 
-          val testCrn = "123A456 A"
-          val request = testPostRequest(testCrn)
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
 
-          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
-
-        }
       }
+    }
 
-      "company number failed validation - zero is invalid" should {
-        "redirect to Company Name Not Found page" in {
-          enable(CompanyNameJourney)
-          mockAuthAdminRole()
+    "get company name returned not found" should {
+      "goto company name not found page" in {
+        mockAuthAdminRole()
 
-          val testCrn = "0"
-          val request = testPostRequest(testCrn)
+        mockGetCompanyNameNotFound(testCompanyNumber)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        val request = testPostRequest(testCompanyNumber)
 
-          result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
-
-        }
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
       }
+    }
 
-      "get company name returned not found" should {
-        "goto company name not found page" in {
-          mockAuthAdminRole()
-          enable(CompanyNameJourney)
+    "get company name fails" should {
+      "throw an InternalServerException" in {
+        mockAuthAdminRole()
 
-          mockGetCompanyNameNotFound(testCompanyNumber)
+        mockGetCompanyNameFailure(testCompanyNumber)
 
-          val request = testPostRequest(testCompanyNumber)
+        val request = testPostRequest(testCompanyNumber)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
-        }
-      }
-
-      "get company name fails" should {
-        "throw an InternalServerException" in {
-          mockAuthAdminRole()
-          enable(CompanyNameJourney)
-
-          mockGetCompanyNameFailure(testCompanyNumber)
-
-          val request = testPostRequest(testCompanyNumber)
-
-          intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
-        }
+        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
       }
     }
   }
