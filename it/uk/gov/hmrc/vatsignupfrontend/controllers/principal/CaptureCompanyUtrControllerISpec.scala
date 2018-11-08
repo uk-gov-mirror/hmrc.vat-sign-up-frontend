@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyUtrForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -26,34 +25,28 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class CaptureCompanyUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /company-utr" when {
-    "the CT Known Facts feature switch is enabled" should {
-      "return an OK" in {
-        enable(CtKnownFactsIdentityVerification)
-        stubAuth(OK, successfulAuthResponse())
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/company-utr")
+      val res = get("/company-utr")
 
-        res should have(
-          httpStatus(OK)
-        )
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
   }
 
-    "POST /company-utr" when {
-      "the CT Known Facts feature switch is enabled" should {
-        "return NOT_IMPLEMENTED status" in {
-          enable(CtKnownFactsIdentityVerification)
-          stubAuth(OK, successfulAuthResponse())
+  "POST /company-utr" when {
+    "redirect to No CT enrolment" in {
+      stubAuth(OK, successfulAuthResponse())
 
-          val res = post("/company-utr")(CompanyUtrForm.companyUtr -> testCompanyUtr)
+      val res = post("/company-utr")(CompanyUtrForm.companyUtr -> testCompanyUtr)
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.NoCtEnrolmentSummaryController.show().url)
-          )
-        }
-      }
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.NoCtEnrolmentSummaryController.show().url)
+      )
     }
-
   }
+
+}
