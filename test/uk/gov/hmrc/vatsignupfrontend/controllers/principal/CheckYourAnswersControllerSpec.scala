@@ -29,7 +29,6 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -64,11 +63,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse("")
     )
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    disable(CtKnownFactsIdentityVerification)
-  }
 
   "Calling the show action of the Check your answers controller" when {
     "all prerequisite data are in session" should {
