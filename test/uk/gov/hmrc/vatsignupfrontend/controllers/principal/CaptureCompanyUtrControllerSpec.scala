@@ -23,17 +23,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(CtKnownFactsIdentityVerification)
-  }
 
   object TestCaptureCompanyUtrController extends CaptureCompanyUtrController(mockControllerComponents)
 
