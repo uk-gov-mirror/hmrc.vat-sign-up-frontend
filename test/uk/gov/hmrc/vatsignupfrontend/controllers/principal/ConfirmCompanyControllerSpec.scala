@@ -25,18 +25,12 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
 
 class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreCompanyNumberService {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    disable(CtKnownFactsIdentityVerification)
-  }
 
   object TestConfirmCompanyController extends ConfirmCompanyController(
     mockControllerComponents,
@@ -67,7 +61,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
     }
 
     "there isn't a company name in the session" should {
-      "go to the capture company name page" in {
+      "go to the capture company number page" in {
         mockAuthAdminRole()
 
         val result = TestConfirmCompanyController.show(testGetRequest)
@@ -78,21 +72,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   }
 
   "Calling the submit action of the Confirm Company controller" should {
-    "go to the 'agree to receive emails' page if CtKnownFactsIdentityVerification is disabled" in {
-      mockAuthRetrieveIRCTEnrolment()
-      mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
-
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.companyNumberKey -> testCompanyNumber
-      )
-
-      val result = TestConfirmCompanyController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
-    }
-    "go to the 'agree to receive emails' page if CtKnownFactsIdentityVerification is enabled and CT enrolled" in {
-      enable(CtKnownFactsIdentityVerification)
+    "go to the 'agree to receive emails' page if CT enrolled" in {
       mockAuthRetrieveIRCTEnrolment()
       mockStoreCompanyNumberSuccess(
         vatNumber = testVatNumber,
@@ -109,8 +89,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
     }
-    "go to the 'capture company UTR' page if CtKnownFactsIdentityVerification is enabled and not CT enrolled" in {
-      enable(CtKnownFactsIdentityVerification)
+    "go to the 'capture company UTR' page if not CT enrolled" in {
       mockAuthRetrieveVatDecEnrolment()
 
       val request = testPostRequest.withSession(
@@ -125,7 +104,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
     "throw internal server exception if store company number fails" in {
       mockAuthRetrieveIRCTEnrolment()
-      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, companyUtr = None)
+      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, Some(testSaUtr))
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,

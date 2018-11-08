@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
@@ -25,7 +24,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -66,7 +64,6 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
         val optCompanyUTR = enrolments.companyUtr
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-            if (isEnabled(CtKnownFactsIdentityVerification)) {
               optCompanyUTR match {
                 case Some(ctutr) =>
                   storeCompanyNumberService.storeCompanyNumber(
@@ -81,13 +78,6 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
                   }
                 case None =>
                   Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-              }
-            } else
-              storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
-                case Right(_) =>
-                  Redirect(routes.AgreeCaptureEmailController.show())
-                case Left(errResponse) =>
-                  throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
               }
           case (None, _) =>
             Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))

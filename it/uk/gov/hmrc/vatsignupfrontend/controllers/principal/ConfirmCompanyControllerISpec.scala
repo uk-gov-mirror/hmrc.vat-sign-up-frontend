@@ -18,18 +18,12 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    disable(CtKnownFactsIdentityVerification)
-  }
 
   "GET /confirm-company" when {
     "return an OK" in {
@@ -46,12 +40,11 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
   "POST /confirm-company" should {
 
     "the company number is successfully stored" when {
-      "CtKnownFactsIdentityVerification is disabled" should {
-        "redirect to agree to receive email page" in {
-          disable(CtKnownFactsIdentityVerification)
 
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
+      "if CT enrolled" should {
+        "redirect to agree to receive email page" in {
+          stubAuth(OK, successfulAuthResponse(irctEnrolment))
+          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testSaUtr))
 
           val res = post("/confirm-company",
             Map(
@@ -67,49 +60,24 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
         }
       }
 
-      "CtKnownFactsIdentityVerification is enabled" when {
-        "if CT enrolled" should {
-          "redirect to agree to receive email page" in {
-            enable(CtKnownFactsIdentityVerification)
+      "if not CT enrolled" should {
+        "redirect to capture company UTR page" in {
+          stubAuth(OK, successfulAuthResponse())
 
-            stubAuth(OK, successfulAuthResponse(irctEnrolment))
-            stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testSaUtr))
+          val res = post("/confirm-company",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.companyNumberKey -> testCompanyNumber
+            ))()
 
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.AgreeCaptureEmailController.show().url)
-            )
-
-          }
-
-        }
-        "if not CT enrolled" should {
-          "redirect to capture company UTR page" in {
-            enable(CtKnownFactsIdentityVerification)
-
-            stubAuth(OK, successfulAuthResponse())
-
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureCompanyUtrController.show().url)
-            )
-          }
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureCompanyUtrController.show().url)
+          )
         }
       }
-    }
 
+    }
   }
 
 }
