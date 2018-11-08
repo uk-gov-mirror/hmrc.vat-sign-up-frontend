@@ -74,10 +74,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           businessEntity match {
             case SoleTrader =>
               soleTraderCheckIRSA(enrolments)
-            case LimitedCompany if enrolments.vatNumber.isDefined || isEnabled(CtKnownFactsIdentityVerification) =>
-              Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case LimitedCompany =>
-              Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
+              Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case GeneralPartnership =>
               Future.successful(Redirect(partnerships.routes.ResolvePartnershipUtrController.resolve()))
             case LimitedPartnership =>
