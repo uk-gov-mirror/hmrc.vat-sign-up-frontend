@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -58,10 +57,6 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       SessionKeys.companyUtrKey -> companyUtr.getOrElse(""),
       SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
     )
-
-  override def beforeEach(): Unit = enable(CtKnownFactsIdentityVerification)
-
-  override def afterEach(): Unit = disable(CtKnownFactsIdentityVerification)
 
   "Calling the show action of the No CT Enrolment controller" when {
     "all prerequisite data are in session" should {

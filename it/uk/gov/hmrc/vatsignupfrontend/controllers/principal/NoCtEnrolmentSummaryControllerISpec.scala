@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, CtKnownFactsIdentityVerification}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub._
@@ -26,11 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 
-class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = enable(CtKnownFactsIdentityVerification)
-
-  override def afterEach(): Unit = disable(CtKnownFactsIdentityVerification)
+class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /check-your-answers-company" should {
     "return an OK" in {
@@ -95,19 +90,6 @@ class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomM
       }
     }
 
-    "Making a request to No CT Enrolment Summary when not enabled" should {
-      "return NotFound" in {
-        disable(CtKnownFactsIdentityVerification)
-
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = get("/check-your-answers-company")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
   }
 
 }

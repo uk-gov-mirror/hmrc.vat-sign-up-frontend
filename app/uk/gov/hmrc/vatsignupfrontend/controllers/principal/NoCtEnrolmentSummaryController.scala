@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CtKnownFactsIdentityVerification
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.{CtReferenceMismatch, StoreCompanyNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -36,7 +35,7 @@ import scala.concurrent.Future
 @Singleton
 class NoCtEnrolmentSummaryController @Inject()(val controllerComponents: ControllerComponents,
                                                val storeCompanyNumberService: StoreCompanyNumberService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(CtKnownFactsIdentityVerification)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
