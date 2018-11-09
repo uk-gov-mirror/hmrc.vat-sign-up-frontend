@@ -30,7 +30,6 @@ object FeatureSwitch {
     StubIncorporationInformation,
     VerifyAgentEmail,
     VerifyClientEmail,
-    CtKnownFactsIdentityVerification,
     BTAClaimSubscription,
     GeneralPartnershipJourney,
     LimitedPartnershipJourney,
@@ -60,11 +59,6 @@ case object VerifyAgentEmail extends FeatureSwitch {
 case object VerifyClientEmail extends FeatureSwitch {
   override val name: String = s"$prefix.verify-client-email"
   override val displayText: String = "Enable client email verification in agent flow"
-}
-
-case object CtKnownFactsIdentityVerification extends FeatureSwitch {
-  override val name: String = s"$prefix.ct-known-facts-journey"
-  override val displayText: String = "Enable CT Known Facts journey to identify limited company authorisation"
 }
 
 case object BTAClaimSubscription extends FeatureSwitch {
