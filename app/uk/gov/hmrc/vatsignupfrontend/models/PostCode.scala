@@ -19,14 +19,30 @@ package uk.gov.hmrc.vatsignupfrontend.models
 import play.api.libs.json.{Json, OFormat}
 
 
-case class PostCode(postCode: String) {
-
+case class PostCode private(postCode: String) {
   import PostCode._
+
+  val sanitisedPostCode: String = postCode.toUpperCase filterNot(_.isWhitespace)
 
   lazy val checkYourAnswersFormat: String = postCode.replaceAll(" ", "").toUpperCase() match {
     case standardFormat(p1, p2) => p1 + " " + p2
     case bfpoFormat(p1, p2) => p1 + " " + p2
     case otherFormat => otherFormat // should never happen, since postcode should have passed validation before being put in this object
+  }
+
+
+
+  override def equals(that: Any): Boolean = that match {
+    case otherPostCode: PostCode =>
+      otherPostCode.sanitisedPostCode == sanitisedPostCode
+    case _ =>
+      false
+  }
+
+  override def hashCode(): Int = {
+    val prime = 31
+    val sanitisedPostCodeHashCode = if(sanitisedPostCode == null) 0 else sanitisedPostCode.hashCode
+    prime * sanitisedPostCodeHashCode
   }
 }
 
