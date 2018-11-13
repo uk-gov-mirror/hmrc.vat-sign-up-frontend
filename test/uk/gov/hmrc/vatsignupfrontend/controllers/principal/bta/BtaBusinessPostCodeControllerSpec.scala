@@ -107,8 +107,6 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       "goto BTA postcode non matching page" in {
         mockAuthAdminRole()
 
-        println(testBusinessPostcode)
-
         mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(KnownFactsMismatch)))
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
