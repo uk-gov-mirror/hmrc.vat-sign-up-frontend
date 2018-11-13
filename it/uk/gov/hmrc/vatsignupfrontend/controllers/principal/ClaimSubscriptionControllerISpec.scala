@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{BTAClaimSubscription,
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSubscriptionClaimed
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 
@@ -34,7 +34,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
           enable(BTAClaimSubscription)
 
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubStoreVatNumberSubscriptionClaimed(isFromBta = Some(true))
+          stubClaimSubscription(testVatNumber, isFromBta = true)(NO_CONTENT)
 
           val res = get(s"/claim-subscription/$testVatNumber")
 

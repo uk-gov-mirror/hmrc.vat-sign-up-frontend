@@ -26,9 +26,9 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{KnownFactsMismatch, SubscriptionClaimed}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{KnownFactsMismatch, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.ClaimSubscriptionService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.principal_place_of_business
 
@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 @Singleton
 class BtaBusinessPostCodeController @Inject()(val controllerComponents: ControllerComponents,
-                                              storeVatNumberService: StoreVatNumberService)
+                                              claimSubscriptionService: ClaimSubscriptionService)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(BTAClaimSubscription)) {
 
   def show: Action[AnyContent] = Action.async {
@@ -48,10 +48,10 @@ class BtaBusinessPostCodeController @Inject()(val controllerComponents: Controll
       }
   }
 
-  private def storeVatNumber(vatNumber: String,
-                             postCode: PostCode,
-                             vatRegistrationDate: DateModel)(implicit hc: HeaderCarrier): Future[Result] =
-    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate, isFromBta = true) map {
+  private def claimSubscription(vatNumber: String,
+                                postCode: PostCode,
+                                vatRegistrationDate: DateModel)(implicit hc: HeaderCarrier): Future[Result] =
+    claimSubscriptionService.claimSubscription(vatNumber, postCode, vatRegistrationDate, isFromBta = true) map {
       case Right(SubscriptionClaimed) => Redirect(principalRoutes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
       case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
@@ -71,7 +71,7 @@ class BtaBusinessPostCodeController @Inject()(val controllerComponents: Controll
                   BadRequest(principal_place_of_business(formWithErrors, routes.BtaBusinessPostCodeController.submit()))
                 ),
               businessPostCode =>
-                storeVatNumber(vatNumber, businessPostCode, vatRegistrationDate)
+                claimSubscription(vatNumber, businessPostCode, vatRegistrationDate)
             )
           case (None, _) => Future.failed(new InternalServerException("Entered BTA claim subscription flow without VRN"))
           case (_, None) => Future.successful(Redirect(routes.CaptureBtaVatRegistrationDateController.show().url))

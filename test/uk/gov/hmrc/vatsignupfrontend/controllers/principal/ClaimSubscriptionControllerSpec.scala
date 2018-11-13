@@ -28,15 +28,16 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockClaimSubscriptionService, MockStoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{InvalidVatNumber, SubscriptionClaimed}
 
 import scala.concurrent.Future
 
 class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockStoreVatNumberService {
+  with MockControllerComponents with MockClaimSubscriptionService {
 
-  object TestClaimSubscriptionController extends ClaimSubscriptionController(mockControllerComponents, mockStoreVatNumberService)
+  object TestClaimSubscriptionController extends ClaimSubscriptionController(mockControllerComponents, mockClaimSubscriptionService)
 
   lazy val testGetRequest = FakeRequest("GET", "/claim-subscription")
 
@@ -49,7 +50,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
-              mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = Some(true))
+              mockClaimSubscription(testVatNumber, isFromBta = true)(Future.successful(Right(SubscriptionClaimed)))
 
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
@@ -62,7 +63,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
-              mockStoreVatNumberInvalid(testVatNumber, isFromBta = Some(true))
+              mockClaimSubscription(testVatNumber, isFromBta = true)(Future.successful(Left(InvalidVatNumber)))
 
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 

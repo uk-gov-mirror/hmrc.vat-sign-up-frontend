@@ -38,13 +38,13 @@ trait MockClaimSubscriptionService extends BeforeAndAfterEach with MockitoSugar 
     reset(mockClaimSubscriptionService)
   }
 
-  private def mockClaimSubscription(vatNumber: String, isFromBta: Boolean)(returnValue: Future[ClaimSubscriptionResponse]): Unit =
+  def mockClaimSubscription(vatNumber: String, isFromBta: Boolean)(returnValue: Future[ClaimSubscriptionResponse]): Unit =
     when(mockClaimSubscriptionService.claimSubscription(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(isFromBta)
     )(ArgumentMatchers.any())) thenReturn returnValue
 
-  private def mockClaimSubscription(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean
+  def mockClaimSubscription(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean
                                 )(returnValue: Future[ClaimSubscriptionResponse]): Unit =
     when(mockClaimSubscriptionService.claimSubscription(
       ArgumentMatchers.eq(vatNumber),

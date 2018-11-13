@@ -29,6 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.{stubStoreVatNumberKnownFactsMismatch, stubStoreVatNumberSubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 
 class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -66,7 +67,7 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
   "the VAT subscription has been claimed" should {
     "redirect to sign up complete client" in {
       stubAuth(OK, successfulAuthResponse())
-      stubStoreVatNumberSubscriptionClaimed(testBusinessPostCode, testDate, isFromBta = true)
+      stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = true)(NO_CONTENT)
 
       val res = post("/bta/business-postcode",
         Map(
@@ -84,7 +85,7 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
   "store vat returned known facts mismatch" should {
     "redirect to could not confirm business" in {
       stubAuth(OK, successfulAuthResponse())
-      stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate, isFromBta = true)
+      stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = true)(FORBIDDEN)
 
       val res = post("/bta/business-postcode",
         Map(

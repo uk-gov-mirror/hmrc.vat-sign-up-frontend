@@ -32,13 +32,16 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{InvalidVatNumber, KnownFactsMismatch, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
+
+import scala.concurrent.Future
 
 
-class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockStoreVatNumberService {
+class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockClaimSubscriptionService {
 
-  object TestBusinessPostCodeController extends BtaBusinessPostCodeController(mockControllerComponents, mockStoreVatNumberService)
+  object TestBusinessPostCodeController extends BtaBusinessPostCodeController(mockControllerComponents, mockClaimSubscriptionService)
 
   lazy val testGetRequest = FakeRequest("GET", "/bta/business-postcode")
 
@@ -75,11 +78,12 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
     "form successfully submitted" should {
       "goto confirmation page" in {
         mockAuthAdminRole()
-        mockStoreVatNumberSubscriptionClaimed(
+        mockClaimSubscription(
           testVatNumber,
           testBusinessPostcode,
-          testDate, isFromBta = true
-        )
+          testDate,
+          isFromBta = true
+        )(Future.successful(Right(SubscriptionClaimed)))
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
 
@@ -101,10 +105,9 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
     "form successfully submitted with non matching postcode" should {
       "goto BTA postcode non matching page" in {
-
         mockAuthAdminRole()
 
-        mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)
+        mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(KnownFactsMismatch)))
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
         status(result) shouldBe Status.SEE_OTHER
@@ -132,12 +135,11 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       }
     }
 
-    "form unsuccessfully submitted" should {
+    "claim subscription returns a failure" should {
       "display a technical difficulties page" in {
-
         mockAuthAdminRole()
 
-        mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)
+        mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(InvalidVatNumber)))
 
         intercept[InternalServerException] {
           await(TestBusinessPostCodeController.submit(testPostRequest()))
