@@ -34,7 +34,6 @@ class ClaimSubscriptionConnector @Inject()(http: HttpClient,
     http.POST[JsObject, ClaimSubscriptionResponse](
       applicationConfig.claimSubscriptionUrl(vatNumber),
       Json.obj(
-        vatNumberKey -> vatNumber,
         isFromBtaKey -> isFromBta
       )
     )
@@ -46,7 +45,6 @@ class ClaimSubscriptionConnector @Inject()(http: HttpClient,
     http.POST[JsObject, ClaimSubscriptionResponse](
       applicationConfig.claimSubscriptionUrl(vatNumber),
       Json.obj(
-        vatNumberKey -> vatNumber,
         postCodeKey -> postCode,
         registrationDateKey -> registrationDate,
         isFromBtaKey -> isFromBta
