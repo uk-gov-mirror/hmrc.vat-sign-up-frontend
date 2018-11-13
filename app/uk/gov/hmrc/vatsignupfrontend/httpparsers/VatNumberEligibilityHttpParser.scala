@@ -33,7 +33,6 @@ object VatNumberEligibilityHttpParser {
             case JsSuccess(dates, _) => Left(IneligibleForMtdVatNumber(dates))
           }
         case NOT_FOUND => Left(InvalidVatNumber)
-        case CONFLICT => Left(VatNumberAlreadySubscribed)
         case status => Left(VatNumberEligibilityFailureResponse(status))
       }
     }
@@ -44,8 +43,6 @@ object VatNumberEligibilityHttpParser {
   sealed trait VatNumberIneligible
 
   case class IneligibleForMtdVatNumber(migratableDates: MigratableDates) extends VatNumberIneligible
-
-  case object VatNumberAlreadySubscribed extends VatNumberIneligible
 
   case object InvalidVatNumber extends VatNumberIneligible
 

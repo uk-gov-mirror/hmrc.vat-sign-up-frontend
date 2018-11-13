@@ -84,7 +84,6 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                   case Left(IneligibleForMtdVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
                     .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
-                  case Left(VatNumberAlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
                   case Left(VatNumberEligibilityFailureResponse(status)) => {
                     throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
                   }

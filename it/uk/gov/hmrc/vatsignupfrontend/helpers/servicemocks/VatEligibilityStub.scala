@@ -42,9 +42,4 @@ object VatEligibilityStub extends WireMockMethods {
       .thenReturn(status = NOT_FOUND)
   }
 
-  def stubVatNumberEligibilityAlreadySubscribed(vatNumber: String): Unit = {
-    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
-      .thenReturn(status = CONFLICT)
-  }
-
 }
