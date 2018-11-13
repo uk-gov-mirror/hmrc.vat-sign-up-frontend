@@ -248,19 +248,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
         }
 
-        "redirect to Already Signed Up page when the vat number has already been subscribed" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberEligibilityAlreadySubscribed(testVatNumber)
-
-          val request = testPostRequest(testVatNumber)
-
-          val result = TestCaptureVatNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
-        }
-
         "throw an exception for any other scenario" in {
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments

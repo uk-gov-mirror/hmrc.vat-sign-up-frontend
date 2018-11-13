@@ -65,14 +65,6 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe InvalidVatNumber
       }
 
-      "parse a CONFLICT response as a VatNumberAlreadySubscribed when the vat number is already subscribed" in {
-        val httpResponse = HttpResponse(CONFLICT)
-
-        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
-
-        res.left.value shouldBe VatNumberAlreadySubscribed
-      }
-
       "parse any other response as a VatNumberEligibilityFailureResponse" in {
         val httpResponse = HttpResponse(FORBIDDEN)
 

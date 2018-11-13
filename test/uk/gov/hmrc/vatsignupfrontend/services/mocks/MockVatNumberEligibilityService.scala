@@ -55,8 +55,4 @@ trait MockVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSug
   def mockVatNumberEligibilityInvalid(vatNumber: String): Unit =
     mockVatNumberEligibility(vatNumber)(Future.successful(Left(InvalidVatNumber)))
 
-  def mockVatNumberEligibilityAlreadySubscribed(vatNumber: String): Unit =
-    mockVatNumberEligibility(vatNumber)(Future.successful(Left(VatNumberAlreadySubscribed)))
-
-
 }

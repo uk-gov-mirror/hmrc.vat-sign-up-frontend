@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.stubStoreVatNumberSuccess
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
@@ -81,7 +81,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       "the vat eligibility is unsuccessful" should {
         "redirect to the invalid vat number page" when {
           "the vat number is fails the checksum validation" in {
-            stubAuth(OK, successfulAuthResponse())
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
 
@@ -92,38 +92,10 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           }
         }
 
-        "redirect to the invalid vat number page" when {
-          "the eligibility returns the vat number as invalid" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberEligibilityInvalid(testVatNumber)
-
-            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.InvalidVatNumberController.show().url)
-            )
-          }
-        }
-
-        "redirect to the Already Signed up page" when {
-          "the vat number is already signed up" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberEligibilityAlreadySubscribed(testVatNumber)
-
-            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.AlreadySignedUpController.show().url)
-            )
-          }
-        }
-
         "redirect to the Cannot Use Service page" when {
           "the vat number is ineligible for mtd vat" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberIneligibleForMtd(testVatNumber)
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubStoreVatNumberIneligible(isFromBta = Some(false), migratableDates = MigratableDates(None))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -136,8 +108,8 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         "redirect to the sign up after this date page" when {
           "the vat number is ineligible for mtd vat and one date is available" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubStoreVatNumberIneligible(isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate)))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -150,8 +122,8 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         "redirect to the sign up between these dates page" when {
           "the vat number is ineligible for mtd vat and two dates are available" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubStoreVatNumberIneligible(isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -164,7 +136,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         "throw an internal server error" when {
           "any other failure occurs" in {
-            stubAuth(OK, successfulAuthResponse())
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
             stubVatNumberEligibilityFailure(testVatNumber)
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
@@ -195,7 +167,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "redirect to the invalid vat number page" when {
           "the vat number is fails the checksum validation" in {
             stubAuth(OK, successfulAuthResponse())
-            stubVatNumberEligibilitySuccess(testInvalidVatNumber)
+            stubVatNumberEligibilitySuccess(testVatNumber)
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
 
@@ -216,20 +188,6 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             res should have(
               httpStatus(SEE_OTHER),
               redirectUri(routes.InvalidVatNumberController.show().url)
-            )
-          }
-        }
-
-        "redirect to the Already Signed up page" when {
-          "the vat number is already signed up" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberEligibilityAlreadySubscribed(testVatNumber)
-
-            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.AlreadySignedUpController.show().url)
             )
           }
         }
