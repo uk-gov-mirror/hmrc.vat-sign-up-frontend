@@ -33,7 +33,7 @@ trait MockClaimSubscriptionService extends BeforeAndAfterEach with MockitoSugar 
 
   val mockClaimSubscriptionService: ClaimSubscriptionService = mock[ClaimSubscriptionService]
 
-  override protected def beforeEach(): Unit = {
+  override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockClaimSubscriptionService)
   }

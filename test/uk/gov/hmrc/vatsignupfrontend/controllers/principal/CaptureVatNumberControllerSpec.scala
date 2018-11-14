@@ -75,7 +75,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               "the VAT number is stored successfully" should {
                 "redirect to the business entity type page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                  mockStoreVatNumberSuccess(testVatNumber, isFromBta = Some(false))
+                  mockStoreVatNumberSuccess(testVatNumber, isFromBta = false)
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
@@ -87,7 +87,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               "the user's subscription has been claimed" should {
                 "redirect to claimed subscription confirmation page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                  mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = Some(false))
+                  mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = false)
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
@@ -113,7 +113,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           "the vat eligibility is unsuccessful" should {
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = MigratableDates())
+              mockStoreVatNumberIneligible(testVatNumber, isFromBta = false, migratableDates = MigratableDates())
 
               val request = testPostRequest(testVatNumber)
 
@@ -127,7 +127,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 val testDates = MigratableDates(Some(testStartDate))
 
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = testDates)
+                mockStoreVatNumberIneligible(testVatNumber, isFromBta = false, migratableDates = testDates)
 
                 val request = testPostRequest(testVatNumber)
 
@@ -143,7 +143,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
                 mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-                mockStoreVatNumberIneligible(testVatNumber, isFromBta = Some(false), migratableDates = testDates)
+                mockStoreVatNumberIneligible(testVatNumber, isFromBta = false, migratableDates = testDates)
 
                 val request = testPostRequest(testVatNumber)
 
@@ -153,25 +153,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
                 await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
               }
-            }
-            "redirect to Already Signed Up page when the vat number has already been subscribed" in {
-              mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-              mockStoreVatNumberAlreadySubscribed(testVatNumber, isFromBta = Some(false))
-
-              val request = testPostRequest(testVatNumber)
-
-              val result = TestCaptureVatNumberController.submit(request)
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
-            }
-          }
-          "throw an exception for any other scenario" in {
-            mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
-            mockStoreVatNumberFailure(testVatNumber, isFromBta = Some(false))
-
-            val request = testPostRequest(testVatNumber)
-            intercept[InternalServerException] {
-              await(TestCaptureVatNumberController.submit(request))
             }
           }
 

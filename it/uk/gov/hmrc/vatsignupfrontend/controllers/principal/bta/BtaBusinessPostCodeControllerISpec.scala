@@ -26,10 +26,9 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalR
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub.{stubStoreVatNumberKnownFactsMismatch, stubStoreVatNumberSubscriptionClaimed}
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 
 class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
 

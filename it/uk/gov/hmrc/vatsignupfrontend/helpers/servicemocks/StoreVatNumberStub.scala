@@ -24,45 +24,41 @@ import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCod
 
 object StoreVatNumberStub extends WireMockMethods {
 
-  private def requestJson(isFromBta: Option[Boolean]) =
-    isFromBta match {
-      case Some(bool) =>
-        Json.obj(
-          "vatNumber" -> testVatNumber,
-          "isFromBta" -> bool
-        )
-      case _ =>
-        Json.obj("vatNumber" -> testVatNumber)
-    }
+  private def requestJson(isFromBta: Boolean) =
+    Json.obj(
+      "vatNumber" -> testVatNumber,
+      "isFromBta" -> isFromBta
+    )
 
-  def stubStoreVatNumberSuccess(isFromBta: Option[Boolean]): Unit = {
+
+  def stubStoreVatNumberSuccess(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = CREATED)
   }
 
-  def stubStoreVatNumberNoRelationship(isFromBta: Option[Boolean]): Unit = {
+  def stubStoreVatNumberNoRelationship(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> NoRelationshipCode))
   }
 
-  def stubStoreVatNumberIneligible(isFromBta: Option[Boolean],
+  def stubStoreVatNumberIneligible(isFromBta: Boolean,
                                    migratableDates: MigratableDates): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = UNPROCESSABLE_ENTITY, Json.toJson(migratableDates))
   }
 
 
-  def stubStoreVatNumberAlreadySignedUp(isFromBta: Option[Boolean]): Unit = {
+  def stubStoreVatNumberAlreadySignedUp(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = CONFLICT)
   }
 
-  def stubStoreVatNumberFailure(isFromBta: Option[Boolean]): Unit = {
+  def stubStoreVatNumberFailure(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = BAD_REQUEST)
   }
 
-  def stubStoreVatNumberSubscriptionClaimed(isFromBta: Option[Boolean]): Unit = {
+  def stubStoreVatNumberSubscriptionClaimed(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = OK, body = Json.obj(CodeKey -> SubscriptionClaimedCode))
   }

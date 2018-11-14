@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -27,8 +28,11 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+
+import scala.concurrent.Future
 
 class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreVatNumberService {
@@ -69,7 +73,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but it is invalid" should {
       "go to invalid vat number page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberSuccess(vatNumber = testVatNumber, isFromBta = None)
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored)))
 
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testInvalidVatNumber)
         val result = TestConfirmVatNumberController.submit(request)
@@ -84,7 +88,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberSuccess(vatNumber = testVatNumber, isFromBta = None)
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored)))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -94,7 +98,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but store vat is unsuccessful as no agent client relationship" should {
       "go to the no agent client relationship page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberNoRelationship(vatNumber = testVatNumber, isFromBta = None)
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Left(NoAgentClientRelationship)))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -106,7 +110,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
       "go to the cannot use service page when no dates are given" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberIneligible(vatNumber = testVatNumber, isFromBta = None, migratableDates = MigratableDates())
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Left(IneligibleVatNumber(MigratableDates.empty))))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -117,7 +121,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val testDates = MigratableDates(Some(testStartDate))
 
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberIneligible(testVatNumber, isFromBta = None, migratableDates = testDates)
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Left(IneligibleVatNumber(testDates))))
 
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
@@ -133,7 +137,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberIneligible(testVatNumber, isFromBta = None, migratableDates = testDates)
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Left(IneligibleVatNumber(testDates))))
 
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
@@ -150,7 +154,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberFailure(vatNumber = testVatNumber, isFromBta = None)
+        mockStoreVatNumberDelegated(testVatNumber)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
 
         intercept[InternalServerException] {
           await(TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)))
@@ -162,7 +166,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       "vat number is already subscribed" should {
         "redirect to the already subscribed page" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber, isFromBta = None)
+          mockStoreVatNumberDelegated(testVatNumber)(Future.successful(Left(AlreadySubscribed)))
 
           val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
           status(result) shouldBe Status.SEE_OTHER

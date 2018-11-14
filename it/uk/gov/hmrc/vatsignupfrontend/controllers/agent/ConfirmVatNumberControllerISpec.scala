@@ -44,7 +44,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the capture client business entity page" when {
       "the vat number is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberSuccess(isFromBta = None)
+        stubStoreVatNumberSuccess(isFromBta = false)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -58,7 +58,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to no agent client relationship page" when {
       "the vat number is unsuccessfully stored as there is no client agent relationship" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberNoRelationship(isFromBta = None)
+        stubStoreVatNumberNoRelationship(isFromBta = false)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -72,7 +72,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to cannot use service page" when {
       "the vat number is unsuccessfully stored as the client is ineligible" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates())
+        stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates())
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -86,7 +86,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the sign up after this date page" when {
       "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and one date is available" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates(Some(LocalDate.now())))
+        stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(Some(LocalDate.now())))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -102,7 +102,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the sign up after this date page" when {
       "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and two dates is available" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberIneligible(isFromBta = None, migratableDates = MigratableDates(Some(LocalDate.now()), Some(LocalDate.now())))
+        stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(Some(LocalDate.now()), Some(LocalDate.now())))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -118,7 +118,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the already signed up page" when {
       "the vat number has already been signed up" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberAlreadySignedUp(isFromBta = None)
+        stubStoreVatNumberAlreadySignedUp(isFromBta = false)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -132,7 +132,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "throw an internal server error" when {
       "the vat number cannot be stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberFailure(isFromBta = None)
+        stubStoreVatNumberFailure(isFromBta = false)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 

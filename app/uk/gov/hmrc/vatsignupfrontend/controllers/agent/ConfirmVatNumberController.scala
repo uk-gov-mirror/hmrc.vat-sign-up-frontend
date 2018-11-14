@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
@@ -58,7 +58,7 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
       request.session.get(SessionKeys.vatNumberKey) match {
         case Some(vatNumber) if vatNumber.nonEmpty =>
           if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
-            storeVatNumberService.storeVatNumber(vatNumber, isFromBta = None) map {
+            storeVatNumberService.storeVatNumberDelegated(vatNumber) map {
               case Right(VatNumberStored) =>
                 Redirect(routes.CaptureBusinessEntityController.show())
               case Left(NoAgentClientRelationship) =>

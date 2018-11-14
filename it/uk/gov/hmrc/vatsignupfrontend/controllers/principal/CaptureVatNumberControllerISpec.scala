@@ -51,7 +51,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "the enrolment vat number matches the inserted one" should {
           "redirect to the business entity type page" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-            stubStoreVatNumberSuccess(isFromBta = Some(false))
+            stubStoreVatNumberSuccess(isFromBta = false)
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -95,7 +95,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "redirect to the Cannot Use Service page" when {
           "the vat number is ineligible for mtd vat" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-            stubStoreVatNumberIneligible(isFromBta = Some(false), migratableDates = MigratableDates(None))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -109,7 +109,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "redirect to the sign up after this date page" when {
           "the vat number is ineligible for mtd vat and one date is available" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-            stubStoreVatNumberIneligible(isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate)))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(Some(testStartDate)))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -123,7 +123,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "redirect to the sign up between these dates page" when {
           "the vat number is ineligible for mtd vat and two dates are available" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-            stubStoreVatNumberIneligible(isFromBta = Some(false), migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
