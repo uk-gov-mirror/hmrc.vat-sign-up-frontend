@@ -26,7 +26,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, SubscriptionClaimed, VatNumberStored}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityService}
@@ -62,13 +63,12 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           if (VatNumberChecksumValidation.isValidChecksum(formVatNumber)) {
             enrolments.vatNumber match {
               case Some(enrolmentVatNumber) if enrolmentVatNumber == formVatNumber =>
-                storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = Some(false)) map {
+                storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = false) map {
                   case Right(VatNumberStored) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
                   case Right(SubscriptionClaimed) =>
                     Redirect(routes.SignUpCompleteClientController.show())
-                  case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
                   case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
                   case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
                     .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
@@ -83,10 +83,9 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                   case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
                   case Left(IneligibleForMtdVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
                     .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
-                  case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
-                  case Left(VatNumberEligibilityFailureResponse(status)) => {
+                  case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
+                  case Left(VatNumberEligibilityFailureResponse(status)) =>
                     throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
-                  }
                 }
             }
           } else

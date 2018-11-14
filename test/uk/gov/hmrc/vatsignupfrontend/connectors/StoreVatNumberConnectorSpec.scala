@@ -21,6 +21,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class StoreVatNumberConnectorSpec extends UnitSpec with MockitoSugar{
 

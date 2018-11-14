@@ -28,30 +28,28 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StoreVatNumberConnector @Inject()(val http: HttpClient,
-                                        val applicationConfig: AppConfig) {
+                                        val applicationConfig: AppConfig
+                                       )(implicit ec: ExecutionContext) {
 
   val vatNumberKey = "vatNumber"
   val postCodeKey = "postCode"
   val registrationDateKey = "registrationDate"
   val isFromBtaKey = "isFromBta"
 
-  def storeVatNumber(vatNumber: String, isFromBta: Option[Boolean])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+  def storeVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
     http.POST[JsObject, StoreVatNumberResponse](
       applicationConfig.storeVatNumberUrl, Json.obj(
-        vatNumberKey -> vatNumber
-      ).++(
-        isFromBta match {
-          case Some(boolean) => Json.obj(isFromBtaKey -> boolean)
-          case _ => Json.obj()
-        }
+        vatNumberKey -> vatNumber,
+        isFromBtaKey -> isFromBta
       )
     )
 
   def storeVatNumber(vatNumber: String,
                      postCode: String,
                      registrationDate: String,
-                     isFromBta: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
-    http.POST[JsObject, StoreVatNumberResponse](applicationConfig.storeVatNumberUrl,
+                     isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
+    http.POST[JsObject, StoreVatNumberResponse](
+      applicationConfig.storeVatNumberUrl,
       Json.obj(vatNumberKey -> vatNumber,
         postCodeKey -> postCode,
         registrationDateKey -> registrationDate,

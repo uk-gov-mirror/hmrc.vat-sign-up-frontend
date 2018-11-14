@@ -68,7 +68,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "the VAT number is stored successfully" should {
           "go to business-type" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberSuccess(testVatNumber, isFromBta = Some(false))
+            mockStoreVatNumberSuccess(testVatNumber, isFromBta = false)
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
@@ -79,44 +79,23 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         "the VAT subscription has been claimed" should {
           "go to sign-up-complete-client" in {
             mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = Some(false))
+            mockStoreVatNumberSubscriptionClaimed(testVatNumber, isFromBta = false)
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
           }
         }
-        "vat number is already subscribed" should {
-          "redirect to the already subscribed page" in {
-            mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberAlreadySubscribed(vatNumber = testVatNumber, isFromBta = Some(false))
-
-            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
-          }
-        }
         "the vat number is ineligible" should {
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()
             mockStoreVatNumberIneligible(vatNumber = testVatNumber,
-                                         isFromBta = Some(false),
+                                         isFromBta = false,
                                          migratableDates = MigratableDates())
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
-          }
-        }
-
-        "store vat returns any other error" should {
-          "throw internal server exception" in {
-            mockAuthRetrieveVatDecEnrolment()
-            mockStoreVatNumberFailure(vatNumber = testVatNumber, isFromBta = Some(false))
-
-            intercept[InternalServerException] {
-              await(TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no")))
-            }
           }
         }
       }

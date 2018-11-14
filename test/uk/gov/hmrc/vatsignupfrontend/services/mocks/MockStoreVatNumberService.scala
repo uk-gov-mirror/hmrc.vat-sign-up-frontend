@@ -22,9 +22,9 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 
 import scala.concurrent.Future
 
@@ -39,42 +39,30 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreVatNumberService)
   }
 
-  def mockStoreVatNumberDelegated(vatNumber: String)(returnValue: Future[StoreVatNumberResponse]): Unit =
+  def mockStoreVatNumberDelegated(vatNumber: String)(returnValue: Future[DelegatedStoreVatNumberResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumberDelegated(
       ArgumentMatchers.eq(vatNumber)
     )(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(returnValue)
 
-  private def mockStoreVatNumber(vatNumber: String, isFromBta: Option[Boolean])(returnValue: Future[StoreVatNumberResponse]): Unit =
+  private def mockStoreVatNumber(vatNumber: String, isFromBta: Boolean)(returnValue: Future[StoreVatNumberWithEnrolmentResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(isFromBta)
     )(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(returnValue)
 
-  def mockStoreVatNumberSuccess(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+  def mockStoreVatNumberSuccess(vatNumber: String, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored)))
 
-  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, isFromBta: Option[Boolean]): Unit =
+  def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
 
-  def mockStoreVatNumberFailure(vatNumber: String, isFromBta: Option[Boolean]): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
-
-  def mockStoreVatNumberNoRelationship(vatNumber: String, isFromBta: Option[Boolean]): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(NoAgentClientRelationship)))
-
-  def mockStoreVatNumberInvalid(vatNumber: String, isFromBta: Option[Boolean]): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(InvalidVatNumber)))
-
-  def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Option[Boolean], migratableDates: MigratableDates): Unit =
+  def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Boolean, migratableDates: MigratableDates): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber(migratableDates))))
 
-  def mockStoreVatNumberAlreadySubscribed(vatNumber: String, isFromBta: Option[Boolean]): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(AlreadySubscribed)))
-
   private def mockStoreVatNumber(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean
-                                )(returnValue: Future[StoreVatNumberResponse]): Unit =
+                                )(returnValue: Future[StoreVatNumberWithKnownFactsResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(postCode),
@@ -106,8 +94,5 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(
       Future.successful(Left(IneligibleVatNumber(migratableDates)))
     )
-
-  def mockStoreVatNumberAlreadySubscribed(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
-    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(AlreadySubscribed)))
 
 }

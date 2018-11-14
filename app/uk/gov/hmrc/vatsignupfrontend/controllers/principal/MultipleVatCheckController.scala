@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.{AlreadySubscribed, IneligibleVatNumber, SubscriptionClaimed, VatNumberStored}
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -56,12 +56,11 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
               case Yes =>
                 Future.successful(Redirect(routes.CaptureVatNumberController.show()))
               case No =>
-                storeVatNumberService.storeVatNumber(vatNumber, isFromBta = Some(false)) map {
+                storeVatNumberService.storeVatNumber(vatNumber, isFromBta = false) map {
                   case Right(VatNumberStored) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                   case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
-                  case Left(AlreadySubscribed) => Redirect(routes.AlreadySignedUpController.show())
                   case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")

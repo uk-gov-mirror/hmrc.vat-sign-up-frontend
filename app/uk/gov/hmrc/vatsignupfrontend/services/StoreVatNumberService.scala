@@ -17,28 +17,108 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
-
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreVatNumberConnector
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberResponse
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
+import StoreVatNumberService._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreVatNumberHttpParser}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreVatNumberService @Inject()(val storeVatNumberConnector: StoreVatNumberConnector
+class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberConnector,
+                                      claimSubscriptionService: ClaimSubscriptionService
                                      )(implicit ec: ExecutionContext) {
 
-  def storeVatNumberDelegated(vatNumber: String)(implicit hc:HeaderCarrier): Future[StoreVatNumberResponse] =
-    storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta = None)
+  def storeVatNumberDelegated(vatNumber: String)(implicit hc: HeaderCarrier): Future[DelegatedStoreVatNumberResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta = false) map {
+      case Right(StoreVatNumberHttpParser.VatNumberStored) => Right(VatNumberStored)
+      case Right(StoreVatNumberHttpParser.SubscriptionClaimed) => //TODO - Remove when no longer supported by API
+        throw new InternalServerException("Subscription was claimed on delegated flow")
+      case Left(StoreVatNumberHttpParser.AlreadySubscribed) => Left(AlreadySubscribed)
+      case Left(StoreVatNumberHttpParser.NoAgentClientRelationship) => Left(NoAgentClientRelationship)
+      case Left(StoreVatNumberHttpParser.InvalidVatNumber) => Left(InvalidVatNumber)
+      case Left(StoreVatNumberHttpParser.IneligibleVatNumber(migratableDates)) => Left(IneligibleVatNumber(migratableDates))
+      case Left(unexpectedError) =>
+        throw new InternalServerException(s"Unexpected error in store VAT number for delegated user - $unexpectedError")
+    }
 
-  def storeVatNumber(vatNumber: String, isFromBta: Option[Boolean])(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
-    storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta)
+  def storeVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithEnrolmentResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta) flatMap {
+      case Right(StoreVatNumberHttpParser.VatNumberStored) =>
+        Future.successful(Right(VatNumberStored))
+      case Right(StoreVatNumberHttpParser.SubscriptionClaimed) => //TODO - Remove when no longer supported by API
+        Future.successful(Right(SubscriptionClaimed))
+      case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
+        claimSubscriptionService.claimSubscription(vatNumber, isFromBta) map {
+          case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
+            Right(SubscriptionClaimed)
+          case Left(unexpectedError) =>
+            throw new InternalServerException(s"Unexpected error in claim subscription for user with enrolment - $unexpectedError")
+        }
+      case Left(StoreVatNumberHttpParser.IneligibleVatNumber(migratableDates)) =>
+        Future.successful(Left(IneligibleVatNumber(migratableDates)))
+      case Left(unexpectedError) =>
+        throw new InternalServerException(s"Unexpected error in store VAT number for user with enrolment - $unexpectedError")
+    }
 
   def storeVatNumber(vatNumber: String,
                      postCode: PostCode,
                      registrationDate: DateModel,
-                     isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
-    storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta)
+                     isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta) flatMap {
+      case Right(StoreVatNumberHttpParser.VatNumberStored) =>
+        Future.successful(Right(VatNumberStored))
+      case Right(StoreVatNumberHttpParser.SubscriptionClaimed) => //TODO - Remove when no longer supported by API
+        Future.successful(Right(SubscriptionClaimed))
+      case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
+        claimSubscriptionService.claimSubscription(vatNumber, postCode, registrationDate, isFromBta) map {
+          case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
+            Right(SubscriptionClaimed)
+          case Left(unexpectedError) =>
+            throw new InternalServerException(s"Unexpected error in claim subscription with supplied known facts - $unexpectedError")
+        }
+      case Left(StoreVatNumberHttpParser.KnownFactsMismatch) =>
+        Future.successful(Left(KnownFactsMismatch))
+      case Left(StoreVatNumberHttpParser.InvalidVatNumber) =>
+        Future.successful(Left(InvalidVatNumber))
+      case Left(StoreVatNumberHttpParser.IneligibleVatNumber(migratableDates)) =>
+        Future.successful(Left(IneligibleVatNumber(migratableDates)))
+      case Left(unexpectedError) =>
+        throw new InternalServerException(s"Unexpected error in store VAT number with supplied known facts - $unexpectedError")
+    }
+}
+
+object StoreVatNumberService {
+  type StoreVatNumberWithKnownFactsResponse = Either[StoreVatNumberWithKnownFactsFailure, StoreVatNumberSuccess]
+  type StoreVatNumberWithEnrolmentResponse = Either[StoreVatNumberWithEnrolmentFailure, StoreVatNumberSuccess]
+  type DelegatedStoreVatNumberResponse = Either[DelegatedStoreVatNumberFailure, VatNumberStored.type]
+
+  sealed trait StoreVatNumberSuccess
+
+  case object VatNumberStored extends StoreVatNumberSuccess
+
+  case object SubscriptionClaimed extends StoreVatNumberSuccess
+
+  sealed trait StoreVatNumberWithKnownFactsFailure
+
+  sealed trait DelegatedStoreVatNumberFailure
+
+  sealed trait StoreVatNumberWithEnrolmentFailure
+
+  case object NoAgentClientRelationship extends DelegatedStoreVatNumberFailure
+
+  case object AlreadySubscribed extends DelegatedStoreVatNumberFailure
+
+  case object KnownFactsMismatch extends StoreVatNumberWithKnownFactsFailure
+
+  case object InvalidVatNumber extends StoreVatNumberWithKnownFactsFailure with DelegatedStoreVatNumberFailure
+
+  case class IneligibleVatNumber(migratableDates: MigratableDates) extends StoreVatNumberWithKnownFactsFailure
+    with DelegatedStoreVatNumberFailure with StoreVatNumberWithEnrolmentFailure
+
+  case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberWithKnownFactsFailure with DelegatedStoreVatNumberFailure
+
+  case class ClaimSubscriptionFailureResponse(status: Int) extends StoreVatNumberWithKnownFactsFailure
 
 }

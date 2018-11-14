@@ -26,7 +26,7 @@ class AlreadySignedUpControllerISpec extends ComponentSpecBase with CustomMatche
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/error/already-signed-up")
+      val res = get("/client/error/already-signed-up")
 
       res should have(
         httpStatus(OK)

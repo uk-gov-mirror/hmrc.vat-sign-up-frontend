@@ -24,6 +24,8 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates}
@@ -73,7 +75,8 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "the VAT subscription has been claimed" should {
       "redirect to sign up complete client" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberSubscriptionClaimed(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate, isFromBta = false)
+        stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = false)(NO_CONTENT)
 
         val res = post("/check-your-answers",
           Map(
@@ -143,25 +146,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.CannotUseServiceController.show().url)
-        )
-      }
-    }
-    "store vat returned already signed up" should {
-      "redirect to already signed up" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate, isFromBta = false)
-
-        val res = post("/check-your-answers",
-          Map(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
-          )
-        )()
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.AlreadySignedUpController.show().url)
         )
       }
     }
