@@ -26,15 +26,19 @@ import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreVatNumberService @Inject()(val storeVatNumberConnector: StoreVatNumberConnector) {
+class StoreVatNumberService @Inject()(val storeVatNumberConnector: StoreVatNumberConnector
+                                     )(implicit ec: ExecutionContext) {
 
-  def storeVatNumber(vatNumber: String, isFromBta: Option[Boolean])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+  def storeVatNumberDelegated(vatNumber: String)(implicit hc:HeaderCarrier): Future[StoreVatNumberResponse] =
+    storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta = None)
+
+  def storeVatNumber(vatNumber: String, isFromBta: Option[Boolean])(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta)
 
   def storeVatNumber(vatNumber: String,
                      postCode: PostCode,
                      registrationDate: DateModel,
-                     isFromBta: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreVatNumberResponse] =
+                     isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta)
 
 }

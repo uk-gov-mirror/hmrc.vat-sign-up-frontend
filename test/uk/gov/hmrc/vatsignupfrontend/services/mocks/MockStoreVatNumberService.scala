@@ -21,6 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
@@ -38,11 +39,17 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreVatNumberService)
   }
 
+  def mockStoreVatNumberDelegated(vatNumber: String)(returnValue: Future[StoreVatNumberResponse]): Unit =
+    when(mockStoreVatNumberService.storeVatNumberDelegated(
+      ArgumentMatchers.eq(vatNumber)
+    )(ArgumentMatchers.any[HeaderCarrier]))
+      .thenReturn(returnValue)
+
   private def mockStoreVatNumber(vatNumber: String, isFromBta: Option[Boolean])(returnValue: Future[StoreVatNumberResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(isFromBta)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    )(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(returnValue)
 
   def mockStoreVatNumberSuccess(vatNumber: String, isFromBta: Option[Boolean]): Unit =
@@ -73,7 +80,7 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
       ArgumentMatchers.eq(postCode),
       ArgumentMatchers.eq(registrationDate),
       ArgumentMatchers.eq(isFromBta)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    )(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(returnValue)
 
   def mockStoreVatNumberSuccess(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
