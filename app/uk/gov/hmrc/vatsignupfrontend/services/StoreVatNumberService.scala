@@ -33,8 +33,6 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
   def storeVatNumberDelegated(vatNumber: String)(implicit hc: HeaderCarrier): Future[DelegatedStoreVatNumberResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta = false) map {
       case Right(StoreVatNumberHttpParser.VatNumberStored) => Right(VatNumberStored)
-      case Right(StoreVatNumberHttpParser.SubscriptionClaimed) => //TODO - Remove when no longer supported by API
-        throw new InternalServerException("Subscription was claimed on delegated flow")
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) => Left(AlreadySubscribed)
       case Left(StoreVatNumberHttpParser.NoAgentClientRelationship) => Left(NoAgentClientRelationship)
       case Left(StoreVatNumberHttpParser.InvalidVatNumber) => Left(InvalidVatNumber)
@@ -47,8 +45,6 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta) flatMap {
       case Right(StoreVatNumberHttpParser.VatNumberStored) =>
         Future.successful(Right(VatNumberStored))
-      case Right(StoreVatNumberHttpParser.SubscriptionClaimed) => //TODO - Remove when no longer supported by API
-        Future.successful(Right(SubscriptionClaimed))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
@@ -69,8 +65,6 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
     storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta) flatMap {
       case Right(StoreVatNumberHttpParser.VatNumberStored) =>
         Future.successful(Right(VatNumberStored))
-      case Right(StoreVatNumberHttpParser.SubscriptionClaimed) => //TODO - Remove when no longer supported by API
-        Future.successful(Right(SubscriptionClaimed))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, postCode, registrationDate, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>

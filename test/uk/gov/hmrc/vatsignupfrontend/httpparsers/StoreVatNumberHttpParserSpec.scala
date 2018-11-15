@@ -43,14 +43,6 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         res.right.value shouldBe VatNumberStored
       }
 
-      "parse an OK response as a SubscriptionClaimed when the response code matches" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(CodeKey -> SubscriptionClaimedCode)))
-
-        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
-
-        res.right.value shouldBe SubscriptionClaimed
-      }
-
       "parse a FORBIDDEN response as a NoAgentClientRelationship when the response code matches" in {
         val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(CodeKey -> NoRelationshipCode)))
 
