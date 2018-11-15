@@ -37,7 +37,6 @@ object StoreVatNumberHttpParser {
 
       response.status match {
         case CREATED  => Right(VatNumberStored)
-        case OK if responseCode contains SubscriptionClaimedCode => Right(SubscriptionClaimed)
         case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)
         case FORBIDDEN if responseCode contains KnownFactsMismatchCode => Left(KnownFactsMismatch)
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
@@ -53,8 +52,6 @@ object StoreVatNumberHttpParser {
   sealed trait StoreVatNumberSuccess
 
   case object VatNumberStored extends StoreVatNumberSuccess
-
-  case object SubscriptionClaimed extends StoreVatNumberSuccess
 
   sealed trait StoreVatNumberFailure
 
