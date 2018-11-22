@@ -720,4 +720,17 @@ object MessageLookup {
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
   }
 
+  object UnplannedOutage {
+    val title = "Sorry, there is a problem with the service"
+    val heading: String = title
+    val line1 = "Try again later."
+    val line2 = "In the meantime:"
+    val link1 = "full list of VAT services"
+    val link2 = "'Help and support for VAT'"
+    val link3 = "how VAT businesses can get ready"
+    val bullet1 = s"get our $link1"
+    val bullet2 = s"read our $link2"
+    val bullet3 = s"find out $link3 for the Making Tax Digital programme"
+  }
+
 }
