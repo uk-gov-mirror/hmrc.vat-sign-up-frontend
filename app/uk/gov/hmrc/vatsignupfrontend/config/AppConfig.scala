@@ -89,6 +89,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def storeVatGroupInformationUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/vat-group"
 
+  def storeAdministrativeDivisionUrl(vatNumber: String) =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/administrative-division"
+
   def claimSubscriptionUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/claim-subscription/vat-number/$vatNumber"
 
