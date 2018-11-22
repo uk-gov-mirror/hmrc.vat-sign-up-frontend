@@ -634,6 +634,13 @@ object MessageLookup {
     val line1 = s"You can $linkText on Companies House."
   }
 
+  object PrincipalCouldNotConfirmPartnershipCompany {
+    val title = "We could not confirm your Limited Partnership's company number"
+    val heading: String = title
+    val line1 = "The company number is not on our system."
+    val tryAgain = "Try again"
+  }
+
   object SignUpAfterThisDate {
     val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"

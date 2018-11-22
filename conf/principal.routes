@@ -179,5 +179,10 @@ POST        /principal-place-postcode                       uk.gov.hmrc.vatsignu
 GET         /check-your-answers-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CheckYourAnswersPartnershipsController.show
 POST        /check-your-answers-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CheckYourAnswersPartnershipsController.submit
 
+# Could not confirm partnership company
+GET         /could-not-confirm-partnership-company          uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmCompanyController.show
+POST        /could-not-confirm-partnership-company          uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmCompanyController.submit
+
 # VAT group resolver
 GET         /vat-group-resolver                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.VatGroupResolverController.resolve
+

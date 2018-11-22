@@ -29,6 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
@@ -137,13 +138,25 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
 
       }
     }
-
     "get company name returned not found" should {
-      "throw an InternalServerException" in {
+      "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()
-        // Redirect to error page
 
         mockGetCompanyNameNotFound(testCompanyNumber)
+
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestCaptureCompanyNumberController.submit(request)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
+      }
+    }
+    "get company name succeeds when non partnership entity entered" should {
+      "throw an InternalServerException" in {
+        mockAuthAdminRole()
+
+        mockGetCompanyNameSuccess(testCompanyNumber, NonPartnershipEntity)
 
         val request = testPostRequest(testCompanyNumber)
 
@@ -152,7 +165,6 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         intercept[InternalServerException](await(result))
       }
     }
-
     "get company name fails" should {
       "throw an InternalServerException" in {
         mockAuthAdminRole()
