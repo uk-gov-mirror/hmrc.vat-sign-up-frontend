@@ -612,6 +612,11 @@ principal.confirm_partnership.title                                    = Confirm
 principal.confirm_partnership.heading                                  = Confirm the partnership
 principal.confirm_partnership.link                                     = Change the partnership
 
+## Partnership Company Number Not Found page
+principal.partnership_company_name_not_found.title                     = We could not confirm your Limited Partnership''s company number
+principal.partnership_company_name_not_found.heading                   = We could not confirm your Limited Partnership''s company number
+principal.partnership_company_name_not_found.line_1                    = The company number is not on our system.
+
 # Check your answers page Partnership
 agent.check-your-answers.title                                         = Confirm your client''s details
 agent.check-your-answers.heading                                       = Confirm your client''s details
