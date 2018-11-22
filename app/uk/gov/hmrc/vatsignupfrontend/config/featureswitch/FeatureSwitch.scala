@@ -80,3 +80,8 @@ case object VatGroupJourney extends FeatureSwitch {
   override val name: String = s"$prefix.vat-group-journey"
   override val displayText: String = "Enable users to enter VAT group flow"
 }
+
+case object UnplannedShutter extends FeatureSwitch {
+  override val name: String = s"$prefix.unplanned-shutter"
+  override val displayText: String = "Unplanned shutter for the service"
+}
