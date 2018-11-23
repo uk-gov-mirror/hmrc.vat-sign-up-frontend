@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.could_not_confirm_partnership
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.could_not_find_partnership
 
 import scala.concurrent.Future
 
@@ -34,7 +34,7 @@ class CouldNotFindPartnershipController @Inject()(val controllerComponents: Cont
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(could_not_confirm_partnership(routes.CouldNotFindPartnershipController.submit())))
+      Future.successful(Ok(could_not_find_partnership(routes.CouldNotFindPartnershipController.submit())))
     }
   }
 

@@ -333,9 +333,9 @@ agent.could_not_confirm_vat_number.heading                             = We coul
 agent.could_not_confirm_vat_number.line_1                              = The information you provided does not match the details on our system.
 
 # Agent could not confirm partnership
-agent.could_not_confirm_partnership.title                              = We could not confirm your client''s company number for their Limited Partnership
-agent.could_not_confirm_partnership.heading                            = We could not confirm your client''s company number for their Limited Partnership
-agent.could_not_confirm_partnership.line_1                             = The company number is not on our system.
+agent.could_not_find_partnership.title                                 = We could not confirm your client''s company number for their Limited Partnership
+agent.could_not_find_partnership.heading                               = We could not confirm your client''s company number for their Limited Partnership
+agent.could_not_find_partnership.line_1                                = The company number is not on our system.
 
 # Could not confirm business
 principal.could_not_confirm_business.title                             = We could not confirm your business
