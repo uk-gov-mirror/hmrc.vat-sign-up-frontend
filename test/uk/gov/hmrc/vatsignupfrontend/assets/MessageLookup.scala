@@ -298,7 +298,7 @@ object MessageLookup {
     val tryAgain = "Try again"
   }
 
-  object AgentCouldNotConfirmPartnership {
+  object AgentCouldNotFindPartnership {
     val title = "We could not confirm your client's company number for their Limited Partnership"
     val heading: String = title
     val line1 = "The company number is not on our system."

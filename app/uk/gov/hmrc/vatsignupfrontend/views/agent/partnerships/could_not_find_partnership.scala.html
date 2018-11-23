@@ -21,11 +21,11 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.could_not_confirm_partnership.title"), bodyClasses = None, showSignOutLink = false) {
+@agent_main_template(title = Messages("agent.could_not_find_partnership.title"), bodyClasses = None, showSignOutLink = false) {
 
-    <h1 class="heading-large">@Messages("agent.could_not_confirm_partnership.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.could_not_find_partnership.heading")</h1>
 
-    <p>@Messages("agent.could_not_confirm_partnership.line_1")</p>
+    <p>@Messages("agent.could_not_find_partnership.line_1")</p>
 
     @form(action = postAction) {
         <div class="form-group">
