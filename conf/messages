@@ -332,7 +332,7 @@ agent.could_not_confirm_vat_number.title                               = We coul
 agent.could_not_confirm_vat_number.heading                             = We could not confirm your client''s VAT number
 agent.could_not_confirm_vat_number.line_1                              = The information you provided does not match the details on our system.
 
-# Agent could not confirm partnership
+# Agent could not find partnership
 agent.could_not_find_partnership.title                                 = We could not confirm your client''s company number for their Limited Partnership
 agent.could_not_find_partnership.heading                               = We could not confirm your client''s company number for their Limited Partnership
 agent.could_not_find_partnership.line_1                                = The company number is not on our system.
@@ -616,6 +616,11 @@ principal.partnership_postcode.label                                   = UK post
 principal.confirm_partnership.title                                    = Confirm the partnership
 principal.confirm_partnership.heading                                  = Confirm the partnership
 principal.confirm_partnership.link                                     = Change the partnership
+
+# Could not confirm partnership
+principal.could_not_confirm_partnership.title                          = We could not confirm your company
+principal.could_not_confirm_partnership.heading                        = We could not confirm your company
+principal.could_not_confirm_partnership.line_1                         = The information you provided does not match the details we have for your company.
 
 ## Partnership Company Number Not Found page
 principal.partnership_company_name_not_found.title                     = We could not confirm your Limited Partnership''s company number
