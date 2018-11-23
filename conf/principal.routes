@@ -183,6 +183,10 @@ POST        /check-your-answers-partnership                 uk.gov.hmrc.vatsignu
 GET         /could-not-confirm-partnership-company          uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmCompanyController.show
 POST        /could-not-confirm-partnership-company          uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmCompanyController.submit
 
+# Could not confirm business
+GET         /error/could-not-confirm-company                uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmPartnershipController.show
+POST        /error/could-not-confirm-company                uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmPartnershipController.submit
+
 # VAT group resolver
 GET         /vat-group-resolver                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.VatGroupResolverController.resolve
 
