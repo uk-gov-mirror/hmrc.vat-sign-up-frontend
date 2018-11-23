@@ -1,4 +1,5 @@
 # Add all the application routes to the app.routes file
+# if the routes changes from /vat-through-software/sign-up also update uk.gov.hmrc.vatsignupfrontend.config.filters.UnplannedOutageFilter
 ->         /vat-through-software/sign-up/client              agent.Routes
 ->         /vat-through-software/sign-up                     principal.Routes
 ->         /                                                 health.Routes
