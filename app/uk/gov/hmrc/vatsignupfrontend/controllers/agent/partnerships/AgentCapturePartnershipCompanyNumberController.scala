@@ -97,8 +97,7 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
                 case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
                   throw new InternalServerException("A none partnership company type returned from companies house")
                 case Left(CompanyNumberNotFound) =>
-                  throw new InternalServerException("CRN not found in Companies House")
-                // TODO Redirect to error page
+                  Redirect(routes.CouldNotFindPartnershipController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>
                   throw new InternalServerException(s"getCompanyName failed: status=$status")
               }

@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJour
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
 
@@ -61,17 +61,29 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
   }
 
   "POST /partnership-company-number" when {
-      "redirect to Confirm Partnership page" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubgetCompanyName(testCompanyNumber, LimitedPartnership)
+    "redirect to Confirm Partnership page" in {
+      stubAuth(OK, successfulAuthResponse())
+      stubGetCompanyName(testCompanyNumber, LimitedPartnership)
 
-        val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+      val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.ConfirmPartnershipController.show().url)
-        )
-      }
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmPartnershipController.show().url)
+      )
     }
+
+    "redirect to Could Not Find Partnership page" in {
+      stubAuth(OK, successfulAuthResponse())
+      stubGetCompanyNameCompanyNotFound(testCompanyNumber)
+
+      val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CouldNotFindPartnershipController.show().url)
+      )
+    }
+  }
 
 }

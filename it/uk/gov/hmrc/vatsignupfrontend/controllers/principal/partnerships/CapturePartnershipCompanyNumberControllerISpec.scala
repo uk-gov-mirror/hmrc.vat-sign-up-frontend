@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJour
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
 
@@ -63,7 +63,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
   "POST /partnership-company-number" when {
       "redirect to Confirm Partnership page" in {
         stubAuth(OK, successfulAuthResponse())
-        stubgetCompanyName(testCompanyNumber, LimitedPartnership)
+        stubGetCompanyName(testCompanyNumber, LimitedPartnership)
 
         val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
