@@ -20,7 +20,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
@@ -40,7 +40,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
   "POST /company-number" should {
     "return a redirect" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
-      stubgetCompanyName(testCompanyNumber, NonPartnershipEntity)
+      stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
       val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 

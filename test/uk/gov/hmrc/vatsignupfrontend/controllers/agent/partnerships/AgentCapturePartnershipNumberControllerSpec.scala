@@ -140,7 +140,6 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
       "get company name returned not found" should {
         "throw an InternalServerException" in {
           mockAuthAdminRole()
-          // Redirect to error page
 
           mockGetCompanyNameNotFound(testCompanyNumber)
 
@@ -148,7 +147,8 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
 
           val result = TestCaptureCompanyNumberController.submit(request)
 
-          intercept[InternalServerException](await(result))
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CouldNotFindPartnershipController.show().url)
         }
       }
 

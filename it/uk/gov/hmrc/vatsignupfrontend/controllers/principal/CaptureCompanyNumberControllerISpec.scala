@@ -20,7 +20,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubgetCompanyName
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
@@ -41,7 +41,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
     "the company name feature switch is enabled" should {
       "redirect to confirm company name" in {
         stubAuth(OK, successfulAuthResponse())
-        stubgetCompanyName(testCompanyNumber, NonPartnershipEntity)
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
         val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
