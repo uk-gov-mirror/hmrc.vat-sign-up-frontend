@@ -23,19 +23,19 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_partnership
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_limited_partnership
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 
 import scala.concurrent.Future
 
 @Singleton
-class CouldNotConfirmPartnershipController @Inject()(val controllerComponents: ControllerComponents)
+class CouldNotConfirmLimitedPartnershipController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(LimitedPartnershipJourney)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_partnership(routes.CouldNotConfirmPartnershipController.submit())))
+        Ok(could_not_confirm_limited_partnership(routes.CouldNotConfirmLimitedPartnershipController.submit())))
     }
   }
 

@@ -75,7 +75,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
       }
     }
     "companies house returned none partnership entity" should {
-      "redirect to Could not Confirm Partnership page" in {
+      "redirect to Could not Confirm limited Partnership page" in {
         stubAuth(OK, successfulAuthResponse())
         stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
@@ -83,7 +83,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CouldNotConfirmPartnershipController.show().url)
+          redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
         )
       }
     }

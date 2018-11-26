@@ -22,19 +22,19 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalR
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class CouldNotConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
+class CouldNotConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(LimitedPartnershipJourney)
   }
 
-  "GET /error/could-not-confirm-company" should {
+  "GET /error/could-not-confirm-limited-partnership" should {
     "return an OK" in {
 
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/error/could-not-confirm-company")
+      val res = get("/error/could-not-confirm-limited-partnership")
 
       res should have(httpStatus(OK))
     }
@@ -43,18 +43,18 @@ class CouldNotConfirmPartnershipControllerISpec extends ComponentSpecBase with C
 
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/error/could-not-confirm-company")
+      val res = get("/error/could-not-confirm-limited-partnership")
 
       res should have(httpStatus(NOT_FOUND))
     }
   }
 
-  "POST /error/could-not-confirm-company" should {
+  "POST /error/could-not-confirm-limited-partnership" should {
     "redirect to the capture company number page" in {
 
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/error/could-not-confirm-company")()
+      val res = post("/error/could-not-confirm-limited-partnership")()
 
       res should have
       (httpStatus(SEE_OTHER),
@@ -66,7 +66,7 @@ class CouldNotConfirmPartnershipControllerISpec extends ComponentSpecBase with C
 
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/error/could-not-confirm-company")()
+      val res = post("/error/could-not-confirm-limited-partnership")()
 
       res should have(httpStatus(NOT_FOUND))
     }

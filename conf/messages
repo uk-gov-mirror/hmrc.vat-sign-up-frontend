@@ -617,10 +617,10 @@ principal.confirm_partnership.title                                    = Confirm
 principal.confirm_partnership.heading                                  = Confirm the partnership
 principal.confirm_partnership.link                                     = Change the partnership
 
-# Could not confirm partnership
-principal.could_not_confirm_partnership.title                          = We could not confirm your company
-principal.could_not_confirm_partnership.heading                        = We could not confirm your company
-principal.could_not_confirm_partnership.line_1                         = The information you provided does not match the details we have for your company.
+# Could not confirm limited partnership
+principal.could_not_confirm_limited_partnership.title                  = We could not confirm your Limited Partnership
+principal.could_not_confirm_limited_partnership.heading                = We could not confirm your Limited Partnership
+principal.could_not_confirm_limited_partnership.line_1                 = The information you provided is not for a Limited Partnership.
 
 ## Partnership Company Number Not Found page
 principal.partnership_company_name_not_found.title                     = We could not confirm your Limited Partnership''s company number
