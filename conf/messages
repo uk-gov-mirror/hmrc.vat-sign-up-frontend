@@ -183,6 +183,11 @@ agent.company_name_not_found.title                                     = We coul
 agent.company_name_not_found.heading                                   = We could not confirm your client''s company
 agent.company_name_not_found.line_1                                    = The company number you entered is not on our system.
 
+## Agent Limited Partnership Company Name Not Found page
+agent.partnerships.company_name_not_found_lp.title                     = We could not confirm your client''s Limited Partnership
+agent.partnerships.company_name_not_found_lp.heading                   = We could not confirm your client''s Limited Partnership
+agent.partnerships.company_name_not_found_lp.line_1                    = The information you provided is not for a Limited Partnership.
+
 ## Agent Confirm Vat Number page
 agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
 agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
@@ -617,10 +622,10 @@ principal.confirm_partnership.title                                    = Confirm
 principal.confirm_partnership.heading                                  = Confirm the partnership
 principal.confirm_partnership.link                                     = Change the partnership
 
-# Could not confirm partnership
-principal.could_not_confirm_partnership.title                          = We could not confirm your company
-principal.could_not_confirm_partnership.heading                        = We could not confirm your company
-principal.could_not_confirm_partnership.line_1                         = The information you provided does not match the details we have for your company.
+# Could not confirm limited partnership
+principal.could_not_confirm_limited_partnership.title                  = We could not confirm your Limited Partnership
+principal.could_not_confirm_limited_partnership.heading                = We could not confirm your Limited Partnership
+principal.could_not_confirm_limited_partnership.line_1                 = The information you provided is not for a Limited Partnership.
 
 ## Partnership Company Number Not Found page
 principal.partnership_company_name_not_found.title                     = We could not confirm your Limited Partnership''s company number

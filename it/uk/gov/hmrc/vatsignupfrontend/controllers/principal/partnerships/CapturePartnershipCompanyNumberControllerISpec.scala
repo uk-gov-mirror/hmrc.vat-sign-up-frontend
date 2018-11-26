@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedPartnership, NonPartnershipEntity}
 
 class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -48,19 +48,20 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
       )
     }
 
-      "return an NOT FOUND" in {
-        disable(LimitedPartnershipJourney)
-        stubAuth(OK, successfulAuthResponse())
+    "return an NOT FOUND" in {
+      disable(LimitedPartnershipJourney)
+      stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/partnership-company-number")
+      val res = get("/partnership-company-number")
 
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
+    }
   }
 
   "POST /partnership-company-number" when {
+    "companies house returned limited partnership" should {
       "redirect to Confirm Partnership page" in {
         stubAuth(OK, successfulAuthResponse())
         stubGetCompanyName(testCompanyNumber, LimitedPartnership)
@@ -73,5 +74,19 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
         )
       }
     }
+    "companies house returned none partnership entity" should {
+      "redirect to Could not Confirm limited Partnership page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
+
+        val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+        )
+      }
+    }
+  }
 
 }

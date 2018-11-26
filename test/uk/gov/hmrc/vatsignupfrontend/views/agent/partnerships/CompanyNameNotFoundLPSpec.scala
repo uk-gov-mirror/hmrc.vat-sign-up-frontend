@@ -14,47 +14,48 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
+package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
 
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCouldNotConfirmPartnership => messages, Base => base}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCompanyNameNotFoundLP => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CouldNotConfirmPartnershipSpec extends ViewSpec {
+class CompanyNameNotFoundLPSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_partnership(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.company_name_not_found_lp(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Could not confirm partnership view" should {
+  "The Agent Company Name Not Found for Limited Partnerships view" should {
 
     val testPage = TestView(
-      name = "Could not confirm partnership View",
+      name = "Agent Company Name Not Found LP view",
       title = messages.title,
       heading = messages.heading,
       page = page,
       haveSignOutInBanner = false
     )
 
-    testPage.shouldHavePara(
+    testPage.shouldHaveParaSeq(
       messages.line1
     )
 
-    testPage.shouldHaveSubmitButton(base.tryAgain)
+    testPage.shouldHaveTryAgainButton()
 
-    testPage.shouldHaveSignOutLink(isAgent = false)
+    testPage.shouldHaveSignOutLink(isAgent = true)
+
   }
 
 }

@@ -33,7 +33,7 @@ class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneApp
     enable(LimitedPartnershipJourney)
   }
 
-  object TestCouldNotConfirmPartnershipController extends CouldNotConfirmPartnershipController(mockControllerComponents)
+  object TestCouldNotConfirmLimitedPartnershipController$ extends CouldNotConfirmLimitedPartnershipController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/error/could-not-confirm-company")
 
@@ -45,7 +45,7 @@ class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneApp
       mockAuthAdminRole()
       val request = testGetRequest
 
-      val result = TestCouldNotConfirmPartnershipController.show(request)
+      val result = TestCouldNotConfirmLimitedPartnershipController$.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
@@ -56,7 +56,7 @@ class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneApp
     "redirect to capture entity type page" in {
       mockAuthAdminRole()
 
-      val result = TestCouldNotConfirmPartnershipController.submit(testPostRequest)
+      val result = TestCouldNotConfirmLimitedPartnershipController$.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
     }

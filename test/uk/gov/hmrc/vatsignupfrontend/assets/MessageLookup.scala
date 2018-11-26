@@ -646,10 +646,10 @@ object MessageLookup {
     val line1 = "The information you provided does not match or is incorrect."
   }
 
-  object PrincipalCouldNotConfirmPartnership {
-    val title = "We could not confirm your company"
+  object PrincipalCouldNotConfirmLimitedPartnership {
+    val title = "We could not confirm your Limited Partnership"
     val heading: String = title
-    val line1 = "The information you provided does not match the details we have for your company."
+    val line1 = "The information you provided is not for a Limited Partnership."
   }
 
   object SignUpAfterThisDate {
