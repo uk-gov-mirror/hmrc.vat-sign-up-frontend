@@ -691,6 +691,12 @@ object MessageLookup {
     val line1 = s"If you are not sure, $link."
   }
 
+  object AgentCompanyNameNotFoundLP {
+    val title = "We could not confirm your client's Limited Partnership"
+    val heading: String = title
+    val line1 = "The information you provided is not for a Limited Partnership."
+  }
+
   object AgentCapturePartnershipUtr {
     val title = "What is your client's Unique Taxpayer Reference (UTR)?"
     val heading: String = title
