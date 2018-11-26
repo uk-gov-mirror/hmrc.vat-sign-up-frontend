@@ -153,7 +153,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
       }
     }
     "get company name succeeds when non partnership entity entered" should {
-      "throw an InternalServerException" in {
+      "redirect to Could Not Confirm Partnership page" in {
         mockAuthAdminRole()
 
         mockGetCompanyNameSuccess(testCompanyNumber, NonPartnershipEntity)
@@ -162,7 +162,8 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
 
         val result = TestCaptureCompanyNumberController.submit(request)
 
-        intercept[InternalServerException](await(result))
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
       }
     }
     "get company name fails" should {
