@@ -20,28 +20,28 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCouldNotConfirmPartnership => messages, Base => base}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCouldNotConfirmLimitedPartnership => messages, Base => base}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CouldNotConfirmPartnershipSpec extends ViewSpec {
+class CouldNotConfirmLimitedPartnershipSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_partnership(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_limited_partnership(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Could not confirm partnership view" should {
+  "The Could not confirm limited partnership view" should {
 
     val testPage = TestView(
-      name = "Could not confirm partnership View",
+      name = "Could not confirm limited partnership View",
       title = messages.title,
       heading = messages.heading,
       page = page,

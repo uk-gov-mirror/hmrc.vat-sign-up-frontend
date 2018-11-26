@@ -95,7 +95,7 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
                       SessionKeys.companyNameKey -> companyName
                     ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
                 case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
-                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                  Redirect(routes.CouldNotConfirmLimitedPartnershipController.show())
                 case Left(CompanyNumberNotFound) =>
                   Redirect(routes.CouldNotConfirmCompanyController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>
