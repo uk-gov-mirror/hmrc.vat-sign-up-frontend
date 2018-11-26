@@ -20,28 +20,28 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCouldNotConfirmPartnershipCompany => messages, Base => base}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCouldNotConfirmPartnership => messages, Base => base}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CouldNotConfirmCompanySpec extends ViewSpec {
+class CouldNotConfirmPartnershipSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_company(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_partnership(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Could not confirm business view" should {
+  "The Could not confirm partnership view" should {
 
     val testPage = TestView(
-      name = "Could not confirm business View",
+      name = "Could not confirm partnership View",
       title = messages.title,
       heading = messages.heading,
       page = page,
@@ -51,8 +51,6 @@ class CouldNotConfirmCompanySpec extends ViewSpec {
     testPage.shouldHavePara(
       messages.line1
     )
-
-    testPage.shouldHaveForm("Could not find business Form")(actionCall = testCall)
 
     testPage.shouldHaveSubmitButton(base.tryAgain)
 
