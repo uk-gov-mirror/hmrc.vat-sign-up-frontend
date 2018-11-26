@@ -223,6 +223,12 @@ object MessageLookup {
     val line1 = "The company number you entered is not on our system."
   }
 
+  object AgentCompanyNameNotFoundLP {
+    val title = "We could not confirm your client's Limited Partnership"
+    val heading: String = title
+    val line1 = "The information you provided is not for a Limited Partnership."
+  }
+
   object ClientVerifiedEmail {
     val title = "You've verified your email address"
     val heading: String = title
