@@ -640,6 +640,12 @@ object MessageLookup {
     val line1 = "The company number is not on our system."
   }
 
+  object PrincipalCouldNotConfirmPartnershipKnownFacts {
+    val title = "We could not confirm your Partnership"
+    val heading: String = title
+    val line1 = "The information you provided does not match or is incorrect."
+  }
+
   object PrincipalCouldNotConfirmPartnership {
     val title = "We could not confirm your company"
     val heading: String = title
