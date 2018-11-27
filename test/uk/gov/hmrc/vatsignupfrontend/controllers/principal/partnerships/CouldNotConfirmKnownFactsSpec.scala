@@ -29,8 +29,14 @@ class CouldNotConfirmKnownFactsSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(LimitedPartnershipJourney)
     enable(GeneralPartnershipJourney)
+    enable(LimitedPartnershipJourney)
+  }
+
+  override def afterEach(): Unit = {
+    super.afterEach()
+    disable(GeneralPartnershipJourney)
+    disable(LimitedPartnershipJourney)
   }
 
   object TestCouldNotConfirmKnownFactsController extends CouldNotConfirmKnownFactsController(mockControllerComponents)
