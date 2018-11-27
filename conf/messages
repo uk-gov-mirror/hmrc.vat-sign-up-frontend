@@ -632,6 +632,11 @@ principal.partnership_company_name_not_found.title                     = We coul
 principal.partnership_company_name_not_found.heading                   = We could not confirm your Limited Partnership''s company number
 principal.partnership_company_name_not_found.line_1                    = The company number is not on our system.
 
+## Partnership Known facts error page
+principal.partnership_known_facts_incorrect.title                     = We could not confirm your Partnership
+principal.partnership_known_facts_incorrect.heading                   = We could not confirm your Partnership
+principal.partnership_known_facts_incorrect.line_1                    = The information you provided does not match or is incorrect.
+
 # Check your answers page Partnership
 agent.check-your-answers.title                                         = Confirm your client''s details
 agent.check-your-answers.heading                                       = Confirm your client''s details
