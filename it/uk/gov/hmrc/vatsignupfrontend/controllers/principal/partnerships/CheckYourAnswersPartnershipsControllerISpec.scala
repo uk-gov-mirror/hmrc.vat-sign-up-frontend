@@ -160,6 +160,33 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       }
     }
 
+    "store partnership information known facts mismatch" should {
+      "redirect to known facts error page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStorePartnershipInformation(
+          vatNumber = testVatNumber,
+          partnershipEntityType = generalPartnershipType,
+          sautr = testSaUtr,
+          companyNumber = None,
+          postCode = Some(testBusinessPostCode)
+        )(FORBIDDEN)
+
+        val res = post("/check-your-answers-partnership",
+          Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.partnershipSautrKey -> testSaUtr,
+            SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CouldNotConfirmKnownFactsController.show().url)
+        )
+      }
+    }
+
   }
 
 }
