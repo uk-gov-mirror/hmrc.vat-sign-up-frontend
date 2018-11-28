@@ -179,6 +179,46 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
 
         }
       }
+      "store partnership info returned KnownFactsMismatchFailure" should {
+        "go to Capture Email Page" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          mockStorePartnershipInformation(
+            testVatNumber,
+            testSaUtr,
+            Some(testBusinessPostcode)
+          )(
+            Future.successful(Left(StorePartnershipKnownFactsFailure))
+          )
+          val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+
+        }
+      }
+
+      "store partnership info returned KnownFactsMismatchFailure for a limited partnership" should {
+        "go to Capture Email Page" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          mockStorePartnershipInformation(
+            testVatNumber,
+            testSaUtr,
+            testCompanyNumber,
+            PartnershipEntityType.LimitedPartnership,
+            Some(testBusinessPostcode)
+          )(
+            Future.successful(Left(StorePartnershipKnownFactsFailure))
+          )
+          val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
+            partnershipEntityType = Some(PartnershipEntityType.LimitedPartnership),
+            companyNumber = Some(testCompanyNumber)
+          ))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+
+        }
+      }
       "store partnership info returned StorePartnershipInformationFailureResponse" should {
         "throw Internal Server Exception" in {
           mockAuthRetrieveAgentEnrolment()

@@ -64,7 +64,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
   }
 
   "POST /client/partnership-check-your-answers" when {
-    "store vat is successful" should {
+    "store partnership is successful" should {
       "redirect to capture email" in {
         enable(GeneralPartnershipJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -93,7 +93,36 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
       }
     }
 
-    "store vat is successful for a limited partnership" should {
+    "store partnership returned forbidden" should {
+      "redirect to capture email" in {
+        enable(GeneralPartnershipJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStorePartnershipInformation(
+          testVatNumber,
+          testSaUtr,
+          PartnershipEntityType.GeneralPartnership,
+          None,
+          Some(testBusinessPostCode)
+        )(
+          FORBIDDEN
+        )
+
+        val res = post("/client/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.partnershipSautrKey -> testSaUtr,
+            SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CouldNotConfirmPartnershipController.show().url)
+        )
+      }
+    }
+
+    "store partnership is successful for a limited partnership" should {
       "redirect to capture email" in {
         enable(LimitedPartnershipJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
