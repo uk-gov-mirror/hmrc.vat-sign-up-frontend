@@ -28,7 +28,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CitizenDetailsService @Inject()(val citizenDetailsConnector: CitizenDetailsConnector) {
 
-  def getCitizenDetails(sautr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CitizenDetailsResponse] =
-    citizenDetailsConnector.getCitizenDetails(sautr)
+  def getCitizenDetailsBySautr(sautr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CitizenDetailsResponse] =
+    citizenDetailsConnector.getCitizenDetailsBySautr(sautr)
+
+  def getCitizenDetailsByNino(nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CitizenDetailsResponse] =
+    citizenDetailsConnector.getCitizenDetailsByNino(nino)
 
 }

@@ -93,7 +93,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
   private def soleTraderCheckIRSA(enrolments: Enrolments)(implicit request: Request[_]): Future[Result] =
     enrolments.selfAssessmentUniqueTaxReferenceNumber match {
       case None => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
-      case Some(utr) => citizenDetailsService.getCitizenDetails(utr) map {
+      case Some(utr) => citizenDetailsService.getCitizenDetailsBySautr(utr) map {
         case Right(CitizenDetailsRetrievalSuccess(detailsModel)) =>
           Redirect(routes.ConfirmYourRetrievedUserDetailsController.show()).addingToSession(SessionKeys.userDetailsKey, detailsModel)
         case Left(reason) =>

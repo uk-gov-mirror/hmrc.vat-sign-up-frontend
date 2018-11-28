@@ -65,7 +65,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "calls to CID is successful" should {
             "go to Confirm your retrieved details with sole trader and user details stored in session" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-              mockCitizenDetailsSuccess(testSaUtr, testUserDetails)
+              mockCitizenDetailsSuccessBySautr(testSaUtr, testUserDetails)
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
@@ -80,7 +80,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "CID returns NoCitizenRecord" should {
             "throw Internal server exception" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-              mockCitizenDetailsFailure(testSaUtr)
+              mockCitizenDetailsFailureBySautr(testSaUtr)
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
@@ -92,7 +92,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "CID returns MoreThanOneCitizenMatched" should {
             "throw Internal server exception" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-              mockCitizenDetailsFailure(testSaUtr)
+              mockCitizenDetailsFailureBySautr(testSaUtr)
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
@@ -104,7 +104,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "calls to CID fails" should {
             "throw Internal server exception" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = true)
-              mockCitizenDetailsFailure(testSaUtr)
+              mockCitizenDetailsFailureBySautr(testSaUtr)
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 

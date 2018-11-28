@@ -30,7 +30,10 @@ import scala.concurrent.Future
 class CitizenDetailsConnector @Inject()(val http: HttpClient,
                                         val applicationConfig: AppConfig) {
 
-  def getCitizenDetails(sautr: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] =
-    http.GET[CitizenDetailsResponse](applicationConfig.getCitizenDetailsUrl(sautr))
+  def getCitizenDetailsBySautr(sautr: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] =
+    http.GET[CitizenDetailsResponse](applicationConfig.getCitizenDetailsUrlBySautr(sautr))
+
+  def getCitizenDetailsByNino(nino: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] =
+    http.GET[CitizenDetailsResponse](applicationConfig.getCitizenDetailsUrlByNino(nino))
 
 }

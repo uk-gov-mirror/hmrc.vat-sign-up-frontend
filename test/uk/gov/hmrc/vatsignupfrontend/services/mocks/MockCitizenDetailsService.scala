@@ -38,23 +38,43 @@ trait MockCitizenDetailsService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockCitizenDetailsService)
   }
 
-  private def mockCitizenDetails(sautr: String)(returnValue: Future[CitizenDetailsResponse]): Unit = {
-    when(mockCitizenDetailsService.getCitizenDetails(
+  private def mockCitizenDetailsBySautr(sautr: String)(returnValue: Future[CitizenDetailsResponse]): Unit = {
+    when(mockCitizenDetailsService.getCitizenDetailsBySautr(
       ArgumentMatchers.eq(sautr)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockCitizenDetailsSuccess(sautr: String, userDetails: UserDetailsModel): Unit =
-    mockCitizenDetails(sautr)(Future.successful(Right(CitizenDetailsRetrievalSuccess(userDetails))))
+  def mockCitizenDetailsSuccessBySautr(sautr: String, userDetails: UserDetailsModel): Unit =
+    mockCitizenDetailsBySautr(sautr)(Future.successful(Right(CitizenDetailsRetrievalSuccess(userDetails))))
 
-  def mockCitizenDetailsNotFound(sautr: String): Unit =
-    mockCitizenDetails(sautr)(Future.successful(Left(NoCitizenRecord)))
+  def mockCitizenDetailsNotFoundBySautr(sautr: String): Unit =
+    mockCitizenDetailsBySautr(sautr)(Future.successful(Left(NoCitizenRecord)))
 
-  def mockCitizenDetailsMoreThanOne(sautr: String): Unit =
-    mockCitizenDetails(sautr)(Future.successful(Left(MoreThanOneCitizenMatched)))
+  def mockCitizenDetailsMoreThanOneBySautr(sautr: String): Unit =
+    mockCitizenDetailsBySautr(sautr)(Future.successful(Left(MoreThanOneCitizenMatched)))
 
-  def mockCitizenDetailsFailure(sautr: String): Unit =
-    mockCitizenDetails(sautr)(Future.successful(Left(CitizenDetailsRetrievalFailureResponse(500))))
+  def mockCitizenDetailsFailureBySautr(sautr: String): Unit =
+    mockCitizenDetailsBySautr(sautr)(Future.successful(Left(CitizenDetailsRetrievalFailureResponse(500))))
+
+
+  private def mockCitizenDetailsByNino(nino: String)(returnValue: Future[CitizenDetailsResponse]): Unit = {
+    when(mockCitizenDetailsService.getCitizenDetailsBySautr(
+      ArgumentMatchers.eq(nino)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .thenReturn(returnValue)
+  }
+
+  def mockCitizenDetailsSuccessByNino(nino: String, userDetails: UserDetailsModel): Unit =
+    mockCitizenDetailsBySautr(nino)(Future.successful(Right(CitizenDetailsRetrievalSuccess(userDetails))))
+
+  def mockCitizenDetailsNotFoundByNino(nino: String): Unit =
+    mockCitizenDetailsBySautr(nino)(Future.successful(Left(NoCitizenRecord)))
+
+  def mockCitizenDetailsMoreThanOneByNino(nino: String): Unit =
+    mockCitizenDetailsBySautr(nino)(Future.successful(Left(MoreThanOneCitizenMatched)))
+
+  def mockCitizenDetailsFailureByNino(nino: String): Unit =
+    mockCitizenDetailsBySautr(nino)(Future.successful(Left(CitizenDetailsRetrievalFailureResponse(500))))
 
 }
