@@ -245,7 +245,24 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
           }
         }
       }
-
+      " known facts mismatch failure on Store Partnership information" should {
+        "redirect to known facts error page" in {
+          mockAuthAdminRole()
+          mockStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            sautr = testSaUtr,
+            companyNumber = testCompanyNumber,
+            partnershipEntity = PartnershipEntityType.LimitedPartnership,
+            postCode = Some(testBusinessPostcode)
+          )(Left(StorePartnershipKnownFactsFailure))
+           val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+             entityType = Some(PartnershipEntityType.LimitedPartnership),
+             crn = Some(testCompanyNumber)
+           )))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+        }
+      }
     }
     "vat number is missing" should {
       "go to resolve vat number page" in {

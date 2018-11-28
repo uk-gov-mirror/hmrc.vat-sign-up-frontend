@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
-import play.api.http.Status.NO_CONTENT
+import play.api.http.Status.{NO_CONTENT,FORBIDDEN}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object StorePartnershipInformationHttpParser {
@@ -26,6 +26,7 @@ object StorePartnershipInformationHttpParser {
     override def read(method: String, url: String, response: HttpResponse): StorePartnershipInformationResponse =
       response.status match {
         case NO_CONTENT => Right(StorePartnershipInformationSuccess)
+        case FORBIDDEN => Left(StorePartnershipKnownFactsFailure)
         case status => Left(StorePartnershipInformationFailureResponse(status))
       }
   }
@@ -33,6 +34,8 @@ object StorePartnershipInformationHttpParser {
   case object StorePartnershipInformationSuccess
 
   sealed trait StorePartnershipInformationFailure
+
+  case object StorePartnershipKnownFactsFailure extends StorePartnershipInformationFailure
 
   case class StorePartnershipInformationFailureResponse(status: Int) extends StorePartnershipInformationFailure
 
