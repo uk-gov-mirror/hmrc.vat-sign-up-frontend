@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.LimitedPartnership
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedPartnership, NonPartnershipEntity}
 
 class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -61,28 +61,46 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
   }
 
   "POST /partnership-company-number" when {
-    "redirect to Confirm Partnership page" in {
-      stubAuth(OK, successfulAuthResponse())
-      stubGetCompanyName(testCompanyNumber, LimitedPartnership)
+    "get company name returns LimitedPartnership" should {
+      "redirect to Confirm Partnership page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, LimitedPartnership)
 
-      val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+        val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmPartnershipController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmPartnershipController.show().url)
+        )
+      }
     }
 
-    "redirect to Could Not Find Partnership page" in {
-      stubAuth(OK, successfulAuthResponse())
-      stubGetCompanyNameCompanyNotFound(testCompanyNumber)
+    "get company name returns NonPartnershipEntity" should {
+      "redirect to Not a Limited Partnership page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
-      val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+        val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CouldNotFindPartnershipController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.NotALimitedPartnershipController.show().url)
+        )
+      }
+    }
+
+    "get company name returns NOT_FOUND" should {
+      "redirect to Could Not Find Partnership page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyNameCompanyNotFound(testCompanyNumber)
+
+        val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CouldNotFindPartnershipController.show().url)
+        )
+      }
     }
   }
 

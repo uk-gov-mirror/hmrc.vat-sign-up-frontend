@@ -95,7 +95,7 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
                       SessionKeys.companyNameKey -> companyName
                     ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
                 case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
-                  throw new InternalServerException("A none partnership company type returned from companies house")
+                  Redirect(routes.NotALimitedPartnershipController.show())
                 case Left(CompanyNumberNotFound) =>
                   Redirect(routes.CouldNotFindPartnershipController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>
