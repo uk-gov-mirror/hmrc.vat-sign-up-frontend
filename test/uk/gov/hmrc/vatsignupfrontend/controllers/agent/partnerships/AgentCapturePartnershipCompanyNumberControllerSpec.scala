@@ -31,7 +31,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
-class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
 
     override def beforeEach(): Unit = {
@@ -44,7 +44,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
       enable(LimitedPartnershipJourney)
     }
 
-    object TestCaptureCompanyNumberController extends AgentCapturePartnershipCompanyNumberController(
+    object TestAgentCapturePartnershipCompanyNumberController extends AgentCapturePartnershipCompanyNumberController(
       mockControllerComponents,
       mockGetCompanyNameService
     )
@@ -58,7 +58,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
       "go to the Capture Partnership Company Number page" in {
         mockAuthAdminRole()
 
-        val result = TestCaptureCompanyNumberController.show(testGetRequest)
+        val result = TestAgentCapturePartnershipCompanyNumberController.show(testGetRequest)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -74,7 +74,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
 
           val request = testPostRequest(testCompanyNumber)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ConfirmPartnershipController.show().url)
           session(result) get SessionKeys.partnershipTypeKey should contain(testPartnershipType)
@@ -83,11 +83,26 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
         }
       }
 
+      "get company name returned a NonPartnershipEntity" should {
+        "Redirect to Not a limited Partnership page" in {
+          mockAuthAdminRole()
+
+          mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.NonPartnershipEntity)
+
+          val request = testPostRequest(testCompanyNumber)
+
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.NotALimitedPartnershipController.show().url)
+        }
+      }
+
       "form unsuccessfully submitted" should {
         "reload the page with errors" in {
           mockAuthAdminRole()
 
-          val result = TestCaptureCompanyNumberController.submit(testPostRequest("123456789"))
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(testPostRequest("123456789"))
           status(result) shouldBe Status.BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
@@ -102,7 +117,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
           val testCrn = "ZZ12345"
           val request = testPostRequest(testCrn)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
           intercept[InternalServerException](await(result))
         }
@@ -116,7 +131,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
           val testCrn = "123A456 A"
           val request = testPostRequest(testCrn)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
           intercept[InternalServerException](await(result))
         }
@@ -130,7 +145,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
           val testCrn = "0"
           val request = testPostRequest(testCrn)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
           intercept[InternalServerException](await(result))
 
@@ -145,7 +160,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
 
           val request = testPostRequest(testCompanyNumber)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CouldNotFindPartnershipController.show().url)
@@ -160,7 +175,7 @@ class AgentCapturePartnershipNumberControllerSpec extends UnitSpec with GuiceOne
 
           val request = testPostRequest(testCompanyNumber)
 
-          val result = TestCaptureCompanyNumberController.submit(request)
+          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
           intercept[InternalServerException](await(result))
         }
