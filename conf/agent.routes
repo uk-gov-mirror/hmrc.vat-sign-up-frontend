@@ -125,6 +125,10 @@ POST        /error/company-number-not-found             uk.gov.hmrc.vatsignupfro
 GET         /error/could-not-confirm-partnership        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.show
 POST        /error/could-not-confirm-partnership        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.submit
 
+# Not a Limited Partnership
+GET         /error/not-a-limited-partnership            uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.show
+POST        /error/not-a-limited-partnership            uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.submit
+
 # Capture Partnership Company Number
 GET         /partnership-company-number                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.show
 POST        /partnership-company-number                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.submit
