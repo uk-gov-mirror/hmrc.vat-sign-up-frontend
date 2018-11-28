@@ -302,7 +302,12 @@ object MessageLookup {
     val title = "We could not confirm your client's company number for their Limited Partnership"
     val heading: String = title
     val line1 = "The company number is not on our system."
-    val tryAgain = "Try again"
+  }
+
+  object AgentCouldNotConfirmPartnership {
+    val title = "We could not confirm your client's Partnership"
+    val heading: String = title
+    val line1 = "The information you provided does not match or is incorrect."
   }
 
   object VatRegistrationDate {

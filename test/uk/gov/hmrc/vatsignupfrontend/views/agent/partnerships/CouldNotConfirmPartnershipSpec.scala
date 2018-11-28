@@ -20,28 +20,28 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCouldNotFindPartnership => messages, Base => base}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCouldNotConfirmPartnership => messages, Base => base}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CouldNotFindPartnershipSpec extends ViewSpec {
+class CouldNotConfirmPartnershipSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.could_not_find_partnership(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.could_not_confirm_partnership(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The agent could not find partnership view" should {
+  "The agent could not confirm partnership view" should {
 
     val testPage = TestView(
-      name = "Agent Could Not Find Partnership View",
+      name = "Agent Could Not Confirm Partnership View",
       title = messages.title,
       heading = messages.heading,
       page = page,
@@ -52,7 +52,7 @@ class CouldNotFindPartnershipSpec extends ViewSpec {
       messages.line1
     )
 
-    testPage.shouldHaveForm("Agent Could Not Find Partnership Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Agent Could Not Confirm Partnership Form")(actionCall = testCall)
 
     testPage.shouldHaveSubmitButton(base.tryAgain)
 
