@@ -104,7 +104,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
 
-  def getCitizenDetailsUrl(sautr: String): String = s"$citizenDetailsUrl/citizen-details/sautr/$sautr/"
+  def getCitizenDetailsUrlBySautr(sautr: String): String = s"$citizenDetailsUrl/citizen-details/sautr/$sautr/"
+  
+  def getCitizenDetailsUrlByNino(nino: String): String = s"$citizenDetailsUrl/citizen-details/nino/$nino/"
 
   lazy val btaUrl: String = loadConfig("bta.url")
 
