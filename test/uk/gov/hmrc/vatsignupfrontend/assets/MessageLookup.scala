@@ -268,7 +268,7 @@ object MessageLookup {
 
     object Section1 {
       val heading = "What happens next"
-      val line1 = "We will let you know when you can report your client's VAT through compatible software. This usually takes 24 hours."
+      val line1 = "We will let you know when you can report your client's VAT through compatible software. This usually takes 72 hours."
       val bullet1 = "Choose your software (opens in a new window or tab). If your client will also use software, it is important they choose a package that can interact with yours."
       val bullet2 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
       val bullet3 = "Use software to record your client's sales and purchases."
@@ -563,7 +563,7 @@ object MessageLookup {
       val heading = "What happens next"
       val line1 = "As this service is currently a pilot, it is only available to some limited companies, sole traders, partnerships and VAT groups."
       val line2 = "We will send you an email to let you know whether you can take part in this trial. You should wait for this email before you choose software."
-      val bullet1 = "We will let you know whether you can take part in this trial, usually within 24 hours."
+      val bullet1 = "We will let you know whether you can take part in this trial, usually within 72 hours."
       val bullet2 = s"${linkText}."
       val bullet3 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
       val bullet4 = "Use software to record your sales and purchases."

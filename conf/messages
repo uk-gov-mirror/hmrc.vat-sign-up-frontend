@@ -306,7 +306,7 @@ agent.terms.line_2                                                     = These t
 agent.confirmation.title                                               = We have received your client''s information
 agent.confirmation.heading                                             = We have received your client''s information
 agent.confirmation.subsection_1.heading                                = What happens next
-agent.confirmation.subsection_1.line_1                                 = We will let you know when you can report your client''s VAT through compatible software. This usually takes 24 hours.
+agent.confirmation.subsection_1.line_1                                 = We will let you know when you can report your client''s VAT through compatible software. This usually takes 72 hours.
 agent.confirmation.subsection_1.bullet_1                               = <a id="softwareOptionsUrl" href="{0}" target="_blank">Choose your software (opens in a new window or tab)</a>. If your client will also use software, it is important they choose a package that can interact with yours.
 agent.confirmation.subsection_1.bullet_2                               = Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details.
 agent.confirmation.subsection_1.bullet_3                               = Use software to record your client''s sales and purchases.
@@ -525,7 +525,7 @@ principal.confirmation.heading                                         = We have
 principal.confirmation.subsection.heading                              = What happens next
 principal.confirmation.subsection.line_1                               = As this service is currently a pilot, it is only available to some limited companies, sole traders, partnerships and VAT groups.
 principal.confirmation.subsection.line_2                               = We will send you an email to let you know whether you can take part in this trial. You should wait for this email before you choose software.
-principal.confirmation.subsection.bullet_1                             = We will let you know whether you can take part in this trial, usually within 24 hours.
+principal.confirmation.subsection.bullet_1                             = We will let you know whether you can take part in this trial, usually within 72 hours.
 principal.confirmation.subsection.bullet_2                             = <a id="softwareOptionsUrl" href="{0}" target="_blank">Choose relevant third party software (opens in a new window or tab)</a>.
 principal.confirmation.subsection.bullet_3                             = Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details.
 principal.confirmation.subsection.bullet_4                             = Use software to record your sales and purchases.
