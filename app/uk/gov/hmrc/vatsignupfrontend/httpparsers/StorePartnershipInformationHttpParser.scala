@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
-import play.api.http.Status.{NO_CONTENT,FORBIDDEN}
+import play.api.http.Status.{NO_CONTENT, FORBIDDEN}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object StorePartnershipInformationHttpParser {

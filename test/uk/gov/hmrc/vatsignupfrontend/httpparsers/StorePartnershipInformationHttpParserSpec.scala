@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
-import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, NOT_FOUND, NO_CONTENT}
+import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, NO_CONTENT}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -33,6 +33,14 @@ class StorePartnershipInformationHttpParserSpec extends UnitSpec {
         val res = StorePartnershipInformationHttpReads.read(testHttpVerb, testUri, httpResponse)
 
         res shouldBe Right(StorePartnershipInformationSuccess)
+      }
+
+      "parse a FORBIDDEN response as an StorePartnershipKnownFactsFailure" in {
+        val httpResponse = HttpResponse(FORBIDDEN)
+
+        val res = StorePartnershipInformationHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(StorePartnershipKnownFactsFailure)
       }
 
       "parse any other response as a StorePartnershipInformationFailureResponse" in {
