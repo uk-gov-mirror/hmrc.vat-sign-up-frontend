@@ -188,9 +188,11 @@ GET         /error/could-not-confirm-limited-partnership        uk.gov.hmrc.vats
 POST        /error/could-not-confirm-limited-partnership        uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmLimitedPartnershipController.submit
 
 # Could not confirm partnership known facts
-GET         /could-not-confirm-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmKnownFactsController.show
-POST        /could-not-confirm-partnership                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmKnownFactsController.submit
+GET         /could-not-confirm-partnership                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmKnownFactsController.show
+POST        /could-not-confirm-partnership                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CouldNotConfirmKnownFactsController.submit
 
 # VAT group resolver
 GET         /vat-group-resolver                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.VatGroupResolverController.resolve
+
+GET         /division-resolver                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.DivisionResolverController.resolve
 

@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.Enrolments
@@ -51,7 +52,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           postAction = routes.CaptureBusinessEntityController.submit(),
           generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney),
           limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney),
-          vatGroupEnabled = isEnabled(VatGroupJourney)
+          vatGroupEnabled = isEnabled(VatGroupJourney),
+          divisionEnabled = isEnabled(DivisionJourney)
         ))
       )
     }
@@ -63,11 +65,12 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         formWithErrors =>
           Future.successful(
             BadRequest(capture_business_entity(
-              formWithErrors,
-              routes.CaptureBusinessEntityController.submit(),
-              isEnabled(GeneralPartnershipJourney),
-              isEnabled(LimitedPartnershipJourney),
-              isEnabled(VatGroupJourney)
+              businessEntityForm = formWithErrors,
+              postAction = routes.CaptureBusinessEntityController.submit(),
+              generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney),
+              limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney),
+              vatGroupEnabled = isEnabled(VatGroupJourney),
+              divisionEnabled = isEnabled(DivisionJourney)
             ))
           ),
         businessEntity => {
@@ -82,6 +85,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(partnerships.routes.CapturePartnershipCompanyNumberController.show()))
             case VatGroup =>
               Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
+            case Division =>
+              Future.successful(Redirect(routes.DivisionResolverController.resolve()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
