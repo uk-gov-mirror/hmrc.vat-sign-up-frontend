@@ -19,28 +19,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.auth.core.Enrolments
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.InternalServerException
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsRetrievalSuccess
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.CitizenDetailsService
-import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents,
-                                                citizenDetailsService: CitizenDetailsService)
+class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
   val validateBusinessEntityForm: Form[BusinessEntity] = businessEntityForm(isAgent = false)
 
@@ -60,7 +53,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
+    authorised() {
       validateBusinessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
@@ -76,7 +69,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         businessEntity => {
           businessEntity match {
             case SoleTrader =>
-              soleTraderCheckIRSA(enrolments)
+              Future.successful(Redirect(soletrader.routes.SoleTraderResolverController.resolve()))
             case LimitedCompany =>
               Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
             case GeneralPartnership =>
@@ -94,16 +87,5 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
       )
     }
   }
-
-  private def soleTraderCheckIRSA(enrolments: Enrolments)(implicit request: Request[_]): Future[Result] =
-    enrolments.selfAssessmentUniqueTaxReferenceNumber match {
-      case None => Future.successful(Redirect(routes.CaptureYourDetailsController.show()))
-      case Some(utr) => citizenDetailsService.getCitizenDetailsBySautr(utr) map {
-        case Right(CitizenDetailsRetrievalSuccess(detailsModel)) =>
-          Redirect(routes.ConfirmYourRetrievedUserDetailsController.show()).addingToSession(SessionKeys.userDetailsKey, detailsModel)
-        case Left(reason) =>
-          throw new InternalServerException(s"calls to CID received unexpected failure $reason")
-      }
-    }
 
 }

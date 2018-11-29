@@ -15,29 +15,42 @@
  */
 
 package uk.gov.hmrc.vatsignupfrontend.models
+import NinoSource._
 
 sealed trait NinoSource {
   def toString: String
+  def isFromEnrolment: Boolean
 }
 
 case object UserEntered extends NinoSource {
-  override def toString: String = "User entered"
+  override def toString: String = UserEnteredKey
+  override def isFromEnrolment: Boolean = false
 }
 
 case object IRSA extends NinoSource {
-  override def toString: String = "IR-SA"
+  override def toString: String = IRSAKey
+  override def isFromEnrolment: Boolean = true
+}
+
+case object AuthProfile extends NinoSource {
+  override def toString: String = AuthProfileKey
+  override def isFromEnrolment: Boolean = true
 }
 
 
 object NinoSource {
-
   val ninoSourceFrontEndKey = "ninoSource"
+
+  val UserEnteredKey = "User entered"
+  val IRSAKey = "IR-SA"
+  val AuthProfileKey = "Auth profile"
 
   import play.api.libs.json._
 
   val reader: Reads[NinoSource] = JsPath.read[String].map {
-    case "User entered" => UserEntered
-    case "IR-SA" => IRSA
+    case UserEnteredKey => UserEntered
+    case IRSAKey => IRSA
+    case AuthProfileKey => AuthProfile
   }
   val writer: Writes[NinoSource] = new Writes[NinoSource] {
     def writes(ninoSource: NinoSource): JsValue =

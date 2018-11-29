@@ -17,12 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.IRSA
+import uk.gov.hmrc.vatsignupfrontend.models.{AuthProfile, IRSA}
 
 class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -51,11 +52,31 @@ class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase w
   }
 
   "POST /confirm-your-details" should {
-    "redirect to agree to receive email page if nino successfully stored" in {
+    "redirect to agree to receive email page if nino successfully stored with a NINO source of IRSA" in {
       stubAuth(OK, successfulAuthResponse(irsaEnrolment))
       stubStoreNinoSuccess(testVatNumber, testUserDetails, IRSA)
 
-      val res = post("/confirm-your-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
+      val res = post("/confirm-your-details", Map(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.userDetailsKey -> testUserDetailsJson,
+        SessionKeys.ninoSourceKey -> Json.toJson(IRSA).toString
+      ))()
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.AgreeCaptureEmailController.show().url)
+      )
+    }
+
+    "redirect to agree to receive email page if nino successfully stored with a NINO source of AuthProfile" in {
+      stubAuth(OK, successfulAuthResponse(irsaEnrolment))
+      stubStoreNinoSuccess(testVatNumber, testUserDetails, AuthProfile)
+
+      val res = post("/confirm-your-details", Map(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.userDetailsKey -> testUserDetailsJson,
+        SessionKeys.ninoSourceKey -> Json.toJson(AuthProfile).toString
+      ))()
 
       res should have(
         httpStatus(SEE_OTHER),
@@ -89,7 +110,11 @@ class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase w
       stubAuth(OK, successfulAuthResponse(irsaEnrolment))
       stubStoreNino(testVatNumber, testUserDetails, IRSA)(BAD_REQUEST)
 
-      val res = post("/confirm-your-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
+      val res = post("/confirm-your-details", Map(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.userDetailsKey -> testUserDetailsJson,
+        SessionKeys.ninoSourceKey -> Json.toJson(IRSA).toString()
+      ))()
 
       res should have(
         httpStatus(INTERNAL_SERVER_ERROR)

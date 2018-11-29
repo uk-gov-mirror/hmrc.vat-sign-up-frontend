@@ -20,12 +20,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.userDetailsKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoVATNumberFailure, StoreNinoFailureResponse}
-import uk.gov.hmrc.vatsignupfrontend.models.{IRSA, UserDetailsModel}
+import uk.gov.hmrc.vatsignupfrontend.models.{IRSA, NinoSource, UserDetailsModel}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_your_user_details
@@ -58,20 +58,22 @@ class ConfirmYourRetrievedUserDetailsController @Inject()(val controllerComponen
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optUserDetails = request.session.getModel[UserDetailsModel](userDetailsKey)
+      val optNinoSource = request.session.getModel[NinoSource](ninoSourceKey)
 
-      (optVatNumber, optUserDetails) match {
-        case (Some(vatNumber), Some(userDetails)) =>
-          storeNinoService.storeNino(vatNumber, userDetails, IRSA) flatMap {
+      (optVatNumber, optUserDetails, optNinoSource) match {
+        case (Some(vatNumber), Some(userDetails), Some(ninoSource)) =>
+          storeNinoService.storeNino(vatNumber, userDetails, ninoSource) flatMap {
             case Right(_) => Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
             case Left(NoVATNumberFailure) =>
               Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))
             case Left(StoreNinoFailureResponse(status)) =>
               Future.failed(new InternalServerException(s"Failure calling store nino: status=$status"))
-            case Left(_) => Future.failed(new InternalServerException(s"Failure calling store nino: failed matching when no matching call required"))
+            case Left(_) =>
+              Future.failed(new InternalServerException(s"Failure calling store nino: failed matching when no matching call required"))
           }
-        case (None, _) =>
+        case (None, _, _) =>
           Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
-        case (_, None) =>
+        case _ =>
           Future.successful(Redirect(routes.CaptureBusinessEntityController.show()))
       }
     }
