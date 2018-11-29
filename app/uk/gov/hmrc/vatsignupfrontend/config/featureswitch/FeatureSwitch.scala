@@ -34,7 +34,8 @@ object FeatureSwitch {
     GeneralPartnershipJourney,
     LimitedPartnershipJourney,
     VatGroupJourney,
-    DivisionJourney
+    DivisionJourney,
+    UnincorporatedAssociationJourney
   )
 
   def apply(str: String): FeatureSwitch =
@@ -90,4 +91,9 @@ case object UnplannedShutter extends FeatureSwitch {
 case object DivisionJourney extends FeatureSwitch {
   override val name: String = s"$prefix.division-journey"
   override val displayText: String = "Enable the division flow"
+}
+
+case object UnincorporatedAssociationJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.unincorporated-association-journey"
+  override val displayText: String = "Enable users to enter unincorporated association flow"
 }
