@@ -138,3 +138,5 @@ GET         /check-your-answers                         uk.gov.hmrc.vatsignupfro
 POST        /check-your-answers                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CheckYourAnswersPartnershipController.submit
 
 GET         /vat-group-resolver                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.VatGroupResolverController.resolve
+
+GET         /division-resolver                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.DivisionResolverController.resolve

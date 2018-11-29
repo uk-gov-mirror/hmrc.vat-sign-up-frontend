@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -26,6 +26,12 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
 
+  override def afterAll(): Unit = {
+    super.afterAll()
+    disable(DivisionJourney)
+    disable(GeneralPartnershipJourney)
+    disable(LimitedPartnershipJourney)
+  }
 
   "GET /business-type" should {
     "return an OK" in {
@@ -103,6 +109,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.VatGroupResolverController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is division" should {
+      "return a SEE_OTHER status and go to division resolver" in {
+        enable(DivisionJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> division)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DivisionResolverController.resolve().url)
         )
       }
     }

@@ -205,6 +205,7 @@ agent.capture_entity_type.generalPartnership                           = General
 agent.capture_entity_type.limitedPartnership                           = Limited partnership (including limited liability partnerships)
 agent.capture_entity_type.limitedCompany                               = Limited company
 agent.capture_entity_type.vatGroup                                     = VAT group
+agent.capture_entity_type.division                                     = Administrative Division
 agent.capture_entity_type.other                                        = Other
 
 ## Client Details ##

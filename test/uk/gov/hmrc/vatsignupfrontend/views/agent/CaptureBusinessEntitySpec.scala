@@ -39,7 +39,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     postAction = testCall,
     generalPartnershipEnabled = true,
     limitedPartnershipEnabled = true,
-    vatGroupEnabled = true)(
+    vatGroupEnabled = true,
+    divisionEnabled = true)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -147,6 +148,21 @@ class CaptureBusinessEntitySpec extends ViewSpec {
           lazy val optionLabel = doc.select("#vat-group")
           "have the id 'vat-group'" in {
             optionLabel.attr("id") shouldEqual "vat-group"
+          }
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'Division'" should {
+        "have the text 'Division'" in {
+          doc.select("label[for=division]").text() shouldEqual messages.radioDivision
+        }
+        "have an input under the label that" should {
+          lazy val optionLabel = doc.select("#division")
+          "have the id 'division'" in {
+            optionLabel.attr("id") shouldEqual "division"
           }
           "be of type radio" in {
             optionLabel.attr("type") shouldEqual "radio"
