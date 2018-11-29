@@ -19,9 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testSaUtr, testUserDetails}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CitizenDetailsStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -38,34 +36,16 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   }
 
   "POST /business-type" when {
-    "the business type is sole trader" when {
+    "the business type is sole trader" should {
+      "return a SEE_OTHER status and go to the Sole Trader resolver" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
 
-      "the user does not have an IRSA enrolment" should {
-        "return a SEE_OTHER status and go to capture your details" in {
-          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
 
-          val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureYourDetailsController.show().url)
-          )
-        }
-
-        "the user has an IRSA enrolment" should {
-          "return a SEE_OTHER status and go to Confirm your retrieved details" in {
-            stubAuth(OK, successfulAuthResponse(vatDecEnrolment, irsaEnrolment))
-            stubGetCitizenDetails(testSaUtr)(OK, testUserDetails)
-
-            val res = post("/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.ConfirmYourRetrievedUserDetailsController.show().url)
-            )
-          }
-        }
-
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(soletrader.routes.SoleTraderResolverController.resolve().url)
+        )
       }
     }
 

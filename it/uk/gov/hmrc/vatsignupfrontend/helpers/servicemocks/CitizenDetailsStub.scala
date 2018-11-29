@@ -20,10 +20,15 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
 
 object CitizenDetailsStub extends WireMockMethods {
-  def uri(sautr: String) = s"/citizen-details/sautr/$sautr/"
+  def sautrUri(sautr: String) = s"/citizen-details/sautr/$sautr/"
+  def ninoUri(nino: String) = s"/citizen-details/nino/$nino/"
 
-  def stubGetCitizenDetails(sautr: String)(status: Int, response: UserDetailsModel): StubMapping =
-    when(method = GET, uri = uri(sautr))
+  def stubGetCitizenDetailsBySautr(sautr: String)(status: Int, response: UserDetailsModel): StubMapping =
+    when(method = GET, uri = sautrUri(sautr))
+      .thenReturn(status = status, body = UserDetailsModel.citizenDetailsWrites.writes(response))
+
+  def stubGetCitizenDetailsByNino(nino: String)(status: Int, response: UserDetailsModel): StubMapping =
+    when(method = GET, uri = ninoUri(nino))
       .thenReturn(status = status, body = UserDetailsModel.citizenDetailsWrites.writes(response))
 
 }

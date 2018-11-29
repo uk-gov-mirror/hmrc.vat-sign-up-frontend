@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -27,10 +28,10 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.IRSA
+import uk.gov.hmrc.vatsignupfrontend.models.{AuthProfile, IRSA}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
 
-class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockStoreNinoService{
+class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockStoreNinoService {
 
   object TestConfirmYourRetrievedUserDetailsController extends ConfirmYourRetrievedUserDetailsController(mockControllerComponents, mockStoreNinoService)
 
@@ -62,12 +63,32 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
   }
 
   "Calling the submit action of the Confirm Your Retrieved User Details controller" should {
-    "redirect to agree to capture emails page when nino is successfully stored" in {
+    "redirect to agree to capture emails page when nino is successfully stored from IRSA" in {
       mockAuthAdminRole()
       mockStoreNinoSuccess(testVatNumber, testUserDetails, IRSA)
 
-      val result = TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
-      (SessionKeys.userDetailsKey -> testUserDetailsJson, SessionKeys.vatNumberKey -> testVatNumber))
+      val result = TestConfirmYourRetrievedUserDetailsController.submit(
+        testPostRequest.withSession(
+          SessionKeys.userDetailsKey -> testUserDetailsJson,
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.ninoSourceKey -> Json.toJson(IRSA).toString()
+        )
+      )
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+    }
+
+    "redirect to agree to capture emails page when nino is successfully stored from Auth Profile" in {
+      mockAuthAdminRole()
+      mockStoreNinoSuccess(testVatNumber, testUserDetails, AuthProfile)
+
+      val result = TestConfirmYourRetrievedUserDetailsController.submit(
+        testPostRequest.withSession(
+          SessionKeys.userDetailsKey -> testUserDetailsJson,
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.ninoSourceKey -> Json.toJson(AuthProfile).toString()
+        )
+      )
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
     }
@@ -79,7 +100,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
         .withSession(SessionKeys.userDetailsKey -> testUserDetailsJson))
 
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve.url)
+      redirectLocation(result) should contain(routes.ResolveVatNumberController.resolve().url)
     }
 
     "redirect to capture business entity page when no user details in session" in {
@@ -97,8 +118,13 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
       mockStoreNinoNoVatStored(testVatNumber, testUserDetails, IRSA)
 
       intercept[InternalServerException] {
-        await(TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
-        (SessionKeys.userDetailsKey -> testUserDetailsJson, SessionKeys.vatNumberKey -> testVatNumber)))
+        await(TestConfirmYourRetrievedUserDetailsController.submit(
+          testPostRequest.withSession(
+            SessionKeys.userDetailsKey -> testUserDetailsJson,
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.ninoSourceKey -> Json.toJson(IRSA).toString()
+          )
+        ))
       }
     }
 
@@ -107,8 +133,13 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
       mockStoreNinoFailure(testVatNumber, testUserDetails, IRSA)
 
       intercept[InternalServerException] {
-        await( TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
-        (SessionKeys.userDetailsKey -> testUserDetailsJson, SessionKeys.vatNumberKey -> testVatNumber)))
+        await(TestConfirmYourRetrievedUserDetailsController.submit(
+          testPostRequest.withSession(
+            SessionKeys.userDetailsKey -> testUserDetailsJson,
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.ninoSourceKey -> Json.toJson(IRSA).toString()
+          )
+        ))
       }
     }
 
@@ -117,8 +148,13 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
       mockStoreNinoNoMatch(testVatNumber, testUserDetails, IRSA)
 
       intercept[InternalServerException] {
-        await( TestConfirmYourRetrievedUserDetailsController.submit(testPostRequest.withSession
-        (SessionKeys.userDetailsKey -> testUserDetailsJson, SessionKeys.vatNumberKey -> testVatNumber)))
+        await(TestConfirmYourRetrievedUserDetailsController.submit(
+          testPostRequest.withSession(
+            SessionKeys.userDetailsKey -> testUserDetailsJson,
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.ninoSourceKey -> Json.toJson(IRSA).toString()
+          )
+        ))
       }
     }
   }

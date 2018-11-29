@@ -194,5 +194,9 @@ POST        /could-not-confirm-partnership                      uk.gov.hmrc.vats
 # VAT group resolver
 GET         /vat-group-resolver                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.VatGroupResolverController.resolve
 
+# Sole trader resolver
+GET         /sole-trader-resolver                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.SoleTraderResolverController.resolve
+
+#Division Resolver
 GET         /division-resolver                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.DivisionResolverController.resolve
 

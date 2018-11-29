@@ -59,22 +59,22 @@ trait MockCitizenDetailsService extends BeforeAndAfterEach with MockitoSugar {
 
 
   private def mockCitizenDetailsByNino(nino: String)(returnValue: Future[CitizenDetailsResponse]): Unit = {
-    when(mockCitizenDetailsService.getCitizenDetailsBySautr(
+    when(mockCitizenDetailsService.getCitizenDetailsByNino(
       ArgumentMatchers.eq(nino)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
   def mockCitizenDetailsSuccessByNino(nino: String, userDetails: UserDetailsModel): Unit =
-    mockCitizenDetailsBySautr(nino)(Future.successful(Right(CitizenDetailsRetrievalSuccess(userDetails))))
+    mockCitizenDetailsByNino(nino)(Future.successful(Right(CitizenDetailsRetrievalSuccess(userDetails))))
 
   def mockCitizenDetailsNotFoundByNino(nino: String): Unit =
-    mockCitizenDetailsBySautr(nino)(Future.successful(Left(NoCitizenRecord)))
+    mockCitizenDetailsByNino(nino)(Future.successful(Left(NoCitizenRecord)))
 
   def mockCitizenDetailsMoreThanOneByNino(nino: String): Unit =
-    mockCitizenDetailsBySautr(nino)(Future.successful(Left(MoreThanOneCitizenMatched)))
+    mockCitizenDetailsByNino(nino)(Future.successful(Left(MoreThanOneCitizenMatched)))
 
   def mockCitizenDetailsFailureByNino(nino: String): Unit =
-    mockCitizenDetailsBySautr(nino)(Future.successful(Left(CitizenDetailsRetrievalFailureResponse(500))))
+    mockCitizenDetailsByNino(nino)(Future.successful(Left(CitizenDetailsRetrievalFailureResponse(500))))
 
 }
