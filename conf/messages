@@ -419,6 +419,7 @@ principal.capture_entity_type.limitedCompany                           = Limited
 principal.capture_entity_type.generalPartnership                       = General partnership
 principal.capture_entity_type.limitedPartnership                       = Limited partnership (including limited liability partnerships)
 principal.capture_entity_type.vatGroup                                 = VAT group
+principal.capture_entity_type.division                                 = Administrative division
 principal.capture_entity_type.other                                    = Other
 
 # Check your answers page
