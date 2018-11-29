@@ -197,6 +197,8 @@ GET         /vat-group-resolver                                 uk.gov.hmrc.vats
 # Sole trader resolver
 GET         /sole-trader-resolver                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.SoleTraderResolverController.resolve
 
-#Division Resolver
+# Division Resolver
 GET         /division-resolver                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.DivisionResolverController.resolve
 
+# Unincorporated Association resolver
+GET         /unincorporated-association-resolver                uk.gov.hmrc.vatsignupfrontend.controllers.principal.UnincorporatedAssociationResolverController.resolve
