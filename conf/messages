@@ -206,6 +206,7 @@ agent.capture_entity_type.limitedPartnership                           = Limited
 agent.capture_entity_type.limitedCompany                               = Limited company
 agent.capture_entity_type.vatGroup                                     = VAT group
 agent.capture_entity_type.division                                     = Administrative Division
+agent.capture_entity_type.unincorporatedAssociation                    = Unincorporated Association
 agent.capture_entity_type.other                                        = Other
 
 ## Client Details ##

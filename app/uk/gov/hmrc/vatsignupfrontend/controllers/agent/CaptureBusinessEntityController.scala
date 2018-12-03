@@ -17,13 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney, VatGroupJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -46,7 +45,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           isEnabled(GeneralPartnershipJourney),
           isEnabled(LimitedPartnershipJourney),
           isEnabled(VatGroupJourney),
-          isEnabled(DivisionJourney)
+          isEnabled(DivisionJourney),
+          isEnabled(UnincorporatedAssociationJourney)
         ))
       )
     }
@@ -63,7 +63,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               isEnabled(GeneralPartnershipJourney),
               isEnabled(LimitedPartnershipJourney),
               isEnabled(VatGroupJourney),
-              isEnabled(DivisionJourney)
+              isEnabled(DivisionJourney),
+              isEnabled(UnincorporatedAssociationJourney)
             ))
           ),
         entityType => {
@@ -74,6 +75,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case LimitedPartnership => Future.successful(Redirect(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show()))
             case VatGroup => Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
             case Division => Future.successful(Redirect(routes.DivisionResolverController.resolve()))
+            case UnincorporatedAssociation => Future.successful(NotImplemented)
+              //TODO redirect to unincorporated association resolver
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
         } map (_.addingToSession(SessionKeys.businessEntityKey, entityType))

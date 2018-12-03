@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney, UnincorporatedAssociationJourney}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -123,6 +123,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.DivisionResolverController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is Unincorporated Association" should {
+      "return a Not Implemented" in {
+        enable(UnincorporatedAssociationJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
+
+        res should have(
+          httpStatus(NOT_IMPLEMENTED)
+          // TODO redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
         )
       }
     }
