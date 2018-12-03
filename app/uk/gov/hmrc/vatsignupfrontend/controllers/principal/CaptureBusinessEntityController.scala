@@ -46,7 +46,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney),
           limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney),
           vatGroupEnabled = isEnabled(VatGroupJourney),
-          divisionEnabled = isEnabled(DivisionJourney)
+          divisionEnabled = isEnabled(DivisionJourney),
+          unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney)
         ))
       )
     }
@@ -63,7 +64,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               generalPartnershipEnabled = isEnabled(GeneralPartnershipJourney),
               limitedPartnershipEnabled = isEnabled(LimitedPartnershipJourney),
               vatGroupEnabled = isEnabled(VatGroupJourney),
-              divisionEnabled = isEnabled(DivisionJourney)
+              divisionEnabled = isEnabled(DivisionJourney),
+              unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney)
             ))
           ),
         businessEntity => {
@@ -80,6 +82,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
             case Division =>
               Future.successful(Redirect(routes.DivisionResolverController.resolve()))
+            case UnincorporatedAssociation =>
+              Future.successful(Redirect(routes.UnincorporatedAssociationResolverController.resolve()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
