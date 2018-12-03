@@ -76,7 +76,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-
     "the business type is general partnership" should {
       "return a SEE_OTHER status and go to resolve partnership utr controller" in {
         stubAuth(OK, successfulAuthResponse())
@@ -112,6 +111,32 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.VatGroupResolverController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is division" should {
+      "return a SEE_OTHER status and go to division resolver" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> division)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DivisionResolverController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is unincorporated association" should {
+      "return a SEE_OTHER status and go to unincorporated association resolver" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
         )
       }
     }
