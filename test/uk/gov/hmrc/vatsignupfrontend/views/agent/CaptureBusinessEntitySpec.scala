@@ -40,6 +40,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     generalPartnershipEnabled = true,
     limitedPartnershipEnabled = true,
     vatGroupEnabled = true,
+    unincorporatedAssociationEnabled = true,
     divisionEnabled = true)(
     FakeRequest(),
     applicationMessages,
@@ -148,6 +149,21 @@ class CaptureBusinessEntitySpec extends ViewSpec {
           lazy val optionLabel = doc.select("#vat-group")
           "have the id 'vat-group'" in {
             optionLabel.attr("id") shouldEqual "vat-group"
+          }
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'Unincorporated association'" should {
+        "have the text 'Unincorporated Association'" in {
+          doc.select("label[for=unincorporated-association]").text() shouldEqual messages.radioUnincorporatedAssociation
+        }
+        "have an input under the label that" should {
+          lazy val optionLabel = doc.select("#unincorporated-association")
+          "have the id 'unincorporated-association'" in {
+            optionLabel.attr("id") shouldEqual "unincorporated-association"
           }
           "be of type radio" in {
             optionLabel.attr("type") shouldEqual "radio"

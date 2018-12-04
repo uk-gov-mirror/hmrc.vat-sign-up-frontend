@@ -35,6 +35,8 @@ object BusinessEntityForm {
 
   val vatGroup: String = "vat-group"
 
+  val unincorporatedAssociation: String = "unincorporated-association"
+
   val division: String = "division"
 
   val other: String = "other"
@@ -52,6 +54,7 @@ object BusinessEntityForm {
         case Some(`generalPartnership`) => Right(GeneralPartnership)
         case Some(`limitedPartnership`) => Right(LimitedPartnership)
         case Some(`vatGroup`) => Right(VatGroup)
+        case Some(`unincorporatedAssociation`) => Right(UnincorporatedAssociation)
         case Some(`division`) => Right(Division)
         case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, if (isAgent) agentBusinessEntityError else principalBusinessEntityError)))
@@ -63,6 +66,7 @@ object BusinessEntityForm {
         case SoleTrader => soleTrader
         case LimitedCompany => limitedCompany
         case VatGroup => vatGroup
+        case UnincorporatedAssociation => unincorporatedAssociation
         case VatGroup => division
         case Other => other
       }

@@ -27,7 +27,8 @@
         generalPartnershipEnabled: Boolean,
         limitedPartnershipEnabled: Boolean,
         vatGroupEnabled: Boolean,
-        divisionEnabled: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+        divisionEnabled: Boolean,
+        unincorporatedAssociationEnabled: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-other-entity.js")></script>
@@ -40,6 +41,8 @@
 @vatGroupOption = @{ Some((vatGroup, Messages("agent.capture_entity_type.vatGroup"))).filter(_ => vatGroupEnabled) }
 
 @divisionOption = @{ Some((division, Messages("agent.capture_entity_type.division"))).filter(_ => divisionEnabled) }
+
+@unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("agent.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
 
 @agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts)) {
 
@@ -55,7 +58,7 @@
             options = Seq(
                         (soleTrader, Messages("agent.capture_entity_type.soleTrader")),
                         (limitedCompany, Messages("agent.capture_entity_type.limitedCompany"))
-                    )++ generalPartnershipOption ++ limitedPartnershipOption ++ vatGroupOption ++ divisionOption
+                    )++ generalPartnershipOption ++ limitedPartnershipOption ++ vatGroupOption ++ divisionOption ++ unincorporatedAssociationOption
                     :+ (other, Messages("agent.capture_entity_type.other")),
             legend = Messages("agent.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity)

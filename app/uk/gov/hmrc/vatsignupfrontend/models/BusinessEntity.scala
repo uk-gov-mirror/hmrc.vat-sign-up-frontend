@@ -28,6 +28,7 @@ sealed trait BusinessEntity {
     case GeneralPartnership => GeneralPartnershipKey
     case LimitedPartnership => LimitedPartnershipKey
     case VatGroup => VatGroupKey
+    case UnincorporatedAssociation => UnincorporatedAssociationKey
     case Division => DivisionKey
     case Other => OtherKey
   }
@@ -49,6 +50,8 @@ object SoleTrader extends BusinessEntity
 
 object VatGroup extends BusinessEntity
 
+object UnincorporatedAssociation extends BusinessEntity
+
 object Division extends BusinessEntity
 
 object Other extends BusinessEntity
@@ -61,6 +64,7 @@ object BusinessEntity {
   val LimitedLiabilityPartnershipKey = "llp"
   val ScottishLimitedPartnershipKey = "scottish-partnership"
   val VatGroupKey = "vat-group"
+  val UnincorporatedAssociationKey = "unincorporated-association"
   val DivisionKey = "division"
   val OtherKey = "other"
 
@@ -73,6 +77,7 @@ object BusinessEntity {
       case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
       case ScottishLimitedPartnershipKey => Some(ScottishLimitedPartnership)
       case VatGroupKey => Some(VatGroup)
+      case UnincorporatedAssociationKey => Some(UnincorporatedAssociation)
       case DivisionKey => Some(Division)
       case OtherKey => Some(Other)
       case _ => None
@@ -86,6 +91,7 @@ object BusinessEntity {
       case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
       case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
       case VatGroup => VatGroupKey
+      case UnincorporatedAssociation => UnincorporatedAssociationKey
       case Division => DivisionKey
       case Other => OtherKey
     }
