@@ -45,10 +45,10 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
 
   lazy val testGetRequest = FakeRequest("GET", "/unincorporated-association-resolver")
 
-  "calling the resolve method on UnincorporatedAssociationResolverController (agent)" when {
+  "calling the resolve method on UnincorporatedAssociationResolverController" when {
     "the unincorporated association feature switch is on" when {
       "store unincorporated association information returns StoreUnincorporatedAssociationInformationSuccess" should {
-        "goto agree capture email" in {
+        "goto email routing" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreUnincorporatedAssociationInformation(testVatNumber)(
             Future.successful(Right(StoreUnincorporatedAssociationInformationSuccess))
@@ -59,7 +59,7 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.AgreeCaptureClientEmailController.show().url)
+          redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
         }
       }
       "store unincorporated association information fails" should {
