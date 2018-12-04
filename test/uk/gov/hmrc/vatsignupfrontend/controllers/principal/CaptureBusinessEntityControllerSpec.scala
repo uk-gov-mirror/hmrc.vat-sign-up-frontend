@@ -132,6 +132,21 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "the business entity is unincorporated association" when {
+        "goto unincorporated association resolver" in {
+          mockAuthAdminRole()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(unincorporatedAssociation)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(
+            BusinessEntitySessionFormatter.toString(UnincorporatedAssociation)
+          )
+        }
+      }
+
       "the business entity is other" should {
         "go to Cannot use service yet page" in {
           mockAuthAdminRole()

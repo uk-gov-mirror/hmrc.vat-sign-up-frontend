@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney, VatGroupJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -134,6 +134,18 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Division))
+        }
+      }
+
+      "the business entity is an Unincorporated Association" when {
+        "redirect to the Unincorporated Association resolver page" in {
+          mockAuthRetrieveAgentEnrolment()
+
+          enable(UnincorporatedAssociationJourney)
+          val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(unincorporatedAssociation)))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(UnincorporatedAssociation))
         }
       }
 

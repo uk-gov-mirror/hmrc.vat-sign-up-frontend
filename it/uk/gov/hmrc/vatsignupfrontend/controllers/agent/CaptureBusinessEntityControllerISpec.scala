@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney, UnincorporatedAssociationJourney}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -114,20 +114,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "the business type is Unincorporated Association" should {
-      "return a SEE_OTHER status and go to the unincorporated association resolver" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(UnincorporatedAssociationJourney)
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
-        )
-      }
-    }
-
     "the business type is division" should {
       "return a SEE_OTHER status and go to division resolver" in {
         enable(DivisionJourney)
@@ -138,6 +124,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.DivisionResolverController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is Unincorporated Association" should {
+      "return a SEE_OTHER status and go to the unincorporated association resolver" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(UnincorporatedAssociationJourney)
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
         )
       }
     }
