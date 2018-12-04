@@ -75,8 +75,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case LimitedPartnership => Future.successful(Redirect(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show()))
             case VatGroup => Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
             case Division => Future.successful(Redirect(routes.DivisionResolverController.resolve()))
-            case UnincorporatedAssociation => Future.successful(NotImplemented)
-              //TODO redirect to unincorporated association resolver
+            case UnincorporatedAssociation => Future.successful(Redirect(routes.UnincorporatedAssociationResolverController.resolve()))
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
         } map (_.addingToSession(SessionKeys.businessEntityKey, entityType))

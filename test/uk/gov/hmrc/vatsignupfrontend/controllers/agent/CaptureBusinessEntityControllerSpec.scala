@@ -138,13 +138,13 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
 
       "the business entity is an Unincorporated Association" when {
-        "return Not Implemented" in {
+        "redirect to the Unincorporated Association resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
           enable(UnincorporatedAssociationJourney)
           val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(unincorporatedAssociation)))
-          status(result) shouldBe Status.NOT_IMPLEMENTED
-          // TODO redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(UnincorporatedAssociation))
         }
       }

@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.UnincorporatedAssociation
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -128,15 +129,15 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     }
 
     "the business type is Unincorporated Association" should {
-      "return a Not Implemented" in {
-        enable(UnincorporatedAssociationJourney)
+      "return a SEE_OTHER status and go to the unincorporated association resolver" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(UnincorporatedAssociationJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
-          // TODO redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
         )
       }
     }
