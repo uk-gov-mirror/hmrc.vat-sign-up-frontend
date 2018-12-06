@@ -709,3 +709,10 @@ unplanned_outage.line2                                                 = In the 
 unplanned_outage.bullet1                                               = get our <a id="vatServices" href="{0}">full list of VAT services</a>
 unplanned_outage.bullet2                                               = read our <a id="help" href="{0}">''Help and support for VAT''</a>
 unplanned_outage.bullet3                                               = find out <a id="mtdReady" href="{0}">how VAT businesses can get ready</a> for the Making Tax Digital programme
+
+## Verify Software Error Page
+principal.verify_software_error.title                                  = Making Tax Digital for VAT: verify your software
+principal.verify_software_error.heading                                = Making Tax Digital for VAT: verify your software
+principal.verify_software_error.line_1                                 = You must confirm with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC.
+principal.verify_software_error.line_2                                 = They will be able to tell you if your software works with Making Tax Digital for VAT to submit your VAT Returns through the software.
+principal.verify_software_error.returnToGovUK                          = Return to GOV.UK
