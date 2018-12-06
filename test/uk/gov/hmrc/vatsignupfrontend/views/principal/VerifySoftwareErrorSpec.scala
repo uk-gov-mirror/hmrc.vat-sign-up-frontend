@@ -56,8 +56,6 @@ class VerifySoftwareErrorSpec extends ViewSpec {
     testPage.shouldHaveForm("verify software error form")(actionCall = testCall)
 
     testPage.shouldHaveSubmitButton(messages.returnToGovUK)
-
-    testPage.shouldHaveSignOutLink(isAgent = false)
   }
 
 }
