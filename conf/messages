@@ -426,6 +426,7 @@ principal.capture_entity_type.limitedPartnership                       = Limited
 principal.capture_entity_type.vatGroup                                 = VAT group
 principal.capture_entity_type.division                                 = Administrative division
 principal.capture_entity_type.unincorporatedAssociation                = Unincorporated association
+principal.capture_entity_type.trust                                    = Trust
 principal.capture_entity_type.other                                    = Other
 
 # Check your answers page

@@ -30,6 +30,7 @@ sealed trait BusinessEntity {
     case VatGroup => VatGroupKey
     case Division => DivisionKey
     case UnincorporatedAssociation => UnincorporatedAssociationKey
+    case Trust => TrustKey
     case Other => OtherKey
   }
 }
@@ -54,6 +55,8 @@ object Division extends BusinessEntity
 
 object UnincorporatedAssociation extends BusinessEntity
 
+object Trust extends BusinessEntity
+
 object Other extends BusinessEntity
 
 object BusinessEntity {
@@ -66,6 +69,7 @@ object BusinessEntity {
   val VatGroupKey = "vat-group"
   val DivisionKey = "division"
   val UnincorporatedAssociationKey = "unincorporated-association"
+  val TrustKey = "trust"
   val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
@@ -79,6 +83,7 @@ object BusinessEntity {
       case VatGroupKey => Some(VatGroup)
       case DivisionKey => Some(Division)
       case UnincorporatedAssociationKey => Some(UnincorporatedAssociation)
+      case TrustKey => Some(Trust)
       case OtherKey => Some(Other)
       case _ => None
     }
@@ -93,6 +98,7 @@ object BusinessEntity {
       case VatGroup => VatGroupKey
       case Division => DivisionKey
       case UnincorporatedAssociation => UnincorporatedAssociationKey
+      case Trust => TrustKey
       case Other => OtherKey
     }
   }

@@ -41,6 +41,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     limitedPartnershipEnabled = true,
     vatGroupEnabled = true,
     divisionEnabled = true,
+    trustEnabled = true,
     unincorporatedAssociationEnabled = true
   )(
     FakeRequest(),
@@ -196,6 +197,25 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'unincorporated-association'" in {
             optionLabel.attr("id") shouldEqual "unincorporated-association"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+      "for the option 'Trust'" should {
+
+        "have the text 'Trust'" in {
+          doc.select("label[for=trust]").text() shouldEqual messages.radioTrust
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#trust")
+
+          "have the id 'trust'" in {
+            optionLabel.attr("id") shouldEqual "trust"
           }
 
           "be of type radio" in {
