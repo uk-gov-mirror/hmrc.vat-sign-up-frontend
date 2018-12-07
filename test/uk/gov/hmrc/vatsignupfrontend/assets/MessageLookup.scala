@@ -773,4 +773,11 @@ object MessageLookup {
     val bullet3 = s"find out $link3 for the Making Tax Digital programme"
   }
 
+  object HaveSoftware {
+    val title = "Do you have accounting software for managing your VAT records?"
+    val heading: String = title
+    val line = "Spreadsheet applications do not count as accounting software."
+    val radioYes: String = "yes"
+    val radioNo: String = "no"
+  }
 }
