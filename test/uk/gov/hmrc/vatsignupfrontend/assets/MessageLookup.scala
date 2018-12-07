@@ -799,6 +799,8 @@ object MessageLookup {
     val line2 = "You must check with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC."
     val radioYes: String = "yes"
     val radioNo: String = "no"
+    val yes: String = "Yes, my software submits through Making Tax Digital for VAT"
+    val no: String = "No, my software does not submit through Making Tax Digital for VAT"
   }
   
   object ChooseSoftwareError {

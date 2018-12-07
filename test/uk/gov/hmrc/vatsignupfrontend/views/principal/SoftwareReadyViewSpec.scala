@@ -57,7 +57,7 @@ class SoftwareReadyViewSpec extends ViewSpec {
       "for the option 'Yes'" should {
 
         "have the text 'yes'" in {
-          messages.radioYes shouldEqual "yes"
+          doc.select(s"label[for=${messages.radioYes}]").text() shouldEqual messages.yes
         }
 
         "have an input under the label that" should {
@@ -77,7 +77,7 @@ class SoftwareReadyViewSpec extends ViewSpec {
       "for the option 'No'" should {
 
         "have the text 'no'" in {
-          messages.radioNo shouldEqual "no"
+          doc.select(s"label[for=${messages.radioNo}]").text()  shouldEqual messages.no
         }
 
         "have an input under the label that" should {
