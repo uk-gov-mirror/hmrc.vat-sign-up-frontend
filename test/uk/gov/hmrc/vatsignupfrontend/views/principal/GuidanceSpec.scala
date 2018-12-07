@@ -118,7 +118,7 @@ class GuidanceSpec extends ViewSpec {
 
     }
 
-    testPage.shouldHaveALink("start-now", Base.startNow, routes.ResolveVatNumberController.resolve().url)
+    testPage.shouldHaveALink("start-now", Base.startNow, routes.IndexResolverController.resolve().url)
   }
 
 }
