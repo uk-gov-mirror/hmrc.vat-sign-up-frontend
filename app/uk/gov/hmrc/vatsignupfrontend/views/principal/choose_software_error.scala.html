@@ -21,16 +21,16 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.verify_software_error.title"), bodyClasses = None, showSignOutLink = false) {
+@principal_main_template(title = Messages("principal.choose_software_error.title"), bodyClasses = None, showSignOutLink = false) {
 
-    <h1 class="heading-large">@Messages("principal.verify_software_error.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.choose_software_error.heading")</h1>
 
-    <p>@Messages("principal.verify_software_error.line_1")</p>
-    <p>@Messages("principal.verify_software_error.line_2")</p>
+    <p>@Messages("principal.choose_software_error.line_1")</p>
+    <p>@Html(Messages("principal.choose_software_error.line_2", appConfig.softwareOptionsUrl))</p>
 
     @form(action = postAction) {
         <div class="form-group">
-            @continueButton(Some(Messages("principal.verify_software_error.returnToGovUK")))
+            @continueButton(Some(Messages("principal.choose_software_error.returnToGovUK")))
         </div>
     }
 

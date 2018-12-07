@@ -20,28 +20,28 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{VerifySoftwareError => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ChooseSoftwareError => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class VerifySoftwareErrorSpec extends ViewSpec {
+class ChooseSoftwareErrorSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.verify_software_error(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.choose_software_error(
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The verify software error view" should {
+  "The choose software view" should {
 
     val testPage = TestView(
-      name = "verify software error view",
+      name = "choose software view",
       title = messages.title,
       heading = messages.heading,
       page = page,
@@ -53,7 +53,7 @@ class VerifySoftwareErrorSpec extends ViewSpec {
       messages.line2
     )
 
-    testPage.shouldHaveForm("verify software error form")(actionCall = testCall)
+    testPage.shouldHaveForm("choose software form")(actionCall = testCall)
 
     testPage.shouldHaveSubmitButton(messages.returnToGovUK)
   }
