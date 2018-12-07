@@ -61,6 +61,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val govUK: String = loadConfig("gov-uk.url")
 
+  lazy val guidancePageUrl: String = s"$govUK/guidance/use-software-to-submit-your-vat-returns"
+
   private def whitelistConfig(key: String): Seq[String] =
     runModeConfiguration.getString(key).getOrElse("").split(",").toSeq
 
@@ -88,6 +90,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def storeVatGroupInformationUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/vat-group"
+
+  def storeTrustInformationUrl(vatNumber: String) =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/trust"
 
   def storeAdministrativeDivisionUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/administrative-division"

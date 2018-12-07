@@ -56,8 +56,7 @@ class HaveSoftwareControllerSpec extends UnitSpec with MockControllerComponents 
         "go to error page" in {
           val result = TestHaveSoftwareController.submit(testPostRequest(entityTypeVal = "no"))
           status(result) shouldBe Status.SEE_OTHER
-          // TODO got to error page controller
-          //            redirectLocation(result) shouldBe Some(routes.asdasdController.show().url)
+          redirectLocation(result) shouldBe Some(routes.VerifySoftwareErrorController.show().url)
         }
       }
     }

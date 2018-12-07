@@ -19,37 +19,28 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.play.bootstrap.controller.{BaseController, FrontendController}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
-import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.have_software
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.verify_software_error
 
 import scala.concurrent.Future
 
 @Singleton
-class HaveSoftwareController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
-
+class VerifySoftwareErrorController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
 
   override val messagesApi: MessagesApi = controllerComponents.messagesApi
 
   implicit val appConfig: AppConfig = controllerComponents.appConfig
 
   val show: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(have_software(haveSoftwareForm, routes.HaveSoftwareController.submit())))
+    Future.successful(
+      Ok(verify_software_error(routes.VerifySoftwareErrorController.submit()))
+    )
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
-    haveSoftwareForm.bindFromRequest.fold(
-      formWithErrors =>
-        Future.successful(
-          BadRequest(have_software(formWithErrors, routes.HaveSoftwareController.submit()))
-        ), {
-        case Yes =>
-          ???
-        case No =>
-          Future.successful(Redirect(routes.VerifySoftwareErrorController.show()))
-      }
+    Future.successful(
+      Redirect(appConfig.guidancePageUrl)
     )
   }
 

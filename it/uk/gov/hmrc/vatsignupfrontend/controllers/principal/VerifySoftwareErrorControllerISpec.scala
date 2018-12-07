@@ -17,15 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class HaveSoftwareControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  "GET /have-software" should {
+class VerifySoftwareErrorControllerISpec extends ComponentSpecBase with CustomMatchers {
+  "GET /error/verify-software" should {
     "return an OK" in {
-      val res = get("/have-software")
+
+      val res = get("/error/verify-software")
 
       res should have(
         httpStatus(OK)
@@ -33,27 +31,15 @@ class HaveSoftwareControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-  "POST /have-software" should {
-    "return a redirect to vat number" when {
-      "form value is YES" in {
-        val res = post("/have-software")(HaveSoftwareForm.yesNo -> option_yes)
+  "POST /error/verify-software" should {
+    "redirect to the gov.uk guidance page" in {
 
-        res should have(
-          httpStatus(NOT_IMPLEMENTED)
-        )
-      }
-    }
+      val res = post("/error/verify-software")()
 
-    "return a redirect to business type" when {
-      "form value is NO" in {
-        val res = post("/have-software")(HaveSoftwareForm.yesNo -> option_no)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.VerifySoftwareErrorController.show().url)
-        )
-      }
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(appConfig.guidancePageUrl)
+      )
     }
   }
-
 }

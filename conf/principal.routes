@@ -3,6 +3,10 @@
 # Guidance page
 GET         /                                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.GuidanceController.show
 
+# Verify Software Error page
+GET         /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.show
+POST        /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.submit
+
 # Resolve Vat Number
 GET         /resolve-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.ResolveVatNumberController.resolve
 
