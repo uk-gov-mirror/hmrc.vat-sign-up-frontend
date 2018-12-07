@@ -129,8 +129,8 @@ error.no_entry_partnership_utr.summary                                 = Enter t
 error.no_entry_partnership_utr.field                                   = Enter the partnership''s UTR
 error.have_software.field                                              = Choose yes or no, if you have accounting software or not
 error.have_software.summary                                            = Choose yes or no, if you have accounting software or not
-error.software_ready.field                                             = Select an option
-error.software_ready.summary                                           = Select an option
+error.software_ready.field                                             = Choose yes or no, if your software is ready to submit with Making Tax Digital for VAT or not
+error.software_ready.summary                                           = Choose yes or no, if your software is ready to submit your VAT Returns with Making Tax Digital for VAT
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -732,6 +732,8 @@ principal.verify_software_ready.title                                  = Is your
 principal.verify_software_ready.heading                                = Is your software ready to submit your Making Tax Digital for VAT Returns directly to HMRC?
 principal.verify_software_ready.line_1                                 = Your software must work with Making Tax Digital for VAT.
 principal.verify_software_ready.line_2                                 = You must check with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC.
+principal.verify_software_ready.yes                                    = Yes, my software submits through Making Tax Digital for VAT
+principal.verify_software_ready.no                                     = No, my software does not submit through Making Tax Digital for VAT
 
 ## Principal Choose Software Error Page
 principal.choose_software_error.title                                  = Making Tax Digital for VAT: software is needed
