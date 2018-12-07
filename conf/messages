@@ -127,7 +127,8 @@ error.invalid_partnership_utr.summary                                  = Enter a
 error.invalid_partnership_utr.field                                    = Enter a UTR using only numbers
 error.no_entry_partnership_utr.summary                                 = Enter the partnership''s UTR
 error.no_entry_partnership_utr.field                                   = Enter the partnership''s UTR
-
+error.have_software.field                                              = Select an option
+error.have_software.summary                                            = Select an option
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -716,3 +717,8 @@ principal.verify_software_error.heading                                = Making 
 principal.verify_software_error.line_1                                 = You must confirm with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC.
 principal.verify_software_error.line_2                                 = They will be able to tell you if your software works with Making Tax Digital for VAT to submit your VAT Returns through the software.
 principal.verify_software_error.returnToGovUK                          = Return to GOV.UK
+
+## Principal Have Software Page
+principal.have_software.title                                          = Do you have accounting software for managing your VAT records?
+principal.have_software.heading                                        = Do you have accounting software for managing your VAT records?
+principal.have_software.line                                           = Spreadsheet applications do not count as accounting software.
