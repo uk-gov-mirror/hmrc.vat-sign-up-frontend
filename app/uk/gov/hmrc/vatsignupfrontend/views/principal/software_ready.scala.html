@@ -43,10 +43,10 @@
 
         @radioHelper(
             parentForm = softwareReadyForm,
-            inline = true,
+            inline = false,
             options = Seq(
-                (option_yes, Messages("base.yes")),
-                (option_no, Messages("base.no"))
+                (option_yes, Messages("principal.verify_software_ready.yes")),
+                (option_no, Messages("principal.verify_software_ready.no"))
             ),
             legend = Messages("principal.verify_software_ready.heading"),
             field = softwareReadyForm(yesNo)
