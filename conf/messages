@@ -129,6 +129,8 @@ error.no_entry_partnership_utr.summary                                 = Enter t
 error.no_entry_partnership_utr.field                                   = Enter the partnership''s UTR
 error.have_software.field                                              = Select an option
 error.have_software.summary                                            = Select an option
+error.software_ready.field                                             = Select an option
+error.software_ready.summary                                           = Select an option
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -722,3 +724,16 @@ principal.verify_software_error.returnToGovUK                          = Return 
 principal.have_software.title                                          = Do you have accounting software for managing your VAT records?
 principal.have_software.heading                                        = Do you have accounting software for managing your VAT records?
 principal.have_software.line                                           = Spreadsheet applications do not count as accounting software.
+
+## Principal Software Ready Page
+principal.verify_software_ready.title                                  = Is your software ready to submit your Making Tax Digital for VAT Returns directly to HMRC?
+principal.verify_software_ready.heading                                = Is your software ready to submit your Making Tax Digital for VAT Returns directly to HMRC?
+principal.verify_software_ready.line_1                                 = Your software must work with Making Tax Digital for VAT.
+principal.verify_software_ready.line_2                                 = You must check with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC.
+
+## Principal Choose Software Error Page
+principal.choose_software_error.title                                  = Making Tax Digital for VAT: software is needed
+principal.choose_software_error.heading                                = Making Tax Digital for VAT: software is needed
+principal.choose_software_error.line_1                                 = You must choose accounting software that works with Making Tax Digital for VAT. You will need to submit your VAT Returns to HMRC through the software.
+principal.choose_software_error.line_2                                 = We have a <a id="listOfSoftwareProviders" href={0}>list of software providers (opens in a new window or tab)</a> that support this VAT Returns process.
+principal.choose_software_error.returnToGovUK                          = Return to GOV.UK

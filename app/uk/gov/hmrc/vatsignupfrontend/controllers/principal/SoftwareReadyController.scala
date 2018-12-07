@@ -19,38 +19,38 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.play.bootstrap.controller.{BaseController, FrontendController}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
-import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.SoftwareReadyForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.have_software
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.software_ready
 
 import scala.concurrent.Future
 
 @Singleton
-class HaveSoftwareController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
-
+class SoftwareReadyController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
 
   override val messagesApi: MessagesApi = controllerComponents.messagesApi
 
   implicit val appConfig: AppConfig = controllerComponents.appConfig
 
   val show: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(have_software(haveSoftwareForm, routes.HaveSoftwareController.submit())))
-  }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    haveSoftwareForm.bindFromRequest.fold(
-      formWithErrors =>
-        Future.successful(
-          BadRequest(have_software(formWithErrors, routes.HaveSoftwareController.submit()))
-        ), {
-        case Yes =>
-          Future.successful(Redirect(routes.SoftwareReadyController.show()))
-        case No =>
-          Future.successful(Redirect(routes.ChooseSoftwareErrorController.show()))
-      }
+    Future.successful(
+      Ok(software_ready(softwareReadyForm, routes.SoftwareReadyController.submit()))
     )
   }
 
+  val submit: Action[AnyContent] = Action.async { implicit request =>
+    softwareReadyForm.bindFromRequest.fold(
+      formWithErrors =>
+        Future.successful(
+          BadRequest(software_ready(formWithErrors, routes.SoftwareReadyController.submit()))
+        ), {
+        case Yes =>
+          Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+        case No =>
+          Future.successful(Redirect(routes.VerifySoftwareErrorController.show()))
+      }
+    )
+  }
 }

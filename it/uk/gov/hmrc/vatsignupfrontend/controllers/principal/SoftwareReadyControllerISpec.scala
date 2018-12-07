@@ -17,15 +17,16 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
+import uk.gov.hmrc.vatsignupfrontend.forms.SoftwareReadyForm
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class HaveSoftwareControllerISpec extends ComponentSpecBase with CustomMatchers {
+class SoftwareReadyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  "GET /have-software" should {
+  "GET /software-ready" should {
     "return an OK" in {
-      val res = get("/have-software")
+
+      val res = get("/software-ready")
 
       res should have(
         httpStatus(OK)
@@ -33,26 +34,27 @@ class HaveSoftwareControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-  "POST /have-software" when {
-    "form value is YES" should {
-      "redirect to Software Ready page" in {
-        val res = post("/have-software")(HaveSoftwareForm.yesNo -> option_yes)
+  "POST /software-ready" should {
+    "redirect to vat number resolver" when {
+      "form value is YES" in {
+
+        val res = post("/software-ready")(SoftwareReadyForm.yesNo -> YesNoMapping.option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.SoftwareReadyController.show().url)
+          redirectUri(routes.ResolveVatNumberController.resolve().url)
         )
       }
     }
 
-    "form value is NO" should {
-      "redirect to Choose Software error page" in {
+    "redirect to verify software error page" when {
+      "form value is NO" in {
 
-        val res = post("/have-software")(HaveSoftwareForm.yesNo -> option_no)
+        val res = post("/software-ready")(SoftwareReadyForm.yesNo -> YesNoMapping.option_no)
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.ChooseSoftwareErrorController.show().url)
+          redirectUri(routes.VerifySoftwareErrorController.show().url)
         )
       }
     }
