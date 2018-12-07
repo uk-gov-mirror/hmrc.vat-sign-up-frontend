@@ -28,7 +28,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class StoreTrustInformationConnector @Inject()(val http: HttpClient,
                                                val applicationConfig: AppConfig
                                                  )(implicit ec: ExecutionContext) {
-  val vatNumberKey = "vatNumber"
 
   def storeTrustInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreTrustInformationResponse] =
     http.POST[JsObject, StoreTrustInformationResponse](applicationConfig.storeTrustInformationUrl(vatNumber), Json.obj())
