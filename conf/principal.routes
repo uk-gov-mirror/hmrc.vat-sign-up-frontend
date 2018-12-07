@@ -7,6 +7,10 @@ GET         /                                                   uk.gov.hmrc.vats
 GET         /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.show
 POST        /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.submit
 
+# Choose Software Error page
+GET         /error/choose-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.ChooseSoftwareErrorController.show
+POST        /error/choose-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.ChooseSoftwareErrorController.submit
+
 # Resolve Vat Number
 GET         /resolve-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.ResolveVatNumberController.resolve
 
