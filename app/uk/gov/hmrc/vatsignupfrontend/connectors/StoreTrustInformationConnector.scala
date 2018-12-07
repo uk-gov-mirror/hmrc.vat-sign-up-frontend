@@ -30,12 +30,7 @@ class StoreTrustInformationConnector @Inject()(val http: HttpClient,
                                                  )(implicit ec: ExecutionContext) {
   val vatNumberKey = "vatNumber"
 
-  def storeTrustInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreTrustInformationResponse] = {
+  def storeTrustInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreTrustInformationResponse] =
+    http.POST[JsObject, StoreTrustInformationResponse](applicationConfig.storeTrustInformationUrl(vatNumber), Json.obj())
 
-    val body = Json.obj(
-      vatNumberKey -> vatNumber
-    )
-
-    http.POST[JsObject, StoreTrustInformationResponse](applicationConfig.storeTrustInformationUrl(vatNumber), body)
-  }
 }
