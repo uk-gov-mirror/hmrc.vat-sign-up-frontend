@@ -788,6 +788,8 @@ object MessageLookup {
     val line = "Spreadsheet applications do not count as accounting software."
     val radioYes: String = "yes"
     val radioNo: String = "no"
+    val yes: String = "Yes, I have accounting software"
+    val no: String = "No, I do not have accounting software"
   }
 
   object SoftwareReady {
