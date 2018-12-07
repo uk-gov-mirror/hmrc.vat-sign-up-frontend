@@ -574,6 +574,7 @@ object MessageLookup {
       val bullet5 = "Submit your VAT Returns before your deadlines."
       val line3 = "You can view your VAT Return deadlines in your accounting software or business tax account."
     }
+
   }
 
   object PrincipalAlreadySignedUp {
@@ -771,6 +772,14 @@ object MessageLookup {
     val bullet1 = s"get our $link1"
     val bullet2 = s"read our $link2"
     val bullet3 = s"find out $link3 for the Making Tax Digital programme"
+  }
+
+  object VerifySoftwareError {
+    val title = "Making Tax Digital for VAT: verify your software"
+    val heading: String = title
+    val line1 = "You must confirm with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC."
+    val line2 = "They will be able to tell you if your software works with Making Tax Digital for VAT to submit your VAT Returns through the software."
+    val returnToGovUK = "Return to GOV.UK"
   }
 
   object HaveSoftware {
