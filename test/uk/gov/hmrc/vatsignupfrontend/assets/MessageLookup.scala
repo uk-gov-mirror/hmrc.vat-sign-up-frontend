@@ -790,7 +790,7 @@ object MessageLookup {
     val radioNo: String = "no"
   }
 
-  object ChooseSoftware {
+  object ChooseSoftwareError {
     val title = "Making Tax Digital for VAT: software is needed"
     val heading: String = title
     val link = "list of software providers (opens in a new window or tab)"
