@@ -737,5 +737,5 @@ principal.verify_software_ready.line_2                                 = You mus
 principal.choose_software_error.title                                  = Making Tax Digital for VAT: software is needed
 principal.choose_software_error.heading                                = Making Tax Digital for VAT: software is needed
 principal.choose_software_error.line_1                                 = You must choose accounting software that works with Making Tax Digital for VAT. You will need to submit your VAT Returns to HMRC through the software.
-principal.choose_software_error.line_2                                 = We have a <a id="listOfSoftwareProviders" href={0}>list of software providers (opens in a new window or tab)</a> that support this VAT Returns process.
+principal.choose_software_error.line_2                                 = We have a <a id="listOfSoftwareProviders" href={0} target="_blank">list of software providers (opens in a new window or tab)</a> that support this VAT Returns process.
 principal.choose_software_error.returnToGovUK                          = Return to GOV.UK
