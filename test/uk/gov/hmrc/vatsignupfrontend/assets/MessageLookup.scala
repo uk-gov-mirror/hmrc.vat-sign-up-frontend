@@ -789,4 +789,13 @@ object MessageLookup {
     val radioYes: String = "yes"
     val radioNo: String = "no"
   }
+
+  object ChooseSoftwareError {
+    val title = "Making Tax Digital for VAT: software is needed"
+    val heading: String = title
+    val link = "list of software providers (opens in a new window or tab)"
+    val line1 = "You must choose accounting software that works with Making Tax Digital for VAT. You will need to submit your VAT Returns to HMRC through the software."
+    val line2 = s"We have a $link that support this VAT Returns process."
+    val returnToGovUK = "Return to GOV.UK"
+  }
 }
