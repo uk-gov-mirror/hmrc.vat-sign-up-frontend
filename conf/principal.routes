@@ -3,6 +3,9 @@
 # Guidance page
 GET         /                                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.GuidanceController.show
 
+# Index Resolver
+GET         /index                                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.IndexResolverController.resolve
+
 # Verify Software Error page
 GET         /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.show
 POST        /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.submit
