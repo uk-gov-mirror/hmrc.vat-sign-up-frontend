@@ -202,3 +202,10 @@ GET         /division-resolver                                  uk.gov.hmrc.vats
 
 # Unincorporated Association resolver
 GET         /unincorporated-association-resolver                uk.gov.hmrc.vatsignupfrontend.controllers.principal.UnincorporatedAssociationResolverController.resolve
+
+# Unincorporated Association resolver
+GET         /unincorporated-association-resolver                uk.gov.hmrc.vatsignupfrontend.controllers.principal.UnincorporatedAssociationResolverController.resolve
+
+# Have Software
+GET         /have-software                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.HaveSoftwareController.show
+POST        /have-software                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.HaveSoftwareController.submit
