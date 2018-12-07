@@ -790,6 +790,15 @@ object MessageLookup {
     val radioNo: String = "no"
   }
 
+  object SoftwareReady {
+    val title = "Is your software ready to submit your Making Tax Digital for VAT Returns directly to HMRC?"
+    val heading: String = title
+    val line1 = "Your software must work with Making Tax Digital for VAT."
+    val line2 = "You must check with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC."
+    val radioYes: String = "yes"
+    val radioNo: String = "no"
+  }
+  
   object ChooseSoftwareError {
     val title = "Making Tax Digital for VAT: software is needed"
     val heading: String = title
