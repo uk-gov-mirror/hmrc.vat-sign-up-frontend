@@ -85,7 +85,7 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
       }
     }
 
-    "the group feature switch is off" should {
+    "the trust feature switch is off" should {
       "throw not found exception" in {
         disable(TrustJourney)
 
