@@ -141,6 +141,19 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "the business type is trust" should {
+      "return a SEE_OTHER status and go to trust resolver" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/business-type")(BusinessEntityForm.businessEntity -> trust)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.TrustResolverController.resolve().url)
+        )
+      }
+    }
+
     "the business type is other" should {
       "return a SEE_OTHER status and go to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())

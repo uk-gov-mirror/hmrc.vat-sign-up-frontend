@@ -86,8 +86,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               Future.successful(Redirect(routes.DivisionResolverController.resolve()))
             case UnincorporatedAssociation =>
               Future.successful(Redirect(routes.UnincorporatedAssociationResolverController.resolve()))
-            case Trust => Future.successful(NotImplemented)
-             // TODO Future.successful(Redirect(routes.TrustResolverController.resolve()))
+            case Trust =>
+              Future.successful(Redirect(routes.TrustResolverController.resolve()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
