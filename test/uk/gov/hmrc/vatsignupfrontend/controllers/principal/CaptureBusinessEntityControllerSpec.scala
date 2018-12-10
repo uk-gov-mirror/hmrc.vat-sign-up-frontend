@@ -50,48 +50,33 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   "Calling the submit action of the Capture Business Entity controller" when {
     "form successfully submitted" when {
-      "the business entity is sole trader" when {
-          "go to sole trader resolver with sole trader stored in session" in {
-            mockAuthAdminRole()
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
+      "the business entity is sole trader" should {
+        "go to sole trader resolver with sole trader stored in session" in {
+          mockAuthAdminRole()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(soletrader.routes.SoleTraderResolverController.resolve().url)
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(soletrader.routes.SoleTraderResolverController.resolve().url)
 
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
-          }
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }
-
-      "the business entity is limited company" when {
-        "there is a VATDEC enrolment" should {
-          "go to capture company number controller" in {
-            mockAuthAdminRole()
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-          }
-        }
-        "there is not a VATDEC enrolment and" when {
-          "go to capture company number controller" in {
-            mockAuthAdminRole()
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
-
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
-
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-          }
-        }
-
       }
 
-      "the business entity is general partnership" when {
+      "the business entity is limited company" should {
+          "go to capture company number controller" in {
+            mockAuthAdminRole()
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+
+            val result = await(TestCaptureBusinessEntityController.submit(request))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+
+            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+          }
+        }
+
+      "the business entity is general partnership" should {
         "go to resolve partnership utr controller" in {
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(generalPartnership)
@@ -104,22 +89,20 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "the business entity is limited partnership" when {
-        "there is a VATDEC enrolment" should {
-          "go to capture partnership company number controller" in {
-            mockAuthAdminRole()
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedPartnership)
+      "the business entity is limited partnership" should {
+        "go to capture partnership company number controller" in {
+          mockAuthAdminRole()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedPartnership)
 
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(partnerships.routes.CapturePartnershipCompanyNumberController.show().url)
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(partnerships.routes.CapturePartnershipCompanyNumberController.show().url)
 
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
-          }
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
         }
       }
 
-      "the business entity is vat group" when {
+      "the business entity is vat group" should {
         "goto vat group resolver" in {
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(vatGroup)
@@ -132,7 +115,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "the business entity is unincorporated association" when {
+      "the business entity is unincorporated association" should {
         "goto unincorporated association resolver" in {
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(unincorporatedAssociation)
@@ -143,6 +126,21 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
           result.session get SessionKeys.businessEntityKey should contain(
             BusinessEntitySessionFormatter.toString(UnincorporatedAssociation)
+          )
+        }
+      }
+
+      "the business entity is trust" should {
+        "goto trust resolver" in {
+          mockAuthAdminRole()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(trust)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.TrustResolverController.resolve().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(
+            BusinessEntitySessionFormatter.toString(Trust)
           )
         }
       }

@@ -23,12 +23,15 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 
-@(businessEntityForm: Form[BusinessEntity], postAction: Call,
+@(businessEntityForm: Form[BusinessEntity],
+    postAction: Call,
     generalPartnershipEnabled: Boolean,
     limitedPartnershipEnabled: Boolean,
     vatGroupEnabled: Boolean,
     divisionEnabled: Boolean,
-    unincorporatedAssociationEnabled: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+    unincorporatedAssociationEnabled: Boolean,
+    trustEnabled: Boolean
+)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-other-entity.js")></script>
@@ -44,6 +47,8 @@
 
 @unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("principal.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
 
+@trustOption = @{ Some((trust, Messages("principal.capture_entity_type.trust"))).filter(_ => trustEnabled) }
+
 @principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts)) {
 
     @summaryErrorHelper(businessEntityForm)
@@ -56,10 +61,15 @@
             parentForm = businessEntityForm,
             inline = false,
             options = Seq(
-                        (soleTrader, Messages("principal.capture_entity_type.soleTrader")),
-                        (limitedCompany, Messages("principal.capture_entity_type.limitedCompany"))
-                    ) ++ generalPartnershipOption ++ limitedPartnershipOption ++ vatGroupOption ++ divisionOption ++ unincorporatedAssociationOption
-                    :+ (other, Messages("principal.capture_entity_type.other")),
+                (soleTrader, Messages("principal.capture_entity_type.soleTrader")),
+                (limitedCompany, Messages("principal.capture_entity_type.limitedCompany"))
+            ) ++ generalPartnershipOption
+              ++ limitedPartnershipOption
+              ++ vatGroupOption
+              ++ divisionOption
+              ++ unincorporatedAssociationOption
+              ++ trustOption
+              :+ (other, Messages("principal.capture_entity_type.other")),
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity)
         )
