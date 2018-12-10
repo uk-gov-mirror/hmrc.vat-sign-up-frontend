@@ -141,4 +141,6 @@ GET         /vat-group-resolver                         uk.gov.hmrc.vatsignupfro
 
 GET         /unincorporated-association-resolver        uk.gov.hmrc.vatsignupfrontend.controllers.agent.UnincorporatedAssociationResolverController.resolve
 
+GET         /trust-resolver                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TrustResolverController.resolve
+
 GET         /division-resolver                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.DivisionResolverController.resolve
