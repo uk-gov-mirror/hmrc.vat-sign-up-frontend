@@ -149,6 +149,18 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "the business entity is a trust" when {
+        "redirect to the trust resolver controller" in {
+          mockAuthRetrieveAgentEnrolment()
+          enable(TrustJourney)
+
+          val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(trust)))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.TrustResolverController.resolve().url)
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Trust))
+        }
+      }
+
       "go to the cannot use service yet page" when {
         "the business entity is other" in {
           mockAuthRetrieveAgentEnrolment()

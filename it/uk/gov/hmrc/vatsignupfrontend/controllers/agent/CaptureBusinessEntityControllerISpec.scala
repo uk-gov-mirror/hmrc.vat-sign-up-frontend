@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionJourney, GeneralPartnershipJourney, LimitedPartnershipJourney, UnincorporatedAssociationJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -138,6 +138,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
+        )
+      }
+    }
+
+    "the business type is trust" should {
+      "redirect to trust resolver controller" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(TrustJourney)
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> trust)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.TrustResolverController.resolve().url)
         )
       }
     }
