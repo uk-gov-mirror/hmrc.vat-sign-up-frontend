@@ -46,8 +46,8 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   lazy val testGetRequest = FakeRequest("GET", "/trust-resolver")
 
   "calling the resolve method on TrustResolverController" when {
-    "the group feature switch is on" when {
-      "store group information returns StoreTrustInformationSuccess" should {
+    "the trust feature switch is on" when {
+      "store trust information returns StoreTrustInformationSuccess" should {
         "goto agree capture email" in {
           mockAuthAdminRole()
           mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
@@ -60,7 +60,7 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           redirectLocation(res) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
         }
       }
-      "store group information returns StoreTrustInformationFailureResponse" should {
+      "store trust information returns StoreTrustInformationFailureResponse" should {
         "throw internal server exception" in {
           mockAuthAdminRole()
           mockStoreTrustInformation(testVatNumber)(Future.successful(Left(StoreTrustInformationFailureResponse(INTERNAL_SERVER_ERROR))))
@@ -85,7 +85,7 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
       }
     }
 
-    "the group feature switch is off" should {
+    "the trust feature switch is off" should {
       "throw not found exception" in {
         disable(TrustJourney)
 
