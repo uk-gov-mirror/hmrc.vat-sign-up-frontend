@@ -45,7 +45,7 @@ class TrustResolverController @Inject()(val controllerComponents: ControllerComp
             case Right(StoreTrustInformationSuccess) =>
               Redirect(routes.AgreeCaptureEmailController.show())
             case Left(StoreTrustInformationFailureResponse(status)) =>
-              throw new InternalServerException("store vat group information failed: status=" + status)
+              throw new InternalServerException("store trust information failed: status=" + status)
           }
         case _ =>
           Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
