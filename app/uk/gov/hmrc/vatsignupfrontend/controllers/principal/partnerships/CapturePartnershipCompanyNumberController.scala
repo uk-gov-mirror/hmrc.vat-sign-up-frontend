@@ -103,8 +103,7 @@ class CapturePartnershipCompanyNumberController @Inject()(val controllerComponen
               }
             } else {
               Future.successful(
-                throw new InternalServerException("Invalid CRN")
-                //Redirect to error page
+                Redirect(routes.CouldNotConfirmCompanyController.show())
               )
             }
         )
