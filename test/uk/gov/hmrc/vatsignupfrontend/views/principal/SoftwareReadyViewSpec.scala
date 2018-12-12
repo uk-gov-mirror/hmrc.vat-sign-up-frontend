@@ -47,7 +47,8 @@ class SoftwareReadyViewSpec extends ViewSpec {
       name = "Software Ready View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
     testPage.shouldHaveForm("Yes No Form")(actionCall = testCall)
 
