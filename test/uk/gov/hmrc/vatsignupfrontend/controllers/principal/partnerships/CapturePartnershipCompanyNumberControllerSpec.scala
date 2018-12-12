@@ -97,45 +97,44 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
     }
 
     "company number failed prefix validation" should {
-      "throw an InternalServerException" in {
+      "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()
-        // TODO Redirect to error page
 
         val testCrn = "ZZ12345"
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
 
-        intercept[InternalServerException](await(result))
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
       }
     }
 
     "company number failed validation - invalid format" should {
-      "throw an InternalServerException" in {
+      "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()
-        // Redirect to error page
 
         val testCrn = "123A456 A"
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
 
-        intercept[InternalServerException](await(result))
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
       }
     }
 
     "company number failed validation - zero is invalid" should {
-      "throw an InternalServerException" in {
+      "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()
-        // Redirect to error page
 
         val testCrn = "0"
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
 
-        intercept[InternalServerException](await(result))
-
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
       }
     }
     "get company name returned not found" should {
