@@ -539,6 +539,12 @@ object MessageLookup {
     val link = "Change company"
   }
 
+  object PrincipalConfirmRegisteredSociety {
+    val title = "Confirm your registered society"
+    val heading: String = title
+    val link = "Change company"
+  }
+
   object PrincipalCaptureCompanyUtr {
     val title = "What is your company's Unique Taxpayer Reference number?"
     val heading: String = title
