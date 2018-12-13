@@ -21,7 +21,9 @@ object SessionKeys {
   val vatNumberKey = "VatNumber"
   val isFromBtaKey = "BTA"
   val companyNumberKey = "CompanyNumber"
+  val societyCompanyNumberKey = "RegisteredSocietyCompanyNumber"
   val companyNameKey = "CompanyName"
+  val societyNameKey = "RegisteredSocietyCompanyName"
   val companyUtrKey = "CompanyUtr"
   val emailKey = "Email"
   val transactionEmailKey = "TransactionEmail"
@@ -35,5 +37,4 @@ object SessionKeys {
   val partnershipTypeKey = "PartnershipType"
   val migratableDatesKey = "MigratableDates"
   val ninoSourceKey = "NinoSource"
-
 }
