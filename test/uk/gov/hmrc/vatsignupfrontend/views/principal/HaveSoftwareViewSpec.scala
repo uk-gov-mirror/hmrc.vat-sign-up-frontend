@@ -54,8 +54,6 @@ class HaveSoftwareViewSpec extends ViewSpec {
     )
     testPage.shouldHaveForm("Yes No Form")(actionCall = testCall)
 
-    testPage.shouldHavePara(messages.line)
-
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
 
