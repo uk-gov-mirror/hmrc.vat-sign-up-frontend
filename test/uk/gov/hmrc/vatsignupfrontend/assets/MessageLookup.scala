@@ -787,7 +787,6 @@ object MessageLookup {
   object HaveSoftware {
     val title = "Do you have accounting software for managing your VAT records?"
     val heading: String = title
-    val line = "Spreadsheet applications do not count as accounting software."
     val radioYes: String = "yes"
     val radioNo: String = "no"
     val yes: String = "Yes, I have accounting software"

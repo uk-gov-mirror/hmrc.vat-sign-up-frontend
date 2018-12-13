@@ -725,7 +725,6 @@ principal.verify_software_error.returnToGovUK                          = Return 
 ## Principal Have Software Page
 principal.have_software.title                                          = Do you have accounting software for managing your VAT records?
 principal.have_software.heading                                        = Do you have accounting software for managing your VAT records?
-principal.have_software.line                                           = Spreadsheet applications do not count as accounting software.
 principal.have_software.yes                                            = Yes, I have accounting software
 principal.have_software.no                                             = No, I do not have accounting software
 
