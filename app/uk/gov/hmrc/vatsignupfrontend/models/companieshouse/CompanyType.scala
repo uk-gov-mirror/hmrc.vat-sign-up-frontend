@@ -27,3 +27,4 @@ case object LimitedLiabilityPartnership extends CompanyType with PartnershipComp
 case object ScottishLimitedPartnership extends CompanyType with PartnershipCompanyType
 
 case object NonPartnershipEntity extends CompanyType
+

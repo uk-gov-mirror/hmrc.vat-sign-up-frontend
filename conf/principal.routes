@@ -49,6 +49,10 @@ POST        /vat-registration-date                              uk.gov.hmrc.vats
 GET         /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.show
 POST        /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.submit
 
+# Capture Registered Society Company Number
+GET        /registered-society-company-number                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureSocietyCompanyNumberController.show
+POST       /registered-society-company-number                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureSocietyCompanyNumberController.submit
+
 # Capture Company Utr
 GET         /company-utr                                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.show
 POST        /company-utr                                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.submit
