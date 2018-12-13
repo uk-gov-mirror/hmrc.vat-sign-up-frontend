@@ -28,6 +28,3 @@ case object ScottishLimitedPartnership extends CompanyType with PartnershipCompa
 
 case object NonPartnershipEntity extends CompanyType
 
-sealed trait RegisteredSocietyCompanyType
-
-case object RegisteredSociety extends CompanyType

@@ -56,6 +56,7 @@ class CaptureSocietyCompanyNumberControllerISpec extends ComponentSpecBase with 
 
         res should have(
           httpStatus(NOT_IMPLEMENTED) // httpStatus(OK),
+          // TODO: Redirect to ConfirmSocietyController.show() once implemented
           //redirectUri(routes.ConfirmSocietyController.show().url)
         )
       }

@@ -78,12 +78,11 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
 
         val result = TestCaptureSocietyCompanyNumberController.submit(request)
         status(result) shouldBe Status.NOT_IMPLEMENTED
-        /*
+        /* TODO: Redirect to ConfirmSocietyController.show() once implemented
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ConfirmPartnershipController.show().url)
-        session(result) get SessionKeys.partnershipTypeKey should contain(testPartnershipType)
-        session(result) get SessionKeys.companyNumberKey should contain(testCompanyNumber)
-        session(result) get SessionKeys.companyNameKey should contain(testCompanyName)
+        redirectLocation(result) shouldBe Some(routes.ConfirmSocietyController.show().url)
+        session(result) get SessionKeys.societyCompanyNumberKey should contain(testCompanyNumber)
+        session(result) get SessionKeys.societyNameKey should contain(testCompanyName)
         */
       }
     }
