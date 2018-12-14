@@ -61,6 +61,11 @@ POST        /company-utr                                        uk.gov.hmrc.vats
 GET         /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.show
 POST        /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
 
+# Confirm Registered Society name
+GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmSocietyController.show
+POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmSocietyController.submit
+
+
 #Agree Capture Email
 GET         /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.show
 POST        /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.submit
