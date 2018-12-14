@@ -28,9 +28,20 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 
 class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
-  with MockStoreCompanyNumberService {
+  with MockStoreCompanyNumberService with FeatureSwitching {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(RegisteredSocietyJourney)
+  }
+
+  override def afterEach(): Unit = {
+    super.afterEach()
+    enable(RegisteredSocietyJourney)
+  }
 
   object TestConfirmSocietyController extends ConfirmSocietyController(
     mockControllerComponents,

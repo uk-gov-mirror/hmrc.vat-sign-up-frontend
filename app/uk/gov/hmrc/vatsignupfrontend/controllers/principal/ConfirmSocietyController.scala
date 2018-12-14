@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -35,7 +36,7 @@ import scala.concurrent.Future
 class ConfirmSocietyController @Inject()(val controllerComponents: ControllerComponents,
                                          val storeCompanyNumberService: StoreCompanyNumberService
                                          )
-  extends AuthenticatedController(AdministratorRolePredicate) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(RegisteredSocietyJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
