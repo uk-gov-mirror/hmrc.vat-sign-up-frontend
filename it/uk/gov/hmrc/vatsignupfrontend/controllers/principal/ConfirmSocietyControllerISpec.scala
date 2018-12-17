@@ -103,26 +103,6 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
       }
     }
 
-    /*"if not CT enrolled" should {
-        "redirect to capture company UTR page" in {
-          stubAuth(OK, successfulAuthResponse())
-
-          val res = post("/confirm-registered-society",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.societyCompanyNumberKey -> testCompanyNumber
-            ))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureCompanyUtrController.show().url)
-          )
-        }
-
-      }
-
-    }
-  */
   }
 
 }
