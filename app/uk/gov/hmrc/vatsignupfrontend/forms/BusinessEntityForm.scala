@@ -41,6 +41,8 @@ object BusinessEntityForm {
 
   val trust: String = "trust"
 
+  val registeredSociety = "registered-society"
+
   val other: String = "other"
 
   val agentBusinessEntityError: String = "error.agent.business-entity"
@@ -59,6 +61,7 @@ object BusinessEntityForm {
         case Some(`division`) => Right(Division)
         case Some(`unincorporatedAssociation`) => Right(UnincorporatedAssociation)
         case Some(`trust`) => Right(Trust)
+        case Some (`registeredSociety`) => Right(RegisteredSociety)
         case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, if (isAgent) agentBusinessEntityError else principalBusinessEntityError)))
       }
@@ -72,6 +75,7 @@ object BusinessEntityForm {
         case Division => division
         case UnincorporatedAssociation => unincorporatedAssociation
         case Trust => trust
+        case RegisteredSociety => registeredSociety
         case Other => other
       }
 
