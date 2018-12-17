@@ -83,12 +83,12 @@ class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   }
 
   "Calling the submit action of the Confirm Society controller" should {
-    "go to the 'agree to receive emails' page if CT enrolled" in {
+    "go to the 'agree to receive emails' page" in {
       mockAuthRetrieveIRCTEnrolment()
       mockStoreCompanyNumberSuccess(
         vatNumber = testVatNumber,
         companyNumber = testCompanyNumber,
-        companyUtr = Some(testSaUtr)
+        companyUtr = None
       )
 
       val request = testPostRequest.withSession(
@@ -101,6 +101,7 @@ class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
     }
 
+    /*
     "go to the 'capture company UTR' page if not CT enrolled" in {
       mockAuthRetrieveVatDecEnrolment()
 
@@ -113,10 +114,11 @@ class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
     }
+    */
 
     "throw internal server exception if store company number fails" in {
       mockAuthRetrieveIRCTEnrolment()
-      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, Some(testSaUtr))
+      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, None)
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,

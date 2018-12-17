@@ -62,25 +62,19 @@ class ConfirmSocietyController @Inject()(val controllerComponents: ControllerCom
       enrolments => {
         val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
         val optCompanyNumber = request.session.get(SessionKeys.societyCompanyNumberKey).filter(_.nonEmpty)
-        val optCompanyUTR = enrolments.companyUtr
 
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-              optCompanyUTR match {
-                case Some(ctutr) =>
-                  storeCompanyNumberService.storeCompanyNumber(
-                    vatNumber = vatNumber,
-                    companyNumber = companyNumber,
-                    companyUtr = Some(ctutr)
-                  ) map {
-                    case Right(_) =>
-                      Redirect(routes.AgreeCaptureEmailController.show())
-                    case Left(errResponse) =>
-                      throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-                  }
-                case None =>
-                  Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-              }
+            storeCompanyNumberService.storeCompanyNumber(
+              vatNumber = vatNumber,
+              companyNumber = companyNumber,
+              companyUtr = None
+            ) map {
+              case Right(_) =>
+                Redirect(routes.AgreeCaptureEmailController.show())
+              case Left(errResponse) =>
+                throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
+            }
           case (None, _) =>
             Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
           case _ =>

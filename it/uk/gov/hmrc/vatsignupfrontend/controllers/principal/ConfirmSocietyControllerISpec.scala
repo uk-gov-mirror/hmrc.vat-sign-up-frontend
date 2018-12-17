@@ -83,28 +83,27 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
 
   "POST /confirm-registered-society" should {
 
-    "the company number is successfully stored" when {
+    "redirect to agree to receive email page" when {
 
-      "if CT enrolled" should {
-        "redirect to agree to receive email page" in {
-          stubAuth(OK, successfulAuthResponse(irctEnrolment))
-          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testSaUtr))
+      "the company number is successfully stored" in {
+        stubAuth(OK, successfulAuthResponse(irctEnrolment))
+        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, None)
 
-          val res = post("/confirm-registered-society",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.societyCompanyNumberKey -> testCompanyNumber
-            ))()
+        val res = post("/confirm-registered-society",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.societyCompanyNumberKey -> testCompanyNumber
+          ))()
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.AgreeCaptureEmailController.show().url)
-          )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.AgreeCaptureEmailController.show().url)
+        )
 
-        }
       }
+    }
 
-      "if not CT enrolled" should {
+    /*"if not CT enrolled" should {
         "redirect to capture company UTR page" in {
           stubAuth(OK, successfulAuthResponse())
 
@@ -119,9 +118,11 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
             redirectUri(routes.CaptureCompanyUtrController.show().url)
           )
         }
+
       }
 
     }
+  */
   }
 
 }
