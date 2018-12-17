@@ -809,7 +809,7 @@ object MessageLookup {
     val yes: String = "Yes, my software submits through Making Tax Digital for VAT"
     val no: String = "No, my software does not submit through Making Tax Digital for VAT"
   }
-  
+
   object ChooseSoftwareError {
     val title = "Making Tax Digital for VAT: software is needed"
     val heading: String = title
@@ -818,4 +818,11 @@ object MessageLookup {
     val line2 = s"We have a $link that support this VAT Returns process."
     val returnToGovUK = "Return to GOV.UK"
   }
+
+  object AgentConfirmRegisteredSociety {
+    val title = "Confirm your client's registered society"
+    val heading: String = title
+    val link = "Change company"
+  }
+
 }
