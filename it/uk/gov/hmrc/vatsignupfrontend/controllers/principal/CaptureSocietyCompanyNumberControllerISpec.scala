@@ -55,9 +55,8 @@ class CaptureSocietyCompanyNumberControllerISpec extends ComponentSpecBase with 
         val res = post("/registered-society-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED) // httpStatus(OK),
-          // TODO: Redirect to ConfirmSocietyController.show() once implemented
-          //redirectUri(routes.ConfirmSocietyController.show().url)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmSocietyController.show().url)
         )
       }
     }

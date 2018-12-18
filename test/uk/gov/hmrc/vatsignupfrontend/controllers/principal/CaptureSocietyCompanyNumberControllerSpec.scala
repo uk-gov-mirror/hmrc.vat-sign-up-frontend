@@ -57,7 +57,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
 
 
   "Calling the show action of the Capture Registered Society Company Number controller" should {
-    "go to the Capture Company Number page" in {
+    "go to the Capture Society Company Number page" in {
       mockAuthAdminRole()
 
       val result = TestCaptureSocietyCompanyNumberController.show(testGetRequest)
@@ -77,13 +77,12 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
         val request = testPostRequest(testCompanyNumber)
 
         val result = TestCaptureSocietyCompanyNumberController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        /* TODO: Redirect to ConfirmSocietyController.show() once implemented
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmSocietyController.show().url)
         session(result) get SessionKeys.societyCompanyNumberKey should contain(testCompanyNumber)
         session(result) get SessionKeys.societyNameKey should contain(testCompanyName)
-        */
+
       }
     }
 
