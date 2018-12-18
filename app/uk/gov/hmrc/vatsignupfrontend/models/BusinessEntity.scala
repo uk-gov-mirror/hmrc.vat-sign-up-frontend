@@ -57,6 +57,8 @@ object UnincorporatedAssociation extends BusinessEntity
 
 object Trust extends BusinessEntity
 
+object RegisteredSociety extends BusinessEntity
+
 object Other extends BusinessEntity
 
 object BusinessEntity {
@@ -70,6 +72,7 @@ object BusinessEntity {
   val DivisionKey = "division"
   val UnincorporatedAssociationKey = "unincorporated-association"
   val TrustKey = "trust"
+  val RegisteredSocietyKey = "registered-society"
   val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
@@ -84,6 +87,7 @@ object BusinessEntity {
       case DivisionKey => Some(Division)
       case UnincorporatedAssociationKey => Some(UnincorporatedAssociation)
       case TrustKey => Some(Trust)
+      case RegisteredSocietyKey => Some(RegisteredSociety)
       case OtherKey => Some(Other)
       case _ => None
     }
@@ -99,6 +103,7 @@ object BusinessEntity {
       case Division => DivisionKey
       case UnincorporatedAssociation => UnincorporatedAssociationKey
       case Trust => TrustKey
+      case RegisteredSociety => RegisteredSocietyKey
       case Other => OtherKey
     }
   }

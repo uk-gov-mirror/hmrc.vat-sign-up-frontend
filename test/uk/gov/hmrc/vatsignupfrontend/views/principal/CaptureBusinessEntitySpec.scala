@@ -42,7 +42,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     vatGroupEnabled = true,
     divisionEnabled = true,
     trustEnabled = true,
-    unincorporatedAssociationEnabled = true
+    unincorporatedAssociationEnabled = true,
+    registeredSocietyEnabled = true
   )(
     FakeRequest(),
     applicationMessages,
@@ -204,6 +205,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
           }
         }
       }
+
       "for the option 'Trust'" should {
 
         "have the text 'Trust'" in {
@@ -216,6 +218,26 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'trust'" in {
             optionLabel.attr("id") shouldEqual "trust"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'Registered Society'" should {
+
+        "have the text 'Registered society (including community benefit societies and co-operative societies)'" in {
+          doc.select("label[for=registered-society]").text() shouldEqual messages.radioRegisteredSociety
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#registered-society")
+
+          "have the id 'registered-society'" in {
+            optionLabel.attr("id") shouldEqual "registered-society"
           }
 
           "be of type radio" in {
@@ -249,4 +271,3 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     testPage.shouldHaveContinueButton()
   }
 }
-
