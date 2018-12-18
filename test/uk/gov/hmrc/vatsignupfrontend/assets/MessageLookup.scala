@@ -116,6 +116,7 @@ object MessageLookup {
     val radioVatGroup: String = "VAT group"
     val radioDivision: String = "Administrative Division"
     val radioUnincorporatedAssociation: String = "Unincorporated Association"
+    val radioRegisteredSociety: String = "Registered Society (including Community Benefit Societies and Co-operative Societies)"
     val radioTrust: String = "Trust"
     val radioOther: String = "Other"
   }

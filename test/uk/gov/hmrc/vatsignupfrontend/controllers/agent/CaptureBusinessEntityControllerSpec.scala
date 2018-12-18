@@ -161,6 +161,18 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "the business entity is a registered society" when {
+        "redirect to the capture registered society company number controller" in {
+          mockAuthRetrieveAgentEnrolment()
+          enable(RegisteredSocietyJourney)
+
+          val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(registeredSociety)))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(RegisteredSociety))
+        }
+      }
+
       "go to the cannot use service yet page" when {
         "the business entity is other" in {
           mockAuthRetrieveAgentEnrolment()

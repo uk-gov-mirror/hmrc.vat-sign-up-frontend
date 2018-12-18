@@ -156,6 +156,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "the business type is registered society" should {
+      "redirect to capture registered society company number" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(RegisteredSocietyJourney)
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> registeredSociety)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
+        )
+      }
+    }
+
     "redirect to cannot use service" when {
       "the business entity is other" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

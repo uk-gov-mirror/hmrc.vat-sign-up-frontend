@@ -42,7 +42,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     vatGroupEnabled = true,
     divisionEnabled = true,
     unincorporatedAssociationEnabled = true,
-    trustEnabled = true
+    trustEnabled = true,
+    registeredSocietyEnabled = true
   )(
     FakeRequest(),
     applicationMessages,
@@ -158,21 +159,6 @@ class CaptureBusinessEntitySpec extends ViewSpec {
         }
       }
 
-      "for the option 'Unincorporated association'" should {
-        "have the text 'Unincorporated Association'" in {
-          doc.select("label[for=unincorporated-association]").text() shouldEqual messages.radioUnincorporatedAssociation
-        }
-        "have an input under the label that" should {
-          lazy val optionLabel = doc.select("#unincorporated-association")
-          "have the id 'unincorporated-association'" in {
-            optionLabel.attr("id") shouldEqual "unincorporated-association"
-          }
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
-          }
-        }
-      }
-
       "for the option 'Division'" should {
         "have the text 'Division'" in {
           doc.select("label[for=division]").text() shouldEqual messages.radioDivision
@@ -188,7 +174,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
         }
       }
 
-      "for the option 'Unincorporated Association'" should {
+      "for the option 'Unincorporated association'" should {
         "have the text 'Unincorporated Association'" in {
           doc.select("label[for=unincorporated-association]").text() shouldEqual messages.radioUnincorporatedAssociation
         }
@@ -218,6 +204,21 @@ class CaptureBusinessEntitySpec extends ViewSpec {
         }
       }
 
+      "for the option 'Registered Society'" should {
+        "have the text 'Registered Society'" in {
+          doc.select("label[for=registered-society]").text() shouldEqual messages.radioRegisteredSociety
+        }
+        "have an input under the label that" should {
+          lazy val optionLabel = doc.select("#registered-society")
+          "have the id 'registered-society'" in {
+            optionLabel.attr("id") shouldEqual "registered-society"
+          }
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
       "for the option 'Other'" should {
 
         "have the text 'Other'" in {
@@ -238,7 +239,6 @@ class CaptureBusinessEntitySpec extends ViewSpec {
         }
       }
     }
-
 
     testPage.shouldHaveContinueButton()
   }
