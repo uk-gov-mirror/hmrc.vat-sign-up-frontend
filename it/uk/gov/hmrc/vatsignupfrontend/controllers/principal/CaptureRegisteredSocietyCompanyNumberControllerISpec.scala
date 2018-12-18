@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stu
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
-class CaptureSocietyCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+class CaptureRegisteredSocietyCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -56,7 +56,7 @@ class CaptureSocietyCompanyNumberControllerISpec extends ComponentSpecBase with 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.ConfirmSocietyController.show().url)
+          redirectUri(routes.ConfirmRegisteredSocietyController.show().url)
         )
       }
     }

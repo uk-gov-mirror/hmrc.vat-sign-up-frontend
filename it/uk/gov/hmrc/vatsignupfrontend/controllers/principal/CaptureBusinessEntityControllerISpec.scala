@@ -162,7 +162,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureSocietyCompanyNumberController.show().url)
+          redirectUri(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
         )
       }
     }

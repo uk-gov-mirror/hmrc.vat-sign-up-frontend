@@ -33,7 +33,7 @@ class ConfirmRegisteredSocietySpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_registered_society(
-    societyName = testCompanyName,
+    registeredSocietyName = testCompanyName,
     postAction = testCall,
     changeLink = testUri)(
     FakeRequest(),

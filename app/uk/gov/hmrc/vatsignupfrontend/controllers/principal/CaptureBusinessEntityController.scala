@@ -91,7 +91,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case Trust =>
               Future.successful(Redirect(routes.TrustResolverController.resolve()))
             case RegisteredSociety =>
-              Future.successful(Redirect(routes.CaptureSocietyCompanyNumberController.show()))
+              Future.successful(Redirect(routes.CaptureRegisteredSocietyCompanyNumberController.show()))
             case Other =>
               Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }

@@ -17,16 +17,14 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import sun.net.RegisteredDomain
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub.stubStoreRegisteredSocietySuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 
-class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -42,7 +40,7 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/confirm-registered-society", Map(SessionKeys.societyNameKey -> testCompanyName))
+      val res = get("/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
 
       res should have(
         httpStatus(OK)
@@ -56,7 +54,7 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
         disable(RegisteredSocietyJourney)
         stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/confirm-registered-society", Map(SessionKeys.societyNameKey -> testCompanyName))
+        val res = get("/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
 
         res should have(
           httpStatus(NOT_FOUND)
@@ -71,7 +69,7 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
         disable(RegisteredSocietyJourney)
         stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/confirm-registered-society", Map(SessionKeys.societyNameKey -> testCompanyName))
+        val res = get("/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
 
         res should have(
           httpStatus(NOT_FOUND)
@@ -87,12 +85,12 @@ class ConfirmSocietyControllerISpec extends ComponentSpecBase with CustomMatcher
 
       "the company number is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(irctEnrolment))
-        stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, None)
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber)
 
         val res = post("/confirm-registered-society",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.societyCompanyNumberKey -> testCompanyNumber
+            SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
           ))()
 
         res should have(

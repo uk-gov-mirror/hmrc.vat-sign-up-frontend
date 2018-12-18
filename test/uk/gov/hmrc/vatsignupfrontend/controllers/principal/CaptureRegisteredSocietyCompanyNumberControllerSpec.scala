@@ -32,7 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
-class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
 
   override def beforeEach(): Unit = {
@@ -45,7 +45,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
     enable(RegisteredSocietyJourney)
   }
 
-  object TestCaptureSocietyCompanyNumberController extends CaptureSocietyCompanyNumberController(
+  object TestCaptureRegisteredSocietyCompanyNumberController extends CaptureRegisteredSocietyCompanyNumberController(
     mockControllerComponents,
     mockGetCompanyNameService
   )
@@ -60,7 +60,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
     "go to the Capture Society Company Number page" in {
       mockAuthAdminRole()
 
-      val result = TestCaptureSocietyCompanyNumberController.show(testGetRequest)
+      val result = TestCaptureRegisteredSocietyCompanyNumberController.show(testGetRequest)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
@@ -76,12 +76,12 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
 
         val request = testPostRequest(testCompanyNumber)
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(request)
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ConfirmSocietyController.show().url)
-        session(result) get SessionKeys.societyCompanyNumberKey should contain(testCompanyNumber)
-        session(result) get SessionKeys.societyNameKey should contain(testCompanyName)
+        redirectLocation(result) shouldBe Some(routes.ConfirmRegisteredSocietyController.show().url)
+        session(result) get SessionKeys.registeredSocietyCompanyNumberKey should contain(testCompanyNumber)
+        session(result) get SessionKeys.registeredSocietyNameKey should contain(testCompanyName)
 
       }
     }
@@ -90,7 +90,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
       "reload the page with errors" in {
         mockAuthAdminRole()
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(testPostRequest("123456789"))
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(testPostRequest("123456789"))
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -105,7 +105,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
         val testCrn = "ZZ12345"
         val request = testPostRequest(testCrn)
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(request)
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
@@ -120,7 +120,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
         val testCrn = "123A456 A"
         val request = testPostRequest(testCrn)
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(request)
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
@@ -135,7 +135,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
         val testCrn = "0"
         val request = testPostRequest(testCrn)
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(request)
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
@@ -149,7 +149,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
 
         val request = testPostRequest(testCompanyNumber)
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(request)
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
@@ -164,7 +164,7 @@ class CaptureSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAp
 
         val request = testPostRequest(testCompanyNumber)
 
-        val result = TestCaptureSocietyCompanyNumberController.submit(request)
+        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         intercept[InternalServerException](await(result))
       }

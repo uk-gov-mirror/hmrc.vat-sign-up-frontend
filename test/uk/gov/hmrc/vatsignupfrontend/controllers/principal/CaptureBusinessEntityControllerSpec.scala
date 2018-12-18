@@ -152,7 +152,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
           val result = await(TestCaptureBusinessEntityController.submit(request))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureSocietyCompanyNumberController.show().url)
+          redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
 
           result.session get SessionKeys.businessEntityKey should contain(
             BusinessEntitySessionFormatter.toString(RegisteredSociety)
