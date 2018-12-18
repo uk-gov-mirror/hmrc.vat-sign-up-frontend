@@ -1,150 +1,154 @@
 # microservice specific routes
 
 # Guidance page
-GET         /                                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.GuidanceController.show
+GET         /                                                   uk.gov.hmrc.vatsignupfrontend.controllers.agent.GuidanceController.show
 
 # Not enrolled
-GET         /there-is-a-problem                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.NotEnrolledToAgentServicesController.show
+GET         /there-is-a-problem                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.NotEnrolledToAgentServicesController.show
 
-GET         /not-authorised                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.NoAgentClientRelationshipController.show
+GET         /not-authorised                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.NoAgentClientRelationshipController.show
 
 # Already signed up
-GET         /error/already-signed-up                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AlreadySignedUpController.show
+GET         /error/already-signed-up                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.AlreadySignedUpController.show
 
 # Capture VRN
-GET         /vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.show
-POST        /vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.submit
+GET         /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.show
+POST        /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.submit
 
 # Confirm VRN
-GET         /confirm-vat-number                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.show
-POST        /confirm-vat-number                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.submit
+GET         /confirm-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.show
+POST        /confirm-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.submit
 
 # Cannot use service yet
-GET         /cannot-use-service-yet                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CannotUseServiceController.show
+GET         /cannot-use-service-yet                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CannotUseServiceController.show
 
 # Capture Client details
-GET         /client-details                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientDetailsController.show
-POST        /client-details                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientDetailsController.submit
+GET         /client-details                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientDetailsController.show
+POST        /client-details                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientDetailsController.submit
 
 # Confirm Client details
-GET         /confirm-client                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.show
-POST        /confirm-client                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.submit
+GET         /confirm-client                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.show
+POST        /confirm-client                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.submit
 
 # Failed Client Matching
-GET         /error/incorrect-details                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.FailedClientMatchingController.show
-POST        /error/incorrect-details                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.FailedClientMatchingController.submit
+GET         /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.FailedClientMatchingController.show
+POST        /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.FailedClientMatchingController.submit
 
 # Capture Company Number
-GET         /company-number                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.show
-POST        /company-number                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.submit
+GET         /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.show
+POST        /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.submit
 
 # Confirm Company name
-GET         /confirm-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
-POST        /confirm-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.submit
+GET         /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
+POST        /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.submit
 
 #Capture Business Entity
-GET         /business-type                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityController.show
-POST        /business-type                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityController.submit
+GET         /business-type                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityController.show
+POST        /business-type                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityController.submit
 
 # Could not confirm VAT Number
-GET         /could-not-confirm-VAT-number               uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.show
-POST        /could-not-confirm-VAT-number               uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.submit
+GET         /could-not-confirm-VAT-number                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.show
+POST        /could-not-confirm-VAT-number                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.submit
 
 # Could not confirm Company name
-GET         /could-not-confirm-company                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.show
-POST        /could-not-confirm-company                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.submit
+GET         /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.show
+POST        /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.submit
 
 # manage the routing of the email flow
-GET         /email                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
+GET         /email                                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
 
 #Agree Capture Email
-GET         /receive-emails                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.show
-POST        /receive-emails                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.submit
+GET         /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.show
+POST        /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.submit
 
 #Capture Email
-GET         /client-email-address                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.show
-POST        /client-email-address                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.submit
+GET         /client-email-address                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.show
+POST        /client-email-address                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.submit
 
 #Capture Agent Email
-GET         /email-address                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.show
-POST        /email-address                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.submit
+GET         /email-address                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.show
+POST        /email-address                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureAgentEmailController.submit
 
 #Confirm Email
-GET         /confirm-client-email                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientEmailController.show
-POST        /confirm-client-email                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientEmailController.submit
+GET         /confirm-client-email                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientEmailController.show
+POST        /confirm-client-email                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientEmailController.submit
 
 #Confirm Agent Email
-GET         /confirm-email                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmAgentEmailController.show
-POST        /confirm-email                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmAgentEmailController.submit
+GET         /confirm-email                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmAgentEmailController.show
+POST        /confirm-email                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmAgentEmailController.submit
 
 #Verify Email
-GET         /sent-client-email                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.show
-POST        /sent-client-email                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.submit
+GET         /sent-client-email                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.show
+POST        /sent-client-email                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.submit
 
 # Use different email address
-GET         /use-different-email-address                uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.show
-POST        /use-different-email-address                uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.submit
+GET         /use-different-email-address                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.show
+POST        /use-different-email-address                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.submit
 
 #Verify Agent Email
-GET         /verify-email                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyAgentEmailController.show
+GET         /verify-email                                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyAgentEmailController.show
 
-GET         /client-email-verified                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.ClientVerifiedEmailController.show
+GET         /client-email-verified                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.ClientVerifiedEmailController.show
 
-GET         /email-verified                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentVerifiedEmailController.show
+GET         /email-verified                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentVerifiedEmailController.show
 
 #Terms
-GET         /terms-of-participation                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.show
-POST        /terms-of-participation                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.submit
+GET         /terms-of-participation                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.show
+POST        /terms-of-participation                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.submit
 
 #Confirmation
-GET         /information-received                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmationController.show
+GET         /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmationController.show
 
 #Sign Up Another Client
-POST        /information-received                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.SignUpAnotherClientController.submit
+POST        /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.SignUpAnotherClientController.submit
 
 # Sign up later
-GET         /error/sign-up-later                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigratableDatesController.show
+GET         /error/sign-up-later                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigratableDatesController.show
 
 # Partnership UTR
-GET         /partnership-utr                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.show
-POST        /partnership-utr                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.submit
+GET         /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.show
+POST        /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.submit
 
 # Partnership PPOB
-GET         /principal-place-postcode                   uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.show
-POST        /principal-place-postcode                   uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.submit
+GET         /principal-place-postcode                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.show
+POST        /principal-place-postcode                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.PartnershipPostCodeController.submit
 
 # Confirm Partnership Name
-GET         /confirm-partnership-company                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.show
-POST        /confirm-partnership-company                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.submit
+GET         /confirm-partnership-company                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.show
+POST        /confirm-partnership-company                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.submit
 
 # Could Not Find Partnership
-GET         /error/company-number-not-found             uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotFindPartnershipController.show
-POST        /error/company-number-not-found             uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotFindPartnershipController.submit
+GET         /error/company-number-not-found                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotFindPartnershipController.show
+POST        /error/company-number-not-found                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotFindPartnershipController.submit
 
 # Could Not Confirm Partnership
-GET         /error/could-not-confirm-partnership        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.show
-POST        /error/could-not-confirm-partnership        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.submit
+GET         /error/could-not-confirm-partnership                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.show
+POST        /error/could-not-confirm-partnership                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.submit
 
 # Not a Limited Partnership
-GET         /error/not-a-limited-partnership            uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.show
-POST        /error/not-a-limited-partnership            uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.submit
+GET         /error/not-a-limited-partnership                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.show
+POST        /error/not-a-limited-partnership                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.submit
 
 # Capture Partnership Company Number
-GET         /partnership-company-number                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.show
-POST        /partnership-company-number                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.submit
+GET         /partnership-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.show
+POST        /partnership-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.submit
 
 # Check Your Answers Partnership
-GET         /check-your-answers                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CheckYourAnswersPartnershipController.show
-POST        /check-your-answers                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CheckYourAnswersPartnershipController.submit
+GET         /check-your-answers                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CheckYourAnswersPartnershipController.show
+POST        /check-your-answers                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CheckYourAnswersPartnershipController.submit
 
-GET         /vat-group-resolver                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.VatGroupResolverController.resolve
+GET         /vat-group-resolver                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.VatGroupResolverController.resolve
 
-GET         /unincorporated-association-resolver        uk.gov.hmrc.vatsignupfrontend.controllers.agent.UnincorporatedAssociationResolverController.resolve
+GET         /unincorporated-association-resolver                uk.gov.hmrc.vatsignupfrontend.controllers.agent.UnincorporatedAssociationResolverController.resolve
 
-GET         /trust-resolver                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TrustResolverController.resolve
+GET         /trust-resolver                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.TrustResolverController.resolve
 
-GET         /division-resolver                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.DivisionResolverController.resolve
+GET         /division-resolver                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.DivisionResolverController.resolve
 
 # Capture Registered Society Company Number
-GET         /registered-society-company-number          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.show
-POST        /registered-society-company-number          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.submit
+GET         /registered-society-company-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.show
+POST        /registered-society-company-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.submit
+
+# Registered Society Company Name not found
+GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.show
+POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.submit

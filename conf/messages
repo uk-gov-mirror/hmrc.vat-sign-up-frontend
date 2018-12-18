@@ -288,7 +288,6 @@ agent.verify_agent_email.line_2                                        = You can
 agent.verify_email.accordion.heading                                   = I did not get an email
 agent.verify_email.accordion.line_1                                    = Check your junk folder. If it is not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
-
 # When client verified their email requested by an agent
 client.verified_email.title                                            = You''ve verified your email address
 client.verified_email.heading                                          = You''ve verified your email address
@@ -758,3 +757,8 @@ principal.choose_software_error.returnToGovUK                          = Return 
 agent.confirm_registered_society_name.title                            = Confirm your client''s registered society
 agent.confirm_registered_society_name.heading                          = Confirm your client''s registered society
 agent.confirm_registered_society_name.link                             = Change company
+
+## Agent Registered Society Company Name Not Found page
+agent.registered_society_company_name_not_found.title                 = We could not confirm your client''s registered society
+agent.registered_society_company_name_not_found.heading               = We could not confirm your client''s registered society
+agent.registered_society_company_name_not_found.line_1                = The information you provided does not match the details we have for your client''s registered society.
