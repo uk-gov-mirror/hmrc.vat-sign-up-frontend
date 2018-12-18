@@ -25,14 +25,14 @@ import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class ConfirmRegisteredSocietyNameSpec extends ViewSpec {
+class ConfirmRegisteredSocietySpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_registered_society_name(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_registered_society(
     companyName = testCompanyName,
     postAction = testCall,
     changeLink = testUri)(
@@ -41,10 +41,10 @@ class ConfirmRegisteredSocietyNameSpec extends ViewSpec {
     new AppConfig(configuration, env)
   )
 
-  "The Confirm Registered Society Name view" should {
+  "The Confirm Registered Society view" should {
 
     val testPage = TestView(
-      name = "Confirm Registered Society Name View",
+      name = "Confirm Registered Society View",
       title = messages.title,
       heading = messages.heading,
       page = page
@@ -52,7 +52,7 @@ class ConfirmRegisteredSocietyNameSpec extends ViewSpec {
 
     testPage.shouldHavePara(testCompanyName)
 
-    testPage.shouldHaveForm("Confirm Registered Society Name Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Confirm Registered Society Form")(actionCall = testCall)
 
     testPage.shouldHaveConfirmButton()
 
