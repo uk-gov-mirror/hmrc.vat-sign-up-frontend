@@ -100,7 +100,6 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
     "company number failed prefix validation" should {
       "redirect to the 'Could not confirm business' page" in {
         mockAuthAdminRole()
-        // TODO Redirect to error page
 
         val testCrn = "ZZ12345"
         val request = testPostRequest(testCrn)
@@ -108,7 +107,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
       }
     }
 
@@ -123,7 +122,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
       }
     }
 
@@ -138,7 +137,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
       }
     }
     "get company name returned not found" should {
@@ -152,7 +151,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
       }
     }
 

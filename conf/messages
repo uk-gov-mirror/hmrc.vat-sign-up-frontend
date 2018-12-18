@@ -428,7 +428,7 @@ principal.capture_entity_type.vatGroup                                 = VAT gro
 principal.capture_entity_type.division                                 = Administrative division
 principal.capture_entity_type.unincorporatedAssociation                = Unincorporated association
 principal.capture_entity_type.trust                                    = Trust
-principal.capture_entity_type.registeredSociety                            = Registered society (including community benefit societies and co-operative societies)
+principal.capture_entity_type.registeredSociety                        = Registered society (including community benefit societies and co-operative societies)
 principal.capture_entity_type.other                                    = Other
 
 # Check your answers page
@@ -580,9 +580,14 @@ principal.confirm_company.title                                        = Confirm
 principal.confirm_company.heading                                      = Confirm your company
 principal.confirm_company.link                                         = Change company
 
-## Confirm Company page
+## Confirm Registered Society Company page
 principal.confirm_registered_society.title                             = Confirm your registered society
 principal.confirm_registered_society.heading                           = Confirm your registered society
+
+## Registered Society Company Name Not Found page
+principal.registered_society_company_name_not_found.title             = We could not confirm your registered society
+principal.registered_society_company_name_not_found.heading           = We could not confirm your registered society
+principal.registered_society_company_name_not_found.line_1            = The information you provided does not match the details we have for your registered society.
 
 ## Principal Incorrect Details page
 principal.failed_matching.title                                        = We couldn''t confirm your details
