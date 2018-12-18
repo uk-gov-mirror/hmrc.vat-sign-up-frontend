@@ -233,3 +233,7 @@ POST        /have-software                                      uk.gov.hmrc.vats
 # Software Ready
 GET         /software-ready                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.SoftwareReadyController.show
 POST        /software-ready                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.SoftwareReadyController.submit
+
+# Registered Society Company Name not found
+GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCompanyNameNotFoundController.show
+POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCompanyNameNotFoundController.submit

@@ -546,6 +546,12 @@ object MessageLookup {
     val link = "Change company"
   }
 
+  object PrincipalRegisteredSocietyCompanyNameNotFound {
+    val title = "We could not confirm your registered society"
+    val heading: String = title
+    val line1 = "The information you provided does not match the details we have for your registered society."
+  }
+
   object PrincipalCaptureCompanyUtr {
     val title = "What is your company's Unique Taxpayer Reference number?"
     val heading: String = title
