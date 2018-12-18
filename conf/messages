@@ -211,6 +211,7 @@ agent.capture_entity_type.vatGroup                                     = VAT gro
 agent.capture_entity_type.division                                     = Administrative Division
 agent.capture_entity_type.unincorporatedAssociation                    = Unincorporated Association
 agent.capture_entity_type.trust                                        = Trust
+agent.capture_entity_type.registeredSociety                            = Registered Society (including Community Benefit Societies and Co-operative Societies)
 agent.capture_entity_type.other                                        = Other
 
 ## Client Details ##
@@ -428,7 +429,7 @@ principal.capture_entity_type.vatGroup                                 = VAT gro
 principal.capture_entity_type.division                                 = Administrative division
 principal.capture_entity_type.unincorporatedAssociation                = Unincorporated association
 principal.capture_entity_type.trust                                    = Trust
-principal.capture_entity_type.registeredSociety                            = Registered society (including community benefit societies and co-operative societies)
+principal.capture_entity_type.registeredSociety                        = Registered society (including community benefit societies and co-operative societies)
 principal.capture_entity_type.other                                    = Other
 
 # Check your answers page

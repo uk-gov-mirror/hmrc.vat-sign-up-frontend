@@ -47,7 +47,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           isEnabled(VatGroupJourney),
           isEnabled(DivisionJourney),
           isEnabled(UnincorporatedAssociationJourney),
-          isEnabled(TrustJourney)
+          isEnabled(TrustJourney),
+          isEnabled(RegisteredSocietyJourney)
         ))
       )
     }
@@ -66,7 +67,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               isEnabled(VatGroupJourney),
               isEnabled(DivisionJourney),
               isEnabled(UnincorporatedAssociationJourney),
-              isEnabled(TrustJourney)
+              isEnabled(TrustJourney),
+              isEnabled(RegisteredSocietyJourney)
             ))
           ),
         entityType => {
@@ -79,6 +81,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             case Division => Future.successful(Redirect(routes.DivisionResolverController.resolve()))
             case UnincorporatedAssociation => Future.successful(Redirect(routes.UnincorporatedAssociationResolverController.resolve()))
             case Trust => Future.successful(Redirect(routes.TrustResolverController.resolve()))
+            case RegisteredSociety => Future.successful(Redirect(routes.CaptureRegisteredSocietyCompanyNumberController.show()))
             case Other => Future.successful(Redirect(routes.CannotUseServiceController.show()))
           }
         } map (_.addingToSession(SessionKeys.businessEntityKey, entityType))
