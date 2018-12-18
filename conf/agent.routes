@@ -144,3 +144,7 @@ GET         /unincorporated-association-resolver        uk.gov.hmrc.vatsignupfro
 GET         /trust-resolver                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TrustResolverController.resolve
 
 GET         /division-resolver                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.DivisionResolverController.resolve
+
+# Capture Registered Society Company Number
+GET         /registered-society-company-number          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.show
+POST        /registered-society-company-number          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.submit
