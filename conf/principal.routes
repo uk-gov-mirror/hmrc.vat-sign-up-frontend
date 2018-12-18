@@ -50,8 +50,8 @@ GET         /company-number                                     uk.gov.hmrc.vats
 POST        /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyNumberController.submit
 
 # Capture Registered Society Company Number
-GET        /registered-society-company-number                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureSocietyCompanyNumberController.show
-POST       /registered-society-company-number                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureSocietyCompanyNumberController.submit
+GET        /registered-society-company-number                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureRegisteredSocietyCompanyNumberController.show
+POST       /registered-society-company-number                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureRegisteredSocietyCompanyNumberController.submit
 
 # Capture Company Utr
 GET         /company-utr                                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureCompanyUtrController.show
@@ -62,8 +62,8 @@ GET         /confirm-company                                    uk.gov.hmrc.vats
 POST        /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
 
 # Confirm Registered Society name
-GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmSocietyController.show
-POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmSocietyController.submit
+GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.show
+POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.submit
 
 
 #Agree Capture Email

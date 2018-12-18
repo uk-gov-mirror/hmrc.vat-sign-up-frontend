@@ -27,11 +27,11 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietyService
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 
-class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
-  with MockStoreCompanyNumberService with FeatureSwitching {
+class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+  with MockStoreRegisteredSocietyService with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -43,9 +43,9 @@ class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
     enable(RegisteredSocietyJourney)
   }
 
-  object TestConfirmSocietyController extends ConfirmSocietyController(
+  object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(
     mockControllerComponents,
-    mockStoreCompanyNumberService
+    mockStoreRegisteredSocietyService
   )
 
   val testGetRequest = FakeRequest("GET", "/confirm-registered-society")
@@ -58,16 +58,16 @@ class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       "go to the Confirm Society page" in {
         mockAuthAdminRole()
         val request = testGetRequest.withSession(
-          SessionKeys.societyNameKey -> testCompanyName
+          SessionKeys.registeredSocietyNameKey -> testCompanyName
         )
 
-        val result = TestConfirmSocietyController.show(request)
+        val result = TestConfirmRegisteredSocietyController.show(request)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
 
         val changeLink = Jsoup.parse(contentAsString(result)).getElementById("changeLink")
-        changeLink.attr("href") shouldBe routes.CaptureSocietyCompanyNumberController.show().url
+        changeLink.attr("href") shouldBe routes.CaptureRegisteredSocietyCompanyNumberController.show().url
       }
     }
 
@@ -75,67 +75,66 @@ class ConfirmSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       "go to the capture society company number page" in {
         mockAuthAdminRole()
 
-        val result = TestConfirmSocietyController.show(testGetRequest)
+        val result = TestConfirmRegisteredSocietyController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureSocietyCompanyNumberController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
       }
     }
   }
 
   "Calling the submit action of the Confirm Society controller" should {
     "go to the 'agree to receive emails' page" in {
-      mockAuthRetrieveIRCTEnrolment()
-      mockStoreCompanyNumberSuccess(
+      mockAuthAdminRole()
+      mockStoreRegisteredSocietySuccess(
         vatNumber = testVatNumber,
-        companyNumber = testCompanyNumber,
-        companyUtr = None
+        companyNumber = testCompanyNumber
       )
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.societyCompanyNumberKey -> testCompanyNumber
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
       )
 
-      val result = TestConfirmSocietyController.submit(request)
+      val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
     }
 
     "throw internal server exception if store company number fails" in {
-      mockAuthRetrieveIRCTEnrolment()
-      mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, None)
+      mockAuthAdminRole()
+      mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber)
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.societyCompanyNumberKey -> testCompanyNumber
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
       )
 
       intercept[InternalServerException] {
-        await(TestConfirmSocietyController.submit(request))
+        await(TestConfirmRegisteredSocietyController.submit(request))
       }
     }
     "go to the 'your vat number' page if vat number is missing" in {
-      mockAuthRetrieveIRCTEnrolment()
+      mockAuthAdminRole()
 
       val request = testPostRequest.withSession(
-        SessionKeys.societyCompanyNumberKey -> testCompanyNumber
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
       )
 
-      val result = TestConfirmSocietyController.submit(request)
+      val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
 
     }
     "go to the 'capture society company number' page if company number is missing" in {
-      mockAuthRetrieveIRCTEnrolment()
+      mockAuthAdminRole()
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber
       )
 
-      val result = TestConfirmSocietyController.submit(request)
+      val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.CaptureSocietyCompanyNumberController.show().url)
+      redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
     }
   }
 

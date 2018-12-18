@@ -35,9 +35,9 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_number
 import scala.concurrent.Future
 
 @Singleton
-class CaptureSocietyCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                                      val getCompanyNameService: GetCompanyNameService
-                                                     )
+class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
+                                                                val getCompanyNameService: GetCompanyNameService
+                                                               )
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(RegisteredSocietyJourney)) {
 
   val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false, isPartnership = false)
@@ -56,7 +56,7 @@ class CaptureSocietyCompanyNumberController @Inject()(val controllerComponents: 
         Future.successful(
           Ok(capture_company_number(
             validateCompanyNumberForm.form,
-            routes.CaptureSocietyCompanyNumberController.submit())
+            routes.CaptureRegisteredSocietyCompanyNumberController.submit())
           )
         )
       }
@@ -70,17 +70,17 @@ class CaptureSocietyCompanyNumberController @Inject()(val controllerComponents: 
             Future.successful(
               BadRequest(capture_company_number(
                 formWithErrors,
-                routes.CaptureSocietyCompanyNumberController.submit()
+                routes.CaptureRegisteredSocietyCompanyNumberController.submit()
               ))
             ),
           companyNumber =>
             if (validateCrnPrefix(companyNumber)) {
               getCompanyNameService.getCompanyName(companyNumber) map {
                 case Right(GetCompanyNameSuccess(societyName, _)) =>
-                  Redirect(routes.ConfirmSocietyController.show())
+                  Redirect(routes.ConfirmRegisteredSocietyController.show())
                     .addingToSession(
-                      SessionKeys.societyCompanyNumberKey -> companyNumber,
-                      SessionKeys.societyNameKey -> societyName
+                      SessionKeys.registeredSocietyCompanyNumberKey -> companyNumber,
+                      SessionKeys.registeredSocietyNameKey -> societyName
                     )
 
                 case Left(CompanyNumberNotFound) =>
