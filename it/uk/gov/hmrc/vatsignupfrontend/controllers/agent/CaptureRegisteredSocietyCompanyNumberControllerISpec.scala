@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -25,6 +26,17 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
 class CaptureRegisteredSocietyCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(RegisteredSocietyJourney)
+  }
+
+  override def afterEach(): Unit = {
+    super.afterEach()
+    enable(RegisteredSocietyJourney)
+  }
+
   "GET /registered-society-company-number" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))

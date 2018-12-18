@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyNumber
@@ -36,6 +37,16 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
     mockControllerComponents,
     mockGetCompanyNameService
   )
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(RegisteredSocietyJourney)
+  }
+
+  override def afterEach(): Unit = {
+    super.afterEach()
+    enable(RegisteredSocietyJourney)
+  }
 
   lazy val testGetRequest = FakeRequest("GET", "/registered-society-company-number")
 
@@ -83,7 +94,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.societyCompanyNumberKey) shouldBe None
+        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
 
       }
     }
@@ -99,7 +110,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.societyCompanyNumberKey) shouldBe None
+        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
 
       }
     }
@@ -115,7 +126,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.societyCompanyNumberKey) shouldBe None
+        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
 
       }
     }
@@ -132,7 +143,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.societyCompanyNumberKey) shouldBe None
+        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
 
       }
 

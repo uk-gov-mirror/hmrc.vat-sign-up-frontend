@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber
@@ -34,7 +35,8 @@ import scala.concurrent.Future
 @Singleton
 class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
                                                                 val getCompanyNameService: GetCompanyNameService
-                                              ) extends AuthenticatedController(AgentEnrolmentPredicate) {
+                                                               )
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(RegisteredSocietyJourney)) {
 
   val validateCompanyNumberForm = companyNumberForm(isAgent = true, isPartnership = false)
 
@@ -69,8 +71,8 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
                 case Right(GetCompanyNameSuccess(companyName, _)) =>
                   NotImplemented // TODO Redirect to Confirm Registered Society Name Controller
                     .addingToSession(
-                      SessionKeys.societyCompanyNumberKey -> companyNumber,
-                      SessionKeys.societyNameKey -> companyName
+                      SessionKeys.registeredSocietyCompanyNumberKey -> companyNumber,
+                      SessionKeys.registeredSocietyNameKey -> companyName
                     )
                 case Left(CompanyNumberNotFound) =>
                   Redirect(routes.CompanyNameNotFoundController.show())
