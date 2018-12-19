@@ -75,7 +75,7 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
                       SessionKeys.registeredSocietyNameKey -> companyName
                     )
                 case Left(CompanyNumberNotFound) =>
-                  Redirect(routes.CompanyNameNotFoundController.show())
+                  Redirect(routes.RegisteredSocietyCompanyNameNotFoundController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>
                   throw new InternalServerException(s"getCompanyName failed: status=$status")
               }
