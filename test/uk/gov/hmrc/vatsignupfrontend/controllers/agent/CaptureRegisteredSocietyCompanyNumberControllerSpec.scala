@@ -132,7 +132,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
     }
 
     "company was not found" should {
-      "redirect to Company Name Not Found page" in {
+      "redirect to Registered Society Company Name Not Found page" in {
 
         mockAuthRetrieveAgentEnrolment()
         mockGetCompanyNameNotFound(testCompanyNumber)
@@ -141,7 +141,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
 

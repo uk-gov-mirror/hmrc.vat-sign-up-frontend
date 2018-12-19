@@ -833,4 +833,10 @@ object MessageLookup {
     val link = "Change company"
   }
 
+  object AgentRegisteredSocietyCompanyNameNotFound {
+    val title = "We could not confirm your client's registered society"
+    val heading: String = title
+    val line1 = "The information you provided does not match the details we have for your client's registered society."
+  }
+
 }
