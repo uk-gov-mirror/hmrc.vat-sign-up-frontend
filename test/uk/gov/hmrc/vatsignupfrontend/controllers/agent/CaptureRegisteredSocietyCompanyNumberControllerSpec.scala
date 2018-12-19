@@ -31,7 +31,8 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
-class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockGetCompanyNameService {
+class CaptureRegisteredSocietyCompanyNumberControllerSpec
+  extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockGetCompanyNameService {
 
   object TestCaptureRegisteredSocietyCompanyNumberController extends CaptureRegisteredSocietyCompanyNumberController(
     mockControllerComponents,
@@ -67,19 +68,17 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
 
   "Calling the submit action of the Capture Registered Society Company Number controller" when {
     "company was found" should {
-      "redirect to Registered Society Name page" in {
-
+      "redirect to Confirm Registered Society page" in {
         mockAuthRetrieveAgentEnrolment()
         mockGetCompanyNameSuccess(testCompanyNumber, NonPartnershipEntity)
 
         val request = testPostRequest(testCompanyNumber)
 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        // TODO redirectLocation(result) shouldBe Some(routes.ConfirmCompanyController.show().url)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmRegisteredSocietyController.show().url)
 
-        // result.session(request).get(SessionKeys.societyCompanyNumberKey) shouldBe Some(testCompanyNumber)
-
+        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe Some(testCompanyNumber)
       }
     }
 
@@ -95,7 +94,6 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
-
       }
     }
 
@@ -111,7 +109,6 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
-
       }
     }
 
@@ -127,7 +124,6 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
-
       }
     }
 
@@ -144,10 +140,9 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
-
       }
-
     }
+
     "company search failed" should {
       "throw Internal Server Exception" in {
 
@@ -157,10 +152,8 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val request = testPostRequest(testCompanyNumber)
 
         intercept[InternalServerException](await(TestCaptureRegisteredSocietyCompanyNumberController.submit(request)))
-
       }
-
     }
-
   }
+
 }

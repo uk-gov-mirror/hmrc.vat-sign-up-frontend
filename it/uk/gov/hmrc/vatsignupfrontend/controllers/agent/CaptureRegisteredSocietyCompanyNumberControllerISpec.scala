@@ -50,15 +50,15 @@ class CaptureRegisteredSocietyCompanyNumberControllerISpec extends ComponentSpec
   }
 
   "POST /registered-society-company-number" should {
-    "return a Not Implemented" in {
+    "redirect to Confirm Registered Society controller" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
       stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
       val res = post("/client/registered-society-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
-        //TODO redirectUri(routes.ConfirmRegisteredSocietyNameController.show().url)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ConfirmRegisteredSocietyController.show().url)
       )
     }
   }
