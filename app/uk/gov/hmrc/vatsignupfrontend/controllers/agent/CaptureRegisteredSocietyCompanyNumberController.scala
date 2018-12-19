@@ -69,7 +69,7 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
             if (validateCrnPrefix(companyNumber)) {
               getCompanyNameService.getCompanyName(companyNumber) map {
                 case Right(GetCompanyNameSuccess(companyName, _)) =>
-                  NotImplemented // TODO Redirect to Confirm Registered Society Name Controller
+                  Redirect(routes.ConfirmRegisteredSocietyController.show())
                     .addingToSession(
                       SessionKeys.registeredSocietyCompanyNumberKey -> companyNumber,
                       SessionKeys.registeredSocietyNameKey -> companyName
