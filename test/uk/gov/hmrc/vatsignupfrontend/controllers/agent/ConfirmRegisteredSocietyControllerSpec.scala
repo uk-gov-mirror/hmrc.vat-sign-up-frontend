@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -25,10 +25,10 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietyService
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 
 class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreRegisteredSocietyService with FeatureSwitching {
@@ -48,15 +48,15 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     mockStoreRegisteredSocietyService
   )
 
-  val testGetRequest = FakeRequest("GET", "/confirm-registered-society")
+  val testGetRequest = FakeRequest("GET", "/client/confirm-registered-society")
 
   val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/confirm-registered-society")
+    FakeRequest("POST", "/client/confirm-registered-society")
 
   "Calling the show action of the Confirm Registered Society controller" when {
     "there is a registered society name in the session" should {
       "go to the Confirm Registered Society page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val request = testGetRequest.withSession(
           SessionKeys.registeredSocietyNameKey -> testCompanyName
         )
@@ -73,7 +73,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
     "there isn't a registered society name in the session" should {
       "go to the capture registered society company number page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestConfirmRegisteredSocietyController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
@@ -83,8 +83,8 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
   }
 
   "Calling the submit action of the Confirm Registered Society controller" should {
-    "go to the 'agree to receive emails' page" in {
-      mockAuthAdminRole()
+    "go to the email routing controller" in {
+      mockAuthRetrieveAgentEnrolment()
       mockStoreRegisteredSocietySuccess(
         vatNumber = testVatNumber,
         companyNumber = testCompanyNumber
@@ -97,11 +97,11 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
       val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+      redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
     }
 
     "throw internal server exception if store registered society fails" in {
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
       mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber)
 
       val request = testPostRequest.withSession(
@@ -113,8 +113,8 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
         await(TestConfirmRegisteredSocietyController.submit(request))
       }
     }
-    "go to the 'your vat number' page if vat number is missing" in {
-      mockAuthAdminRole()
+    "go to the 'your clients vat number' page if vat number is missing" in {
+      mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
@@ -122,11 +122,11 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
       val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+      redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
 
     }
     "go to the 'capture registered society company number' page if company number is missing" in {
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber

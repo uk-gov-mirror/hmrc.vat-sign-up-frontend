@@ -149,6 +149,10 @@ GET         /division-resolver                                  uk.gov.hmrc.vats
 GET         /registered-society-company-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.show
 POST        /registered-society-company-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.submit
 
+# Confirm Registered Society Name
+GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmRegisteredSocietyController.show
+POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmRegisteredSocietyController.submit
+
 # Registered Society Company Name not found
 GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.show
 POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.submit

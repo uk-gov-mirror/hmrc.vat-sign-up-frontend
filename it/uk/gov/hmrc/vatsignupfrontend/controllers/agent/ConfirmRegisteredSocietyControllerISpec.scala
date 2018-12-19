@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -36,11 +36,11 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     disable(RegisteredSocietyJourney)
   }
 
-  "GET /confirm-registered-society" when {
+  "GET /client/confirm-registered-society" when {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
+      val res = get("/client/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
 
       res should have(
         httpStatus(OK)
@@ -48,13 +48,13 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     }
   }
 
-  "GET /confirm-registered-society" when {
+  "GET /client/confirm-registered-society" when {
     "the Registered Society feature switch is disabled" should {
-      "return a 404 not found response" in {
+      "return a 404" in {
         disable(RegisteredSocietyJourney)
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get("/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
+        val res = get("/client/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
 
         res should have(
           httpStatus(NOT_FOUND)
@@ -63,13 +63,14 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     }
   }
 
-  "POST /confirm-registered-society" should {
-    "redirect to agree to receive email page" when {
+
+  "POST /client/confirm-registered-society" should {
+    "redirect to email routing controller" when {
       "the registered society is successfully stored" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber)
 
-        val res = post("/confirm-registered-society",
+        val res = post("/client/confirm-registered-society",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
@@ -77,7 +78,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
+          redirectUri(routes.EmailRoutingController.route().url)
         )
       }
     }
