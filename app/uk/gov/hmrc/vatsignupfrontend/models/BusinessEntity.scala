@@ -31,6 +31,7 @@ sealed trait BusinessEntity {
     case Division => DivisionKey
     case UnincorporatedAssociation => UnincorporatedAssociationKey
     case Trust => TrustKey
+    case RegisteredSociety => RegisteredSocietyKey
     case Other => OtherKey
   }
 }
