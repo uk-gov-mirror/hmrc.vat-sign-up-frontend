@@ -62,8 +62,8 @@ object MessageLookup {
   object CannotUseServiceYet {
     val title = "Your client cannot use this service yet"
     val heading: String = title
-    val line1 = "This service is currently only available to certain sole traders, limited companies, partnerships and VAT groups."
-    val line2 = "Your client must come back and sign up in April 2019, when this service is available to them."
+    val line1 = "Your client's business is not eligible at this time"
+    val line2 = "Most businesses will be eligible after 21 January 2019. Try again then."
   }
 
   object CaptureVatNumber {
@@ -413,8 +413,8 @@ object MessageLookup {
   object PrincipalCannotUseServiceYet {
     val title = "You cannot use this service yet"
     val heading: String = title
-    val line1 = "This service is only available to some limited companies, sole traders, partnerships and VAT groups."
-    val line2 = "You will be able to sign up for this service from April 2019."
+    val line1 = "Your business is not eligible at this time"
+    val line2 = "Most businesses will be eligible after 21 January 2019. Try again then."
   }
 
   object PrincipalCaptureEmail {
