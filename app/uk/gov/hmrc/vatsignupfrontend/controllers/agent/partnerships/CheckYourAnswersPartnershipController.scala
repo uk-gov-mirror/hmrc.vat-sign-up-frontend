@@ -50,24 +50,37 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
-      (optVatNumber, optBusinessEntity, optSaUtr, optBusinessPostCode) match {
-        case (Some(_), Some(businessEntity), Some(saUtr), Some(postCode)) =>
-          Future.successful(
-            Ok(check_your_answers(
-              saUtr,
-              businessEntity,
-              postCode,
-              optPartnershipCrn,
-              routes.CheckYourAnswersPartnershipController.submit())
-            )
-          )
-        case (None, _, _, _) =>
+      (optVatNumber, optSaUtr, optBusinessPostCode) match {
+        case (Some(_), Some(saUtr), Some(postCode)) =>
+          optBusinessEntity match {
+            case Some(businessEntity: LimitedPartnershipBase) =>
+              Future.successful(
+                Ok(check_your_answers(
+                  utr = saUtr,
+                  entityType = businessEntity,
+                  postCode = postCode,
+                  companyNumber = optPartnershipCrn,
+                  postAction = routes.CheckYourAnswersPartnershipController.submit())
+                )
+              )
+            case Some(GeneralPartnership) =>
+              Future.successful(
+                Ok(check_your_answers(
+                  utr = saUtr,
+                  entityType = GeneralPartnership,
+                  postCode = postCode,
+                  companyNumber = None,
+                  postAction = routes.CheckYourAnswersPartnershipController.submit())
+                )
+              )
+            case _ =>
+              Future.successful(
+                Redirect(agentRoutes.CaptureBusinessEntityController.show())
+              )
+          }
+        case (None, _, _) =>
           Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
-        case (_, None, _, _) =>
-          Future.successful(
-            Redirect(agentRoutes.CaptureBusinessEntityController.show())
-          )
-        case (_, _, _, _) =>
+        case _ =>
           Future.successful(
             Redirect(routes.CapturePartnershipUtrController.show())
           )

@@ -77,10 +77,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      sautr: Option[String] = Some(testSaUtr),
-                     crn: Option[String] = Some(testCompanyNumber),
+                     crn: Option[String] = None,
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
                      entityType: Option[PartnershipEntityType] = None,
-                     businessEntity: Option[BusinessEntity] = Some(GeneralPartnership)
+                     businessEntity: Option[BusinessEntity] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity).toSeq: _*
@@ -104,7 +104,9 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
           disable(LimitedPartnershipJourney)
           enable(GeneralPartnershipJourney)
 
-          val result = TestCheckYourAnswersController.show(testGetRequest())
+          val result = TestCheckYourAnswersController.show(testGetRequest(
+            businessEntity = Some(GeneralPartnership)
+          ))
 
           status(result) shouldBe Status.OK
           contentType(result) shouldBe Some("text/html")
@@ -165,11 +167,27 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
         redirectLocation(result) shouldBe Some(routes.CapturePartnershipCompanyNumberController.show().url)
       }
     }
-    "partnership utr is missing" should {
+    "partnership utr is missing for general partnership" should {
       "go to capture partnership utr page" in {
         mockAuthAdminRole()
 
-        val result = TestCheckYourAnswersController.show(testGetRequest(sautr = None))
+        val result = TestCheckYourAnswersController.show(testGetRequest(
+          businessEntity = Some(GeneralPartnership),
+          sautr = None
+        ))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+      }
+    }
+    "partnership utr is missing for limited partnership" should {
+      "go to capture partnership utr page" in {
+        mockAuthAdminRole()
+
+        val result = TestCheckYourAnswersController.show(testGetRequest(
+          businessEntity = Some(GeneralPartnership),
+          sautr = None,
+          crn = Some(testCompanyNumber)
+        ))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
       }
@@ -178,7 +196,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
       "go to partnership post code page" in {
         mockAuthAdminRole()
 
-        val result = TestCheckYourAnswersController.show(testGetRequest(postCode = None))
+        val result = TestCheckYourAnswersController.show(testGetRequest(
+          businessEntity = Some(GeneralPartnership),
+          postCode = None
+        ))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
       }
@@ -200,10 +221,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               postCode = Some(testBusinessPostcode)
             )(Right(StorePartnershipInformationSuccess))
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-              entityType = None,
-              crn = None
-            )))
+            val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.AgreeCaptureEmailController.show().url)
           }
@@ -255,10 +273,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             partnershipEntity = PartnershipEntityType.LimitedPartnership,
             postCode = Some(testBusinessPostcode)
           )(Left(StorePartnershipKnownFactsFailure))
-           val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-             entityType = Some(PartnershipEntityType.LimitedPartnership),
-             crn = Some(testCompanyNumber)
-           )))
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            crn = Some(testCompanyNumber)
+          )))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
         }
@@ -311,7 +329,9 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
       "go to capture partnership utr page" in {
         mockAuthAdminRole()
 
-        val result = TestCheckYourAnswersController.submit(testPostRequest(postCode = None))
+        val result = TestCheckYourAnswersController.submit(testPostRequest(
+          postCode = None
+        ))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
       }

@@ -46,13 +46,12 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
   val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
 
   "GET /check-your-answers-partnership" should {
-    "return an OK" in {
+    "return an OK for a general partnership" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/check-your-answers-partnership",
         Map(
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-          SessionKeys.partnershipTypeKey -> generalPartnershipType.toString,
           SessionKeys.partnershipSautrKey -> testSaUtr,
           SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
         )
@@ -62,6 +61,25 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         httpStatus(OK)
       )
     }
+
+    "return an OK for a limited partnership" in {
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/check-your-answers-partnership",
+        Map(
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership),
+          SessionKeys.partnershipTypeKey -> limitedPartnershipType.toString,
+          SessionKeys.partnershipSautrKey -> testSaUtr,
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+        )
+      )
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
+
     "if feature switch is disabled" should {
       "return a not found" in {
         disable(GeneralPartnershipJourney)
@@ -104,6 +122,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           )
         }
       }
+
       "the user is a limited partnership" should {
         "redirect to agree to receive emails" in {
           stubAuth(OK, successfulAuthResponse())
