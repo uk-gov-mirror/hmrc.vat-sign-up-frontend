@@ -64,7 +64,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      sautr: Option[String] = Some(testSaUtr),
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
-                     entityType: Option[BusinessEntity] = Some(GeneralPartnership),
+                     entityType: Option[BusinessEntity] = None,
                      companyNumber: Option[String] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
@@ -74,7 +74,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
                       sautr: Option[String] = Some(testSaUtr),
                       postCode: Option[PostCode] = Some(testBusinessPostcode),
-                      entityType: Option[BusinessEntity] = Some(GeneralPartnership),
+                      entityType: Option[BusinessEntity] = None,
                       companyNumber: Option[String] = None,
                       partnershipEntityType: Option[PartnershipEntityType] = None
                      ): FakeRequest[AnyContentAsEmpty.type] =
@@ -92,7 +92,9 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
       "go to the Check your answers page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestCheckYourAnswersPartnershipController.show(testGetRequest())
+        val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(
+          entityType = Some(GeneralPartnership)
+        ))
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -102,7 +104,10 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
       "go to the Check your answers page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(companyNumber = Some(testCompanyNumber)))
+        val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(
+          entityType = Some(LimitedPartnership),
+          companyNumber = Some(testCompanyNumber)
+        ))
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")

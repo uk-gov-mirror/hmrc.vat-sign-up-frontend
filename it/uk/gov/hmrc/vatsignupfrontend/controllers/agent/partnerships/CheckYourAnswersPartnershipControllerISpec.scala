@@ -26,15 +26,42 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInform
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, PartnershipEntityType, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
 class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
-  "GET /client/check-your-answers" should {
-    "return an OK" in {
-      enable(GeneralPartnershipJourney)
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    enable(GeneralPartnershipJourney)
+    enable(LimitedPartnershipJourney)
+  }
 
+  override def afterEach(): Unit = {
+    super.afterEach()
+    disable(GeneralPartnershipJourney)
+    disable(LimitedPartnershipJourney)
+  }
+
+  "GET /client/check-your-answers" should {
+    "return an OK for general partnership" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/check-your-answers",
+        Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.partnershipSautrKey -> testSaUtr,
+          SessionKeys.businessEntityKey -> GeneralPartnership.toString,
+          SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
+        )
+      )
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
+
+    "return an OK for limited partnership" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/check-your-answers",
@@ -42,7 +69,9 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr,
           SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode),
-          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.businessEntityKey -> LimitedPartnership.toString,
+          SessionKeys.partnershipTypeKey -> CompanyTypeSessionFormatter.toString(PartnershipEntityType.LimitedPartnership)
         )
       )
 
@@ -53,6 +82,8 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
     "return an NOT FOUND" in {
       disable(GeneralPartnershipJourney)
+      disable(LimitedPartnershipJourney)
+
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/check-your-answers")
@@ -66,7 +97,6 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
   "POST /client/partnership-check-your-answers" when {
     "store partnership is successful" should {
       "redirect to capture email" in {
-        enable(GeneralPartnershipJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
@@ -95,7 +125,6 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
     "store partnership returned forbidden" should {
       "redirect to capture email" in {
-        enable(GeneralPartnershipJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
@@ -124,7 +153,6 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
     "store partnership is successful for a limited partnership" should {
       "redirect to capture email" in {
-        enable(LimitedPartnershipJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,

@@ -20,7 +20,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.businessEntityKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
@@ -46,16 +45,25 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val optBusinessEntityType = request.session.getModel[BusinessEntity](businessEntityKey)
+      val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
+      val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
       (optBusinessEntityType, optPartnershipUtr, optPartnershipPostCode) match {
         case (Some(entityType), Some(partnershipUtr), Some(partnershipPostCode)) =>
           (entityType, optPartnershipCrn, optPartnershipType) match {
-            case (GeneralPartnership, _, _) | (_, Some(_), Some(_)) =>
+            case (GeneralPartnership, _, _) =>
+              Future.successful(
+                Ok(check_your_answers_partnerships(
+                  entityType = entityType,
+                  companyUtr = partnershipUtr,
+                  companyNumber = None,
+                  postCode = partnershipPostCode,
+                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
+              )
+            case (_: LimitedPartnershipBase, Some(_), Some(_: LimitedPartnershipEntityType)) =>
               Future.successful(
                 Ok(check_your_answers_partnerships(
                   entityType = entityType,
@@ -65,7 +73,9 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
                   postAction = routes.CheckYourAnswersPartnershipsController.submit()))
               )
             case _ =>
-              Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
+              Future.successful(
+                Redirect(routes.CapturePartnershipCompanyNumberController.show())
+              )
           }
         case (None, _, _) =>
           Future.successful(
