@@ -69,9 +69,11 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                       .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
                   case Right(SubscriptionClaimed) =>
                     Redirect(routes.SignUpCompleteClientController.show())
-                  case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
-                  case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
-                    .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+                  case Left(IneligibleVatNumber(MigratableDates(None, None))) =>
+                    Redirect(routes.CannotUseServiceController.show())
+                  case Left(IneligibleVatNumber(migratableDates)) =>
+                    Redirect(routes.MigratableDatesController.show())
+                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")
                 }
@@ -79,11 +81,16 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                 Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
               case None =>
                 vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
-                  case Right(VatNumberEligible) => Redirect(routes.CaptureVatRegistrationDateController.show()).addingToSession(vatNumberKey -> formVatNumber)
-                  case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
-                  case Left(IneligibleForMtdVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
-                    .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
-                  case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
+                  case Right(VatNumberEligible) =>
+                    Redirect(routes.CaptureVatRegistrationDateController.show())
+                      .addingToSession(vatNumberKey -> formVatNumber)
+                  case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) =>
+                    Redirect(routes.CannotUseServiceController.show())
+                  case Left(IneligibleForMtdVatNumber(migratableDates)) =>
+                    Redirect(routes.MigratableDatesController.show())
+                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+                  case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) =>
+                    Redirect(routes.InvalidVatNumberController.show())
                   case Left(VatNumberEligibilityFailureResponse(status)) =>
                     throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
                 }
