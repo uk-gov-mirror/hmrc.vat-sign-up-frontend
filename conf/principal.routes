@@ -238,5 +238,5 @@ POST        /software-ready                                     uk.gov.hmrc.vats
 GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCompanyNameNotFoundController.show
 POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCompanyNameNotFoundController.submit
 
-# VAT group resolver
+# Charity Resolver
 GET         /charity-resolver                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CharityResolverController.resolve
