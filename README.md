@@ -35,7 +35,7 @@ You will need [sbt](http://www.scala-sbt.org/)
    
    `sm --stop VAT_SIGN_UP_FRONTEND`
 
-   `sbt "run 9566" -Dapplication.router=testOnlyDoNotUseInAppConf.Routes`
+   `sbt "run 9566 -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"`
 
 
 5) **Go to the homepage:**
