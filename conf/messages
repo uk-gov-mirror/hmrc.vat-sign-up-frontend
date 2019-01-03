@@ -429,6 +429,7 @@ principal.capture_entity_type.division                                 = Adminis
 principal.capture_entity_type.unincorporatedAssociation                = Unincorporated association
 principal.capture_entity_type.trust                                    = Trust
 principal.capture_entity_type.registeredSociety                        = Registered society (including community benefit societies and co-operative societies)
+principal.capture_entity_type.charity                                  = CIO (charity)
 principal.capture_entity_type.other                                    = Other
 
 # Check your answers page

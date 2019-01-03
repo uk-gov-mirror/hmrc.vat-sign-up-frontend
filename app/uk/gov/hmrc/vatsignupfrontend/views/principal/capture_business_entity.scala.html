@@ -31,7 +31,8 @@
     divisionEnabled: Boolean,
     unincorporatedAssociationEnabled: Boolean,
     trustEnabled: Boolean,
-    registeredSocietyEnabled: Boolean
+    registeredSocietyEnabled: Boolean,
+    charityEnabled: Boolean
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
@@ -51,6 +52,8 @@
 @trustOption = @{ Some((trust, Messages("principal.capture_entity_type.trust"))).filter(_ => trustEnabled) }
 
 @registeredSocietyOption = @{ Some((registeredSociety, Messages("principal.capture_entity_type.registeredSociety"))).filter(_ => registeredSocietyEnabled) }
+
+@charityOption = @{ Some((charity, Messages("principal.capture_entity_type.charity"))).filter(_ => charityEnabled) }
 
 @principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts)) {
 
@@ -73,6 +76,7 @@
               ++ unincorporatedAssociationOption
               ++ trustOption
               ++ registeredSocietyOption
+              ++ charityOption
               :+ (other, Messages("principal.capture_entity_type.other")),
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity)
