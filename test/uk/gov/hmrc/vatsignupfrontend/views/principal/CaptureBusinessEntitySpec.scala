@@ -26,7 +26,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-
 class CaptureBusinessEntitySpec extends ViewSpec {
 
   val env = Environment.simple()
@@ -43,7 +42,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     divisionEnabled = true,
     trustEnabled = true,
     unincorporatedAssociationEnabled = true,
-    registeredSocietyEnabled = true
+    registeredSocietyEnabled = true,
+    charityEnabled = true
   )(
     FakeRequest(),
     applicationMessages,
@@ -238,6 +238,26 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'registered-society'" in {
             optionLabel.attr("id") shouldEqual "registered-society"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'Charity'" should {
+
+        "have the text 'CIO (charity)'" in {
+          doc.select("label[for=charity]").text() shouldEqual messages.radioCharity
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#charity")
+
+          "have the id 'charity'" in {
+            optionLabel.attr("id") shouldEqual "charity"
           }
 
           "be of type radio" in {
