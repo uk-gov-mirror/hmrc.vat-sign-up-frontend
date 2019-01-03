@@ -840,4 +840,10 @@ object MessageLookup {
     val line1 = "The information you provided does not match the details we have for your client's registered society."
   }
 
+  object MigrationInProgressError {
+    val title = "You have already signed up"
+    val heading: String = title
+    val line = "Your Making Tax Digital for VAT account is being set up. You will receive an email within 72 hours."
+  }
+
 }
