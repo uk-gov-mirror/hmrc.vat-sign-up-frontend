@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ object FeatureSwitch {
     DivisionJourney,
     UnincorporatedAssociationJourney,
     TrustJourney,
-    RegisteredSocietyJourney
+    RegisteredSocietyJourney,
+    CharityJourney
   )
 
   def apply(str: String): FeatureSwitch =
@@ -108,4 +109,9 @@ case object TrustJourney extends FeatureSwitch {
 case object RegisteredSocietyJourney extends FeatureSwitch {
   override val name: String = s"$prefix.registered-society-journey"
   override val displayText: String = "Enable users to enter registered society flow"
+}
+
+case object CharityJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.charity-journey"
+  override val displayText: String = "Enable users to enter charitable incorporated organisation flow"
 }
