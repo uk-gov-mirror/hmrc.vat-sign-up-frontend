@@ -32,6 +32,7 @@ sealed trait BusinessEntity {
     case UnincorporatedAssociation => UnincorporatedAssociationKey
     case Trust => TrustKey
     case RegisteredSociety => RegisteredSocietyKey
+    case Charity => CharityKey
     case Other => OtherKey
   }
 }
@@ -60,6 +61,8 @@ object Trust extends BusinessEntity
 
 object RegisteredSociety extends BusinessEntity
 
+object Charity extends BusinessEntity
+
 object Other extends BusinessEntity
 
 object BusinessEntity {
@@ -74,6 +77,7 @@ object BusinessEntity {
   val UnincorporatedAssociationKey = "unincorporated-association"
   val TrustKey = "trust"
   val RegisteredSocietyKey = "registered-society"
+  val CharityKey = "charity"
   val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
@@ -89,6 +93,7 @@ object BusinessEntity {
       case UnincorporatedAssociationKey => Some(UnincorporatedAssociation)
       case TrustKey => Some(Trust)
       case RegisteredSocietyKey => Some(RegisteredSociety)
+      case CharityKey => Some(Charity)
       case OtherKey => Some(Other)
       case _ => None
     }
@@ -105,6 +110,7 @@ object BusinessEntity {
       case UnincorporatedAssociation => UnincorporatedAssociationKey
       case Trust => TrustKey
       case RegisteredSociety => RegisteredSocietyKey
+      case Charity => CharityKey
       case Other => OtherKey
     }
   }
