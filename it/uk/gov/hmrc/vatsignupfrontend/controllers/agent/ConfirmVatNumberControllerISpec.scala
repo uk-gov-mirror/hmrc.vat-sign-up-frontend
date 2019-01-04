@@ -129,6 +129,20 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "redirect to the migration in progress error page" when {
+      "the vat number has already been signed up and migration is in progress" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreVatNumberMigrationInProgress(isFromBta = false)
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.MigrationInProgressErrorController.show().url)
+        )
+      }
+    }
+
     "throw an internal server error" when {
       "the vat number cannot be stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

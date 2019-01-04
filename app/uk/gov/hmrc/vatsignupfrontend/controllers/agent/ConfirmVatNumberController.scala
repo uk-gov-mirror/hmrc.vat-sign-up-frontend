@@ -68,6 +68,7 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
               case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
               case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
                 .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+              case Left(VatMigrationInProgress) => Redirect(routes.MigrationInProgressErrorController.show())
               case Left(errResponse: StoreVatNumberFailureResponse) =>
                 throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
             }

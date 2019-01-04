@@ -173,6 +173,17 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
           redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
         }
       }
+
+      "vat migration is in progress" should {
+        "redirect to the migration in progress error page" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockStoreVatNumberDelegated(testVatNumber)(Future.successful(Left(VatMigrationInProgress)))
+
+          val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+        }
+      }
     }
 
     "vat number is not in session" should {
