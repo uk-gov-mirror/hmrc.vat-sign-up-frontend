@@ -37,6 +37,7 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
       case Left(StoreVatNumberHttpParser.NoAgentClientRelationship) => Left(NoAgentClientRelationship)
       case Left(StoreVatNumberHttpParser.InvalidVatNumber) => Left(InvalidVatNumber)
       case Left(StoreVatNumberHttpParser.IneligibleVatNumber(migratableDates)) => Left(IneligibleVatNumber(migratableDates))
+      case Left(StoreVatNumberHttpParser.VatMigrationInProgress) => Left(VatMigrationInProgress)
       case Left(unexpectedError) =>
         throw new InternalServerException(s"Unexpected error in store VAT number for delegated user - $unexpectedError")
     }
@@ -54,6 +55,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
         }
       case Left(StoreVatNumberHttpParser.IneligibleVatNumber(migratableDates)) =>
         Future.successful(Left(IneligibleVatNumber(migratableDates)))
+      case Left(StoreVatNumberHttpParser.VatMigrationInProgress) =>
+        Future.successful(Left(VatMigrationInProgress))
       case Left(unexpectedError) =>
         throw new InternalServerException(s"Unexpected error in store VAT number for user with enrolment - $unexpectedError")
     }
@@ -78,6 +81,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
         Future.successful(Left(InvalidVatNumber))
       case Left(StoreVatNumberHttpParser.IneligibleVatNumber(migratableDates)) =>
         Future.successful(Left(IneligibleVatNumber(migratableDates)))
+      case Left(StoreVatNumberHttpParser.VatMigrationInProgress) =>
+        Future.successful(Left(VatMigrationInProgress))
       case Left(unexpectedError) =>
         throw new InternalServerException(s"Unexpected error in store VAT number with supplied known facts - $unexpectedError")
     }
@@ -114,5 +119,8 @@ object StoreVatNumberService {
   case class StoreVatNumberFailureResponse(status: Int) extends StoreVatNumberWithKnownFactsFailure with DelegatedStoreVatNumberFailure
 
   case class ClaimSubscriptionFailureResponse(status: Int) extends StoreVatNumberWithKnownFactsFailure
+
+  case object VatMigrationInProgress extends StoreVatNumberWithEnrolmentFailure with DelegatedStoreVatNumberFailure
+    with StoreVatNumberWithKnownFactsFailure
 
 }
