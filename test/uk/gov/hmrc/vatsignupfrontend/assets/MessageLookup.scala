@@ -847,4 +847,10 @@ object MessageLookup {
     val line = "Your Making Tax Digital for VAT account is being set up. You will receive an email within 72 hours."
   }
 
+  object AgentMigrationInProgressError {
+    val title = "Your client is already signed up"
+    val heading: String = title
+    val line = "Your client's Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours."
+  }
+
 }
