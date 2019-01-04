@@ -79,6 +79,16 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
         res shouldBe Left(IneligibleVatNumber(testMigratableDates))
       }
     }
+    "the connector returns VatMigrationInProgress" should {
+      "return VatMigrationInProgress" in {
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(
+          Future.successful(Left(StoreVatNumberHttpParser.VatMigrationInProgress))
+        )
+
+        val res = await(TestStoreVatNumberService.storeVatNumberDelegated(testVatNumber))
+        res shouldBe Left(VatMigrationInProgress)
+      }
+    }
     "the connector returns anything else" should {
       "throw an InternalServerException" in {
         mockStoreVatNumber(testVatNumber, isFromBta = false)(
@@ -127,6 +137,16 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
         res shouldBe Left(IneligibleVatNumber(testMigratableDates))
+      }
+    }
+    "the connector returns VatMigrationInProgress" should {
+      "return VatMigrationInProgress" in {
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(
+          Future.successful(Left(StoreVatNumberHttpParser.VatMigrationInProgress))
+        )
+
+        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
+        res shouldBe Left(VatMigrationInProgress)
       }
     }
     "the connector returns anything else" should {
@@ -187,6 +207,16 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
         res shouldBe Left(KnownFactsMismatch)
+      }
+    }
+    "the connector returns VatMigrationInProgress" should {
+      "return VatMigrationInProgress" in {
+        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(
+          Future.successful(Left(StoreVatNumberHttpParser.VatMigrationInProgress))
+        )
+
+        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+        res shouldBe Left(VatMigrationInProgress)
       }
     }
     "the connector returns anything else" should {

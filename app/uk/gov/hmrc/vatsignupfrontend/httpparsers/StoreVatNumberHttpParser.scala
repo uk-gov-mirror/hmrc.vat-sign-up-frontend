@@ -29,6 +29,7 @@ object StoreVatNumberHttpParser {
   val NoRelationshipCode = "RELATIONSHIP_NOT_FOUND"
   val KnownFactsMismatchCode = "KNOWN_FACTS_MISMATCH"
   val SubscriptionClaimedCode = "SUBSCRIPTION_CLAIMED"
+  val MigrationInProgressCode = "VatMigrationInProgress"
 
   implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
@@ -43,6 +44,7 @@ object StoreVatNumberHttpParser {
         case UNPROCESSABLE_ENTITY => response.json.validate[MigratableDates] match {
           case JsSuccess(dates, _) => Left(IneligibleVatNumber(dates))
         }
+        case BAD_REQUEST if responseCode contains MigrationInProgressCode => Left(VatMigrationInProgress)
         case CONFLICT => Left(AlreadySubscribed)
         case status => Left(StoreVatNumberFailureResponse(status))
       }
@@ -62,6 +64,8 @@ object StoreVatNumberHttpParser {
   case object AlreadySubscribed extends StoreVatNumberFailure
 
   case object InvalidVatNumber extends StoreVatNumberFailure
+
+  case object VatMigrationInProgress extends StoreVatNumberFailure
 
   case class IneligibleVatNumber(migratableDates: MigratableDates) extends StoreVatNumberFailure
 

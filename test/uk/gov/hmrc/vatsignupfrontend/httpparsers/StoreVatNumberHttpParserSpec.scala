@@ -100,6 +100,13 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe StoreVatNumberHttpParser.IneligibleVatNumber(MigratableDates())
       }
 
+      "parse a BAD_REQUEST response as a VatMigrationInProgress when the vat number is already subscribed" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj(CodeKey -> "VatMigrationInProgress")))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe StoreVatNumberHttpParser.VatMigrationInProgress
+      }
 
       "parse any other response as a StoreVatNumberFailureResponse" in {
         val httpResponse = HttpResponse(INTERNAL_SERVER_ERROR)
