@@ -137,7 +137,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
-          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CouldNotConfirmBusinessController.show().url)
         }
@@ -149,7 +149,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
-          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
         }
@@ -161,9 +161,21 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
-          val result = TestCheckYourAnswersController.submit(testGetRequest())
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+        }
+      }
+      "store vat number returned VatMigrationInProgress" should {
+        "go to the migration in progress error page" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockStoreVatNumberMigrationInProgress(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
         }
       }
       "store vat number returned a failure" should {
@@ -174,7 +186,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
 
           intercept[InternalServerException] {
-            await(TestCheckYourAnswersController.submit(testGetRequest()))
+            await(TestCheckYourAnswersController.submit(testPostRequest()))
           }
 
         }

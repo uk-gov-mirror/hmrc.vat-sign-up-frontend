@@ -134,6 +134,20 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           }
         }
 
+        "redirect to the migration in progress error page" when {
+          "the vat number is already signed up and migrating" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubStoreVatNumberMigrationInProgress(isFromBta = false)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.MigrationInProgressErrorController.show().url)
+            )
+          }
+        }
+
         "throw an internal server error" when {
           "any other failure occurs" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))

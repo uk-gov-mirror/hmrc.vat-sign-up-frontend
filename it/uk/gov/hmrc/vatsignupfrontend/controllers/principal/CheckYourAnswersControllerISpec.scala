@@ -149,6 +149,25 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+    "store vat returned vat migration in progress" should {
+      "redirect to migration in progress error page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberMigrationInProgress(testBusinessPostCode, testDate, isFromBta = false)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.MigrationInProgressErrorController.show().url)
+        )
+      }
+    }
   }
 
 }
