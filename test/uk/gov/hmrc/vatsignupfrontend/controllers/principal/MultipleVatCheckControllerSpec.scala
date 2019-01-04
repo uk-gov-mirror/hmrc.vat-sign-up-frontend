@@ -98,6 +98,16 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
           }
         }
+        "the vat number has already been signed up and migration is progress" should {
+          "redirect to the migration in progress error page" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberMigrationInProgress(vatNumber = testVatNumber, isFromBta = false)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+          }
+        }
       }
     }
 

@@ -63,6 +63,10 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = OK, body = Json.obj(CodeKey -> SubscriptionClaimedCode))
   }
 
+  def stubStoreVatNumberMigrationInProgress(isFromBta: Boolean): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
+      .thenReturn(status = BAD_REQUEST, Json.obj(CodeKey -> MigrationInProgressCode))
+  }
 
   private def requestJson(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): JsObject =
     Json.obj(
@@ -109,6 +113,12 @@ object StoreVatNumberStub extends WireMockMethods {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       requestJson(postCode, registrationDate, isFromBta))
       .thenReturn(status = CONFLICT)
+  }
+
+  def stubStoreVatNumberMigrationInProgress(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
+      requestJson(postCode, registrationDate, isFromBta))
+      .thenReturn(status = BAD_REQUEST, Json.obj(CodeKey -> MigrationInProgressCode))
   }
 
 }

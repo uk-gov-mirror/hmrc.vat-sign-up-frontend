@@ -84,6 +84,17 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                   session(result) get vatNumberKey should contain(testVatNumber)
                 }
               }
+              "the user's information is being migrated" should {
+                "redirect to migration in progress error page" in {
+                  mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                  mockStoreVatNumberMigrationInProgress(testVatNumber, isFromBta = false)
+
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+                }
+              }
               "the user's subscription has been claimed" should {
                 "redirect to claimed subscription confirmation page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)

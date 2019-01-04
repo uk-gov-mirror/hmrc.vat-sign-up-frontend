@@ -58,6 +58,9 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
 
+ def mockStoreVatNumberMigrationInProgress(vatNumber: String, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(VatMigrationInProgress)))
+
   def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Boolean, migratableDates: MigratableDates): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber(migratableDates))))
 
@@ -76,6 +79,9 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
 
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
+
+  def mockStoreVatNumberMigrationInProgress(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(VatMigrationInProgress)))
 
   def mockStoreVatNumberFailure(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, postCode, registrationDate, isFromBta)(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))

@@ -64,6 +64,19 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+    "redirect to migration in progress error page" when {
+      "form value is NO" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubStoreVatNumberMigrationInProgress(isFromBta = false)
+
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.MigrationInProgressErrorController.show().url)
+        )
+      }
+    }
   }
 
 }
