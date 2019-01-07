@@ -769,3 +769,8 @@ agent.registered_society_company_name_not_found.line_1                = The info
 principal.migration_in_progress_error.title                           = You have already signed up
 principal.migration_in_progress_error.heading                         = You have already signed up
 principal.migration_in_progress_error.line                            = Your Making Tax Digital for VAT account is being set up. You will receive an email within 72 hours.
+
+## Agent Migration In Progress Error Page
+agent.migration_in_progress_error.title                               = Your client is already signed up
+agent.migration_in_progress_error.heading                             = Your client is already signed up
+agent.migration_in_progress_error.line                                = Your client''s Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours.
