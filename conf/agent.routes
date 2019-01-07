@@ -158,3 +158,6 @@ POST        /confirm-registered-society                         uk.gov.hmrc.vats
 # Registered Society Company Name not found
 GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.show
 POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.submit
+
+# Migration In Progress error page
+GET         /error/sign-up-in-progress                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigrationInProgressErrorController.show
