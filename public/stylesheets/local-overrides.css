@@ -1,0 +1,9 @@
+/* Local style overrides */
+
+/* Padding fix for assets-frontend/assets/scss/components/_tabular-data.scss */
+@media (min-width: 641px) {
+    .tabular-data__heading--label {
+        width: 50% !important;
+        padding-right: 1em;
+    }
+}
