@@ -23,7 +23,7 @@
 
 @(businessPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.principal_place_of_business.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.principal_place_of_business.title"), bodyClasses = None, form = Some(businessPostCodeForm)) {
 
     <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
 

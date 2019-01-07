@@ -22,7 +22,7 @@
 
 @(companyNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.capture_company_number.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.capture_company_number.title"), bodyClasses = None, form = Some(companyNumberForm)) {
 
     @summaryErrorHelper(companyNumberForm)
 

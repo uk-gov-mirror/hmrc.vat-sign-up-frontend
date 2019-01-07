@@ -22,7 +22,7 @@
 
 @(companyUtrForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.capture_company_utr.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.capture_company_utr.title"), bodyClasses = None, form = Some(companyUtrForm)) {
     @summaryErrorHelper(companyUtrForm)
 
     <h1 class="heading-large">@Messages("principal.capture_company_utr.heading")</h1>

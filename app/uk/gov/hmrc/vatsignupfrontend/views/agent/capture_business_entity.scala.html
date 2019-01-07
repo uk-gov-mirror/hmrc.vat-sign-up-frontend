@@ -55,7 +55,7 @@
 
 @charityOption = @{ Some((charity, Messages("agent.capture_entity_type.charity"))).filter(_ => charityEnabled) }
 
-@agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts)) {
+@agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts), form = Some(businessEntityForm)) {
 
     @summaryErrorHelper(businessEntityForm)
 

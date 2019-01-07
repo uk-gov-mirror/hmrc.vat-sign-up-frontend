@@ -23,7 +23,7 @@
 
 @(partnershipPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.partnership_postcode.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.partnership_postcode.title"), bodyClasses = None, form = Some(partnershipPostCodeForm)) {
     @summaryErrorHelper(partnershipPostCodeForm)
     <h1 class="heading-large">@Messages("agent.partnership_postcode.heading")</h1>
 
