@@ -19,11 +19,13 @@
 @import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 @import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, inputHelper}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, inputHelper, summaryErrorHelper}
 
 @(businessPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @principal_main_template(title = Messages("principal.principal_place_of_business.title"), bodyClasses = None, form = Some(businessPostCodeForm)) {
+
+    @summaryErrorHelper(businessPostCodeForm)
 
     <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
 
