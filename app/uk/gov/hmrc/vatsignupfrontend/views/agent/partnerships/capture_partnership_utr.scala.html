@@ -22,7 +22,7 @@
 
 @(partnershipUtrForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.capture_partnership_utr.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.capture_partnership_utr.title"), bodyClasses = None, form = Some(partnershipUtrForm)) {
     @summaryErrorHelper(partnershipUtrForm)
 
     <h1 class="heading-large">@Messages("agent.capture_partnership_utr.heading")</h1>

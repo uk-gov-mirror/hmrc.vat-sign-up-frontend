@@ -23,7 +23,7 @@
 
 @(userDetailsForm: Form[UserDetailsModel], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.client-details.title"), bodyClasses = None) {
+@agent_main_template(title = Messages("agent.client-details.title"), bodyClasses = None, form = Some(userDetailsForm)) {
 
     @summaryErrorHelper(userDetailsForm)
 

@@ -29,6 +29,7 @@ base.yes                                                               = Yes
 base.no                                                                = No
 
 ## Errors
+error.title_prefix                                                     = 'Error: '
 error.principal.business-entity.field                                  = Select if you are registered as a sole trader or limited company
 error.principal.business-entity.summary                                = Select if you are registered as a sole trader or limited company
 error.agent.business-entity.field                                      = Select if your client is registered as a sole trader or limited company
