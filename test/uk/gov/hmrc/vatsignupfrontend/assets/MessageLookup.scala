@@ -680,6 +680,12 @@ object MessageLookup {
     val line1 = "The information you provided is not for a Limited Partnership."
   }
 
+  object PrincipalCaptureRegisteredSocietyUtr {
+    val title = "What is your registered society's Unique Taxpayer Reference number?"
+    val heading: String = title
+    val line1 = "You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR."
+  }
+
   object SignUpAfterThisDate {
     val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
