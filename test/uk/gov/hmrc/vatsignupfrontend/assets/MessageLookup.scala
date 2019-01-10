@@ -686,8 +686,8 @@ object MessageLookup {
   }
 
   object PrincipalCaptureRegisteredSocietyUtr {
-    val title = "What is your registered society's Unique Taxpayer Reference number?"
-    val heading: String = title
+    val heading = "What is your registered society's Unique Taxpayer Reference number?"
+    val title: String = heading + ServiceName.principalSuffix
     val line1 = "You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR."
   }
 
