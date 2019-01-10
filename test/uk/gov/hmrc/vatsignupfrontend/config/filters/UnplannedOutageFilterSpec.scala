@@ -87,7 +87,7 @@ class UnplannedOutageFilterSpec extends UnitSpec with GuiceOneServerPerSuite wit
         val Some(result) = route(app, request)
 
         status(result) shouldBe OK
-        contentAsString(result) shouldBe unplanned_outage().toString()
+        contentAsString(result) shouldBe unplanned_outage(isAgent = false).toString()
       }
     }
   }
