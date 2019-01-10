@@ -18,6 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.assets
 
 object MessageLookup {
 
+  object ServiceName {
+    val agentSuffix = " - Use software to submit your client's VAT Returns - GOV.UK"
+    val principalSuffix = " - Use software to submit your VAT Returns - GOV.UK"
+  }
+
   object Base {
     val continue = "Continue"
     val continueToSignUp = "Continue to sign up"
@@ -48,67 +53,67 @@ object MessageLookup {
   }
 
   object NotEnrolledToAS {
-    val title = "You can't use this service yet"
-    val heading: String = title
+    val heading: String = "You can't use this service yet"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "To use this service, you need to set up an agent services account."
   }
 
   object NoAgentClientRelationship {
-    val title = "You can't sign up this client yet"
-    val heading: String = title
+    val heading: String = "You can't sign up this client yet"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "To use this service, your client needs to authorise you as their agent."
   }
 
   object CannotUseServiceYet {
-    val title = "Your client cannot use this service yet"
-    val heading: String = title
+    val heading: String = "Your client cannot use this service yet"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "Your client's business is not eligible at this time"
     val line2 = "Most businesses will be eligible after 21 January 2019. Try again then."
   }
 
   object CaptureVatNumber {
-    val title = "What is your client's VAT number?"
-    val heading: String = title
+    val heading: String = "What is your client's VAT number?"
+    val title = heading + ServiceName.agentSuffix
     val description = "This is the 9-digit number they received when they registered for VAT."
     val hint = "For example, 123456789"
   }
 
   object ConfirmVatNumber {
-    val title = "Confirm your client's VAT number"
-    val heading: String = title
+    val heading: String = "Confirm your client's VAT number"
+    val title = heading + ServiceName.agentSuffix
     val link = "Change VAT number"
   }
 
   object CaptureCompanyNumber {
-    val title = "What is your client's company number?"
-    val heading: String = title
+    val heading: String =  "What is your client's company number?"
+    val title = heading + ServiceName.agentSuffix
   }
 
   object PrincipalCompanyNameNotFound {
-    val title = "We could not confirm your company"
-    val heading: String = title
+    val heading: String = "We could not confirm your company"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The company number you entered is not on our system."
   }
 
   object PrincipalSignInDifferentDetails {
-    val title = "You need to sign in with different details"
-    val heading: String = title
+    val heading: String = "You need to sign in with different details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The details you have used to sign in are for a different sole trader. You need to sign out, then sign in with the correct Government Gateway details."
     val linkText = "change your answer"
     val line2 = s"You can $linkText."
   }
 
   object PrincipalIncorrectEnrolmentVatNumber {
-    val title = "You need to sign in with different details"
-    val heading: String = title
+    val heading: String = "You need to sign in with different details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The VAT number you entered is for a different business that has its own Government Gateway account. Once you've signed out, you need to sign in with the correct details."
     val linkText = "change your answer"
     val line2 = s"If you've entered the wrong VAT number, you can $linkText."
   }
 
   object CaptureBusinessEntity {
-    val title = "What type of business is your client registered as?"
-    val heading: String = title
+    val heading: String = "What type of business is your client registered as?"
+    val title = heading + ServiceName.agentSuffix
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
     val radioGeneralPartnership: String = "General partnership"
@@ -123,15 +128,15 @@ object MessageLookup {
   }
 
   object YesNo {
-    val title = "Do you have more than one VAT registered business?"
-    val heading: String = title
+    val heading: String = "Do you have more than one VAT registered business?"
+    val title = heading + ServiceName.principalSuffix
     val radioYes: String = "yes"
     val radioNo: String = "no"
   }
 
   object ClientDetails {
-    val title = "Enter your client's details"
     val heading = "Enter your client's details"
+    val title = heading  + ServiceName.agentSuffix
     val line1 = "We will attempt to match these details against information we currently hold."
     val field1 = "First name"
     val field2 = "Last name"
@@ -142,49 +147,49 @@ object MessageLookup {
   }
 
   object ConfirmCompanyNumber {
-    val title = "Confirm your client's company number"
-    val heading: String = title
+    val heading: String = "Confirm your client's company number"
+    val title = heading + ServiceName.agentSuffix
     val companyNumberHeading = "Company number"
     val link = "Change company number"
   }
 
   object AgreeCaptureEmail {
-    val title = "Agree for your client to get secure messages from HMRC"
-    val heading: String = title
+    val heading: String = "Agree for your client to get secure messages from HMRC"
+    val title = heading + ServiceName.agentSuffix
     val insetText = "To join this trial, your client must agree to get secure messages instead of letters."
     val line1 = "When your client has a new message about VAT in their business tax account, we will send an email notification to let them know."
     val line2 = "Your client will need to sign in to their business tax account to read their secure messages."
   }
 
   object CaptureAgentEmail {
-    val title = "What is your email address?"
-    val heading: String = title
+    val heading: String = "What is your email address?"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "We will only send you an email to let you know if your client can join the trial."
     val hint = "For example, me@me.com"
   }
 
   object CaptureClientEmail {
-    val title = "What is your client's email address?"
-    val heading: String = title
+    val heading: String = "What is your client's email address?"
+    val title = heading + ServiceName.agentSuffix
     val hint = "For example, me@me.com"
   }
 
   object ConfirmEmail {
-    val title = "Check your client's email address"
-    val heading: String = title
+    val heading: String = "Check your client's email address"
+    val title = heading + ServiceName.agentSuffix
     val emailHeading = "Email address"
     val link = "Change email address"
   }
 
   object ConfirmAgentEmail {
-    val title = "Confirm your email address"
-    val heading: String = title
+    val heading: String = "Confirm your email address"
+    val title = heading + ServiceName.agentSuffix
     val link = "Change email address"
   }
 
   object SentClientEmail {
-    val title = "We have sent your client an email"
-    val heading: String = title
+    val heading: String = "We have sent your client an email"
+    val title = heading + ServiceName.agentSuffix
 
     def line1(email: String) = s"We have sent an email to $email. Your client needs to click on the link in the email to verify their email address."
 
@@ -192,8 +197,8 @@ object MessageLookup {
   }
 
   object VerifyAgentEmail {
-    val title = "Verify your email address"
-    val heading: String = title
+    val heading: String = "Verify your email address"
+    val title = heading + ServiceName.agentSuffix
 
     def line1(email: String) = s"We have sent an email to $email. Click on the link in the email to verify your email address."
 
@@ -205,39 +210,39 @@ object MessageLookup {
   }
 
   object AgentEmailVerified {
-    val title = "You have verified your email address"
-    val heading: String = title
+    val heading: String = "You have verified your email address"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "You need to continue to sign up your client. We will send you a confirmation message after you sign up this client."
   }
 
   object UseDifferentEmailAddress {
-    val title = "You need to enter a different email address"
-    val heading: String = title
+    val heading: String = "You need to enter a different email address"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The email address you entered for your client is the same as your own email address."
   }
 
   object AgentConfirmCompany {
-    val title = "Confirm your client's company"
-    val heading: String = title
+    val heading: String = "Confirm your client's company"
+    val title = heading + ServiceName.agentSuffix
     val link = "Change company"
   }
 
   object AgentCompanyNameNotFound {
-    val title = "We could not confirm your client's company"
-    val heading: String = title
+    val heading: String = "We could not confirm your client's company"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The company number you entered is not on our system."
   }
 
   object ClientVerifiedEmail {
-    val title = "You've verified your email address"
-    val heading: String = title
+    val heading: String = "You've verified your email address"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "HM Revenue and Customs will contact you by email instead of sending letters."
     val link = "Return to GOV.UK"
   }
 
   object ConfirmClient {
-    val title = "Confirm your client's details"
     val heading = "Confirm your client's details"
+    val title = heading + ServiceName.agentSuffix
     val firstName = "First name"
     val lastName = "Last name"
     val nino = "National Insurance number"
@@ -245,20 +250,20 @@ object MessageLookup {
   }
 
   object FailedClientMatching {
-    val title = "There's a problem"
-    val heading: String = title
+    val heading: String = "There's a problem"
+    val title = heading + ServiceName.agentSuffix
     val description = "The details you've entered are not on our system."
   }
 
   object ClientAlreadySignedUp {
-    val title = "Your client has already signed up"
-    val heading: String = title
+    val heading: String = "Your client has already signed up"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "This client's details are already in use."
   }
 
   object Terms {
-    val title = "Terms of participation"
-    val heading: String = title
+    val heading: String = "Terms of participation"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "By taking part in this trial, you agree that either you or your client will:"
     val bullet1 = "use relevant software to record your client's sales and purchases, then to submit their VAT Returns"
     val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of their accounting period"
@@ -268,8 +273,8 @@ object MessageLookup {
   }
 
   object AgentInformationReceived {
-    val title = "We have received your client's information"
-    val heading: String = title
+    val heading: String = "We have received your client's information"
+    val title = heading + ServiceName.agentSuffix
 
     object Section1 {
       val heading = "What happens next"
@@ -284,73 +289,73 @@ object MessageLookup {
   }
 
   object YourVatNumber {
-    val title = "Confirm you want to use this VAT number to sign up"
-    val heading: String = title
+    val heading: String = "Confirm you want to use this VAT number to sign up"
+    val title = heading + ServiceName.principalSuffix
     val vatNumberHeading = "VAT number"
     val link = "I want to use a different VAT number"
   }
 
   object VatNumber {
-    val title = "What is your VAT number?"
-    val heading: String = title
+    val heading: String = "What is your VAT number?"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "This is the 9-digit number on your VAT registration certificate."
   }
 
   object CouldNotConfirmVatNumber {
-    val title = "We could not confirm your client's VAT number"
-    val heading: String = title
+    val heading: String = "We could not confirm your client's VAT number"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The information you provided does not match the details on our system."
     val tryAgain = "Try again"
   }
 
   object AgentCouldNotFindPartnership {
-    val title = "We could not confirm your client's company number for their Limited Partnership"
-    val heading: String = title
+    val heading: String = "We could not confirm your client's company number for their Limited Partnership"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The company number is not on our system."
   }
 
   object AgentCouldNotConfirmPartnership {
-    val title = "We could not confirm your client's Partnership"
-    val heading: String = title
+    val heading: String = "We could not confirm your client's Partnership"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The information you provided does not match or is incorrect."
   }
 
   object VatRegistrationDate {
-    val title = "When did you register for VAT?"
     val heading = "When did you become VAT registered?"
+    val title = "When did you register for VAT?" + ServiceName.principalSuffix
     val line1 = "You can find this date on your VAT registration certificate."
     val formhint1 = "For example, 6 4 2017"
   }
 
   object PrincipalCouldNotConfirmVatNumber {
-    val title = "We could not confirm your VAT number"
-    val heading: String = title
+    val heading: String = "We could not confirm your VAT number"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The VAT number you entered is not on our system."
   }
 
   object SignInWithDifferentDetails {
-    val title = "You need to sign in with different details"
-    val heading: String = title
+    val heading: String = "You need to sign in with different details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You need to sign in with the Government Gateway details for the business you want to sign up."
   }
 
   object SignInWithDifferentDetailsPartnership {
-    val title = "You need to sign in with different details"
-    val heading: String = title
+    val heading: String = "You need to sign in with different details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You must use a Government Gateway user ID that is linked to the Unique Taxpayer Reference for your partnership."
   }
 
   object PrincipalPlaceOfBusiness {
-    val title = "Where is the principal place of business?"
-    val heading = title
+    val heading = "Where is the principal place of business?"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "This is where the company carries out most of its business activities."
     val line2 = "If the company does business in different places or contract work on client premises, it is where the company keeps its financial and business records."
     val label = "UK postcode"
   }
 
   object PrincipalGuidance {
-    val title = "Use software to submit your VAT Returns"
-    val heading: String = title
+    val heading: String = "Use software to submit your VAT Returns"
+    val title = ServiceName.principalSuffix.substring(3)
     val line1 = "HM Revenue and Customs (HMRC) are changing the way you submit your VAT Returns."
     val line2 = "From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns."
     val line3 = "If you're a sole trader or a director of a limited company you can try this new way of reporting now, instead of waiting until April 2019."
@@ -378,8 +383,8 @@ object MessageLookup {
   }
 
   object PrincipalCaptureBusinessEntity {
-    val title = "What type of business are you registered as?"
-    val heading: String = title
+    val heading: String = "What type of business are you registered as?"
+    val title = heading + ServiceName.principalSuffix
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
     val radioGeneralPartnership: String = "General partnership"
@@ -394,8 +399,8 @@ object MessageLookup {
   }
 
   object PrincipalCheckYourAnswers {
-    val title = "Check your answers"
     val heading = "Check your answers"
+    val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
     val yourVatNumber = "What is your VAT number?"
     val vatRegistrationDate = "What is your VAT registration date?"
@@ -404,8 +409,8 @@ object MessageLookup {
   }
 
   object PrincipalNoCtEnrolmentSummary {
-    val title = "Check your answers"
     val heading = "Check your answers"
+    val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
     val companyNumber = "What is your company number?"
     val companyUtr = "What is your company Unique Taxpayer Reference?"
@@ -413,35 +418,35 @@ object MessageLookup {
   }
 
   object PrincipalCannotUseServiceYet {
-    val title = "You cannot use this service yet"
-    val heading: String = title
+    val heading: String = "You cannot use this service yet"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "Your business is not eligible at this time"
     val line2 = "Most businesses will be eligible after 21 January 2019. Try again then."
   }
 
   object PrincipalCaptureEmail {
-    val title = "What is your email address?"
-    val heading: String = title
+    val heading: String = "What is your email address?"
+    val title = heading + ServiceName.principalSuffix
     val hint = "For example, me@me.com"
   }
 
   object PrincipalAgreeCaptureEmail {
-    val title = "Agree to get emails instead of letters"
-    val heading: String = title
+    val heading: String = "Agree to get emails instead of letters"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "When you have a new message about VAT in your HMRC account, we'll send you an email to let you know."
     val line2 = "You'll need to sign in to your account to read the message."
   }
 
   object PrincipalConfirmEmail {
-    val title = "Check your email address"
-    val heading: String = title
+    val heading: String = "Check your email address"
+    val title = heading + ServiceName.principalSuffix
     val emailHeading = "Email address"
     val link = "Change email address"
   }
 
   object PrincipalVerifyEmail {
-    val title = "Verify your email address"
-    val heading: String = title
+    val heading: String = "Verify your email address"
+    val title = heading + ServiceName.principalSuffix
 
     def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
 
@@ -453,14 +458,14 @@ object MessageLookup {
   }
 
   object PrincipalEmailVerified {
-    val title = "You've verified your email address"
-    val heading: String = title
+    val heading: String = "You've verified your email address"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You'll now receive messages and email notifications from HMRC."
   }
 
   object YourDetails {
-    val title = "Enter your details"
-    val heading: String = title
+    val heading: String = "Enter your details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "We will attempt to match these details against information we currently hold."
     val field1 = "First name"
     val field2 = "Last name"
@@ -471,8 +476,8 @@ object MessageLookup {
   }
 
   object ConfirmDetails {
-    val title = "Confirm your details"
     val heading = "Confirm your details"
+    val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
     val firstName = "First name"
     val lastName = "Last name"
@@ -481,8 +486,8 @@ object MessageLookup {
   }
 
   object PrincipalConfirmYourDetails {
-    val title = "Confirm your details"
-    val heading: String = title
+    val heading: String = "Confirm your details"
+    val title = heading + ServiceName.principalSuffix
     val firstName = "First name"
     val lastName = "Last name"
     val dob = "Date of birth"
@@ -491,79 +496,79 @@ object MessageLookup {
   }
 
   object FailedIdentityVerification {
-    val title = "We couldn't confirm your details"
-    val heading: String = title
+    val heading: String = "We couldn't confirm your details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided doesn't match the details on our system."
     val tryAgain = "Try again"
   }
 
   object CouldNotConfirmBusiness {
-    val title = "We could not confirm your business"
-    val heading: String = title
+    val heading: String = "We could not confirm your business"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided does not match the details we have about your business."
     val tryAgain = "Try again"
   }
 
   object BTACannotConfirmBusiness {
-    val title = "We cannot confirm the business"
-    val heading: String = title
+    val heading: String = "We cannot confirm the business"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided does not match the details we have about the business."
     val tryAgain = "Try again"
   }
 
   object IdentityVerificationSuccess {
-    val title = "We've confirmed your identity"
-    val heading: String = title
+    val heading: String = "We've confirmed your identity"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You can now sign up for this service."
   }
 
   object FailedMatching {
-    val title = "We couldn't confirm your details"
-    val heading: String = title
+    val heading: String = "We couldn't confirm your details"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided doesn't match the details on our system."
     val tryAgain = "Try again"
   }
 
   object PrincipalCaptureCompanyNumber {
-    val title = "What is your company number?"
-    val heading: String = title
+    val heading: String = "What is your company number?"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You received this from Companies House when you set up your company. It's 8 digits and sometimes starts with 2 letters."
   }
 
   object PrincipalConfirmCompanyNumber {
-    val title = "Confirm your company number"
-    val heading: String = title
+    val heading: String = "Confirm your company number"
+    val title = heading + ServiceName.principalSuffix
     val companyNumberHeading = "Company number"
     val link = "Change company number"
   }
 
   object PrincipalConfirmCompany {
-    val title = "Confirm your company"
-    val heading: String = title
+    val heading: String = "Confirm your company"
+    val title = heading + ServiceName.principalSuffix
     val link = "Change company"
   }
 
   object PrincipalConfirmRegisteredSociety {
-    val title = "Confirm your registered society"
-    val heading: String = title
+    val heading: String = "Confirm your registered society"
+    val title = heading + ServiceName.principalSuffix
     val link = "Change company"
   }
 
   object PrincipalRegisteredSocietyCompanyNameNotFound {
-    val title = "We could not confirm your registered society"
-    val heading: String = title
+    val heading: String = "We could not confirm your registered society"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided does not match the details we have for your registered society."
   }
 
   object PrincipalCaptureCompanyUtr {
-    val title = "What is your company's Unique Taxpayer Reference number?"
-    val heading: String = title
+    val heading: String = "What is your company's Unique Taxpayer Reference number?"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR."
   }
 
   object PrincipalTerms {
-    val title = "Terms of participation"
-    val heading: String = title
+    val heading: String = "Terms of participation"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "By taking part in this trial, you agree to:"
     val bullet1 = "use relevant software to record your sales and purchases, then to submit your VAT Returns"
     val bullet2 = "submit each VAT Return within one calendar month and 7 days from the end of your accounting period"
@@ -575,8 +580,8 @@ object MessageLookup {
 
   object PrincipalInformationReceived {
 
-    val title = "We have received your information"
-    val heading: String = title
+    val heading: String = "We have received your information"
+    val title = heading + ServiceName.principalSuffix
 
     object Section {
       val link = "/guidance/software-for-sending-income-tax-updates"
@@ -596,14 +601,14 @@ object MessageLookup {
   }
 
   object PrincipalAlreadySignedUp {
-    val title = "You've already signed up"
-    val heading: String = title
+    val heading: String = "You've already signed up"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "Your sign in details are already in use."
   }
 
   object AgentGuidance {
-    val title = "Use software to submit your client's VAT Returns"
     val heading = "Use software to submit your client's VAT Returns"
+    val title = ServiceName.agentSuffix.substring(3)
     val line1 = "From April 2019, sole trader businesses and limited companies with a turnover above £85,000 must submit their VAT Returns using software that supports Making Tax Digital."
     val line2 = "If your client is VAT registered they can choose to sign up for this new reporting method now. To help us test this new way of working out your tax, they'll need to:"
     val bullet1 = "use software that supports Making Tax Digital to record their purchases and sales"
@@ -630,14 +635,14 @@ object MessageLookup {
   }
 
   object AssistantCredentialError {
-    val title = "You cannot use this service"
-    val heading = title
+    val heading = "You cannot use this service"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You can only sign up this business if you are an administrator."
   }
 
   object SignUpCompleteClient {
-    val title = "You have added VAT to your business tax account"
     val heading = "You have added VAT to your business tax account"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You can now use your business tax account to:"
     val bullet1 = "see what you owe"
     val bullet2 = "check your deadlines"
@@ -646,7 +651,7 @@ object MessageLookup {
   }
 
   object ConfirmPartnershipUtr {
-    val title = "Is this the right Unique Taxpayer Reference for the partnership?"
+    val title = "Is this the right Unique Taxpayer Reference for the partnership?" + ServiceName.principalSuffix
     val headingGeneralPartnership = "Is this the right Unique Taxpayer Reference (UTR) for the partnership?"
 
     def headingLimitedPartnership(name: String) = s"Is this the right Unique Taxpayer Reference (UTR) for $name?"
@@ -656,27 +661,27 @@ object MessageLookup {
   }
 
   object PrincipalCapturePartnershipCompanyNumber {
-    val title = "What is the partnership's company number?"
-    val heading: String = title
+    val heading: String = "What is the partnership's company number?"
+    val title = heading + ServiceName.principalSuffix
     val linkText = "search for your company number (opens in a window or tab)"
     val line1 = s"You can $linkText on Companies House."
   }
 
   object PrincipalCouldNotConfirmPartnershipCompany {
-    val title = "We could not confirm your Limited Partnership's company number"
-    val heading: String = title
+    val heading: String = "We could not confirm your Limited Partnership's company number"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The company number is not on our system."
   }
 
   object PrincipalCouldNotConfirmPartnershipKnownFacts {
-    val title = "We could not confirm your Partnership"
-    val heading: String = title
+    val heading: String = "We could not confirm your Partnership"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided does not match or is incorrect."
   }
 
   object PrincipalCouldNotConfirmLimitedPartnership {
-    val title = "We could not confirm your Limited Partnership"
-    val heading: String = title
+    val heading: String = "We could not confirm your Limited Partnership"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided is not for a Limited Partnership."
   }
 
@@ -687,88 +692,88 @@ object MessageLookup {
   }
 
   object SignUpAfterThisDate {
-    val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due."
 
     def line2(date: String) = s"Please come back and sign up after $date."
   }
 
   object SignUpBetweenTheseDates {
-    val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due."
 
     def line2(startDate: String, endDate: String) = s"Please come back and sign up between $startDate and $endDate."
   }
 
   object AgentSignUpAfterThisDate {
-    val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due."
 
     def line2(date: String) = s"Please come back and sign them up after $date."
   }
 
   object AgentSignUpBetweenTheseDates {
-    val title = "You must come back later to sign up"
     val heading = "You must come back later to sign up"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due."
 
     def line2(startDate: String, endDate: String) = s"Please come back and sign them up between $startDate and $endDate."
   }
 
   object AgentCapturePartnershipCompanyNumber {
-    val title = "What is the company number of your client's partnership?"
-    val heading: String = title
+    val heading: String = "What is the company number of your client's partnership?"
+    val title = heading + ServiceName.agentSuffix
     val link = "check the Companies House register (opens in a new window or tab)"
     val line1 = s"If you are not sure, $link."
   }
 
   object AgentCompanyNameNotFoundLP {
-    val title = "We could not confirm your client's Limited Partnership"
-    val heading: String = title
+    val heading: String = "We could not confirm your client's Limited Partnership"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The information you provided is not for a Limited Partnership."
   }
 
   object AgentCapturePartnershipUtr {
-    val title = "What is your client's Unique Taxpayer Reference (UTR)?"
-    val heading: String = title
+    val heading: String = "What is your client's Unique Taxpayer Reference (UTR)?"
+    val title = heading + ServiceName.agentSuffix
   }
 
   object ConfirmPartnership {
-    val title = "Confirm the partnership"
-    val heading = title
+    val heading = "Confirm the partnership"
+    val title = heading + ServiceName.principalSuffix
     val link = "Change the partnership"
   }
 
   object AgentConfirmPartnership {
-    val title = "Confirm the partnership"
-    val heading = title
+    val heading = "Confirm the partnership"
+    val title = heading + ServiceName.agentSuffix
     val link = "Change the partnership"
   }
 
   object AgentPartnershipPostcode {
-    val title = "Where is the client's principal place of business?"
-    val heading = title
+    val heading = "Where is the client's principal place of business?"
+    val title = heading + ServiceName.agentSuffix
     val label = "UK postcode"
   }
 
   object CapturePartnershipUtr {
-    val title = "What is the partnership's Unique Taxpayer Reference (UTR)?"
-    val heading = title
+    val heading = "What is the partnership's Unique Taxpayer Reference (UTR)?"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs."
   }
 
   object PartnershipPrincipalPlaceOfBusiness {
-    val title = "Where is the partnership registered for Self Assessment?"
-    val heading = title
+    val heading = "Where is the partnership registered for Self Assessment?"
+    val title = heading + ServiceName.principalSuffix
     val label = "UK postcode"
   }
 
   object PartnershipsCYA {
-    val title = "Check your answers"
-    val heading = title
+    val heading = "Check your answers"
+    val title = heading + ServiceName.principalSuffix
     val businessEntity = "What type of business or group are you signing up?"
     val companyNumber = "What is the partnership's company number?"
     val companyUtr = "What is the partnership's Unique Taxpayer Reference?"
@@ -776,8 +781,8 @@ object MessageLookup {
   }
 
   object AgentCheckYourAnswers {
-    val title = "Confirm your client's details"
     val heading = "Confirm your client's details"
+    val title = heading + ServiceName.agentSuffix
     val yourUtr = "What is your client's Unique Taxpayer Reference (UTR)?"
     val yourCompanyNumber = "What is your client's company number?"
     val yourBusinessPostCode = "Where is your client's principal place of business?"
@@ -786,8 +791,8 @@ object MessageLookup {
   }
 
   object UnplannedOutage {
-    val title = "Sorry, there is a problem with the service"
-    val heading: String = title
+    val heading: String = "Sorry, there is a problem with the service"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "Try again later."
     val line2 = "In the meantime:"
     val link1 = "full list of VAT services"
@@ -799,16 +804,16 @@ object MessageLookup {
   }
 
   object VerifySoftwareError {
-    val title = "Making Tax Digital for VAT: verify your software"
-    val heading: String = title
+    val heading: String = "Making Tax Digital for VAT: verify your software"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You must confirm with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC."
     val line2 = "They will be able to tell you if your software works with Making Tax Digital for VAT to submit your VAT Returns through the software."
     val returnToGovUK = "Return to GOV.UK"
   }
 
   object HaveSoftware {
-    val title = "Do you have accounting software for managing your VAT records?"
-    val heading: String = title
+    val heading: String = "Do you have accounting software for managing your VAT records?"
+    val title = heading + ServiceName.principalSuffix
     val radioYes: String = "yes"
     val radioNo: String = "no"
     val yes: String = "Yes, I have accounting software"
@@ -816,8 +821,8 @@ object MessageLookup {
   }
 
   object SoftwareReady {
-    val title = "Is your software ready to submit your Making Tax Digital for VAT Returns directly to HMRC?"
-    val heading: String = title
+    val heading: String = "Is your software ready to submit your Making Tax Digital for VAT Returns directly to HMRC?"
+    val title = heading + ServiceName.principalSuffix
     val line1 = "Your software must work with Making Tax Digital for VAT."
     val line2 = "You must check with your provider that your accounting software is ready to submit your VAT Returns directly to HMRC."
     val radioYes: String = "yes"
@@ -827,8 +832,8 @@ object MessageLookup {
   }
 
   object ChooseSoftwareError {
-    val title = "Making Tax Digital for VAT: software is needed"
-    val heading: String = title
+    val heading: String = "Making Tax Digital for VAT: software is needed"
+    val title = heading + ServiceName.principalSuffix
     val link = "list of software providers (opens in a new window or tab)"
     val line1 = "You must choose accounting software that works with Making Tax Digital for VAT. You will need to submit your VAT Returns to HMRC through the software."
     val line2 = s"We have a $link that support this VAT Returns process."
@@ -836,26 +841,26 @@ object MessageLookup {
   }
 
   object AgentConfirmRegisteredSociety {
-    val title = "Confirm your client's registered society"
-    val heading: String = title
+    val heading: String = "Confirm your client's registered society"
+    val title = heading + ServiceName.agentSuffix
     val link = "Change company"
   }
 
   object AgentRegisteredSocietyCompanyNameNotFound {
-    val title = "We could not confirm your client's registered society"
-    val heading: String = title
+    val heading: String = "We could not confirm your client's registered society"
+    val title = heading + ServiceName.agentSuffix
     val line1 = "The information you provided does not match the details we have for your client's registered society."
   }
 
   object MigrationInProgressError {
-    val title = "You have already signed up"
-    val heading: String = title
+    val heading: String = "You have already signed up"
+    val title = heading + ServiceName.principalSuffix
     val line = "Your Making Tax Digital for VAT account is being set up. You will receive an email within 72 hours."
   }
 
   object AgentMigrationInProgressError {
-    val title = "Your client is already signed up"
-    val heading: String = title
+    val heading: String = "Your client is already signed up"
+    val title = heading + ServiceName.agentSuffix
     val line = "Your client's Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours."
   }
 

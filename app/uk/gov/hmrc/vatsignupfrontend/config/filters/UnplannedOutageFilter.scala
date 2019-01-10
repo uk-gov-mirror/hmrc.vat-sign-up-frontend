@@ -39,7 +39,7 @@ class UnplannedOutageFilter @Inject()(val messagesApi: MessagesApi,
 
     override def apply(rh: RequestHeader): Accumulator[ByteString, Result] =
       if (isEnabled(UnplannedShutter) && rh.path.contains("/vat-through-software/sign-up"))
-        nextFilter(rh).map(_ => Ok(unplanned_outage()(Request(rh, ""), request2Messages(rh), appConfig)))
+        nextFilter(rh).map(_ => Ok(unplanned_outage(rh.path.contains("/client"))(Request(rh, ""), request2Messages(rh), appConfig)))
       else
         nextFilter(rh)
   }

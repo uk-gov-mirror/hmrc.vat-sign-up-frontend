@@ -21,7 +21,7 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("principal.could_not_confirm_limited_partnership.title"), bodyClasses = None, showSignOutLink = false) {
+@principal_main_template(title = Messages("principal.could_not_confirm_limited_partnership.title"), bodyClasses = None, showSignOutLink = false) {
 
     <h1 class="heading-large">@Messages("principal.could_not_confirm_limited_partnership.heading")</h1>
 

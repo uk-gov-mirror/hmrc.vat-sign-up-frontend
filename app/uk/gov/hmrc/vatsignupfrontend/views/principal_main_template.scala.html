@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.TitleErrorHelper._
+@import uk.gov.hmrc.vatsignupfrontend.views.helpers.PageTitleHelper._
 
 @(title: String,
   sidebarLinks: Option[Html] = None,
@@ -27,4 +27,4 @@
   form: Option[Form[_]] = None
 )(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(formatTitleIfErrors(form, title), Some(Messages("service_name.principal_journey")), sidebarLinks, contentHeader, bodyClasses, mainClass, scriptElem, showSignOutLink)(mainContent)(request, messages, appConfig)
+@main_template(formatTitle(form, Messages("service_name.principal_journey"), title), Some(Messages("service_name.principal_journey")), sidebarLinks, contentHeader, bodyClasses, mainClass, scriptElem, showSignOutLink)(mainContent)(request, messages, appConfig)

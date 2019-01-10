@@ -28,7 +28,7 @@ class UnplannedOutageSpec extends ViewSpec {
   val configuration = Configuration.load(env)
   lazy val appConfig = new AppConfig(configuration, env)
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.unplanned_outage()(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.unplanned_outage(isAgent = false)(
     FakeRequest(),
     applicationMessages,
     appConfig

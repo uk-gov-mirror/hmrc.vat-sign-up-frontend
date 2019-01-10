@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.forms.validation.utils
+package uk.gov.hmrc.vatsignupfrontend.views.helpers
 
 import play.api.data.Form
 import play.api.i18n.Messages
 
-object TitleErrorHelper {
+object PageTitleHelper {
 
-  def formatTitleIfErrors(form: Option[Form[_]], title: String)(implicit messages: Messages): String = {
+  val separator: String = " - "
+  val errorPrefixKey: String = "error.title_prefix"
+  val govukKey: String = "service_name.govuk"
+
+  def formatTitle(form: Option[Form[_]], serviceName: String, title: String)(implicit messages: Messages): String = {
+    errorPrefix(form) + Set(title, serviceName, messages(govukKey)).reduce(_ + separator + _)
+  }
+
+  private def errorPrefix(form: Option[Form[_]]) (implicit messages: Messages): String = {
     form match {
-      case Some(form) => if(form.hasErrors) messages("error.title_prefix") + title else title
-      case None => title
+      case Some(form) => if (form.hasErrors) messages(errorPrefixKey) else ""
+      case None => ""
     }
   }
 
