@@ -112,6 +112,8 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
           ) map {
             case Right(StorePartnershipInformationSuccess) =>
               Redirect(principalRoutes.AgreeCaptureEmailController.show())
+            case Left(PartnershipUtrNotFound) =>
+              Redirect(routes.CouldNotConfirmKnownFactsController.show())
             case Left(StorePartnershipKnownFactsFailure) =>
               Redirect(routes.CouldNotConfirmKnownFactsController.show())
             case Left(StorePartnershipInformationFailureResponse(status)) =>
@@ -126,6 +128,8 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             case Right(StorePartnershipInformationSuccess) =>
               Redirect(principalRoutes.AgreeCaptureEmailController.show())
             case Left(StorePartnershipKnownFactsFailure) =>
+              Redirect(routes.CouldNotConfirmKnownFactsController.show())
+            case Left(PartnershipUtrNotFound) =>
               Redirect(routes.CouldNotConfirmKnownFactsController.show())
             case Left(StorePartnershipInformationFailureResponse(status)) =>
               throw new InternalServerException("Store Partnership failed with status code: " + status)

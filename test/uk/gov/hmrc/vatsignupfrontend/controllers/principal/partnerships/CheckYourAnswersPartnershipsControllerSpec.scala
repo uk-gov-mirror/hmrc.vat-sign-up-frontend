@@ -38,6 +38,8 @@ import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSes
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
+import scala.concurrent.Future
+
 class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
   with MockStorePartnershipInformationService {
@@ -273,6 +275,41 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             partnershipEntity = PartnershipEntityType.LimitedPartnership,
             postCode = Some(testBusinessPostcode)
           )(Left(StorePartnershipKnownFactsFailure))
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            crn = Some(testCompanyNumber)
+          )))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+        }
+      }
+      "store partnership info returned NOT FOUND for SAUTR"  should {
+        "goto could not confirm known facts page" in {
+          enable(GeneralPartnershipJourney)
+          disable(LimitedPartnershipJourney)
+
+          mockAuthAdminRole()
+          mockStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            sautr = testSaUtr,
+            postCode = Some(testBusinessPostcode)
+          )(Left(PartnershipUtrNotFound))
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+        }
+      }
+      " SAUTR NOT FOUND from ODS on Store Partnership information" should {
+        "redirect to known facts error page" in {
+          mockAuthAdminRole()
+          mockStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            sautr = testSaUtr,
+            companyNumber = testCompanyNumber,
+            partnershipEntity = PartnershipEntityType.LimitedPartnership,
+            postCode = Some(testBusinessPostcode)
+          )(Left(PartnershipUtrNotFound))
           val result = await(TestCheckYourAnswersController.submit(testPostRequest(
             entityType = Some(PartnershipEntityType.LimitedPartnership),
             crn = Some(testCompanyNumber)

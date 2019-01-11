@@ -109,6 +109,8 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
               Redirect(agentRoutes.EmailRoutingController.route())
             case Left(StorePartnershipKnownFactsFailure) =>
               Redirect(routes.CouldNotConfirmPartnershipController.show())
+            case Left(PartnershipUtrNotFound) =>
+              Redirect(routes.CouldNotConfirmPartnershipController.show())
             case Left(StorePartnershipInformationFailureResponse(failure)) =>
               throw new InternalServerException(s"Failed to save partnership information with error $failure")
           }
@@ -121,6 +123,8 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             case Right(StorePartnershipInformationSuccess) =>
               Redirect(agentRoutes.EmailRoutingController.route())
             case Left(StorePartnershipKnownFactsFailure) =>
+              Redirect(routes.CouldNotConfirmPartnershipController.show())
+            case Left(PartnershipUtrNotFound) =>
               Redirect(routes.CouldNotConfirmPartnershipController.show())
             case Left(StorePartnershipInformationFailureResponse(failure)) =>
               throw new InternalServerException(s"Failed to save partnership information with error $failure")

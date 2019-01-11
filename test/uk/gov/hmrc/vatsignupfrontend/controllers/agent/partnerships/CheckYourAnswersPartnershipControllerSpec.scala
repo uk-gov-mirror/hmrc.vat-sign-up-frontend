@@ -185,7 +185,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
         }
       }
       "store partnership info returned KnownFactsMismatchFailure" should {
-        "go to Capture Email Page" in {
+        "go to Could not confirm partnership Page" in {
           mockAuthRetrieveAgentEnrolment()
 
           mockStorePartnershipInformation(
@@ -201,9 +201,8 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
 
         }
       }
-
       "store partnership info returned KnownFactsMismatchFailure for a limited partnership" should {
-        "go to Capture Email Page" in {
+        "go to Could not confirm partnership Page" in {
           mockAuthRetrieveAgentEnrolment()
 
           mockStorePartnershipInformation(
@@ -237,6 +236,45 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           )
           intercept[InternalServerException](await(TestCheckYourAnswersPartnershipController.submit(testPostRequest())))
         }
+      }
+    }
+    "store partnership info returned PartnershipUtrNotFound" should {
+      "go to Could not confirm partnership Page" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        mockStorePartnershipInformation(
+          testVatNumber,
+          testSaUtr,
+          Some(testBusinessPostcode)
+        )(
+          Future.successful(Left(PartnershipUtrNotFound))
+        )
+        val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest())
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+
+      }
+    }
+    "store partnership info returned PartnershipUtrNotFound for a limited partnership" should {
+      "go to Could not confirm partnership page" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        mockStorePartnershipInformation(
+          testVatNumber,
+          testSaUtr,
+          testCompanyNumber,
+          PartnershipEntityType.LimitedPartnership,
+          Some(testBusinessPostcode)
+        )(
+          Future.successful(Left(PartnershipUtrNotFound))
+        )
+        val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
+          partnershipEntityType = Some(PartnershipEntityType.LimitedPartnership),
+          companyNumber = Some(testCompanyNumber)
+        ))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+
       }
     }
     "vat number is missing" should {
