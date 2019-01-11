@@ -25,15 +25,11 @@ object PageTitleHelper {
   val errorPrefixKey: String = "error.title_prefix"
   val govukKey: String = "service_name.govuk"
 
-  def formatTitle(form: Option[Form[_]], serviceName: String, title: String)(implicit messages: Messages): String = {
-    errorPrefix(form) + Set(title, serviceName, messages(govukKey)).reduce(_ + separator + _)
-  }
+  def formatTitle(formOpt: Option[Form[_]], serviceName: String, title: String)(implicit messages: Messages): String = {
+    val prefix = formOpt.collect { case form if form.hasErrors => messages(errorPrefixKey) }.getOrElse("")
+    val body = if (serviceName == title) serviceName else title + separator + serviceName
+    val suffix = separator + messages(govukKey)
 
-  private def errorPrefix(form: Option[Form[_]]) (implicit messages: Messages): String = {
-    form match {
-      case Some(form) => if (form.hasErrors) messages(errorPrefixKey) else ""
-      case None => ""
-    }
+    prefix + body + suffix
   }
-
 }
