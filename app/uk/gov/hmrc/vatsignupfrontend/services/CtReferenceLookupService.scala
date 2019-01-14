@@ -24,8 +24,8 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.CtReferenceLookupHttpParser.CtR
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CtReferenceLookupService @Inject()(val storeCompanyNumberConnector: CtReferenceLookupConnector) {
+class CtReferenceLookupService @Inject()(val ctReferenceLookupConnector: CtReferenceLookupConnector) {
 
   def checkCtReferenceExists(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CtReferenceLookupResponse] =
-    storeCompanyNumberConnector.checkCtReferenceExists(companyNumber)
+    ctReferenceLookupConnector.checkCtReferenceExists(companyNumber)
 }
