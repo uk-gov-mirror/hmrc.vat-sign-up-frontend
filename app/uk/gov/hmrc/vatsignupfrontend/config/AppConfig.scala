@@ -119,6 +119,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   
   def getCitizenDetailsUrlByNino(nino: String): String = s"$citizenDetailsUrl/citizen-details/nino/$nino/"
 
+  lazy val ctReferenceLookupUrl: String = s"$protectedMicroServiceUrl/subscription-request/ct-reference-check"
+
   lazy val btaUrl: String = loadConfig("bta.url")
 
   lazy val btaRedirectUrl: String = "/business-account"
