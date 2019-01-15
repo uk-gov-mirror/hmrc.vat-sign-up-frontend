@@ -27,11 +27,11 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietyService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockCtReferenceLookupService, MockStoreRegisteredSocietyService}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 
 class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
-  with MockStoreRegisteredSocietyService with FeatureSwitching {
+  with MockStoreRegisteredSocietyService with MockCtReferenceLookupService with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -45,7 +45,8 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
   object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(
     mockControllerComponents,
-    mockStoreRegisteredSocietyService
+    mockStoreRegisteredSocietyService,
+    mockCtReferenceLookupService
   )
 
   val testGetRequest = FakeRequest("GET", "/confirm-registered-society")
@@ -82,48 +83,99 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     }
   }
 
-  "Calling the submit action of the Confirm Registered Society controller" should {
-    "go to the 'agree to receive emails' page" in {
-      mockAuthAdminRole()
-      mockStoreRegisteredSocietySuccess(
-        vatNumber = testVatNumber,
-        companyNumber = testCompanyNumber
-      )
+  "Calling the submit action of the Confirm Registered Society controller" when {
+    "the CtReferenceLookup returns that a ctutr exists for the given crn" should {
+      "go to the 'Capture Registered Society UTR' page" in {
+        mockAuthAdminRole()
+        mockStoreRegisteredSocietySuccess(
+          vatNumber = testVatNumber,
+          companyNumber = testCompanyNumber
+        )
+        mockCtReferenceFound(testCompanyNumber)
 
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-      )
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+        )
 
-      val result = TestConfirmRegisteredSocietyController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
-    }
+        val result = TestConfirmRegisteredSocietyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyUtrController.show().url)
+      }
 
-    "throw internal server exception if store registered society fails" in {
-      mockAuthAdminRole()
-      mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber)
+      "throw internal server exception if ct reference lookup fails" in {
+        mockAuthAdminRole()
+        mockCtReferenceFailure(testCompanyNumber)(BAD_REQUEST)
 
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-      )
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+        )
 
-      intercept[InternalServerException] {
-        await(TestConfirmRegisteredSocietyController.submit(request))
+        intercept[InternalServerException] {
+          await(TestConfirmRegisteredSocietyController.submit(request))
+        }
+      }
+      "go to the 'your vat number' page if vat number is missing" in {
+        mockAuthAdminRole()
+        mockCtReferenceFound(testCompanyNumber)
+
+        val request = testPostRequest.withSession(
+          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+        )
+
+        val result = TestConfirmRegisteredSocietyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+
       }
     }
-    "go to the 'your vat number' page if vat number is missing" in {
-      mockAuthAdminRole()
+    "the CtReferenceLookup returns that a ctutr does not exist for the given crn" should {
+      "go to the 'agree to receive emails' page" in {
+        mockAuthAdminRole()
+        mockStoreRegisteredSocietySuccess(
+          vatNumber = testVatNumber,
+          companyNumber = testCompanyNumber
+        )
+        mockCtReferenceNotFound(testCompanyNumber)
 
-      val request = testPostRequest.withSession(
-        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-      )
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+        )
 
-      val result = TestConfirmRegisteredSocietyController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+        val result = TestConfirmRegisteredSocietyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+      }
 
+      "throw internal server exception if store registered society fails" in {
+        mockAuthAdminRole()
+        mockCtReferenceNotFound(testCompanyNumber)
+        mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber)
+
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+        )
+
+        intercept[InternalServerException] {
+          await(TestConfirmRegisteredSocietyController.submit(request))
+        }
+      }
+      "go to the 'your vat number' page if vat number is missing" in {
+        mockAuthAdminRole()
+        mockCtReferenceNotFound(testCompanyNumber)
+
+        val request = testPostRequest.withSession(
+          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+        )
+
+        val result = TestConfirmRegisteredSocietyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+
+      }
     }
     "go to the 'capture registered society company number' page if company number is missing" in {
       mockAuthAdminRole()

@@ -25,14 +25,16 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.services.StoreRegisteredSocietyService
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.CtReferenceLookupHttpParser.{CtReferenceIsFound, CtReferenceLookupFailureResponse, CtReferenceNotFound}
+import uk.gov.hmrc.vatsignupfrontend.services.{CtReferenceLookupService, StoreRegisteredSocietyService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_registered_society
 
 import scala.concurrent.Future
 
 @Singleton
 class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: ControllerComponents,
-                                                   val storeRegisteredSocietyService: StoreRegisteredSocietyService
+                                                   val storeRegisteredSocietyService: StoreRegisteredSocietyService,
+                                                   val ctReferenceLookupService: CtReferenceLookupService
                                                   )
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(RegisteredSocietyJourney)) {
 
@@ -60,23 +62,26 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optCompanyNumber = request.session.get(SessionKeys.registeredSocietyCompanyNumberKey).filter(_.nonEmpty)
 
-      (optVatNumber, optCompanyNumber) match {
-        case (Some(vatNumber), Some(companyNumber)) =>
-          storeRegisteredSocietyService.storeRegisteredSociety(
-            vatNumber = vatNumber,
-            companyNumber = companyNumber
-          ) map {
-            case Right(_) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
-            case Left(status) =>
-              throw new InternalServerException("storeRegisteredSociety failed: status =" + status)
+      (optCompanyNumber, optVatNumber) match {
+        case (Some(companyNumber), Some(vatNumber)) =>
+          ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
+            case Right(CtReferenceIsFound) =>
+              Future.successful(Redirect(routes.CaptureRegisteredSocietyUtrController.show()))
+            case Left(CtReferenceNotFound) =>
+              storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber) flatMap {
+                case Right(_) =>
+                  Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+                case Left(status) =>
+                  throw new InternalServerException("StoreRegisteredSociety failed: status = " + status)
+              }
+            case Left(CtReferenceLookupFailureResponse(status)) =>
+              throw new InternalServerException("CtReferenceLookup failed: status = " + status)
           }
-        case (None, _) =>
+        case (_, None) =>
           Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
-        case _ =>
+        case (None, _) =>
           Future.successful(Redirect(routes.CaptureRegisteredSocietyCompanyNumberController.show()))
       }
     }
   }
-
 }
