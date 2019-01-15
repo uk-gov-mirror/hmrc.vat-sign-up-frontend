@@ -1,0 +1,91 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
+@import uk.gov.hmrc.play.views.helpers._
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
+@import uk.gov.hmrc.vatsignupfrontend.models.RegisteredSociety
+
+
+@(companyNumber: String, ctReference: String, entityType: BusinessEntity, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
+
+@summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
+        <div class="tabular-data__entry divider--top--thick" id="@field-row">
+            <span class="tabular-data__heading tabular-data__heading--label" id="@field-question">
+            @question
+            </span>
+            <div class="tabular-data__data-1" id="@field-answer">
+                @if(enableHtml) {@Html(answer)} else {@answer}
+            </div>
+    @changeUrl match {
+        case Some(url) => {
+            <a class="tabular-data__data-2" href="@url" id="@field-edit">@Messages("base.change") <span class="visuallyhidden">@question</span> </a>
+        }
+        case _ => {
+            <div class="tabular-data__data-2"></div>
+        }
+    }
+        </div>
+}
+
+@yourCompanyNumber() = @{
+    val rowName = CrnId
+    val rowQuestion = Messages("principal.check-your-answers-registered-society.company_number")
+    val rowAnswer = companyNumber
+    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureRegisteredSocietyCompanyNumberController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+}
+
+@yourCtReference() = @{
+    val rowName = UtrId
+    val rowQuestion = Messages("principal.check-your-answers-registered-society.ct_reference")
+    val rowAnswer = ctReference
+    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureRegisteredSocietyUtrController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+}
+
+@yourBusinessEntity() = @{
+    val rowName = BusinessEntityId
+    val rowQuestion = Messages("principal.check-your-answers-registered-society.business_entity")
+    val rowAnswer = entityType match {
+        case RegisteredSociety => Messages("principal.check-your-answers-registered-society.registered_society")
+    }
+    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
+    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+}
+
+@principal_main_template(title = Messages("principal.check-your-answers-registered-society.title")) {
+
+    <h1 class="heading-large">@Messages("principal.check-your-answers-registered-society.heading")</h1>
+    <h2 class="heading-medium">@Messages("principal.check-your-answers-registered-society.sub_heading")</h2>
+
+    <div class="form-group">
+        @yourBusinessEntity()
+        @yourCompanyNumber()
+        @yourCtReference()
+        <div class="divider--top--thick"></div>
+    </div>
+
+    @form(action = postAction) {
+        @continueButton()
+    }
+
+}
