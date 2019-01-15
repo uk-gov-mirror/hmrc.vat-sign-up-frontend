@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, Reg
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub.stubStoreRegisteredSocietySuccess
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
@@ -65,8 +66,9 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
 
   "POST /confirm-registered-society" should {
     "redirect to agree to receive email page" when {
-      "the registered society is successfully stored" in {
+      "there is no ctutr available and registered society is successfully stored" in {
         stubAuth(OK, successfulAuthResponse())
+        stubCtReferenceNotFound(testCompanyNumber)
         stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber)
 
         val res = post("/confirm-registered-society",
@@ -78,6 +80,25 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.AgreeCaptureEmailController.show().url)
+        )
+      }
+    }
+
+    "redirect to capture registered society ctutr page" when {
+      "there is a ctutr available" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubCtReferenceFound(testCompanyNumber)
+
+
+        val res = post("/confirm-registered-society",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+          ))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureRegisteredSocietyUtrController.show().url)
         )
       }
     }
