@@ -22,6 +22,8 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -32,6 +34,10 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/could-not-confirm-business")
+
+  def testPostRequestWithSession(businessEntity: String): FakeRequest[AnyContentAsEmpty.type] = {
+    testPostRequest.withSession((businessEntityKey, businessEntity))
+  }
 
   "Calling the show action of the Could not confirm business controller" should {
     "show the could not confirm business page" in {
@@ -45,13 +51,28 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
     }
   }
 
-  "Calling the submit action of the Could not confirm business controller" should {
-    "redirect to capture your vat number page" in {
-      mockAuthAdminRole()
+  "Calling the submit action of the Could not confirm business controller" when {
+    "the session contains a business entity" should {
+      "redirect to the capture business entity page" in {
+        mockAuthAdminRole()
+        val ltdCoRequest: FakeRequest[AnyContentAsEmpty.type] = testPostRequestWithSession(limitedCompany)
 
-      val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+        val result = TestCouldNotConfirmBusinessController.submit(ltdCoRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+      }
+    }
+  }
+
+  "Calling the submit action of the Could not confirm business controller" when {
+    "the business entity is not set" should {
+      "redirect to capture your vat number page" in {
+        mockAuthAdminRole()
+
+        val result = TestCouldNotConfirmBusinessController.submit(testPostRequest)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+      }
     }
   }
 

@@ -18,6 +18,9 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -37,9 +40,14 @@ class CouldNotConfirmBusinessController @Inject()(val controllerComponents: Cont
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
+    val optBusinessEntity = request.session.getModel[BusinessEntity](businessEntityKey)
+
     authorised() {
       Future.successful(
-        Redirect(routes.CaptureVatNumberController.show())
+        optBusinessEntity match {
+          case Some(_: BusinessEntity) => Redirect(routes.CaptureBusinessEntityController.show().url)
+          case _ => Redirect(routes.CaptureVatNumberController.show().url)
+        }
       )
     }
   }
