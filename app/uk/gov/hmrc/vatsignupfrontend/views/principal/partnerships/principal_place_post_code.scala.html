@@ -23,7 +23,7 @@
 
 @(businessPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.partnership_postcode.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.partnership_postcode.title"), bodyClasses = None, form = Some(businessPostCodeForm)) {
 
     @summaryErrorHelper(businessPostCodeForm)
 
