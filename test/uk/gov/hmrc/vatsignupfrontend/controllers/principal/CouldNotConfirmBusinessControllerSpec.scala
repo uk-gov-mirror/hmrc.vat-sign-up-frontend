@@ -52,20 +52,7 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
   }
 
   "Calling the submit action of the Could not confirm business controller" when {
-    "the business entity is registered society" should {
-      "redirect to the capture registered society UTR page" in {
-        mockAuthAdminRole()
-        val regSocRequest: FakeRequest[AnyContentAsEmpty.type] = testPostRequestWithSession(registeredSociety)
-
-        val result = TestCouldNotConfirmBusinessController.submit(regSocRequest)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CaptureRegisteredSocietyUtrController.show().url)
-      }
-    }
-  }
-
-  "Calling the submit action of the Could not confirm business controller" when {
-    "the business entity is limited company" should {
+    "the session contains a business entity" should {
       "redirect to the capture business entity page" in {
         mockAuthAdminRole()
         val ltdCoRequest: FakeRequest[AnyContentAsEmpty.type] = testPostRequestWithSession(limitedCompany)
@@ -73,19 +60,6 @@ class CouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPer
         val result = TestCouldNotConfirmBusinessController.submit(ltdCoRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
-      }
-    }
-  }
-
-  "Calling the submit action of the Could not confirm business controller" when {
-    "the business entity set, but is not registered society or limited company" should {
-      "redirect to capture your vat number page" in {
-        mockAuthAdminRole()
-        val otherEntityRequest: FakeRequest[AnyContentAsEmpty.type] = testPostRequestWithSession(soleTrader)
-
-        val result = TestCouldNotConfirmBusinessController.submit(otherEntityRequest)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
       }
     }
   }
