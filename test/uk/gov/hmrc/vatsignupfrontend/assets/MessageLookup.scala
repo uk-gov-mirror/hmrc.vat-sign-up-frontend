@@ -85,7 +85,7 @@ object MessageLookup {
   }
 
   object CaptureCompanyNumber {
-    val heading: String =  "What is your client's company number?"
+    val heading: String = "What is your client's company number?"
     val title = heading + ServiceName.agentSuffix
   }
 
@@ -136,7 +136,7 @@ object MessageLookup {
 
   object ClientDetails {
     val heading = "Enter your client's details"
-    val title = heading  + ServiceName.agentSuffix
+    val title = heading + ServiceName.agentSuffix
     val line1 = "We will attempt to match these details against information we currently hold."
     val field1 = "First name"
     val field2 = "Last name"
@@ -862,6 +862,16 @@ object MessageLookup {
     val heading: String = "Your client is already signed up"
     val title = heading + ServiceName.agentSuffix
     val line = "Your client's Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours."
+  }
+
+  object PrincipalCheckYourAnswersRegisteredSociety {
+    val heading = "Check your answers"
+    val title = heading + ServiceName.principalSuffix
+    val subHeading = "You've told us"
+    val businessEntity = "What is your business type?"
+    val registeredSociety = "Registered Society"
+    val companyNumber = "What is your company number?"
+    val companyUtr = "What is your registered society's Unique Taxpayer Reference?"
   }
 
 }
