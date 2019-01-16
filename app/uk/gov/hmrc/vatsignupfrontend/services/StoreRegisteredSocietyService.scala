@@ -21,11 +21,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreRegisteredSocietyConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreRegisteredSocietyHttpParser.StoreRegisteredSocietyResponse
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreRegisteredSocietyService @Inject()(storeRegisteredSocietyConnector: StoreRegisteredSocietyConnector) {
+class StoreRegisteredSocietyService @Inject()(val storeRegisteredSocietyConnector: StoreRegisteredSocietyConnector) {
 
-  def storeRegisteredSociety(vatNumber: String, companyNumber: String)(implicit hc: HeaderCarrier): Future[StoreRegisteredSocietyResponse] =
-    storeRegisteredSocietyConnector.storeRegisteredSociety(vatNumber, companyNumber)
+  def storeRegisteredSociety(vatNumber: String, companyNumber: String, companyUtr: Option[String] = None)
+                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreRegisteredSocietyResponse] =
+    storeRegisteredSocietyConnector.storeRegisteredSociety(vatNumber, companyNumber, companyUtr)
+
 }

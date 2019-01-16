@@ -54,9 +54,8 @@ class CaptureRegisteredSocietyUtrControllerISpec extends ComponentSpecBase with 
       val res = post("/registered-society-utr")(RegisteredSocietyUtrForm.registeredSocietyUtr -> testCompanyUtr)
 
       res should have(
-        httpStatus(NOT_IMPLEMENTED)
-          //redirectUri(routes.RegisteredSocietyCheckYourAnswers.show().url)
-          //TODO implement redirect to registered society check your answers
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.RegisteredSocietyCheckYourAnswersController.show().url)
       )
     }
   }

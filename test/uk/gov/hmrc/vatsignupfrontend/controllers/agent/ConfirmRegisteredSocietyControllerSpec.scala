@@ -40,7 +40,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
   override def afterEach(): Unit = {
     super.afterEach()
-    enable(RegisteredSocietyJourney)
+    disable(RegisteredSocietyJourney)
   }
 
   object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(
@@ -87,7 +87,8 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       mockAuthRetrieveAgentEnrolment()
       mockStoreRegisteredSocietySuccess(
         vatNumber = testVatNumber,
-        companyNumber = testCompanyNumber
+        companyNumber = testCompanyNumber,
+        companyUtr = None
       )
 
       val request = testPostRequest.withSession(
@@ -102,7 +103,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
     "throw internal server exception if store registered society fails" in {
       mockAuthRetrieveAgentEnrolment()
-      mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber)
+      mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber, None)
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,

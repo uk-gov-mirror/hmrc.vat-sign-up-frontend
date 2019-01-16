@@ -16,23 +16,38 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
-import play.api.http.Status.NO_CONTENT
+import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object StoreRegisteredSocietyHttpParser {
+
+  val CodeKey = "CODE"
+  val ctReferenceMismatch = "CtReferenceMismatch"
+
   type StoreRegisteredSocietyResponse = Either[StoreRegisteredSocietyFailure, StoreRegisteredSocietySuccess.type]
 
   implicit object StoreRegisteredSocietyHttpReads extends HttpReads[StoreRegisteredSocietyResponse] {
-    override def read(method: String, url: String, response: HttpResponse): StoreRegisteredSocietyResponse =
+    override def read(method: String, url: String, response: HttpResponse): StoreRegisteredSocietyResponse = {
+
+      def responseCode: Option[String] = (response.json \ CodeKey).asOpt[String]
+
       response.status match {
         case NO_CONTENT => Right(StoreRegisteredSocietySuccess)
+        case BAD_REQUEST if responseCode contains ctReferenceMismatch => Left(CtReferenceMismatch)
         case status => Left(StoreRegisteredSocietyFailureResponse(status))
       }
+    }
+  }
+
+  sealed trait StoreRegisteredSocietyFailure {
+    def status: Int
   }
 
   case object StoreRegisteredSocietySuccess
 
-  sealed trait StoreRegisteredSocietyFailure
+  case object CtReferenceMismatch extends StoreRegisteredSocietyFailure {
+    override def status = BAD_REQUEST
+  }
 
   case class StoreRegisteredSocietyFailureResponse(status: Int) extends StoreRegisteredSocietyFailure
 
