@@ -21,8 +21,8 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub.stubStoreRegisteredSocietySuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub.stubStoreRegisteredSocietySuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
@@ -69,7 +69,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
       "there is no ctutr available and registered society is successfully stored" in {
         stubAuth(OK, successfulAuthResponse())
         stubCtReferenceNotFound(testCompanyNumber)
-        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber)
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, None)
 
         val res = post("/confirm-registered-society",
           Map(

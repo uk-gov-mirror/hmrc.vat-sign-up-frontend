@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreRegisteredSocietyHttpParser._
@@ -35,6 +36,14 @@ class StoreRegisteredSocietyHttpParserSpec extends UnitSpec {
         res shouldBe Right(StoreRegisteredSocietySuccess)
       }
 
+      "parse BAD_REQUEST response with the expected body as CtReferenceMismatch" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj("CODE" -> "CtReferenceMismatch")))
+
+        val res = StoreRegisteredSocietyHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(CtReferenceMismatch)
+      }
+
       "parse any other response as a StoreRegisteredSocietyFailureResponse" in {
         val httpResponse = HttpResponse(BAD_REQUEST)
 
@@ -47,3 +56,4 @@ class StoreRegisteredSocietyHttpParserSpec extends UnitSpec {
   }
 
 }
+

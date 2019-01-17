@@ -62,7 +62,7 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
 
       (optVatNumber, optCompanyNumber) match {
         case (Some(vatNumber), Some(companyNumber)) =>
-          storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber) map {
+          storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber, None) map {
             case Right(_) =>
               Redirect(routes.EmailRoutingController.route().url)
             case Left(status) =>
@@ -82,3 +82,4 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
   }
 
 }
+

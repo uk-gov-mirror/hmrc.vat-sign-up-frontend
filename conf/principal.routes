@@ -244,6 +244,10 @@ GET         /charity-resolver                                   uk.gov.hmrc.vats
 # Migration In Progress error page
 GET         /error/sign-up-in-progress                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.MigrationInProgressErrorController.show
 
-# Capture Company Utr
+# Capture Registered Society Company Utr
 GET         /registered-society-utr                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureRegisteredSocietyUtrController.show
 POST        /registered-society-utr                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureRegisteredSocietyUtrController.submit
+
+# Check Your Answers Registered Society Utr
+GET         /check-your-answers-registered-society              uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCheckYourAnswersController.show
+POST        /check-your-answers-registered-society              uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCheckYourAnswersController.submit

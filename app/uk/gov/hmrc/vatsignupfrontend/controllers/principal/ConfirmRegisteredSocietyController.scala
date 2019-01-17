@@ -68,7 +68,7 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
             case Right(CtReferenceIsFound) =>
               Future.successful(Redirect(routes.CaptureRegisteredSocietyUtrController.show()))
             case Left(CtReferenceNotFound) =>
-              storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber) flatMap {
+              storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber, None) flatMap {
                 case Right(_) =>
                   Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
                 case Left(status) =>

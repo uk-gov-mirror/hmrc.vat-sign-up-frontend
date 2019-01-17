@@ -20,9 +20,9 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreRegisteredSocietyHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreRegisteredSocietyService
-import play.api.http.Status.INTERNAL_SERVER_ERROR
 
 import scala.concurrent.Future
 
@@ -36,18 +36,23 @@ trait MockStoreRegisteredSocietyService extends BeforeAndAfterEach with MockitoS
     reset(mockStoreRegisteredSocietyService)
   }
 
-  private def mockStoreRegisteredSociety(vatNumber: String, companyNumber: String)(returnValue: Future[StoreRegisteredSocietyResponse]): Unit = {
+  private def mockStoreRegisteredSociety(vatNumber: String, companyNumber: String, companyUtr: Option[String] = None)
+                                        (returnValue: Future[StoreRegisteredSocietyResponse]): Unit = {
     when(mockStoreRegisteredSocietyService.storeRegisteredSociety(
       ArgumentMatchers.eq(vatNumber),
-      ArgumentMatchers.eq(companyNumber)
-    )(ArgumentMatchers.any()))
+      ArgumentMatchers.eq(companyNumber),
+      ArgumentMatchers.eq(companyUtr)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockStoreRegisteredSocietySuccess(vatNumber: String, companyNumber: String): Unit =
-    mockStoreRegisteredSociety(vatNumber, companyNumber)(Future.successful(Right(StoreRegisteredSocietySuccess)))
+  def mockStoreRegisteredSocietySuccess(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+    mockStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(Future.successful(Right(StoreRegisteredSocietySuccess)))
 
-  def mockStoreRegisteredSocietyFailure(vatNumber: String, companyNumber: String): Unit =
-    mockStoreRegisteredSociety(vatNumber, companyNumber)(Future.successful(Left(StoreRegisteredSocietyFailureResponse(INTERNAL_SERVER_ERROR))))
+  def mockStoreCompanyNumberCtMismatch(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+    mockStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(Future.successful(Left(CtReferenceMismatch)))
+
+  def mockStoreRegisteredSocietyFailure(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+    mockStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(Future.successful(Left(StoreRegisteredSocietyFailureResponse(INTERNAL_SERVER_ERROR))))
 
 }

@@ -40,7 +40,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
   override def afterEach(): Unit = {
     super.afterEach()
-    enable(RegisteredSocietyJourney)
+    disable(RegisteredSocietyJourney)
   }
 
   object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(
@@ -89,7 +89,8 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
         mockAuthAdminRole()
         mockStoreRegisteredSocietySuccess(
           vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber
+          companyNumber = testCompanyNumber,
+          companyUtr = Some(testCompanyUtr)
         )
         mockCtReferenceFound(testCompanyNumber)
 
@@ -133,11 +134,13 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     "the CtReferenceLookup returns that a ctutr does not exist for the given crn" should {
       "go to the 'agree to receive emails' page" in {
         mockAuthAdminRole()
+
+        mockCtReferenceNotFound(testCompanyNumber)
         mockStoreRegisteredSocietySuccess(
           vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber
+          companyNumber = testCompanyNumber,
+          companyUtr = None
         )
-        mockCtReferenceNotFound(testCompanyNumber)
 
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
@@ -152,7 +155,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       "throw internal server exception if store registered society fails" in {
         mockAuthAdminRole()
         mockCtReferenceNotFound(testCompanyNumber)
-        mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber)
+        mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber, None)
 
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,

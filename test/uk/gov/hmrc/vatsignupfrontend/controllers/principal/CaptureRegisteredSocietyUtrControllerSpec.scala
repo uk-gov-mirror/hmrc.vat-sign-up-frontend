@@ -61,10 +61,9 @@ class CaptureRegisteredSocietyUtrControllerSpec extends UnitSpec with GuiceOneAp
 
       val result = TestCaptureRegisteredSocietyUtrController.submit(request)
 
-      status(result) shouldBe Status.NOT_IMPLEMENTED
-     // redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCheckYourAnswers.show().url)
-     //TODO Redirect to registered society check your answers page
-      //result.session(request).get(SessionKeys.companyUtrKey) shouldBe Some(testCompanyUtr)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCheckYourAnswersController.show().url)
+      result.session(request).get(SessionKeys.registeredSocietyUtrKey) shouldBe Some(testCompanyUtr)
     }
   }
 

@@ -26,13 +26,23 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreRegisteredSocietyHttpParse
 import scala.concurrent.{ExecutionContext, Future}
 
 class StoreRegisteredSocietyConnector @Inject()(val http: HttpClient,
-                                                val appConfig: AppConfig
-                                               )(implicit ec: ExecutionContext) {
+                                                val appConfig: AppConfig) {
   val companyNumberKey = "companyNumber"
+  val companyUtrKey = "ctReference"
 
-  def storeRegisteredSociety(vatNumber: String, companyNumber: String)(implicit hc: HeaderCarrier): Future[StoreRegisteredSocietyResponse] =
-    http.POST[JsObject, StoreRegisteredSocietyResponse](
-      appConfig.storeRegisteredSocietyUrl(vatNumber),
-      Json.obj(companyNumberKey -> companyNumber)
+  def storeRegisteredSociety(vatNumber: String, companyNumber: String, optCompanyUtr: Option[String])
+                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreRegisteredSocietyResponse] =
+    http.POST[JsObject, StoreRegisteredSocietyResponse](appConfig.storeRegisteredSocietyUrl(vatNumber),
+      optCompanyUtr match {
+        case Some(companyUtr) =>
+          Json.obj(
+            companyNumberKey -> companyNumber,
+            companyUtrKey -> companyUtr
+          )
+        case None =>
+          Json.obj(
+            companyNumberKey -> companyNumber
+          )
+      }
     )
 }

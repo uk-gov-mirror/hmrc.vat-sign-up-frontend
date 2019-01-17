@@ -68,7 +68,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     "redirect to email routing controller" when {
       "the registered society is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber)
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, None)
 
         val res = post("/client/confirm-registered-society",
           Map(
