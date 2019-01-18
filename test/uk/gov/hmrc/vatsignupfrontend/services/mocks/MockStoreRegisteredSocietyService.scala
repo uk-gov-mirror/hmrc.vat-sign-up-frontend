@@ -49,7 +49,7 @@ trait MockStoreRegisteredSocietyService extends BeforeAndAfterEach with MockitoS
   def mockStoreRegisteredSocietySuccess(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
     mockStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(Future.successful(Right(StoreRegisteredSocietySuccess)))
 
-  def mockStoreCompanyNumberCtMismatch(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+  def mockStoreRegisteredSocietyCtMismatch(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
     mockStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(Future.successful(Left(CtReferenceMismatch)))
 
   def mockStoreRegisteredSocietyFailure(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =

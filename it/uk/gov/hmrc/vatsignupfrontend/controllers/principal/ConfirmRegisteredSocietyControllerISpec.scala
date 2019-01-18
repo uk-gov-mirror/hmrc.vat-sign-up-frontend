@@ -83,6 +83,39 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
         )
       }
     }
+    "redirect to agree to receive email page" when {
+      "the enrolment ctutr matches the retrieved ctutr from DES" in {
+        stubAuth(OK, successfulAuthResponse(irctEnrolment))
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testSaUtr))
+
+        val res = post("/confirm-registered-society",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+          ))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.AgreeCaptureEmailController.show().url)
+        )
+      }
+    }
+    "throw internal server error" when {
+      "the ctutr does not match the enrolment ctutr" in {
+        stubAuth(OK, successfulAuthResponse(irctEnrolment))
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+
+        val res = post("/confirm-registered-society",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+          ))()
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+    }
 
     "redirect to capture registered society ctutr page" when {
       "there is a ctutr available" in {

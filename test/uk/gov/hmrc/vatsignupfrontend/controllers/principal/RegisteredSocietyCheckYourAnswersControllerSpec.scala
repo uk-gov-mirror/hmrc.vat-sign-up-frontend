@@ -128,7 +128,7 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
         //TODO confirm route
         "goto could not confirm business controller" in {
           mockAuthAdminRole()
-          mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+          mockStoreRegisteredSocietyCtMismatch(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
           val result = await(TestRegisteredSocietyController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
