@@ -36,6 +36,7 @@ object MessageLookup {
     val signOut = "Sign out"
     val signUp = "Sign up"
     val goBack = "Go back"
+    val signUpClient = "Sign up your client"
     val signUpAnotherClient = "Sign up another client"
     val day = "Day"
     val month = "Month"
@@ -87,6 +88,12 @@ object MessageLookup {
   object CaptureCompanyNumber {
     val heading: String = "What is your client's company number?"
     val title = heading + ServiceName.agentSuffix
+  }
+
+  object WrongAccountType {
+    val heading: String = "You have logged in with the wrong type of account"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "If you are an agent signing up your client to Making Tax Digital for VAT you need to use the agent service."
   }
 
   object PrincipalCompanyNameNotFound {
