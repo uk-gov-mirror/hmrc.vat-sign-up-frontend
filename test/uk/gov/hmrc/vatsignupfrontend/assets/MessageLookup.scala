@@ -891,4 +891,11 @@ object MessageLookup {
     val line2 = s"If you have lost your details, $linkText"
   }
 
+  object CtEnrolmentDetailsDoNotMatch {
+    val heading: String = "Your details do not match"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "Your details do not match the company number you provided."
+    val companyNumber = "Change your company number"
+  }
+
 }
