@@ -251,3 +251,7 @@ POST        /registered-society-utr                             uk.gov.hmrc.vats
 # Check Your Answers Registered Society Utr
 GET         /check-your-answers-registered-society              uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCheckYourAnswersController.show
 POST        /check-your-answers-registered-society              uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCheckYourAnswersController.submit
+
+# Business Already Signed Up page
+GET         /error/business-already-signed-up                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BusinessAlreadySignedUpController.show
+POST        /error/business-already-signed-up                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BusinessAlreadySignedUpController.submit
