@@ -30,6 +30,7 @@ base.try_again                                                         = Try aga
 base.start_now                                                         = Start now
 base.yes                                                               = Yes
 base.no                                                                = No
+base.company_number                                                    = Change your company number
 
 ## Errors
 error.title_prefix                                                     = 'Error: '
@@ -142,7 +143,6 @@ error.character_limit_registered_society_utr.field                     = Registe
 error.character_limit_registered_society_utr.summary                   = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.invalid_registered_society_utr.field                             = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
 error.invalid_registered_society_.summary                              = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
-
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -811,3 +811,10 @@ principal.bta.business_already_signed_up.title                        = Your bus
 principal.bta.business_already_signed_up.heading                      = Your business is already signed up
 principal.bta.business_already_signed_up.line_1                       = Your business is set up for Making Tax Digital for VAT with a different Government Gateway user ID. Try signing in with another Government Gateway user ID.
 principal.bta.business_already_signed_up.line_2                       = If you have lost your details, <a id="recoverAccount" href={0}>find or recover your account.</a>
+
+## Error for CT enrolment mismatch
+principal.ct_enrolment_details_do_not_match.title                     = Your details do not match
+principal.ct_enrolment_details_do_not_match.heading                   = Your details do not match
+principal.ct_enrolment_details_do_not_match.line                      = Your details do not match the company number you provided.
+
+
