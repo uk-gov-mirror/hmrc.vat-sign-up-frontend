@@ -21,6 +21,7 @@ base.error_heading                                                     = There''
 base.sign_out                                                          = Sign out
 base.sign_up_client                                                    = Sign up your client
 base.sign_up_another_client                                            = Sign up another client
+base.sign_in_with_another_id                                           = Sign in with another user ID
 base.day                                                               = Day
 base.month                                                             = Month
 base.year                                                              = Year
@@ -804,3 +805,9 @@ principal.check-your-answers-registered-society.company_number        = What is 
 principal.check-your-answers-registered-society.ct_reference          = What is your registered society''s Unique Taxpayer Reference?
 principal.check-your-answers-registered-society.business_entity       = What is your business type?
 principal.check-your-answers-registered-society.registered_society    = Registered Society
+
+## Bta Business already signed up
+principal.bta.business_already_signed_up.title                        = Your business is already signed up
+principal.bta.business_already_signed_up.heading                      = Your business is already signed up
+principal.bta.business_already_signed_up.line_1                       = Your business is set up for Making Tax Digital for VAT with a different Government Gateway user ID. Try signing in with another Government Gateway user ID.
+principal.bta.business_already_signed_up.line_2                       = If you have lost your details, <a id="recoverAccount" href={0}>find or recover your account.</a>

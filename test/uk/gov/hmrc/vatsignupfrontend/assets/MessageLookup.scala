@@ -38,6 +38,7 @@ object MessageLookup {
     val goBack = "Go back"
     val signUpClient = "Sign up your client"
     val signUpAnotherClient = "Sign up another client"
+    val signUpWithAnotherId = "Sign in with another user ID"
     val day = "Day"
     val month = "Month"
     val year = "Year"
@@ -879,6 +880,15 @@ object MessageLookup {
     val registeredSociety = "Registered Society"
     val companyNumber = "What is your company number?"
     val companyUtr = "What is your registered society's Unique Taxpayer Reference?"
+  }
+
+  object BtaBusinessAlreadySignedUp {
+    val heading = "Your business is already signed up"
+    val title = heading + ServiceName.principalSuffix
+    val linkText = "find or recover your account."
+    val linkId = "recoverAccount"
+    val line1 = "Your business is set up for Making Tax Digital for VAT with a different Government Gateway user ID. Try signing in with another Government Gateway user ID."
+    val line2 = s"If you have lost your details, $linkText"
   }
 
 }
