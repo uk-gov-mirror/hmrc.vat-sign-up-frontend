@@ -47,6 +47,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-out?continue=${encodeUrl(redirectionUrl)}"
 
+  def ggSignInUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-in?continue=${encodeUrl(redirectionUrl + "/resolve-vat-number")}"
+
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MTDVAT"
 
