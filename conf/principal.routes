@@ -252,6 +252,11 @@ POST        /registered-society-utr                             uk.gov.hmrc.vats
 GET         /check-your-answers-registered-society              uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCheckYourAnswersController.show
 POST        /check-your-answers-registered-society              uk.gov.hmrc.vatsignupfrontend.controllers.principal.RegisteredSocietyCheckYourAnswersController.submit
 
+# CT enrolment details do not match
+GET         /error/details-do-not-match                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CtEnrolmentDetailsDoNotMatchController.show
+POST        /error/details-do-not-match                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CtEnrolmentDetailsDoNotMatchController.submit
+
 # Business Already Signed Up page
 GET         /error/business-already-signed-up                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BusinessAlreadySignedUpController.show
 POST        /error/business-already-signed-up                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BusinessAlreadySignedUpController.submit
+

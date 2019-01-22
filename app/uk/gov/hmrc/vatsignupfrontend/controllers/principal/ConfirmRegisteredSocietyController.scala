@@ -71,7 +71,7 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
             case Right(_) =>
               Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
             case Left(CtReferenceMismatch) =>
-              throw new InternalServerException("Enrolment CTUTR does not match the CTUTR that the user entered")
+              Future.successful(Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show()))
             case Left(status) =>
               throw new InternalServerException("StoreRegisteredSociety failed: status = " + status)
           }
