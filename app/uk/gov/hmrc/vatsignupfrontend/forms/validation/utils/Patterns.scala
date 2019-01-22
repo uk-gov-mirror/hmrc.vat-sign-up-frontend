@@ -67,7 +67,7 @@ object Patterns {
       "NC", "R0", "NI", "EN",
       "IP", "SP", "IC", "SI",
       "NP", "NV", "RC", "SR",
-      "NR", "NO"
+      "NR", "NO", "BR"
     )
   }
 
