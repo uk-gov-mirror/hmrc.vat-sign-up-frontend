@@ -108,7 +108,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       }
     }
     "the ct enrolment ctutr does not match the ctutr returned from DES" should {
-      "throw internal server error" in {
+      "redirect to the ct enrolment details do not match page" in {
         mockAuthRetrieveIRCTEnrolment()
         mockStoreRegisteredSocietyCtMismatch(
           vatNumber = testVatNumber,
@@ -121,8 +121,10 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
           SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
         )
 
-        intercept[InternalServerException] {
-          await(TestConfirmRegisteredSocietyController.submit(request))
+        val result = await(TestConfirmRegisteredSocietyController.submit(request))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
+
         }
       }
     }
@@ -246,6 +248,5 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
     }
-  }
-
 }
+
