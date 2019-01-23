@@ -32,7 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{InvalidVatNumber, KnownFactsMismatch, SubscriptionClaimed}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, InvalidVatNumber, KnownFactsMismatch, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
 
@@ -135,6 +135,17 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       }
     }
 
+    "claim subscription returns AlreadyEnrolledOnAnotherCredential" should {
+      "redirect to Business already signed up page" in {
+        mockAuthAdminRole()
+
+        mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(AlreadyEnrolledOnDifferentCredential)))
+
+        val result = TestBusinessPostCodeController.submit(testPostRequest())
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.BusinessAlreadySignedUpController.show().url)
+      }
+    }
     "claim subscription returns a failure" should {
       "display a technical difficulties page" in {
         mockAuthAdminRole()
