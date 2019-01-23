@@ -49,8 +49,7 @@ class CannotUseServiceYetSpec extends ViewSpec {
     )
 
     testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
+      messages.line1
     )
 
     testPage.shouldHaveSignOutButton(isAgent = false)
