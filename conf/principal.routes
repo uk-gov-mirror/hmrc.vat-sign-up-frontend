@@ -102,6 +102,10 @@ GET         /identity-verified                                  uk.gov.hmrc.vats
 GET         /could-not-confirm-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.show
 POST        /could-not-confirm-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.submit
 
+# Partnership as company error
+GET         /error/company-number-incorrect                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.PartnershipAsCompanyErrorController.show
+POST        /error/company-number-incorrect                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.PartnershipAsCompanyErrorController.submit
+
 # Failed Identity Verification
 GET         /could-not-confirm-identity                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.show
 POST        /could-not-confirm-identity                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.submit
