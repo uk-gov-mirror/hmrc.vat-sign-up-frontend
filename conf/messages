@@ -376,6 +376,11 @@ principal.could_not_confirm_business.title                             = We coul
 principal.could_not_confirm_business.heading                           = We could not confirm your business
 principal.could_not_confirm_business.line_1                            = The information you provided does not match the details we have about your business.
 
+# Partnership as company error
+principal.partnership_as_company_error.title                           = We could not confirm your business
+principal.partnership_as_company_error.heading                         = We could not confirm your business
+principal.partnership_as_company_error.line_1                          = The company number you entered is not for a limited company.
+
 # Cannot confirm business
 principal.bta.cannot_confirm_business.title                             = We cannot confirm the business
 principal.bta.cannot_confirm_business.heading                           = We cannot confirm the business
