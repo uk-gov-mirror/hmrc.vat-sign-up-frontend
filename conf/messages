@@ -820,4 +820,7 @@ principal.ct_enrolment_details_do_not_match.title                     = Your det
 principal.ct_enrolment_details_do_not_match.heading                   = Your details do not match
 principal.ct_enrolment_details_do_not_match.line                      = Your details do not match the company number you provided.
 
-
+## Already Signed Up for MTD VAT
+principal.already_signed_up.title                                     = You have already signed up
+principal.already_signed_up.heading                                   = You have already signed up
+principal.already_signed_up.line                                      = Your sign in details are already in use.

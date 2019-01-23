@@ -614,9 +614,9 @@ object MessageLookup {
   }
 
   object PrincipalAlreadySignedUp {
-    val heading: String = "You've already signed up"
+    val heading: String = "You have already signed up"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "Your sign in details are already in use."
+    val line = "Your sign in details are already in use."
   }
 
   object AgentGuidance {
