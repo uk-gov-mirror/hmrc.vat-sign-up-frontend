@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedLiabilityPartnership, NonPartnershipEntity}
 
 class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /company-number" should {
@@ -38,8 +38,8 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
   }
 
   "POST /company-number" when {
-    "the company name feature switch is enabled" should {
-      "redirect to confirm company name" in {
+    "the company is not a partnership" should {
+      "redirect to Confirm Company Name page" in {
         stubAuth(OK, successfulAuthResponse())
         stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
@@ -51,5 +51,20 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
         )
       }
     }
+
+    "the company is a partnership" should {
+      "redirect to Partnership As Company Error page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, LimitedLiabilityPartnership)
+
+        val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.PartnershipAsCompanyErrorController.show().url)
+        )
+      }
+    }
   }
+
 }

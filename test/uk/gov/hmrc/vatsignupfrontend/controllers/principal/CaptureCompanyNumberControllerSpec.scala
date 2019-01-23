@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
+import uk.gov.hmrc.vatsignupfrontend.models.companieshouse._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
@@ -71,6 +71,20 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
         result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
+      }
+    }
+
+    "get company name returned successfully with partnership type" should {
+      "goto confirm Partnership As Company Error page" in {
+        mockAuthAdminRole()
+
+        mockGetCompanyNameSuccess(testCompanyNumber, ScottishLimitedPartnership)
+
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.PartnershipAsCompanyErrorController.show().url)
       }
     }
 
