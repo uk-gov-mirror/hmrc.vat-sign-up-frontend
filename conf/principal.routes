@@ -28,6 +28,9 @@ POST        /vat-number                                         uk.gov.hmrc.vats
 GET         /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.show
 POST        /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.submit
 
+# Agent trying to use principal journey
+GET         /wrong-account-type                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgentUsingPrincipalJourneyController.show
+
 # Company Name not found
 GET         /company-name-not-found                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.show
 POST        /company-name-not-found                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.submit
