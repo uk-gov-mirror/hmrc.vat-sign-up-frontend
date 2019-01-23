@@ -44,8 +44,8 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
           )
         }
       }
-      "Claim Subscription Service returns AlreadySubscribedOnAnotherCredential" should {
-        "return a redirect to the business aleady signed up page" in {
+      "Claim Subscription Service returns AlreadyEnrolledOnAnotherCredential" should {
+        "return a redirect to the business already signed up page" in {
           enable(BTAClaimSubscription)
 
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))

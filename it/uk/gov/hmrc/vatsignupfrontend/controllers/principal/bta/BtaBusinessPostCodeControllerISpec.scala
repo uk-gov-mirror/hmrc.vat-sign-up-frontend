@@ -81,7 +81,7 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
       )
     }
   }
-  "store vat returned known facts mismatch" should {
+  "Claim Subscription Service returned known facts mismatch" should {
     "redirect to could not confirm business" in {
       stubAuth(OK, successfulAuthResponse())
       stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = true)(FORBIDDEN)
@@ -96,6 +96,24 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
       res should have(
         httpStatus(SEE_OTHER),
         redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+      )
+    }
+  }
+  "Claim Subscription Service returned AlreadyEnrolledOnAnotherCredential" should {
+    "redirect to business already signed up page" in {
+      stubAuth(OK, successfulAuthResponse())
+      stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = true)(CONFLICT)
+
+      val res = post("/bta/business-postcode",
+        Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString()
+        )
+      )(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode.postCode)
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.BusinessAlreadySignedUpController.show().url)
       )
     }
   }
