@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
@@ -97,7 +99,18 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
           }
+
+        "redirect to the migratable dates page" in {
+          mockAuthRetrieveVatDecEnrolment()
+          mockStoreVatNumberIneligible(vatNumber = testVatNumber,
+            isFromBta = false,
+            migratableDates = MigratableDates(Some(LocalDate.now())))
+
+          val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
         }
+      }
         "the vat number has already been signed up and migration is progress" should {
           "redirect to the migration in progress error page" in {
             mockAuthRetrieveVatDecEnrolment()
