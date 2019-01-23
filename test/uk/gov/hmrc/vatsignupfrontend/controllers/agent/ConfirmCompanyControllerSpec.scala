@@ -90,6 +90,21 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
     }
 
+    "go to the CT enrolment mismatch page" in {
+      mockAuthRetrieveAgentEnrolment()
+      mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCompanyUtr)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.show(testGetRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
+    }
+
+
     "throw internal server exception if store company number fails" in {
       mockAuthRetrieveAgentEnrolment()
       mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, companyUtr = None)
