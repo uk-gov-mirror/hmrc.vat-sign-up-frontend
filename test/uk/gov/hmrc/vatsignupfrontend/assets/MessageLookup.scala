@@ -517,6 +517,13 @@ object MessageLookup {
     val tryAgain = "Try again"
   }
 
+  object PartnershipAsCompanyError {
+    val heading: String = "We could not confirm your business"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "The company number you entered is not for a limited company."
+    val tryAgain = "Try again"
+  }
+
   object BTACannotConfirmBusiness {
     val heading: String = "We cannot confirm the business"
     val title = heading + ServiceName.principalSuffix
