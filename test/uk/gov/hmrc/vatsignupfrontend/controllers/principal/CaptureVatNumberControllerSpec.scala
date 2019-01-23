@@ -106,6 +106,17 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                   redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
                 }
               }
+              "the user tried to claim a subscription that is already enrolled" should {
+                "redirect to business already signed up page" in {
+                  mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                  mockStoreVatNumberAlreadyEnrolled(testVatNumber, isFromBta = false)
+
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
+                }
+              }
             }
 
             "the inserted vat number doesn't match the enrolment one" should {

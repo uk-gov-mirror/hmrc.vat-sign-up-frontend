@@ -178,6 +178,18 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
         }
       }
+      "store vat number returned VatNumberAlreadyEnrolled" should {
+        "go to the business already signed up error page" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockStoreVatNumberAlreadyEnrolled(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
+        }
+      }
       "store vat number returned a failure" should {
         "throw internal server exception" in {
           mockAuthorise(

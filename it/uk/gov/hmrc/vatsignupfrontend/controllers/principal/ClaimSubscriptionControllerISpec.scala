@@ -29,7 +29,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
 
   "GET /claim-subscription/:vat-number" when {
     "the user has a matching VATDEC enrolment" when {
-      "store VAT number returns subscription claimed" should {
+      "Claim Subscription Service returns subscription claimed" should {
         "return a redirect to the confirmation page" in {
           enable(BTAClaimSubscription)
 
@@ -41,6 +41,21 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
           res should have(
             httpStatus(SEE_OTHER),
             redirectUri(appConfig.btaRedirectUrl)
+          )
+        }
+      }
+      "Claim Subscription Service returns AlreadySubscribedOnAnotherCredential" should {
+        "return a redirect to the business aleady signed up page" in {
+          enable(BTAClaimSubscription)
+
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubClaimSubscription(testVatNumber, isFromBta = true)(CONFLICT)
+
+          val res = get(s"/claim-subscription/$testVatNumber")
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
           )
         }
       }

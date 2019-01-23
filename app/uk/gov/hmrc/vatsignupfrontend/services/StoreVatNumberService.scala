@@ -50,6 +50,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
         claimSubscriptionService.claimSubscription(vatNumber, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
             Right(SubscriptionClaimed)
+          case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
+            Left(VatNumberAlreadyEnrolled)
           case Left(unexpectedError) =>
             throw new InternalServerException(s"Unexpected error in claim subscription for user with enrolment - $unexpectedError")
         }
@@ -72,6 +74,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
         claimSubscriptionService.claimSubscription(vatNumber, postCode, registrationDate, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
             Right(SubscriptionClaimed)
+          case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
+            Left(VatNumberAlreadyEnrolled)
           case Left(unexpectedError) =>
             throw new InternalServerException(s"Unexpected error in claim subscription with supplied known facts - $unexpectedError")
         }
@@ -121,6 +125,9 @@ object StoreVatNumberService {
   case class ClaimSubscriptionFailureResponse(status: Int) extends StoreVatNumberWithKnownFactsFailure
 
   case object VatMigrationInProgress extends StoreVatNumberWithEnrolmentFailure with DelegatedStoreVatNumberFailure
+    with StoreVatNumberWithKnownFactsFailure
+
+  case object VatNumberAlreadyEnrolled extends StoreVatNumberWithEnrolmentFailure with DelegatedStoreVatNumberFailure
     with StoreVatNumberWithKnownFactsFailure
 
 }

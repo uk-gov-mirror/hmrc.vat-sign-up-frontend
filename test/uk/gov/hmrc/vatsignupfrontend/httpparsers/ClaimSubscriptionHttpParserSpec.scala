@@ -53,6 +53,13 @@ class ClaimSubscriptionHttpParserSpec extends UnitSpec with EitherValues {
         res.left.value shouldBe ClaimSubscriptionHttpParser.InvalidVatNumber
       }
 
+      "parse an CONFLICT response as an AlreadyEnrolledOnDifferentCredential" in {
+        val httpResponse = HttpResponse(CONFLICT)
+
+        val res = ClaimSubscriptionHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.left.value shouldBe ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential
+      }
 
       "parse any other response as a ClaimSubscriptionFailureResponse" in {
         val httpResponse = HttpResponse(INTERNAL_SERVER_ERROR)

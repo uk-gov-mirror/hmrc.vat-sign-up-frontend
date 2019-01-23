@@ -19,7 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -74,6 +76,20 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.MigrationInProgressErrorController.show().url)
+        )
+      }
+    }
+    "redirect to business already signed up error page" when {
+      "form value is NO" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubStoreVatNumberAlreadySignedUp(isFromBta = false)
+        stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
+
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
         )
       }
     }
