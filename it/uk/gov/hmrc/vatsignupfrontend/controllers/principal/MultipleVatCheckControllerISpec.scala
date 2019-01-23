@@ -16,12 +16,15 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -64,6 +67,37 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
+    "return a redirect to migratable dates page" when {
+      "form value is NO" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubStoreVatNumberIneligible(isFromBta = false,
+                                     migratableDates = MigratableDates(Some(LocalDate.now())))
+
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.MigratableDatesController.show().url)
+        )
+      }
+    }
+
+    "return a redirect to cannot use service error page" when {
+      "form value is NO" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubStoreVatNumberIneligible(isFromBta = false,
+          migratableDates = MigratableDates())
+
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CannotUseServiceController.show().url)
+        )
+      }
+    }
+
     "redirect to migration in progress error page" when {
       "form value is NO" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))

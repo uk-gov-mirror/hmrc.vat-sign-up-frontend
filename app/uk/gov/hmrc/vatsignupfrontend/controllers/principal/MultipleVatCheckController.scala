@@ -26,10 +26,11 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 
 import scala.concurrent.Future
 
@@ -61,7 +62,9 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                   case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
-                  case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
+                  case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
+                  case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
+                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case Left(VatMigrationInProgress) => Redirect(routes.MigrationInProgressErrorController.show())
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")
