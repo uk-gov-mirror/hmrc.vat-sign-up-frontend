@@ -23,7 +23,7 @@
 
 @(vatRegistrationDateForm: Form[DateModel], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.vat_registration_date.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.vat_registration_date.title"), bodyClasses = None, form = Some(vatRegistrationDateForm)) {
 
     @summaryErrorHelper(vatRegistrationDateForm)
 
