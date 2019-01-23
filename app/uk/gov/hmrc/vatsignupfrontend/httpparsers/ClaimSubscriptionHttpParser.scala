@@ -28,6 +28,7 @@ object ClaimSubscriptionHttpParser {
         case NO_CONTENT => Right(SubscriptionClaimed)
         case FORBIDDEN => Left(KnownFactsMismatch)
         case BAD_REQUEST => Left(InvalidVatNumber)
+        case CONFLICT => Left(AlreadyEnrolledOnDifferentCredential)
         case status => Left(ClaimSubscriptionFailureResponse(status))
       }
     }
@@ -40,6 +41,8 @@ object ClaimSubscriptionHttpParser {
   case object KnownFactsMismatch extends ClaimSubscriptionFailure
 
   case object InvalidVatNumber extends ClaimSubscriptionFailure
+
+  case object AlreadyEnrolledOnDifferentCredential extends ClaimSubscriptionFailure
 
   case class ClaimSubscriptionFailureResponse(status: Int) extends ClaimSubscriptionFailure
 }

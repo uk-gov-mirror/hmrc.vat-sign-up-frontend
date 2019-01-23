@@ -30,7 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockClaimSubscriptionService, MockStoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{InvalidVatNumber, SubscriptionClaimed}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, InvalidVatNumber, SubscriptionClaimed}
 
 import scala.concurrent.Future
 
@@ -45,7 +45,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the BTA claim subscription feature switch is enabled" when {
       "the user has a VATDEC enrolment" when {
         "the VAT number on the enrolment matches the one provided in the URL" when {
-          "store VAT returns SubscriptionClaimed" should {
+          "claim subscription service returns SubscriptionClaimed" should {
             "redirect to SignUpCompleteClientController" in {
               enable(BTAClaimSubscription)
 
@@ -58,7 +58,20 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               redirectLocation(result) should contain(mockAppConfig.btaRedirectUrl)
             }
           }
-          "store VAT returns anything else" should {
+          "claim subscription service returns VatNumberAlreadyEnrolled" should {
+            "redirect to Business Already Signed Up error page" in {
+              enable(BTAClaimSubscription)
+
+              mockAuthRetrieveVatDecEnrolment()
+              mockClaimSubscription(testVatNumber, isFromBta = true)(Future.successful(Left(AlreadyEnrolledOnDifferentCredential)))
+
+              val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
+
+              status(result) shouldBe SEE_OTHER
+              redirectLocation(result) should contain(bta.routes.BusinessAlreadySignedUpController.show().url)
+            }
+          }
+          "claim subscription service returns anything else" should {
             "throw an Internal Server Exception" in {
               enable(BTAClaimSubscription)
 

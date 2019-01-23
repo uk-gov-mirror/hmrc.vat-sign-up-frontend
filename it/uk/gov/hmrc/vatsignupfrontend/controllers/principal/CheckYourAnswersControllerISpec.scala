@@ -92,6 +92,26 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+    "the VAT subscription has been claimed on another cred" should {
+      "redirect to business already signed up error page" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate, isFromBta = false)
+        stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = false)(CONFLICT)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+        )
+      }
+    }
     "store vat returned known facts mismatch" should {
       "redirect to could not confirm business" in {
         stubAuth(OK, successfulAuthResponse())

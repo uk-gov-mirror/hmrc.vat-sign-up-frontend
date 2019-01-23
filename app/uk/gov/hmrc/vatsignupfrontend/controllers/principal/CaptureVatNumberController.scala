@@ -76,6 +76,8 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case Left(VatMigrationInProgress) =>
                     Redirect(routes.MigrationInProgressErrorController.show())
+                  case Left(VatNumberAlreadyEnrolled) =>
+                    Redirect(bta.routes.BusinessAlreadySignedUpController.show())
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")
                 }

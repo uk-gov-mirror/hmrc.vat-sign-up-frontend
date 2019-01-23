@@ -121,6 +121,16 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
           }
         }
+        "the vat number has already been enrolled to another cred" should {
+          "redirect to the business already signed up error page" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberAlreadyEnrolled(vatNumber = testVatNumber, isFromBta = false)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
+          }
+        }
       }
     }
 

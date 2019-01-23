@@ -66,6 +66,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                   case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case Left(VatMigrationInProgress) => Redirect(routes.MigrationInProgressErrorController.show())
+                  case Left(VatNumberAlreadyEnrolled) => Redirect(bta.routes.BusinessAlreadySignedUpController.show())
                   case Left(_) =>
                     throw new InternalServerException("storeVatNumber failed")
                 }

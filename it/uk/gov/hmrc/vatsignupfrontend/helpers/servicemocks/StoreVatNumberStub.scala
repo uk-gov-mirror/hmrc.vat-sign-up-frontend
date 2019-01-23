@@ -47,7 +47,6 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = UNPROCESSABLE_ENTITY, Json.toJson(migratableDates))
   }
 
-
   def stubStoreVatNumberAlreadySignedUp(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = CONFLICT)

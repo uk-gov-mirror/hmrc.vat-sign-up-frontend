@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator, SessionCookieCrumbler}
@@ -144,6 +145,21 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             res should have(
               httpStatus(SEE_OTHER),
               redirectUri(routes.MigrationInProgressErrorController.show().url)
+            )
+          }
+        }
+
+        "redirect to the business already signed up error page" when {
+          "the vat number is already signed up and a user is attempting to claim subscription" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubStoreVatNumberAlreadySignedUp(isFromBta = false)
+            stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
             )
           }
         }

@@ -118,6 +118,19 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
           res shouldBe Right(SubscriptionClaimed)
         }
       }
+      "the claim subscription connector returns AlreadyEnrolledOnDifferentCredential" should {
+        "return VatNumberAlreadyEnrolled" in {
+          mockStoreVatNumber(testVatNumber, isFromBta = false)(
+            Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed))
+          )
+          mockClaimSubscription(testVatNumber, isFromBta = false)(
+            Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential))
+          )
+
+          val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
+          res shouldBe Left(VatNumberAlreadyEnrolled)
+        }
+      }
       "the claim subscription connector returns anything else" should {
         "throw an InternalServerException" in {
           mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
@@ -176,6 +189,15 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
           val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
           res shouldBe Right(SubscriptionClaimed)
+        }
+      }
+      "the claim subscription connector returns AlreadyEnrolledOnDifferentCredential" should {
+        "return VatNumberAlreadyEnrolled" in {
+          mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
+          mockClaimSubscription(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false)(Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential)))
+
+          val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+          res shouldBe Left(VatNumberAlreadyEnrolled)
         }
       }
       "the claim subscription connector returns anything else" should {

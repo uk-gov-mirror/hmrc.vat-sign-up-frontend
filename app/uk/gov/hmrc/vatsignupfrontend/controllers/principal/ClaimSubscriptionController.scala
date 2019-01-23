@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.SubscriptionClaimed
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.services.ClaimSubscriptionService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidChecksum
@@ -46,6 +46,8 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
             claimSubscriptionService.claimSubscription(enrolmentVatNumber, isFromBta = true) map {
               case Right(SubscriptionClaimed) =>
                 Redirect(appConfig.btaRedirectUrl)
+              case Left(AlreadyEnrolledOnDifferentCredential) =>
+                Redirect(btaRoutes.BusinessAlreadySignedUpController.show())
               case subscriptionNotClaimedReason =>
                 throw new InternalServerException(s"Claim subscription was not successful, result was $subscriptionNotClaimedReason")
             }

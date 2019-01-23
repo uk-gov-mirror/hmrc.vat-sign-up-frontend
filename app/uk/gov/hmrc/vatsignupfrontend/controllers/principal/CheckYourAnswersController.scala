@@ -79,6 +79,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
       case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
+      case Left(VatNumberAlreadyEnrolled) => Redirect(bta.routes.BusinessAlreadySignedUpController.show())
       case Left(VatMigrationInProgress) => Redirect(routes.MigrationInProgressErrorController.show())
       case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
     }
