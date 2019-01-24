@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.CtReferenceMismatch
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company
@@ -73,6 +74,8 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
                   ) map {
                     case Right(_) =>
                       Redirect(routes.AgreeCaptureEmailController.show())
+                    case Left(CtReferenceMismatch) =>
+                      Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show())
                     case Left(errResponse) =>
                       throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
                   }
