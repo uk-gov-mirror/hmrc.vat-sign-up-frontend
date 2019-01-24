@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -27,14 +27,14 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 
 import scala.concurrent.Future
 
@@ -61,48 +61,63 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
           )
         , formVatNumber =>
           if (VatNumberChecksumValidation.isValidChecksum(formVatNumber)) {
-            enrolments.vatNumber match {
-              case Some(enrolmentVatNumber) if enrolmentVatNumber == formVatNumber =>
-                storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = false) map {
-                  case Right(VatNumberStored) =>
-                    Redirect(routes.CaptureBusinessEntityController.show())
-                      .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
-                  case Right(SubscriptionClaimed) =>
-                    Redirect(routes.SignUpCompleteClientController.show())
-                  case Left(IneligibleVatNumber(MigratableDates(None, None))) =>
-                    Redirect(routes.CannotUseServiceController.show())
-                  case Left(IneligibleVatNumber(migratableDates)) =>
-                    Redirect(routes.MigratableDatesController.show())
-                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
-                  case Left(VatMigrationInProgress) =>
-                    Redirect(routes.MigrationInProgressErrorController.show())
-                  case Left(VatNumberAlreadyEnrolled) =>
-                    Redirect(bta.routes.BusinessAlreadySignedUpController.show())
-                  case Left(_) =>
-                    throw new InternalServerException("storeVatNumber failed")
-                }
-              case Some(_) =>
-                Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
+            enrolments.mtdVatNumber match {
+              case Some(mtdVatNumber) =>
+                if (mtdVatNumber == formVatNumber)
+                  Future.successful(Redirect(routes.AlreadySignedUpController.show()))
+                else
+                  Future.successful(NotImplemented) // TODO redirect to new cannot-sign-up-another-account error page
               case None =>
-                vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
-                  case Right(VatNumberEligible) =>
-                    Redirect(routes.CaptureVatRegistrationDateController.show())
-                      .addingToSession(vatNumberKey -> formVatNumber)
-                  case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) =>
-                    Redirect(routes.CannotUseServiceController.show())
-                  case Left(IneligibleForMtdVatNumber(migratableDates)) =>
-                    Redirect(routes.MigratableDatesController.show())
-                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
-                  case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) =>
-                    Redirect(routes.InvalidVatNumberController.show())
-                  case Left(VatNumberEligibilityFailureResponse(status)) =>
-                    throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
+                enrolments.vatNumber match {
+                  case Some(enrolmentVatNumber) =>
+                    if (enrolmentVatNumber == formVatNumber)
+                      storeVatNumber(formVatNumber)
+                    else
+                      Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
+                  case _ =>
+                    checkVrnEligibility(formVatNumber)
                 }
             }
-          } else
-            Future.successful(Redirect(routes.InvalidVatNumberController.show()))
+          } else Future.successful(Redirect(routes.InvalidVatNumberController.show()))
       )
     }
   }
 
+  private def checkVrnEligibility(formVatNumber: String)(implicit request: Request[AnyContent]): Future[Result] = {
+    vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
+      case Right(VatNumberEligible) =>
+        Redirect(routes.CaptureVatRegistrationDateController.show())
+          .addingToSession(vatNumberKey -> formVatNumber)
+      case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) =>
+        Redirect(routes.CannotUseServiceController.show())
+      case Left(IneligibleForMtdVatNumber(migratableDates)) =>
+        Redirect(routes.MigratableDatesController.show())
+          .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+      case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) =>
+        Redirect(routes.InvalidVatNumberController.show())
+      case Left(VatNumberEligibilityFailureResponse(status)) =>
+        throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
+    }
+  }
+
+  private def storeVatNumber(formVatNumber: String)(implicit request: Request[AnyContent]): Future[Result] = {
+    storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = false) map {
+      case Right(VatNumberStored) =>
+        Redirect(routes.CaptureBusinessEntityController.show())
+          .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
+      case Right(SubscriptionClaimed) =>
+        Redirect(routes.SignUpCompleteClientController.show())
+      case Left(IneligibleVatNumber(MigratableDates(None, None))) =>
+        Redirect(routes.CannotUseServiceController.show())
+      case Left(IneligibleVatNumber(migratableDates)) =>
+        Redirect(routes.MigratableDatesController.show())
+          .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+      case Left(VatMigrationInProgress) =>
+        Redirect(routes.MigrationInProgressErrorController.show())
+      case Left(VatNumberAlreadyEnrolled) =>
+        Redirect(bta.routes.BusinessAlreadySignedUpController.show())
+      case Left(_) =>
+        throw new InternalServerException("storeVatNumber failed")
+    }
+  }
 }

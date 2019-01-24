@@ -22,14 +22,20 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.{Admin, Enrolment, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.{MtdVatEnrolmentKey, MtdVatReferenceKey}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+
+import scala.concurrent.Future
 
 class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerComponents with MockStoreVatNumberService {
 
@@ -92,25 +98,25 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()
             mockStoreVatNumberIneligible(vatNumber = testVatNumber,
-                                         isFromBta = false,
-                                         migratableDates = MigratableDates())
+              isFromBta = false,
+              migratableDates = MigratableDates())
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
           }
 
-        "redirect to the migratable dates page" in {
-          mockAuthRetrieveVatDecEnrolment()
-          mockStoreVatNumberIneligible(vatNumber = testVatNumber,
-            isFromBta = false,
-            migratableDates = MigratableDates(Some(LocalDate.now())))
+          "redirect to the migratable dates page" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberIneligible(vatNumber = testVatNumber,
+              isFromBta = false,
+              migratableDates = MigratableDates(Some(LocalDate.now())))
 
-          val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+          }
         }
-      }
         "the vat number has already been signed up and migration is progress" should {
           "redirect to the migration in progress error page" in {
             mockAuthRetrieveVatDecEnrolment()
@@ -131,17 +137,42 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
           }
         }
+        "the user has an MTD-VAT and VAT-DEC enrolment" should {
+          "redirect to already signed up error page" when {
+            "the vat numbers from both enrolments match each other" in {
+              mockAuthRetrieveAllVatEnrolments()
+
+              val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+            }
+          }
+          "return a Not Implemented Status Code" when {//TODO change test name
+            "the vat numbers from both enrolments don't match each other" in {
+              val nonMatchingMtdVatEnrolment = Enrolment(MtdVatEnrolmentKey) withIdentifier(MtdVatReferenceKey, TestConstantsGenerator.randomVatNumber)
+
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, nonMatchingMtdVatEnrolment)))))
+
+              val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+              status(result) shouldBe Status.NOT_IMPLEMENTED
+              //TODO redirect location should be new cannot-sign-up-another-account error page
+            }
+          }
+        }
+
       }
-    }
 
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
-        mockAuthRetrieveVatDecEnrolment()
+      "form unsuccessfully submitted" should {
+        "reload the page with errors" in {
+          mockAuthRetrieveVatDecEnrolment()
 
-        val result = TestMultipleVatCheckController.submit(testPostRequest("invalid"))
-        status(result) shouldBe Status.BAD_REQUEST
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+          val result = TestMultipleVatCheckController.submit(testPostRequest("invalid"))
+          status(result) shouldBe Status.BAD_REQUEST
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
       }
     }
   }
