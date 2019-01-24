@@ -37,7 +37,7 @@ object CompanyNumberForm {
     )
   )
 
-  def crnNotEntered(isAgent: Boolean, isPartnership: Boolean): Constraint[String] = Constraint("companyNumber.maxLength")(
+  def crnNotEntered(isAgent: Boolean, isPartnership: Boolean): Constraint[String] = Constraint("companyNumber.notEntered")(
     companyNumber => {
 
       val principalErrMsg = if (isPartnership) "error.principal.partnership_company_number_not_entered" else "error.principal.company_number_not_entered"
