@@ -267,3 +267,6 @@ POST        /error/details-do-not-match                         uk.gov.hmrc.vats
 GET         /error/business-already-signed-up                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BusinessAlreadySignedUpController.show
 POST        /error/business-already-signed-up                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.BusinessAlreadySignedUpController.submit
 
+# Principal Already Signed Up page
+GET         /error/already-signed-up                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.AlreadySignedUpController.show
+
