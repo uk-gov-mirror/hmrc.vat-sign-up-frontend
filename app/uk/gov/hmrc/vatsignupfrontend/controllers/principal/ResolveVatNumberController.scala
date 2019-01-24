@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.agentEnrolmentKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -32,16 +33,17 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
-      enrolments.vatNumber match {
-        case Some(vatNumber) =>
-          Future.successful(
-            Redirect(routes.MultipleVatCheckController.show())
-          )
-        case None =>
-          Future.successful(
-            Redirect(routes.CaptureVatNumberController.show())
-          )
-      }
+      val optAgentEnrolment = enrolments.getEnrolment(agentEnrolmentKey)
+      val optVatNumber = enrolments.vatNumber
+
+      (optAgentEnrolment, optVatNumber) match {
+        case (Some(agent), _) =>
+          Future.successful(Redirect(routes.AgentUsingPrincipalJourneyController.show()))
+        case (_, Some(vatNumber)) =>
+          Future.successful(Redirect(routes.MultipleVatCheckController.show()))
+        case _ =>
+          Future.successful(Redirect(routes.CaptureVatNumberController.show()))
+       }
     }
   }
 

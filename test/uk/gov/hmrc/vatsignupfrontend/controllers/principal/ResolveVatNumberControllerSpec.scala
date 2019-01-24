@@ -24,6 +24,7 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testAgentEnrolment
 
 import scala.concurrent.Future
 
@@ -45,9 +46,8 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
       }
     }
-  }
 
-  "the user does not have a VAT-DEC enrolment" when {
+    "the user does not have a VAT-DEC enrolment" should {
       "redirect to Capture VAT number page" in {
         mockAuthorise(
           retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
@@ -59,6 +59,20 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
       }
 
+    }
+
+    "the user has an agent enrolment" should {
+      "redirect to the agent using principal journey page" in {
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+        )(Future.successful(new ~(Some(Admin), Enrolments(Set(testAgentEnrolment)))))
+
+        val result = TestResolveVatNumberController.resolve(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.AgentUsingPrincipalJourneyController.show().url)
+      }
+    }
   }
 
 }

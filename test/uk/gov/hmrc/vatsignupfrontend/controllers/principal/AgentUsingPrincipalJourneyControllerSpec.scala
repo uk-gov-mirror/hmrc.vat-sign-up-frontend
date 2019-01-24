@@ -31,7 +31,7 @@ class AgentUsingPrincipalJourneyControllerSpec extends UnitSpec with GuiceOneApp
 
   "Calling the show action of the agent using wrong journey controller" when {
     "using an agent account" should {
-      "show the wrong account type page" in {
+      "show the agent using principal journey page page" in {
         mockAuthRetrieveAgentEnrolment()
         val request = testGetRequest
 
