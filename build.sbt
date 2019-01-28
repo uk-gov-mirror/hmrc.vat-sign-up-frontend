@@ -6,9 +6,24 @@ name := "vat-sign-up-frontend"
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
+  val exclusionsList = List(
+    "<empty>",
+    "Reverse.*",
+    "uk.gov.hmrc.BuildInfo",
+    "app.*",
+    "prod.*",
+    "core.config.*",
+    "com.*",
+    "uk.gov.hmrc.vatsignupfrontend.views.html.*",
+    "testonly.*",
+    "business.*",
+    "testOnlyDoNotUseInAppConf.*",
+    "uk.gov.hmrc.vatsignupfrontend.testonly.*"
+  )
+
   Seq(
     // Semicolon-separated list of regexs matching classes to exclude
-    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;core.config.*;com.*;uk.gov.hmrc.vatsignupfrontend.views.html.*;testonly.*;business.*;testOnlyDoNotUseInAppConf.*;",
+    ScoverageKeys.coverageExcludedPackages := exclusionsList.mkString(";"),
     ScoverageKeys.coverageMinimum := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
