@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.wrong_account_type
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.agent_using_principal_journey
 
 import scala.concurrent.Future
 
@@ -32,7 +32,7 @@ class AgentUsingPrincipalJourneyController @Inject()(val controllerComponents: C
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(wrong_account_type(agentRoutes.CaptureVatNumberController.show())))
+      Future.successful(Ok(agent_using_principal_journey(agentRoutes.CaptureVatNumberController.show())))
     }
   }
 

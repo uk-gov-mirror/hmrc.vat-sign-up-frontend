@@ -35,6 +35,7 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "the vat number is not on the profile" when {
       "the KnownFactsJourney feature switch is enabled" should {
         "redirect to the capture VAT number page" in {
@@ -48,6 +49,20 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           )
         }
       }
+    }
+
+    "the credential has an agent enrolment" should {
+      "redirect to the agent using principal journey page" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = get("/resolve-vat-number")
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.AgentUsingPrincipalJourneyController.show().url)
+        )
+      }
+
     }
   }
 
