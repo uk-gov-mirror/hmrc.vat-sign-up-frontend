@@ -42,6 +42,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val exitSurveyPrincipalOrigin = "MTDfB-VAT-sign-up"
   lazy val agentFeedbackSurveyUrl = s"$feedbackSurveyUrl/feedback-survey/?origin=$exitSurveyAgentOrigin"
   lazy val principalFeedbackSurveyUrl = s"$feedbackSurveyUrl/feedback-survey/?origin=$exitSurveyPrincipalOrigin"
+  lazy val createAccountUrl: String = ggUrl + "/login/create-account"
 
   private def encodeUrl(url: String): String = URLEncoder.encode(url, "UTF-8")
 

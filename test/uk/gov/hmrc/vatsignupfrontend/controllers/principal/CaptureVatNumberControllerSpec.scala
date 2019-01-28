@@ -179,90 +179,140 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
         }
+        "the user has an MTD-VAT enrolment" when {
+          "the user attempts to sign up the same vat number that is already on their enrolment" in {
+            mockAuthRetrieveMtdVatEnrolment()
 
-      }
+            val request = testPostRequest(testVatNumber)
 
-      "the user does not have a VAT-DEC enrolment" when {
+            val result = TestCaptureVatNumberController.submit(request)
 
-        "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberEligibilitySuccess(testVatNumber)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+          }
 
-          implicit val request = testPostRequest(testVatNumber)
+          "the user attempts to sign up a different vat number" in {
+            mockAuthRetrieveMtdVatEnrolment()
 
-          val result = TestCaptureVatNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+            val request = testPostRequest(TestConstantsGenerator.randomVatNumber)
 
-          result.session get vatNumberKey should contain(testVatNumber)
+            val result = TestCaptureVatNumberController.submit(request)
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CannotSignUpAnotherAccountController.show().url)
+          }
         }
 
-        "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberIneligibleForMtd(testVatNumber)
+        "the user has an MTD-VAT enrolment and a VAT-DEC enrolment" should {
+          "display the already signed up error page" when {
+            "the user attempts to sign up the same vat number that is already on their enrolment" in {
+              mockAuthRetrieveAllVatEnrolments()
 
-          val request = testPostRequest(testVatNumber)
+              val request = testPostRequest(testVatNumber)
 
-          val result = TestCaptureVatNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+              val result = TestCaptureVatNumberController.submit(request)
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+            }
+          }
+
+          "display the cannot sign up another account error page" when {
+            "the user attempts to sign up a different vat number" in {
+              mockAuthRetrieveAllVatEnrolments()
+
+              val request = testPostRequest(TestConstantsGenerator.randomVatNumber)
+
+              val result = TestCaptureVatNumberController.submit(request)
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CannotSignUpAnotherAccountController.show().url)
+            }
+          }
         }
 
-        "redirect to sign up after this date when the vat number is ineligible and one date is available" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
+        "the user does not have a VAT-DEC enrolment" when {
+          "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberEligibilitySuccess(testVatNumber)
 
-          val request = testPostRequest(testVatNumber)
+            implicit val request = testPostRequest(testVatNumber)
 
-          val result = TestCaptureVatNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
-        }
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-        "redirect to sign up between these dates when the vat number is ineligible and two dates are available" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+            result.session get vatNumberKey should contain(testVatNumber)
+          }
 
-          val request = testPostRequest(testVatNumber)
+          "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberIneligibleForMtd(testVatNumber)
 
-          val result = TestCaptureVatNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
-        }
+            val request = testPostRequest(testVatNumber)
 
-        "redirect to Invalid Vat Number page when the vat number is invalid" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberEligibilityInvalid(testVatNumber)
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+          }
 
-          val request = testPostRequest(testVatNumber)
+          "redirect to sign up after this date when the vat number is ineligible and one date is available" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
 
-          val result = TestCaptureVatNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
-        }
+            val request = testPostRequest(testVatNumber)
 
-        "throw an exception for any other scenario" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockVatNumberEligibilityFailure(testVatNumber)
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+          }
 
-          val request = testPostRequest(testVatNumber)
-          intercept[InternalServerException] {
-            await(TestCaptureVatNumberController.submit(request))
+          "redirect to sign up between these dates when the vat number is ineligible and two dates are available" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+
+            val request = testPostRequest(testVatNumber)
+
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+          }
+
+          "redirect to Invalid Vat Number page when the vat number is invalid" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberEligibilityInvalid(testVatNumber)
+
+            val request = testPostRequest(testVatNumber)
+
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
+          }
+
+          "throw an exception for any other scenario" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockVatNumberEligibilityFailure(testVatNumber)
+
+            val request = testPostRequest(testVatNumber)
+            intercept[InternalServerException] {
+              await(TestCaptureVatNumberController.submit(request))
+            }
           }
         }
       }
+
     }
 
     "the vat number fails checksum validation" should {
@@ -279,6 +329,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
       }
     }
+
   }
 
   "form unsuccessfully submitted" should {
@@ -293,4 +344,5 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       charset(result) shouldBe Some("utf-8")
     }
   }
+
 }

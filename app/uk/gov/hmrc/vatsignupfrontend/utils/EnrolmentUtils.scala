@@ -50,6 +50,12 @@ object EnrolmentUtils {
           vatDecEnrolment getIdentifier PartnershipReferenceKey map (_.value)
 
       }
+
+    def mtdVatNumber: Option[String] =
+      enrolments getEnrolment MtdVatEnrolmentKey flatMap {
+        mtdVatEnrolment =>
+          mtdVatEnrolment getIdentifier MtdVatReferenceKey map (_.value)
+      }
   }
 
 }
