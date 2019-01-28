@@ -365,10 +365,10 @@ agent.could_not_confirm_partnership.title                              = We coul
 agent.could_not_confirm_partnership.heading                            = We could not confirm your client''s Partnership
 agent.could_not_confirm_partnership.line_1                             = The information you provided does not match or is incorrect.
 
-# Wrong account type
-principal.wrong_account_type.title                                     = You have logged in with the wrong type of account
-principal.wrong_account_type.heading                                   = You have logged in with the wrong type of account
-principal.wrong_account_type.line_1                                    = If you are an agent signing up your client to Making Tax Digital for VAT you need to use the agent service.
+# Agent using principal journey
+principal.agent_using_principal_journey.title                          = You have logged in with the wrong type of account
+principal.agent_using_principal_journey.heading                        = You have logged in with the wrong type of account
+principal.agent_using_principal_journey.line_1                         = If you are an agent signing up your client to Making Tax Digital for VAT you need to use the agent service.
 
 # Could not confirm business
 principal.could_not_confirm_business.title                             = We could not confirm your business

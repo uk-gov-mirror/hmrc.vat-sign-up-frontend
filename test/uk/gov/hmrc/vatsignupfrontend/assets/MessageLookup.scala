@@ -90,7 +90,7 @@ object MessageLookup {
     val title = heading + ServiceName.agentSuffix
   }
 
-  object WrongAccountType {
+  object AgentUsingPrincipalJourney {
     val heading: String = "You have logged in with the wrong type of account"
     val title = heading + ServiceName.principalSuffix
     val line1 = "If you are an agent signing up your client to Making Tax Digital for VAT you need to use the agent service."

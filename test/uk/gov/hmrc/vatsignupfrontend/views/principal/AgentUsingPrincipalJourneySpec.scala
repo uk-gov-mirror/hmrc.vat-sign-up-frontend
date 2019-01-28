@@ -20,19 +20,20 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{WrongAccountType => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentUsingPrincipalJourney => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class WrongAccountTypeSpec extends ViewSpec {
+class AgentUsingPrincipalJourneySpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.wrong_account_type(
-    postAction = testCall)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.agent_using_principal_journey(
+    postAction = testCall
+  )(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -41,7 +42,7 @@ class WrongAccountTypeSpec extends ViewSpec {
   "The Principal Wrong account type view" should {
 
     val testPage = TestView(
-      name = "Principal Wrong account type View",
+      name = "Agent Using Principal Journey View",
       title = messages.title,
       heading = messages.heading,
       page = page,
