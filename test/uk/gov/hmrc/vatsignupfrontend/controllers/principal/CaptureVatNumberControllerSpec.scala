@@ -198,32 +198,36 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             val result = TestCaptureVatNumberController.submit(request)
 
-            status(result) shouldBe Status.NOT_IMPLEMENTED
-            //TODO redirect location should be new cannot-sign-up-another-account error page
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CannotSignUpAnotherAccountController.show().url)
           }
         }
 
-        "the user has an MTD-VAT enrolment and a VAT-DEC enrolment" when {
-          "the user attempts to sign up the same vat number that is already on their enrolment" in {
-            mockAuthRetrieveAllVatEnrolments()
+        "the user has an MTD-VAT enrolment and a VAT-DEC enrolment" should {
+          "display the already signed up error page" when {
+            "the user attempts to sign up the same vat number that is already on their enrolment" in {
+              mockAuthRetrieveAllVatEnrolments()
 
-            val request = testPostRequest(testVatNumber)
+              val request = testPostRequest(testVatNumber)
 
-            val result = TestCaptureVatNumberController.submit(request)
+              val result = TestCaptureVatNumberController.submit(request)
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+            }
           }
 
-          "the user attempts to sign up a different vat number" in {
-            mockAuthRetrieveAllVatEnrolments()
+          "display the cannot sign up another account error page" when {
+            "the user attempts to sign up a different vat number" in {
+              mockAuthRetrieveAllVatEnrolments()
 
-            val request = testPostRequest(TestConstantsGenerator.randomVatNumber)
+              val request = testPostRequest(TestConstantsGenerator.randomVatNumber)
 
-            val result = TestCaptureVatNumberController.submit(request)
+              val result = TestCaptureVatNumberController.submit(request)
 
-            status(result) shouldBe Status.NOT_IMPLEMENTED
-            //TODO redirect location should be new cannot-sign-up-another-account error page
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CannotSignUpAnotherAccountController.show().url)
+            }
           }
         }
 

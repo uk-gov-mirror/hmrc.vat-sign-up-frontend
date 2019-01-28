@@ -147,7 +147,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
               redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
             }
           }
-          "return a Not Implemented Status Code" when {//TODO change test name
+          "redirect to Cannot Sign Up Another Account error page" when {//TODO change test name
             "the vat numbers from both enrolments don't match each other" in {
               val nonMatchingMtdVatEnrolment = Enrolment(MtdVatEnrolmentKey) withIdentifier(MtdVatReferenceKey, TestConstantsGenerator.randomVatNumber)
 
@@ -156,8 +156,8 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
               )(Future.successful(new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, nonMatchingMtdVatEnrolment)))))
 
               val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
-              status(result) shouldBe Status.NOT_IMPLEMENTED
-              //TODO redirect location should be new cannot-sign-up-another-account error page
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CannotSignUpAnotherAccountController.show().url)
             }
           }
         }

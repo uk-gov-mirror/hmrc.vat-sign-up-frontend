@@ -62,7 +62,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                     if (mtdVatNumber == vatNumber)
                       Future.successful(Redirect(routes.AlreadySignedUpController.show()))
                     else
-                      Future.successful(NotImplemented) // TODO redirect to new cannot-sign-up-another-account error page
+                      Future.successful(Redirect(routes.CannotSignUpAnotherAccountController.show()))
                   case _ =>
                     storeVatNumber(vatNumber)
                 }

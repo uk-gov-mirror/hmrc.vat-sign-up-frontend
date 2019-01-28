@@ -66,7 +66,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                 if (mtdVatNumber == formVatNumber)
                   Future.successful(Redirect(routes.AlreadySignedUpController.show()))
                 else
-                  Future.successful(NotImplemented) // TODO redirect to new cannot-sign-up-another-account error page
+                  Future.successful(Redirect(routes.CannotSignUpAnotherAccountController.show()))
               case None =>
                 enrolments.vatNumber match {
                   case Some(enrolmentVatNumber) =>

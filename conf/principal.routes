@@ -270,3 +270,6 @@ POST        /error/business-already-signed-up                   uk.gov.hmrc.vats
 # Principal Already Signed Up page
 GET         /error/already-signed-up                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.AlreadySignedUpController.show
 
+# Principal Cannot Sign Up Another Account
+GET         /error/cannot-sign-up-another-account               uk.gov.hmrc.vatsignupfrontend.controllers.principal.CannotSignUpAnotherAccountController.show
+
