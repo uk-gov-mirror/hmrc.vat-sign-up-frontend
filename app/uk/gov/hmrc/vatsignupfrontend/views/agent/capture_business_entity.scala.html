@@ -36,7 +36,7 @@
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
-    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-other-entity.js")></script>
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
 }
 
 @generalPartnershipOption = @{ Some((generalPartnership, Messages("agent.capture_entity_type.generalPartnership"))).filter(_ => generalPartnershipEnabled) }

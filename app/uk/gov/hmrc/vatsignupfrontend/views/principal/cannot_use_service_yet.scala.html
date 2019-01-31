@@ -20,11 +20,15 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.cannot_use_service.title"), bodyClasses = None, showSignOutLink = false) {
+@principal_main_template(title = Messages("principal.cannot_use_service.title"),
+                         bodyClasses = None,
+                         showSignOutLink = false) {
 
     <h1 class="heading-large">@Messages("principal.cannot_use_service.heading")</h1>
 
     <p>@Messages("principal.cannot_use_service.line_1")</p>
+
+    <p>@Messages("principal.cannot_use_service.line_2")</p>
 
     <div class="form-group">
         @signOutButton(isAgent = false)
