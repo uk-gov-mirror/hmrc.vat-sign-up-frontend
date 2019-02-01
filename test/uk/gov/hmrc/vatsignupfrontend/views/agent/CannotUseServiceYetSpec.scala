@@ -49,7 +49,8 @@ class CannotUseServiceYetSpec extends ViewSpec {
     )
 
     testPage.shouldHaveParaSeq(
-      messages.line1
+      messages.line1,
+      messages.line2
     )
 
     testPage.shouldHaveSignUpAnotherClientButton()
