@@ -251,6 +251,9 @@ POST        /registered-society-company-name-not-found          uk.gov.hmrc.vats
 # Charity Resolver
 GET         /charity-resolver                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.CharityResolverController.resolve
 
+# GovOrg Resolver
+GET         /government-organisation-resolver                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.GovOrgResolverController.resolve
+
 # Migration In Progress error page
 GET         /error/sign-up-in-progress                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.MigrationInProgressErrorController.show
 

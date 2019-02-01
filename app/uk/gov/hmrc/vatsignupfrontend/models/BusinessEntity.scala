@@ -34,6 +34,7 @@ sealed trait BusinessEntity {
     case RegisteredSociety => RegisteredSocietyKey
     case Charity => CharityKey
     case Overseas => OverseasKey
+    case GovernmentOrganisation => GovernmentOrganisationKey
     case Other => OtherKey
   }
 }
@@ -66,6 +67,8 @@ object Charity extends BusinessEntity
 
 object Overseas extends BusinessEntity
 
+object GovernmentOrganisation extends BusinessEntity
+
 object Other extends BusinessEntity
 
 object BusinessEntity {
@@ -82,6 +85,7 @@ object BusinessEntity {
   val RegisteredSocietyKey = "registered-society"
   val CharityKey = "charity"
   val OverseasKey = "overseas"
+  val GovernmentOrganisationKey = "government-organisation"
   val OtherKey = "other"
 
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
@@ -99,6 +103,7 @@ object BusinessEntity {
       case RegisteredSocietyKey => Some(RegisteredSociety)
       case CharityKey => Some(Charity)
       case OverseasKey => Some(Overseas)
+      case GovernmentOrganisationKey => Some(GovernmentOrganisation)
       case OtherKey => Some(Other)
       case _ => None
     }
@@ -117,6 +122,7 @@ object BusinessEntity {
       case RegisteredSociety => RegisteredSocietyKey
       case Charity => CharityKey
       case Overseas => OverseasKey
+      case GovernmentOrganisation => GovernmentOrganisationKey
       case Other => OtherKey
     }
   }
