@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
 
 
 object StoreVatNumberHttpParser {
@@ -37,7 +37,11 @@ object StoreVatNumberHttpParser {
       def responseCode: Option[String] = (response.json \ CodeKey).asOpt[String]
 
       response.status match {
-        case CREATED  => Right(VatNumberStored)
+        case OK => (response.json \ OverseasTrader.key).asOpt[Boolean] match {
+          case Some(overseas) if overseas => Right(OverseasVatNumberStored)
+          case _ => Right(VatNumberStored)
+        }
+        case CREATED => Right(VatNumberStored)
         case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)
         case FORBIDDEN if responseCode contains KnownFactsMismatchCode => Left(KnownFactsMismatch)
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
@@ -54,6 +58,8 @@ object StoreVatNumberHttpParser {
   sealed trait StoreVatNumberSuccess
 
   case object VatNumberStored extends StoreVatNumberSuccess
+
+  case object OverseasVatNumberStored extends StoreVatNumberSuccess
 
   sealed trait StoreVatNumberFailure
 

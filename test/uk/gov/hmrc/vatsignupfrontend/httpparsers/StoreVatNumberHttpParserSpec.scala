@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
 
 class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
@@ -35,6 +35,22 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
   "StoreVatNumberHttpReads" when {
     "read" should {
+      "parse an OK response as a OverseasVatNumberStored with a Json body that contains a true overseas flag" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> true)))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.right.value shouldBe OverseasVatNumberStored
+      }
+
+      "parse an OK response as a VatNumberStored with a Json body that contains a false overseas flag" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> false)))
+
+        val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.right.value shouldBe VatNumberStored
+      }
+
       "parse a CREATED response as a VatNumberStored" in {
         val httpResponse = HttpResponse(CREATED)
 
