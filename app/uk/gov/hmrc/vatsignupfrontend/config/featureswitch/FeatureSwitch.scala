@@ -121,3 +121,8 @@ case object GovernmentOrganisationJourney extends FeatureSwitch {
   override val name: String = s"$prefix.government-organisation-journey"
   override val displayText: String = "Enable users to enter government organisation flow"
 }
+
+case object WelshTranslation extends FeatureSwitch {
+  override val name: String = s"$prefix.welsh-translation"
+  override val displayText: String = "Enable welsh language"
+}
