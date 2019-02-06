@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
 
 class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
   val testHttpVerb = "PUT"
@@ -33,6 +33,22 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
 
   "VatNumberEligibilityHttpReads" when {
     "read" should {
+      "parse an OK response where the overseas flag is set to true as OverseasVatNumberEligible" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> true)))
+
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.right.value shouldBe OverseasVatNumberEligible
+      }
+
+      "parse an OK response where the overseas flag is set to false as VatNumberEligible" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> false)))
+
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res.right.value shouldBe VatNumberEligible
+      }
+
       "parse a NO_CONTENT response as an VatNumberEligible" in {
         val httpResponse = HttpResponse(NO_CONTENT)
 

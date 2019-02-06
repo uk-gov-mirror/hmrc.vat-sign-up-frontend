@@ -19,14 +19,18 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
 
 object VatNumberEligibilityHttpParser {
-  type VatNumberEligibilityResponse = Either[VatNumberIneligible, VatNumberEligible.type]
+  type VatNumberEligibilityResponse = Either[VatNumberIneligibleResponse, VatNumberEligibleResponse]
 
   implicit object VatNumberEligibilityHttpReads extends HttpReads[VatNumberEligibilityResponse] {
     override def read(method: String, url: String, response: HttpResponse): VatNumberEligibilityResponse = {
       response.status match {
+        case OK => (response.json \ OverseasTrader.key).asOpt[Boolean] match {
+          case Some(overseas) if overseas => Right(OverseasVatNumberEligible)
+          case _ => Right(VatNumberEligible)
+        }
         case NO_CONTENT => Right(VatNumberEligible)
         case BAD_REQUEST =>
           response.json.validate[MigratableDates] match {
@@ -38,14 +42,18 @@ object VatNumberEligibilityHttpParser {
     }
   }
 
-  case object VatNumberEligible
+  sealed trait VatNumberEligibleResponse
 
-  sealed trait VatNumberIneligible
+  case object VatNumberEligible extends VatNumberEligibleResponse
 
-  case class IneligibleForMtdVatNumber(migratableDates: MigratableDates) extends VatNumberIneligible
+  case object OverseasVatNumberEligible extends VatNumberEligibleResponse
 
-  case object InvalidVatNumber extends VatNumberIneligible
+  sealed trait VatNumberIneligibleResponse
 
-  case class VatNumberEligibilityFailureResponse(status: Int) extends VatNumberIneligible
+  case class IneligibleForMtdVatNumber(migratableDates: MigratableDates) extends VatNumberIneligibleResponse
+
+  case object InvalidVatNumber extends VatNumberIneligibleResponse
+
+  case class VatNumberEligibilityFailureResponse(status: Int) extends VatNumberIneligibleResponse
 
 }
