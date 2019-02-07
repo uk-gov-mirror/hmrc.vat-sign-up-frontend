@@ -192,6 +192,20 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           )
         }
 
+        "the vat number is eligible and overseas" should {
+          "redirect to the Multiple Vat Check page" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibilityOverseas(testVatNumber)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.MultipleVatCheckController.show().url)
+            )
+          }
+        }
+
       }
       "the vat eligibility is unsuccessful" when {
         "redirect to the invalid vat number page" when {

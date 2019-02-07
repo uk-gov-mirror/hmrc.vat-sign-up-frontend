@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{vatNumberKey, businessEntityKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -29,6 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -85,7 +86,10 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
 
   private def checkVrnEligibility(formVatNumber: String)(implicit request: Request[AnyContent]): Future[Result] = {
     vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
-      case Right(VatNumberEligible) =>
+      case Right(success) if success.isOverseas =>
+        Redirect(routes.MultipleVatCheckController.show())
+          .addingToSession(vatNumberKey -> formVatNumber, businessEntityKey -> Overseas.toString)
+      case Right(_) =>
         Redirect(routes.CaptureVatRegistrationDateController.show())
           .addingToSession(vatNumberKey -> formVatNumber)
       case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) =>

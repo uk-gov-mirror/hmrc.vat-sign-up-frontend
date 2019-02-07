@@ -18,13 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
 
 object VatEligibilityStub extends WireMockMethods {
 
   def stubVatNumberEligibilitySuccess(vatNumber: String): Unit = {
     when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
-      .thenReturn(status = NO_CONTENT)
+      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> false))
   }
 
   def stubVatNumberEligibilityFailure(vatNumber: String): Unit = {
@@ -42,4 +42,8 @@ object VatEligibilityStub extends WireMockMethods {
       .thenReturn(status = NOT_FOUND)
   }
 
+  def stubVatNumberEligibilityOverseas(vatNumber: String): Unit = {
+    when(method = GET, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/mtdfb-eligibility")
+      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> true))
+  }
 }
