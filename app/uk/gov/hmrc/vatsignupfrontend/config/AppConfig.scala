@@ -109,6 +109,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def storeCharityInformationUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/charity"
 
+  def storeOverseasInformationUrl(vatNumber: String): String =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/overseas"
+
   def claimSubscriptionUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/claim-subscription/vat-number/$vatNumber"
 

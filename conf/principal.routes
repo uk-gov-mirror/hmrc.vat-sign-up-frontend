@@ -233,6 +233,9 @@ GET         /unincorporated-association-resolver                uk.gov.hmrc.vats
 # Trust resolver
 GET         /trust-resolver                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.TrustResolverController.resolve
 
+# Overseas (Non Uk with No Uk Establishment) resolver
+GET         /overseas-resolver                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.OverseasResolverController.resolve
+
 # Have Software
 GET         /have-software                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.HaveSoftwareController.show
 POST        /have-software                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.HaveSoftwareController.submit
