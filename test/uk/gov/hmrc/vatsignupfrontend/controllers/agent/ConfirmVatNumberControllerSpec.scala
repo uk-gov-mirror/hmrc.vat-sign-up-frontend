@@ -73,7 +73,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but it is invalid" should {
       "go to invalid vat number page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored)))
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false))))
 
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testInvalidVatNumber)
         val result = TestConfirmVatNumberController.submit(request)
@@ -86,9 +86,20 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
 
     "vat number is in session and store vat is successful" should {
+      "go to the Overseas Resolver" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = true))))
+
+        val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        status(result) shouldBe Status.NOT_IMPLEMENTED
+        //redirectLocation(result) should contain(routes.OverseasResolverController.resolve().url)
+      }
+    }
+
+    "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored)))
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false))))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER

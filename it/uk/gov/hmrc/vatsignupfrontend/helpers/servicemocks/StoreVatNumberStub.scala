@@ -20,7 +20,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, OverseasTrader, PostCode}
 
 object StoreVatNumberStub extends WireMockMethods {
 
@@ -33,7 +33,7 @@ object StoreVatNumberStub extends WireMockMethods {
 
   def stubStoreVatNumberSuccess(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
-      .thenReturn(status = CREATED)
+      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> false))
   }
 
   def stubStoreVatNumberNoRelationship(isFromBta: Boolean): Unit = {
@@ -78,7 +78,7 @@ object StoreVatNumberStub extends WireMockMethods {
   def stubStoreVatNumberSuccess(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
       requestJson(postCode, registrationDate, isFromBta))
-      .thenReturn(status = CREATED)
+      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> false))
   }
 
   def stubStoreVatNumberSubscriptionClaimed(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): Unit = {

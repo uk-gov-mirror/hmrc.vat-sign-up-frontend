@@ -87,8 +87,8 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
   private def checkVrnEligibility(formVatNumber: String)(implicit request: Request[AnyContent]): Future[Result] = {
     vatNumberEligibilityService.checkVatNumberEligibility(formVatNumber) map {
       case Right(success) if success.isOverseas =>
-        Redirect(routes.MultipleVatCheckController.show())
-          .addingToSession(vatNumberKey -> formVatNumber, businessEntityKey -> Overseas.toString)
+        Redirect(routes.CannotUseServiceController.show())
+          .addingToSession(vatNumberKey -> formVatNumber)
       case Right(_) =>
         Redirect(routes.CaptureVatRegistrationDateController.show())
           .addingToSession(vatNumberKey -> formVatNumber)
@@ -106,7 +106,10 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
 
   private def storeVatNumber(formVatNumber: String)(implicit request: Request[AnyContent]): Future[Result] = {
     storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = false) map {
-      case Right(VatNumberStored) =>
+      case Right(VatNumberStored(isOverseas)) if isOverseas =>
+        Redirect(routes.CannotUseServiceController.show())
+          .addingToSession(vatNumberKey -> formVatNumber)
+      case Right(VatNumberStored(_)) =>
         Redirect(routes.CaptureBusinessEntityController.show())
           .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
       case Right(SubscriptionClaimed) =>
