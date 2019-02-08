@@ -22,16 +22,15 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
 
 object VatNumberEligibilityHttpParser {
-  type VatNumberEligibilityResponse = Either[VatNumberIneligibleResponse, VatNumberEligibleResponse]
+  type VatNumberEligibilityResponse = Either[VatNumberIneligible, VatNumberEligible]
 
   implicit object VatNumberEligibilityHttpReads extends HttpReads[VatNumberEligibilityResponse] {
     override def read(method: String, url: String, response: HttpResponse): VatNumberEligibilityResponse = {
       response.status match {
-        case OK => (response.json \ OverseasTrader.key).asOpt[Boolean] match {
-          case Some(overseas) if overseas => Right(OverseasVatNumberEligible)
-          case _ => Right(VatNumberEligible)
-        }
-        case NO_CONTENT => Right(VatNumberEligible)
+        case OK if (response.json \ OverseasTrader.key).as[Boolean] =>
+          Right(VatNumberEligible(true))
+        case OK =>
+          Right(VatNumberEligible())
         case BAD_REQUEST =>
           response.json.validate[MigratableDates] match {
             case JsSuccess(dates, _) => Left(IneligibleForMtdVatNumber(dates))
@@ -42,18 +41,14 @@ object VatNumberEligibilityHttpParser {
     }
   }
 
-  sealed trait VatNumberEligibleResponse
+  case class VatNumberEligible(isOverseas: Boolean = false)
 
-  case object VatNumberEligible extends VatNumberEligibleResponse
+  sealed trait VatNumberIneligible
 
-  case object OverseasVatNumberEligible extends VatNumberEligibleResponse
+  case class IneligibleForMtdVatNumber(migratableDates: MigratableDates) extends VatNumberIneligible
 
-  sealed trait VatNumberIneligibleResponse
+  case object InvalidVatNumber extends VatNumberIneligible
 
-  case class IneligibleForMtdVatNumber(migratableDates: MigratableDates) extends VatNumberIneligibleResponse
-
-  case object InvalidVatNumber extends VatNumberIneligibleResponse
-
-  case class VatNumberEligibilityFailureResponse(status: Int) extends VatNumberIneligibleResponse
+  case class VatNumberEligibilityFailureResponse(status: Int) extends VatNumberIneligible
 
 }

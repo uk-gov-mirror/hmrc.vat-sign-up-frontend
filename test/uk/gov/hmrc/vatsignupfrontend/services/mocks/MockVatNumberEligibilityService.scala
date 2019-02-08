@@ -44,7 +44,10 @@ trait MockVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSug
   }
 
   def mockVatNumberEligibilitySuccess(vatNumber: String): Unit =
-    mockVatNumberEligibility(vatNumber)(Future.successful(Right(VatNumberEligible)))
+    mockVatNumberEligibility(vatNumber)(Future.successful(Right(VatNumberEligible())))
+
+  def mockVatNumberEligibilityOverseas(vatNumber: String): Unit =
+    mockVatNumberEligibility(vatNumber)(Future.successful(Right(VatNumberEligible(isOverseas = true))))
 
   def mockVatNumberEligibilityFailure(vatNumber: String): Unit =
     mockVatNumberEligibility(vatNumber)(Future.successful(Left(VatNumberEligibilityFailureResponse(INTERNAL_SERVER_ERROR))))

@@ -27,13 +27,14 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{vatNumberKey, businessEntityKey}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.OverseasKey
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
 
 import scala.concurrent.Future
@@ -232,19 +233,39 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
 
         "the user does not have a VAT-DEC enrolment" when {
-          "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-            mockVatNumberEligibilitySuccess(testVatNumber)
+          "the Vat number is not for an overseas business" should {
+            "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockVatNumberEligibilitySuccess(testVatNumber)
 
-            implicit val request = testPostRequest(testVatNumber)
+              implicit val request = testPostRequest(testVatNumber)
 
-            val result = TestCaptureVatNumberController.submit(request)
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-            result.session get vatNumberKey should contain(testVatNumber)
+              result.session get vatNumberKey should contain(testVatNumber)
+            }
+          }
+
+          "the vat number is for an overseas business" should {
+            "redirect to the Multiple Vat Check page when the Vat number is eligible" in {
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockVatNumberEligibilityOverseas(testVatNumber)
+
+              implicit val request = testPostRequest(testVatNumber)
+
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.MultipleVatCheckController.show().url)
+
+              result.session get vatNumberKey should contain(testVatNumber)
+              result.session get businessEntityKey should contain(OverseasKey)
+            }
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
