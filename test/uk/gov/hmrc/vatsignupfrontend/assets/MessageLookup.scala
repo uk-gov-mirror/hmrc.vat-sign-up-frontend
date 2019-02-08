@@ -67,10 +67,9 @@ object MessageLookup {
   }
 
   object CannotUseServiceYet {
-    val heading: String = "You cannot use this service at this time"
+    val heading: String = "Your client's business is not eligible at this time"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "You can sign up your client after 7 February 2019."
-    val line2 = "We cannot set up your client for Making Tax Digital for VAT during a busy filing period."
+    val line1 = "Try again later."
   }
 
   object CaptureVatNumber {
@@ -426,10 +425,9 @@ object MessageLookup {
   }
 
   object PrincipalCannotUseServiceYet {
-    val heading: String = "You cannot use this service at this time"
+    val heading: String = "Your business is not eligible at this time"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "You can sign up after 7 February 2019."
-    val line2 = "We cannot set you up for Making Tax Digital for VAT during a busy filing period."
+    val line1 = "Try again later."
   }
 
   object PrincipalCaptureEmail {
