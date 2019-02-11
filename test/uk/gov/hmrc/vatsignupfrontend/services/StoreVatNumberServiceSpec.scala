@@ -38,11 +38,17 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
   "storeVatNumberDelegated" when {
     "the connector returns VatNumberStored" should {
-      "return VatNumberStored" in {
-        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored)))
+      "return VatNumberStored(false) when the company is not overseas" in {
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumberDelegated(testVatNumber))
-        res shouldBe Right(VatNumberStored)
+        res shouldBe Right(VatNumberStored(isOverseas = false))
+      }
+      "return VatNumberStored(true) when the company is overseas" in {
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = true))))
+
+        val res = await(TestStoreVatNumberService.storeVatNumberDelegated(testVatNumber))
+        res shouldBe Right(VatNumberStored(isOverseas = true))
       }
     }
     "the connector returns AlreadySubscribed" should {
@@ -101,11 +107,17 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
   }
   "storeVatNumber with an enrolment" when {
     "the connector returns VatNumberStored" should {
-      "return VatNumberStored" in {
-        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored)))
+      "return VatNumberStored(false) when the company is not overseas" in {
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
-        res shouldBe Right(VatNumberStored)
+        res shouldBe Right(VatNumberStored(isOverseas = false))
+      }
+      "return VatNumberStored(true) when the company is overseas" in {
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = true))))
+
+        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
+        res shouldBe Right(VatNumberStored(isOverseas = true))
       }
     }
     "the store vat number connector returns AlreadySubscribed" when {
@@ -174,11 +186,11 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
   }
   "storeVatNumber with supplied known facts" when {
     "the connector returns VatNumberStored" should {
-      "return VatNumberStored" in {
-        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored)))
+      "return VatNumberStored(false) when the company is not overseas" in {
+        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
-        res shouldBe Right(VatNumberStored)
+        res shouldBe Right(VatNumberStored(isOverseas = false))
       }
     }
     "the store vat number connector returns AlreadySubscribed" when {

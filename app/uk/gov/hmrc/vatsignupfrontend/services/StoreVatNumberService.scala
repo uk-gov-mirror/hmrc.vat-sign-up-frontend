@@ -32,7 +32,7 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
 
   def storeVatNumberDelegated(vatNumber: String)(implicit hc: HeaderCarrier): Future[DelegatedStoreVatNumberResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta = false) map {
-      case Right(StoreVatNumberHttpParser.VatNumberStored) => Right(VatNumberStored)
+      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) => Right(VatNumberStored(isOverseas))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) => Left(AlreadySubscribed)
       case Left(StoreVatNumberHttpParser.NoAgentClientRelationship) => Left(NoAgentClientRelationship)
       case Left(StoreVatNumberHttpParser.InvalidVatNumber) => Left(InvalidVatNumber)
@@ -44,8 +44,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
 
   def storeVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithEnrolmentResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta) flatMap {
-      case Right(StoreVatNumberHttpParser.VatNumberStored) =>
-        Future.successful(Right(VatNumberStored))
+      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) =>
+        Future.successful(Right(VatNumberStored(isOverseas)))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
@@ -68,8 +68,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
                      registrationDate: DateModel,
                      isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta) flatMap {
-      case Right(StoreVatNumberHttpParser.VatNumberStored) =>
-        Future.successful(Right(VatNumberStored))
+      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) =>
+        Future.successful(Right(VatNumberStored(isOverseas)))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, postCode, registrationDate, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
@@ -90,16 +90,17 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
       case Left(unexpectedError) =>
         throw new InternalServerException(s"Unexpected error in store VAT number with supplied known facts - $unexpectedError")
     }
+
 }
 
 object StoreVatNumberService {
   type StoreVatNumberWithKnownFactsResponse = Either[StoreVatNumberWithKnownFactsFailure, StoreVatNumberSuccess]
   type StoreVatNumberWithEnrolmentResponse = Either[StoreVatNumberWithEnrolmentFailure, StoreVatNumberSuccess]
-  type DelegatedStoreVatNumberResponse = Either[DelegatedStoreVatNumberFailure, VatNumberStored.type]
+  type DelegatedStoreVatNumberResponse = Either[DelegatedStoreVatNumberFailure, StoreVatNumberSuccess]
 
   sealed trait StoreVatNumberSuccess
 
-  case object VatNumberStored extends StoreVatNumberSuccess
+  case class VatNumberStored(isOverseas: Boolean = false) extends StoreVatNumberSuccess
 
   case object SubscriptionClaimed extends StoreVatNumberSuccess
 

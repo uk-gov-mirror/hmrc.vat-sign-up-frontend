@@ -42,7 +42,6 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
-
   }
 
   "POST /vat-number" when {
@@ -60,10 +59,9 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               httpStatus(SEE_OTHER),
               redirectUri(routes.CaptureBusinessEntityController.show().url)
             )
-
           }
-
         }
+
         "the enrolment vat number doesn't match the inserted one" should {
           "redirect to error page" in {
             val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
@@ -77,8 +75,8 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             )
           }
         }
-
       }
+
       "the vat eligibility is unsuccessful" should {
         "redirect to the invalid vat number page" when {
           "the vat number is fails the checksum validation" in {
@@ -178,6 +176,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
     }
+
     "we don't have an enrolment" when {
       "the vat eligibility is successful" should {
         "redirect to Capture Vat Registration Date page" in {
@@ -193,7 +192,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         }
 
         "the vat number is eligible and overseas" should {
-          "redirect to the Multiple Vat Check page" in {
+          "redirect to the Cannot Use Service page" in {
             stubAuth(OK, successfulAuthResponse())
             stubVatNumberEligibilityOverseas(testVatNumber)
 
@@ -201,12 +200,12 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
             res should have(
               httpStatus(SEE_OTHER),
-              redirectUri(routes.MultipleVatCheckController.show().url)
+              redirectUri(routes.CannotUseServiceController.show().url)
             )
           }
         }
-
       }
+
       "the vat eligibility is unsuccessful" when {
         "redirect to the invalid vat number page" when {
           "the vat number is fails the checksum validation" in {
@@ -296,7 +295,5 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
     }
-
   }
-
 }

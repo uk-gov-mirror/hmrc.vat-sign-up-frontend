@@ -27,14 +27,13 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{vatNumberKey, businessEntityKey}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
-import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.OverseasKey
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
 
 import scala.concurrent.Future
@@ -85,6 +84,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                   session(result) get vatNumberKey should contain(testVatNumber)
                 }
               }
+
               "the user's information is being migrated" should {
                 "redirect to migration in progress error page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
@@ -96,6 +96,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                   redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
                 }
               }
+
               "the user's subscription has been claimed" should {
                 "redirect to claimed subscription confirmation page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
@@ -107,6 +108,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                   redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
                 }
               }
+
               "the user tried to claim a subscription that is already enrolled" should {
                 "redirect to business already signed up page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
@@ -131,8 +133,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 redirectLocation(result) shouldBe Some(routes.IncorrectEnrolmentVatNumberController.show().url)
               }
             }
-
           }
+
           "the vat eligibility is unsuccessful" should {
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
               mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
@@ -161,6 +163,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
               }
             }
+
             "the vat eligibility is unsuccessful" should {
               "redirect to sign up between these dates page when the vat number is ineligible and two dates are available" in {
                 val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
@@ -178,8 +181,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               }
             }
           }
-
         }
+
         "the user has an MTD-VAT enrolment" when {
           "the user attempts to sign up the same vat number that is already on their enrolment" in {
             mockAuthRetrieveMtdVatEnrolment()
@@ -251,7 +254,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "the vat number is for an overseas business" should {
-            "redirect to the Multiple Vat Check page when the Vat number is eligible" in {
+            "redirect to the Cannot Use Service page" in {
               mockAuthorise(
                 retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
               )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -261,10 +264,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.MultipleVatCheckController.show().url)
+              redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
 
               result.session get vatNumberKey should contain(testVatNumber)
-              result.session get businessEntityKey should contain(OverseasKey)
             }
           }
 
@@ -333,7 +335,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
         }
       }
-
     }
 
     "the vat number fails checksum validation" should {
@@ -350,7 +351,6 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
       }
     }
-
   }
 
   "form unsuccessfully submitted" should {
@@ -365,5 +365,4 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       charset(result) shouldBe Some("utf-8")
     }
   }
-
 }

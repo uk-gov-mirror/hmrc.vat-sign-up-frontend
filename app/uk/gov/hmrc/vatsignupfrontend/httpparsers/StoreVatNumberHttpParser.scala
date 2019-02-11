@@ -35,13 +35,11 @@ object StoreVatNumberHttpParser {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
 
       def responseCode: Option[String] = (response.json \ CodeKey).asOpt[String]
-
+      
       response.status match {
-        case OK => (response.json \ OverseasTrader.key).asOpt[Boolean] match {
-          case Some(overseas) if overseas => Right(OverseasVatNumberStored)
-          case _ => Right(VatNumberStored)
-        }
-        case CREATED => Right(VatNumberStored)
+        case OK if (response.json \ OverseasTrader.key).as[Boolean]=>
+          Right(VatNumberStored(isOverseas = true))
+        case OK => Right(VatNumberStored(isOverseas = false))
         case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)
         case FORBIDDEN if responseCode contains KnownFactsMismatchCode => Left(KnownFactsMismatch)
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
@@ -55,11 +53,10 @@ object StoreVatNumberHttpParser {
     }
   }
 
+
   sealed trait StoreVatNumberSuccess
 
-  case object VatNumberStored extends StoreVatNumberSuccess
-
-  case object OverseasVatNumberStored extends StoreVatNumberSuccess
+  case class VatNumberStored(isOverseas: Boolean = false) extends StoreVatNumberSuccess
 
   sealed trait StoreVatNumberFailure
 
