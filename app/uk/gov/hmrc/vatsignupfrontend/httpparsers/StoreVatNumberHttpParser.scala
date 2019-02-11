@@ -37,7 +37,7 @@ object StoreVatNumberHttpParser {
       def responseCode: Option[String] = (response.json \ CodeKey).asOpt[String]
       
       response.status match {
-        case OK if (response.json \ OverseasTrader.key).as[Boolean]=>
+        case OK if (response.json \ OverseasTrader.key).as[Boolean] =>
           Right(VatNumberStored(isOverseas = true))
         case OK => Right(VatNumberStored(isOverseas = false))
         case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)

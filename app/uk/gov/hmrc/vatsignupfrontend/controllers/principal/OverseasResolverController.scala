@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 import uk.gov.hmrc.vatsignupfrontend.services.StoreOverseasInformationService
 
 import scala.concurrent.Future
@@ -42,6 +43,7 @@ class OverseasResolverController @Inject()(val controllerComponents: ControllerC
           storeOverseasInformationService.storeOverseasInformation(vatNumber) map {
             case Right(StoreOverseasInformationSuccess) =>
               Redirect(routes.AgreeCaptureEmailController.show())
+                .addingToSession(SessionKeys.businessEntityKey -> Overseas.toString)
             case Left(StoreOverseasInformationFailureResponse(status)) =>
               throw new InternalServerException("store overseas information failed: status=" + status)
           }

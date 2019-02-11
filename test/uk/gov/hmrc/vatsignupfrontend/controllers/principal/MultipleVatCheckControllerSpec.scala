@@ -84,6 +84,17 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
           }
         }
+        "the VAT number is stored successfully and the BE is Overseas" should {
+          "go to overseas resolver" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberOverseasSuccess(testVatNumber, isFromBta = false)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
+            session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
+          }
+        }
         "the VAT subscription has been claimed" should {
           "go to sign-up-complete-client" in {
             mockAuthRetrieveVatDecEnrolment()

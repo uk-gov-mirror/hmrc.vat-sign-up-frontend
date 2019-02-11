@@ -35,6 +35,10 @@ object StoreVatNumberStub extends WireMockMethods {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = OK, Json.obj(OverseasTrader.key -> false))
   }
+  def stubStoreVatNumberOverseasSuccess(isFromBta: Boolean): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
+      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> true))
+  }
 
   def stubStoreVatNumberNoRelationship(isFromBta: Boolean): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
