@@ -52,7 +52,7 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
       }
 
       "parse an OK response as a VatNumberStored" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> false)))
+        val httpResponse = HttpResponse(OK, None)
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
