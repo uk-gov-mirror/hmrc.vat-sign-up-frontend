@@ -86,17 +86,6 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
 
     "vat number is in session and store vat is successful" should {
-      "go to the Overseas Resolver" in {
-        mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = true))))
-
-        val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
-        status(result) shouldBe Status.NOT_IMPLEMENTED
-        //redirectLocation(result) should contain(routes.OverseasResolverController.resolve().url)
-      }
-    }
-
-    "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false))))
@@ -106,6 +95,18 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
       }
     }
+
+    "overseas vat number is in session and store vat is successful" should {
+      "go to the overseas resolver controller" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = true))))
+
+        val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.OverseasResolverController.resolve().url)
+      }
+    }
+
     "vat number is in session but store vat is unsuccessful as no agent client relationship" should {
       "go to the no agent client relationship page" in {
         mockAuthRetrieveAgentEnrolment()
@@ -118,7 +119,6 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
 
     "vat number is in session but store vat is unsuccessful as client is ineligible" when {
-
       "go to the cannot use service page when no dates are given" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Left(IneligibleVatNumber(MigratableDates.empty))))

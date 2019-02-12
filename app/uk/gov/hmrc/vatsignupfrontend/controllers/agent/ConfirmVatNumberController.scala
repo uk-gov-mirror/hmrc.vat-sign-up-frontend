@@ -59,17 +59,21 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) if vatNumber.nonEmpty =>
           if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
             storeVatNumberService.storeVatNumberDelegated(vatNumber) map {
-              case Right(VatNumberStored(isOverseas)) if isOverseas => NotImplemented
+              case Right(VatNumberStored(isOverseas)) if isOverseas =>
+                Redirect(routes.OverseasResolverController.resolve())
               case Right(VatNumberStored(_)) =>
                 Redirect(routes.CaptureBusinessEntityController.show())
               case Left(NoAgentClientRelationship) =>
                 Redirect(routes.NoAgentClientRelationshipController.show())
               case Left(AlreadySubscribed) =>
                 Redirect(routes.AlreadySignedUpController.show())
-              case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
-              case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
-                .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
-              case Left(VatMigrationInProgress) => Redirect(routes.MigrationInProgressErrorController.show())
+              case Left(IneligibleVatNumber(MigratableDates(None, None))) =>
+                Redirect(routes.CannotUseServiceController.show())
+              case Left(IneligibleVatNumber(migratableDates)) =>
+                Redirect(routes.MigratableDatesController.show())
+                  .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+              case Left(VatMigrationInProgress) =>
+                Redirect(routes.MigrationInProgressErrorController.show())
               case Left(errResponse: StoreVatNumberFailureResponse) =>
                 throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
             }
