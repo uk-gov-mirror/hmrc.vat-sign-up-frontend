@@ -38,7 +38,7 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberEligible(true)
+        res.right.value shouldBe VatNumberEligible(isOverseas = true)
       }
 
       "parse an OK response where the overseas flag is set to false as VatNumberEligible" in {
@@ -46,7 +46,7 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberEligible()
+        res.right.value shouldBe VatNumberEligible(isOverseas = false)
       }
 
       "parse a BAD_REQUEST response with no body as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
