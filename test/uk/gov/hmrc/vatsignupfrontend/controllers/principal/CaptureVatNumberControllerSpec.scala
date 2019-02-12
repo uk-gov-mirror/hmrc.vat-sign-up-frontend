@@ -72,7 +72,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         "the user has a VAT-DEC enrolment" when {
           "the vat eligibility is successful" when {
             "the inserted vat number matches the enrolment one" when {
-              "the VAT number is stored successfully" should {
+              "the VAT number is not overseas and is stored successfully" should {
                 "redirect to the business entity type page" in {
                   mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
                   mockStoreVatNumberSuccess(testVatNumber, isFromBta = false)
@@ -81,6 +81,19 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
                   status(result) shouldBe Status.SEE_OTHER
                   redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+                  session(result) get vatNumberKey should contain(testVatNumber)
+                }
+              }
+
+              "the VAT number is overseas and is stored successfully" should {
+                "redirect to the overseas resolver controller" in {
+                  mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment = false)
+                  mockStoreVatNumberOverseasSuccess(testVatNumber, isFromBta = false)
+
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
                   session(result) get vatNumberKey should contain(testVatNumber)
                 }
               }

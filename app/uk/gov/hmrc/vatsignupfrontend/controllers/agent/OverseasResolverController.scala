@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.{StoreOverseasInformationFailureResponse, StoreOverseasInformationSuccess}
-import uk.gov.hmrc.vatsignupfrontend.models.Overseas
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreOverseasInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 
@@ -45,7 +45,7 @@ class OverseasResolverController @Inject()(val controllerComponents: ControllerC
           storeOverseasInformationService.storeOverseasInformation(vatNumber) map {
             case Right(StoreOverseasInformationSuccess) =>
               Redirect(routes.EmailRoutingController.route())
-                .addingToSession(SessionKeys.businessEntityKey, Overseas.toString)
+                .addingToSession(SessionKeys.businessEntityKey -> Overseas.toString)
             case Left(StoreOverseasInformationFailureResponse(status)) =>
               throw new InternalServerException("store overseas information failed: status =" + status)
           }
