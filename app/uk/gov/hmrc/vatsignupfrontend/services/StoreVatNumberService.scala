@@ -19,9 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.services
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreVatNumberConnector
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
-import StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreVatNumberHttpParser}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -70,6 +70,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
     storeVatNumberConnector.storeVatNumber(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta) flatMap {
       case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) =>
         Future.successful(Right(VatNumberStored(isOverseas)))
+      case Right(StoreVatNumberHttpParser.VatNumberStored(_)) =>
+        Future.successful(Right(VatNumberStored(isOverseas = false)))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, postCode, registrationDate, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>

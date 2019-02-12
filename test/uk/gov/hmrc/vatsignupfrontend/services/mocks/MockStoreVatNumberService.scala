@@ -55,6 +55,9 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberSuccess(vatNumber: String, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = false))))
 
+  def mockStoreVatNumberOverseasSuccess(vatNumber: String, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = true))))
+
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
 

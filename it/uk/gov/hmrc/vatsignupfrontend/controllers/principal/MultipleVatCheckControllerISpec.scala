@@ -70,6 +70,20 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "return a redirect to overseas resolver" when {
+      "form value is NO" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubStoreVatNumberOverseasSuccess(isFromBta = false)
+
+        val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.OverseasResolverController.resolve().url)
+        )
+      }
+    }
+
     "return a redirect to migratable dates page" when {
       "form value is NO" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
@@ -113,6 +127,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "redirect to business already signed up error page" when {
       "form value is NO" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
