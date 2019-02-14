@@ -63,6 +63,11 @@ class BusinessEntityFormSpec extends UnitSpec {
       res.value should contain(Division)
     }
 
+    "successfully parse a government organisation entity" in {
+      val res = validateBusinessEntityForm.bind(Map(businessEntity -> governmentOrganisation))
+      res.value should contain(GovernmentOrganisation)
+    }
+
     "successfully parse a other entity" in {
       val res = validateBusinessEntityForm.bind(Map(businessEntity -> other))
       res.value should contain(Other)

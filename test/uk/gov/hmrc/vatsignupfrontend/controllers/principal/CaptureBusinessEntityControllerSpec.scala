@@ -175,6 +175,21 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "the business entity is a government organisation" should {
+        "goto government organisation resolver" in {
+          mockAuthAdminRole()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(governmentOrganisation)
+
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.GovernmentOrganisationResolverController.resolve().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(
+            BusinessEntitySessionFormatter.toString(GovernmentOrganisation)
+          )
+        }
+      }
+
       "the business entity is other" should {
         "go to Cannot use service yet page" in {
           mockAuthAdminRole()

@@ -43,7 +43,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     trustEnabled = true,
     unincorporatedAssociationEnabled = true,
     registeredSocietyEnabled = true,
-    charityEnabled = true
+    charityEnabled = true,
+    governmentOrganisationEnabled = true
   )(
     FakeRequest(),
     applicationMessages,
@@ -258,6 +259,26 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
           "have the id 'charity'" in {
             optionLabel.attr("id") shouldEqual "charity"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'Government Organisation'" should {
+
+        "have the text 'Government Organisation'" in {
+          doc.select("label[for=government-organisation]").text() shouldEqual messages.radioGovernmentOrganisation
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#government-organisation")
+
+          "have the id 'government-organisation'" in {
+            optionLabel.attr("id") shouldEqual "government-organisation"
           }
 
           "be of type radio" in {

@@ -402,6 +402,7 @@ object MessageLookup {
     val radioTrust: String = "Trust"
     val radioRegisteredSociety = "Registered society (including community benefit societies and co-operative societies)"
     val radioCharity = "CIO (charity)"
+    val radioGovernmentOrganisation: String = "Government organisations and public sector"
     val radioOther: String = "Other"
   }
 
