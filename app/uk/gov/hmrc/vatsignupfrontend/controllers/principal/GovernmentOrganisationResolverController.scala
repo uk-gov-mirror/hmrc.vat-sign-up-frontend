@@ -22,18 +22,18 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.TrustJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GovernmentOrganisationJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovOrgInformationHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreGovOrgInformationService
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreGovernmentOrganisationInformationService
 
 import scala.concurrent.Future
 
 @Singleton
-class GovOrgResolverController @Inject()(val controllerComponents: ControllerComponents,
-                                         storeGovOrgInformationService: StoreGovOrgInformationService
-                                       )
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(TrustJourney)) {
+class GovernmentOrganisationResolverController @Inject()(val controllerComponents: ControllerComponents,
+                                                         storeGovernmentOrganisationInformationService: StoreGovernmentOrganisationInformationService
+                                                        )
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GovernmentOrganisationJourney)) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -41,10 +41,10 @@ class GovOrgResolverController @Inject()(val controllerComponents: ControllerCom
 
       optVatNumber match {
         case Some(vatNumber) =>
-          storeGovOrgInformationService.storeGovOrgInformation(vatNumber = vatNumber) map {
-            case Right(StoreGovOrgInformationSuccess) =>
+          storeGovernmentOrganisationInformationService.storeGovernmentOrganisationInformation(vatNumber = vatNumber) map {
+            case Right(StoreGovernmentOrganisationInformationSuccess) =>
               Redirect(routes.AgreeCaptureEmailController.show())
-            case Left(StoreGovOrgInformationFailureResponse(status)) =>
+            case Left(StoreGovernmentOrganisationInformationFailureResponse(status)) =>
               throw new InternalServerException("store trust information failed: status=" + status)
           }
         case _ =>

@@ -21,14 +21,14 @@ import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovOrgInformationHttpParser.StoreGovOrgInformationResponse
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser.StoreGovernmentOrganisationInformationResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StoreGovOrgInformationConnector @Inject()(val http: HttpClient,
-                                                val applicationConfig: AppConfig
+class StoreGovernmentOrganisationInformationConnector @Inject()(val http: HttpClient,
+                                                                val applicationConfig: AppConfig
                                                  )(implicit ec: ExecutionContext) {
-  def storeGovOrgInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreGovOrgInformationResponse] =
-    http.POST[JsObject, StoreGovOrgInformationResponse](applicationConfig.storeGovOrgInformationUrl(vatNumber), Json.obj())
+  def storeGovernmentOrganisationInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreGovernmentOrganisationInformationResponse] =
+    http.POST[JsObject, StoreGovernmentOrganisationInformationResponse](applicationConfig.storeGovOrgInformationUrl(vatNumber), Json.obj())
 
 }

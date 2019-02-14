@@ -18,14 +18,14 @@ package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.connectors.StoreGovOrgInformationConnector
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovOrgInformationHttpParser.StoreGovOrgInformationResponse
+import uk.gov.hmrc.vatsignupfrontend.connectors.StoreGovernmentOrganisationInformationConnector
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser.StoreGovernmentOrganisationInformationResponse
 
 import scala.concurrent.Future
 
 @Singleton
-class StoreGovOrgInformationService @Inject()(storeGovOrgInformationConnector: StoreGovOrgInformationConnector) {
+class StoreGovernmentOrganisationInformationService @Inject()(storeGovernmentOrganisationInformationConnector: StoreGovernmentOrganisationInformationConnector) {
 
-  def storeGovOrgInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreGovOrgInformationResponse] =
-    storeGovOrgInformationConnector.storeGovOrgInformation(vatNumber)
+  def storeGovernmentOrganisationInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreGovernmentOrganisationInformationResponse] =
+    storeGovernmentOrganisationInformationConnector.storeGovernmentOrganisationInformation(vatNumber)
 }

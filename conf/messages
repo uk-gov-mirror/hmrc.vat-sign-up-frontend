@@ -452,7 +452,7 @@ principal.capture_entity_type.unincorporatedAssociation                = Unincor
 principal.capture_entity_type.trust                                    = Trust
 principal.capture_entity_type.registeredSociety                        = Registered society (including community benefit societies and co-operative societies)
 principal.capture_entity_type.charity                                  = CIO (charity)
-principal.capture_entity_type.govOrg                                   = GovOrg
+principal.capture_entity_type.governmentOrganisation                   = Government organisations and public sector
 principal.capture_entity_type.other                                    = Other
 
 # Check your answers page
