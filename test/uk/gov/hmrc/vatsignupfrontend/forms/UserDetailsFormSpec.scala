@@ -133,6 +133,11 @@ class UserDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         val form = validateUserDetailsForm.bind(Map(userNino -> testNino))
         form.errors(userNino) shouldBe Seq.empty
       }
+
+      "ensure the user can enter a nino with spaces" in {
+        val form = validateUserDetailsForm.bind(Map(userNino -> "AA 11 11 11 A"))
+        form.errors(userNino) shouldBe Seq.empty
+      }
     }
 
     "validating the date of birth" should {
