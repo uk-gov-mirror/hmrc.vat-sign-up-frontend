@@ -39,7 +39,8 @@ object FeatureSwitch {
     TrustJourney,
     RegisteredSocietyJourney,
     CharityJourney,
-    GovernmentOrganisationJourney
+    GovernmentOrganisationJourney,
+    AdditionalKnownFacts
   )
 
   def apply(str: String): FeatureSwitch =
@@ -125,4 +126,9 @@ case object GovernmentOrganisationJourney extends FeatureSwitch {
 case object WelshTranslation extends FeatureSwitch {
   override val name: String = s"$prefix.welsh-translation"
   override val displayText: String = "Enable welsh language"
+}
+
+case object AdditionalKnownFacts extends FeatureSwitch {
+  override val name: String = s"$prefix.additional-known-facts"
+  override val displayText: String = "Enable the two additional Known Facts"
 }
