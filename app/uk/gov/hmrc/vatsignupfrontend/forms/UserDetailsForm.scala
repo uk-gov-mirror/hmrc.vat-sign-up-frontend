@@ -98,7 +98,7 @@ object UserDetailsForm {
 
   val invalidNino: Constraint[String] = Constraint("nino.invalid")(
     nino => validateNot(
-      constraint = validNino(nino),
+      constraint = validNino(nino.filterNot(_.isWhitespace)),
       principalErrMsg = "error.invalid_nino"
     )
   )
@@ -152,7 +152,7 @@ object UserDetailsForm {
     trimRules = Map(
       userFirstName -> both,
       userLastName -> both,
-      userNino -> bothAndCompress
+      userNino -> all
     ),
     caseRules = Map(
       userNino -> upper
