@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
 
@@ -27,24 +27,6 @@
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
 
-@summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
-    <div class="tabular-data__entry divider--top--thick" id="@field-row">
-        <span class="tabular-data__heading tabular-data__heading--label" id="@field-question">
-        @question
-        </span>
-        <div class="tabular-data__data-1" id="@field-answer">
-            @if(enableHtml) {@Html(answer)} else {@answer}
-        </div>
-        @changeUrl match {
-            case Some(url) => {
-                <a class="tabular-data__data-2" href="@url" id="@field-edit">@Messages("base.change") <span class="visuallyhidden">@question</span> </a>
-            }
-            case _ => {
-                <div class="tabular-data__data-2"></div>
-            }
-        }
-    </div>
-}
 @businessEntityCheck() = @{
     val rowName = BusinessEntityId
     val rowQuestion = Messages("agent.check-your-answers.business_entity")
@@ -54,7 +36,7 @@
     }
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureBusinessEntityController.show().url
 
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 @utrNumber() = @{
     val rowName = UtrId
@@ -62,7 +44,7 @@
     val rowAnswer = utr
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
 
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 @placeOfBusiness() = @{
     val rowName = BusinessPostCodeId
@@ -70,7 +52,7 @@
     val rowAnswer = postCode.checkYourAnswersFormat
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.PartnershipPostCodeController.show().url
 
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 @partnershipCompanyNumber() = @{
     companyNumber match {
@@ -79,7 +61,7 @@
             val rowQuestion = Messages("agent.check-your-answers.company_number")
             val rowAnswer = crn
             val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url
-            summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")
     }
 }

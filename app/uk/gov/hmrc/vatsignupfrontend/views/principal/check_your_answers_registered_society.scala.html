@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
@@ -27,31 +27,12 @@
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
-@summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
-        <div class="tabular-data__entry divider--top--thick" id="@field-row">
-            <span class="tabular-data__heading tabular-data__heading--label" id="@field-question">
-            @question
-            </span>
-            <div class="tabular-data__data-1" id="@field-answer">
-                @if(enableHtml) {@Html(answer)} else {@answer}
-            </div>
-    @changeUrl match {
-        case Some(url) => {
-            <a class="tabular-data__data-2" href="@url" id="@field-edit">@Messages("base.change") <span class="visuallyhidden">@question</span> </a>
-        }
-        case _ => {
-            <div class="tabular-data__data-2"></div>
-        }
-    }
-        </div>
-}
-
 @yourCompanyNumber() = @{
     val rowName = CrnId
     val rowQuestion = Messages("principal.check-your-answers-registered-society.company_number")
     val rowAnswer = companyNumber
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureRegisteredSocietyCompanyNumberController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @yourCtReference() = @{
@@ -59,7 +40,7 @@
     val rowQuestion = Messages("principal.check-your-answers-registered-society.ct_reference")
     val rowAnswer = ctReference
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureRegisteredSocietyUtrController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @yourBusinessEntity() = @{
@@ -69,7 +50,7 @@
         case RegisteredSociety => Messages("principal.check-your-answers-registered-society.registered_society")
     }
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @principal_main_template(title = Messages("principal.check-your-answers-registered-society.title")) {
