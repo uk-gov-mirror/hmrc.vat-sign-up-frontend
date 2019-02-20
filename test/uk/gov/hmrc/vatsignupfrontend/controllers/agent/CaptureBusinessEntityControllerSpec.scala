@@ -191,8 +191,9 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           enable(GovernmentOrganisationJourney)
 
           val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(governmentOrganisation)))
-          status(result) shouldBe NOT_IMPLEMENTED
-
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.GovernmentOrganisationResolverController.resolve().url)
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GovernmentOrganisation))
         }
       }
 

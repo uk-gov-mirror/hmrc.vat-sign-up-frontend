@@ -184,6 +184,20 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "the business type is government organisation" should {
+      "redirect to government organisation resolver controller" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(GovernmentOrganisationJourney)
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> governmentOrganisation)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.GovernmentOrganisationResolverController.resolve().url)
+        )
+      }
+    }
+
     "redirect to cannot use service" when {
       "the business entity is other" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
