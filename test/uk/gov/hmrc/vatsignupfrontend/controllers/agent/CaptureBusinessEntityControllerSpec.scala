@@ -185,6 +185,17 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "the business entity is a government organisation" when {
+        "redirect to the NOT IMPLEMENTED" in {
+          mockAuthRetrieveAgentEnrolment()
+          enable(GovernmentOrganisationJourney)
+
+          val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(governmentOrganisation)))
+          status(result) shouldBe NOT_IMPLEMENTED
+
+        }
+      }
+
       "go to the cannot use service yet page" when {
         "the business entity is other" in {
           mockAuthRetrieveAgentEnrolment()
