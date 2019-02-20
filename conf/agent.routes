@@ -149,6 +149,8 @@ GET         /charity-resolver                                   uk.gov.hmrc.vats
 
 GET         /overseas-resolver                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.OverseasResolverController.resolve
 
+GET         /government-organisation-resolver                   uk.gov.hmrc.vatsignupfrontend.controllers.agent.GovernmentOrganisationResolverController.resolve
+
 # Capture Registered Society Company Number
 GET         /registered-society-company-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.show
 POST        /registered-society-company-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureRegisteredSocietyCompanyNumberController.submit

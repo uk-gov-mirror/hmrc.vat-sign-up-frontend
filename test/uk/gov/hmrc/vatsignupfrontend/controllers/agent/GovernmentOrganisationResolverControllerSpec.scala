@@ -22,37 +22,37 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GovernmentOrganisationJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser.{StoreAdministrativeDivisionFailureResponse, StoreAdministrativeDivisionSuccess}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreAdministrativeDivisionService
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser.{StoreGovernmentOrganisationInformationFailureResponse, StoreGovernmentOrganisationInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreGovernmentOrganisationInformationService
 
 import scala.concurrent.Future
 
-class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
-  with MockStoreAdministrativeDivisionService {
+class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+  with MockStoreGovernmentOrganisationInformationService {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(DivisionJourney)
+    enable(GovernmentOrganisationJourney)
   }
 
-  object TestDivisionResolverController extends DivisionResolverController(
+  object TestGovernmentOrganisationResolverController extends GovernmentOrganisationResolverController(
     mockControllerComponents,
-    mockStoreAdministrativeDivisionService
+    mockStoreGovernmentOrganisationInformationService
   )
 
-  lazy val testGetRequest = FakeRequest("GET", "/division-resolver")
+  lazy val testGetRequest = FakeRequest("GET", "/government-organisation-resolver")
 
-  "calling the resolve method on DivisionResolverController" when {
-    "the group feature switch is on" when {
-      "store division information returns StoreAdministrativeDivisionSuccess" should {
+  "calling the resolve method on GovernmentOrganisationController" when {
+    "the Gov organisation feature switch is on" when {
+      "store government organisation information returns StoreGovernmentOrganisationSuccess" should {
         "goto email" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Right(StoreAdministrativeDivisionSuccess)))
+          mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
-          val res = await(TestDivisionResolverController.resolve(testGetRequest.withSession(
+          val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
 
@@ -60,13 +60,15 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
           redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
         }
       }
-      "store division information returns StoreAdministrativeDivisionFailureResponse" should {
+      "store government organisation information returns StoreGovernmentOrganisationFailureResponse" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Left(StoreAdministrativeDivisionFailureResponse(INTERNAL_SERVER_ERROR))))
+          mockStoreGovernmentOrganisationInformation(testVatNumber)(
+            Future.successful(Left(StoreGovernmentOrganisationInformationFailureResponse(INTERNAL_SERVER_ERROR)))
+          )
 
           intercept[InternalServerException] {
-            await(TestDivisionResolverController.resolve(testGetRequest.withSession(
+            await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
               SessionKeys.vatNumberKey -> testVatNumber
             )))
           }
@@ -75,22 +77,21 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       "vat number is not in session" should {
         "goto capture vat number" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Right(StoreAdministrativeDivisionSuccess)))
+          mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
-          val res = await(TestDivisionResolverController.resolve(testGetRequest))
+          val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest))
 
           status(res) shouldBe SEE_OTHER
           redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)
         }
       }
     }
-
-    "the division feature switch is off" should {
+    "the Government Organisation feature switch is off" should {
       "throw not found exception" in {
-        disable(DivisionJourney)
+        disable(GovernmentOrganisationJourney)
 
         intercept[NotFoundException] {
-          await(TestDivisionResolverController.resolve(testGetRequest.withSession(
+          await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
         }
