@@ -114,41 +114,12 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
           mockAuthAdminRole()
           // TODO Redirect to error page
 
-          val testCrn = "ZZ12345"
+          val testCrn = "BR12345"
           val request = testPostRequest(testCrn)
 
           val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
           intercept[InternalServerException](await(result))
-        }
-      }
-
-      "company number failed validation - invalid format" should {
-        "throw an InternalServerException" in {
-          mockAuthAdminRole()
-          // Redirect to error page
-
-          val testCrn = "123A456 A"
-          val request = testPostRequest(testCrn)
-
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
-
-          intercept[InternalServerException](await(result))
-        }
-      }
-
-      "company number failed validation - zero is invalid" should {
-        "throw an InternalServerException" in {
-          mockAuthAdminRole()
-          // Redirect to error page
-
-          val testCrn = "0"
-          val request = testPostRequest(testCrn)
-
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
-
-          intercept[InternalServerException](await(result))
-
         }
       }
 

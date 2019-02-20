@@ -43,6 +43,8 @@ object Patterns {
 
   val alphanumericRegex = "^[A-Z0-9]*$"
 
+  val numericRegex = "^[0-9]*$"
+
   val postcodeRegex = """^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$|BFPO\s?[0-9]{1,3}$"""
 
   def validText(text: String): Boolean = text matches iso8859_1Regex
@@ -55,7 +57,7 @@ object Patterns {
 
   object CompanyNumber {
     val allNumbersRegex: Regex = "^([0-9]{1,8})$".r
-    val withPrefixRegex: Regex = "^([A-Za-z][A-Za-z0-9])([0-9]{0,6})$".r
+    val withPrefixRegex: Regex = "^([A-z][A-z0-9])([A-z0-9]{0,6})$".r
 
     // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/426891/uniformResourceIdentifiersCustomerGuide.pdf
     lazy val validCompanyNumberPrefixes = Set(

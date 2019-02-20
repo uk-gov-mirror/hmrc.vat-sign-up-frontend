@@ -26,7 +26,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJour
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{NonPartnershipEntity, PartnershipCompanyType}
@@ -50,14 +49,6 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
       case companieshouse.LimitedPartnership => LimitedPartnership
       case companieshouse.LimitedLiabilityPartnership => LimitedLiabilityPartnership
       case companieshouse.ScottishLimitedPartnership => ScottishLimitedPartnership
-    }
-  }
-
-  def validateCrnPrefix(companyNumber: String): Boolean = {
-    companyNumber match {
-      case CompanyNumber.allNumbersRegex(numbers) if numbers.toInt > 0 => true
-      case CompanyNumber.withPrefixRegex(prefix, numbers) if CompanyNumber.validCompanyNumberPrefixes.contains(prefix) && numbers.toInt > 0 => true
-      case _ => false
     }
   }
 
@@ -85,7 +76,12 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
               ))
             ),
           companyNumber =>
-            if (validateCrnPrefix(companyNumber)) {
+            if (companyNumber.startsWith("BR")) {
+              Future.successful(
+                throw new InternalServerException("Invalid CRN")
+                // TODO Redirect to error page
+              )
+            } else {
               getCompanyNameService.getCompanyName(companyNumber) map {
                 case Right(GetCompanyNameSuccess(companyName, companyType: PartnershipCompanyType)) =>
                   val partnershipEntity = toPartnershipEntityType(companyType)
@@ -101,15 +97,9 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
                 case Left(GetCompanyNameFailureResponse(status)) =>
                   throw new InternalServerException(s"getCompanyName failed: status=$status")
               }
-            } else {
-              Future.successful(
-                throw new InternalServerException("Invalid CRN")
-                // TODO Redirect to error page
-              )
             }
         )
       }
-
   }
 
 }

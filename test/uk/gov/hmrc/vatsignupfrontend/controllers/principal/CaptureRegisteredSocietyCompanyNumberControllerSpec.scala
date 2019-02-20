@@ -101,7 +101,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
       "redirect to the 'Could not confirm business' page" in {
         mockAuthAdminRole()
 
-        val testCrn = "ZZ12345"
+        val testCrn = "BR12345"
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
@@ -111,35 +111,6 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
       }
     }
 
-    "company number failed validation - invalid format" should {
-      "redirect to the 'Could not confirm business' page" in {
-        mockAuthAdminRole()
-        // Redirect to error page
-
-        val testCrn = "123A456 A"
-        val request = testPostRequest(testCrn)
-
-        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
-
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
-      }
-    }
-
-    "company number failed validation - zero is invalid" should {
-      "redirect to the 'Could not confirm business' page" in {
-        mockAuthAdminRole()
-        // Redirect to error page
-
-        val testCrn = "0"
-        val request = testPostRequest(testCrn)
-
-        val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
-
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
-      }
-    }
     "get company name returned not found" should {
       "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()

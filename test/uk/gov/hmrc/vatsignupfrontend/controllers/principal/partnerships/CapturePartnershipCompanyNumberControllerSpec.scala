@@ -100,7 +100,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
       "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()
 
-        val testCrn = "ZZ12345"
+        val testCrn = "BR12345"
         val request = testPostRequest(testCrn)
 
         val result = TestCaptureCompanyNumberController.submit(request)
@@ -110,33 +110,6 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
       }
     }
 
-    "company number failed validation - invalid format" should {
-      "redirect to Could Not Confirm Company page" in {
-        mockAuthAdminRole()
-
-        val testCrn = "123A456 A"
-        val request = testPostRequest(testCrn)
-
-        val result = TestCaptureCompanyNumberController.submit(request)
-
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
-      }
-    }
-
-    "company number failed validation - zero is invalid" should {
-      "redirect to Could Not Confirm Company page" in {
-        mockAuthAdminRole()
-
-        val testCrn = "0"
-        val request = testPostRequest(testCrn)
-
-        val result = TestCaptureCompanyNumberController.submit(request)
-
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
-      }
-    }
     "get company name returned not found" should {
       "redirect to Could Not Confirm Company page" in {
         mockAuthAdminRole()
