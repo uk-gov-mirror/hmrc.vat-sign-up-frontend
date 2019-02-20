@@ -86,6 +86,15 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
           validateCompanyNumber(noPaddingResult)
         }
       }
+      "the company number has a prefix and a suffix" should {
+        "not pad the company number" in {
+          validCompanyNumberPrefixes.foreach { prefix =>
+            val noPaddingResult = padCompanyNumber(prefix + (randomDigit * 5) + "R")
+            noPaddingResult shouldBe prefix + (randomDigit * 5) + "R"
+            validateCompanyNumber(noPaddingResult)
+          }
+        }
+      }
     }
     "illegal company number" should {
       "throw exception" in {

@@ -25,7 +25,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.PartnershipCompanyType
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
@@ -40,14 +39,6 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = false, isPartnership = false)
-
-  def validateCrnPrefix(companyNumber: String): Boolean = {
-    companyNumber match {
-      case CompanyNumber.allNumbersRegex(numbers) if numbers.toInt > 0 => true
-      case CompanyNumber.withPrefixRegex(prefix, numbers) if CompanyNumber.validCompanyNumberPrefixes.contains(prefix) && numbers.toInt > 0 => true
-      case _ => false
-    }
-  }
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>
@@ -67,7 +58,12 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
               BadRequest(capture_company_number(formWithErrors, routes.CaptureCompanyNumberController.submit()))
             ),
           companyNumber =>
-            if (validateCrnPrefix(companyNumber)) {
+            if (companyNumber.startsWith("BR")) {
+              Future.successful(
+                Redirect(routes.CompanyNameNotFoundController.show())
+                // should be removed when NonUK UK established is live
+              )
+            } else {
               getCompanyNameService.getCompanyName(companyNumber) map {
                 case Right(GetCompanyNameSuccess(_, _: PartnershipCompanyType)) =>
                   Redirect(routes.PartnershipAsCompanyErrorController.show())
@@ -82,10 +78,6 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                 case Left(GetCompanyNameFailureResponse(status)) =>
                   throw new InternalServerException(s"getCompanyName failed: status=$status")
               }
-            } else {
-              Future.successful(
-                Redirect(routes.CompanyNameNotFoundController.show())
-              )
             }
         )
       }

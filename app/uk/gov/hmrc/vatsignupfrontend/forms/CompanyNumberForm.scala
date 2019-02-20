@@ -19,9 +19,10 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraint
-import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PreprocessedForm
+import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.{PreprocessedForm, PrevalidationAPI}
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.MappingUtil._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.alphanumericRegex
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 
 object CompanyNumberForm {
@@ -40,8 +41,17 @@ object CompanyNumberForm {
   def crnNotEntered(isAgent: Boolean, isPartnership: Boolean): Constraint[String] = Constraint("companyNumber.notEntered")(
     companyNumber => {
 
-      val principalErrMsg = if (isPartnership) "error.principal.partnership_company_number_not_entered" else "error.principal.company_number_not_entered"
-      val agentErrMsg = if (isPartnership) "error.agent.partnership_company_number_not_entered" else "error.agent.company_number_not_entered"
+      val principalErrMsg =
+        if (isPartnership)
+          "error.principal.partnership_company_number_not_entered"
+        else
+          "error.principal.company_number_not_entered"
+
+      val agentErrMsg =
+        if (isPartnership)
+          "error.agent.partnership_company_number_not_entered"
+        else
+          "error.agent.company_number_not_entered"
 
       validate(
         constraint = companyNumber.isEmpty,
@@ -52,17 +62,29 @@ object CompanyNumberForm {
     }
   )
 
+  def containsAlphanumericCharacters: Constraint[String] = Constraint("companyNumber.alphanumeric")(
+    companyNumber => validateNot(
+      constraint = companyNumber.toUpperCase matches alphanumericRegex,
+      principalErrMsg = "error.invalid_company_number_characters"
+    )
+  )
+
+
   private def companyNumberValidationForm(isAgent: Boolean, isPartnership: Boolean) = Form(
     single(
-      companyNumber -> optText.toText.verifying(crnNotEntered(isAgent = isAgent, isPartnership = isPartnership) andThen withinMinAndMaxLength)
+      companyNumber -> optText.toText.verifying(
+        crnNotEntered(isAgent, isPartnership)
+          andThen withinMinAndMaxLength
+          andThen containsAlphanumericCharacters
+      )
     )
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  def companyNumberForm(isAgent: Boolean, isPartnership: Boolean) = PreprocessedForm(
-    validation = companyNumberValidationForm(isAgent = isAgent, isPartnership = isPartnership),
+  def companyNumberForm(isAgent: Boolean, isPartnership: Boolean): PrevalidationAPI[String] = PreprocessedForm(
+    validation = companyNumberValidationForm(isAgent, isPartnership),
     trimRules = Map(companyNumber -> all),
     caseRules = Map(companyNumber -> upper)
   )
