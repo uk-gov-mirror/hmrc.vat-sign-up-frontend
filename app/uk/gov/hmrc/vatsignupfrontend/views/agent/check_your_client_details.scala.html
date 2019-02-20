@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryRowHelper, summaryErrorHelper, continueButton}
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes
@@ -25,31 +25,12 @@
 @(userDetailsModel: UserDetailsModel, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.ConfirmClientIdConstants._
 
-@summaryRow(field: String, question: String, answer: String, changeUrl: Option[String] = None, enableHtml: Boolean = false) = {
-        <div class="tabular-data__entry divider--top--thick" id="@field-row">
-            <span class="tabular-data__heading tabular-data__heading--label" id="@field-question">
-            @question
-            </span>
-            <div class="tabular-data__data-1" id="@field-answer">
-                @if(enableHtml) {@Html(answer)} else {@answer}
-            </div>
-    @changeUrl match {
-        case Some(url) => {
-            <a class="tabular-data__data-2" href="@url" id="@field-edit">@Messages("base.change") <span class="visuallyhidden">@question</span> </a>
-        }
-        case _ => {
-            <div class="tabular-data__data-2"></div>
-        }
-    }
-        </div>
-}
-
 @firstName(userDetailsModel: UserDetailsModel) = @{
     val rowName = FirstNameId
     val rowQuestion = Messages("agent.client-details.summary.first_name")
     val rowAnswer = userDetailsModel.firstName
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @lastName(userDetailsModel: UserDetailsModel) = @{
@@ -57,7 +38,7 @@
     val rowQuestion = Messages("agent.client-details.summary.last_name")
     val rowAnswer = userDetailsModel.lastName
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @nino(userDetailsModel: UserDetailsModel) = @{
@@ -65,7 +46,7 @@
     val rowQuestion = Messages("agent.client-details.summary.nino")
     val rowAnswer = userDetailsModel.nino
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 @dob(userDetailsModel: UserDetailsModel) = @{
@@ -73,7 +54,7 @@
     val rowQuestion = Messages("agent.client-details.summary.dob")
     val rowAnswer = userDetailsModel.dateOfBirth.toCheckYourAnswersDateFormat
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureClientDetailsController.show().url
-    summaryRow(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
 
