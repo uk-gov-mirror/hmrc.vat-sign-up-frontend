@@ -17,31 +17,31 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
+@import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
 @import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 @import uk.gov.hmrc.vatsignupfrontend.models.YesNo
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
 
-@(multipleVatCheckForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(previousVatReturnForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.multiple_vat_check.title"), bodyClasses = None, form = Some(multipleVatCheckForm)) {
+@principal_main_template(title = Messages("principal.previous_vat_return.title"), bodyClasses = None, form = Some(previousVatReturnForm)) {
 
-    @summaryErrorHelper(multipleVatCheckForm)
+    @summaryErrorHelper(previousVatReturnForm)
 
-    <h1 class="heading-large">@Messages("principal.multiple_vat_check.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.previous_vat_return.heading")</h1>
 
     @form(action = postAction) {
 
         @radioHelper(
-            parentForm = multipleVatCheckForm,
+            parentForm = previousVatReturnForm,
             inline = true,
             options = Seq(
                 (option_yes, Messages("base.yes")),
                 (option_no, Messages("base.no"))
             ),
-            legend = Messages("principal.multiple_vat_check.heading"),
-            field = multipleVatCheckForm(yesNo)
+            legend = Messages("principal.previous_vat_return.heading"),
+            field = previousVatReturnForm(yesNo)
         )
 
         @continueButton()
