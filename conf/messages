@@ -145,7 +145,7 @@ error.no_entry_registered_society_utr.summary                          = Enter y
 error.character_limit_registered_society_utr.field                     = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.character_limit_registered_society_utr.summary                   = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.invalid_registered_society_utr.field                             = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
-error.invalid_registered_society_.summary                              = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
+error.invalid_registered_society_utr.summary                           = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
