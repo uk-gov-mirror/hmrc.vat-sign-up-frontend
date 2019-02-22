@@ -24,6 +24,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -49,18 +50,38 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   }
 
   "Calling the submit action of the Business PostCode controller" when {
-    "form successfully submitted" should {
-      "goto check your answers page" in {
-        mockAuthAdminRole()
+    "the feature switch is disabled" when {
+      "the form is successfully submitted" should {
+        "goto check your answers page" in {
+          mockAuthAdminRole()
 
-        implicit val request = testPostRequest(testBusinessPostcode.postCode)
-        val result = TestBusinessPostCodeController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
+          implicit val request = testPostRequest(testBusinessPostcode.postCode)
+          val result = TestBusinessPostCodeController.submit(request)
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
 
-        result.session get SessionKeys.businessPostCodeKey should contain(
-          Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
-        )
+          result.session get SessionKeys.businessPostCodeKey should contain(
+            Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
+          )
+        }
+      }
+
+      "the feature switch is enabled" when {
+        "the form is successfully submitted" should {
+          "redirect to the previous vat return page" in {
+            mockAuthAdminRole()
+            enable(AdditionalKnownFacts)
+
+            implicit val request = testPostRequest(testBusinessPostcode.postCode)
+            val result = TestBusinessPostCodeController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
+
+            result.session get SessionKeys.businessPostCodeKey should contain(
+              Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
+            )
+          }
+        }
       }
     }
 

@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
@@ -50,9 +51,17 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
               BadRequest(principal_place_of_business(formWithErrors, routes.BusinessPostCodeController.submit()))
             ),
           businessPostCode =>
-            Future.successful(
-              Redirect(routes.CheckYourAnswersController.show()).addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
-            )
+            if (isEnabled(AdditionalKnownFacts))
+              Future.successful(
+                Redirect(routes.PreviousVatReturnController.show())
+                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+              )
+            else {
+              Future.successful(
+                Redirect(routes.CheckYourAnswersController.show())
+                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+              )
+            }
         )
       }
   }
