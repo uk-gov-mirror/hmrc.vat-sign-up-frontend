@@ -146,6 +146,8 @@ error.character_limit_registered_society_utr.field                     = Registe
 error.character_limit_registered_society_utr.summary                   = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.invalid_registered_society_utr.field                             = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
 error.invalid_registered_society_utr.summary                           = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
+error.no_month_selected.field                                          = Select a month
+error.no_month_selected.summary                                        = Select a month
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -641,6 +643,23 @@ principal.assistant_credential.line_1                                  = You can
 ## Principal Multiple Vat Check
 principal.multiple_vat_check.title                                     = Do you have more than one VAT registered business?
 principal.multiple_vat_check.heading                                   = Do you have more than one VAT registered business?
+
+## Principal Capture Last Return Month Period
+principal.capture_last_return_month_period.title                       = When was your last VAT return date?
+principal.capture_last_return_month_period.heading                     = When was your most recent VAT payment?
+principal.capture_last_return_month_period.line                        = Select the month of your most recent VAT payment. You can find your most recent VAT payment in your online business tax account.
+principal.capture_last_return_month_period.january                     = January
+principal.capture_last_return_month_period.february                    = February
+principal.capture_last_return_month_period.march                       = March
+principal.capture_last_return_month_period.april                       = April
+principal.capture_last_return_month_period.may                         = May
+principal.capture_last_return_month_period.june                        = June
+principal.capture_last_return_month_period.july                        = July
+principal.capture_last_return_month_period.august                      = August
+principal.capture_last_return_month_period.september                   = September
+principal.capture_last_return_month_period.october                     = October
+principal.capture_last_return_month_period.november                    = November
+principal.capture_last_return_month_period.december                    = December
 
 ## Sign Up Complete Client
 sign_up_complete_client.title                                          = You have added VAT to your business tax account
