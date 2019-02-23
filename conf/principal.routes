@@ -279,3 +279,6 @@ GET         /error/already-signed-up                            uk.gov.hmrc.vats
 # Principal Cannot Sign Up Another Account
 GET         /error/cannot-sign-up-another-account               uk.gov.hmrc.vatsignupfrontend.controllers.principal.CannotSignUpAnotherAccountController.show
 
+# Are you currently submitting VAT returns page
+GET         /submitted-vat-return                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.PreviousVatReturnController.show
+POST        /submitted-vat-return                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.PreviousVatReturnController.submit

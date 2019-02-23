@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -36,15 +37,32 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
   }
 
   "POST /business-postcode" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse())
+    "the feature switch is disabled" when {
+      "redirect to check your answers" in {
+        stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode.postCode)
+        val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode.postCode)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CheckYourAnswersController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersController.show().url)
+        )
+      }
+
+      "the feature switch is enabled" when {
+        "redirect to previous vat return page" in {
+          stubAuth(OK, successfulAuthResponse())
+          enable(AdditionalKnownFacts)
+
+          val res = post("/business-postcode")(BusinessPostCodeForm.businessPostCode -> testBusinessPostCode.postCode)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.PreviousVatReturnController.show().url)
+          )
+        }
+      }
     }
   }
+
 }

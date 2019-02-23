@@ -21,47 +21,47 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{AdditionalKnownFacts, FeatureSwitch, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.principal_place_of_business
+import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.previous_vat_return
 
 import scala.concurrent.Future
 
 @Singleton
-class BusinessPostCodeController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+class PreviousVatReturnController @Inject()(val controllerComponents: ControllerComponents)
 
-  def show: Action[AnyContent] = Action.async {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(AdditionalKnownFacts)){
+
+  val show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         Future.successful(
-          Ok(principal_place_of_business(businessPostCodeForm.form, routes.BusinessPostCodeController.submit()))
+          Ok(previous_vat_return(previousVatReturnForm, routes.PreviousVatReturnController.submit()))
         )
       }
   }
 
-  def submit: Action[AnyContent] = Action.async {
+  val submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        businessPostCodeForm.bindFromRequest.fold(
+        previousVatReturnForm.bindFromRequest.fold(
           formWithErrors =>
             Future.successful(
-              BadRequest(principal_place_of_business(formWithErrors, routes.BusinessPostCodeController.submit()))
-            ),
-          businessPostCode =>
-            if (isEnabled(AdditionalKnownFacts))
+              BadRequest(previous_vat_return(formWithErrors, routes.PreviousVatReturnController.submit()))
+            ), {
+            case Yes =>
               Future.successful(
-                Redirect(routes.PreviousVatReturnController.show())
-                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+                NotImplemented //TODO: Redirect to Box 5 page
+                  .addingToSession(SessionKeys.previousVatReturnKey -> Yes.toString)
               )
-            else {
+            case No =>
               Future.successful(
                 Redirect(routes.CheckYourAnswersController.show())
-                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+                  .addingToSession(SessionKeys.previousVatReturnKey -> No.toString)
               )
-            }
+          }
         )
       }
   }

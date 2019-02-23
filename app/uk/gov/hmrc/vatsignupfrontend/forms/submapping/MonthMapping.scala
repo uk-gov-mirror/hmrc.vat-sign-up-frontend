@@ -42,18 +42,14 @@ object MonthMapping {
         case Some(`option_feb`) => Right(February)
         case Some(`option_mar`) => Right(March)
         case Some(`option_apr`) => Right(April)
-
         case Some(`option_may`) => Right(May)
         case Some(`option_jun`) => Right(June)
         case Some(`option_jul`) => Right(July)
         case Some(`option_aug`) => Right(August)
-
         case Some(`option_sep`) => Right(September)
         case Some(`option_oct`) => Right(October)
         case Some(`option_nov`) => Right(November)
         case Some(`option_dec`) => Right(December)
-
-
         case _ => Left(Seq(FormError(key, error)))
       }
     }

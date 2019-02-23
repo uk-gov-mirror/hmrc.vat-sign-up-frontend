@@ -145,7 +145,7 @@ error.no_entry_registered_society_utr.summary                          = Enter y
 error.character_limit_registered_society_utr.field                     = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.character_limit_registered_society_utr.summary                   = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.invalid_registered_society_utr.field                             = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
-error.invalid_registered_society_.summary                              = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
+error.invalid_registered_society_utr.summary                           = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
 error.no_month_selected.field                                          = Select a month
 error.no_month_selected.summary                                        = Select a month
 
