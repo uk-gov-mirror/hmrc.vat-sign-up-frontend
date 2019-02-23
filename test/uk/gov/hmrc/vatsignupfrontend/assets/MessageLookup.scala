@@ -920,4 +920,11 @@ object MessageLookup {
     val line3 = "If you do not have a Government Gateway user ID for your business, you'll need to create a new account."
     val buttonText = "Create a Government Gateway user ID"
   }
+
+  object CaptureBoxFiveValue {
+    val heading = "What is your Box 5 amount?"
+    val title = heading + ServiceName.principalSuffix
+    val line = "Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online."
+  }
+
 }
