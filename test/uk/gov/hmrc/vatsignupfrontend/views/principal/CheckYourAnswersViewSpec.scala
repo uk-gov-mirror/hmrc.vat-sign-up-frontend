@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import play.api.http.NotImplementedHttpRequestHandler
 import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
@@ -40,14 +41,20 @@ class CheckYourAnswersViewSpec extends ViewSpec {
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers(
+  def page(optBox5Value: Option[String] = None,
+           optLastReturnMonthPeriod: Option[String] = None
+          ): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers(
     vatNumber = testVatNumber,
     registrationDate = testRegistrationDate,
     postCode = testBusinessPostcode,
+    optBox5Value = optBox5Value,
+    optLastReturnMonthPeriod = optLastReturnMonthPeriod,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
-  lazy val doc = Jsoup.parse(page.body)
+  lazy val pageDefault = page()
+
+  lazy val pageWithAdditionalKnownFacts = page(Some(testBoxFiveValue), Some(testLastReturnMonthPeriod))
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -71,7 +78,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
       name = "Check your answers View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = pageDefault
     )
 
     testPage.shouldHaveH2(messages.subHeading)
@@ -79,7 +86,8 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
   }
 
-  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
+  def sectionTest(page: Html, sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]): Unit = {
+    lazy val doc = Jsoup.parse(page.body)
     val accountingPeriod = doc.getElementById(sectionId)
     val question = doc.getElementById(questionId(sectionId))
     val answer = doc.getElementById(answerId(sectionId))
@@ -99,45 +107,77 @@ class CheckYourAnswersViewSpec extends ViewSpec {
   }
 
   "display the correct info for VatNumber" in {
-    val sectionId = VatNumberId
-    val expectedQuestion = messages.yourVatNumber
-    val expectedAnswer = testVatNumber
     val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
 
     sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
+      page = pageDefault,
+      sectionId = VatNumberId,
+      expectedQuestion = messages.yourVatNumber,
+      expectedAnswer = testVatNumber,
       expectedEditLink = Some(expectedEditLink)
     )
   }
 
   "display the correct info for VatRegistrationDate" in {
-    val sectionId = VatRegistrationDateId
-    val expectedQuestion = messages.vatRegistrationDate
-    val expectedAnswer = testRegistrationDate.toCheckYourAnswersDateFormat
     val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url
 
     sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
+      page = pageDefault,
+      sectionId = VatRegistrationDateId,
+      expectedQuestion = messages.vatRegistrationDate,
+      expectedAnswer = testRegistrationDate.toCheckYourAnswersDateFormat,
       expectedEditLink = Some(expectedEditLink)
     )
   }
 
   "display the correct info for BusinessPostCode" in {
-    val sectionId = BusinessPostCodeId
-    val expectedQuestion = messages.businessPostCode
-    val expectedAnswer = testBusinessPostcode.checkYourAnswersFormat
     val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
 
     sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
+      page = pageDefault,
+      sectionId = BusinessPostCodeId,
+      expectedQuestion = messages.businessPostCode,
+      expectedAnswer = testBusinessPostcode.checkYourAnswersFormat,
       expectedEditLink = Some(expectedEditLink)
     )
+  }
+
+  "Check your answers view with additional known facts" should {
+
+    val testPage = TestView(
+      name = "Check your answers View",
+      title = messages.title,
+      heading = messages.heading,
+      page = pageWithAdditionalKnownFacts
+    )
+
+    testPage.shouldHaveH2(messages.subHeading)
+
+    testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
+
+    "display the correct answer for Box5Value" in {
+      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBoxFiveValueController.show().url
+
+      sectionTest(
+        page = pageWithAdditionalKnownFacts,
+        sectionId = VatBox5ValueId,
+        expectedQuestion = messages.box5Value,
+        expectedAnswer = s"£$testBoxFiveValue",
+        expectedEditLink = Some(expectedEditLink)
+      )
+    }
+
+    "display the correct answer for LastReturnMonth" in {
+      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url
+
+      sectionTest(
+        page = pageWithAdditionalKnownFacts,
+        sectionId = VatLastReturnMonthId,
+        expectedQuestion = messages.lastReturnMonth,
+        expectedAnswer = testLastReturnMonthPeriod,
+        expectedEditLink = Some(expectedEditLink)
+      )
+    }
   }
 
 }
