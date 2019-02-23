@@ -142,6 +142,13 @@ object MessageLookup {
     val radioNo: String = "no"
   }
 
+  object CaptureLastReturnMonthPeriod {
+    val heading: String = "When was your most recent VAT payment?"
+    val title: String = "When was your last VAT return date?" + ServiceName.principalSuffix
+    val line: String = "Select the month of your most recent VAT payment. You can find your most recent VAT payment in your online business tax account."
+    val months: List[String] = List("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+  }
+
   object ClientDetails {
     val heading = "Enter your client's details"
     val title = heading + ServiceName.agentSuffix
