@@ -73,7 +73,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
                              vatRegistrationDate: DateModel,
                              isFromBta: Boolean
                             )(implicit hc: HeaderCarrier) =
-    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate, isFromBta) map {
+    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate, None, None, isFromBta = isFromBta) map {
       case Right(VatNumberStored(isOverseas)) if isOverseas => Redirect(routes.OverseasResolverController.resolve())
       case Right(VatNumberStored(_)) => Redirect(routes.CaptureBusinessEntityController.show())
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())

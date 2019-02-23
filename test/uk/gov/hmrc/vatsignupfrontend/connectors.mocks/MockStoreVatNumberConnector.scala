@@ -50,12 +50,16 @@ trait MockStoreVatNumberConnector extends MockitoSugar with BeforeAndAfterEach {
   def mockStoreVatNumber(vatNumber: String,
                          postCode: String,
                          registrationDate: String,
+                         optBox5Figure: Option[String],
+                         optLastReturnMonth: Option[String],
                          isFromBta: Boolean
                         )(response: Future[StoreVatNumberResponse]): Unit =
     when(mockStoreVatNumberConnector.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(postCode),
       ArgumentMatchers.eq(registrationDate),
+      ArgumentMatchers.eq(optBox5Figure),
+      ArgumentMatchers.eq(optLastReturnMonth),
       ArgumentMatchers.eq(isFromBta)
     )(
       ArgumentMatchers.any[HeaderCarrier]

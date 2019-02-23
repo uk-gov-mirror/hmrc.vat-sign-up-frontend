@@ -17,8 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -34,6 +33,8 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
   val vatNumberKey = "vatNumber"
   val postCodeKey = "postCode"
   val registrationDateKey = "registrationDate"
+  val box5FigureKey = "lastNetDue"
+  val lastReturnMonthKey = "lastReturnMonthPeriod"
   val isFromBtaKey = "isFromBta"
 
   def storeVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
@@ -47,14 +48,24 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
   def storeVatNumber(vatNumber: String,
                      postCode: String,
                      registrationDate: String,
+                     optBox5Figure: Option[String],
+                     optLastReturnMonth: Option[String],
                      isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
     http.POST[JsObject, StoreVatNumberResponse](
       applicationConfig.storeVatNumberUrl,
       Json.obj(vatNumberKey -> vatNumber,
         postCodeKey -> postCode,
-        registrationDateKey -> registrationDate,
-        isFromBtaKey -> isFromBta
+        registrationDateKey -> registrationDate
       )
+      ++ optionalValue(box5FigureKey, optBox5Figure)
+      ++ optionalValue(lastReturnMonthKey, optLastReturnMonth)
+      ++ Json.obj(isFromBtaKey -> isFromBta)
     )
 
+  private def optionalValue[T](key: String, optValue: Option[T])(implicit writes: Writes[T]): JsObject = {
+    optValue match {
+      case Some(value) => Json.obj(key -> value)
+      case None => Json.obj()
+    }
+  }
 }

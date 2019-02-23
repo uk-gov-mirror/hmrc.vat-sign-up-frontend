@@ -187,39 +187,115 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
   "storeVatNumber with supplied known facts" when {
     "the connector returns VatNumberStored" should {
       "return VatNumberStored(false) when the company is not overseas" in {
-        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
+        mockStoreVatNumber(
+          testVatNumber,
+          testBusinessPostcode.postCode,
+          testDateModel.toLocalDate.toString,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        )(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
 
-        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+        val res = await(TestStoreVatNumberService.storeVatNumber(
+          testVatNumber,
+          testBusinessPostcode,
+          testDateModel,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        ))
+
         res shouldBe Right(VatNumberStored(isOverseas = false))
       }
     }
     "the store vat number connector returns AlreadySubscribed" when {
       "the claim subscription connector returns SubscriptionClaimed" should {
         "return SubscriptionClaimed" in {
-          mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
-          mockClaimSubscription(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false)(Future.successful(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed)))
+          mockStoreVatNumber(
+            testVatNumber,
+            testBusinessPostcode.postCode,
+            testDateModel.toLocalDate.toString,
+            Some(testBox5Figure),
+            Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
 
-          val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+          mockClaimSubscription(
+            testVatNumber,
+            testBusinessPostcode,
+            testDateModel,
+            isFromBta = false
+          )(Future.successful(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed)))
+
+          val res = await(TestStoreVatNumberService.storeVatNumber(
+            testVatNumber,
+            testBusinessPostcode,
+            testDateModel,
+            Some(testBox5Figure),
+            Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          ))
+
           res shouldBe Right(SubscriptionClaimed)
         }
       }
       "the claim subscription connector returns AlreadyEnrolledOnDifferentCredential" should {
         "return VatNumberAlreadyEnrolled" in {
-          mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
-          mockClaimSubscription(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false)(Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential)))
+          mockStoreVatNumber(
+            testVatNumber,
+            testBusinessPostcode.postCode,
+            testDateModel.toLocalDate.toString,
+            Some(testBox5Figure),
+            Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
 
-          val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+          mockClaimSubscription(
+            testVatNumber,
+            testBusinessPostcode,
+            testDateModel,
+            isFromBta = false
+          )(Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential)))
+
+          val res = await(TestStoreVatNumberService.storeVatNumber(
+            testVatNumber,
+            testBusinessPostcode,
+            testDateModel,
+            Some(testBox5Figure),
+            Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          ))
+
           res shouldBe Left(VatNumberAlreadyEnrolled)
         }
       }
       "the claim subscription connector returns anything else" should {
         "throw an InternalServerException" in {
-          mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
-          mockClaimSubscription(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false)(
+          mockStoreVatNumber(
+            testVatNumber,
+            testBusinessPostcode.postCode,
+            testDateModel.toLocalDate.toString,
+            Some(testBox5Figure),
+            Some(testLastReturnMonthPeriod),
+            isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
+
+          mockClaimSubscription(
+            testVatNumber,
+            testBusinessPostcode,
+            testDateModel,
+            isFromBta = false
+          )(
             Future.successful(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(INTERNAL_SERVER_ERROR)))
           )
 
-          intercept[InternalServerException](await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false)))
+          intercept[InternalServerException](await(TestStoreVatNumberService.storeVatNumber(
+            testVatNumber,
+            testBusinessPostcode,
+            testDateModel,
+            Some(testBox5Figure),
+            Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )))
         }
       }
     }
@@ -227,9 +303,24 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
       "return IneligibleVatNumber and pass through the migratable dates" in {
         val testMigratableDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
-        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.IneligibleVatNumber(testMigratableDates))))
+        mockStoreVatNumber(
+          testVatNumber,
+          testBusinessPostcode.postCode,
+          testDateModel.toLocalDate.toString,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        )(Future.successful(Left(StoreVatNumberHttpParser.IneligibleVatNumber(testMigratableDates))))
 
-        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+        val res = await(TestStoreVatNumberService.storeVatNumber(
+          testVatNumber,
+          testBusinessPostcode,
+          testDateModel,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        ))
+
         res shouldBe Left(IneligibleVatNumber(testMigratableDates))
       }
     }
@@ -237,29 +328,73 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
       "return KnownFactsMismatch and pass through the migratable dates" in {
         val testMigratableDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
-        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(Future.successful(Left(StoreVatNumberHttpParser.KnownFactsMismatch)))
+        mockStoreVatNumber(
+          testVatNumber,
+          testBusinessPostcode.postCode,
+          testDateModel.toLocalDate.toString,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        )(Future.successful(Left(StoreVatNumberHttpParser.KnownFactsMismatch)))
 
-        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+        val res = await(TestStoreVatNumberService.storeVatNumber(
+          testVatNumber,
+          testBusinessPostcode,
+          testDateModel,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        ))
+
         res shouldBe Left(KnownFactsMismatch)
       }
     }
     "the connector returns VatMigrationInProgress" should {
       "return VatMigrationInProgress" in {
-        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(
+        mockStoreVatNumber(
+          testVatNumber,
+          testBusinessPostcode.postCode,
+          testDateModel.toLocalDate.toString,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        )(
           Future.successful(Left(StoreVatNumberHttpParser.VatMigrationInProgress))
         )
 
-        val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false))
+        val res = await(TestStoreVatNumberService.storeVatNumber(
+          testVatNumber,
+          testBusinessPostcode,
+          testDateModel,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        ))
+
         res shouldBe Left(VatMigrationInProgress)
       }
     }
     "the connector returns anything else" should {
       "throw an InternalServerException" in {
-        mockStoreVatNumber(testVatNumber, testBusinessPostcode.postCode, testDateModel.toLocalDate.toString, isFromBta = false)(
+        mockStoreVatNumber(
+          testVatNumber,
+          testBusinessPostcode.postCode,
+          testDateModel.toLocalDate.toString,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        )(
           Future.successful(Left(StoreVatNumberHttpParser.StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR)))
         )
 
-        intercept[InternalServerException](await(TestStoreVatNumberService.storeVatNumber(testVatNumber, testBusinessPostcode, testDateModel, isFromBta = false)))
+        intercept[InternalServerException](await(TestStoreVatNumberService.storeVatNumber(
+          testVatNumber,
+          testBusinessPostcode,
+          testDateModel,
+          Some(testBox5Figure),
+          Some(testLastReturnMonthPeriod),
+          isFromBta = false
+        )))
       }
     }
   }
