@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.vat_registration_date
 
@@ -41,16 +42,27 @@ class CaptureVatRegistrationDateController @Inject()(val controllerComponents: C
   }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
+
+    val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
+
     authorised() {
       vatRegistrationDateForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(vat_registration_date(formWithErrors, routes.CaptureVatRegistrationDateController.submit()))
           ),
-        vatRegistrationDate =>
-          Future.successful(Redirect(routes.BusinessPostCodeController.show().url)
-            .addingToSession(SessionKeys.vatRegistrationDateKey, vatRegistrationDate))
+        vatRegistrationDate => {
+          optBusinessEntity match {
+            case Some(entity) if entity == Overseas.toString =>
+              Future.successful(Redirect(routes.PreviousVatReturnController.show().url))
+            case _ =>
+              Future.successful(Redirect(routes.BusinessPostCodeController.show().url))
+          }
+        } map (_.addingToSession(SessionKeys.vatRegistrationDateKey, vatRegistrationDate))
       )
+
     }
+
   }
+
 }
