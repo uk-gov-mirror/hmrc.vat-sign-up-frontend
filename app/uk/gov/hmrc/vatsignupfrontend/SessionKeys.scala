@@ -39,5 +39,6 @@ object SessionKeys {
   val migratableDatesKey = "MigratableDates"
   val ninoSourceKey = "NinoSource"
   val previousVatReturnKey = "previousVatReturn"
+  val lastReturnMonthPeriodKey = "lastReturnMonthPeriod"
   val boxFiveValueKey = "boxFiveValue"
 }
