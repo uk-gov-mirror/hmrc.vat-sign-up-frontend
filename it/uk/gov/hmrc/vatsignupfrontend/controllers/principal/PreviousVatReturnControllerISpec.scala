@@ -57,13 +57,16 @@ class PreviousVatReturnControllerISpec extends ComponentSpecBase with CustomMatc
   }
 
   "POST /submitted-vat-return" should {
-    "return a redirect to vat number" when {
+    "redirect to capture box 5 figure page" when {
       "form value is YES" in {
         stubAuth(OK, successfulAuthResponse())
 
         val res = post("/submitted-vat-return")(PreviousVatReturnForm.yesNo -> YesNoMapping.option_yes)
 
-        res should have (httpStatus(NOT_IMPLEMENTED))
+        res should have (
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBox5FigureController.show().url)
+        )
       }
     }
 

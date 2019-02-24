@@ -20,35 +20,35 @@ import org.scalatest.Matchers._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import uk.gov.hmrc.vatsignupfrontend.forms.BoxFiveValueForm._
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testBoxFiveValue
+import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testBox5Figure
 
-class BoxFiveValueFormSpec extends PlaySpec with GuiceOneAppPerSuite {
+class Box5FigureFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  "The boxFiveValueForm" should {
-    val not_entered_error_key = "error.principal.box_five_value_not_entered"
-    val invalid_format_error_key = "error.principal.box_five_value_invalid_format"
-    val invalid_length_error_key = "error.principal.box_five_value_invalid_length"
+  "The box5FigureForm" should {
+    val not_entered_error_key = "error.principal.box_5_figure_not_entered"
+    val invalid_format_error_key = "error.principal.box_5_figure_invalid_format"
+    val invalid_length_error_key = "error.principal.box_5_figure_invalid_length"
 
     "validate that valid data within the character limit passes" in {
-      val actual = boxFiveValueForm.bind(Map(boxFiveValue -> testBoxFiveValue)).value
-      actual shouldBe Some(testBoxFiveValue)
+      val actual = box5FigureForm.bind(Map(box5Figure -> testBox5Figure)).value
+      actual shouldBe Some(testBox5Figure)
     }
 
     "validate that valid data outside the character limit passes" in {
       val outsideLimitNum = "123456789012.00"
-      val formWithError = boxFiveValueForm.bind(Map(boxFiveValue -> outsideLimitNum))
-      formWithError.errors should contain(FormError(boxFiveValue, invalid_length_error_key))
+      val formWithError = box5FigureForm.bind(Map(box5Figure -> outsideLimitNum))
+      formWithError.errors should contain(FormError(box5Figure, invalid_length_error_key))
     }
 
     "validate that data has been entered in the form" in {
-      val formWithError = boxFiveValueForm.bind(Map(boxFiveValue -> ""))
-      formWithError.errors should contain(FormError(boxFiveValue, not_entered_error_key))
+      val formWithError = box5FigureForm.bind(Map(box5Figure -> ""))
+      formWithError.errors should contain(FormError(box5Figure, not_entered_error_key))
     }
 
     "validate that data containing any non numeric data fails" in {
-      val formWithError = boxFiveValueForm.bind(Map(boxFiveValue -> (testBoxFiveValue.drop(1) + "A")))
-      formWithError.errors should contain(FormError(boxFiveValue, invalid_format_error_key))
+      val formWithError = box5FigureForm.bind(Map(box5Figure -> (testBox5Figure.drop(1) + "A")))
+      formWithError.errors should contain(FormError(box5Figure, invalid_format_error_key))
     }
 
   }

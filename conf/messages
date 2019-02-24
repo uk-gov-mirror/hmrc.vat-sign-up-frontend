@@ -148,12 +148,12 @@ error.invalid_registered_society_utr.field                             = Registe
 error.invalid_registered_society_utr.summary                           = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
 error.no_month_selected.field                                          = Select a month
 error.no_month_selected.summary                                        = Select a month
-error.principal.box_five_value_not_entered.field                       = Enter your Box 5 amount
-error.principal.box_five_value_not_entered.summary                     = Enter your Box 5 amount
-error.principal.box_five_value_invalid_format.field                    = Enter a value to 2 decimal places. For example, £100.00
-error.principal.box_five_value_invalid_format.summary                  = Enter a value to 2 decimal places. For example, £100.00
-error.principal.box_five_value_invalid_length.field                    = The Box 5 amount must be less than 14 digits
-error.principal.box_five_value_invalid_length.summary                  = The Box 5 amount must be less than 14 digits
+error.principal.box_5_figure_not_entered.field                         = Enter your Box 5 amount
+error.principal.box_5_figure_not_entered.summary                       = Enter your Box 5 amount
+error.principal.box_5_figure_invalid_format.field                      = Enter a value to 2 decimal places. For example, £100.00
+error.principal.box_5_figure_invalid_format.summary                    = Enter a value to 2 decimal places. For example, £100.00
+error.principal.box_5_figure_invalid_length.field                      = The Box 5 amount must be less than 14 digits
+error.principal.box_5_figure_invalid_length.summary                    = The Box 5 amount must be less than 14 digits
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -867,7 +867,7 @@ principal.cannot_sign_up_another_account.button                       = Create a
 principal.previous_vat_return.title                                   = Are you currently submitting VAT returns?
 principal.previous_vat_return.heading                                 = Are you currently submitting VAT returns?
 
-## What is your box 5 value page
-principal.capture_box_five_value.title                                = What is your Box 5 amount?
-principal.capture_box_five_value.heading                              = What is your Box 5 amount?
-principal.capture_box_five_value.line                                 = Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online.
+## What is your box 5 Figure page
+principal.capture_box_5_figure.title                                  = What is your Box 5 amount?
+principal.capture_box_5_figure.heading                                = What is your Box 5 amount?
+principal.capture_box_5_figure.line                                   = Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online.

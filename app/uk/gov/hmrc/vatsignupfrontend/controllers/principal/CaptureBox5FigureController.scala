@@ -23,35 +23,36 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.forms.BoxFiveValueForm._
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_box_five_value
+import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_box_5_figure
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBoxFiveValueController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureBox5FigureController @Inject()(val controllerComponents: ControllerComponents)
 
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(AdditionalKnownFacts)) {
 
   def show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        Future.successful(Ok(capture_box_five_value(boxFiveValueForm.form, routes.CaptureBoxFiveValueController.submit())))
+        Future.successful(Ok(capture_box_5_figure(box5FigureForm.form, routes.CaptureBox5FigureController.submit())))
       }
   }
 
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        boxFiveValueForm.bindFromRequest.fold(
+        box5FigureForm.bindFromRequest.fold(
           formWithErrors =>
             Future.successful(
-              BadRequest(capture_box_five_value(formWithErrors, routes.CaptureBoxFiveValueController.submit()))
+              BadRequest(capture_box_5_figure(formWithErrors, routes.CaptureBox5FigureController.submit()))
             )
-          , formBoxFiveValue =>
+          ,
+          formBox5Figure =>
             Future.successful(
-              NotImplemented // TODO: Redirect to most recent vat payment page
-                //.addingToSession(SessionKeys.boxFiveValueKey -> formBoxFiveValue)
+              Redirect(routes.CaptureLastReturnMonthPeriodController.show())
+                .addingToSession(SessionKeys.box5FigureKey -> formBox5Figure)
             )
         )
       }

@@ -21,30 +21,31 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.forms.BoxFiveValueForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class CaptureBoxFiveValueControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(AdditionalKnownFacts)
   }
 
-  object TestCaptureBoxFiveValueController extends CaptureBoxFiveValueController(mockControllerComponents)
+  object TestCaptureBox5FigureController extends CaptureBox5FigureController(mockControllerComponents)
 
   lazy val testGetRequest = FakeRequest("GET", "/box-5-figure")
 
-  lazy val testPostRequest = FakeRequest("POST", "/box-5-figure").withFormUrlEncodedBody(boxFiveValue -> testBoxFiveValue)
+  lazy val testPostRequest = FakeRequest("POST", "/box-5-figure").withFormUrlEncodedBody(box5Figure -> testBox5Figure)
 
-  "calling the show method on CaptureBoxFiveValueController" when {
+  "calling the show method on CaptureBox5FigureController" when {
     "the AdditionalKnownFacts feature switch is enabled" should {
       "go to the capture box five value page" in {
         mockAuthAdminRole()
 
-        val result = TestCaptureBoxFiveValueController.show(testGetRequest)
+        val result = TestCaptureBox5FigureController.show(testGetRequest)
         status(result) shouldBe OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -56,21 +57,22 @@ class CaptureBoxFiveValueControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         disable(AdditionalKnownFacts)
 
         intercept[NotFoundException] {
-          await(TestCaptureBoxFiveValueController.show(testGetRequest))
+          await(TestCaptureBox5FigureController.show(testGetRequest))
         }
       }
     }
   }
 
-  "calling the submit method on CaptureBoxFiveValueController" when {
+  "calling the submit method on CaptureBox5FigureController" when {
     "the AdditionalKnownFacts feature switch is on" should {
-      "return a Not Implemented" in {
+      "redirect to CaptureLastMonthReturnPeriod page" in {
         mockAuthAdminRole()
 
-        val res = TestCaptureBoxFiveValueController.submit(testPostRequest)
+        val result = await(TestCaptureBox5FigureController.submit(testPostRequest))
 
-        status(res) shouldBe NOT_IMPLEMENTED
-        // TODO: redirect most recent vat payment page
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+        result.session(testPostRequest).get(SessionKeys.box5FigureKey) should contain(testBox5Figure)
       }
       "form unsuccessfully submitted" should {
         "reload the page with errors" in {
@@ -78,7 +80,7 @@ class CaptureBoxFiveValueControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
           mockAuthAdminRole()
 
-          val result = TestCaptureBoxFiveValueController.submit(testPostRequest)
+          val result = TestCaptureBox5FigureController.submit(testPostRequest)
           status(result) shouldBe BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
