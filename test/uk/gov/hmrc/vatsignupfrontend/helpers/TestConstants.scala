@@ -39,6 +39,7 @@ object TestConstants {
   val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"
   val testUri: String = "/test/uri"
   val testPartnershipType: String = "limitedPartnership"
+  val testBoxFiveValue = "99999999999.99"
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)

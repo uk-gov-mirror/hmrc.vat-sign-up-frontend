@@ -7,3 +7,23 @@
         padding-right: 1em;
     }
 }
+
+.govuk-currency-input__inner {
+    position: relative;
+}
+
+.govuk-currency-input__inner__unit {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    font-weight: bold;
+}
+
+input.form-control, textarea.form-control {
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
+.govuk-currency-input__inner__input {
+    padding-left: 25px !important;
+}

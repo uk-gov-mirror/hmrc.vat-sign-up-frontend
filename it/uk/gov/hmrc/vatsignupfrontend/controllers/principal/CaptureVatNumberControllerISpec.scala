@@ -207,7 +207,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         }
 
         "the vat number is eligible and overseas" should {
-          "redirect to the Cannot Use Service page" in {
+          "redirect to the Vat Registration Date" in {
             stubAuth(OK, successfulAuthResponse())
             stubVatNumberEligibilityOverseas(testVatNumber)
 
@@ -215,7 +215,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
             res should have(
               httpStatus(SEE_OTHER),
-              redirectUri(routes.CannotUseServiceController.show().url)
+              redirectUri(routes.CaptureVatRegistrationDateController.show().url)
             )
           }
         }

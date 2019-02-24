@@ -27,13 +27,13 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
 
 import scala.concurrent.Future
@@ -267,7 +267,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "the vat number is for an overseas business" should {
-            "redirect to the Cannot Use Service page" in {
+            "redirect to the Capture Vat registration date controller" in {
               mockAuthorise(
                 retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
               )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
@@ -277,9 +277,10 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
               result.session get vatNumberKey should contain(testVatNumber)
+              result.session get businessEntityKey should contain(Overseas.toString)
             }
           }
 
