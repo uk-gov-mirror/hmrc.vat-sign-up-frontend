@@ -282,3 +282,7 @@ GET         /error/cannot-sign-up-another-account               uk.gov.hmrc.vats
 # Are you currently submitting VAT returns page
 GET         /submitted-vat-return                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.PreviousVatReturnController.show
 POST        /submitted-vat-return                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.PreviousVatReturnController.submit
+
+# Principal Capture Last Return Month Period
+GET         /last-vat-return-date                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureLastReturnMonthPeriodController.show
+POST        /last-vat-return-date                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureLastReturnMonthPeriodController.submit
