@@ -48,4 +48,5 @@ object IntegrationTestConstants {
   val testStartDate: LocalDate = LocalDate.now()
   val testEndDate: LocalDate = testStartDate.plusMonths(3)
   val testPartnershipType: String = "limitedPartnership"
+  val testBoxFiveValue: String = "1234.56"
 }

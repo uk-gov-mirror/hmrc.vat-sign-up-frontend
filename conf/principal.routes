@@ -286,3 +286,7 @@ POST        /submitted-vat-return                               uk.gov.hmrc.vats
 # Principal Capture Last Return Month Period
 GET         /last-vat-return-date                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureLastReturnMonthPeriodController.show
 POST        /last-vat-return-date                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureLastReturnMonthPeriodController.submit
+
+# Capture Box Five Value page
+GET         /box-5-figure                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBoxFiveValueController.show
+POST        /box-5-figure                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBoxFiveValueController.submit
