@@ -19,11 +19,12 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import java.time.LocalDate
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatRegistrationDateKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, vatRegistrationDateKey}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsignupfrontend.models.DateModel
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, Overseas}
 
 class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -41,22 +42,51 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
   }
 
   "POST /vat-registration-date" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse())
+    "user is not overseas" when {
+      "redirects to Capture Business Postcode page" in {
+        stubAuth(OK, successfulAuthResponse())
 
-      val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
+        val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
 
-      val res = post("/vat-registration-date")(vatRegistrationDate + ".dateDay" -> yesterday.day,
-                                                 vatRegistrationDate + ".dateMonth" -> yesterday.month,
-                                                 vatRegistrationDate + ".dateYear" -> yesterday.year)
+        val res = post("/vat-registration-date")(vatRegistrationDate + ".dateDay" -> yesterday.day,
+          vatRegistrationDate + ".dateMonth" -> yesterday.month,
+          vatRegistrationDate + ".dateYear" -> yesterday.year
+        )
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.BusinessPostCodeController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.BusinessPostCodeController.show().url)
+        )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
-      session.keys should contain(vatRegistrationDateKey)
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(vatRegistrationDateKey)
+      }
+    }
+    "user is overseas" when {
+      "redirects to Previous VAT return page" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
+
+        val res = post(
+          "/vat-registration-date",
+          Map(SessionKeys.businessEntityKey -> Overseas.toString))(
+            vatRegistrationDate + ".dateDay" -> yesterday.day,
+            vatRegistrationDate + ".dateMonth" -> yesterday.month,
+            vatRegistrationDate + ".dateYear" -> yesterday.year
+        )
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.PreviousVatReturnController.show().url)
+        )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(vatRegistrationDateKey)
+        session.keys should contain(businessEntityKey)
+
+
+      }
     }
   }
 
