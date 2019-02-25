@@ -47,10 +47,10 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
         case (Some(vat_number), Some(vatRegistrationDate), Some(postCode)) =>
           Future.successful(
             Ok(check_your_answers(
-              vat_number,
-              vatRegistrationDate,
-              postCode,
-              routes.CheckYourAnswersController.submit()))
+              vatNumber = vat_number,
+              registrationDate = vatRegistrationDate,
+              postCode = postCode,
+              postAction = routes.CheckYourAnswersController.submit()))
           )
         case (None, _, _) =>
           Future.successful(

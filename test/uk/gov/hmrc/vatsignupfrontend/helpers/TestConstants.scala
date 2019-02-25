@@ -18,11 +18,12 @@ package uk.gov.hmrc.vatsignupfrontend.helpers
 
 import java.time.LocalDate
 import java.util.UUID
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments._
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode, UserDetailsModel}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, January, PostCode, UserDetailsModel}
 
 import scala.util.Random
 
@@ -39,7 +40,9 @@ object TestConstants {
   val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"
   val testUri: String = "/test/uri"
   val testPartnershipType: String = "limitedPartnership"
+
   val testBox5Figure = "99999999999.99"
+  val testLastReturnMonthPeriod = January.toString
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)

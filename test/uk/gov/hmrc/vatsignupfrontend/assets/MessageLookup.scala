@@ -422,6 +422,8 @@ object MessageLookup {
     val vatRegistrationDate = "What is your VAT registration date?"
     val businessPostCode = "What is your business postcode?"
     val businessEntity = "What type of business are you registered as?"
+    val box5Value = "What is your Box 5 amount?"
+    val lastReturnMonth = "When was your most recent VAT payment?"
   }
 
   object PrincipalNoCtEnrolmentSummary {

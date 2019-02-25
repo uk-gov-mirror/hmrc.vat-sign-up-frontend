@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.January
 
 class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 

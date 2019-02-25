@@ -20,6 +20,8 @@ object CheckYourAnswersIdConstants {
 
   val VatNumberId = "your-vat-number"
   val VatRegistrationDateId = "vat-registration-date"
+  val VatBox5ValueId = "box-5-value"
+  val VatLastReturnMonthId = "last-return-month-period"
   val BusinessPostCodeId = "business-post-code"
   val BusinessEntityId = "business-entity"
   val CrnId = "company-number"
