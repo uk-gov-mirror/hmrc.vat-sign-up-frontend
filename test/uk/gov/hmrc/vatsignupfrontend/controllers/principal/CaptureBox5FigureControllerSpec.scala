@@ -71,15 +71,9 @@ class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
         val result = await(TestCaptureBox5FigureController.submit(testPostRequest))
 
-<<<<<<< HEAD:test/uk/gov/hmrc/vatsignupfrontend/controllers/principal/CaptureBox5FigureControllerSpec.scala
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
         result.session(testPostRequest).get(SessionKeys.box5FigureKey) should contain(testBox5Figure)
-=======
-        status(res) shouldBe SEE_OTHER
-        redirectLocation(res) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-        session(res) get SessionKeys.boxFiveValueKey should contain(testBoxFiveValue)
->>>>>>> 106c02d5... SAR-3341: Additional KFs on CheckYourAnswers:test/uk/gov/hmrc/vatsignupfrontend/controllers/principal/CaptureBoxFiveValueControllerSpec.scala
       }
       "form unsuccessfully submitted" should {
         "reload the page with errors" in {

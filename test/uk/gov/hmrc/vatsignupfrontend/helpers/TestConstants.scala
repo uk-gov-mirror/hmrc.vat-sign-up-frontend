@@ -40,12 +40,9 @@ object TestConstants {
   val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"
   val testUri: String = "/test/uri"
   val testPartnershipType: String = "limitedPartnership"
-<<<<<<< HEAD
+
   val testBox5Figure = "99999999999.99"
-=======
-  val testBoxFiveValue = "99999999999.99"
   val testLastReturnMonthPeriod = January.toString
->>>>>>> 106c02d5... SAR-3341: Additional KFs on CheckYourAnswers
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)

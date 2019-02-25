@@ -54,7 +54,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
   lazy val pageDefault = page()
 
-  lazy val pageWithAdditionalKnownFacts = page(Some(testBoxFiveValue), Some(testLastReturnMonthPeriod))
+  lazy val pageWithAdditionalKnownFacts = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod))
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -156,13 +156,13 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
     "display the correct answer for Box5Value" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBoxFiveValueController.show().url
+      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url
 
       sectionTest(
         page = pageWithAdditionalKnownFacts,
         sectionId = VatBox5ValueId,
         expectedQuestion = messages.box5Value,
-        expectedAnswer = s"£$testBoxFiveValue",
+        expectedAnswer = s"£$testBox5Figure",
         expectedEditLink = Some(expectedEditLink)
       )
     }
