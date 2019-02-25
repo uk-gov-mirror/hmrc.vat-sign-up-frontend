@@ -64,7 +64,8 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
           mockAuthAdminRole()
 
           val result = TestPreviousVatReturnController.submit(testPostRequest(usersChoice = "yes"))
-          status(result) shouldBe Status.NOT_IMPLEMENTED
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
           result.session(testPostRequest(usersChoice = "no")).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.toString)
         }
       }

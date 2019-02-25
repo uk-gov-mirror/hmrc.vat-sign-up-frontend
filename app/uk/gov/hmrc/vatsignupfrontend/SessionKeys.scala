@@ -40,5 +40,5 @@ object SessionKeys {
   val ninoSourceKey = "NinoSource"
   val previousVatReturnKey = "previousVatReturn"
   val lastReturnMonthPeriodKey = "lastReturnMonthPeriod"
-  val boxFiveValueKey = "boxFiveValue"
+  val box5FigureKey = "box5Figure"
 }

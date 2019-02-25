@@ -20,40 +20,40 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBoxFiveValue => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBox5Figure => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.forms.BoxFiveValueForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-class CaptureBoxFiveValueSpec extends ViewSpec {
+class CaptureBox5FigureSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_box_five_value(
-    boxFiveValueForm = boxFiveValueForm.form,
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_box_5_figure(
+    box5FigureForm = box5FigureForm.form,
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
   )
 
-  "The Capture Box Five Value view" should {
+  "The Capture Box 5 Figure view" should {
 
     val testPage = TestView(
-      name = "Capture Box Five Value View",
+      name = "Capture Box 5 Figure View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveForm("Box Five Value Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Box 5 Figure Form")(actionCall = testCall)
 
     testPage.shouldHavePara(messages.line)
 
-    testPage.shouldHaveTextField(boxFiveValue, messages.heading)
+    testPage.shouldHaveTextField(box5Figure, messages.heading)
 
     testPage.shouldHaveContinueButton()
 

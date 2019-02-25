@@ -921,7 +921,7 @@ object MessageLookup {
     val buttonText = "Create a Government Gateway user ID"
   }
 
-  object CaptureBoxFiveValue {
+  object CaptureBox5Figure {
     val heading = "What is your Box 5 amount?"
     val title = heading + ServiceName.principalSuffix
     val line = "Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online."

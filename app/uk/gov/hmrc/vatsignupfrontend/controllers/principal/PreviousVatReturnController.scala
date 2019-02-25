@@ -53,7 +53,7 @@ class PreviousVatReturnController @Inject()(val controllerComponents: Controller
             ), {
             case Yes =>
               Future.successful(
-                NotImplemented //TODO: Redirect to Box 5 page
+                Redirect(routes.CaptureBox5FigureController.show())
                   .addingToSession(SessionKeys.previousVatReturnKey -> Yes.toString)
               )
             case No =>

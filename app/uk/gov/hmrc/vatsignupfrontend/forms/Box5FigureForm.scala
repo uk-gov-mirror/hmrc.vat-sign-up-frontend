@@ -21,49 +21,49 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraint
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.box5FigureRegex
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.{boxFiveValueRegex, numericRegex}
 
-object BoxFiveValueForm {
+object Box5FigureForm {
 
-  val boxFiveValue = "boxFiveValue"
+  val box5Figure = "box5Figure"
 
   val maxLength = 14
 
-  val isEntered: Constraint[String] = Constraint("box_five_value.entered")(
+  val isEntered: Constraint[String] = Constraint("box_5_figure.entered")(
     boxFiveValue => validate(
       constraint = boxFiveValue.isEmpty,
-      principalErrMsg = "error.principal.box_five_value_not_entered"
+      principalErrMsg = "error.principal.box_5_figure_not_entered"
     )
   )
 
-  val checkFormat: Constraint[String] = Constraint("box_five_value.invalid_format")(
+  val checkFormat: Constraint[String] = Constraint("box_5_figure.invalid_format")(
     boxFiveValue => validateNot(
-      constraint = boxFiveValue matches boxFiveValueRegex,
-      principalErrMsg = "error.principal.box_five_value_invalid_format"
+      constraint = boxFiveValue matches box5FigureRegex,
+      principalErrMsg = "error.principal.box_5_figure_invalid_format"
     )
   )
 
-  val checkLength: Constraint[String] = Constraint("box_five_value.invalid_length")(
+  val checkLength: Constraint[String] = Constraint("box_5_figure.invalid_length")(
     boxFiveValue => validateNot(
       constraint = boxFiveValue.length <= maxLength,
-      principalErrMsg = "error.principal.box_five_value_invalid_length"
+      principalErrMsg = "error.principal.box_5_figure_invalid_length"
     )
   )
 
-  private def boxFiveValidationForm() = Form(
+  private def box5FigureValidationForm() = Form(
     single(
-     boxFiveValue -> text.verifying(isEntered andThen checkLength andThen checkFormat)
+      box5Figure -> text.verifying(isEntered andThen checkLength andThen checkFormat)
     )
   )
 
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  def boxFiveValueForm: PrevalidationAPI[String] = PreprocessedForm(
-    validation = boxFiveValidationForm(),
-    trimRules = Map(boxFiveValue -> all),
-    caseRules = Map(boxFiveValue -> upper)
+  def box5FigureForm: PrevalidationAPI[String] = PreprocessedForm(
+    validation = box5FigureValidationForm(),
+    trimRules = Map(box5Figure -> all),
+    caseRules = Map(box5Figure -> upper)
   )
 
 }

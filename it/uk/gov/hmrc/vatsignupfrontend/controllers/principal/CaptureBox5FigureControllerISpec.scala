@@ -18,12 +18,12 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{AdditionalKnownFacts, FeatureSwitching}
-import uk.gov.hmrc.vatsignupfrontend.forms.BoxFiveValueForm
+import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class CaptureBoxFiveValueControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+class CaptureBox5FigureControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -64,14 +64,14 @@ class CaptureBoxFiveValueControllerISpec extends ComponentSpecBase with CustomMa
 
   "POST /box-5-figure" when {
     "the AdditionalKnownFacts feature switch is enabled" should {
-      "return a Not Implemented" in {
+      "redirect to CaptureLastMonthReturnPeriod Page" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/box-5-figure")(BoxFiveValueForm.boxFiveValue -> testBoxFiveValue)
+        val res = post("/box-5-figure")(Box5FigureForm.box5Figure -> testBox5Figure)
 
         res should have(
-          httpStatus(NOT_IMPLEMENTED)
-          // TODO: Redirect to most recent vat payment page
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureLastReturnMonthPeriodController.show().url)
         )
       }
     }

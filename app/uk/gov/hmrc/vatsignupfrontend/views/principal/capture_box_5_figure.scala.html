@@ -14,30 +14,30 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsignupfrontend.forms.BoxFiveValueForm._
+@import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, continueButton, summaryErrorHelper}
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 
-@(boxFiveValueForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(box5FigureForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.capture_box_five_value.title"), bodyClasses = None, form = Some(boxFiveValueForm)) {
+@principal_main_template(title = Messages("principal.capture_box_5_figure.title"), bodyClasses = None, form = Some(box5FigureForm)) {
 
-    @summaryErrorHelper(boxFiveValueForm)
+    @summaryErrorHelper(box5FigureForm)
 
-    <h1 class="heading-large">@Messages("principal.capture_box_five_value.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.capture_box_5_figure.heading")</h1>
 
-    <p>@Messages("principal.capture_box_five_value.line")</p>
+    <p>@Messages("principal.capture_box_5_figure.line")</p>
 
     @form(action = postAction) {
 
         <div class="form-group">
             @inputHelper(
-                field = boxFiveValueForm(boxFiveValue),
-                label = Messages("principal.capture_box_five_value.heading"),
-                parentForm = boxFiveValueForm,
+                field = box5FigureForm(box5Figure),
+                label = Messages("principal.capture_box_5_figure.heading"),
+                parentForm = box5FigureForm,
                 isCurrencyField = true
             )
 
