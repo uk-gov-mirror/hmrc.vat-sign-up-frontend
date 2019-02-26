@@ -58,7 +58,7 @@
       val rowQuestion = Messages("check-your-answers.box_5_value")
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url
       summaryRowHelper(VatBox5ValueId, rowQuestion, s"£$answer", Some(rowUrl))
-    case None => Html
+    case None => Html("")
   }
 }
 
@@ -68,7 +68,7 @@
       val rowQuestion = Messages("check-your-answers.last_return_month_period")
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url
       summaryRowHelper(VatLastReturnMonthId, rowQuestion, answer, Some(rowUrl))
-    case None => Html
+    case None => Html("")
   }
 }
 
