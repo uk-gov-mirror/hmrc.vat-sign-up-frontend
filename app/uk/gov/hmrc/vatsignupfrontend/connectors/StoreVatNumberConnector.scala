@@ -68,4 +68,5 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
       case None => Json.obj()
     }
   }
+
 }

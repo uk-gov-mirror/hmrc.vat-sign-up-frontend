@@ -69,12 +69,13 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
                      optBox5Figure: Option[String],
                      optLastReturnMonth: Option[String],
                      isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] =
-    storeVatNumberConnector.storeVatNumber(vatNumber,
-      postCode.postCode,
-      registrationDate.toLocalDate.toString,
-      optBox5Figure,
-      optLastReturnMonth,
-      isFromBta
+    storeVatNumberConnector.storeVatNumber(
+      vatNumber = vatNumber,
+      postCode = postCode.postCode,
+      registrationDate = registrationDate.toLocalDate.toString,
+      optBox5Figure = optBox5Figure,
+      optLastReturnMonth = optLastReturnMonth,
+      isFromBta = isFromBta
     ) flatMap {
       case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) =>
         Future.successful(Right(VatNumberStored(isOverseas)))
