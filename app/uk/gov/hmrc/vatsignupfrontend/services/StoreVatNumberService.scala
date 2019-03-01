@@ -68,7 +68,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
                      registrationDate: DateModel,
                      optBox5Figure: Option[String],
                      optLastReturnMonth: Option[String],
-                     isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] =
+                     isFromBta: Boolean
+                    )(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] =
     storeVatNumberConnector.storeVatNumber(
       vatNumber = vatNumber,
       postCode = postCode.postCode,

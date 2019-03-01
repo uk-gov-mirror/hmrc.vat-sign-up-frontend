@@ -90,8 +90,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberSuccess(vatNumber: String,
                                 postCode: PostCode,
                                 registrationDate: DateModel,
-                                optBox5Figure: Option[String] = None,
-                                optLastReturnMonth: Option[String] = None,
+                                optBox5Figure: Option[String],
+                                optLastReturnMonth: Option[String],
                                 isFromBta: Boolean
                                ): Unit =
     mockStoreVatNumber(
@@ -101,8 +101,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String,
                                             postCode: PostCode,
                                             registrationDate: DateModel,
-                                            optBox5Figure: Option[String] = None,
-                                            optLastReturnMonth: Option[String] = None,
+                                            optBox5Figure: Option[String],
+                                            optLastReturnMonth: Option[String],
                                             isFromBta: Boolean
                                            ): Unit =
     mockStoreVatNumber(
@@ -112,8 +112,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberMigrationInProgress(vatNumber: String,
                                             postCode: PostCode,
                                             registrationDate: DateModel,
-                                            optBox5Figure: Option[String] = None,
-                                            optLastReturnMonth: Option[String] = None,
+                                            optBox5Figure: Option[String],
+                                            optLastReturnMonth: Option[String],
                                             isFromBta: Boolean
                                            ): Unit =
     mockStoreVatNumber(
@@ -123,8 +123,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberFailure(vatNumber: String,
                                 postCode: PostCode,
                                 registrationDate: DateModel,
-                                optBox5Figure: Option[String] = None,
-                                optLastReturnMonth: Option[String] = None,
+                                optBox5Figure: Option[String],
+                                optLastReturnMonth: Option[String],
                                 isFromBta: Boolean
                                ): Unit =
     mockStoreVatNumber(
@@ -134,8 +134,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberKnownFactsMismatch(vatNumber: String,
                                            postCode: PostCode,
                                            registrationDate: DateModel,
-                                           optBox5Figure: Option[String] = None,
-                                           optLastReturnMonth: Option[String] = None,
+                                           optBox5Figure: Option[String],
+                                           optLastReturnMonth: Option[String],
                                            isFromBta: Boolean
                                           ): Unit =
     mockStoreVatNumber(
@@ -145,8 +145,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberInvalid(vatNumber: String,
                                 postCode: PostCode,
                                 registrationDate: DateModel,
-                                optBox5Figure: Option[String] = None,
-                                optLastReturnMonth: Option[String] = None,
+                                optBox5Figure: Option[String],
+                                optLastReturnMonth: Option[String],
                                 isFromBta: Boolean
                                ): Unit =
     mockStoreVatNumber(
@@ -156,8 +156,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberAlreadyEnrolled(vatNumber: String,
                                         postCode: PostCode,
                                         registrationDate: DateModel,
-                                        optBox5Figure: Option[String] = None,
-                                        optLastReturnMonth: Option[String] = None,
+                                        optBox5Figure: Option[String],
+                                        optLastReturnMonth: Option[String],
                                         isFromBta: Boolean
                                        ): Unit =
     mockStoreVatNumber(
@@ -167,8 +167,8 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberIneligible(vatNumber: String,
                                    postCode: PostCode,
                                    registrationDate: DateModel,
-                                   optBox5Figure: Option[String] = None,
-                                   optLastReturnMonth: Option[String] = None,
+                                   optBox5Figure: Option[String],
+                                   optLastReturnMonth: Option[String],
                                    isFromBta: Boolean,
                                    migratableDates: MigratableDates = MigratableDates()
                                   ): Unit =

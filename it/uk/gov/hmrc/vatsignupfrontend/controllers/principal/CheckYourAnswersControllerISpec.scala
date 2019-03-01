@@ -56,13 +56,17 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat is successful" should {
       "redirect to business entity" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberSuccess(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberSuccess(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+        )
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 
@@ -75,14 +79,19 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "the VAT subscription has been claimed" should {
       "redirect to sign up complete client" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberAlreadySignedUp(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+        )
+
         stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = false)(NO_CONTENT)
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 
@@ -95,14 +104,19 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "the VAT subscription has been claimed on another cred" should {
       "redirect to business already signed up error page" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberAlreadySignedUp(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberAlreadySignedUp(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+        )
+
         stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = false)(CONFLICT)
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 
@@ -115,13 +129,17 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned known facts mismatch" should {
       "redirect to could not confirm business" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberKnownFactsMismatch(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberKnownFactsMismatch(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+        )
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 
@@ -134,13 +152,17 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned invalid vat number" should {
       "redirect to invalid vat number" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberInvalid(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberInvalid(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+        )
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 
@@ -153,13 +175,17 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned ineligible vat number" should {
       "redirect to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberIneligible(testBusinessPostCode, testDate, isFromBta = false, MigratableDates())
+        stubStoreVatNumberIneligible(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false, MigratableDates()
+        )
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 
@@ -172,13 +198,17 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
     "store vat returned vat migration in progress" should {
       "redirect to migration in progress error page" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreVatNumberMigrationInProgress(testBusinessPostCode, testDate, isFromBta = false)
+        stubStoreVatNumberMigrationInProgress(
+          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+        )
 
         val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
 

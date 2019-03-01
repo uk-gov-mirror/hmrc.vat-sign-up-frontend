@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
@@ -42,25 +43,37 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
+      val optBox5Figure = request.session.get(SessionKeys.box5FigureKey).filter(_.nonEmpty)
+      val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
 
-      (optVatNumber, optVatRegistrationDate, optBusinessPostCode) match {
-        case (Some(vat_number), Some(vatRegistrationDate), Some(postCode)) =>
+      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBox5Figure, optLastReturnMonth) match {
+        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) =>
+          Future.successful(
+            Redirect(routes.CaptureBox5FigureController.show())
+          )
+        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) =>
+          Future.successful(
+            Redirect(routes.CaptureLastReturnMonthPeriodController.show())
+          )
+        case (Some(vat_number), Some(vatRegistrationDate), Some(postCode), _, _) =>
           Future.successful(
             Ok(check_your_answers(
               vatNumber = vat_number,
               registrationDate = vatRegistrationDate,
               postCode = postCode,
+              optBox5Value = optBox5Figure,
+              optLastReturnMonthPeriod = optLastReturnMonth,
               postAction = routes.CheckYourAnswersController.submit()))
           )
-        case (None, _, _) =>
+        case (None, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
           )
-        case (_, None, _) =>
+        case (_, None, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatRegistrationDateController.show())
           )
-        case (_, _, None) =>
+        case (_, _, None, _, _) =>
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
@@ -71,9 +84,18 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
   private def storeVatNumber(vatNumber: String,
                              postCode: PostCode,
                              vatRegistrationDate: DateModel,
+                             optBox5Figure: Option[String],
+                             optLastReturnMonth: Option[String],
                              isFromBta: Boolean
                             )(implicit hc: HeaderCarrier) =
-    storeVatNumberService.storeVatNumber(vatNumber, postCode, vatRegistrationDate, None, None, isFromBta = isFromBta) map {
+    storeVatNumberService.storeVatNumber(
+      vatNumber = vatNumber,
+      postCode = postCode,
+      registrationDate = vatRegistrationDate,
+      optBox5Figure = optBox5Figure,
+      optLastReturnMonth = optLastReturnMonth,
+      isFromBta = isFromBta
+    ) map {
       case Right(VatNumberStored(isOverseas)) if isOverseas => Redirect(routes.OverseasResolverController.resolve())
       case Right(VatNumberStored(_)) => Redirect(routes.CaptureBusinessEntityController.show())
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
@@ -90,19 +112,29 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
+      val optBox5Figure = request.session.get(SessionKeys.box5FigureKey).filter(_.nonEmpty)
+      val optlastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
 
-      (optVatNumber, optVatRegistrationDate, optBusinessPostCode) match {
-        case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode)) =>
-          storeVatNumber(vatNumber, postCode, vatRegistrationDate, isFromBta = false)
-        case (None, _, _) =>
+      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBox5Figure, optlastReturnMonth) match {
+        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) =>
+          Future.successful(
+            Redirect(routes.CaptureBox5FigureController.show())
+          )
+        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) =>
+          Future.successful(
+            Redirect(routes.CaptureLastReturnMonthPeriodController.show())
+          )
+        case (Some(vatNumber), Some(vatRegistrationDate), Some(postCode), _, _) =>
+          storeVatNumber(vatNumber, postCode, vatRegistrationDate, optBox5Figure, optlastReturnMonth, isFromBta = false)
+        case (None, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
           )
-        case (_, None, _) =>
+        case (_, None, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatRegistrationDateController.show())
           )
-        case (_, _, None) =>
+        case (_, _, None, _, _) =>
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
