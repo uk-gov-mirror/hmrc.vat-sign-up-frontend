@@ -29,6 +29,7 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -44,24 +45,36 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
+  override def beforeEach(): Unit = {
+    enable(AdditionalKnownFacts)
+  }
+
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      registrationDate: Option[DateModel] = Some(testDate),
-                     postCode: Option[PostCode] = Some(testBusinessPostcode)
+                     postCode: Option[PostCode] = Some(testBusinessPostcode),
+                     optBox5Figure: Option[String] = Some(testBox5Figure),
+                     optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod)
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse("")
+      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
+      SessionKeys.box5FigureKey -> optBox5Figure.getOrElse(""),
+      SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse("")
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
                       registrationDate: Option[DateModel] = Some(testDate),
-                      postCode: Option[PostCode] = Some(testBusinessPostcode)
+                      postCode: Option[PostCode] = Some(testBusinessPostcode),
+                      optBox5Figure: Option[String] = Some(testBox5Figure),
+                      optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod)
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
-      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse("")
+      SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
+      SessionKeys.box5FigureKey -> optBox5Figure.getOrElse(""),
+      SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse("")
     )
 
   "Calling the show action of the Check your answers controller" when {
@@ -102,6 +115,27 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
       }
     }
+    "when the AdditionalKnownFacts feature switch is enabled" when {
+      "the box 5 figure is missing" should {
+        "go to the capture box 5 figure page" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(testGetRequest(optBox5Figure = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+        }
+      }
+      "the last return month is missing" should {
+        "go to the capture last return month page" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(testGetRequest(optLastReturnMonth = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+         }
+      }
+    }
+
   }
 
   "Calling the submit action of the Check your answers controller" when {
@@ -111,7 +145,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberSuccess(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberSuccess(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
@@ -123,7 +164,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberSubscriptionClaimed(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberSubscriptionClaimed(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
@@ -135,7 +183,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberKnownFactsMismatch(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberKnownFactsMismatch(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -147,7 +202,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberInvalid(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberInvalid(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -159,7 +221,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberIneligible(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberIneligible(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -171,7 +240,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberMigrationInProgress(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberMigrationInProgress(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -183,7 +259,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberAlreadyEnrolled(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberAlreadyEnrolled(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
@@ -195,7 +278,14 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
-          mockStoreVatNumberFailure(testVatNumber, testBusinessPostcode, testDate, isFromBta = false)
+          mockStoreVatNumberFailure(
+            vatNumber = testVatNumber,
+            postCode = testBusinessPostcode,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testPostRequest()))
@@ -238,6 +328,31 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
       }
     }
+    "When the AdditionalKnownFacts feature switch is enabled" when {
+      "the box 5 figure is missing" should {
+        "go to the capture box 5 figure page" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest(optBox5Figure = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+        }
+      }
+      "the last return month is missing" should {
+        "go to the capture last return month page" in {
+          mockAuthorise(
+            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest(optLastReturnMonth = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+        }
+      }
+    }
+
   }
 
 }
