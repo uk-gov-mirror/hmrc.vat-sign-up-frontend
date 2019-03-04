@@ -54,7 +54,8 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
                      optBox5Figure: Option[String] = Some(testBox5Figure),
                      optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod),
-                     optPreviousVatReturn: Option[String] = Some(Yes.toString)
+                     optPreviousVatReturn: Option[String] = Some(Yes.toString),
+                     optBusinessEntity: Option[String] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
@@ -62,7 +63,8 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.box5FigureKey -> optBox5Figure.getOrElse(""),
       SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse(""),
-      SessionKeys.previousVatReturnKey -> optPreviousVatReturn.getOrElse("")
+      SessionKeys.previousVatReturnKey -> optPreviousVatReturn.getOrElse(""),
+      SessionKeys.businessEntityKey -> optBusinessEntity.getOrElse("")
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
@@ -70,7 +72,8 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                       postCode: Option[PostCode] = Some(testBusinessPostcode),
                       optBox5Figure: Option[String] = Some(testBox5Figure),
                       optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod),
-                      optPreviousVatReturn: Option[String] = Some(Yes.toString)
+                      optPreviousVatReturn: Option[String] = Some(Yes.toString),
+                      optBusinessEntity: Option[String] = None
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
@@ -78,7 +81,8 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.box5FigureKey -> optBox5Figure.getOrElse(""),
       SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse(""),
-      SessionKeys.previousVatReturnKey -> optPreviousVatReturn.getOrElse("")
+      SessionKeys.previousVatReturnKey -> optPreviousVatReturn.getOrElse(""),
+      SessionKeys.businessEntityKey -> optBusinessEntity.getOrElse("")
     )
 
   "Calling the show action of the Check your answers controller" when {
@@ -119,6 +123,16 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
       }
     }
+    "Overseas entity is in session" should {
+      "show page without postcode" in {
+        mockAuthAdminRole()
+
+        val result = TestCheckYourAnswersController.show(testGetRequest(optBusinessEntity = Some(Overseas.toString)))
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+    }
     "when the AdditionalKnownFacts feature switch is enabled" when {
       "the user has filed a vat return before" when {
         "the box 5 figure is missing" should {
@@ -152,7 +166,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberSuccess(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -171,7 +185,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberSubscriptionClaimed(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -190,7 +204,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberKnownFactsMismatch(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -209,7 +223,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberInvalid(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -228,7 +242,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberIneligible(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -247,7 +261,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberMigrationInProgress(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -266,7 +280,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberAlreadyEnrolled(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -285,7 +299,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
           mockStoreVatNumberFailure(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDate,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),

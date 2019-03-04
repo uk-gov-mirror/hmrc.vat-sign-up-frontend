@@ -24,7 +24,7 @@
 
 @(vatNumber: String,
   registrationDate: DateModel,
-  postCode: PostCode,
+  optPostCode: Option[PostCode],
   optBox5Value: Option[String] = None,
   optLastReturnMonthPeriod: Option[String] = None,
   postAction: Call
@@ -47,10 +47,14 @@
 }
 
 @businessPostCode() = @{
-    val rowQuestion = Messages("check-your-answers.business_post_code")
-    val rowAnswer = postCode.checkYourAnswersFormat
-    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
-    summaryRowHelper(BusinessPostCodeId, rowQuestion, rowAnswer, Some(rowUrl))
+  optPostCode match {
+    case Some(postCode) =>
+      val rowQuestion = Messages("check-your-answers.business_post_code")
+      val rowAnswer = postCode.checkYourAnswersFormat
+      val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
+      summaryRowHelper(BusinessPostCodeId, rowQuestion, postCode.checkYourAnswersFormat, Some(rowUrl))
+    case None => Html("")
+  }
 }
 
 @box5Value() = @{

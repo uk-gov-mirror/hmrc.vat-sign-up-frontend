@@ -32,10 +32,10 @@ class ClaimSubscriptionService @Inject()(claimSubscriptionConnector: ClaimSubscr
     claimSubscriptionConnector.claimSubscription(vatNumber, isFromBta)
 
   def claimSubscription(vatNumber: String,
-                        postCode: PostCode,
+                        optPostCode: Option[PostCode],
                         registrationDate: DateModel,
                         isFromBta: Boolean
                        )(implicit hc: HeaderCarrier): Future[ClaimSubscriptionResponse] =
-    claimSubscriptionConnector.claimSubscription(vatNumber, postCode.postCode, registrationDate.toLocalDate.toString, isFromBta)
+    claimSubscriptionConnector.claimSubscription(vatNumber, optPostCode, registrationDate.toLocalDate.toString, isFromBta)
 
 }

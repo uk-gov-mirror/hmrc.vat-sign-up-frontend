@@ -49,9 +49,9 @@ class BtaBusinessPostCodeController @Inject()(val controllerComponents: Controll
   }
 
   private def claimSubscription(vatNumber: String,
-                                postCode: PostCode,
+                                optPostCode: Option[PostCode],
                                 vatRegistrationDate: DateModel)(implicit hc: HeaderCarrier): Future[Result] =
-    claimSubscriptionService.claimSubscription(vatNumber, postCode, vatRegistrationDate, isFromBta = true) map {
+    claimSubscriptionService.claimSubscription(vatNumber, optPostCode, vatRegistrationDate, isFromBta = true) map {
       case Right(SubscriptionClaimed) => Redirect(principalRoutes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
       case Left(AlreadyEnrolledOnDifferentCredential) => Redirect(routes.BusinessAlreadySignedUpController.show())
@@ -72,7 +72,7 @@ class BtaBusinessPostCodeController @Inject()(val controllerComponents: Controll
                   BadRequest(principal_place_of_business(formWithErrors, routes.BtaBusinessPostCodeController.submit()))
                 ),
               businessPostCode =>
-                claimSubscription(vatNumber, businessPostCode, vatRegistrationDate)
+                claimSubscription(vatNumber, Some(businessPostCode), vatRegistrationDate)
             )
           case (None, _) => Future.failed(new InternalServerException("Entered BTA claim subscription flow without VRN"))
           case (_, None) => Future.successful(Redirect(routes.CaptureBtaVatRegistrationDateController.show().url))

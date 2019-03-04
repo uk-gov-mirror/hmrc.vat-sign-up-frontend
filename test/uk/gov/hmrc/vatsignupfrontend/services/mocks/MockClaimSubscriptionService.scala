@@ -44,11 +44,14 @@ trait MockClaimSubscriptionService extends BeforeAndAfterEach with MockitoSugar 
       ArgumentMatchers.eq(isFromBta)
     )(ArgumentMatchers.any())) thenReturn returnValue
 
-  def mockClaimSubscription(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean
-                                )(returnValue: Future[ClaimSubscriptionResponse]): Unit =
+  def mockClaimSubscription(vatNumber: String,
+                            optPostCode: Option[PostCode],
+                            registrationDate: DateModel,
+                            isFromBta: Boolean
+                           )(returnValue: Future[ClaimSubscriptionResponse]): Unit =
     when(mockClaimSubscriptionService.claimSubscription(
       ArgumentMatchers.eq(vatNumber),
-      ArgumentMatchers.eq(postCode),
+      ArgumentMatchers.eq(optPostCode),
       ArgumentMatchers.eq(registrationDate),
       ArgumentMatchers.eq(isFromBta)
     )(ArgumentMatchers.any())) thenReturn returnValue

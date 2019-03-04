@@ -64,15 +64,15 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
     }
 
   def storeVatNumber(vatNumber: String,
-                     postCode: PostCode,
+                     optPostCode: Option[PostCode],
                      registrationDate: DateModel,
                      optBox5Figure: Option[String],
                      optLastReturnMonth: Option[String],
                      isFromBta: Boolean
-                    )(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] =
+                    )(implicit hc: HeaderCarrier): Future[StoreVatNumberWithKnownFactsResponse] = {
     storeVatNumberConnector.storeVatNumber(
       vatNumber = vatNumber,
-      postCode = postCode.postCode,
+      optPostCode = optPostCode,
       registrationDate = registrationDate.toLocalDate.toString,
       optBox5Figure = optBox5Figure,
       optLastReturnMonth = optLastReturnMonth,
@@ -83,7 +83,7 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
       case Right(StoreVatNumberHttpParser.VatNumberStored(_)) =>
         Future.successful(Right(VatNumberStored(isOverseas = false)))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
-        claimSubscriptionService.claimSubscription(vatNumber, postCode, registrationDate, isFromBta) map {
+        claimSubscriptionService.claimSubscription(vatNumber, optPostCode, registrationDate, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
             Right(SubscriptionClaimed)
           case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
@@ -102,6 +102,7 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
       case Left(unexpectedError) =>
         throw new InternalServerException(s"Unexpected error in store VAT number with supplied known facts - $unexpectedError")
     }
+  }
 
 }
 

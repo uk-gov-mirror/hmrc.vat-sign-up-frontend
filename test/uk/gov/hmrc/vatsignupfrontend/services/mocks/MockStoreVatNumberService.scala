@@ -71,7 +71,7 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber(migratableDates))))
 
   private def mockStoreVatNumber(vatNumber: String,
-                                 postCode: PostCode,
+                                 optPostCode: Option[PostCode],
                                  registrationDate: DateModel,
                                  optBox5Figure: Option[String],
                                  optLastReturnMonth: Option[String],
@@ -79,7 +79,7 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
                                 )(returnValue: Future[StoreVatNumberWithKnownFactsResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
-      ArgumentMatchers.eq(postCode),
+      ArgumentMatchers.eq(optPostCode),
       ArgumentMatchers.eq(registrationDate),
       ArgumentMatchers.eq(optBox5Figure),
       ArgumentMatchers.eq(optLastReturnMonth),
@@ -88,84 +88,84 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
       .thenReturn(returnValue)
 
   def mockStoreVatNumberSuccess(vatNumber: String,
-                                postCode: PostCode,
+                                optPostCode: Option[PostCode],
                                 registrationDate: DateModel,
                                 optBox5Figure: Option[String],
                                 optLastReturnMonth: Option[String],
                                 isFromBta: Boolean
                                ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Right(VatNumberStored(isOverseas = false))))
 
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String,
-                                            postCode: PostCode,
+                                            optPostCode: Option[PostCode],
                                             registrationDate: DateModel,
                                             optBox5Figure: Option[String],
                                             optLastReturnMonth: Option[String],
                                             isFromBta: Boolean
                                            ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Right(SubscriptionClaimed)))
 
   def mockStoreVatNumberMigrationInProgress(vatNumber: String,
-                                            postCode: PostCode,
+                                            optPostCode: Option[PostCode],
                                             registrationDate: DateModel,
                                             optBox5Figure: Option[String],
                                             optLastReturnMonth: Option[String],
                                             isFromBta: Boolean
                                            ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Left(VatMigrationInProgress)))
 
   def mockStoreVatNumberFailure(vatNumber: String,
-                                postCode: PostCode,
+                                optPostCode: Option[PostCode],
                                 registrationDate: DateModel,
                                 optBox5Figure: Option[String],
                                 optLastReturnMonth: Option[String],
                                 isFromBta: Boolean
                                ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Left(StoreVatNumberFailureResponse(INTERNAL_SERVER_ERROR))))
 
   def mockStoreVatNumberKnownFactsMismatch(vatNumber: String,
-                                           postCode: PostCode,
+                                           optPostCode: Option[PostCode],
                                            registrationDate: DateModel,
                                            optBox5Figure: Option[String],
                                            optLastReturnMonth: Option[String],
                                            isFromBta: Boolean
                                           ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Left(KnownFactsMismatch)))
 
   def mockStoreVatNumberInvalid(vatNumber: String,
-                                postCode: PostCode,
+                                optPostCode: Option[PostCode],
                                 registrationDate: DateModel,
                                 optBox5Figure: Option[String],
                                 optLastReturnMonth: Option[String],
                                 isFromBta: Boolean
                                ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Left(InvalidVatNumber)))
 
   def mockStoreVatNumberAlreadyEnrolled(vatNumber: String,
-                                        postCode: PostCode,
+                                        optPostCode: Option[PostCode],
                                         registrationDate: DateModel,
                                         optBox5Figure: Option[String],
                                         optLastReturnMonth: Option[String],
                                         isFromBta: Boolean
                                        ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Left(VatNumberAlreadyEnrolled)))
 
   def mockStoreVatNumberIneligible(vatNumber: String,
-                                   postCode: PostCode,
+                                   optPostCode: Option[PostCode],
                                    registrationDate: DateModel,
                                    optBox5Figure: Option[String],
                                    optLastReturnMonth: Option[String],
@@ -173,7 +173,7 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
                                    migratableDates: MigratableDates = MigratableDates()
                                   ): Unit =
     mockStoreVatNumber(
-      vatNumber, postCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Left(IneligibleVatNumber(migratableDates))))
 
 }

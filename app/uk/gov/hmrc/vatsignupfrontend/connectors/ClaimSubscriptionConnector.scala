@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.connectors.ClaimSubscriptionConnector._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.ClaimSubscriptionResponse
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,18 +40,19 @@ class ClaimSubscriptionConnector @Inject()(http: HttpClient,
     )
 
   def claimSubscription(vatNumber: String,
-                        postCode: String,
+                        optPostCode: Option[PostCode],
                         registrationDate: String,
                         isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[ClaimSubscriptionResponse] =
     http.POST[JsObject, ClaimSubscriptionResponse](
       applicationConfig.claimSubscriptionUrl(vatNumber),
       Json.obj(
-        postCodeKey -> postCode,
         registrationDateKey -> registrationDate,
         isFromBtaKey -> isFromBta
-      )
+      ) ++ (optPostCode match {
+        case Some(postCode) => Json.obj(postCodeKey -> postCode.postCode)
+        case None => Json.obj()
+      })
     )
-
 }
 
 object ClaimSubscriptionConnector {

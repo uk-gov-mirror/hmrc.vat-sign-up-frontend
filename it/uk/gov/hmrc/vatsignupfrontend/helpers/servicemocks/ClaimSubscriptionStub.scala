@@ -20,8 +20,8 @@ import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 
 object ClaimSubscriptionStub extends WireMockMethods {
-  def stubClaimSubscription(vatNumber: String, postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean)(status: Int): Unit =
-    stubClaimSubscription(vatNumber, requestJson(postCode, registrationDate, isFromBta))(status)
+  def stubClaimSubscription(vatNumber: String, optPostCode: Option[PostCode], registrationDate: DateModel, isFromBta: Boolean)(status: Int): Unit =
+    stubClaimSubscription(vatNumber, requestJson(optPostCode, registrationDate, isFromBta))(status)
 
   def stubClaimSubscription(vatNumber: String, isFromBta: Boolean)(status: Int): Unit =
     stubClaimSubscription(vatNumber, requestJson(isFromBta))(status)
@@ -38,10 +38,12 @@ object ClaimSubscriptionStub extends WireMockMethods {
       "isFromBta" -> isFromBta
     )
 
-  private def requestJson(postCode: PostCode, registrationDate: DateModel, isFromBta: Boolean): JsObject =
+  private def requestJson(optPostCode: Option[PostCode], registrationDate: DateModel, isFromBta: Boolean): JsObject =
     Json.obj(
-      "postCode" -> postCode.postCode,
       "registrationDate" -> registrationDate.toLocalDate.toString,
       "isFromBta" -> isFromBta
-    )
+    ) ++ (optPostCode match {
+      case Some(postCode) => Json.obj("postCode" -> postCode.postCode)
+      case None => Json.obj()
+    })
 }
