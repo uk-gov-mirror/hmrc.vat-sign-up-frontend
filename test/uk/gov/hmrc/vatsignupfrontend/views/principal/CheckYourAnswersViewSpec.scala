@@ -162,7 +162,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         page = pageWithAdditionalKnownFacts,
         sectionId = VatBox5ValueId,
         expectedQuestion = messages.box5Value,
-        expectedAnswer = s"£$testBox5Figure",
+        expectedAnswer = s"£99,999,999,999.99",
         expectedEditLink = Some(expectedEditLink)
       )
     }
