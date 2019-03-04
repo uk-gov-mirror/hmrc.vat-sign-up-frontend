@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
+@import uk.gov.hmrc.vatsignupfrontend.utils.StringUtils._
 
 @(vatNumber: String,
   registrationDate: DateModel,
@@ -57,7 +58,7 @@
     case Some(answer) =>
       val rowQuestion = Messages("check-your-answers.box_5_value")
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url
-      summaryRowHelper(VatBox5ValueId, rowQuestion, s"£$answer", Some(rowUrl))
+      summaryRowHelper(VatBox5ValueId, rowQuestion, s"£${answer.currencyFormat()}", Some(rowUrl))
     case None => Html("")
   }
 }
