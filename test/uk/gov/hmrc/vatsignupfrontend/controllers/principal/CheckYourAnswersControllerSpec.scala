@@ -53,28 +53,32 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                      registrationDate: Option[DateModel] = Some(testDate),
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
                      optBox5Figure: Option[String] = Some(testBox5Figure),
-                     optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod)
+                     optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod),
+                     optPreviousVatReturn: Option[String] = Some(Yes.toString)
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.box5FigureKey -> optBox5Figure.getOrElse(""),
-      SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse("")
+      SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse(""),
+      SessionKeys.previousVatReturnKey -> optPreviousVatReturn.getOrElse("")
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
                       registrationDate: Option[DateModel] = Some(testDate),
                       postCode: Option[PostCode] = Some(testBusinessPostcode),
                       optBox5Figure: Option[String] = Some(testBox5Figure),
-                      optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod)
+                      optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod),
+                      optPreviousVatReturn: Option[String] = Some(Yes.toString)
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
       SessionKeys.vatNumberKey -> vatNumber.getOrElse(""),
       SessionKeys.vatRegistrationDateKey -> registrationDate.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.businessPostCodeKey -> postCode.map(Json.toJson(_).toString()).getOrElse(""),
       SessionKeys.box5FigureKey -> optBox5Figure.getOrElse(""),
-      SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse("")
+      SessionKeys.lastReturnMonthPeriodKey -> optLastReturnMonth.getOrElse(""),
+      SessionKeys.previousVatReturnKey -> optPreviousVatReturn.getOrElse("")
     )
 
   "Calling the show action of the Check your answers controller" when {
@@ -116,26 +120,27 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
     "when the AdditionalKnownFacts feature switch is enabled" when {
-      "the box 5 figure is missing" should {
-        "go to the capture box 5 figure page" in {
-          mockAuthAdminRole()
+      "the user has filed a vat return before" when {
+        "the box 5 figure is missing" should {
+          "go to the capture box 5 figure page" in {
+            mockAuthAdminRole()
 
-          val result = TestCheckYourAnswersController.show(testGetRequest(optBox5Figure = None))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+            val result = TestCheckYourAnswersController.show(testGetRequest(optBox5Figure = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+          }
+        }
+        "the last return month is missing" should {
+          "go to the capture last return month page" in {
+            mockAuthAdminRole()
+
+            val result = TestCheckYourAnswersController.show(testGetRequest(optLastReturnMonth = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+          }
         }
       }
-      "the last return month is missing" should {
-        "go to the capture last return month page" in {
-          mockAuthAdminRole()
-
-          val result = TestCheckYourAnswersController.show(testGetRequest(optLastReturnMonth = None))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-         }
-      }
     }
-
   }
 
   "Calling the submit action of the Check your answers controller" when {
@@ -329,26 +334,28 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
     "When the AdditionalKnownFacts feature switch is enabled" when {
-      "the box 5 figure is missing" should {
-        "go to the capture box 5 figure page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+      "the user has filed a vat return before" when {
+        "the box 5 figure is missing" should {
+          "go to the capture box 5 figure page" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
-          val result = TestCheckYourAnswersController.submit(testPostRequest(optBox5Figure = None))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+            val result = TestCheckYourAnswersController.submit(testPostRequest(optBox5Figure = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+          }
         }
-      }
-      "the last return month is missing" should {
-        "go to the capture last return month page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        "the last return month is missing" should {
+          "go to the capture last return month page" in {
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
-          val result = TestCheckYourAnswersController.submit(testPostRequest(optLastReturnMonth = None))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+            val result = TestCheckYourAnswersController.submit(testPostRequest(optLastReturnMonth = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+          }
         }
       }
     }
