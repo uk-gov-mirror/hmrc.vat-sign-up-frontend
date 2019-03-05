@@ -189,7 +189,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
       "return VatNumberStored(false) when the company is not overseas" in {
         mockStoreVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode.postCode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel.toLocalDate.toString,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -198,7 +198,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         val res = await(TestStoreVatNumberService.storeVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -213,7 +213,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
         "return SubscriptionClaimed" in {
           mockStoreVatNumber(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode.postCode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel.toLocalDate.toString,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -222,14 +222,14 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
           mockClaimSubscription(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel,
             isFromBta = false
           )(Future.successful(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed)))
 
           val res = await(TestStoreVatNumberService.storeVatNumber(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -243,7 +243,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
         "return VatNumberAlreadyEnrolled" in {
           mockStoreVatNumber(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode.postCode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel.toLocalDate.toString,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -252,14 +252,14 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
           mockClaimSubscription(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel,
             isFromBta = false
           )(Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential)))
 
           val res = await(TestStoreVatNumberService.storeVatNumber(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -273,7 +273,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
         "throw an InternalServerException" in {
           mockStoreVatNumber(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode.postCode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel.toLocalDate.toString,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -282,14 +282,14 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
           mockClaimSubscription(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel,
             isFromBta = false
           )(Future.successful(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(INTERNAL_SERVER_ERROR))))
 
           intercept[InternalServerException](await(TestStoreVatNumberService.storeVatNumber(
             vatNumber = testVatNumber,
-            postCode = testBusinessPostcode,
+            optPostCode = Some(testBusinessPostcode),
             registrationDate = testDateModel,
             optBox5Figure = Some(testBox5Figure),
             optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -304,7 +304,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         mockStoreVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode.postCode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel.toLocalDate.toString,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -313,7 +313,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         val res = await(TestStoreVatNumberService.storeVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -329,7 +329,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         mockStoreVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode.postCode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel.toLocalDate.toString,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -338,7 +338,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         val res = await(TestStoreVatNumberService.storeVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -352,7 +352,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
       "return VatMigrationInProgress" in {
         mockStoreVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode.postCode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel.toLocalDate.toString,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -361,7 +361,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         val res = await(TestStoreVatNumberService.storeVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -375,7 +375,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
       "throw an InternalServerException" in {
         mockStoreVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode.postCode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel.toLocalDate.toString,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
@@ -384,7 +384,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
 
         intercept[InternalServerException](await(TestStoreVatNumberService.storeVatNumber(
           vatNumber = testVatNumber,
-          postCode = testBusinessPostcode,
+          optPostCode = Some(testBusinessPostcode),
           registrationDate = testDateModel,
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),

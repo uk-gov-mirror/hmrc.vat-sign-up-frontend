@@ -57,7 +57,11 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to business entity" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberSuccess(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
         )
 
         val res = post("/check-your-answers",
@@ -80,10 +84,14 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to sign up complete client" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberAlreadySignedUp(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
         )
 
-        stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = false)(NO_CONTENT)
+        stubClaimSubscription(testVatNumber, Some(testBusinessPostCode), testDate, isFromBta = false)(NO_CONTENT)
 
         val res = post("/check-your-answers",
           Map(
@@ -105,10 +113,14 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to business already signed up error page" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberAlreadySignedUp(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
         )
 
-        stubClaimSubscription(testVatNumber, testBusinessPostCode, testDate, isFromBta = false)(CONFLICT)
+        stubClaimSubscription(testVatNumber, Some(testBusinessPostCode), testDate, isFromBta = false)(CONFLICT)
 
         val res = post("/check-your-answers",
           Map(
@@ -130,7 +142,11 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to could not confirm business" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberKnownFactsMismatch(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
         )
 
         val res = post("/check-your-answers",
@@ -153,7 +169,11 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to invalid vat number" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberInvalid(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
         )
 
         val res = post("/check-your-answers",
@@ -176,7 +196,12 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberIneligible(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false, MigratableDates()
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false,
+          MigratableDates()
         )
 
         val res = post("/check-your-answers",
@@ -199,7 +224,11 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to migration in progress error page" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberMigrationInProgress(
-          testBusinessPostCode, testDate, Some(testBox5Figure), Some(testLastReturnMonth), isFromBta = false
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
         )
 
         val res = post("/check-your-answers",

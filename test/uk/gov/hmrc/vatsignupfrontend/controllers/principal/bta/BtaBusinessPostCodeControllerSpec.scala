@@ -80,7 +80,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         mockAuthAdminRole()
         mockClaimSubscription(
           testVatNumber,
-          testBusinessPostcode,
+          Some(testBusinessPostcode),
           testDate,
           isFromBta = true
         )(Future.successful(Right(SubscriptionClaimed)))
@@ -107,7 +107,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       "goto BTA postcode non matching page" in {
         mockAuthAdminRole()
 
-        mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(KnownFactsMismatch)))
+        mockClaimSubscription(testVatNumber, Some(testBusinessPostcode), testDate, isFromBta = true)(Future.successful(Left(KnownFactsMismatch)))
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
         status(result) shouldBe Status.SEE_OTHER
@@ -139,7 +139,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       "redirect to Business already signed up page" in {
         mockAuthAdminRole()
 
-        mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(AlreadyEnrolledOnDifferentCredential)))
+        mockClaimSubscription(testVatNumber, Some(testBusinessPostcode), testDate, isFromBta = true)(Future.successful(Left(AlreadyEnrolledOnDifferentCredential)))
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
         status(result) shouldBe Status.SEE_OTHER
@@ -150,7 +150,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       "display a technical difficulties page" in {
         mockAuthAdminRole()
 
-        mockClaimSubscription(testVatNumber, testBusinessPostcode, testDate, isFromBta = true)(Future.successful(Left(InvalidVatNumber)))
+        mockClaimSubscription(testVatNumber, Some(testBusinessPostcode), testDate, isFromBta = true)(Future.successful(Left(InvalidVatNumber)))
 
         intercept[InternalServerException] {
           await(TestBusinessPostCodeController.submit(testPostRequest()))

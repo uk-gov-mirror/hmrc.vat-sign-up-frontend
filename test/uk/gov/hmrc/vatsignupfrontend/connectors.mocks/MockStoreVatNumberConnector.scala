@@ -23,6 +23,7 @@ import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreVatNumberConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser.StoreVatNumberResponse
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 import scala.concurrent.Future
 
@@ -48,7 +49,7 @@ trait MockStoreVatNumberConnector extends MockitoSugar with BeforeAndAfterEach {
 
 
   def mockStoreVatNumber(vatNumber: String,
-                         postCode: String,
+                         optPostCode: Option[PostCode],
                          registrationDate: String,
                          optBox5Figure: Option[String],
                          optLastReturnMonth: Option[String],
@@ -56,7 +57,7 @@ trait MockStoreVatNumberConnector extends MockitoSugar with BeforeAndAfterEach {
                         )(response: Future[StoreVatNumberResponse]): Unit =
     when(mockStoreVatNumberConnector.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
-      ArgumentMatchers.eq(postCode),
+      ArgumentMatchers.eq(optPostCode),
       ArgumentMatchers.eq(registrationDate),
       ArgumentMatchers.eq(optBox5Figure),
       ArgumentMatchers.eq(optLastReturnMonth),

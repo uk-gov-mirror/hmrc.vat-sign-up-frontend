@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,7 +47,7 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
     )
 
   def storeVatNumber(vatNumber: String,
-                     postCode: String,
+                     optPostCode: Option[PostCode],
                      registrationDate: String,
                      optBox5Figure: Option[String],
                      optLastReturnMonth: Option[String],
@@ -54,9 +55,9 @@ class StoreVatNumberConnector @Inject()(val http: HttpClient,
     http.POST[JsObject, StoreVatNumberResponse](
       applicationConfig.storeVatNumberUrl,
       Json.obj(vatNumberKey -> vatNumber,
-        postCodeKey -> postCode,
         registrationDateKey -> registrationDate
       )
+      ++ optionalValue(postCodeKey, optPostCode map (_.postCode))
       ++ optionalValue(box5FigureKey, optBox5Figure)
       ++ optionalValue(lastReturnMonthKey, optLastReturnMonth)
       ++ Json.obj(isFromBtaKey -> isFromBta)
