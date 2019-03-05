@@ -45,13 +45,14 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
       val optBox5Figure = request.session.get(SessionKeys.box5FigureKey).filter(_.nonEmpty)
       val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
+      val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBox5Figure, optLastReturnMonth) match {
-        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) =>
+        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
           Future.successful(
             Redirect(routes.CaptureBox5FigureController.show())
           )
-        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) =>
+        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
           Future.successful(
             Redirect(routes.CaptureLastReturnMonthPeriodController.show())
           )
@@ -114,13 +115,14 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
       val optBox5Figure = request.session.get(SessionKeys.box5FigureKey).filter(_.nonEmpty)
       val optlastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
+      val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBox5Figure, optlastReturnMonth) match {
-        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) =>
+        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
           Future.successful(
             Redirect(routes.CaptureBox5FigureController.show())
           )
-        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) =>
+        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
           Future.successful(
             Redirect(routes.CaptureLastReturnMonthPeriodController.show())
           )
