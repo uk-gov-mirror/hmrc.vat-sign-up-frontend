@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{vatNumberKey, businessEntityKey}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -75,7 +75,16 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                     else
                       Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
                   case _ =>
-                    checkVrnEligibility(formVatNumber)
+                    checkVrnEligibility(formVatNumber) map {
+                      _.removingFromSession(
+                        vatRegistrationDateKey,
+                        businessPostCodeKey,
+                        previousVatReturnKey,
+                        lastReturnMonthPeriodKey,
+                        box5FigureKey
+                      )
+                    }
+
                 }
             }
           } else Future.successful(Redirect(routes.InvalidVatNumberController.show()))

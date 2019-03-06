@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
@@ -27,14 +29,15 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, vatNumberKey}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
-import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, Overseas}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils
 
 import scala.concurrent.Future
 
@@ -263,6 +266,33 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
               result.session get vatNumberKey should contain(testVatNumber)
+            }
+
+            "delete the known facts when they have been entered previously" in {
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockVatNumberEligibilitySuccess(testVatNumber)
+
+              implicit val request = testPostRequest(testVatNumber)
+                .withSession(
+                  vatRegistrationDateKey -> Json.toJson(DateModel.dateConvert(LocalDate.now())).toString,
+                  businessPostCodeKey -> testBusinessPostcode.postCode,
+                  previousVatReturnKey -> Yes.toString,
+                  lastReturnMonthPeriodKey -> testLastReturnMonthPeriod,
+                  box5FigureKey -> testBox5Figure
+                )
+
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+
+              result.session get vatNumberKey should contain(testVatNumber)
+              result.session get vatRegistrationDateKey shouldBe empty
+              result.session get businessPostCodeKey shouldBe empty
+              result.session get previousVatReturnKey shouldBe empty
+              result.session get lastReturnMonthPeriodKey shouldBe empty
+              result.session get box5FigureKey shouldBe empty
             }
           }
 
