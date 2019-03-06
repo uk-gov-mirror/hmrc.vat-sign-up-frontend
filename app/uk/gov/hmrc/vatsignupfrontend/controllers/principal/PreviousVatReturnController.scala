@@ -60,6 +60,10 @@ class PreviousVatReturnController @Inject()(val controllerComponents: Controller
               Future.successful(
                 Redirect(routes.CheckYourAnswersController.show())
                   .addingToSession(SessionKeys.previousVatReturnKey -> No.toString)
+                  .removingFromSession(
+                    SessionKeys.lastReturnMonthPeriodKey,
+                    SessionKeys.box5FigureKey
+                  )
               )
           }
         )

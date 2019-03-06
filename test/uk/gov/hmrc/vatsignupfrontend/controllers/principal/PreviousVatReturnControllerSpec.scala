@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
 class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerComponents {
@@ -47,15 +48,15 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
   }
 
   "Calling the show action of the Previous Vat Return controller" when {
-      "go to the Previous Vat Return page" in {
-        mockAuthAdminRole()
+    "go to the Previous Vat Return page" in {
+      mockAuthAdminRole()
 
-        val result = TestPreviousVatReturnController.show(testGetRequest)
-        status(result) shouldBe Status.OK
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
-      }
+      val result = TestPreviousVatReturnController.show(testGetRequest)
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
+  }
 
   "Calling the submit action of the Previous Vat Return controller" when {
     "form successfully submitted" should {
@@ -63,10 +64,12 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
         "go to vat number" in {
           mockAuthAdminRole()
 
-          val result = TestPreviousVatReturnController.submit(testPostRequest(usersChoice = "yes"))
+          val testRequest = testPostRequest(usersChoice = "yes")
+
+          val result = TestPreviousVatReturnController.submit(testRequest)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
-          result.session(testPostRequest(usersChoice = "no")).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.toString)
+          result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.toString)
         }
       }
 
@@ -75,10 +78,29 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
           "go to check your answers" in {
             mockAuthAdminRole()
 
-            val result = TestPreviousVatReturnController.submit(testPostRequest(usersChoice = "no"))
+            val testRequest = testPostRequest(usersChoice = "no")
+
+            val result = TestPreviousVatReturnController.submit(testRequest)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
-            result.session(testPostRequest(usersChoice = "no")).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.toString)
+            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.toString)
+          }
+        }
+        "the VAT number is stored successfully" should {
+          "delete the new known facts and go to check your answers" in {
+            mockAuthAdminRole()
+
+            val testRequest = testPostRequest(usersChoice = "no").withSession(
+              SessionKeys.box5FigureKey -> testBox5Figure,
+              SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonthPeriod
+            )
+
+            val result = TestPreviousVatReturnController.submit(testRequest)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
+            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.toString)
+            result.session(testRequest).get(SessionKeys.lastReturnMonthPeriodKey) shouldBe None
+            result.session(testRequest).get(SessionKeys.box5FigureKey) shouldBe None
           }
         }
       }
