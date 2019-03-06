@@ -37,7 +37,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils
 
 import scala.concurrent.Future
 
@@ -278,7 +277,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 .withSession(
                   vatRegistrationDateKey -> Json.toJson(DateModel.dateConvert(LocalDate.now())).toString,
                   businessPostCodeKey -> testBusinessPostcode.postCode,
-                  previousVatReturnKey -> Yes.toString,
+                  previousVatReturnKey -> Yes.stringValue,
                   lastReturnMonthPeriodKey -> testLastReturnMonthPeriod,
                   box5FigureKey -> testBox5Figure
                 )
@@ -290,6 +289,35 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               result.session get vatNumberKey should contain(testVatNumber)
               result.session get vatRegistrationDateKey shouldBe empty
               result.session get businessPostCodeKey shouldBe empty
+              result.session get previousVatReturnKey shouldBe empty
+              result.session get lastReturnMonthPeriodKey shouldBe empty
+              result.session get box5FigureKey shouldBe empty
+            }
+
+            "overseas user changes vat number to non overseas vat number" in {
+              mockAuthorise(
+                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockVatNumberEligibilitySuccess(testVatNumber)
+
+              implicit val request = testPostRequest(testVatNumber)
+                .withSession(
+                  vatRegistrationDateKey -> Json.toJson(DateModel.dateConvert(LocalDate.now())).toString,
+                  businessPostCodeKey -> testBusinessPostcode.postCode,
+                  previousVatReturnKey -> Yes.stringValue,
+                  businessEntityKey -> Overseas.toString,
+                  lastReturnMonthPeriodKey -> testLastReturnMonthPeriod,
+                  box5FigureKey -> testBox5Figure
+                )
+
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+
+              result.session get vatNumberKey should contain(testVatNumber)
+              result.session get vatRegistrationDateKey shouldBe empty
+              result.session get businessPostCodeKey shouldBe empty
+              result.session get businessEntityKey shouldBe empty
               result.session get previousVatReturnKey shouldBe empty
               result.session get lastReturnMonthPeriodKey shouldBe empty
               result.session get box5FigureKey shouldBe empty
