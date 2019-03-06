@@ -69,7 +69,7 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
           val result = TestPreviousVatReturnController.submit(testRequest)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
-          result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.toString)
+          result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.stringValue)
         }
       }
 
@@ -83,7 +83,7 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
             val result = TestPreviousVatReturnController.submit(testRequest)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
-            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.toString)
+            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.stringValue)
           }
         }
         "the VAT number is stored successfully" should {
@@ -98,7 +98,7 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
             val result = TestPreviousVatReturnController.submit(testRequest)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
-            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.toString)
+            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.stringValue)
             result.session(testRequest).get(SessionKeys.lastReturnMonthPeriodKey) shouldBe None
             result.session(testRequest).get(SessionKeys.box5FigureKey) shouldBe None
           }

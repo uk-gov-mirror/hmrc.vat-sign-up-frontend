@@ -16,8 +16,14 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models
 
-sealed trait YesNo
+sealed trait YesNo {
+  val stringValue : String
+}
 
-object Yes extends YesNo
+object Yes extends YesNo {
+  override val stringValue: String = "Yes"
+}
 
-object No extends YesNo
+object No extends YesNo {
+  override val stringValue: String = "No"
+}

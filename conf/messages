@@ -474,8 +474,9 @@ check-your-answers.sub_heading                                         = You''ve
 check-your-answers.your_vat_number                                     = What is your VAT number?
 check-your-answers.vat_registration_date                               = What is your VAT registration date?
 check-your-answers.business_post_code                                  = What is your business postcode?
+check-your-answers.previous_vat_return                                 = Are you currently submitting VAT returns?
 check-your-answers.business_entity                                     = What type of business are you registered as?
-check-your-answers.box_5_value                                         = What is your Box 5 amount?
+check-your-answers.box_5_figure                                        = What is your Box 5 amount?
 check-your-answers.last_return_month_period                            = When was your most recent VAT payment?
 
 # No CT Enrolment Summary page

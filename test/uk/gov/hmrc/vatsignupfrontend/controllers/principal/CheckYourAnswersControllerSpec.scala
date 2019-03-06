@@ -54,7 +54,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                      postCode: Option[PostCode] = Some(testBusinessPostcode),
                      optBox5Figure: Option[String] = Some(testBox5Figure),
                      optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod),
-                     optPreviousVatReturn: Option[String] = Some(Yes.toString),
+                     optPreviousVatReturn: Option[String] = Some(Yes.stringValue),
                      optBusinessEntity: Option[String] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
@@ -72,7 +72,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                       postCode: Option[PostCode] = Some(testBusinessPostcode),
                       optBox5Figure: Option[String] = Some(testBox5Figure),
                       optLastReturnMonth: Option[String] = Some(testLastReturnMonthPeriod),
-                      optPreviousVatReturn: Option[String] = Some(Yes.toString),
+                      optPreviousVatReturn: Option[String] = Some(Yes.stringValue),
                       optBusinessEntity: Option[String] = None
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
@@ -134,7 +134,43 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
     "when the AdditionalKnownFacts feature switch is enabled" when {
-      "the user has filed a vat return before" when {
+      "all prerequisite data is in session" when {
+        "vat number is missing" should {
+          "go to capture vat number page" in {
+            mockAuthAdminRole()
+
+            val result = TestCheckYourAnswersController.show(testGetRequest(vatNumber = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
+          }
+        }
+        "vat registration date is missing" should {
+          "go to capture vat registration date page" in {
+            mockAuthAdminRole()
+
+            val result = TestCheckYourAnswersController.show(testGetRequest(registrationDate = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+          }
+        }
+        "post code is missing" should {
+          "go to business post code page" in {
+            mockAuthAdminRole()
+
+            val result = TestCheckYourAnswersController.show(testGetRequest(postCode = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
+          }
+        }
+        "previous VAT return is missing" should {
+          "go to Previous VAT return page" in {
+            mockAuthAdminRole()
+
+            val result = TestCheckYourAnswersController.show(testGetRequest(optPreviousVatReturn = None))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
+          }
+        }
         "the box 5 figure is missing" should {
           "go to the capture box 5 figure page" in {
             mockAuthAdminRole()
@@ -179,7 +215,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
       }
       "store vat number returned SubscriptionClaimed" when {
-        "goto business entity controller" in {
+        "goto sign up complete controller" in {
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
           )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))

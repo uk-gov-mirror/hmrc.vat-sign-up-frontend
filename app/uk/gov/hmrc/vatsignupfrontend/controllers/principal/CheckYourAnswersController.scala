@@ -48,34 +48,39 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
 
-      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBox5Figure, optLastReturnMonth) match {
-        case (None, _, _, _, _) =>
+      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optLastReturnMonth) match {
+        case (None, _, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
           )
-        case (_, None, _, _, _) =>
+        case (_, None, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatRegistrationDateController.show())
           )
-        case (_, _, None, _, _) if optBusinessEntity.isEmpty =>
+        case (_, _, None, _, _, _) if optBusinessEntity.isEmpty =>
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
-        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString)=>
+        case (_, _, _, None, _, _) if isEnabled(AdditionalKnownFacts) =>
+          Future.successful(
+            Redirect(routes.PreviousVatReturnController.show())
+          )
+        case (_, _, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureBox5FigureController.show())
           )
-        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
+        case (_, _, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureLastReturnMonthPeriodController.show())
           )
-        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _) =>
+        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) =>
           Future.successful(
             Ok(check_your_answers(
               vatNumber = vatNumber,
               registrationDate = vatRegistrationDate,
               optPostCode = if (optBusinessEntity contains Overseas.toString) None else optBusinessPostCode,
-              optBox5Value = optBox5Figure,
+              optPreviousVatReturn = optPreviousVatReturn,
+              optBox5Figure = optBox5Figure,
               optLastReturnMonthPeriod = optLastReturnMonth,
               postAction = routes.CheckYourAnswersController.submit()))
           )
@@ -120,28 +125,32 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
 
-      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optBox5Figure, optlastReturnMonth) match {
-        case (None, _, _, _, _) =>
+      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optlastReturnMonth) match {
+        case (None, _, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
           )
-        case (_, None, _, _, _) =>
+        case (_, None, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatRegistrationDateController.show())
           )
-        case (_, _, None, _, _) =>
+        case (_, _, None, _, _, _) if optBusinessEntity.isEmpty =>
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
-        case (_, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
+        case (_, _, _, None, _, _) =>
+          Future.successful(
+            Redirect(routes.PreviousVatReturnController.show())
+          )
+        case (_, _, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureBox5FigureController.show())
           )
-        case (_, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.toString) =>
+        case (_, _, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureLastReturnMonthPeriodController.show())
           )
-        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _) =>
+        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) =>
           storeVatNumber(
             vatNumber = vatNumber,
             optPostCode = if (optBusinessEntity contains Overseas.toString) None else optBusinessPostCode,
