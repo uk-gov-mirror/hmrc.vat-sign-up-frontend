@@ -54,12 +54,12 @@ class PreviousVatReturnController @Inject()(val controllerComponents: Controller
             case Yes =>
               Future.successful(
                 Redirect(routes.CaptureBox5FigureController.show())
-                  .addingToSession(SessionKeys.previousVatReturnKey -> Yes.toString)
+                  .addingToSession(SessionKeys.previousVatReturnKey -> Yes.stringValue)
               )
             case No =>
               Future.successful(
                 Redirect(routes.CheckYourAnswersController.show())
-                  .addingToSession(SessionKeys.previousVatReturnKey -> No.toString)
+                  .addingToSession(SessionKeys.previousVatReturnKey -> No.stringValue)
                   .removingFromSession(
                     SessionKeys.lastReturnMonthPeriodKey,
                     SessionKeys.box5FigureKey

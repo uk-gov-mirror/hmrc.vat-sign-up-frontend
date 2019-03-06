@@ -21,7 +21,7 @@ import java.util.UUID
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Generator
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, January, PostCode, UserDetailsModel}
+import uk.gov.hmrc.vatsignupfrontend.models._
 
 import scala.util.Random
 
@@ -50,4 +50,5 @@ object IntegrationTestConstants {
   val testPartnershipType: String = "limitedPartnership"
   val testBox5Figure: String = "1234.56"
   val testLastReturnMonth: String = January.toString
+  val testPreviousVatSubmitted: String = Yes.stringValue
 }

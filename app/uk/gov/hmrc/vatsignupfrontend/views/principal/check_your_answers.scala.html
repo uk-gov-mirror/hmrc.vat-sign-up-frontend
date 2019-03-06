@@ -25,7 +25,8 @@
 @(vatNumber: String,
   registrationDate: DateModel,
   optPostCode: Option[PostCode],
-  optBox5Value: Option[String] = None,
+  optPreviousVatReturn: Option[String] = None,
+  optBox5Figure: Option[String] = None,
   optLastReturnMonthPeriod: Option[String] = None,
   postAction: Call
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -52,17 +53,29 @@
       val rowQuestion = Messages("check-your-answers.business_post_code")
       val rowAnswer = postCode.checkYourAnswersFormat
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
-      summaryRowHelper(BusinessPostCodeId, rowQuestion, postCode.checkYourAnswersFormat, Some(rowUrl))
+      summaryRowHelper(BusinessPostCodeId, rowQuestion, rowAnswer, Some(rowUrl))
     case None => Html("")
   }
 }
 
-@box5Value() = @{
-  optBox5Value match {
+@previousVatReturn() = @{
+  optPreviousVatReturn match {
     case Some(answer) =>
-      val rowQuestion = Messages("check-your-answers.box_5_value")
+      val rowQuestion = Messages("check-your-answers.previous_vat_return")
+      val rowAnswer = answer
+      val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.PreviousVatReturnController.show().url
+      summaryRowHelper(PreviousVatReturnId, rowQuestion, rowAnswer, Some(rowUrl))
+    case None => Html("")
+  }
+}
+
+@box5Figure() = @{
+  optBox5Figure match {
+    case Some(answer) =>
+      val rowQuestion = Messages("check-your-answers.box_5_figure")
+      val rowAnswer = s"£${answer.currencyFormat()}"
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url
-      summaryRowHelper(VatBox5ValueId, rowQuestion, s"£${answer.currencyFormat()}", Some(rowUrl))
+      summaryRowHelper(VatBox5FigureId, rowQuestion, rowAnswer, Some(rowUrl))
     case None => Html("")
   }
 }
@@ -71,8 +84,9 @@
   optLastReturnMonthPeriod match {
     case Some(answer) =>
       val rowQuestion = Messages("check-your-answers.last_return_month_period")
+      val rowAnswer = answer
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url
-      summaryRowHelper(VatLastReturnMonthId, rowQuestion, answer, Some(rowUrl))
+      summaryRowHelper(VatLastReturnMonthId, rowQuestion, rowAnswer, Some(rowUrl))
     case None => Html("")
   }
 }
@@ -86,7 +100,8 @@
         @yourVatNumber()
         @vatRegistrationDate()
         @businessPostCode()
-        @box5Value()
+        @previousVatReturn()
+        @box5Figure()
         @lastReturnMonthPeriod()
         <div class="divider--top--thick"></div>
     </div>

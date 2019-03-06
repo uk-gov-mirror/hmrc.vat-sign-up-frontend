@@ -70,7 +70,8 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
-            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted
           )
         )()
 
@@ -99,6 +100,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
             SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
@@ -128,6 +130,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
             SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
@@ -155,6 +158,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
             SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
@@ -182,6 +186,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
             SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
           )
         )()
@@ -210,7 +215,8 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
-            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted
           )
         )()
 
@@ -237,7 +243,8 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.box5FigureKey -> testBox5Figure,
-            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted
           )
         )()
 
