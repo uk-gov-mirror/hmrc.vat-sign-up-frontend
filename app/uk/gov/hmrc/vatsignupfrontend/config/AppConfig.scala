@@ -162,7 +162,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val taxEnrolmentsUrl: String = baseUrl("tax-enrolments")
 
-  lazy val softwareOptionsUrl: String = govUK + "/guidance/software-for-sending-income-tax-updates"
+  lazy val softwareOptionsUrl: String = govUK + "/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
 
   lazy val recoverAccountUrl: String = govUK + "/log-in-register-hmrc-online-services/problems-signing-in"
 
