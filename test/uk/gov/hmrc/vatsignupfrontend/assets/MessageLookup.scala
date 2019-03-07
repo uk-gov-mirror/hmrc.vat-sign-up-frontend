@@ -930,4 +930,17 @@ object MessageLookup {
     val line = "Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online."
   }
 
+  object CancelDirectDebit {
+    val heading = "If you do not want to use your email address for Direct Debit notifications"
+    val title= heading + ServiceName.principalSuffix
+    val line1 = "You will need to:"
+    val bullet1= "cancel your Direct Debit with your bank"
+    val bullet2 = "notify HMRC that you have cancelled the Direct Debit"
+    val bullet3 = "wait 7 to 10 days before trying to sign up again"
+    val linkText = "Go back to Direct debit terms and conditions"
+    val linkId = "directDebitTerms"
+    val link = "/DD-terms-conditions"
+    val buttonText = "Logout"
+  }
+
 }
