@@ -165,7 +165,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+          redirectUri(routes.VatCouldNotConfirmBusinessController.show().url)
         )
       }
     }

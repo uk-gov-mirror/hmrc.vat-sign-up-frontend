@@ -249,7 +249,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmBusinessController.show().url)
+          redirectLocation(result) shouldBe Some(routes.VatCouldNotConfirmBusinessController.show().url)
         }
       }
       "store vat number returned InvalidVatNumber" should {
