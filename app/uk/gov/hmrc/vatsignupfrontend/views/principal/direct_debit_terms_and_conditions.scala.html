@@ -22,16 +22,13 @@
 
 @(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@scripts = {
-    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-change-email.js")></script>
-}
-
-@principal_main_template(title = Messages("principal.direct_debit_terms_and_conditions.title"), scriptElem = Some(scripts)) {
+@principal_main_template(title = Messages("principal.direct_debit_terms_and_conditions.title")) {
 
     <h1 class="heading-large">@Messages("principal.direct_debit_terms_and_conditions.heading")</h1>
 
     <p>
         @Messages("principal.direct_debit_terms_and_conditions.line.pre_link")
+        <!--TODO: Add link to DD Terms & Conditions once known-->
         <a id="termsAndConditionsLink" href="#">@Messages("principal.direct_debit_terms_and_conditions.line.link")</a>
         @Messages("principal.direct_debit_terms_and_conditions.line.after_link")
     </p>
@@ -42,5 +39,6 @@
         </div>
     }
 
+    <!--TODO: Add reverse route to DD Not Agreed Controller once created -->
     <p><a id="notAgreeLink" href="#">@Messages("principal.direct_debit_terms_and_conditions.not_agree_link")</a></p>
 }
