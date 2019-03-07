@@ -34,6 +34,7 @@ lazy val root = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(PlayKeys.playDefaultPort := 9566)
 
 scoverageSettings
 scalaSettings
