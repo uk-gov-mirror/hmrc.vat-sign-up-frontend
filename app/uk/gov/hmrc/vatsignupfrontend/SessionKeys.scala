@@ -41,5 +41,5 @@ object SessionKeys {
   val previousVatReturnKey = "previousVatReturn"
   val lastReturnMonthPeriodKey = "lastReturnMonthPeriod"
   val box5FigureKey = "box5Figure"
-  val directDebitKey = ??? // TODO : To be confirmed
+  val directDebitKey = "directDebitResolver"
 }
