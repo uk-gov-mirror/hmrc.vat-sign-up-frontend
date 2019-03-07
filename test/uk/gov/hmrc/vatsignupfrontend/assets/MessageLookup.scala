@@ -609,7 +609,7 @@ object MessageLookup {
     val title = heading + ServiceName.principalSuffix
 
     object Section {
-      val link = "/guidance/software-for-sending-income-tax-updates"
+      val link = "/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
       val linkText = "Choose relevant third party software (opens in a new window or tab)"
 
       val heading = "What happens next"
