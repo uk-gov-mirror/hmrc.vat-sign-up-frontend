@@ -19,6 +19,7 @@ base.accept_and_continue                                               = Accept 
 base.continue_to_sign_up                                               = Continue to sign up
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
+base.logout                                                            = Logout
 base.sign_up_client                                                    = Sign up your client
 base.sign_up_another_client                                            = Sign up another client
 base.sign_in_with_another_id                                           = Sign in with another user ID
@@ -874,3 +875,12 @@ principal.previous_vat_return.heading                                 = Are you 
 principal.capture_box_5_figure.title                                  = What is your Box 5 amount?
 principal.capture_box_5_figure.heading                                = What is your Box 5 amount?
 principal.capture_box_5_figure.line                                   = Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online.
+
+## Cancel Direct Debit page
+principal.cancel_direct_debit.title                                   = If you do not want to use your email address for Direct Debit notifications
+principal.cancel_direct_debit.heading                                 = If you do not want to use your email address for Direct Debit notifications
+principal.cancel_direct_debit.line_1                                  = You will need to:
+principal.cancel_direct_debit.bullet_1                                = cancel your Direct Debit with your bank
+principal.cancel_direct_debit.bullet_2                                = notify HMRC that you have cancelled the Direct Debit
+principal.cancel_direct_debit.bullet_3                                = wait 7 to 10 days before trying to sign up again
+principal.cancel_direct_debit.line_2                                  = <a href="{0}">Go back to Direct debit terms and conditions</a>
