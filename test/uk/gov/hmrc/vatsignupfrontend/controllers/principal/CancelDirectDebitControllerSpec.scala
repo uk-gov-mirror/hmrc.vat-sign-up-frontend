@@ -20,6 +20,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
@@ -48,8 +49,10 @@ class CancelDirectDebitControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         mockAuthAdminRole()
         disable(DirectDebitTermsJourney)
 
-        val result = TestCancelDirectDebitController.show(testGetRequest)
-        status(result) shouldBe Status.NOT_FOUND
+        intercept[NotFoundException](
+          await(TestCancelDirectDebitController.show(testGetRequest))
+        )
+
       }
     }
   }
