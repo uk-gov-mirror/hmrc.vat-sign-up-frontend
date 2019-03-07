@@ -106,7 +106,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       case Right(VatNumberStored(isOverseas)) if isOverseas => Redirect(routes.OverseasResolverController.resolve())
       case Right(VatNumberStored(_)) => Redirect(routes.CaptureBusinessEntityController.show())
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
-      case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
+      case Left(KnownFactsMismatch) => Redirect(routes.VatCouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
       case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
       case Left(VatNumberAlreadyEnrolled) => Redirect(bta.routes.BusinessAlreadySignedUpController.show())
@@ -138,7 +138,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
-        case (_, _, _, None, _, _) =>
+        case (_, _, _, None, _, _) if isEnabled(AdditionalKnownFacts) =>
           Future.successful(
             Redirect(routes.PreviousVatReturnController.show())
           )
