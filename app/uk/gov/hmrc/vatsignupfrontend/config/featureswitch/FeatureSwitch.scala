@@ -40,7 +40,8 @@ object FeatureSwitch {
     RegisteredSocietyJourney,
     CharityJourney,
     GovernmentOrganisationJourney,
-    AdditionalKnownFacts
+    AdditionalKnownFacts,
+    DirectDebitTermsJourney
   )
 
   def apply(str: String): FeatureSwitch =
@@ -131,4 +132,9 @@ case object WelshTranslation extends FeatureSwitch {
 case object AdditionalKnownFacts extends FeatureSwitch {
   override val name: String = s"$prefix.additional-known-facts"
   override val displayText: String = "Enable the two additional Known Facts"
+}
+
+case object DirectDebitTermsJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.direct-debit-terms-journey"
+  override val displayText: String = "Enable the Direct Debit T&Cs Journey"
 }
