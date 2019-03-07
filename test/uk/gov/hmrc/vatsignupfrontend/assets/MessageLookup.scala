@@ -943,7 +943,7 @@ object MessageLookup {
     val buttonText = "Logout"
   }
 
-  object PrincipalTermsAndConditions {
+  object PrincipalDirectDebitTermsAndConditions {
     val heading = "Terms and Conditions"
     val title = heading + ServiceName.principalSuffix
     val link1 = "Direct Debit terms and conditions (opens in a new window or tab)"
