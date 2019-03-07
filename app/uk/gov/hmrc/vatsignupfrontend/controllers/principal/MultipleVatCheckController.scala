@@ -64,10 +64,10 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                     Future.successful(Redirect(routes.CannotSignUpAnotherAccountController.show()))
                   case _ =>
                     storeVatNumberService.storeVatNumber(vatNumber, isFromBta = false) map {
-                      case Right(VatNumberStored(true)) =>
+                      case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
                         Redirect(routes.OverseasResolverController.resolve())
                           .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-                      case Right(VatNumberStored(false)) =>
+                      case Right(VatNumberStored(_, isDirectDebit)) =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())

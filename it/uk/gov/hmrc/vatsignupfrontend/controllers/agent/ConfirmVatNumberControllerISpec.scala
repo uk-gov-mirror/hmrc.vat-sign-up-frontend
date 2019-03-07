@@ -58,7 +58,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the overseas resolver controller" when {
       "the overseas vat number is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreVatNumberOverseas(isFromBta = false)
+        stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 

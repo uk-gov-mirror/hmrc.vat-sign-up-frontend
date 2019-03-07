@@ -30,17 +30,19 @@ object StoreVatNumberHttpParser {
   val KnownFactsMismatchCode = "KNOWN_FACTS_MISMATCH"
   val SubscriptionClaimedCode = "SUBSCRIPTION_CLAIMED"
   val MigrationInProgressCode = "VatMigrationInProgress"
+  val DirectDebitKey = "isDirectDebit"
 
   implicit object StoreVatNumberHttpReads extends HttpReads[StoreVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreVatNumberResponse = {
 
       def responseCode: Option[String] = (response.json \ CodeKey).asOpt[String]
-      
+
       response.status match {
-        case OK => (response.json \ OverseasTrader.key).asOpt[Boolean] match {
-          case Some(isOverseas) if isOverseas => Right(VatNumberStored(isOverseas = true))
-          case _ => Right(VatNumberStored(isOverseas = false))
-        }
+        case OK =>
+          val isOverseas = (response.json \ OverseasTrader.key).asOpt[Boolean] getOrElse false
+          val isDirectDebit = (response.json \ DirectDebitKey).asOpt[Boolean] getOrElse false
+
+          Right(VatNumberStored(isOverseas, isDirectDebit))
         case FORBIDDEN if responseCode contains NoRelationshipCode => Left(NoAgentClientRelationship)
         case FORBIDDEN if responseCode contains KnownFactsMismatchCode => Left(KnownFactsMismatch)
         case PRECONDITION_FAILED => Left(InvalidVatNumber)
@@ -57,7 +59,7 @@ object StoreVatNumberHttpParser {
 
   sealed trait StoreVatNumberSuccess
 
-  case class VatNumberStored(isOverseas: Boolean = false) extends StoreVatNumberSuccess
+  case class VatNumberStored(isOverseas: Boolean = false, isDirectDebit: Boolean) extends StoreVatNumberSuccess
 
   sealed trait StoreVatNumberFailure
 
