@@ -101,13 +101,17 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
       case Right(_) =>
         Redirect(routes.CaptureVatRegistrationDateController.show())
           .addingToSession(vatNumberKey -> formVatNumber)
+          .removingFromSession(businessEntityKey)
       case Left(IneligibleForMtdVatNumber(MigratableDates(None, None))) =>
         Redirect(routes.CannotUseServiceController.show())
+          .removingFromSession(businessEntityKey)
       case Left(IneligibleForMtdVatNumber(migratableDates)) =>
         Redirect(routes.MigratableDatesController.show())
           .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+          .removingFromSession(businessEntityKey)
       case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) =>
         Redirect(routes.InvalidVatNumberController.show())
+          .removingFromSession(businessEntityKey)
       case Left(VatNumberEligibilityFailureResponse(status)) =>
         throw new InternalServerException(s"Failure retrieving eligibility of vat number: status=$status")
     }
