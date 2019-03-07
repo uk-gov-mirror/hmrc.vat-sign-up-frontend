@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers
 
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.Result
 import uk.gov.hmrc.play.test.UnitSpec
@@ -25,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.utils.MaterializerSupport
 
 trait ControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MaterializerSupport {
 
-  def titleOf(result: Result): String = Jsoup.parse(bodyOf(result)).title
+  def document(result: Result): Document = Jsoup.parse(bodyOf(result))
+  def titleOf(result: Result): String = document(result).title
 
 }
