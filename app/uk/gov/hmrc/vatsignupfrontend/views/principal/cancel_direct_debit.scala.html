@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.signOutButton
 
@@ -35,5 +36,12 @@
     </div>
 
     @signOutButton(alternativeText = Some(Messages("base.logout")), isAgent = false)
+
+    <p>
+        <a id="directDebitTerms" href="@routes.DirectDebitTermsAndConditionsController.show().url">
+            @Messages("principal.cancel_direct_debit.line_2")
+        </a>
+    </p>
+
 
 }

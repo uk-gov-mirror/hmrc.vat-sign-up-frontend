@@ -883,7 +883,7 @@ principal.cancel_direct_debit.line_1                                  = You will
 principal.cancel_direct_debit.bullet_1                                = cancel your Direct Debit with your bank
 principal.cancel_direct_debit.bullet_2                                = notify HMRC that you have cancelled the Direct Debit
 principal.cancel_direct_debit.bullet_3                                = wait 7 to 10 days before trying to sign up again
-principal.cancel_direct_debit.line_2                                  = <a href="{0}">Go back to Direct debit terms and conditions</a>
+principal.cancel_direct_debit.line_2                                  = Go back to Direct debit terms and conditions
 
 ## Direct Debit Terms and Conditions
 principal.direct_debit_terms_and_conditions.title                     = Terms and Conditions
