@@ -38,13 +38,14 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
   }
 
   "POST /terms-of-participation" when {
-    "Submission is successful" should {
-      "redirect to information received" in {
+    "the user has the direct debit attribute on the control list" should {
+      "Submit successfully and redirect to information received" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionSuccess()
 
         val res = post("/terms-of-participation", cookies = Map(
           SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.hasDirectDebitKey -> "true",
           SessionKeys.acceptedDirectDebitTermsKey -> "true"
         ))()
 
@@ -53,24 +54,30 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
           redirectUri(routes.InformationReceivedController.show().url)
         )
       }
-    }
-    "Submission is unsuccessful" should {
-      "return INTERNAL_SERVER_ERROR" in {
-        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubSubmissionFailure()
 
-        val res = post("/terms-of-participation", cookies = Map(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.acceptedDirectDebitTermsKey -> "true"
-        ))()
+      "Submission is unsuccessful" should {
+        "return INTERNAL_SERVER_ERROR" in {
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubSubmissionFailure()
 
-        res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
-        )
+          val res = post("/terms-of-participation", cookies = Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.hasDirectDebitKey -> "true",
+            SessionKeys.acceptedDirectDebitTermsKey -> "true"
+          ))()
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR)
+          )
+        }
       }
     }
-    "Vat number and acceptedDirectDebit keys missing from session" should {
-      "redirect to resolve-vat-number" in {
+  }
+
+  "the user does not have the direct debit attribute on the control list" should {
+    "redirect to resolve-vat-number" when {
+      "vat number and acceptedDirectDebit keys missing from session" in {
+
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
@@ -82,13 +89,15 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
         )
       }
     }
-    "acceptedDirectDebit key is missing from session" should {
-      "redirect to resolve-vat-number" in {
+    "redirect to direct-debit-terms-and-conditions" when {
+      "acceptedDirectDebit key is missing from session" in {
+
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
         val res = post("/terms-of-participation", cookies = Map(
-          SessionKeys.vatNumberKey -> testVatNumber
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.hasDirectDebitKey -> "true"
         ))()
 
         res should have(
@@ -97,13 +106,14 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
         )
       }
     }
-    "acceptedDirectDebit key in session is invalid" should {
-      "redirect to resolve-vat-number" in {
+    "redirect to direct-debit-terms-and-conditions" when {
+      "acceptedDirectDebit key in session is false" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
         val res = post("/terms-of-participation", cookies = Map(
           SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.hasDirectDebitKey -> "true",
           SessionKeys.acceptedDirectDebitTermsKey -> "false"
         ))()
 
@@ -113,8 +123,8 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
         )
       }
     }
-    "vat number key is missing from session" should {
-      "redirect to resolve-vat-number" in {
+    "redirect to resolve-vat-number" when {
+      "vat number key is missing from session" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 

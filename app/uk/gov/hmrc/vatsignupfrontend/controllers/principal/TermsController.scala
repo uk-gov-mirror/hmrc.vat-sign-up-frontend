@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
@@ -31,8 +31,8 @@ import scala.concurrent.Future
 
 @Singleton
 class TermsController @Inject()(val controllerComponents: ControllerComponents,
-                                val submissionService: SubmissionService)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+                                val submissionService: SubmissionService
+                               ) extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -46,18 +46,30 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents,
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val acceptedDirectDebitTerms = request.session.get(SessionKeys.acceptedDirectDebitTermsKey).getOrElse("false").toBoolean
+      val hasDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
 
-      optVatNumber match {
-        case Some(vatNumber) if acceptedDirectDebitTerms =>
-          submissionService.submit(vatNumber).map {
-            case Right(_) => {
-              Redirect(routes.InformationReceivedController.show())
-            }
-            case Left(SubmissionFailureResponse(status)) =>
-              throw new InternalServerException(s"Submission failed, backend returned: $status")
-          }
-        case Some(_) => Future.successful(Redirect(routes.DirectDebitTermsAndConditionsController.show()))
-        case _ => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+      def submit(vatNumber: String): Future[Result] = {
+        submissionService.submit(vatNumber).map {
+          case Right(_) =>
+            Redirect(routes.InformationReceivedController.show())
+          case Left(SubmissionFailureResponse(status)) =>
+            throw new InternalServerException(s"Submission failed, backend returned: $status")
+        }
+      }
+
+      (optVatNumber, hasDirectDebit) match {
+        case (Some(vatNumber), true) if acceptedDirectDebitTerms =>
+          submit(vatNumber)
+        case (Some(vatNumber), false) =>
+          submit(vatNumber)
+        case (Some(_), true) =>
+          Future.successful(
+            Redirect(routes.DirectDebitTermsAndConditionsController.show())
+          )
+        case _ =>
+          Future.successful(
+            Redirect(routes.ResolveVatNumberController.resolve())
+          )
       }
     }
   }
