@@ -79,7 +79,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
+          redirectUri(routes.DirectDebitResolverController.show().url)
         )
       }
     }
@@ -96,7 +96,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
+          redirectUri(routes.DirectDebitResolverController.show().url)
         )
       }
     }
