@@ -35,19 +35,31 @@ class CaptureEmailController @Inject()(val controllerComponents: ControllerCompo
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      val hasDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
+
       Future.successful(
-        Ok(capture_email(validateEmailForm.form, routes.CaptureEmailController.submit()))
+        Ok(capture_email(
+          hasDirectDebit = hasDirectDebit,
+          validateEmailForm.form,
+          routes.CaptureEmailController.submit())
+        )
       )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      val hasDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
+
       validateEmailForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(capture_email(formWithErrors, routes.CaptureEmailController.submit()))
-          ),
+            BadRequest(capture_email(
+              hasDirectDebit = hasDirectDebit,
+              formWithErrors,
+              routes.CaptureEmailController.submit())
+            ))
+        ,
         email =>
           Future.successful(Redirect(routes.ConfirmEmailController.show()).addingToSession(SessionKeys.emailKey -> email))
       )

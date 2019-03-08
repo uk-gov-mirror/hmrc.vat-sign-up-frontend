@@ -489,8 +489,11 @@ no_ct_enrolment_summary.company_utr                                    = What is
 no_ct_enrolment_summary.business_entity                                = What is your business type?
 
 ## Principal Capture Email page
-principal.capture_email.title                                          = What is your email address?
-principal.capture_email.heading                                        = What is your email address?
+principal.capture_email.title                                          = What is the business email address?
+principal.capture_email.heading                                        = What is the business email address?
+principal.capture_email.line_1                                         = We will email you to confirm you''ve signed up your business to use software to submit its VAT Returns (this can take up to 72 hours).
+principal.capture_email.line_2                                         = We''ll email you a Direct Debit advance notice 10 working days before each payment is taken.
+principal.capture_email.line_3                                         = If you do not want to receive Direct Debit notices by email, you will need to cancel your Direct Debit.
 principal.capture_email.hint                                           = For example, me@me.com
 
 ## Principal Confirm Email page
