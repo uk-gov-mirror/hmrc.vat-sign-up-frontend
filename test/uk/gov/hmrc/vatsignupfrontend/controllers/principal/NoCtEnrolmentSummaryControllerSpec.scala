@@ -108,7 +108,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
           val result = await(TestNoCtEnrolmentSummaryController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
         }
       }
       "store company number returned StoreCompanyNumberSuccess" should {
