@@ -91,7 +91,7 @@ class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with Cu
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(principalRoutes.AgreeCaptureEmailController.show().url)
+            redirectUri(principalRoutes.DirectDebitResolverController.show().url)
           )
         }
       }
