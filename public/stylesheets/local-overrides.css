@@ -3,8 +3,12 @@
 /* Padding fix for assets-frontend/assets/scss/components/_tabular-data.scss */
 @media (min-width: 641px) {
     .tabular-data__heading--label {
-        width: 50% !important;
+        width: 50%;
         padding-right: 1em;
+    }
+
+    .tabular-data__data-1 {
+        width: 40%;
     }
 }
 

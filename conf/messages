@@ -19,6 +19,7 @@ base.accept_and_continue                                               = Accept 
 base.continue_to_sign_up                                               = Continue to sign up
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
+base.logout                                                            = Logout
 base.sign_up_client                                                    = Sign up your client
 base.sign_up_another_client                                            = Sign up another client
 base.sign_in_with_another_id                                           = Sign in with another user ID
@@ -161,9 +162,9 @@ agent.not_enrolled_to_agent_services.heading                           = You can
 agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
 
 ## Agent Cannot Use Service Yet page
-agent.cannot_use_service.title                                         = You can sign up after 7 March 2019
-agent.cannot_use_service.heading                                       = You can sign up after 7 March 2019
-agent.cannot_use_service.line                                          = We cannot set up your client for Making Tax Digital for VAT during a busy filing period.
+agent.cannot_use_service.title                                         = Your client''s business is not eligible at this time
+agent.cannot_use_service.heading                                       = Your client''s business is not eligible at this time
+agent.cannot_use_service.line                                          = Try again later.
 
 ## No agent client relationship page
 agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
@@ -635,9 +636,9 @@ principal.failed_matching.line_1                                       = The inf
 principal.failed_matching.try_again                                    = Try again
 
 ## Principal Cannot Use Service Yet page
-principal.cannot_use_service.title                                     = You can sign up after 7 March 2019
-principal.cannot_use_service.heading                                   = You can sign up after 7 March 2019
-principal.cannot_use_service.line                                      = We cannot set you up for Making Tax Digital for VAT during a busy filing period.
+principal.cannot_use_service.title                                     = Your business is not eligible at this time
+principal.cannot_use_service.heading                                   = Your business is not eligible at this time
+principal.cannot_use_service.line                                      = Try again later.
 
 ## Principal Already Signed Up page
 principal.already_signed_up.title                                      = You''ve already signed up
@@ -874,3 +875,20 @@ principal.previous_vat_return.heading                                 = Are you 
 principal.capture_box_5_figure.title                                  = What is your Box 5 amount?
 principal.capture_box_5_figure.heading                                = What is your Box 5 amount?
 principal.capture_box_5_figure.line                                   = Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online.
+
+## Cancel Direct Debit page
+principal.cancel_direct_debit.title                                   = If you do not want to use your email address for Direct Debit notifications
+principal.cancel_direct_debit.heading                                 = If you do not want to use your email address for Direct Debit notifications
+principal.cancel_direct_debit.line_1                                  = You will need to:
+principal.cancel_direct_debit.bullet_1                                = cancel your Direct Debit with your bank
+principal.cancel_direct_debit.bullet_2                                = notify HMRC that you have cancelled the Direct Debit
+principal.cancel_direct_debit.bullet_3                                = wait 7 to 10 days before trying to sign up again
+principal.cancel_direct_debit.line_2                                  = <a href="{0}">Go back to Direct debit terms and conditions</a>
+
+## Direct Debit Terms and Conditions
+principal.direct_debit_terms_and_conditions.title                     = Terms and Conditions
+principal.direct_debit_terms_and_conditions.heading                   = Terms and Conditions
+principal.direct_debit_terms_and_conditions.line.pre_link             = You will need to read and agree to the
+principal.direct_debit_terms_and_conditions.line.link                 = Direct Debit terms and conditions (opens in a new window or tab)
+principal.direct_debit_terms_and_conditions.line.after_link           = to continue.
+principal.direct_debit_terms_and_conditions.not_agree_link            = I do not agree

@@ -1,0 +1,39 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.signOutButton
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@principal_main_template(title = Messages("principal.cancel_direct_debit.title"), bodyClasses = None, showSignOutLink = true) {
+
+    <h1 class="heading-large">@Messages("principal.cancel_direct_debit.heading")</h1>
+
+    <div class="form-group">
+        <p>@Messages("principal.cancel_direct_debit.line_1")</p>
+        <ul class="bullets">
+            <li>@Messages("principal.cancel_direct_debit.bullet_1")</li>
+            <li>@Messages("principal.cancel_direct_debit.bullet_2")</li>
+            <li>@Messages("principal.cancel_direct_debit.bullet_3")</li>
+        </ul>
+    </div>
+
+    @signOutButton(alternativeText = Some(Messages("base.logout")), isAgent = false)
+
+}
