@@ -50,7 +50,7 @@ class IdentityVerificationCallbackController @Inject()(val controllerComponents:
               if(journeyLink == skipIvJourneyValue){
                 businessEntity match {
                   case LimitedCompany => Redirect(routes.CaptureCompanyNumberController.show())
-                  case SoleTrader => Redirect(routes.AgreeCaptureEmailController.show())
+                  case SoleTrader => Redirect(routes.DirectDebitResolverController.show())
                 }
               }
               else Redirect(routes.IdentityVerificationSuccessController.show())

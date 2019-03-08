@@ -59,7 +59,7 @@ class IdentityVerificationSuccessControllerSpec extends UnitSpec with GuiceOneAp
         mockAuthAdminRole()
         val result = TestIdentityVerificationSuccessController.submit(request(SoleTrader))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+        redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
       }
     }
 
