@@ -73,7 +73,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session but it is invalid" should {
       "go to invalid vat number page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false))))
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testInvalidVatNumber)
         val result = TestConfirmVatNumberController.submit(request)
@@ -88,7 +88,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false))))
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -99,7 +99,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "overseas vat number is in session and store vat is successful" should {
       "go to the overseas resolver controller" in {
         mockAuthRetrieveAgentEnrolment()
-        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = true))))
+        mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = true, isDirectDebit = false))))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
