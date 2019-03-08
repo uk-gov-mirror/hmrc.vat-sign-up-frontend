@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, Overseas}
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, MigratableDates, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -122,9 +122,11 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
       case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
         Redirect(routes.OverseasResolverController.resolve())
           .addingToSession(vatNumberKey -> formVatNumber)
+          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
       case Right(VatNumberStored(_, isDirectDebit)) =>
         Redirect(routes.CaptureBusinessEntityController.show())
           .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
+          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
       case Right(SubscriptionClaimed) =>
         Redirect(routes.SignUpCompleteClientController.show())
       case Left(IneligibleVatNumber(MigratableDates(None, None))) =>

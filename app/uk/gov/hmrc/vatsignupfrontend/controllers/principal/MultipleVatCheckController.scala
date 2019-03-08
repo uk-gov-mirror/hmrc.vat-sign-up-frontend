@@ -67,9 +67,11 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                       case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
                         Redirect(routes.OverseasResolverController.resolve())
                           .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
+                          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
                       case Right(VatNumberStored(_, isDirectDebit)) =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
+                          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
                       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
                       case Left(IneligibleVatNumber(MigratableDates(None, None))) => Redirect(routes.CannotUseServiceController.show())
                       case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.MigratableDatesController.show())
