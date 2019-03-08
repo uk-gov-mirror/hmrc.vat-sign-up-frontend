@@ -39,6 +39,5 @@
         </div>
     }
 
-    <!--TODO: Add reverse route to DD Not Agreed Controller once created -->
-    <p><a id="notAgreeLink" href="#">@Messages("principal.direct_debit_terms_and_conditions.not_agree_link")</a></p>
+    <p><a id="notAgreeLink" href="@routes.CancelDirectDebitController.show().url">@Messages("principal.direct_debit_terms_and_conditions.not_agree_link")</a></p>
 }

@@ -23,6 +23,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalTermsAndConditions => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 
 class DirectDebitTermsAndConditionsSpec extends ViewSpec {
 
@@ -55,13 +56,13 @@ class DirectDebitTermsAndConditionsSpec extends ViewSpec {
     testPage.shouldHaveALink(
       id = "termsAndConditionsLink",
       text = messages.link1,
-      href = "#" //TODO: Update with the Direct Debit Service url
+      href = "#" //TODO: Update with the Direct Debit Service T&Cs URL
     )
 
     testPage.shouldHaveALink(
       id = "notAgreeLink",
       text = messages.link2,
-      href = "#" //TODO: Update with the reverse route for the Do Not Agree Controller (Once Created)
+      href = routes.CancelDirectDebitController.show().url
     )
   }
 }
