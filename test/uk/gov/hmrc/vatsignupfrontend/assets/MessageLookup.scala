@@ -939,7 +939,7 @@ object MessageLookup {
     val bullet3 = "wait 7 to 10 days before trying to sign up again"
     val linkText = "Go back to Direct debit terms and conditions"
     val linkId = "directDebitTerms"
-    val link = "/DD-terms-conditions"
+    val link = "/direct-debit-terms-and-conditions"
     val buttonText = "Logout"
   }
 

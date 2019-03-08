@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CancelDirectDebit => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
@@ -65,8 +66,7 @@ class CancelDirectDebitViewSpec extends ViewSpec {
     )
 
     testPage.shouldHaveSignOutButton(isAgent = false, text =  messages.buttonText)
-    // TODO add test to verify it goes to the new direct debit terms controller
-    // testPage.shouldHaveALink(messages.linkId, conf.govUK + messages.link, messages.linkText)
+    testPage.shouldHaveALink(messages.linkId, messages.linkText, routes.DirectDebitTermsAndConditionsController.show().url)
 
   }
 
