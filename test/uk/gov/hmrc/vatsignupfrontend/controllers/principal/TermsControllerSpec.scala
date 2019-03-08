@@ -27,7 +27,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockSubmissionService
-import play.api.mvc.Results
 
 class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
@@ -52,9 +51,8 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   }
 
   "Calling the submit action of the Terms controller" when {
-
-    "submission is successful" should {
-      "goto information received" in {
+    "the user does not have the direct debit attribute on the control list" should {
+      "submit successfully and go to information received" in {
         mockAuthAdminRole()
         mockSubmitSuccess(testVatNumber)
 
@@ -68,29 +66,30 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.InformationReceivedController.show().url)
       }
-    }
 
-    "submission is unsuccessful" when {
-      "VAT number isn't in session and acceptedDirectDebit isn't in session" should {
-        "goto resolve vat number" in {
+      "not submit" when {
+        "the vat number is missing and go to resolve vat number" in {
           mockAuthAdminRole()
           val result = TestTermsController.submit(testPostRequest)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-
         }
       }
+    }
 
-      "VAT number isn't in session and acceptedDirectDebit is in session" should {
+    "the user does have the direct debit attribute on the control list" should {
+      "VAT number isn't in session but acceptedDirectDebit is in session" should {
         "goto resolve vat number" in {
           mockAuthAdminRole()
           val result = TestTermsController.submit(
-            testPostRequest.withSession(SessionKeys.acceptedDirectDebitTermsKey -> "true")
+            testPostRequest.withSession(
+              SessionKeys.hasDirectDebitKey -> "true",
+              SessionKeys.acceptedDirectDebitTermsKey -> "true"
+            )
           )
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-
         }
       }
 
@@ -98,43 +97,46 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         "goto accept direct debit terms and conditions" in {
           mockAuthAdminRole()
           val result = TestTermsController.submit(
-            testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
+            testPostRequest.withSession(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.hasDirectDebitKey -> "true"
+            )
           )
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.DirectDebitTermsAndConditionsController.show().url)
-
         }
       }
 
-      "VAT number is in session and acceptedDirectDebit contains an invalid value" should {
+      "VAT number is in session and acceptedDirectDebit is false" should {
         "goto accept direct debit terms and conditions" in {
           mockAuthAdminRole()
           val result = TestTermsController.submit(
             testPostRequest.withSession(
               SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.hasDirectDebitKey -> "true",
               SessionKeys.acceptedDirectDebitTermsKey -> "false"
             )
           )
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.DirectDebitTermsAndConditionsController.show().url)
-
         }
       }
+    }
 
-      "submission service fails" should {
-        "goto technical difficulties" in {
-          mockAuthAdminRole()
-          mockSubmitFailure(testVatNumber)
-          intercept[InternalServerException] {
-            await(TestTermsController.submit(
-              testPostRequest.withSession(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.acceptedDirectDebitTermsKey -> "true"
-              )
-            ))
-          }
+    "submission service fails" should {
+      "goto technical difficulties" in {
+        mockAuthAdminRole()
+        mockSubmitFailure(testVatNumber)
+        intercept[InternalServerException] {
+          await(TestTermsController.submit(
+            testPostRequest.withSession(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.hasDirectDebitKey -> "true",
+              SessionKeys.acceptedDirectDebitTermsKey -> "true"
+            )
+          ))
         }
       }
     }
