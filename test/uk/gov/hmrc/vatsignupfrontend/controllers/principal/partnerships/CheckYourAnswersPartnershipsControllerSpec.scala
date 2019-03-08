@@ -225,7 +225,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.AgreeCaptureEmailController.show().url)
+            redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
           }
         }
         "the user is a limited partnership" should {
@@ -247,7 +247,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               crn = Some(testCompanyNumber)
             )))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.AgreeCaptureEmailController.show().url)
+            redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
           }
         }
       }

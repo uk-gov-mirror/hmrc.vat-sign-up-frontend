@@ -59,7 +59,7 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
         }
       }
       "StoreGovernmentOrganisationInformation returns StoreGovernmentOrganisationInformationFailureResponse" should {

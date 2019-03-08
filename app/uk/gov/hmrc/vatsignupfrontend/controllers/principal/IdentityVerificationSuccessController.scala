@@ -46,7 +46,7 @@ class IdentityVerificationSuccessController @Inject()(val controllerComponents: 
       Future.successful(
         businessEntity match {
           case Some(SoleTrader) =>
-            Redirect(routes.AgreeCaptureEmailController.show())
+            Redirect(routes.DirectDebitResolverController.show())
           case Some(LimitedCompany) =>
             Redirect(routes.CaptureCompanyNumberController.show())
           case _ =>

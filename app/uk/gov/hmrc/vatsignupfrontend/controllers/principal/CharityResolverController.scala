@@ -42,7 +42,7 @@ class CharityResolverController @Inject()(val controllerComponents: ControllerCo
         case Some(vatNumber) =>
           storeCharityInformationService.storeCharityInformation(vatNumber = vatNumber) map {
             case Right(StoreCharityInformationSuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
             case Left(StoreCharityInformationFailureResponse(status)) =>
               throw new InternalServerException("store charity information failed: status=" + status)
           }

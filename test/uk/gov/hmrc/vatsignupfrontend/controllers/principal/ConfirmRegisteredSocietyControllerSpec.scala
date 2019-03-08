@@ -104,7 +104,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
         val result = await(TestConfirmRegisteredSocietyController.submit(request))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
       }
     }
     "the ct enrolment ctutr does not match the ctutr returned from DES" should {
@@ -200,7 +200,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
         val result = TestConfirmRegisteredSocietyController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
       }
 
       "throw internal server exception if store registered society fails" in {

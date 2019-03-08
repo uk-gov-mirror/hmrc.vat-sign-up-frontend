@@ -44,7 +44,7 @@ class VatGroupResolverController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) =>
           storeVatGroupInformationService.storeVatGroupInformation(vatNumber = vatNumber) map {
             case Right(StoreVatGroupInformationSuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
             case Left(StoreVatGroupInformationFailureResponse(status)) =>
               throw new InternalServerException("store vat group information failed: status=" + status)
           }

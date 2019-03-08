@@ -75,7 +75,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
         )
       )
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+      redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
     }
 
     "redirect to agree to capture emails page when nino is successfully stored from Auth Profile" in {
@@ -90,7 +90,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
         )
       )
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+      redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
     }
 
     "redirect to capture vat number page when no vat number in session" in {

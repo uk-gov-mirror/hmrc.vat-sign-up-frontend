@@ -42,7 +42,7 @@ class OverseasResolverController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) =>
           storeOverseasInformationService.storeOverseasInformation(vatNumber) map {
             case Right(StoreOverseasInformationSuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
                 .addingToSession(SessionKeys.businessEntityKey -> Overseas.toString)
             case Left(StoreOverseasInformationFailureResponse(status)) =>
               throw new InternalServerException("store overseas information failed: status=" + status)

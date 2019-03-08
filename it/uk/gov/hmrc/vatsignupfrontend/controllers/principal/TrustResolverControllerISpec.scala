@@ -45,7 +45,7 @@ class TrustResolverControllerISpec extends ComponentSpecBase with CustomMatchers
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.AgreeCaptureEmailController.show().url)
+            redirectUri(routes.DirectDebitResolverController.show().url)
           )
         }
       }

@@ -69,7 +69,7 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
         def storeRegisteredSociety(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Future[Result] = {
           storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber, companyUtr) flatMap {
             case Right(_) =>
-              Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+              Future.successful(Redirect(routes.DirectDebitResolverController.show()))
             case Left(CtReferenceMismatch) =>
               Future.successful(Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show()))
             case Left(status) =>

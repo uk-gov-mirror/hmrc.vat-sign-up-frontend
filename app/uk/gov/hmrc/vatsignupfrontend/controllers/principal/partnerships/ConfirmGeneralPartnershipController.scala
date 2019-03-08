@@ -86,7 +86,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
                   postCode = None
                 ) flatMap {
                   case Right(StorePartnershipInformationSuccess) =>
-                    Future.successful(Redirect(principalRoutes.AgreeCaptureEmailController.show()))
+                    Future.successful(Redirect(principalRoutes.DirectDebitResolverController.show()))
                   case Left(_) =>
                     Future.failed(new BadGatewayException("Store partnership information failed"))
                 }

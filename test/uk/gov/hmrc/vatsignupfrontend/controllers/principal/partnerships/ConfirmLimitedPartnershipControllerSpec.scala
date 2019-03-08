@@ -142,7 +142,7 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
             SessionKeys.partnershipTypeKey -> testPartnershipType
           ))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(principalRoutes.AgreeCaptureEmailController.show().url)
+          redirectLocation(result) shouldBe Some(principalRoutes.DirectDebitResolverController.show().url)
         }
       }
       "User answered No" should {

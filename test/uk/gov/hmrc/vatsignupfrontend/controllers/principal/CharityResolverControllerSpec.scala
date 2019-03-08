@@ -57,7 +57,7 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
         }
       }
       "store charity information returns StoreCharityInformationFailureResponse" should {

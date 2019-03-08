@@ -118,7 +118,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(principalRoutes.AgreeCaptureEmailController.show().url)
+            redirectUri(principalRoutes.DirectDebitResolverController.show().url)
           )
         }
       }
@@ -147,7 +147,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(principalRoutes.AgreeCaptureEmailController.show().url)
+            redirectUri(principalRoutes.DirectDebitResolverController.show().url)
           )
         }
       }

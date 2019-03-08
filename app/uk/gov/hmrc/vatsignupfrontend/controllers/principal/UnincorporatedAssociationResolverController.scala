@@ -43,7 +43,7 @@ class UnincorporatedAssociationResolverController @Inject()(val controllerCompon
         case Some(vatNumber) =>
           storeUnincorporatedAssociationInformationService.storeUnincorporatedAssociationInformation(vatNumber = vatNumber) map {
             case Right(StoreUnincorporatedAssociationInformationSuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
             case Left(StoreUnincorporatedAssociationInformationFailureResponse(status)) =>
               throw new InternalServerException("store unincorporated association information failed: status=" + status)
           }

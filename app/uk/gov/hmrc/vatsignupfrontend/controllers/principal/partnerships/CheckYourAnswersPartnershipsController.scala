@@ -111,7 +111,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             postCode = Some(partnershipPostCode)
           ) map {
             case Right(StorePartnershipInformationSuccess) =>
-              Redirect(principalRoutes.AgreeCaptureEmailController.show())
+              Redirect(principalRoutes.DirectDebitResolverController.show())
             case Left(PartnershipUtrNotFound) =>
               Redirect(routes.CouldNotConfirmKnownFactsController.show())
             case Left(StorePartnershipKnownFactsFailure) =>
@@ -126,7 +126,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             postCode = Some(partnershipPostCode)
           ) map {
             case Right(StorePartnershipInformationSuccess) =>
-              Redirect(principalRoutes.AgreeCaptureEmailController.show())
+              Redirect(principalRoutes.DirectDebitResolverController.show())
             case Left(StorePartnershipKnownFactsFailure) =>
               Redirect(routes.CouldNotConfirmKnownFactsController.show())
             case Left(PartnershipUtrNotFound) =>

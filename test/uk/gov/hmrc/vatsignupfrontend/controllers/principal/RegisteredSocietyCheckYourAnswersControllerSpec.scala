@@ -121,7 +121,7 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
 
           val result = await(TestRegisteredSocietyController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
         }
       }
       "store company number returned StoreCompanyNumberSuccess" should {

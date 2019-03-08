@@ -82,7 +82,7 @@ class RegisteredSocietyCheckYourAnswersController @Inject()(val controllerCompon
         case (Some(vatNumber), Some(RegisteredSociety), Some(companyNumber), Some(companyUtr)) =>
           storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber, Some(companyUtr)) map {
             case Right(StoreRegisteredSocietySuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
             case Left(CtReferenceMismatch) =>
               Redirect(routes.CouldNotConfirmBusinessController.show())
             case Left(failure) =>

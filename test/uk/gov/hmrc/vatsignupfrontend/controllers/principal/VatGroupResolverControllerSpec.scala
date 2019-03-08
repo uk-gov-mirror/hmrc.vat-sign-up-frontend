@@ -57,7 +57,7 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
         }
       }
       "store group information returns StoreVatGroupInformationFailureResponse" should {

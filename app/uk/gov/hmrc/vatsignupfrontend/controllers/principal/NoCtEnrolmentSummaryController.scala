@@ -71,7 +71,7 @@ class NoCtEnrolmentSummaryController @Inject()(val controllerComponents: Control
 
   private def storeCompanyNumber(vatNumber: String, companyNumber: String, companyUtr: String)(implicit hc: HeaderCarrier) =
     storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, Some(companyUtr)).map {
-      case Right(StoreCompanyNumberSuccess) => Redirect(routes.AgreeCaptureEmailController.show())
+      case Right(StoreCompanyNumberSuccess) => Redirect(routes.DirectDebitResolverController.show())
       case Left(CtReferenceMismatch) =>
         //TODO confirm redirection and content for CT mismatch
         Redirect(routes.CouldNotConfirmBusinessController.show())

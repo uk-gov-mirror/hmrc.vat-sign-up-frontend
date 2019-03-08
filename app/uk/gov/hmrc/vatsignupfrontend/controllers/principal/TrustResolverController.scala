@@ -43,7 +43,7 @@ class TrustResolverController @Inject()(val controllerComponents: ControllerComp
         case Some(vatNumber) =>
           storeTrustInformationService.storeTrustInformation(vatNumber = vatNumber) map {
             case Right(StoreTrustInformationSuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
             case Left(StoreTrustInformationFailureResponse(status)) =>
               throw new InternalServerException("store trust information failed: status=" + status)
           }

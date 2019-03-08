@@ -73,7 +73,7 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
                     companyUtr = Some(ctutr)
                   ) map {
                     case Right(_) =>
-                      Redirect(routes.AgreeCaptureEmailController.show())
+                      Redirect(routes.DirectDebitResolverController.show())
                     case Left(CtReferenceMismatch) =>
                       Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show())
                     case Left(errResponse) =>
