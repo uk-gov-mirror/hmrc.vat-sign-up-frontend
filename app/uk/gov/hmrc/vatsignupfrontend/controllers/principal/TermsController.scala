@@ -26,7 +26,6 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.services.SubmissionService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.terms
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils
 
 import scala.concurrent.Future
 
@@ -45,14 +44,20 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents,
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) => submissionService.submit(vatNumber).map {
-          case Right(_) => {
-            Redirect(routes.InformationReceivedController.show())
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val acceptedDirectDebitTerms = request.session.get(SessionKeys.acceptedDirectDebitTermsKey).getOrElse("false").toBoolean
+
+      optVatNumber match {
+        case Some(vatNumber) if acceptedDirectDebitTerms =>
+          submissionService.submit(vatNumber).map {
+            case Right(_) => {
+              Redirect(routes.InformationReceivedController.show())
+            }
+            case Left(SubmissionFailureResponse(status)) =>
+              throw new InternalServerException(s"Submission failed, backend returned: $status")
           }
-          case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
-        }
-        case None => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+        case Some(_) => Future.successful(Redirect(routes.DirectDebitTermsAndConditionsController.show()))
+        case _ => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
       }
     }
   }

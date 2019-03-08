@@ -37,11 +37,7 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   lazy val testGetRequest = FakeRequest("GET", "/terms-of-participation")
 
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/terms-of-participation").withSession(SessionKeys.vatNumberKey -> testVatNumber)
-
-  lazy val testPostRequestWithoutSession: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/terms-of-participation")
+  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/terms-of-participation")
 
   "Calling the show action of the Terms controller" should {
     "show the Terms page" in {
@@ -62,19 +58,67 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         mockAuthAdminRole()
         mockSubmitSuccess(testVatNumber)
 
-        val result = TestTermsController.submit(testPostRequest)
+        val result = TestTermsController.submit(
+          testPostRequest.withSession(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.acceptedDirectDebitTermsKey -> "true"
+          )
+        )
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.InformationReceivedController.show().url)
       }
     }
 
     "submission is unsuccessful" when {
-      "not in session" should {
+      "VAT number isn't in session and acceptedDirectDebit isn't in session" should {
         "goto resolve vat number" in {
           mockAuthAdminRole()
-          val result = TestTermsController.submit(testPostRequestWithoutSession)
+          val result = TestTermsController.submit(testPostRequest)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+
+        }
+      }
+
+      "VAT number isn't in session and acceptedDirectDebit is in session" should {
+        "goto resolve vat number" in {
+          mockAuthAdminRole()
+          val result = TestTermsController.submit(
+            testPostRequest.withSession(SessionKeys.acceptedDirectDebitTermsKey -> "true")
+          )
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+
+        }
+      }
+
+      "VAT number is in session and acceptedDirectDebit isn't in session" should {
+        "goto accept direct debit terms and conditions" in {
+          mockAuthAdminRole()
+          val result = TestTermsController.submit(
+            testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
+          )
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.DirectDebitTermsAndConditionsController.show().url)
+
+        }
+      }
+
+      "VAT number is in session and acceptedDirectDebit contains an invalid value" should {
+        "goto accept direct debit terms and conditions" in {
+          mockAuthAdminRole()
+          val result = TestTermsController.submit(
+            testPostRequest.withSession(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.acceptedDirectDebitTermsKey -> "false"
+            )
+          )
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.DirectDebitTermsAndConditionsController.show().url)
 
         }
       }
@@ -84,13 +128,16 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           mockAuthAdminRole()
           mockSubmitFailure(testVatNumber)
           intercept[InternalServerException] {
-            await(TestTermsController.submit(testPostRequest))
-      }
-    }
-
+            await(TestTermsController.submit(
+              testPostRequest.withSession(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.acceptedDirectDebitTermsKey -> "true"
+              )
+            ))
+          }
         }
       }
-
     }
+  }
 
 }
