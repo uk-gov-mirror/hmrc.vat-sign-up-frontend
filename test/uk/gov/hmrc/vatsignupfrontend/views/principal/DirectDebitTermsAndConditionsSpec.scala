@@ -56,7 +56,7 @@ class DirectDebitTermsAndConditionsSpec extends ViewSpec {
     testPage.shouldHaveALink(
       id = "termsAndConditionsLink",
       text = messages.link1,
-      href = "#" //TODO: Update with the Direct Debit Service T&Cs URL
+      href = "https://www.tax.service.gov.uk/direct-debit/vat/terms-and-conditions"
     )
 
     testPage.shouldHaveALink(

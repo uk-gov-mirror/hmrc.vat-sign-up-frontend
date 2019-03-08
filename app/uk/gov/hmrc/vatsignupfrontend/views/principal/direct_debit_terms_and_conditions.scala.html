@@ -26,12 +26,7 @@
 
     <h1 class="heading-large">@Messages("principal.direct_debit_terms_and_conditions.heading")</h1>
 
-    <p>
-        @Messages("principal.direct_debit_terms_and_conditions.line.pre_link")
-        <!--TODO: Add link to DD Terms & Conditions once known-->
-        <a id="termsAndConditionsLink" href="#">@Messages("principal.direct_debit_terms_and_conditions.line.link")</a>
-        @Messages("principal.direct_debit_terms_and_conditions.line.after_link")
-    </p>
+    <p>@Html(Messages("principal.direct_debit_terms_and_conditions.line_1", appConfig.directDebitTermsAndConditionsUrl))</p>
 
     @form(action = postAction) {
         <div class="form-group">
