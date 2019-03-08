@@ -179,7 +179,7 @@ object MessageLookup {
   object CaptureAgentEmail {
     val heading: String = "What is your email address?"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "We will only send you an email to let you know if your client can join the trial."
+    val line1 = "We will only send you an email to let you know when you can report your client's VAT through compatible software. This might take up to 72 hours."
     val hint = "For example, me@me.com"
   }
 

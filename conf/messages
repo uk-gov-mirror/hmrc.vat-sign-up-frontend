@@ -275,7 +275,7 @@ agent.capture_client_email.hint                                        = For exa
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = What is your email address?
 agent.capture_agent_email.heading                                      = What is your email address?
-agent.capture_agent_email.line_1                                       = We will only send you an email to let you know if your client can join the trial.
+agent.capture_agent_email.line_1                                       = We will only send you an email to let you know when you can report your client''s VAT through compatible software. This might take up to 72 hours.
 agent.capture_agent_email.hint                                         = For example, me@me.com
 
 ## Agent Confirm Email page
