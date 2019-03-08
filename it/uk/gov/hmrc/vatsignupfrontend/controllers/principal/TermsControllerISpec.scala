@@ -43,7 +43,10 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionSuccess()
 
-        val res = post("/terms-of-participation", cookies = Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/terms-of-participation", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.acceptedDirectDebitTermsKey -> "true"
+        ))()
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -56,19 +59,68 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
-        val res = post("/terms-of-participation", cookies = Map(SessionKeys.vatNumberKey -> testVatNumber))()
+        val res = post("/terms-of-participation", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.acceptedDirectDebitTermsKey -> "true"
+        ))()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
       }
     }
-    "Vat number key missing from session" should {
+    "Vat number and acceptedDirectDebit keys missing from session" should {
       "redirect to resolve-vat-number" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
         val res = post("/terms-of-participation")()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ResolveVatNumberController.resolve().url)
+        )
+      }
+    }
+    "acceptedDirectDebit key is missing from session" should {
+      "redirect to resolve-vat-number" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubSubmissionFailure()
+
+        val res = post("/terms-of-participation", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DirectDebitTermsAndConditionsController.show().url)
+        )
+      }
+    }
+    "acceptedDirectDebit key in session is invalid" should {
+      "redirect to resolve-vat-number" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubSubmissionFailure()
+
+        val res = post("/terms-of-participation", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.acceptedDirectDebitTermsKey -> "false"
+        ))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DirectDebitTermsAndConditionsController.show().url)
+        )
+      }
+    }
+    "vat number key is missing from session" should {
+      "redirect to resolve-vat-number" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubSubmissionFailure()
+
+        val res = post("/terms-of-participation", cookies = Map(
+          SessionKeys.acceptedDirectDebitTermsKey -> "true"
+        ))()
 
         res should have(
           httpStatus(SEE_OTHER),
