@@ -119,10 +119,10 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
 
   private def storeVatNumber(formVatNumber: String)(implicit request: Request[AnyContent]): Future[Result] = {
     storeVatNumberService.storeVatNumber(formVatNumber, isFromBta = false) map {
-      case Right(VatNumberStored(isOverseas)) if isOverseas =>
+      case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
         Redirect(routes.OverseasResolverController.resolve())
           .addingToSession(vatNumberKey -> formVatNumber)
-      case Right(VatNumberStored(_)) =>
+      case Right(VatNumberStored(_, isDirectDebit)) =>
         Redirect(routes.CaptureBusinessEntityController.show())
           .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)
       case Right(SubscriptionClaimed) =>

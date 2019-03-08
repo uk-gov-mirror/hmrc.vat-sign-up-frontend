@@ -59,9 +59,9 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) if vatNumber.nonEmpty =>
           if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
             storeVatNumberService.storeVatNumberDelegated(vatNumber) map {
-              case Right(VatNumberStored(isOverseas)) if isOverseas =>
+              case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
                 Redirect(routes.OverseasResolverController.resolve())
-              case Right(VatNumberStored(_)) =>
+              case Right(VatNumberStored(_, isDirectDebit)) =>
                 Redirect(routes.CaptureBusinessEntityController.show())
               case Left(NoAgentClientRelationship) =>
                 Redirect(routes.NoAgentClientRelationshipController.show())
