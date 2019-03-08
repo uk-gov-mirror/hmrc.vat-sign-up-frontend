@@ -32,7 +32,7 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
 
   def storeVatNumberDelegated(vatNumber: String)(implicit hc: HeaderCarrier): Future[DelegatedStoreVatNumberResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta = false) map {
-      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) => Right(VatNumberStored(isOverseas))
+      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas, isDirectDebit)) => Right(VatNumberStored(isOverseas, isDirectDebit))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) => Left(AlreadySubscribed)
       case Left(StoreVatNumberHttpParser.NoAgentClientRelationship) => Left(NoAgentClientRelationship)
       case Left(StoreVatNumberHttpParser.InvalidVatNumber) => Left(InvalidVatNumber)
@@ -44,8 +44,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
 
   def storeVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[StoreVatNumberWithEnrolmentResponse] =
     storeVatNumberConnector.storeVatNumber(vatNumber, isFromBta) flatMap {
-      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) =>
-        Future.successful(Right(VatNumberStored(isOverseas)))
+      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas, isDirectDebit)) =>
+        Future.successful(Right(VatNumberStored(isOverseas, isDirectDebit)))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
@@ -78,10 +78,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
       optLastReturnMonth = optLastReturnMonth,
       isFromBta = isFromBta
     ) flatMap {
-      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas)) =>
-        Future.successful(Right(VatNumberStored(isOverseas)))
-      case Right(StoreVatNumberHttpParser.VatNumberStored(_)) =>
-        Future.successful(Right(VatNumberStored(isOverseas = false)))
+      case Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas, isDirectDebit)) =>
+        Future.successful(Right(VatNumberStored(isOverseas, isDirectDebit)))
       case Left(StoreVatNumberHttpParser.AlreadySubscribed) =>
         claimSubscriptionService.claimSubscription(vatNumber, optPostCode, registrationDate, isFromBta) map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
@@ -113,7 +111,7 @@ object StoreVatNumberService {
 
   sealed trait StoreVatNumberSuccess
 
-  case class VatNumberStored(isOverseas: Boolean = false) extends StoreVatNumberSuccess
+  case class VatNumberStored(isOverseas: Boolean = false, isDirectDebit: Boolean) extends StoreVatNumberSuccess
 
   case object SubscriptionClaimed extends StoreVatNumberSuccess
 

@@ -73,7 +73,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
     "return a redirect to overseas resolver" when {
       "form value is NO" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubStoreVatNumberOverseasSuccess(isFromBta = false)
+        stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
         val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
 

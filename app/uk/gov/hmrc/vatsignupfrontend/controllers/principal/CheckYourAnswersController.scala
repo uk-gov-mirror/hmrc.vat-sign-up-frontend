@@ -103,8 +103,8 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       optLastReturnMonth = optLastReturnMonth,
       isFromBta = isFromBta
     ) map {
-      case Right(VatNumberStored(isOverseas)) if isOverseas => Redirect(routes.OverseasResolverController.resolve())
-      case Right(VatNumberStored(_)) => Redirect(routes.CaptureBusinessEntityController.show())
+      case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas => Redirect(routes.OverseasResolverController.resolve())
+      case Right(VatNumberStored(_, isDirectDebit)) => Redirect(routes.CaptureBusinessEntityController.show())
       case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.VatCouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())

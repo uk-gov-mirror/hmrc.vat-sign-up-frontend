@@ -165,8 +165,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "redirect to the overseas resolver controller" when {
           "the vat number is overseas" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-            stubStoreVatNumberOverseasSuccess(isFromBta = false)
-
+            stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 

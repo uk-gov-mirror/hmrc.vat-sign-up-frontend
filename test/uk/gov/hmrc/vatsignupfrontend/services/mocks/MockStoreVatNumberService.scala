@@ -53,10 +53,13 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
       .thenReturn(returnValue)
 
   def mockStoreVatNumberSuccess(vatNumber: String, isFromBta: Boolean): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = false))))
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
   def mockStoreVatNumberOverseasSuccess(vatNumber: String, isFromBta: Boolean): Unit =
-    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = true))))
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = true, isDirectDebit = false))))
+
+  def mockStoreVatNumberDirectDebitSuccess(vatNumber: String, isFromBta: Boolean): Unit =
+    mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = true))))
 
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String, isFromBta: Boolean): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Right(SubscriptionClaimed)))
@@ -96,7 +99,7 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
                                ): Unit =
     mockStoreVatNumber(
       vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
-    )(Future.successful(Right(VatNumberStored(isOverseas = false))))
+    )(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String,
                                             optPostCode: Option[PostCode],

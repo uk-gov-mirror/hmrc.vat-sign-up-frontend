@@ -39,16 +39,16 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
   "storeVatNumberDelegated" when {
     "the connector returns VatNumberStored" should {
       "return VatNumberStored(false) when the company is not overseas" in {
-        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumberDelegated(testVatNumber))
-        res shouldBe Right(VatNumberStored(isOverseas = false))
+        res shouldBe Right(VatNumberStored(isOverseas = false, isDirectDebit = false))
       }
       "return VatNumberStored(true) when the company is overseas" in {
-        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = true))))
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = true, isDirectDebit = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumberDelegated(testVatNumber))
-        res shouldBe Right(VatNumberStored(isOverseas = true))
+        res shouldBe Right(VatNumberStored(isOverseas = true, isDirectDebit = false))
       }
     }
     "the connector returns AlreadySubscribed" should {
@@ -108,16 +108,16 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
   "storeVatNumber with an enrolment" when {
     "the connector returns VatNumberStored" should {
       "return VatNumberStored(false) when the company is not overseas" in {
-        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
-        res shouldBe Right(VatNumberStored(isOverseas = false))
+        res shouldBe Right(VatNumberStored(isOverseas = false, isDirectDebit = false))
       }
       "return VatNumberStored(true) when the company is overseas" in {
-        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = true))))
+        mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = true, isDirectDebit = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumber(testVatNumber, isFromBta = false))
-        res shouldBe Right(VatNumberStored(isOverseas = true))
+        res shouldBe Right(VatNumberStored(isOverseas = true, isDirectDebit = false))
       }
     }
     "the store vat number connector returns AlreadySubscribed" when {
@@ -194,7 +194,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
           optBox5Figure = Some(testBox5Figure),
           optLastReturnMonth = Some(testLastReturnMonthPeriod),
           isFromBta = false
-        )(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false))))
+        )(Future.successful(Right(StoreVatNumberHttpParser.VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
         val res = await(TestStoreVatNumberService.storeVatNumber(
           vatNumber = testVatNumber,
@@ -205,7 +205,7 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
           isFromBta = false
         ))
 
-        res shouldBe Right(VatNumberStored(isOverseas = false))
+        res shouldBe Right(VatNumberStored(isOverseas = false, isDirectDebit = false))
       }
     }
     "the store vat number connector returns AlreadySubscribed" when {
