@@ -38,7 +38,7 @@ class OverseasResolverControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgreeCaptureEmailController.show().url)
+          redirectUri(routes.DirectDebitResolverController.show().url)
         )
       }
     }

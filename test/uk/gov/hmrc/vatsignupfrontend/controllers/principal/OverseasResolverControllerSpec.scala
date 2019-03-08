@@ -50,7 +50,7 @@ class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         )))
 
         status(res) shouldBe SEE_OTHER
-        redirectLocation(res) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
       }
     }
     "store overseas information returns StoreOverseasInformationFailureResponse" should {
