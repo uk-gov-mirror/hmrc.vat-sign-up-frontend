@@ -44,7 +44,7 @@ class DivisionResolverController @Inject()(val controllerComponents: ControllerC
         case Some(vatNumber) =>
           storeAdministrativeDivisionService.storeAdministrativeDivision(vatNumber = vatNumber) map {
             case Right(StoreAdministrativeDivisionSuccess) =>
-              Redirect(routes.AgreeCaptureEmailController.show())
+              Redirect(routes.DirectDebitResolverController.show())
             case Left(StoreAdministrativeDivisionFailureResponse(status)) =>
               throw new InternalServerException("store division information failed: status=" + status)
           }
