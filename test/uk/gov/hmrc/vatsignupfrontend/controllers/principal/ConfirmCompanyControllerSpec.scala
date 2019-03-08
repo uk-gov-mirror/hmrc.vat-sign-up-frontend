@@ -87,7 +87,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
       val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+      redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
     }
     "go to the 'capture company UTR' page if not CT enrolled" in {
       mockAuthRetrieveVatDecEnrolment()
