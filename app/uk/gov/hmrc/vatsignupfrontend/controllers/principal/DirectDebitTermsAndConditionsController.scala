@@ -16,28 +16,33 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.direct_debit_terms_and_conditions
 
 import scala.concurrent.Future
 
-class DirectDebitResolverController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(
-    retrievalPredicate = AdministratorRolePredicate) {
+@Singleton
+class DirectDebitTermsAndConditionsController @Inject()(val controllerComponents: ControllerComponents)
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
-  def show: Action[AnyContent] = Action.async { implicit request =>
+  val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val directDebitFlagFromSession: Boolean = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
-
-      if (directDebitFlagFromSession && isEnabled(DirectDebitTermsJourney))
-        Future.successful(Redirect(routes.DirectDebitTermsAndConditionsController.show()))
-      else Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+      Future.successful(
+        Ok(direct_debit_terms_and_conditions(routes.DirectDebitTermsAndConditionsController.submit()))
+      )
     }
   }
 
+  val submit: Action[AnyContent] = Action.async { implicit request =>
+    authorised() {
+      Future.successful(
+        Redirect(routes.AgreeCaptureEmailController.show()).addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> "true")
+      )
+    }
+  }
 }

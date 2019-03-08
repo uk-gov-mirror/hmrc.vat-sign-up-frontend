@@ -20,7 +20,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalTermsAndConditions => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalDirectDebitTermsAndConditions => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
