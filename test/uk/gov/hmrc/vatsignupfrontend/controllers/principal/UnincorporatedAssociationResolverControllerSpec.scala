@@ -59,7 +59,7 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+          redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
         }
       }
       "store unincorporated association information fails" should {
