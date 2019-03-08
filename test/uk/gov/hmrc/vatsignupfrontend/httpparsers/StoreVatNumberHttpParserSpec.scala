@@ -36,11 +36,11 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
   "StoreVatNumberHttpReads" when {
     "read" should {
       "parse an OK response as a OverseasVatNumberStored with a Json body that contains a true overseas flag" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> true)))
+        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> true, DirectDebitKey -> true)))
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberStored(isOverseas = true)
+        res.right.value shouldBe VatNumberStored(isOverseas = true, isDirectDebit = true)
       }
 
       "parse an OK response as a VatNumberStored with a Json body that contains a false overseas flag" in {
@@ -48,7 +48,7 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberStored(isOverseas = false)
+        res.right.value shouldBe VatNumberStored(isOverseas = false, isDirectDebit = false)
       }
 
       "parse an OK response as a VatNumberStored" in {
@@ -56,7 +56,7 @@ class StoreVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
         val res = StoreVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberStored(isOverseas = false)
+        res.right.value shouldBe VatNumberStored(isOverseas = false, isDirectDebit = false)
       }
 
       "parse a FORBIDDEN response as a NoAgentClientRelationship when the response code matches" in {

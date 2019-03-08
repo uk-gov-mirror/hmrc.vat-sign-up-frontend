@@ -31,19 +31,13 @@ object StoreVatNumberStub extends WireMockMethods {
     )
 
 
-  def stubStoreVatNumberSuccess(isFromBta: Boolean): Unit = {
+  def stubStoreVatNumberSuccess(isFromBta: Boolean, isOverseasTrader: Boolean = false, isDirectDebit: Boolean = false): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
-      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> false))
-  }
-
-  def stubStoreVatNumberOverseasSuccess(isFromBta: Boolean): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
-      .thenReturn(status = OK, Json.obj(OverseasTrader.key -> true))
-  }
-
-  def stubStoreVatNumberOverseas(isFromBta: Boolean): Unit = {
-    when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
-      .thenReturn(status = OK, body = Json.obj(OverseasTrader.key -> true))
+      .thenReturn(status = OK,
+        Json.obj(
+          OverseasTrader.key -> isOverseasTrader,
+          DirectDebitKey -> isDirectDebit
+        ))
   }
 
   def stubStoreVatNumberNoRelationship(isFromBta: Boolean): Unit = {
