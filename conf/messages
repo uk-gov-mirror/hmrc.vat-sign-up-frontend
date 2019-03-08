@@ -884,3 +884,11 @@ principal.cancel_direct_debit.bullet_1                                = cancel y
 principal.cancel_direct_debit.bullet_2                                = notify HMRC that you have cancelled the Direct Debit
 principal.cancel_direct_debit.bullet_3                                = wait 7 to 10 days before trying to sign up again
 principal.cancel_direct_debit.line_2                                  = <a href="{0}">Go back to Direct debit terms and conditions</a>
+
+## Direct Debit Terms and Conditions
+principal.direct_debit_terms_and_conditions.title                     = Terms and Conditions
+principal.direct_debit_terms_and_conditions.heading                   = Terms and Conditions
+principal.direct_debit_terms_and_conditions.line.pre_link             = You will need to read and agree to the
+principal.direct_debit_terms_and_conditions.line.link                 = Direct Debit terms and conditions (opens in a new window or tab)
+principal.direct_debit_terms_and_conditions.line.after_link           = to continue.
+principal.direct_debit_terms_and_conditions.not_agree_link            = I do not agree
