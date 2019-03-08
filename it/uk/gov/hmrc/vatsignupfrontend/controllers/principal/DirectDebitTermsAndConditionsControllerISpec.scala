@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.acceptedDirectDebitTermsKey
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
@@ -27,6 +28,7 @@ class DirectDebitTermsAndConditionsControllerISpec extends ComponentSpecBase wit
 
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
+      enable(DirectDebitTermsJourney)
 
       val res = get("/direct-debit-terms-and-conditions")
 
@@ -42,6 +44,7 @@ class DirectDebitTermsAndConditionsControllerISpec extends ComponentSpecBase wit
 
     "return a redirect to Agree Capture Email" in {
       stubAuth(OK, successfulAuthResponse())
+      enable(DirectDebitTermsJourney)
 
       res should have(
         httpStatus(SEE_OTHER),

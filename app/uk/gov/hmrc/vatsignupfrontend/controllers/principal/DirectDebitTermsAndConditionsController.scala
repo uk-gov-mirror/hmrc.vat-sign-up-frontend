@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.direct_debit_terms_and_conditions
 
@@ -28,7 +29,7 @@ import scala.concurrent.Future
 
 @Singleton
 class DirectDebitTermsAndConditionsController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(DirectDebitTermsJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -41,7 +42,8 @@ class DirectDebitTermsAndConditionsController @Inject()(val controllerComponents
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Redirect(routes.AgreeCaptureEmailController.show()).addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> "true")
+        Redirect(routes.AgreeCaptureEmailController.show())
+          .addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> "true")
       )
     }
   }
