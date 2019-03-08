@@ -45,7 +45,7 @@ class GovernmentOrganisationResolverControllerISpec extends ComponentSpecBase wi
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.AgreeCaptureEmailController.show().url)
+            redirectUri(routes.DirectDebitResolverController.show().url)
           )
         }
       }
