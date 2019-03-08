@@ -101,6 +101,17 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
       vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
     )(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = false))))
 
+  def mockStoreVatNumberDirectDebitSuccess(vatNumber: String,
+                                optPostCode: Option[PostCode],
+                                registrationDate: DateModel,
+                                optBox5Figure: Option[String],
+                                optLastReturnMonth: Option[String],
+                                isFromBta: Boolean
+                               ): Unit =
+    mockStoreVatNumber(
+      vatNumber, optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta
+    )(Future.successful(Right(VatNumberStored(isOverseas = false, isDirectDebit = true))))
+
   def mockStoreVatNumberSubscriptionClaimed(vatNumber: String,
                                             optPostCode: Option[PostCode],
                                             registrationDate: DateModel,

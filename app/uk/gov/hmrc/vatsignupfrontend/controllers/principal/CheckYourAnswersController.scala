@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, RequestHeader}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -94,7 +94,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
                              optBox5Figure: Option[String],
                              optLastReturnMonth: Option[String],
                              isFromBta: Boolean
-                            )(implicit hc: HeaderCarrier) =
+                            )(implicit hc: HeaderCarrier, request: RequestHeader) =
     storeVatNumberService.storeVatNumber(
       vatNumber = vatNumber,
       optPostCode = optPostCode,
@@ -103,15 +103,24 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       optLastReturnMonth = optLastReturnMonth,
       isFromBta = isFromBta
     ) map {
-      case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas => Redirect(routes.OverseasResolverController.resolve())
-      case Right(VatNumberStored(_, isDirectDebit)) => Redirect(routes.CaptureBusinessEntityController.show())
-      case Right(SubscriptionClaimed) => Redirect(routes.SignUpCompleteClientController.show())
-      case Left(KnownFactsMismatch) => Redirect(routes.VatCouldNotConfirmBusinessController.show())
-      case Left(InvalidVatNumber) => Redirect(routes.InvalidVatNumberController.show())
-      case Left(IneligibleVatNumber(migratableDates)) => Redirect(routes.CannotUseServiceController.show())
-      case Left(VatNumberAlreadyEnrolled) => Redirect(bta.routes.BusinessAlreadySignedUpController.show())
-      case Left(VatMigrationInProgress) => Redirect(routes.MigrationInProgressErrorController.show())
-      case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
+      case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
+        Redirect(routes.OverseasResolverController.resolve()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+      case Right(VatNumberStored(_, isDirectDebit)) =>
+        Redirect(routes.CaptureBusinessEntityController.show()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+      case Right(SubscriptionClaimed) =>
+        Redirect(routes.SignUpCompleteClientController.show())
+      case Left(KnownFactsMismatch) =>
+        Redirect(routes.VatCouldNotConfirmBusinessController.show())
+      case Left(InvalidVatNumber) =>
+        Redirect(routes.InvalidVatNumberController.show())
+      case Left(IneligibleVatNumber(migratableDates)) =>
+        Redirect(routes.CannotUseServiceController.show())
+      case Left(VatNumberAlreadyEnrolled) =>
+        Redirect(bta.routes.BusinessAlreadySignedUpController.show())
+      case Left(VatMigrationInProgress) =>
+        Redirect(routes.MigrationInProgressErrorController.show())
+      case err =>
+        throw new InternalServerException("unexpected response on store vat number " + err)
     }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>

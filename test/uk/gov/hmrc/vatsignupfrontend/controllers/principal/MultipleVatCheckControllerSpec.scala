@@ -82,6 +82,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
             session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
+            session(result) get SessionKeys.hasDirectDebitKey should contain("false")
           }
         }
         "the VAT number is stored successfully and the BE is Overseas" should {
@@ -93,6 +94,19 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
             session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
+            session(result) get SessionKeys.hasDirectDebitKey should contain("false")
+          }
+        }
+        "the VAT number is stored successfully and the user has Direct Debits" should {
+          "go to business-type with the direct debit flag in the session" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockStoreVatNumberDirectDebitSuccess(testVatNumber, isFromBta = false)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+            session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
+            session(result) get SessionKeys.hasDirectDebitKey should contain("true")
           }
         }
         "the VAT subscription has been claimed" should {

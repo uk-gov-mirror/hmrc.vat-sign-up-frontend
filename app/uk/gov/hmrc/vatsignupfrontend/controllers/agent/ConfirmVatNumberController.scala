@@ -60,9 +60,9 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
           if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
             storeVatNumberService.storeVatNumberDelegated(vatNumber) map {
               case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
-                Redirect(routes.OverseasResolverController.resolve())
+                Redirect(routes.OverseasResolverController.resolve()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
               case Right(VatNumberStored(_, isDirectDebit)) =>
-                Redirect(routes.CaptureBusinessEntityController.show())
+                Redirect(routes.CaptureBusinessEntityController.show()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
               case Left(NoAgentClientRelationship) =>
                 Redirect(routes.NoAgentClientRelationshipController.show())
               case Left(AlreadySubscribed) =>
