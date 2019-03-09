@@ -155,6 +155,8 @@ error.principal.box_5_figure_invalid_format.field                      = Enter a
 error.principal.box_5_figure_invalid_format.summary                    = Enter a value to 2 decimal places. For example, £100.00
 error.principal.box_5_figure_invalid_length.field                      = The Box 5 amount must be less than 14 digits
 error.principal.box_5_figure_invalid_length.summary                    = The Box 5 amount must be less than 14 digits
+error.receive_email_notification.field                                 = Select a contact preference
+error.receive_email_notification.summary                               = Select a contact preference
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -895,3 +897,11 @@ principal.direct_debit_terms_and_conditions.title                     = Terms an
 principal.direct_debit_terms_and_conditions.heading                   = Terms and Conditions
 principal.direct_debit_terms_and_conditions.line_1                    = You will need to read and agree to the <a id="termsAndConditionsLink" href="{0}" target="_blank">Direct Debit terms and conditions (opens in a new window or tab)</a> to continue.
 principal.direct_debit_terms_and_conditions.not_agree_link            = I do not agree
+
+## Contact Preferences Receive Email Notifications
+principal.receive_email_notifications.title                           = How should we contact the business about VAT?
+principal.receive_email_notifications.heading                         = How should we contact the business about VAT?
+principal.receive_email_notifications.line_1                          = We can email you when the business has a new message about VAT in their HMRC account.
+principal.receive_email_notifications.line_2                          = In some cases we will need to send you letters, even if you have chosen emails only.
+principal.receive_email_notifications.yes                             = Send emails to {0}
+principal.receive_email_notifications.no                              = Send letters only
