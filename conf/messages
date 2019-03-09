@@ -272,12 +272,14 @@ agent.agree_capture_email.line_2                                       = Your cl
 ## Agent Capture Email page
 agent.capture_client_email.title                                       = What is your client''s email address?
 agent.capture_client_email.heading                                     = What is your client''s email address?
+agent.capture_client_email.line_1                                      = We''ll email your client a Direct Debit advance notice 10 working days before each payment is taken.
+agent.capture_client_email.line_2                                      = If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit.
 agent.capture_client_email.hint                                        = For example, me@me.com
 
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = What is your email address?
 agent.capture_agent_email.heading                                      = What is your email address?
-agent.capture_agent_email.line_1                                       = We will only send you an email to let you know if your client can join the trial.
+agent.capture_agent_email.line_1                                       = We will only send you an email to let you know when you can report your client''s VAT through compatible software. This might take up to 72 hours.
 agent.capture_agent_email.hint                                         = For example, me@me.com
 
 ## Agent Confirm Email page
@@ -893,9 +895,7 @@ principal.cancel_direct_debit.line_2                                  = Go back 
 ## Direct Debit Terms and Conditions
 principal.direct_debit_terms_and_conditions.title                     = Terms and Conditions
 principal.direct_debit_terms_and_conditions.heading                   = Terms and Conditions
-principal.direct_debit_terms_and_conditions.line.pre_link             = You will need to read and agree to the
-principal.direct_debit_terms_and_conditions.line.link                 = Direct Debit terms and conditions (opens in a new window or tab)
-principal.direct_debit_terms_and_conditions.line.after_link           = to continue.
+principal.direct_debit_terms_and_conditions.line_1                    = You will need to read and agree to the <a id="termsAndConditionsLink" href="{0}" target="_blank">Direct Debit terms and conditions (opens in a new window or tab)</a> to continue.
 principal.direct_debit_terms_and_conditions.not_agree_link            = I do not agree
 
 ## Contact Preferences Receive Email Notifications
@@ -905,4 +905,3 @@ principal.receive_email_notifications.line_1                          = We can e
 principal.receive_email_notifications.line_2                          = In some cases we will need to send you letters, even if you have chosen emails only.
 principal.receive_email_notifications.yes                             = Send emails to {0}
 principal.receive_email_notifications.no                              = Send letters only
-

@@ -115,6 +115,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def storeGovOrgInformationUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/government-organisation"
 
+  def storeContactPreferenceUrl(vatNumber: String): String =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/contact-preference"
+
   def claimSubscriptionUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/claim-subscription/vat-number/$vatNumber"
 
@@ -165,6 +168,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val softwareOptionsUrl: String = govUK + "/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
 
   lazy val recoverAccountUrl: String = govUK + "/log-in-register-hmrc-online-services/problems-signing-in"
+
+  lazy val directDebitTermsAndConditionsUrl: String = "https://www.tax.service.gov.uk/direct-debit/vat/terms-and-conditions"
 
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes
