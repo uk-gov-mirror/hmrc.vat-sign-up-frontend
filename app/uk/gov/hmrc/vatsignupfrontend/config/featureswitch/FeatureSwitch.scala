@@ -41,7 +41,8 @@ object FeatureSwitch {
     CharityJourney,
     GovernmentOrganisationJourney,
     AdditionalKnownFacts,
-    DirectDebitTermsJourney
+    DirectDebitTermsJourney,
+    ContactPrefencesJourney
   )
 
   def apply(str: String): FeatureSwitch =

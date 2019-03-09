@@ -18,8 +18,10 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.email_verified
 
@@ -32,8 +34,24 @@ class EmailVerifiedController @Inject()(val controllerComponents: ControllerComp
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(email_verified())
+        Ok(email_verified(routes.EmailVerifiedController.submit()))
       )
+    }
+  }
+
+  val submit: Action[AnyContent] = Action.async { implicit request =>
+    authorised() {
+      if (isEnabled(ContactPrefencesJourney)) {
+        Future.successful(
+          NotImplemented
+            .addingToSession(SessionKeys.emailVerifiedKey -> "true")
+          // TODO: redirect to contact preferences page.
+        )
+      } else {
+        Future.successful(
+          Redirect(routes.TermsController.show().url)
+        )
+      }
     }
   }
 
