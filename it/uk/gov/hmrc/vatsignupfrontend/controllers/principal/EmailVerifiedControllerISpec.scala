@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import play.api.http.Status._
+import play.api.http.Status.{NOT_IMPLEMENTED, OK, SEE_OTHER}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -31,6 +32,34 @@ class EmailVerifiedControllerISpec extends ComponentSpecBase with CustomMatchers
       res should have(
         httpStatus(OK)
       )
+    }
+  }
+
+  "POST /email-verified" should {
+    "return a Not Implemented" when {
+      "the contact preferences feature switch is enabled" in {
+        stubAuth(OK, successfulAuthResponse())
+        enable(ContactPrefencesJourney)
+
+        val res = post("/email-verified")()
+
+        res should have(
+          httpStatus(NOT_IMPLEMENTED)
+        )
+      }
+    }
+    "redirect to Terms" when {
+      "the contact preferences feature switch is not enabled" in {
+        stubAuth(OK, successfulAuthResponse())
+        disable(ContactPrefencesJourney)
+
+        val res = post("/email-verified")()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.TermsController.show().url)
+        )
+      }
     }
   }
 

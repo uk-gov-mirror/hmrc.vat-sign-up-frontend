@@ -14,12 +14,13 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButtonLink
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @principal_main_template(title = Messages("principal.email_verified.title"), bodyClasses = None) {
 
@@ -27,8 +28,9 @@
 
     <p>@Messages("principal.email_verified.line_1")</p>
 
-    <div class="form-group">
-        @continueButtonLink(href = routes.TermsController.show().url, alternativeText = Some(Messages("base.continue_to_sign_up")))
-    </div>
-
+    @form(action = postAction) {
+        <div class="form-group">
+            @continueButton(Some(Messages("base.continue_to_sign_up")))
+        </div>
+    }
 }

@@ -32,7 +32,9 @@ class EmailVerifiedSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.email_verified()(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.email_verified(
+    postAction = testCall
+  )(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -51,7 +53,7 @@ class EmailVerifiedSpec extends ViewSpec {
       messages.line1
     )
 
-    testPage.shouldHaveContinueButtonLink(routes.TermsController.show().url, common.continueToSignUp)
+    testPage.shouldHaveContinueToSignUpButton()
 
   }
 

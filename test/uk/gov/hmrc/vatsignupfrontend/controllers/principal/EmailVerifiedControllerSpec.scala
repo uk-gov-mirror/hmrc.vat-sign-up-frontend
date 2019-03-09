@@ -20,13 +20,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-
-import scala.concurrent.Future
 
 class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -45,5 +42,32 @@ class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         charset(result) shouldBe Some("utf-8")
       }
     }
+
+  "Calling the submit action of the Email Verified controller" should {
+    lazy val testPostRequest = FakeRequest("POST", "/email-verified")
+    "return a not implemented" when {
+      "the contact preferences feature switch is enabled" in {
+        mockAuthAdminRole()
+        enable(ContactPrefencesJourney)
+
+        val result = TestEmailVerifiedController.submit(testPostRequest)
+
+        status(result) shouldBe Status.NOT_IMPLEMENTED
+        result.session(testPostRequest).get(SessionKeys.emailVerifiedKey) shouldBe Some("true")
+        //TODO: redirect to contact preferences page
+      }
+    }
+    "redirect to Terms controller" when {
+      "the contact preferences feature switch is disabled" in {
+        mockAuthAdminRole()
+        disable(ContactPrefencesJourney)
+
+        val result = TestEmailVerifiedController.submit(testPostRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+      }
+    }
+  }
 
 }
