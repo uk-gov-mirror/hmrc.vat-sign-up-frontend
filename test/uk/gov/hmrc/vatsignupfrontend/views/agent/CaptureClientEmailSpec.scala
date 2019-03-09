@@ -32,7 +32,42 @@ class CaptureClientEmailSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
+  lazy val ddPage = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email(
+    hasDirectDebit = true,
+    emailForm = emailForm(isAgent = true).form,
+    postAction = testCall)(
+    FakeRequest(),
+    applicationMessages,
+    new AppConfig(configuration, env)
+  )
+
+  "The Capture Client Email view with direct debit" should {
+
+    val testPage = TestView(
+      name = "Capture Client Email View",
+      title = messages.title,
+      heading = messages.heading,
+      page = ddPage
+    )
+
+    testPage.shouldHaveParaSeq(
+      messages.line1,
+      messages.line2
+    )
+
+    testPage.shouldHaveHint(
+      messages.hint
+    )
+
+    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
+
+    testPage.shouldHaveTextField(email, messages.heading)
+
+    testPage.shouldHaveContinueButton()
+  }
+
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email(
+    hasDirectDebit = true,
     emailForm = emailForm(isAgent = true).form,
     postAction = testCall)(
     FakeRequest(),
@@ -61,4 +96,3 @@ class CaptureClientEmailSpec extends ViewSpec {
   }
 
 }
-

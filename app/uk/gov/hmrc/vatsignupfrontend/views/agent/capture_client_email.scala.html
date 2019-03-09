@@ -20,13 +20,23 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
 
-@(emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(hasDirectDebit: Boolean, emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @agent_main_template(title = Messages("agent.capture_client_email.title"), bodyClasses = None, form = Some(emailForm)) {
 
     @summaryErrorHelper(emailForm)
 
     <h1 class="heading-large">@Messages("agent.capture_client_email.heading")</h1>
+
+    @if(hasDirectDebit) {
+        <p>@Messages("agent.capture_client_email.line_1")</p>
+
+        <div class="panel panel-border-wide">
+
+            <p>@Messages("agent.capture_client_email.line_2")</p>
+
+        </div>
+    }
 
     @form(action = postAction) {
         <div class="form-group">
