@@ -954,4 +954,16 @@ object MessageLookup {
     val link2 = "I do not agree"
   }
 
+  object ReceiveEmailNotifications {
+    val heading: String = "How should we contact the business about VAT?"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "We can email you when the business has a new message about VAT in their HMRC account."
+    val line2 = "In some cases we will need to send you letters, even if you have chosen emails only."
+    val radioYes: String = "yes"
+    val radioNo: String = "no"
+
+    def radioButtonEmail(email: String) = s"Send emails to $email"
+    val no: String = "Send letters only"
+  }
+
 }
