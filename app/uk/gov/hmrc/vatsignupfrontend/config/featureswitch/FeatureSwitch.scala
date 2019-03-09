@@ -138,3 +138,8 @@ case object DirectDebitTermsJourney extends FeatureSwitch {
   override val name: String = s"$prefix.direct-debit-terms-journey"
   override val displayText: String = "Enable the Direct Debit T&Cs Journey"
 }
+
+case object ContactPrefencesJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.contact-preferences-journey"
+  override val displayText: String = "Enable the Contact Preferences Journey"
+}
