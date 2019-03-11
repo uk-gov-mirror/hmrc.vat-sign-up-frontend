@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockSubmissionService
@@ -95,6 +96,8 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "VAT number is in session and acceptedDirectDebit isn't in session" should {
         "goto accept direct debit terms and conditions" in {
+          enable(DirectDebitTermsJourney)
+
           mockAuthAdminRole()
           val result = TestTermsController.submit(
             testPostRequest.withSession(
@@ -110,6 +113,8 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "VAT number is in session and acceptedDirectDebit is false" should {
         "goto accept direct debit terms and conditions" in {
+          enable(DirectDebitTermsJourney)
+
           mockAuthAdminRole()
           val result = TestTermsController.submit(
             testPostRequest.withSession(
