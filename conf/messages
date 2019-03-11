@@ -905,3 +905,11 @@ principal.receive_email_notifications.line_1                          = We can e
 principal.receive_email_notifications.line_2                          = In some cases we will need to send you letters, even if you have chosen emails only.
 principal.receive_email_notifications.yes                             = Send emails to {0}
 principal.receive_email_notifications.no                              = Send letters only
+
+## Agent Contact Preferences Receive Email Notifications
+agent.receive_email_notifications.title                               = Does your client want to receive emails about VAT?
+agent.receive_email_notifications.heading                             = Does your client want to receive emails about VAT?
+agent.receive_email_notifications.line_1                              = We can email your client when they have a new message about VAT in their HMRC account. Your client will be able to change the preference later.
+agent.receive_email_notifications.line_2                              = In some cases we will need to send your client letters, even if you have chosen emails only.
+agent.receive_email_notifications.yes                                 = Yes, send emails
+agent.receive_email_notifications.no                                  = No, send my client letters only
