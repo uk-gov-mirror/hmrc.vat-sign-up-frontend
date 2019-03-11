@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{ContactPreference, Digital}
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 @Singleton
 class ContactPreferenceController @Inject()(val controllerComponents: ControllerComponents,
                                             val contactPreferenceService: StoreContactPreferenceService)
-  extends AuthenticatedController(AgentEnrolmentPredicate, Set(ContactPrefencesJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate, Set(ContactPreferencesJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

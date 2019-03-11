@@ -22,7 +22,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -33,15 +33,15 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
   object TestContactPreferenceController extends ContactPreferenceController(mockControllerComponents, mockStoreContactPreferenceService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/receive-email-notifications")
-  lazy val testPostRequest = FakeRequest("POST", "/receive-email-notifications")
+  lazy val testGetRequest = FakeRequest("GET", "/client/receive-email-notifications")
+  lazy val testPostRequest = FakeRequest("POST", "/client/receive-email-notifications")
 
   "Calling the show action of the Contact Preference controller" should {
 
     lazy val result = TestContactPreferenceController.show(testGetRequest)
 
     "return status OK (200)" in {
-      enable(ContactPrefencesJourney)
+      enable(ContactPreferencesJourney)
       mockAuthRetrieveAgentEnrolment()
       status(result) shouldBe Status.OK
     }
@@ -68,7 +68,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
         "contact preference is Digital" should {
 
           "redirect to Capture Client Email page" in {
-            enable(ContactPrefencesJourney)
+            enable(ContactPreferencesJourney)
             mockAuthRetrieveAgentEnrolment()
             mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Digital)
 
@@ -87,7 +87,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
           "user has direct debit" should {
 
             "redirect to Capture Client Email page" in {
-              enable(ContactPrefencesJourney)
+              enable(ContactPreferencesJourney)
               mockAuthRetrieveAgentEnrolment()
               mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
 
@@ -104,7 +104,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
           "user does not have a direct debit" should {
 
             "redirect to Terms page" in {
-              enable(ContactPrefencesJourney)
+              enable(ContactPreferencesJourney)
               mockAuthRetrieveAgentEnrolment()
               mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
 
@@ -124,7 +124,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
       "call to store contact preference is NOT successful" when {
 
         "redirect to Capture Client Email page" in {
-          enable(ContactPrefencesJourney)
+          enable(ContactPreferencesJourney)
           mockAuthRetrieveAgentEnrolment()
           mockStoreContactPreferenceFailure(vatNumber = testVatNumber, contactPreference = Digital)
 
@@ -141,7 +141,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
     "vat number is NOT in session" should {
 
       "redirect to Capture Client VRN page" in {
-        enable(ContactPrefencesJourney)
+        enable(ContactPreferencesJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest.withFormUrlEncodedBody(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)

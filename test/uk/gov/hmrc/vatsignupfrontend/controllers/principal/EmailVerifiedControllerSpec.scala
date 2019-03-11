@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -48,7 +48,7 @@ class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
     "return a not implemented" when {
       "the contact preferences feature switch is enabled" in {
         mockAuthAdminRole()
-        enable(ContactPrefencesJourney)
+        enable(ContactPreferencesJourney)
 
         val result = TestEmailVerifiedController.submit(testPostRequest)
 
@@ -60,7 +60,7 @@ class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
     "redirect to Terms controller" when {
       "the contact preferences feature switch is disabled" in {
         mockAuthAdminRole()
-        disable(ContactPrefencesJourney)
+        disable(ContactPreferencesJourney)
 
         val result = TestEmailVerifiedController.submit(testPostRequest)
 
