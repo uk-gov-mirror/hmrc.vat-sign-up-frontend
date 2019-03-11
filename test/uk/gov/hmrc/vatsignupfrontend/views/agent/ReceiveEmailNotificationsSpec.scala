@@ -23,7 +23,8 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentReceiveEmailNotifications => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.forms.ReceiveEmailNotificationForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
+import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
@@ -37,7 +38,7 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.receive_email_notifications(
-    receiveEmailNotificationForm,
+    contactPreferencesForm(isAgent = true),
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
@@ -52,23 +53,24 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
       heading = messages.heading,
       page = page
     )
-    testPage.shouldHaveForm("Yes No Form")(actionCall = testCall)
+
+    testPage.shouldHaveForm("Contact Preference Form")(actionCall = testCall)
 
     "have a set of radio inputs" which {
       lazy val doc = Jsoup.parse(page.body)
 
-      "for the option 'Yes'" should {
+      "for the option 'Digital'" should {
 
-        "have the text 'Send email to'" in {
-          doc.select(s"label[for=${messages.radioYes}]").text() shouldEqual messages.radioButtonEmail
+        s"have the text '${messages.digital}'" in {
+          doc.select(s"label[for=${ContactPreferencesForm.digital}]").text() shouldEqual messages.digital
         }
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#yes")
+          lazy val optionLabel = doc.select("#digital")
 
-          "have the id 'yes'" in {
-            optionLabel.attr("id") shouldEqual "yes"
+          "have the id 'digital'" in {
+            optionLabel.attr("id") shouldEqual "digital"
           }
 
           "be of type radio" in {
@@ -77,18 +79,18 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
         }
       }
 
-      "for the option 'No'" should {
+      "for the option 'Paper'" should {
 
-        "have the text 'no'" in {
-          doc.select(s"label[for=${messages.radioNo}]").text()  shouldEqual messages.no
+        s"have the text '${messages.paper}'" in {
+          doc.select(s"label[for=${ContactPreferencesForm.paper}]").text()  shouldEqual messages.paper
         }
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#no")
+          lazy val optionLabel = doc.select("#paper")
 
-          "have the id 'no" in {
-            optionLabel.attr("id") shouldEqual "no"
+          "have the id 'paper" in {
+            optionLabel.attr("id") shouldEqual "paper"
           }
 
           "be of type radio" in {
@@ -97,8 +99,6 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
         }
       }
     }
-
-    testPage.shouldHaveForm("Receive Ready Form")(actionCall = testCall)
 
     testPage.shouldHaveParaSeq(
       messages.line1,
