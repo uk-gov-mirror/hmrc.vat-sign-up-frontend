@@ -968,4 +968,13 @@ object MessageLookup {
     val no: String = "Send letters only"
   }
 
+  object AgentReceiveEmailNotifications {
+    val heading: String = "Does your client want to receive emails about VAT?"
+    val title = heading + ServiceName.agentSuffix
+    val line1 = "We can email your client when they have a new message about VAT in their HMRC account. Your client will be able to change the preference later."
+    val line2 = "In some cases we will need to send your client letters, even if you have chosen emails only."
+    val digital = "Yes, send emails"
+    val paper: String = "No, send my client letters only"
+  }
+
 }
