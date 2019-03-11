@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.services.SubmissionService
@@ -58,7 +59,7 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents,
       }
 
       (optVatNumber, hasDirectDebit) match {
-        case (Some(vatNumber), true) if acceptedDirectDebitTerms =>
+        case (Some(vatNumber), true) if acceptedDirectDebitTerms || !isEnabled(DirectDebitTermsJourney) =>
           submit(vatNumber)
         case (Some(vatNumber), false) =>
           submit(vatNumber)
