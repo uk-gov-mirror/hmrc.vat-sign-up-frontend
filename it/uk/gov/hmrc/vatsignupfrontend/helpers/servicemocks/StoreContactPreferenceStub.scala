@@ -23,6 +23,9 @@ import uk.gov.hmrc.vatsignupfrontend.models.ContactPreference
 
 object StoreContactPreferenceStub extends WireMockMethods {
 
+  object StoreContactPreferenceStub extends WireMockMethods {
+  }
+
   def stubStoreContactPreferenceSuccess(preference: ContactPreference): Unit = {
     when(
       method = POST,
