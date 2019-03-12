@@ -232,6 +232,8 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     def shouldHaveAcceptAndContinueButton(): Unit = shouldHaveSubmitButton(common.acceptAndContinue)
 
+    def shouldHaveAcceptAndSendButton(): Unit = shouldHaveSubmitButton(common.acceptAndSend)
+
     def shouldHaveAgreeAndContinueButton(): Unit = shouldHaveSubmitButton(common.agreeAndContinue)
 
     def shouldHaveAgreeButton(): Unit = shouldHaveSubmitButton(common.agree)

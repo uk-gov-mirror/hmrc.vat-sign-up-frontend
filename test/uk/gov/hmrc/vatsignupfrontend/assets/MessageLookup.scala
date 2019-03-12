@@ -29,6 +29,7 @@ object MessageLookup {
     val confirmAndContinue = "Confirm and continue"
     val confirm = "Confirm"
     val acceptAndContinue = "Accept and continue"
+    val acceptAndSend = "Accept and send"
     val agreeAndContinue = "Agree and continue"
     val agree = "Agree"
     val submit = "Submit"
@@ -975,6 +976,12 @@ object MessageLookup {
     val line2 = "In some cases we will need to send your client letters, even if you have chosen emails only."
     val digital = "Yes, send emails"
     val paper: String = "No, send my client letters only"
+  }
+
+  object PrincipalSendYourApplication {
+    val heading: String = "Send your application"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct."
   }
 
 }
