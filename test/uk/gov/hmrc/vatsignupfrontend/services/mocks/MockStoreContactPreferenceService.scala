@@ -46,7 +46,7 @@ trait MockStoreContactPreferenceService extends BeforeAndAfterEach with MockitoS
       .thenReturn(returnValue)
   }
 
-  def mockStoreContactPreferenceSuccess(vatNumber: String, contactPreference: ContactPreference)(emailVerified: Boolean): Unit =
+  def mockStoreContactPreferenceSuccess(vatNumber: String, contactPreference: ContactPreference): Unit =
     mockStoreContactPreference(vatNumber, contactPreference)(Future.successful(Right(StoreContactPreferenceSuccess)))
 
   def mockStoreContactPreferenceFailure(vatNumber: String, contactPreference: ContactPreference): Unit =

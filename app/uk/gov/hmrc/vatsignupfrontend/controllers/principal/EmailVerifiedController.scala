@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPrefencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.email_verified
 
@@ -41,7 +41,7 @@ class EmailVerifiedController @Inject()(val controllerComponents: ControllerComp
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      if (isEnabled(ContactPrefencesJourney)) {
+      if (isEnabled(ContactPreferencesJourney)) {
         Future.successful(
           NotImplemented
             .addingToSession(SessionKeys.emailVerifiedKey -> "true")
