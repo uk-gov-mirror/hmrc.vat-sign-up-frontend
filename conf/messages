@@ -918,4 +918,9 @@ agent.receive_email_notifications.no                                  = No, send
 ## Send Your Application
 principal.send_your_application.title                                 = Send your application
 principal.send_your_application.heading                               = Send your application
-principal.send_your_application.line                                  = By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct.
+principal.send_your_application.line                                  = By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct.## Send Your Application
+
+## Agent - Send Your Application
+agent.send_your_application.title                                     = Send your application
+agent.send_your_application.heading                                   = Send your application
+agent.send_your_application.line                                      = By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct.

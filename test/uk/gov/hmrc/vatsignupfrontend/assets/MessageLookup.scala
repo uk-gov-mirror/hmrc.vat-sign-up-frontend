@@ -984,4 +984,10 @@ object MessageLookup {
     val line1 = "By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct."
   }
 
+  object AgentSendYourApplication {
+    val heading: String = "Send your application"
+    val title = heading + ServiceName.agentSuffix
+    val line1 = "By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct."
+  }
+
 }
