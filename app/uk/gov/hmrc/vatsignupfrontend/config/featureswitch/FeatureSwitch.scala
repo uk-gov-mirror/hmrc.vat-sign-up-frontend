@@ -42,7 +42,8 @@ object FeatureSwitch {
     GovernmentOrganisationJourney,
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
-    ContactPreferencesJourney
+    ContactPreferencesJourney,
+    SendYourApplication
   )
 
   def apply(str: String): FeatureSwitch =

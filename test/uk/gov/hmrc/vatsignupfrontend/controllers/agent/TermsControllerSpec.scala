@@ -16,21 +16,19 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockSubmissionService
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentSendYourApplication, Terms}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SendYourApplication
+import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockSubmissionService
 
-class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
-  with MockSubmissionService {
+class TermsControllerSpec extends ControllerSpec with MockSubmissionService {
 
   object TestTermsController extends TermsController(mockControllerComponents, mockSubmissionService)
 
@@ -39,15 +37,49 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/terms-of-participation").withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
-  "Calling the show action of the Terms controller" should {
-    "show the Terms page" in {
-      mockAuthRetrieveAgentEnrolment()
+  "Calling the show action of the Terms controller" when {
+
+    "SendYourApplication is disabled" should {
+
       val request = testGetRequest
 
-      val result = TestTermsController.show(request)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      lazy val result = TestTermsController.show(request)
+
+      "return an OK" in {
+        mockAuthRetrieveAgentEnrolment()
+        status(result) shouldBe Status.OK
+      }
+
+      "return Html" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+
+      "display the correct page" in {
+        titleOf(result) shouldBe Terms.title
+      }
+    }
+
+    "SendYourApplication is enabled" should {
+
+      val request = testGetRequest
+
+      lazy val result = TestTermsController.show(request)
+
+      "return an OK" in {
+        enable(SendYourApplication)
+        mockAuthRetrieveAgentEnrolment()
+        status(result) shouldBe Status.OK
+      }
+
+      "return Html" in {
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
+
+      "display the correct page" in {
+        titleOf(result) shouldBe AgentSendYourApplication.title
+      }
     }
   }
 
