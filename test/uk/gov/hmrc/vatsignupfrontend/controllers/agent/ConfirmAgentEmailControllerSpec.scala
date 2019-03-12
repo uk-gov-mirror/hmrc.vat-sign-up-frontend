@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, VerifyAgentEmail}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
@@ -96,21 +96,42 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
           redirectLocation(result) shouldBe Some(routes.VerifyAgentEmailController.show().url)
         }
       }
-      "email is verified" should {
-        "redirect to Terms page" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreTransactionEmailAddressSuccess(
-            vatNumber = testVatNumber,
-            transactionEmail = testEmail
-          )(emailVerified = true)
+      "email is verified" when {
+        "contact preferences is enabled" should {
+          "redirect to Contact Preferences page" in {
+            mockAuthRetrieveAgentEnrolment()
+            mockStoreTransactionEmailAddressSuccess(
+              vatNumber = testVatNumber,
+              transactionEmail = testEmail
+            )(emailVerified = true)
+            enable(ContactPreferencesJourney)
 
-          val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(
-            SessionKeys.transactionEmailKey -> testEmail,
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
+            val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(
+              SessionKeys.transactionEmailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber
+            ))
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.ContactPreferenceController.show().url)
+          }
+        }
+        "contact preferences is disabled" should {
+
+          "redirect to Terms page" in {
+            mockAuthRetrieveAgentEnrolment()
+            mockStoreTransactionEmailAddressSuccess(
+              vatNumber = testVatNumber,
+              transactionEmail = testEmail
+            )(emailVerified = true)
+
+            val result = TestConfirmAgentEmailController.submit(testPostRequest.withSession(
+              SessionKeys.transactionEmailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber
+            ))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+          }
         }
       }
     }
