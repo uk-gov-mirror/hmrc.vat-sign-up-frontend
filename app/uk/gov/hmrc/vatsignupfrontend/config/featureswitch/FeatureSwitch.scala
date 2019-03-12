@@ -144,3 +144,8 @@ case object ContactPreferencesJourney extends FeatureSwitch {
   override val name: String = s"$prefix.contact-preferences-journey"
   override val displayText: String = "Enable the Contact Preferences Journey"
 }
+
+case object SendYourApplication extends FeatureSwitch {
+  override val name: String = s"$prefix.send-your-application"
+  override val displayText: String = "Enable the Send Your Application view (replaces Terms of Participation)"
+}
