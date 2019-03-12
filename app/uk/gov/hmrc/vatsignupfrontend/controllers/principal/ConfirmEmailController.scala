@@ -63,16 +63,20 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
       val optEmail = request.session.get(SessionKeys.emailKey).filter(_.nonEmpty)
 
       (optVatNumber, optEmail) match {
-        case (Some(vatNumber), Some(email)) =>
-          storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
-            case Right(StoreEmailAddressSuccess(false)) =>
-              Redirect(routes.VerifyEmailController.show().url)
-            case Right(StoreEmailAddressSuccess(true)) =>
-              if(isEnabled(ContactPreferencesJourney)) Redirect(routes.ReceiveEmailNotificationsController.show())
-              else Redirect(routes.TermsController.show())
-            case Left(errResponse) =>
-              throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
-          }
+        case (Some(vatNumber), Some(email)) => {
+          if (isEnabled(ContactPreferencesJourney))
+            storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email)
+          else
+            storeEmailAddressService.storeEmailAddress(vatNumber, email)
+        } map {
+          case Right(StoreEmailAddressSuccess(false)) =>
+            Redirect(routes.VerifyEmailController.show().url)
+          case Right(StoreEmailAddressSuccess(true)) =>
+            if(isEnabled(ContactPreferencesJourney)) Redirect(routes.ReceiveEmailNotificationsController.show())
+            else Redirect(routes.TermsController.show())
+          case Left(errResponse) =>
+            throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
+        }
         case (None, _) =>
           Future.successful(
             Redirect(routes.ResolveVatNumberController.resolve())
