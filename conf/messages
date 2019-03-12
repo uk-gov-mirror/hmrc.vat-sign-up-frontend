@@ -16,6 +16,7 @@ base.confirm                                                           = Confirm
 base.agree                                                             = Agree
 base.agree_and_continue                                                = Agree and continue
 base.accept_and_continue                                               = Accept and continue
+base.accept_and_send                                                   = Accept and send
 base.continue_to_sign_up                                               = Continue to sign up
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
@@ -914,3 +915,7 @@ agent.receive_email_notifications.line_2                              = In some 
 agent.receive_email_notifications.yes                                 = Yes, send emails
 agent.receive_email_notifications.no                                  = No, send my client letters only
 
+## Send Your Application
+principal.send_your_application.title                                 = Send your application
+principal.send_your_application.heading                               = Send your application
+principal.send_your_application.line                                  = By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct.
