@@ -48,6 +48,7 @@ object MessageLookup {
     val startNow = "Start now"
     val yes = "Yes"
     val no = "No"
+    val errPrefix = "Error:"
   }
 
   object ErrorMessage {
@@ -967,6 +968,7 @@ object MessageLookup {
 
     def radioButtonEmail(email: String) = s"Send emails to $email"
     val paper: String = "Send letters only"
+    val error = "Select if you want to be contacted by email or letters only"
   }
 
   object AgentReceiveEmailNotifications {
@@ -976,6 +978,7 @@ object MessageLookup {
     val line2 = "In some cases we will need to send your client letters, even if you have chosen emails only."
     val digital = "Yes, send emails"
     val paper: String = "No, send my client letters only"
+    val error = "Select if you want to be contacted by email or letters only"
   }
 
   object PrincipalSendYourApplication {

@@ -29,7 +29,7 @@ object ContactPreferencesForm {
 
   val paper: String = "paper"
 
-  val agentContactPreferenceError: String = "error.agent.contact-preference"
+  val agentContactPreferenceError: String = "error.agent.receive_email_notifications"
 
   val principalContactPreferenceError: String = "error.principal.receive_email_notifications"
 
