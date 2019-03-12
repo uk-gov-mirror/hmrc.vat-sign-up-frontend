@@ -42,6 +42,44 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
   "POST /confirm-email" should {
     "redirect to verify email page" when {
+      "the email is successfully stored and returned with email not verified on the contact preference journey" in {
+        enable(ContactPreferencesJourney)
+
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreTransactionEmailAddressSuccess(emailVerified = false)
+
+        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.VerifyEmailController.show().url)
+        )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(emailKey)
+      }
+    }
+
+    "redirect to receive email notifications controller" when {
+      "the email is successfully stored and returned with email verified flag on the contact preference journey" in {
+        enable(ContactPreferencesJourney)
+
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreTransactionEmailAddressSuccess(emailVerified = true)
+
+        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ReceiveEmailNotificationsController.show().url)
+        )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(emailKey)
+      }
+    }
+
+    "redirect to verify email page" when {
       "the email is successfully stored and returned with email not verified" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreEmailAddressSuccess(emailVerified = false)
@@ -68,24 +106,6 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.TermsController.show().url)
-        )
-
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
-      }
-    }
-
-    "redirect to contact preference" when {
-      "the email is successfully stored and returned with email verified flag and the contact preference journey is enabled" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreEmailAddressSuccess(emailVerified = true)
-        enable(ContactPreferencesJourney)
-
-        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.ReceiveEmailNotificationsController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
