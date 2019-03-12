@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.SubmissionStub._
@@ -77,7 +78,6 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
   "the user does not have the direct debit attribute on the control list" should {
     "redirect to resolve-vat-number" when {
       "vat number and acceptedDirectDebit keys missing from session" in {
-
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
@@ -91,6 +91,7 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
     }
     "redirect to direct-debit-terms-and-conditions" when {
       "acceptedDirectDebit key is missing from session" in {
+        enable(DirectDebitTermsJourney)
 
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
@@ -108,6 +109,8 @@ class TermsControllerISpec extends ComponentSpecBase with CustomMatchers {
     }
     "redirect to direct-debit-terms-and-conditions" when {
       "acceptedDirectDebit key in session is false" in {
+        enable(DirectDebitTermsJourney)
+
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionFailure()
 
