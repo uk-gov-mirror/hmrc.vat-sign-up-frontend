@@ -24,14 +24,14 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, SendYourApplication}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockSubmissionService
 
-class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
-  with MockSubmissionService {
+class TermsControllerSpec extends ControllerSpec with MockSubmissionService {
 
   object TestTermsController extends TermsController(mockControllerComponents, mockSubmissionService)
 
@@ -40,14 +40,30 @@ class TermsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/terms-of-participation")
 
   "Calling the show action of the Terms controller" should {
-    "show the Terms page" in {
-      mockAuthAdminRole()
-      val request = testGetRequest
+    "show the Terms page" when {
+      "the SendYourApplication feature is disabled" in {
+        mockAuthAdminRole()
+        val request = testGetRequest
 
-      val result = TestTermsController.show(request)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+        val result = TestTermsController.show(request)
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+        titleOf(result) shouldBe MessageLookup.PrincipalTerms.title
+      }
+    }
+    "show the SendYourApplication page" when {
+      "the SendYourApplication feature is enabled" in {
+        enable(SendYourApplication)
+        mockAuthAdminRole()
+        val request = testGetRequest
+
+        val result = TestTermsController.show(request)
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+        titleOf(result) shouldBe MessageLookup.PrincipalSendYourApplication.title
+      }
     }
   }
 
