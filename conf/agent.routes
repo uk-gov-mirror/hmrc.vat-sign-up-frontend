@@ -165,3 +165,7 @@ POST        /registered-society-company-name-not-found          uk.gov.hmrc.vats
 
 # Migration In Progress error page
 GET         /error/sign-up-in-progress                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigrationInProgressErrorController.show
+
+# Client Contact Preferences
+GET         /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.show
+POST        /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.submit

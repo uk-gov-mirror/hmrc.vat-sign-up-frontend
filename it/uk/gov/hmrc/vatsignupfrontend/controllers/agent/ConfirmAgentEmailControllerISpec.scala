@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.transactionEmailKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{VerifyAgentEmail, VerifyClientEmail}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, VerifyAgentEmail, VerifyClientEmail}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -120,6 +120,26 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
 
         res should have(
           redirectUri(routes.VerifyAgentEmailController.show().url)
+        )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(transactionEmailKey)
+      }
+    }
+
+    "redirect to contact preferences page" when {
+      "the email is successfully stored and returned with email verified flag and contact prefs journey is enabled" in {
+        enable(ContactPreferencesJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreTransactionEmailAddressSuccess(emailVerified = true)
+
+        val res = post("/client/confirm-email", Map(
+          SessionKeys.transactionEmailKey -> testEmail,
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))(EmailForm.email -> testEmail)
+
+        res should have(
+          redirectUri(routes.ContactPreferenceController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
