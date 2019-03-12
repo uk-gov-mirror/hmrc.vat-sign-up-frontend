@@ -23,8 +23,9 @@ import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreContactPreferenceStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreEmailAddressStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.Digital
+import uk.gov.hmrc.vatsignupfrontend.models.{Digital, Paper}
 
 class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -95,26 +96,114 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
       }
     }
 
-    "ContactPreferencesJourney is enabled and vat number is in session" should {
-      "redirect to the terms page" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreContactPreferenceSuccess(Digital)
+    "ContactPreferencesJourney is enabled and vat number is in session" when {
+      "the choice is digital" should {
+        "redirect to the terms page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreContactPreferenceSuccess(Digital)
+          stubStoreEmailAddressSuccess(true)
 
-        val res = post("/receive-email-notifications",
-          Map(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.emailKey -> testEmail
-          ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
+          val res = post("/receive-email-notifications",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.emailKey -> testEmail
+            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.TermsController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.TermsController.show().url)
+          )
+        }
       }
     }
 
-    "ContactPreferencesJourney is enabled and vat number is not not session" should {
-      "redirect to the terms page" in {
+    "ContactPreferencesJourney is enabled and vat number is in session" when {
+      "the choice is digital and No email is in session" should {
+        "redirect to Capture Email controller" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreContactPreferenceSuccess(Digital)
+          stubStoreEmailAddressSuccess(true)
+
+          val res = post("/receive-email-notifications",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber
+            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureEmailController.show().url)
+          )
+        }
+      }
+    }
+
+    "ContactPreferencesJourney is enabled and vat number is in session" when {
+      "the choice is paper" should {
+        "redirect to the terms page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreContactPreferenceSuccess(Paper)
+
+          val res = post("/receive-email-notifications",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.emailKey -> testEmail
+            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.TermsController.show().url)
+          )
+        }
+      }
+    }
+
+    "ContactPreferencesJourney is enabled and vat number is in session" when {
+      "the choice is paper and the user has Direct Debit" should {
+        "redirect to the terms page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreContactPreferenceSuccess(Paper)
+          stubStoreEmailAddressSuccess(true)
+
+
+          val res = post("/receive-email-notifications",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.emailKey -> testEmail,
+              SessionKeys.hasDirectDebitKey -> "true"
+            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.TermsController.show().url)
+          )
+        }
+      }
+    }
+
+    "ContactPreferencesJourney is enabled and vat number is in session" when {
+      "the Store Email Address service returns a failure" should {
+        "throw an internal server error" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreContactPreferenceSuccess(Paper)
+          stubStoreEmailAddressFailure()
+
+
+          val res = post("/receive-email-notifications",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.emailKey -> testEmail,
+              SessionKeys.hasDirectDebitKey -> "true"
+            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR)
+          )
+        }
+      }
+    }
+
+    "ContactPreferencesJourney is enabled and vat number is not in session" should {
+      "redirect to the resolve vat number controller" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreContactPreferenceSuccess(Digital)
 

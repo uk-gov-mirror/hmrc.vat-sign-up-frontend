@@ -30,10 +30,11 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreContactPreferenceService
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
 
 
 class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
-  with MockStoreContactPreferenceService {
+  with MockStoreContactPreferenceService with MockStoreEmailAddressService {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -41,8 +42,10 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
   }
 
   object TestReceiveEmailController extends ReceiveEmailNotificationsController(
-    mockControllerComponents,
-    mockStoreContactPreferenceService
+    mockStoreContactPreferenceService,
+    mockStoreEmailAddressService,
+    mockControllerComponents
+
   )
 
   val testGetRequest = FakeRequest("GET", "/receive-email-notifications")
@@ -89,7 +92,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
 
     "Calling the submit action of the Receive Email Notifications controller" when {
       "vat number is in session" when {
-        "User answered Yes" should {
+        "User answered Digital" should {
           "go to the 'terms' page" in {
             mockAuthAdminRole()
 
@@ -97,6 +100,10 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
               vatNumber = testVatNumber,
               contactPreference = Digital
             )
+            mockStoreEmailAddressSuccess(
+              vatNumber = testVatNumber,
+              email = testEmail
+            )(emailVerified = true)
 
             val result = TestReceiveEmailController.submit(testPostRequest("digital").withSession(
               SessionKeys.vatNumberKey -> testVatNumber,
@@ -106,7 +113,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
             redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
           }
         }
-        "User answered No" should {
+        "User answered Paper" should {
           "go to terms page" in {
             mockAuthAdminRole()
 
@@ -118,6 +125,28 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
             val result = TestReceiveEmailController.submit(testPostRequest("paper").withSession(
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.emailKey -> testEmail
+            ))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+          }
+        }
+        "User answered Paper with Direct Debit in session" should {
+          "go to terms page" in {
+            mockAuthAdminRole()
+
+            mockStoreContactPreferenceSuccess(
+              vatNumber = testVatNumber,
+              contactPreference = Paper
+            )
+            mockStoreEmailAddressSuccess(
+              vatNumber = testVatNumber,
+              email = testEmail
+            )(emailVerified = true)
+
+            val result = TestReceiveEmailController.submit(testPostRequest("paper").withSession(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.emailKey -> testEmail,
+              SessionKeys.hasDirectDebitKey -> "true"
             ))
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
@@ -154,6 +183,28 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
       mockStoreContactPreferenceFailure(
         vatNumber = testVatNumber,
         contactPreference = Paper
+      )
+
+      val result = TestReceiveEmailController.submit(testPostRequest("paper").withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.emailKey -> testEmail)
+      )
+
+      intercept[InternalServerException](
+        await(result)
+      )
+    }
+  }
+  "store email address service failed" should {
+    "throw Internal Server Exception" in {
+      mockAuthAdminRole()
+      mockStoreContactPreferenceFailure(
+        vatNumber = testVatNumber,
+        contactPreference = Paper
+      )
+      mockStoreEmailAddressFailure(
+        vatNumber = testVatNumber,
+        email = testEmail
       )
 
       val result = TestReceiveEmailController.submit(testPostRequest("paper").withSession(
