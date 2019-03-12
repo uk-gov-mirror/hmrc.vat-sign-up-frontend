@@ -18,23 +18,27 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testEmail, testVatNumber}
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testVatNumber
+import uk.gov.hmrc.vatsignupfrontend.models.ContactPreference
 
 object StoreContactPreferenceStub extends WireMockMethods {
 
-  def stubStoreContactPreferenceSuccess(emailVerified: Boolean): Unit = {
+  object StoreContactPreferenceStub extends WireMockMethods {
+  }
+
+  def stubStoreContactPreferenceSuccess(preference: ContactPreference): Unit = {
     when(
-      method = PUT,
+      method = POST,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/contact-preference",
-      body = Json.obj("email" -> testEmail)
+      body = Json.obj("contactPreference" -> preference.toString)
     ).thenReturn(status = NO_CONTENT)
   }
 
-  def stubStoreContactPreferenceFailure(): Unit = {
+  def stubStoreContactPreferenceFailure(preference: ContactPreference): Unit = {
     when(
-      method = PUT,
+      method = POST,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/contact-preference",
-      body = Json.obj("email" -> testEmail)
+      body = Json.obj("contactPreference" -> preference.toString)
     ).thenReturn(status = BAD_REQUEST)
   }
 }

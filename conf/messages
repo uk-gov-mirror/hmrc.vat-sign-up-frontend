@@ -155,8 +155,8 @@ error.principal.box_5_figure_invalid_format.field                      = Enter a
 error.principal.box_5_figure_invalid_format.summary                    = Enter a value to 2 decimal places. For example, £100.00
 error.principal.box_5_figure_invalid_length.field                      = The Box 5 amount must be less than 14 digits
 error.principal.box_5_figure_invalid_length.summary                    = The Box 5 amount must be less than 14 digits
-error.receive_email_notification.field                                 = Select a contact preference
-error.receive_email_notification.summary                               = Select a contact preference
+error.principal.receive_email_notifications.field                      = Select a contact preference
+error.principal.receive_email_notifications.summary                    = Select a contact preference
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
@@ -903,5 +903,5 @@ principal.receive_email_notifications.title                           = How shou
 principal.receive_email_notifications.heading                         = How should we contact the business about VAT?
 principal.receive_email_notifications.line_1                          = We can email you when the business has a new message about VAT in their HMRC account.
 principal.receive_email_notifications.line_2                          = In some cases we will need to send you letters, even if you have chosen emails only.
-principal.receive_email_notifications.yes                             = Send emails to {0}
-principal.receive_email_notifications.no                              = Send letters only
+principal.receive_email_notifications.digital                         = Send emails to {0}
+principal.receive_email_notifications.paper                           = Send letters only
