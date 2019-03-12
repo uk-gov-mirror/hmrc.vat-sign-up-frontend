@@ -35,7 +35,9 @@
         </ul>
     </div>
 
-    @signOutButton(alternativeText = Some(Messages("base.logout")), isAgent = false)
+    <div class="form-group">
+        @signOutButton(alternativeText = Some(Messages("base.logout")), isAgent = false)
+    </div>
 
     <p>
         <a id="directDebitTerms" href="@routes.DirectDebitTermsAndConditionsController.show().url">
