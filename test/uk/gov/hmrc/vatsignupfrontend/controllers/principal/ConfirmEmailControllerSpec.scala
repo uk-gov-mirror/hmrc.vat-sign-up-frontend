@@ -66,59 +66,97 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
   }
 
   "Calling the submit action of the Confirm Email controller" when {
-    "email and vat number is in session and store call is successful" when {
-      "email is not verified" should {
-        "redirect to Verify Email page" in {
-          mockAuthAdminRole()
-          mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = false)
+    "email and vat number are in session" when {
+      "the contact preferences feature switch is enabled" when {
+        "store call is successful" when {
+          "email is not verified" should {
+            "redirect to Verify Email page" in {
+              enable(ContactPreferencesJourney)
 
-          val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-            SessionKeys.vatNumberKey -> testVatNumber))
+              mockAuthAdminRole()
+              mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = false)
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+              val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber))
 
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+
+            }
+          }
+          "email is verified" should {
+            "redirect to receive email notifications controller page" in {
+              enable(ContactPreferencesJourney)
+
+              mockAuthAdminRole()
+              mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = true)
+
+              val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber))
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.ReceiveEmailNotificationsController.show().url)
+
+            }
+          }
         }
-      }
-      "email is verified" when {
-        "the Contact Preference Journey is enabled" should {
-          "redirect to Terms page" in {
+        "store call is unsuccessful" should {
+          "throw Internal Server Error" in {
             enable(ContactPreferencesJourney)
+
             mockAuthAdminRole()
-            mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
+            mockStoreTransactionEmailAddressFailure(vatNumber = testVatNumber, transactionEmail = testEmail)
 
-            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-              SessionKeys.vatNumberKey -> testVatNumber))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.ReceiveEmailNotificationsController.show().url)
-          }
-        }
-
-        "the Contact Preference Journey is disabled" should {
-          "redirect to Terms page" in {
-            mockAuthAdminRole()
-            mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
-
-            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-              SessionKeys.vatNumberKey -> testVatNumber))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            intercept[InternalServerException] {
+              await(TestConfirmEmailController.submit(testPostRequest.withSession(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.emailKey -> testEmail
+              )))
+            }
           }
         }
       }
-    }
-    "email and vat number is in session but store call is unsuccessful" should {
-      "throw Internal Server Error" in {
-        mockAuthAdminRole()
-        mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
+      "the contact preferences feature switch is disabled" when {
+        "store call is successful" when {
+          "email is not verified" should {
+            "redirect to Verify Email page" in {
+              mockAuthAdminRole()
+              mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = false)
 
-        intercept[InternalServerException] {
-          await(TestConfirmEmailController.submit(testPostRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.emailKey -> testEmail
-          )))
+              val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber))
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+
+            }
+          }
+          "email is verified" should {
+            "redirect to Terms page" in {
+              mockAuthAdminRole()
+              mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
+
+              val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber))
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+
+            }
+          }
+        }
+        "store call is unsuccessful" should {
+          "throw Internal Server Error" in {
+            mockAuthAdminRole()
+            mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
+
+            intercept[InternalServerException] {
+              await(TestConfirmEmailController.submit(testPostRequest.withSession(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.emailKey -> testEmail
+              )))
+            }
+          }
         }
       }
     }

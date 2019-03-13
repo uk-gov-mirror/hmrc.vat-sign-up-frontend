@@ -25,14 +25,16 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreContactPreferenceService
+import uk.gov.hmrc.vatsignupfrontend.models.Digital
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreContactPreferenceService, StoreEmailAddressService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.receive_email_notifications
 
 import scala.concurrent.Future
 
 @Singleton
-class ReceiveEmailNotificationsController @Inject()(val controllerComponents: ControllerComponents,
-                                                    storeContactPreferenceService: StoreContactPreferenceService
+class ReceiveEmailNotificationsController @Inject()(storeContactPreferenceService: StoreContactPreferenceService,
+                                                    storeEmailAddressService: StoreEmailAddressService,
+                                                    val controllerComponents: ControllerComponents
                                                    )
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(ContactPreferencesJourney)) {
 
@@ -63,6 +65,7 @@ class ReceiveEmailNotificationsController @Inject()(val controllerComponents: Co
 
       val optEmail = request.session.get(SessionKeys.emailKey).filter(_.nonEmpty)
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val isDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
 
       contactPreferencesForm(isAgent = false).bindFromRequest.fold(
         formWithErrors => optEmail match {
@@ -81,9 +84,26 @@ class ReceiveEmailNotificationsController @Inject()(val controllerComponents: Co
         }, {
           contactPreference =>
             optVatNumber match {
-              case (Some(vatNumber)) =>
-                storeContactPreferenceService.storeContactPreference(vatNumber, contactPreference) map {
-                  case Right(_) => Redirect(routes.TermsController.show())
+              case Some(vatNumber) =>
+                storeContactPreferenceService.storeContactPreference(vatNumber, contactPreference) flatMap {
+                  case Right(_) if contactPreference == Digital || isDirectDebit =>
+                    optEmail match {
+                      case Some(email) =>
+                        storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
+                          case Right(_) =>
+                            Redirect(routes.TermsController.show())
+                          case Left(status) =>
+                            throw new InternalServerException(s"Store email address service failed with status= $status")
+                        }
+                      case None =>
+                        Future.successful(
+                          Redirect(routes.CaptureEmailController.show())
+                        )
+                    }
+                  case Right(_) =>
+                    Future.successful(
+                      Redirect(routes.TermsController.show())
+                    )
                   case Left(status) => throw new InternalServerException(s"Store contact preference failed with status = $status")
                 }
               case None =>
