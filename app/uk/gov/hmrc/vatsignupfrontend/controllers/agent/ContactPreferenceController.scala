@@ -39,7 +39,7 @@ class ContactPreferenceController @Inject()(val controllerComponents: Controller
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(receive_email_notifications(contactPreferencesForm(isAgent = true), routes.ConfirmClientEmailController.submit()))
+        Ok(receive_email_notifications(contactPreferencesForm(isAgent = true), routes.ContactPreferenceController.submit()))
       )
     }
   }
