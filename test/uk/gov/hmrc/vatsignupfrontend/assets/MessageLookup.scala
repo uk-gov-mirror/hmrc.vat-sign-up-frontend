@@ -993,4 +993,9 @@ object MessageLookup {
     val line1 = "By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct."
   }
 
+  object PrincipalJointVentureOrProperty {
+    val heading: String = "Are you either a Joint Venture or Property Partnership?"
+    val title = heading + ServiceName.principalSuffix
+  }
+
 }
