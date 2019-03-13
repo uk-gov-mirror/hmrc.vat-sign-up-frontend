@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class StoreJointVentureInformationConnector @Inject()(val http: HttpClient,
                                                       val applicationConfig: AppConfig
-                                                 )(implicit ec: ExecutionContext) {
+                                                     )(implicit ec: ExecutionContext) {
   def storeJointVentureInformation(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreJointVentureInformationResponse] =
     http.POST[JsObject, StoreJointVentureInformationResponse](applicationConfig.storeJointVentureInformationUrl(vatNumber), Json.obj())
 
