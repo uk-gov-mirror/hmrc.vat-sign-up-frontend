@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
@@ -44,8 +45,11 @@ class JointVentureOrPropertyController @Inject()(val controllerComponents: Contr
         jointVentureOrPropertyForm(isAgent = true).bindFromRequest.fold(
           formWithErrors => BadRequest(joint_venture_or_property(formWithErrors, routes.JointVentureOrPropertyController.submit()))
           , {
-            case Yes => Redirect(routes.CheckYourAnswersPartnershipsController.show())
-            case No => Redirect(routes.CapturePartnershipUtrController.show())
+            case Yes =>
+              Redirect(routes.CheckYourAnswersPartnershipsController.show())
+                .removingFromSession(SessionKeys.partnershipSautrKey)
+            case No =>
+              Redirect(routes.CapturePartnershipUtrController.show())
           }
         )
       )

@@ -21,6 +21,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => BaseMessages}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalJointVentureOrProperty => Messages}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
@@ -81,12 +82,18 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
 
         "the choice is YES" should {
 
-          lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_yes))
+          lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_yes)
+            .withSession(SessionKeys.partnershipSautrKey -> "utr")
+          )
 
           "return status SEE_OTHER (303)" in {
             mockAuthAdminRole()
             enable(JointVenturePropertyJourney)
             status(result) shouldBe Status.SEE_OTHER
+          }
+
+          "remove partnershipSautrKey from session" in {
+            session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
           }
 
           s"redirect to '${routes.CheckYourAnswersPartnershipsController.show().url}'" in {

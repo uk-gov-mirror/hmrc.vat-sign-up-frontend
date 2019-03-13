@@ -17,11 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{JointVenturePropertyJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.forms.{HaveSoftwareForm, JointVentureOrPropertyForm}
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
 class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -49,12 +50,14 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
       "redirect to Check Your Answers Partnership page" in {
 
-        val res = post("/joint-venture-or-property-partnership")(JointVentureOrPropertyForm.yesNo -> option_yes)
+        val res = post("/joint-venture-or-property-partnership", Map(SessionKeys.partnershipSautrKey -> "utr"))(JointVentureOrPropertyForm.yesNo -> option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.CheckYourAnswersPartnershipsController.show().url)
         )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
       }
     }
 
