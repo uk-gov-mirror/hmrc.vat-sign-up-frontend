@@ -91,9 +91,6 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
   def mockAuthAdminRole(): Unit =
     mockAuthorise(retrievals = Retrievals.credentialRole)(Future.successful(Some(Admin)))
 
-  def mockUnauthorised(): Unit =
-    mockAuthorise(retrievals = Retrievals.credentialRole)(Future.failed(MissingBearerToken()))
-
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuthConnector)
