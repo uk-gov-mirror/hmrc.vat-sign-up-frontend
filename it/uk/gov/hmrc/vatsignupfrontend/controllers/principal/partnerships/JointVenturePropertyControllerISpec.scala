@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.{HaveSoftwareForm, JointVentureOrProp
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
 class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -58,6 +59,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
       }
     }
 
@@ -71,6 +73,8 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
           httpStatus(SEE_OTHER),
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
       }
     }
   }

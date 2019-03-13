@@ -92,12 +92,16 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
             status(result) shouldBe Status.SEE_OTHER
           }
 
-          "remove partnershipSautrKey from session" in {
+          s"remove ${SessionKeys.partnershipSautrKey} from session" in {
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
           }
 
           s"redirect to '${routes.CheckYourAnswersPartnershipsController.show().url}'" in {
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
+          }
+
+          s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_yes} to session" in {
+            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
           }
         }
 
@@ -113,6 +117,10 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
 
           s"redirect to '${routes.CapturePartnershipUtrController.show().url}'" in {
             redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+          }
+
+          s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_no} to session" in {
+            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
           }
         }
       }
