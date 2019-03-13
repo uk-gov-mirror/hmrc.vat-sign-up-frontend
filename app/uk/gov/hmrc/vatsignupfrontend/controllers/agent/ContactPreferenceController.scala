@@ -65,12 +65,12 @@ class ContactPreferenceController @Inject()(val controllerComponents: Controller
 
       def redirect(contactPreference: ContactPreference): Result =
         (contactPreference, hasDirectDebit) match {
-        case (Digital, false) | (_, true) =>
-          Redirect(routes.CaptureClientEmailController.show())
-            .addingToSession(SessionKeys.contactPreferenceKey, contactPreference)
-        case (Paper, false) =>
-          Redirect(routes.TermsController.show())
-      }
+          case (Digital, false) | (_, true) =>
+            Redirect(routes.CaptureClientEmailController.show())
+              .addingToSession(SessionKeys.contactPreferenceKey, contactPreference)
+          case (Paper, false) =>
+            Redirect(routes.TermsController.show())
+        }
 
       contactPreferencesForm(isAgent = true).bindFromRequest.fold(
         formWithErrors => Future.successful(
