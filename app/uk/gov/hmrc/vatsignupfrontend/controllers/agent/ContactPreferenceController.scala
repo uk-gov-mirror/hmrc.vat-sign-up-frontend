@@ -25,8 +25,9 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{ContactPreference, Digital}
+import uk.gov.hmrc.vatsignupfrontend.models.{ContactPreference, Digital, Paper}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreContactPreferenceService
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.receive_email_notifications
 
 import scala.concurrent.Future
@@ -63,11 +64,13 @@ class ContactPreferenceController @Inject()(val controllerComponents: Controller
       }
 
       def redirect(contactPreference: ContactPreference): Result =
-        if(contactPreference == Digital || hasDirectDebit) {
+        (contactPreference, hasDirectDebit) match {
+        case (Digital, false) | (_, true) =>
           Redirect(routes.CaptureClientEmailController.show())
-        } else {
+            .addingToSession(SessionKeys.contactPreferenceKey, contactPreference)
+        case (Paper, false) =>
           Redirect(routes.TermsController.show())
-        }
+      }
 
       contactPreferencesForm(isAgent = true).bindFromRequest.fold(
         formWithErrors => Future.successful(

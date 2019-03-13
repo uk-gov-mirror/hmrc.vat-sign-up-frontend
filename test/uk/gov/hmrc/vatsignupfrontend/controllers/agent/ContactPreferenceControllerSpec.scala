@@ -83,6 +83,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
+            result.session(request).get(SessionKeys.contactPreferenceKey) shouldBe Some(Digital.toString)
           }
         }
 
@@ -102,6 +103,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
+              result.session(request).get(SessionKeys.contactPreferenceKey) shouldBe Some(Paper.toString)
             }
           }
 
