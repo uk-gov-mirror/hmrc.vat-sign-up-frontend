@@ -19,8 +19,9 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
+@import uk.gov.hmrc.vatsignupfrontend.models.Digital
 
-@(hasDirectDebit: Boolean, emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(hasDirectDebit: Boolean, contactPreference: Option[String], emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @agent_main_template(title = Messages("agent.capture_client_email.title"), bodyClasses = None, form = Some(emailForm)) {
 
@@ -28,13 +29,20 @@
 
     <h1 class="heading-large">@Messages("agent.capture_client_email.heading")</h1>
 
+    <p>@Messages("agent.capture_client_email.line_1")</p>
+
+     <ul class="list list-bullet">
+        @if(hasDirectDebit) {
+            <li>@Messages("agent.capture_client_email.bullet_1")</li>
+        }
+        @if(contactPreference == Some(Digital.toString)) {
+            <li>@Messages("agent.capture_client_email.bullet_2")</li>
+        }
+    </ul>
+
     @if(hasDirectDebit) {
-        <p>@Messages("agent.capture_client_email.line_1")</p>
-
         <div class="panel panel-border-wide">
-
             <p>@Messages("agent.capture_client_email.line_2")</p>
-
         </div>
     }
 
