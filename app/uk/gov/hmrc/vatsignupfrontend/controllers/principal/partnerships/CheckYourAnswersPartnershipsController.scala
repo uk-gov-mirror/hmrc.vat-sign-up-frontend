@@ -50,46 +50,82 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
       val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
+      val optJointVentureProperty = request.session.getModel[YesNo](SessionKeys.jointVentureOrPropertyKey)
 
-      (optBusinessEntityType, optPartnershipUtr, optPartnershipPostCode) match {
-        case (Some(entityType), Some(partnershipUtr), Some(partnershipPostCode)) =>
-          (entityType, optPartnershipCrn, optPartnershipType) match {
-            case (GeneralPartnership, _, _) =>
-              Future.successful(
+      Future.successful(
+        (optBusinessEntityType, optJointVentureProperty, optPartnershipCrn, optPartnershipType) match {
+          case (None, _, _, _) => Redirect(principalRoutes.CaptureBusinessEntityController.show())
+          case (Some(GeneralPartnership), None, _, _) => Redirect(routes.JointVentureOrPropertyController.show())
+          case (Some(entityType: LimitedPartnershipBase), _, None, _) => Redirect(routes.CapturePartnershipCompanyNumberController.show())
+          case (Some(entityType: LimitedPartnershipBase), _, _, None) => Redirect(routes.CapturePartnershipCompanyNumberController.show())
+          case (Some(GeneralPartnership), Some(Yes), _, _) =>
+            Ok(check_your_answers_partnerships(
+              entityType = GeneralPartnership,
+              companyUtr = None,
+              companyNumber = None,
+              postCode = None,
+              jointVentureProperty = optJointVentureProperty,
+              postAction = routes.CheckYourAnswersPartnershipsController.submit())
+            )
+          case (Some(entityType), _, Some(_), _) =>
+            (optPartnershipUtr, optPartnershipPostCode) match {
+              case (Some(_), Some(_)) =>
                 Ok(check_your_answers_partnerships(
                   entityType = entityType,
-                  companyUtr = partnershipUtr,
-                  companyNumber = None,
-                  postCode = partnershipPostCode,
-                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-              )
-            case (_: LimitedPartnershipBase, Some(_), Some(_: LimitedPartnershipEntityType)) =>
-              Future.successful(
-                Ok(check_your_answers_partnerships(
-                  entityType = entityType,
-                  companyUtr = partnershipUtr,
+                  companyUtr = optPartnershipUtr,
                   companyNumber = optPartnershipCrn,
-                  postCode = partnershipPostCode,
-                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-              )
-            case _ =>
-              Future.successful(
-                Redirect(routes.CapturePartnershipCompanyNumberController.show())
-              )
-          }
-        case (None, _, _) =>
-          Future.successful(
-            Redirect(principalRoutes.CaptureBusinessEntityController.show())
-          )
-        case (_, None, _) =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipUtrController.show())
-          )
-        case (_, _, None) =>
-          Future.successful(
-            Redirect(routes.PrincipalPlacePostCodeController.show())
-          )
-      }
+                  postCode = optPartnershipPostCode,
+                  jointVentureProperty = optJointVentureProperty,
+                  postAction = routes.CheckYourAnswersPartnershipsController.submit())
+                )
+              case (None, _) => Redirect(routes.CapturePartnershipUtrController.show())
+              case (_, None) => Redirect(routes.PrincipalPlacePostCodeController.show())
+            }
+        }
+      )
+
+
+//      (optBusinessEntityType, optPartnershipUtr, optPartnershipPostCode) match {
+//        case (Some(entityType), Some(partnershipUtr), Some(partnershipPostCode)) =>
+//          (entityType, optPartnershipCrn, optPartnershipType) match {
+//            case (GeneralPartnership, _, _) =>
+//              Future.successful(
+//                Ok(check_your_answers_partnerships(
+//                  entityType = entityType,
+//                  companyUtr = Some(partnershipUtr),
+//                  companyNumber = None,
+//                  postCode = Some(partnershipPostCode),
+//                  jointVentureProperty = optJointVentureProperty,
+//                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
+//              )
+//            case (_: LimitedPartnershipBase, Some(_), Some(_: LimitedPartnershipEntityType)) =>
+//              Future.successful(
+//                Ok(check_your_answers_partnerships(
+//                  entityType = entityType,
+//                  companyUtr = partnershipUtr,
+//                  companyNumber = optPartnershipCrn,
+//                  postCode = partnershipPostCode,
+//                  jointVentureProperty = None,
+//                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
+//              )
+//            case _ =>
+//              Future.successful(
+//                Redirect(routes.CapturePartnershipCompanyNumberController.show())
+//              )
+//          }
+//        case (None, _, _) =>
+//          Future.successful(
+//            Redirect(principalRoutes.CaptureBusinessEntityController.show())
+//          )
+//        case (_, None, _) =>
+//          Future.successful(
+//            Redirect(routes.CapturePartnershipUtrController.show())
+//          )
+//        case (_, _, None) =>
+//          Future.successful(
+//            Redirect(routes.PrincipalPlacePostCodeController.show())
+//          )
+//      }
     }
   }
 

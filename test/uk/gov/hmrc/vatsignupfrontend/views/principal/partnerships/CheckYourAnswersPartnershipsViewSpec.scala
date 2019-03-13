@@ -35,10 +35,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
   lazy val limitedPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
     entityType = LimitedPartnership,
-    companyUtr = testCompanyUtr,
+    companyUtr = Some(testCompanyUtr),
     companyNumber = Some(testCompanyNumber),
-    postCode = testBusinessPostcode,
-    postAction = testCall
+    postCode = Some(testBusinessPostcode),
+    postAction = testCall,
+    jointVentureProperty = None
   )(FakeRequest(), applicationMessages, appConfig)
 
   lazy val limitedPartnershipCyaDoc = Jsoup.parse(limitedPartnershipCyaPage.body)
@@ -152,10 +153,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
   lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
     entityType = GeneralPartnership,
-    companyUtr = testCompanyUtr,
+    companyUtr = Some(testCompanyUtr),
     companyNumber = None,
-    postCode = testBusinessPostcode,
-    postAction = testCall
+    postCode = Some(testBusinessPostcode),
+    postAction = testCall,
+    jointVentureProperty = None
   )(FakeRequest(), applicationMessages, appConfig)
 
   lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)

@@ -19,9 +19,16 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 @import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
+@import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership, YesNo}
+@import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.{routes => partnershipRoutes}
+@import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 
-@(entityType: BusinessEntity, companyUtr: String, companyNumber: Option[String], postCode: PostCode, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(entityType: BusinessEntity,
+  companyUtr: Option[String],
+  companyNumber: Option[String],
+  postCode: Option[PostCode],
+  jointVentureProperty: Option[YesNo],
+  postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
 
@@ -32,7 +39,7 @@
         case GeneralPartnership => Messages("principal.capture_entity_type.generalPartnership")
         case LimitedPartnership => Messages("principal.capture_entity_type.limitedPartnership")
     }
-    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
+    val rowUrl = routes.CaptureBusinessEntityController.show().url
     summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
@@ -42,26 +49,46 @@
             val rowName = CompanyNumberId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.company_number")
             val rowAnswer = crn
-            val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipCompanyNumberController.show().url
+            val rowUrl = partnershipRoutes.CapturePartnershipCompanyNumberController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")
     }
 }
 
 @partnershipCompanyUtr() = @{
-    val rowName = CompanyUtrId
-    val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
-    val rowAnswer = companyUtr
-    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipUtrController.show().url
-    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    companyUtr match {
+        case Some(utr)=>
+            val rowName = CompanyUtrId
+            val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
+            val rowAnswer = utr
+            val rowUrl = partnershipRoutes.CapturePartnershipUtrController.show().url
+            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+        case _ => Html("")
+    }
 }
 
 @partnershipPostCode() = @{
-    val rowName = PartnershipPostCodeId
-    val rowQuestion = Messages("principal.check_your_answers_partnerships.post_code")
-    val rowAnswer = postCode.checkYourAnswersFormat
-    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.PrincipalPlacePostCodeController.show().url
-    summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+    postCode match {
+        case Some(postcode)=>
+            val rowName = PartnershipPostCodeId
+            val rowQuestion = Messages("principal.check_your_answers_partnerships.post_code")
+            val rowAnswer = postcode.checkYourAnswersFormat
+            val rowUrl = partnershipRoutes.PrincipalPlacePostCodeController.show().url
+            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+        case _ => Html("")
+    }
+}
+
+@jointVentureOrProperty() = @{
+    jointVentureProperty match {
+        case Some(yesno)=>
+            val rowName = JointVenturePropertyId
+            val rowQuestion = Messages("principal.check_your_answers_partnerships.joint_vernture_or_property")
+            val rowAnswer = yesno.stringValue
+            val rowUrl = partnershipRoutes.JointVentureOrPropertyController.show().url
+            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+        case _ => Html("")
+    }
 }
 
 @principal_main_template(title = Messages("principal.check_your_answers_partnerships.title")) {
@@ -70,9 +97,8 @@
 
     <div class="form-group">
         @businessEntityType()
-        @if(companyNumber.isDefined) {
-            @partnershipCompanyNumber()
-        }
+        @jointVentureOrProperty()
+        @partnershipCompanyNumber()
         @partnershipCompanyUtr()
         @partnershipPostCode()
         <div class="divider--top--thick"></div>
