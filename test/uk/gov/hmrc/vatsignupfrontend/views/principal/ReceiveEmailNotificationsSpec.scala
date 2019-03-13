@@ -18,11 +18,14 @@ package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages.Message
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ReceiveEmailNotifications => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
@@ -36,77 +39,103 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.receive_email_notifications(
-    testEmail,
-    contactPreferencesForm(isAgent = false),
-    postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
-  )
+  "The Receive Email Notifications view" when {
 
-  "The Receive Email Notifications view" should {
+    "the form has no errors" should {
 
-    val testPage = TestView(
-      name = "Receive Email Notifcations",
-      title = messages.title,
-      heading = messages.heading,
-      page = page,
-      haveSignOutInBanner = true
-    )
-    testPage.shouldHaveForm("Yes No Form")(actionCall = testCall)
+      lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.receive_email_notifications(
+        testEmail,
+        contactPreferencesForm(isAgent = false),
+        postAction = testCall)(
+        FakeRequest(),
+        applicationMessages,
+        new AppConfig(configuration, env)
+      )
 
-    "have a set of radio inputs" which {
-      lazy val doc = Jsoup.parse(page.body)
+      val testPage = TestView(
+        name = "Receive Email Notifcations",
+        title = messages.title,
+        heading = messages.heading,
+        page = page,
+        haveSignOutInBanner = true
+      )
 
-      "for the option 'Digital'" should {
+      "have a set of radio inputs" which {
+        lazy val doc = Jsoup.parse(page.body)
 
-        "have the text 'Send email to'" in {
-          doc.select(s"label[for=${messages.radioDigital}]").text() shouldEqual messages.radioButtonEmail(testEmail)
-        }
+        "for the option 'Digital'" should {
 
-        "have an input under the label that" should {
-
-          lazy val optionLabel = doc.select("#digital")
-
-          "have the id 'yes'" in {
-            optionLabel.attr("id") shouldEqual "digital"
+          "have the text 'Send email to'" in {
+            doc.select(s"label[for=${messages.radioDigital}]").text() shouldEqual messages.radioButtonEmail(testEmail)
           }
 
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
+          "have an input under the label that" should {
+
+            lazy val optionLabel = doc.select("#digital")
+
+            "have the id 'yes'" in {
+              optionLabel.attr("id") shouldEqual "digital"
+            }
+
+            "be of type radio" in {
+              optionLabel.attr("type") shouldEqual "radio"
+            }
+          }
+        }
+
+        "for the option 'No'" should {
+
+          "have the text 'no'" in {
+            doc.select(s"label[for=${messages.radioPaper}]").text() shouldEqual messages.paper
+          }
+
+          "have an input under the label that" should {
+
+            lazy val optionLabel = doc.select("#paper")
+
+            "have the id 'no" in {
+              optionLabel.attr("id") shouldEqual "paper"
+            }
+
+            "be of type radio" in {
+              optionLabel.attr("type") shouldEqual "radio"
+            }
           }
         }
       }
 
-      "for the option 'No'" should {
+      testPage.shouldHaveForm("Receive Ready Form")(actionCall = testCall)
 
-        "have the text 'no'" in {
-          doc.select(s"label[for=${messages.radioPaper}]").text()  shouldEqual messages.paper
-        }
+      testPage.shouldHaveParaSeq(
+        messages.line1,
+        messages.line2
+      )
 
-        "have an input under the label that" should {
-
-          lazy val optionLabel = doc.select("#paper")
-
-          "have the id 'no" in {
-            optionLabel.attr("id") shouldEqual "paper"
-          }
-
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
-          }
-        }
-      }
+      testPage.shouldHaveContinueButton()
     }
 
-    testPage.shouldHaveForm("Receive Ready Form")(actionCall = testCall)
+    "the form has errors due to no radio option" should {
 
-    testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
-    )
+      lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.receive_email_notifications(
+        testEmail,
+        contactPreferencesForm(isAgent = false).bind(Map(ContactPreferencesForm.contactPreference -> "")),
+        postAction = testCall)(
+        FakeRequest(),
+        applicationMessages,
+        new AppConfig(configuration, env)
+      )
 
-    testPage.shouldHaveContinueButton()
+      val testPage = TestView(
+        name = "Receive Email Notifications Error",
+        title = messages.title,
+        heading = messages.heading,
+        page = page,
+        hasErrors = true
+      )
+
+      testPage.shouldHaveErrorSummary(MessageLookup.ReceiveEmailNotifications.error)
+      testPage.shouldHaveFieldError(ContactPreferencesForm.contactPreference, MessageLookup.ReceiveEmailNotifications.error)
+    }
+
   }
 }

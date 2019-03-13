@@ -23,6 +23,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => common}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
@@ -266,6 +267,18 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         formSelector.attr("action") shouldBe url
       }
     }
+
+    def shouldHaveErrorSummary(msg: String): Unit = {
+      s"Error Summary in $name must have a message '$msg'" in {
+        element.select("#error-summary-display ul").text shouldBe msg
+      }
+    }
+
+    def shouldHaveFieldError(fieldName: String, msg: String): Unit = {
+      s"Error Field for $fieldName must have a message '$msg'" in {
+        element.select(s"#error-message-$fieldName").text shouldBe msg
+      }
+    }
   }
 
 
@@ -273,13 +286,16 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
                  title: String,
                  heading: String,
                  page: => Html,
-                 haveSignOutInBanner: Boolean) extends ElementTest {
+                 haveSignOutInBanner: Boolean,
+                 hasErrors: Boolean) extends ElementTest {
 
     lazy val document: Document = Jsoup.parse(page.body)
     override lazy val element: Element = document.getElementById("content")
 
-    s"$name should have the title '$title'" in {
-      document.title() shouldBe title
+    val titleText: String = if(hasErrors) MessageLookup.Base.errPrefix + " " + title else title
+
+    s"$name should have the title '$titleText'" in {
+      document.title() shouldBe titleText
     }
 
     s"$name should have the heading (H1) '$heading'" in {
@@ -303,7 +319,8 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
               title: String,
               heading: String,
               page: => Html,
-              haveSignOutInBanner: Boolean = true): TestView = new TestView(name, title, heading, page, haveSignOutInBanner)
+              haveSignOutInBanner: Boolean = true,
+              hasErrors: Boolean = false): TestView = new TestView(name, title, heading, page, haveSignOutInBanner, hasErrors)
   }
 
 }

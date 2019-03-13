@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.models.{Digital, Paper}
 class ContactPreferencesFormSpec extends UnitSpec {
   "contactPreferencesForm" should {
 
-    val agentContactPreferencesErrorKey = "error.agent.contact-preference"
+    val agentContactPreferencesErrorKey = "error.agent.receive_email_notifications"
     val principalContactPreferencesErrorKey = "error.principal.receive_email_notifications"
     val validateContactPreferencesForm = contactPreferencesForm(isAgent = false)
 
