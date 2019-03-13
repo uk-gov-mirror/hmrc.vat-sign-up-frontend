@@ -309,3 +309,7 @@ POST        /direct-debit-terms-and-conditions                  uk.gov.hmrc.vats
 # Receive Email Notification
 GET         /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.ReceiveEmailNotificationsController.show
 POST        /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.ReceiveEmailNotificationsController.submit
+
+# Receive Email Notification
+GET         /joint-venture-or-property-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.JointVentureOrPropertyController.show
+POST        /joint-venture-or-property-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.JointVentureOrPropertyController.submit
