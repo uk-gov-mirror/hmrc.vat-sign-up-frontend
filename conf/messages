@@ -931,6 +931,10 @@ agent.send_your_application.title                                     = Send you
 agent.send_your_application.heading                                   = Send your application
 agent.send_your_application.line                                      = By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct.
 
-## Agent Contact Preferences Receive Email Notifications
+## Principle Joint Venture or Property Partnership
 principal.partnership.joint_venture_or_property.title                 = Are you either a Joint Venture or Property Partnership?
 principal.partnership.joint_venture_or_property.heading               = Are you either a Joint Venture or Property Partnership?
+
+## Agent Joint Venture or Property Partnership
+agent.partnership.joint_venture_or_property.title                 = Is your client either a Joint Venture or Property Partnership?
+agent.partnership.joint_venture_or_property.heading               = Is your client either a Joint Venture or Property Partnership?

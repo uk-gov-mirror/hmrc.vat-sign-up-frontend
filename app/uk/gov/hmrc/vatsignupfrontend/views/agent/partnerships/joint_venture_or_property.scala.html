@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
+@import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
 @import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 @import uk.gov.hmrc.vatsignupfrontend.models.YesNo
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
@@ -24,11 +24,11 @@
 
 @(jointVenturePropertyForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.partnership.joint_venture_or_property.title"), bodyClasses = None, showSignOutLink = true, form = Some(jointVenturePropertyForm)) {
+@agent_main_template(title = Messages("agent.partnership.joint_venture_or_property.title"), bodyClasses = None, showSignOutLink = true, form = Some(jointVenturePropertyForm)) {
 
     @summaryErrorHelper(jointVenturePropertyForm)
 
-    <h1 class="heading-large">@Messages("principal.partnership.joint_venture_or_property.heading")</h1>
+    <h1 class="heading-large">@Messages("agent.partnership.joint_venture_or_property.heading")</h1>
 
     @form(action = postAction) {
 
@@ -39,7 +39,7 @@
                 (option_yes, Messages("base.yes")),
                 (option_no, Messages("base.no"))
             ),
-            legend = Messages("principal.partnership.joint_venture_or_property.heading"),
+            legend = Messages("agent.partnership.joint_venture_or_property.heading"),
             field = jointVenturePropertyForm(yesNo)
         )
 
