@@ -43,6 +43,7 @@ object FeatureSwitch {
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
     ContactPreferencesJourney,
+    SendYourApplication,
     JointVenturePropertyJourney
   )
 

@@ -17,16 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
+import play.api.mvc.Call
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SendYourApplication
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.services.SubmissionService
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.terms
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.{send_your_application, terms}
 
 import scala.concurrent.Future
 
@@ -36,9 +37,12 @@ class TermsController @Inject()(val controllerComponents: ControllerComponents,
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
+
+    val renderView = (postAction: Call) => if (isEnabled(SendYourApplication)) send_your_application(postAction) else terms(postAction)
+
     authorised() {
       Future.successful(
-        Ok(terms(routes.TermsController.submit()))
+        Ok(renderView(routes.TermsController.submit()))
       )
     }
   }
