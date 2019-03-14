@@ -23,9 +23,11 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
@@ -35,26 +37,23 @@ class ResolvePartnershipUtrController @Inject()(val controllerComponents: Contro
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
-
-      val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
-      val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.get(SessionKeys.partnershipTypeKey).filter(_.nonEmpty)
+      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
       if (isEnabled(GeneralPartnershipJourney) || isEnabled(LimitedPartnershipJourney)) {
-        (enrolments.partnershipUtr, optCompanyName, optCompanyNumber, optPartnershipType) match {
-          case (Some(partnershipUtr), Some(_), Some(_), Some(_)) =>
+        (enrolments.partnershipUtr, optBusinessEntity) match {
+          case (Some(partnershipUtr), Some(LimitedPartnership)) =>
             Future.successful(
               Redirect(routes.ConfirmLimitedPartnershipController.show())
                 addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
             )
-          case (Some(partnershipUtr), None, None, None) =>
+          case (Some(partnershipUtr), Some(GeneralPartnership)) =>
             Future.successful(
               Redirect(routes.ConfirmGeneralPartnershipController.show())
                 addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
             )
-          case (Some(_), _, _, _) =>
-            Future.successful(Redirect(routes.CapturePartnershipCompanyNumberController.show()))
-          case _ =>
+          case (None, _) if isEnabled(JointVenturePropertyJourney) =>
+            Future.successful(Redirect(routes.JointVentureOrPropertyController.show()))
+          case (None, _) =>
             Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
         }
       } else

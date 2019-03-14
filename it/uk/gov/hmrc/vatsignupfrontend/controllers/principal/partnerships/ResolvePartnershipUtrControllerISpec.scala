@@ -18,10 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 
 class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -37,7 +38,9 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
         "redirect to the confirm general partnership page" in {
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
-          val res = get("/resolve-partnership-utr")
+          val res = get("/resolve-partnership-utr", Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+          ))
 
           res should have(
             httpStatus(SEE_OTHER),
@@ -50,9 +53,8 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
           val res = get("/resolve-partnership-utr", Map(
-            SessionKeys.companyNumberKey -> testCompanyNumber,
-            SessionKeys.companyNameKey -> testCompanyName,
-            SessionKeys.partnershipTypeKey -> testPartnershipType
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
+
           ))
 
           res should have(
@@ -61,42 +63,33 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
           )
         }
       }
-      "only company number is in session" should {
-        "redirect to the confirm limited partnership page" in {
-          stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
-
-          val res = get("/resolve-partnership-utr", Map(SessionKeys.companyNumberKey -> testCompanyNumber))
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CapturePartnershipCompanyNumberController.show().url)
-          )
-        }
-      }
-      "only company name is in session" should {
-        "redirect to the confirm limited partnership page" in {
-          stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
-
-          val res = get("/resolve-partnership-utr", Map(SessionKeys.companyNameKey->testCompanyName))
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CapturePartnershipCompanyNumberController.show().url)
-          )
-        }
-      }
     }
 
-    "the partnership utr is not on the profile" should {
-      "go to Capture Partnership UTR page" in {
-        stubAuth(OK, successfulAuthResponse())
+    "the partnership utr is not on the profile" when {
+      "the joint venture feature switch is enabled" should {
+        "go to the joint venture page" in {
+          stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/resolve-partnership-utr")
+          val res = get("/resolve-partnership-utr")
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CapturePartnershipUtrController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CapturePartnershipUtrController.show().url)
+          )
+        }
+      }
+      "the joint venture feature switch is disabled" should {
+        "go to Capture Partnership UTR page" in {
+          enable(JointVenturePropertyJourney)
+          stubAuth(OK, successfulAuthResponse())
+
+          val res = get("/resolve-partnership-utr")
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.JointVentureOrPropertyController.show().url)
+          )
+        }
       }
     }
   }
