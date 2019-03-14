@@ -18,12 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.contactPreferenceKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreContactPreferenceStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.models.Digital
 
 class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -63,6 +64,9 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
           httpStatus(SEE_OTHER),
           redirectUri(routes.CaptureClientEmailController.show().url)
         )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(contactPreferenceKey)
       }
     }
 

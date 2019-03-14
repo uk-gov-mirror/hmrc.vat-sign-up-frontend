@@ -28,5 +28,6 @@ trait ControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControll
 
   def document(result: Result): Document = Jsoup.parse(bodyOf(result))
   def titleOf(result: Result): String = document(result).title
+  def formAction(result: Result): String = document(result).select("form").attr("action")
 
 }

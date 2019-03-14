@@ -277,7 +277,9 @@ agent.agree_capture_email.line_2                                       = Your cl
 ## Agent Capture Email page
 agent.capture_client_email.title                                       = What is your client''s email address?
 agent.capture_client_email.heading                                     = What is your client''s email address?
-agent.capture_client_email.line_1                                      = We''ll email your client a Direct Debit advance notice 10 working days before each payment is taken.
+agent.capture_client_email.line_1                                      = We''ll only use the email address to:
+agent.capture_client_email.bullet_1                                    = send a Direct Debit advance notice 10 working days before each payment is taken
+agent.capture_client_email.bullet_2                                    = send VAT notifications
 agent.capture_client_email.line_2                                      = If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit.
 agent.capture_client_email.hint                                        = For example, me@me.com
 

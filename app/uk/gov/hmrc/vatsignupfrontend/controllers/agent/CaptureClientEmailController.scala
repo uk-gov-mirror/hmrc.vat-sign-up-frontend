@@ -37,10 +37,12 @@ class CaptureClientEmailController @Inject()(val controllerComponents: Controlle
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val hasDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
+      val contactPreference = request.session.get(SessionKeys.contactPreferenceKey).filter(_.nonEmpty)
 
       Future.successful(
         Ok(capture_client_email(
           hasDirectDebit = hasDirectDebit,
+          contactPreference,
           validateEmailForm.form,
           routes.CaptureClientEmailController.submit()
         ))
@@ -51,12 +53,14 @@ class CaptureClientEmailController @Inject()(val controllerComponents: Controlle
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val hasDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
+      val contactPreference = request.session.get(SessionKeys.contactPreferenceKey).filter(_.nonEmpty)
 
       validateEmailForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_client_email(
               hasDirectDebit = hasDirectDebit,
+              contactPreference,
               formWithErrors,
               routes.CaptureClientEmailController.submit()
             ))

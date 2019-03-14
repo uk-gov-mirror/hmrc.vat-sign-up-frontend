@@ -57,6 +57,10 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
     "render the receive email notifications view" in {
       titleOf(result) shouldBe MessageLookup.AgentReceiveEmailNotifications.title
     }
+
+    s"have a form which submits to '${routes.ContactPreferenceController.submit().url}'" in {
+      formAction(result) shouldBe routes.ContactPreferenceController.submit().url
+    }
   }
 
   "Calling the submit action of the Contact Preference controller" when {
@@ -79,6 +83,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
+            result.session(request).get(SessionKeys.contactPreferenceKey) shouldBe Some(Digital.toString)
           }
         }
 
@@ -98,6 +103,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
+              result.session(request).get(SessionKeys.contactPreferenceKey) shouldBe Some(Paper.toString)
             }
           }
 

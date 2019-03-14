@@ -16,8 +16,30 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models
 
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionFormatter
+
 sealed trait ContactPreference
 
 case object Paper extends ContactPreference
 
 case object Digital extends ContactPreference
+
+case object ContactPreference {
+  val PaperKey = "Paper"
+  val DigitalKey = "Digital"
+
+  implicit val contactPreferenceFormat: SessionFormatter[ContactPreference] = new SessionFormatter[ContactPreference] {
+    override def toString(contactPreference: ContactPreference): String =
+      contactPreference match {
+        case Paper => PaperKey
+        case Digital => DigitalKey
+      }
+
+    override def fromString(string: String): Option[ContactPreference] =
+      string match {
+        case PaperKey => Some(Paper)
+        case DigitalKey => Some(Digital)
+        case _ => None
+      }
+  }
+}
