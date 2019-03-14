@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => BaseMessages}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalJointVentureOrProperty => Messages}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
-import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 
 

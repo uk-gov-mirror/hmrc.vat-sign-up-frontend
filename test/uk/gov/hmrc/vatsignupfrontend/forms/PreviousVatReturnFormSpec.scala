@@ -18,27 +18,27 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.FormError
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
 class PreviousVatReturnFormSpec extends UnitSpec {
 
-  val error = "error.multiple_vat_check"
+  val error = "error.previous_vat_return"
 
   "YesNoForm" should {
     "successfully parse a Yes" in {
-      val res = multipleVatCheckForm.bind(Map(yesNo -> option_yes))
+      val res = previousVatReturnForm.bind(Map(yesNo -> option_yes))
       res.value should contain(Yes)
     }
 
     "successfully parse a No" in {
-      val res = multipleVatCheckForm.bind(Map(yesNo -> option_no))
+      val res = previousVatReturnForm.bind(Map(yesNo -> option_no))
       res.value should contain(No)
     }
 
     "fail when nothing has been entered" in {
-      val res = multipleVatCheckForm.bind(Map.empty[String, String])
+      val res = previousVatReturnForm.bind(Map.empty[String, String])
       res.errors should contain(FormError(yesNo, error))
     }
   }
