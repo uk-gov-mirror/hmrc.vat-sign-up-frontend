@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 
 class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -50,7 +51,10 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
       "redirect to Check Your Answers Partnership page" in {
 
-        val res = post("/joint-venture-or-property-partnership", Map(SessionKeys.partnershipSautrKey -> "utr"))(JointVentureOrPropertyForm.yesNo -> option_yes)
+        val res = post(
+          "/joint-venture-or-property-partnership",
+          Map(SessionKeys.partnershipSautrKey -> "utr", SessionKeys.businessPostCodeKey -> "postcode")
+        )(JointVentureOrPropertyForm.yesNo -> option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -58,7 +62,8 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessPostCodeKey) shouldBe None
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(YesNo.YesNoSessionFormatter.toString(Yes))
       }
     }
 
@@ -73,7 +78,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(YesNo.YesNoSessionFormatter.toString(No))
       }
     }
   }

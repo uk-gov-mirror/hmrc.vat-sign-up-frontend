@@ -24,8 +24,10 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models.YesNo.YesNoSessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.joint_venture_or_property
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 
 import scala.concurrent.Future
 
@@ -48,10 +50,11 @@ class JointVentureOrPropertyController @Inject()(val controllerComponents: Contr
             case Yes =>
               Redirect(routes.CheckYourAnswersPartnershipsController.show())
                 .removingFromSession(SessionKeys.partnershipSautrKey)
-                .addingToSession(SessionKeys.jointVentureOrPropertyKey -> true.toString)
+                .removingFromSession(SessionKeys.businessPostCodeKey)
+                .addingToSession[YesNo](SessionKeys.jointVentureOrPropertyKey, Yes)
             case No =>
               Redirect(routes.CapturePartnershipUtrController.show())
-                .addingToSession(SessionKeys.jointVentureOrPropertyKey -> false.toString)
+                .addingToSession[YesNo](SessionKeys.jointVentureOrPropertyKey, No)
           }
         )
       )

@@ -28,7 +28,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJo
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
-
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 
 class JointVentureOrPropertyControllerSpec extends ControllerSpec {
 
@@ -83,7 +84,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
         "the choice is YES" should {
 
           lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_yes)
-            .withSession(SessionKeys.partnershipSautrKey -> "utr")
+            .withSession(SessionKeys.partnershipSautrKey -> "utr", SessionKeys.businessPostCodeKey -> "postcode")
           )
 
           "return status SEE_OTHER (303)" in {
@@ -96,12 +97,16 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
           }
 
+          s"remove ${SessionKeys.businessPostCodeKey} from session" in {
+            session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
+          }
+
           s"redirect to '${routes.CheckYourAnswersPartnershipsController.show().url}'" in {
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
           }
 
           s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_yes} to session" in {
-            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
+            session(result).getModel[YesNo](SessionKeys.jointVentureOrPropertyKey) shouldBe Some(Yes)
           }
         }
 
@@ -120,7 +125,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
           }
 
           s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_no} to session" in {
-            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
+            session(result).getModel[YesNo](SessionKeys.jointVentureOrPropertyKey) shouldBe Some(No)
           }
         }
       }
