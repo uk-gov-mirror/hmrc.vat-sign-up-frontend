@@ -1000,4 +1000,8 @@ object MessageLookup {
     val title = heading + ServiceName.principalSuffix
   }
 
+  object AgentJointVentureOrProperty {
+    val heading: String = "Is your client either a Joint Venture or Property Partnership?"
+    val title = heading + ServiceName.agentSuffix
+  }
 }
