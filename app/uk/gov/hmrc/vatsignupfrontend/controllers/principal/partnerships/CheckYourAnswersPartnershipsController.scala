@@ -38,7 +38,8 @@ import scala.concurrent.Future
 class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents: ControllerComponents,
                                                        val storePartnershipInformationService: StorePartnershipInformationService,
                                                        val storeJointVentureInformationService: StoreJointVentureInformationService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate,
+    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney, JointVenturePropertyJourney)) {
 
   override protected def featureEnabled[T](func: => T): T =
     if (featureSwitches exists isEnabled) func

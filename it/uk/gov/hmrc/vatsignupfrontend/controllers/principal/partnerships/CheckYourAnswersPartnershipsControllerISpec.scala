@@ -19,14 +19,16 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreJointVentureInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType}
+import uk.gov.hmrc.vatsignupfrontend.models.YesNo.YesNoSessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType, Yes}
 
 class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -36,17 +38,33 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
     enable(LimitedPartnershipJourney)
   }
 
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-  }
-
   val generalPartnershipType = PartnershipEntityType.GeneralPartnership
   val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
 
   "GET /check-your-answers-partnership" should {
+
+    "return an OK for a Joint Venture or Property Partnership" in {
+
+      enable(JointVenturePropertyJourney)
+
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/check-your-answers-partnership",
+        Map(
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+          SessionKeys.jointVentureOrPropertyKey -> YesNoSessionFormatter.toString(Yes)
+        )
+      )
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
+
     "return an OK for a general partnership" in {
+
+      disable(JointVenturePropertyJourney)
+
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/check-your-answers-partnership",
@@ -80,10 +98,11 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       )
     }
 
-    "if feature switch is disabled" should {
+    "if all feature switches are disabled" should {
       "return a not found" in {
         disable(GeneralPartnershipJourney)
         disable(LimitedPartnershipJourney)
+        disable(JointVenturePropertyJourney)
 
         val res = get("/check-your-answers-partnership")
 
@@ -95,36 +114,125 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
   }
 
   "POST /check-your-answers-partnership" when {
-    "store partnership information is successful" when {
-      "the user is a general partnership" should {
-        "redirect to agree to receive emails" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStorePartnershipInformation(
-            vatNumber = testVatNumber,
-            partnershipEntityType = generalPartnershipType,
-            sautr = testSaUtr,
-            companyNumber = None,
-            postCode = Some(testBusinessPostCode)
-          )(NO_CONTENT)
 
-          val res = post("/check-your-answers-partnership",
-            Map(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.partnershipSautrKey -> testSaUtr,
-              SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+    "the user is a general partnership" when {
+
+      "the user is NOT a Joint Venture or Property Partnership" when {
+
+        "store partnership information is successful" should {
+
+          "redirect to agree to Direct Debit resolver" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              partnershipEntityType = generalPartnershipType,
+              sautr = testSaUtr,
+              companyNumber = None,
+              postCode = Some(testBusinessPostCode)
+            )(NO_CONTENT)
+
+            val res = post("/check-your-answers-partnership",
+              Map(
+                SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.partnershipSautrKey -> testSaUtr,
+                SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+              )
+            )()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(principalRoutes.DirectDebitResolverController.show().url)
             )
-          )()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(principalRoutes.DirectDebitResolverController.show().url)
-          )
+          }
         }
+
+        "store partnership information failed" should {
+
+          "throw internal server error" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              partnershipEntityType = generalPartnershipType,
+              sautr = testSaUtr,
+              companyNumber = None,
+              postCode = Some(testBusinessPostCode)
+            )(BAD_REQUEST)
+
+            val res = post("/check-your-answers-partnership",
+              Map(
+                SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.partnershipSautrKey -> testSaUtr,
+                SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+              )
+            )()
+
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR)
+            )
+          }
+        }
+
       }
 
-      "the user is a limited partnership" should {
-        "redirect to agree to receive emails" in {
+      "the user IS a Joint Venture or Property Partnership" when {
+
+        "store joint venture information is successful" should {
+
+          "redirect to agree to Direct Debit resolver" in {
+
+            enable(JointVenturePropertyJourney)
+
+            stubAuth(OK, successfulAuthResponse())
+            stubStoreJointVentureInformation(vatNumber = testVatNumber)(NO_CONTENT)
+
+            val res = post("/check-your-answers-partnership",
+              Map(
+                SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.jointVentureOrPropertyKey -> YesNoSessionFormatter.toString(Yes)
+              )
+            )()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(principalRoutes.DirectDebitResolverController.show().url)
+            )
+          }
+        }
+
+        "store joint venture information failed" should {
+
+          "throw internal server error" in {
+
+            enable(JointVenturePropertyJourney)
+
+            stubAuth(OK, successfulAuthResponse())
+            stubStoreJointVentureInformation(testVatNumber)(BAD_REQUEST)
+
+            val res = post("/check-your-answers-partnership",
+              Map(
+                SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.jointVentureOrPropertyKey -> YesNoSessionFormatter.toString(Yes)
+              )
+            )()
+
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR)
+            )
+          }
+        }
+
+      }
+    }
+
+    "the user is a limited partnership" when {
+
+      "store partnership information is successful" should {
+
+        "redirect to agree to Direct Debit resolver" in {
           stubAuth(OK, successfulAuthResponse())
           stubStorePartnershipInformation(
             vatNumber = testVatNumber,
@@ -151,32 +259,36 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           )
         }
       }
-    }
 
-    "store partnership information failed" should {
-      "throw internal server error" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStorePartnershipInformation(
-          vatNumber = testVatNumber,
-          partnershipEntityType = generalPartnershipType,
-          sautr = testSaUtr,
-          companyNumber = None,
-          postCode = Some(testBusinessPostCode)
-        )(BAD_REQUEST)
+      "store partnership information failed" should {
 
-        val res = post("/check-your-answers-partnership",
-          Map(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.partnershipSautrKey -> testSaUtr,
-            SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+        "throw internal server error" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStorePartnershipInformation(
+            vatNumber = testVatNumber,
+            partnershipEntityType = limitedPartnershipType,
+            sautr = testSaUtr,
+            companyNumber = Some(testCompanyNumber),
+            postCode = Some(testBusinessPostCode)
+          )(BAD_REQUEST)
+
+          val res = post("/check-your-answers-partnership",
+            Map(
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership),
+              SessionKeys.partnershipTypeKey -> limitedPartnershipType.toString,
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.companyNumberKey -> testCompanyNumber,
+              SessionKeys.partnershipSautrKey -> testSaUtr,
+              SessionKeys.partnershipPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+            )
+          )()
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR)
           )
-        )()
-
-        res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
-        )
+        }
       }
+
     }
 
     "store partnership information known facts mismatch" should {
