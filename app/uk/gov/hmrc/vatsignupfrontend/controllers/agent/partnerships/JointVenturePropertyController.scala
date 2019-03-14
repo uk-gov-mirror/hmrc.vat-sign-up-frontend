@@ -57,7 +57,7 @@ class JointVenturePropertyController @Inject()(val controllerComponents: Control
           {
             case Yes => Redirect(routes.CheckYourAnswersPartnershipController.show())
               .removingFromSession(SessionKeys.partnershipSautrKey)
-              .addingToSession(SessionKeys.jointVentureOrPropertyKey -> "true")
+              .addingToSession(SessionKeys.jointVentureOrPropertyKey -> true.toString)
             case No => Redirect(routes.CapturePartnershipUtrController.show())
               .addingToSession(SessionKeys.jointVentureOrPropertyKey -> false.toString)
           }

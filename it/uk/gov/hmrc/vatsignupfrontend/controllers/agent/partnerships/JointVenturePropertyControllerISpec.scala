@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testSaUtr
 
 class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -50,7 +51,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
       "redirect to Check Your Answers Partnership page" in {
 
-        val res = post("/client/joint-venture-or-property-partnership", Map(SessionKeys.partnershipSautrKey -> "utr"))(JointVentureOrPropertyForm.yesNo -> option_yes)
+        val res = post("/client/joint-venture-or-property-partnership", Map(SessionKeys.partnershipSautrKey -> testSaUtr))(JointVentureOrPropertyForm.yesNo -> option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -58,7 +59,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some("true")
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
       }
     }
 
@@ -73,7 +74,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some("false")
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
       }
     }
   }

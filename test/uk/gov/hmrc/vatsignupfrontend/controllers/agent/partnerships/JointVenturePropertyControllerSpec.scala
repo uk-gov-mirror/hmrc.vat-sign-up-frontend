@@ -28,8 +28,6 @@ import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 
-
-
 class JointVenturePropertyControllerSpec extends ControllerSpec {
 
   object TestJointVenturePropertyController extends JointVenturePropertyController(mockControllerComponents)
@@ -123,7 +121,7 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
 
       "An error is submitted" should {
 
-        lazy val result = TestJointVenturePropertyController.submit(testPostRequest("how?"))
+        lazy val result = TestJointVenturePropertyController.submit(testPostRequest(""))
 
         "return status BAD_REQUEST (400)" in {
           mockAuthRetrieveAgentEnrolment()
