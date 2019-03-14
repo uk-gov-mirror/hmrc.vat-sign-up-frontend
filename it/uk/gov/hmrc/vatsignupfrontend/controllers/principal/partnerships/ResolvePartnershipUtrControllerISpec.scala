@@ -66,8 +66,8 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
     }
 
     "the partnership utr is not on the profile" when {
-      "the joint venture feature switch is enabled" should {
-        "go to the joint venture page" in {
+      "the joint venture feature switch is disabled" should {
+        "go to Capture Partnership UTR page" in {
           stubAuth(OK, successfulAuthResponse())
 
           val res = get("/resolve-partnership-utr")
@@ -78,8 +78,8 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
           )
         }
       }
-      "the joint venture feature switch is disabled" should {
-        "go to Capture Partnership UTR page" in {
+      "the joint venture feature switch is enabled" should {
+        "go to the joint venture page" in {
           enable(JointVenturePropertyJourney)
           stubAuth(OK, successfulAuthResponse())
 
