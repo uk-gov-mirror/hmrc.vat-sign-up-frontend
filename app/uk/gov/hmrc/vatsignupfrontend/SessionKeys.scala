@@ -43,5 +43,6 @@ object SessionKeys {
   val box5FigureKey = "box5Figure"
   val hasDirectDebitKey = "hasDirectDebit"
   val acceptedDirectDebitTermsKey = "acceptedDirectDebitTerms"
+  val jointVentureOrPropertyKey = "jointVentureOrProperty"
   val contactPreferenceKey = "contactPreference"
 }
