@@ -783,6 +783,7 @@ principal.check_your_answers_partnerships.business_entity              = What ty
 principal.check_your_answers_partnerships.company_number               = What is the partnership''s company number?
 principal.check_your_answers_partnerships.company_utr                  = What is the partnership''s Unique Taxpayer Reference?
 principal.check_your_answers_partnerships.post_code                    = Where is the partnership registered for Self Assessment?
+principal.check_your_answers_partnerships.joint_vernture_or_property   = Are you either a Joint Venture or Property Partnership?
 
 # unplanned outage page
 unplanned_outage.title                                                 = Sorry, there is a problem with the service

@@ -810,6 +810,7 @@ object MessageLookup {
     val companyNumber = "What is the partnership's company number?"
     val companyUtr = "What is the partnership's Unique Taxpayer Reference?"
     val postCode = "Where is the partnership registered for Self Assessment?"
+    val jointVentureOrProperty = "Are you either a Joint Venture or Property Partnership?"
   }
 
   object AgentCheckYourAnswers {

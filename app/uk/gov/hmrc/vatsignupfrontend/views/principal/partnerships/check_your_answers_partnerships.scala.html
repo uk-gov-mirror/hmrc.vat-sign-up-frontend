@@ -84,7 +84,7 @@
         case Some(yesno)=>
             val rowName = JointVenturePropertyId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.joint_vernture_or_property")
-            val rowAnswer = yesno.stringValue
+            val rowAnswer = Messages(s"base.${yesno.stringValue.toLowerCase}")
             val rowUrl = partnershipRoutes.JointVentureOrPropertyController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")
