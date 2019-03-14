@@ -27,6 +27,9 @@ import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+
 
 class JointVenturePropertyControllerSpec extends ControllerSpec {
 
@@ -95,8 +98,12 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
           session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
         }
 
+        s"remove ${SessionKeys.businessPostCodeKey} from session" in {
+          session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
+        }
+
         s"add ${SessionKeys.jointVentureOrPropertyKey} = $option_yes to session" in {
-          session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some("true")
+          session(result).getModel[YesNo](SessionKeys.jointVentureOrPropertyKey) shouldBe Some(Yes)
         }
       }
 
@@ -115,7 +122,7 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
         }
 
         s"add ${SessionKeys.jointVentureOrPropertyKey} = $option_no to session" in {
-          session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
+          session(result).getModel[YesNo](SessionKeys.jointVentureOrPropertyKey) shouldBe Some(No)
         }
       }
 
