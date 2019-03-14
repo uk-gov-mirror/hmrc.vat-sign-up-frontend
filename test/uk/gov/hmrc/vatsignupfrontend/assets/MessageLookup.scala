@@ -619,17 +619,15 @@ object MessageLookup {
 
     object Section {
       val link = "/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
-      val linkText = "Choose relevant third party software (opens in a new window or tab)"
+      val linkText = "software that works with Making Tax Digital for VAT (opens in a new window or tab)"
 
       val heading = "What happens next"
-      val line1 = "As this service is currently a pilot, it is only available to some limited companies, sole traders, partnerships and VAT groups."
-      val line2 = "We will send you an email to let you know whether you can take part in this trial. You should wait for this email before you choose software."
-      val bullet1 = "We will let you know whether you can take part in this trial, usually within 72 hours."
-      val bullet2 = s"${linkText}."
-      val bullet3 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
-      val bullet4 = "Use software to record your sales and purchases."
-      val bullet5 = "Submit your VAT Returns before your deadlines."
-      val line3 = "You can view your VAT Return deadlines in your accounting software or business tax account."
+      val line = "We will send you an email within 72 hours to confirm. Do not submit a VAT Return during this time."
+      val bullet1 = s"You must use ${linkText}."
+      val bullet2 = "You must only use the new way of submitting your VAT Return through software with Making Tax Digital for VAT. Do not use the old way of sending your VAT Return."
+      val bullet3 = "Check that your software is connected to send VAT Returns to HMRC directly. You might need to sign in with your Government Gateway user ID."
+      val bullet4 = "Use the software to record all your sales and purchases."
+      val bullet5 = "After April, keep your business details up to date using HMRC services (this is also called business tax account). Do not use the VAT online services."
     }
 
   }
