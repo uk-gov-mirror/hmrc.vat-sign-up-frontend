@@ -27,9 +27,6 @@ import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
-
 
 class JointVenturePropertyControllerSpec extends ControllerSpec {
 

@@ -58,7 +58,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(YesNo.YesNoSessionFormatter.toString(Yes))
       }
     }
 
@@ -73,7 +73,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(YesNo.YesNoSessionFormatter.toString(No))
       }
     }
   }
