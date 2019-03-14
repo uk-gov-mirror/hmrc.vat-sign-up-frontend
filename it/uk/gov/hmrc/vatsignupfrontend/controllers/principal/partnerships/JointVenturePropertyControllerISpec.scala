@@ -18,12 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{JointVenturePropertyJourney, LimitedPartnershipJourney}
-import uk.gov.hmrc.vatsignupfrontend.forms.{HaveSoftwareForm, JointVentureOrPropertyForm}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 
 class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
