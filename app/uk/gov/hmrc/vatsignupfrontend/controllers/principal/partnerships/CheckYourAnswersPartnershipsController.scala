@@ -17,12 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -42,90 +42,82 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
     if (featureSwitches exists isEnabled) func
     else throw new NotFoundException(featureSwitchError)
 
-
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
-      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-      val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
-      val optJointVentureProperty = request.session.getModel[YesNo](SessionKeys.jointVentureOrPropertyKey)
 
-      Future.successful(
-        (optBusinessEntityType, optJointVentureProperty, optPartnershipCrn, optPartnershipType) match {
-          case (None, _, _, _) => Redirect(principalRoutes.CaptureBusinessEntityController.show())
-          case (Some(GeneralPartnership), None, _, _) => Redirect(routes.JointVentureOrPropertyController.show())
-          case (Some(entityType: LimitedPartnershipBase), _, None, _) => Redirect(routes.CapturePartnershipCompanyNumberController.show())
-          case (Some(entityType: LimitedPartnershipBase), _, _, None) => Redirect(routes.CapturePartnershipCompanyNumberController.show())
-          case (Some(GeneralPartnership), Some(Yes), _, _) =>
-            Ok(check_your_answers_partnerships(
-              entityType = GeneralPartnership,
-              companyUtr = None,
-              companyNumber = None,
-              postCode = None,
-              jointVentureProperty = optJointVentureProperty,
-              postAction = routes.CheckYourAnswersPartnershipsController.submit())
-            )
-          case (Some(entityType), _, Some(_), _) =>
-            (optPartnershipUtr, optPartnershipPostCode) match {
-              case (Some(_), Some(_)) =>
-                Ok(check_your_answers_partnerships(
-                  entityType = entityType,
-                  companyUtr = optPartnershipUtr,
-                  companyNumber = optPartnershipCrn,
-                  postCode = optPartnershipPostCode,
-                  jointVentureProperty = optJointVentureProperty,
-                  postAction = routes.CheckYourAnswersPartnershipsController.submit())
-                )
-              case (None, _) => Redirect(routes.CapturePartnershipUtrController.show())
-              case (_, None) => Redirect(routes.PrincipalPlacePostCodeController.show())
-            }
-        }
-      )
+      Future.successful(optBusinessEntityType match {
+        case Some(GeneralPartnership) => showGeneralPartnershipAnswers()
+        case Some(entity: LimitedPartnershipBase) => showLimitedPartnershipAnswers(entity)
+        case None => Redirect(principalRoutes.CaptureBusinessEntityController.show())
+      })
+    }
+  }
 
+  private def showGeneralPartnershipAnswers()(implicit request: Request[_]): Result = {
 
-//      (optBusinessEntityType, optPartnershipUtr, optPartnershipPostCode) match {
-//        case (Some(entityType), Some(partnershipUtr), Some(partnershipPostCode)) =>
-//          (entityType, optPartnershipCrn, optPartnershipType) match {
-//            case (GeneralPartnership, _, _) =>
-//              Future.successful(
-//                Ok(check_your_answers_partnerships(
-//                  entityType = entityType,
-//                  companyUtr = Some(partnershipUtr),
-//                  companyNumber = None,
-//                  postCode = Some(partnershipPostCode),
-//                  jointVentureProperty = optJointVentureProperty,
-//                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-//              )
-//            case (_: LimitedPartnershipBase, Some(_), Some(_: LimitedPartnershipEntityType)) =>
-//              Future.successful(
-//                Ok(check_your_answers_partnerships(
-//                  entityType = entityType,
-//                  companyUtr = partnershipUtr,
-//                  companyNumber = optPartnershipCrn,
-//                  postCode = partnershipPostCode,
-//                  jointVentureProperty = None,
-//                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-//              )
-//            case _ =>
-//              Future.successful(
-//                Redirect(routes.CapturePartnershipCompanyNumberController.show())
-//              )
-//          }
-//        case (None, _, _) =>
-//          Future.successful(
-//            Redirect(principalRoutes.CaptureBusinessEntityController.show())
-//          )
-//        case (_, None, _) =>
-//          Future.successful(
-//            Redirect(routes.CapturePartnershipUtrController.show())
-//          )
-//        case (_, _, None) =>
-//          Future.successful(
-//            Redirect(routes.PrincipalPlacePostCodeController.show())
-//          )
-//      }
+    val optJointVentureProperty = request.session.getModel[YesNo](SessionKeys.jointVentureOrPropertyKey)
+
+    (isEnabled(JointVenturePropertyJourney), optJointVentureProperty) match {
+      case (true, None) => Redirect(routes.JointVentureOrPropertyController.show())
+      case (true, Some(Yes)) =>
+        Ok(check_your_answers_partnerships(
+          entityType = GeneralPartnership,
+          companyUtr = None,
+          companyNumber = None,
+          postCode = None,
+          jointVentureProperty = optJointVentureProperty,
+          postAction = routes.CheckYourAnswersPartnershipsController.submit()
+        ))
+      case (_, _) => utrPostcodePredicate { (utr, postcode) =>
+        Ok(check_your_answers_partnerships(
+          entityType = GeneralPartnership,
+          companyUtr = Some(utr),
+          companyNumber = None,
+          postCode = Some(postcode),
+          jointVentureProperty = optJointVentureProperty,
+          postAction = routes.CheckYourAnswersPartnershipsController.submit()
+        ))
+      }
+    }
+  }
+
+  private def showLimitedPartnershipAnswers(entity: LimitedPartnershipBase)(implicit request: Request[_]): Result = {
+    crnPredicate { crn =>
+      utrPostcodePredicate { (utr, postcode) =>
+        Ok(check_your_answers_partnerships(
+          entityType = entity,
+          companyUtr = Some(utr),
+          companyNumber = Some(crn),
+          postCode = Some(postcode),
+          jointVentureProperty = None,
+          postAction = routes.CheckYourAnswersPartnershipsController.submit()
+        ))
+      }
+    }
+  }
+
+  private def utrPostcodePredicate(f: (String, PostCode) => Result)(implicit request: Request[_]): Result = {
+
+    val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+    val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
+
+    (optPartnershipUtr, optPartnershipPostCode) match {
+      case (Some(utr), Some(postcode)) => f(utr, postcode)
+      case (None, _) => Redirect(routes.CapturePartnershipUtrController.show())
+      case (_, None) => Redirect(routes.PrincipalPlacePostCodeController.show())
+    }
+  }
+
+  private def crnPredicate(f: String => Result)(implicit request: Request[_]): Result = {
+
+    val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+    val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
+
+    (optPartnershipCrn, optPartnershipType) match {
+      case (Some(crn), Some(_)) => f(crn)
+      case (_, _) => Redirect(routes.CapturePartnershipCompanyNumberController.show())
     }
   }
 
