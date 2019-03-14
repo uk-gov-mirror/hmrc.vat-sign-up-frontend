@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, DirectDebitTermsJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -76,7 +76,7 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
     "prerequisite data is missing from session" when {
 
-      "the feature switch has been enabled" should {
+      "the direct debit feature switch has been enabled" should {
 
         lazy val result = TestDirectDebitResolverController.show(testGetRequest())
 
@@ -92,7 +92,23 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         }
       }
 
-      "the feature switch has been disabled" should {
+      "the contact preference feature switch has been enabled" should {
+
+        lazy val result = TestDirectDebitResolverController.show(testGetRequest())
+
+        "return status SEE_OTHER (303)" in {
+          mockAuthAdminRole()
+          enable(ContactPreferencesJourney)
+
+          status(result) shouldBe SEE_OTHER
+        }
+
+        "redirect to the Agree Capture Email page" in {
+          redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
+        }
+      }
+
+      "both Direct Debit and Contact Preference feature switches have been disabled" should {
 
         lazy val result = TestDirectDebitResolverController.show(testGetRequest())
 
