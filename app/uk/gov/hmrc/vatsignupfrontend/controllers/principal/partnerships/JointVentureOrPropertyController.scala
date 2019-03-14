@@ -51,10 +51,10 @@ class JointVentureOrPropertyController @Inject()(val controllerComponents: Contr
               Redirect(routes.CheckYourAnswersPartnershipsController.show())
                 .removingFromSession(SessionKeys.partnershipSautrKey)
                 .removingFromSession(SessionKeys.businessPostCodeKey)
-                .addingToSession[YesNo](SessionKeys.jointVentureOrPropertyKey, Yes)
+                .addingToSession(SessionKeys.jointVentureOrPropertyKey, Yes: YesNo)
             case No =>
               Redirect(routes.CapturePartnershipUtrController.show())
-                .addingToSession[YesNo](SessionKeys.jointVentureOrPropertyKey, No)
+                .addingToSession(SessionKeys.jointVentureOrPropertyKey, No: YesNo)
           }
         )
       )
