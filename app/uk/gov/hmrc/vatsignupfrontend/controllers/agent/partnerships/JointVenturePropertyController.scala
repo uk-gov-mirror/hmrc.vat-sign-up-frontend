@@ -23,10 +23,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.jointVentureOrPropertyForm
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_vat_number
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.joint_venture_or_property
 
 import scala.concurrent.Future
@@ -57,6 +55,7 @@ class JointVenturePropertyController @Inject()(val controllerComponents: Control
           {
             case Yes => Redirect(routes.CheckYourAnswersPartnershipController.show())
               .removingFromSession(SessionKeys.partnershipSautrKey)
+              .removingFromSession(SessionKeys.businessPostCodeKey)
               .addingToSession(SessionKeys.jointVentureOrPropertyKey -> true.toString)
             case No => Redirect(routes.CapturePartnershipUtrController.show())
               .addingToSession(SessionKeys.jointVentureOrPropertyKey -> false.toString)

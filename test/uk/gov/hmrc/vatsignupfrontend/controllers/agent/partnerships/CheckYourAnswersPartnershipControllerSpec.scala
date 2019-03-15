@@ -148,7 +148,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
       }
     }
     "saUtr is missing" should {
-      "go to capture partnership utr page" in {
+      "go to capture business entity page" in {
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(
@@ -156,11 +156,11 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           postCode = Some(testBusinessPostcode)
         ))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+        redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
     }
     "postcode is missing" should {
-      "go to business postcode page" in {
+      "go to capture business entity page" in {
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestCheckYourAnswersPartnershipController.show(testGetRequest(
@@ -168,7 +168,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           sautr = Some(testSaUtr)
         ))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.PartnershipPostCodeController.show().url)
+        redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
     }
   }
@@ -347,7 +347,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
       }
     }
     "saUtr is missing" should {
-      "go to capture partnership utr page" in {
+      "go to Capture Business Entity page" in {
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestCheckYourAnswersPartnershipController.submit(testGetRequest(
@@ -358,7 +358,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           postCode = Some(testBusinessPostcode)
         ))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+        redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
     }
   }

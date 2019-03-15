@@ -110,6 +110,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
         val res = post("/client/check-your-answers",
           Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
@@ -138,6 +139,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
         val res = post("/client/check-your-answers",
           Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
@@ -166,6 +168,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
         val res = post("/client/check-your-answers",
           Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership),
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode),
