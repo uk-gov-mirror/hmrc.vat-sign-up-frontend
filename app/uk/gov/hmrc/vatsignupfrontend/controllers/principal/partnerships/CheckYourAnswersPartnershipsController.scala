@@ -17,17 +17,18 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser.{StoreJointVentureInformationFailureResponse, StoreJointVentureInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreJointVentureInformationService, StorePartnershipInformationService}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships
 
@@ -35,115 +36,118 @@ import scala.concurrent.Future
 
 @Singleton
 class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents: ControllerComponents,
-                                                       val storePartnershipInformationService: StorePartnershipInformationService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)) {
+                                                       val storePartnershipInformationService: StorePartnershipInformationService,
+                                                       val storeJointVentureInformationService: StoreJointVentureInformationService)
+  extends AuthenticatedController(AdministratorRolePredicate,
+    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney, JointVenturePropertyJourney)) {
 
   override protected def featureEnabled[T](func: => T): T =
     if (featureSwitches exists isEnabled) func
     else throw new NotFoundException(featureSwitchError)
 
-
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
-      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-      val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
 
-      (optBusinessEntityType, optPartnershipUtr, optPartnershipPostCode) match {
-        case (Some(entityType), Some(partnershipUtr), Some(partnershipPostCode)) =>
-          (entityType, optPartnershipCrn, optPartnershipType) match {
-            case (GeneralPartnership, _, _) =>
-              Future.successful(
-                Ok(check_your_answers_partnerships(
-                  entityType = entityType,
-                  companyUtr = partnershipUtr,
-                  companyNumber = None,
-                  postCode = partnershipPostCode,
-                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-              )
-            case (_: LimitedPartnershipBase, Some(_), Some(_: LimitedPartnershipEntityType)) =>
-              Future.successful(
-                Ok(check_your_answers_partnerships(
-                  entityType = entityType,
-                  companyUtr = partnershipUtr,
-                  companyNumber = optPartnershipCrn,
-                  postCode = partnershipPostCode,
-                  postAction = routes.CheckYourAnswersPartnershipsController.submit()))
-              )
-            case _ =>
-              Future.successful(
-                Redirect(routes.CapturePartnershipCompanyNumberController.show())
-              )
-          }
-        case (None, _, _) =>
-          Future.successful(
-            Redirect(principalRoutes.CaptureBusinessEntityController.show())
-          )
-        case (_, None, _) =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipUtrController.show())
-          )
-        case (_, _, None) =>
-          Future.successful(
-            Redirect(routes.PrincipalPlacePostCodeController.show())
-          )
+      val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+      val optJointVentureProperty = request.session.get(SessionKeys.jointVentureOrPropertyKey).map(_.toBoolean)
+      val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
+      val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
+      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+
+      (optJointVentureProperty, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
+        case (Some(true), Some(GeneralPartnership), _, _, _) =>
+          Future.successful(Ok(check_your_answers_partnerships(
+            entityType = GeneralPartnership,
+            companyUtr = None,
+            companyNumber = None,
+            postCode = None,
+            jointVentureProperty = optJointVentureProperty,
+            postAction = routes.CheckYourAnswersPartnershipsController.submit()
+          )))
+        case (_, Some(GeneralPartnership), _, Some(utr), Some(postcode)) =>
+          Future.successful(Ok(check_your_answers_partnerships(
+            entityType = GeneralPartnership,
+            companyUtr = Some(utr),
+            companyNumber = None,
+            postCode = Some(postcode),
+            jointVentureProperty = optJointVentureProperty,
+            postAction = routes.CheckYourAnswersPartnershipsController.submit()
+          )))
+        case (_, Some(entity: LimitedPartnershipBase), Some(crn), Some(utr), Some(postcode)) =>
+          Future.successful(Ok(check_your_answers_partnerships(
+            entityType = entity,
+            companyUtr = Some(utr),
+            companyNumber = Some(crn),
+            postCode = Some(postcode),
+            jointVentureProperty = None,
+            postAction = routes.CheckYourAnswersPartnershipsController.submit()
+          )))
+        case _ =>
+          Future.successful(Redirect(principalRoutes.CaptureBusinessEntityController.show()))
       }
     }
   }
 
+
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
+      val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+      val optJointVentureProperty = request.session.getModel[Boolean](SessionKeys.jointVentureOrPropertyKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
 
-      (optVatNumber, optPartnershipUtr, optPartnershipType, optPartnershipCrn, optPartnershipPostCode) match {
-        case (Some(vatNumber), Some(partnershipUtr), Some(partnershipType: LimitedPartnershipEntityType), Some(companyNumber), Some(partnershipPostCode)) =>
-          storePartnershipInformationService.storePartnershipInformation(
-            vatNumber = vatNumber,
-            sautr = partnershipUtr,
-            companyNumber = companyNumber,
-            partnershipEntity = partnershipType,
-            postCode = Some(partnershipPostCode)
-          ) map {
-            case Right(StorePartnershipInformationSuccess) =>
-              Redirect(principalRoutes.DirectDebitResolverController.show())
-            case Left(PartnershipUtrNotFound) =>
-              Redirect(routes.CouldNotConfirmKnownFactsController.show())
-            case Left(StorePartnershipKnownFactsFailure) =>
-              Redirect(routes.CouldNotConfirmKnownFactsController.show())
-            case Left(StorePartnershipInformationFailureResponse(status)) =>
-              throw new InternalServerException("Store Partnership failed with status code: " + status)
+      (optVatNumber, optJointVentureProperty, optBusinessEntityType) match {
+        case (Some(vrn), Some(true), Some(GeneralPartnership)) =>
+          storeJointVentureInformationService.storeJointVentureInformation(vrn) map {
+            case Right(StoreJointVentureInformationSuccess) => Redirect(principalRoutes.DirectDebitResolverController.show())
+            case Left(StoreJointVentureInformationFailureResponse(status)) =>
+              throw new InternalServerException("Store Joint Venture Partnership Information failed with status code: " + status)
           }
-        case (Some(vatNumber), Some(partnershipUtr), None, None, Some(partnershipPostCode)) =>
-          storePartnershipInformationService.storePartnershipInformation(
-            vatNumber = vatNumber,
-            sautr = partnershipUtr,
-            postCode = Some(partnershipPostCode)
-          ) map {
-            case Right(StorePartnershipInformationSuccess) =>
-              Redirect(principalRoutes.DirectDebitResolverController.show())
-            case Left(StorePartnershipKnownFactsFailure) =>
-              Redirect(routes.CouldNotConfirmKnownFactsController.show())
-            case Left(PartnershipUtrNotFound) =>
-              Redirect(routes.CouldNotConfirmKnownFactsController.show())
-            case Left(StorePartnershipInformationFailureResponse(status)) =>
-              throw new InternalServerException("Store Partnership failed with status code: " + status)
+        case (Some(vrn), _, Some(GeneralPartnership)) =>
+          (optPartnershipUtr, optPartnershipPostCode) match {
+            case (Some(utr), Some(postcode)) =>
+              storePartnershipInformationService.storePartnershipInformation(
+                vatNumber = vrn,
+                sautr = utr,
+                postCode = Some(postcode)
+              ) map handleStorePartnershipResult
+            case _ =>
+              Future.successful(Redirect(principalRoutes.CaptureBusinessEntityController.show()))
           }
-        case (None, _, _, _, _) =>
-          Future.successful(
-            Redirect(principalRoutes.ResolveVatNumberController.resolve())
-          )
+        case (Some(vrn), _, Some(entity: LimitedPartnershipBase)) =>
+          (optPartnershipUtr, optPartnershipPostCode, optPartnershipCrn, optPartnershipType) match {
+            case (Some(utr), Some(postcode), Some(crn), Some(partnershipType)) =>
+              storePartnershipInformationService.storePartnershipInformation(
+                vatNumber = vrn,
+                sautr = utr,
+                companyNumber = crn,
+                partnershipEntity = partnershipType,
+                postCode = Some(postcode)
+              ) map handleStorePartnershipResult
+            case _ =>
+              Future.successful(Redirect(principalRoutes.CaptureBusinessEntityController.show()))
+          }
+        case (None, _, _) =>
+          Future.successful(Redirect(principalRoutes.ResolveVatNumberController.resolve()))
         case _ =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipUtrController.show())
-          )
+          Future.successful(Redirect(principalRoutes.CaptureBusinessEntityController.show()))
       }
     }
+  }
+
+  private val handleStorePartnershipResult: StorePartnershipInformationResponse => Result = {
+    case Right(StorePartnershipInformationSuccess) =>
+      Redirect(principalRoutes.DirectDebitResolverController.show())
+    case Left(PartnershipUtrNotFound) =>
+      Redirect(routes.CouldNotConfirmKnownFactsController.show())
+    case Left(StorePartnershipKnownFactsFailure) =>
+      Redirect(routes.CouldNotConfirmKnownFactsController.show())
+    case Left(StorePartnershipInformationFailureResponse(status)) =>
+      throw new InternalServerException("Store Partnership failed with status code: " + status)
   }
 
 }

@@ -50,7 +50,10 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
       "redirect to Check Your Answers Partnership page" in {
 
-        val res = post("/joint-venture-or-property-partnership", Map(SessionKeys.partnershipSautrKey -> "utr"))(JointVentureOrPropertyForm.yesNo -> option_yes)
+        val res = post(
+          "/joint-venture-or-property-partnership",
+          Map(SessionKeys.partnershipSautrKey -> "utr", SessionKeys.businessPostCodeKey -> "postcode")
+        )(JointVentureOrPropertyForm.yesNo -> option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -58,6 +61,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessPostCodeKey) shouldBe None
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
       }
     }

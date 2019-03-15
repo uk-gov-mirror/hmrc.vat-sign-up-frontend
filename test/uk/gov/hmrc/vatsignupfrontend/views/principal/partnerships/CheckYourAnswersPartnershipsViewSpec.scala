@@ -22,26 +22,17 @@ import org.jsoup.nodes.{Document, Element}
 import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PartnershipsCYA => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
 
 class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
   lazy val appConfig = app.injector.instanceOf[AppConfig]
-
-  lazy val limitedPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
-    entityType = LimitedPartnership,
-    companyUtr = testCompanyUtr,
-    companyNumber = Some(testCompanyNumber),
-    postCode = testBusinessPostcode,
-    postAction = testCall
-  )(FakeRequest(), applicationMessages, appConfig)
-
-  lazy val limitedPartnershipCyaDoc = Jsoup.parse(limitedPartnershipCyaPage.body)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -78,6 +69,17 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
   }
 
   "Limited Partnership Check Your Answers View" should {
+
+    lazy val limitedPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
+      entityType = LimitedPartnership,
+      companyUtr = Some(testCompanyUtr),
+      companyNumber = Some(testCompanyNumber),
+      postCode = Some(testBusinessPostcode),
+      postAction = testCall,
+      jointVentureProperty = None
+    )(FakeRequest(), applicationMessages, appConfig)
+
+    lazy val limitedPartnershipCyaDoc = Jsoup.parse(limitedPartnershipCyaPage.body)
 
     val testPage = TestView(
       name = "Limited Partnership Check Your Answers View",
@@ -150,72 +152,144 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
   }
 
-  lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
-    entityType = GeneralPartnership,
-    companyUtr = testCompanyUtr,
-    companyNumber = None,
-    postCode = testBusinessPostcode,
-    postAction = testCall
-  )(FakeRequest(), applicationMessages, appConfig)
+  "General Partnership Check Your Answers View" when {
 
-  lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
+    "it is NOT a Joint Venture or Property Partnership" should {
 
-  "General Partnership Check Your Answers View" should {
+      lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
+        entityType = GeneralPartnership,
+        companyUtr = Some(testCompanyUtr),
+        companyNumber = None,
+        postCode = Some(testBusinessPostcode),
+        postAction = testCall,
+        jointVentureProperty = Some(false)
+      )(FakeRequest(), applicationMessages, appConfig)
 
-    val testPage = TestView(
-      name = "General Partnership Check Your Answers View",
-      title = messages.title,
-      heading = messages.heading,
-      page = generalPartnershipCyaPage
-    )
+      lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
 
-    testPage.shouldHaveForm("Check Your Answers Form")(actionCall = testCall)
-
-
-    "display the correct info for business entity" in {
-      val sectionId = BusinessEntityId
-      val expectedQuestion = messages.businessEntity
-      val expectedAnswer = CaptureBusinessEntity.radioGeneralPartnership
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
-
-      sectionTest(
-        doc = generalPartnershipCyaDoc,
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
+      val testPage = TestView(
+        name = "General Partnership NOT Joint Venture or Property Check Your Answers",
+        title = messages.title,
+        heading = messages.heading,
+        page = generalPartnershipCyaPage
       )
+
+      testPage.shouldHaveForm("Check Your Answers Form")(actionCall = testCall)
+
+
+      "display the correct info for business entity" in {
+        val sectionId = BusinessEntityId
+        val expectedQuestion = messages.businessEntity
+        val expectedAnswer = CaptureBusinessEntity.radioGeneralPartnership
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
+
+        sectionTest(
+          doc = generalPartnershipCyaDoc,
+          sectionId = sectionId,
+          expectedQuestion = expectedQuestion,
+          expectedAnswer = expectedAnswer,
+          expectedEditLink = Some(expectedEditLink)
+        )
+      }
+
+      "display the correct info for company utr" in {
+        val sectionId = CompanyUtrId
+        val expectedQuestion = messages.companyUtr
+        val expectedAnswer = testCompanyUtr
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipUtrController.show().url
+
+        sectionTest(
+          doc = generalPartnershipCyaDoc,
+          sectionId = sectionId,
+          expectedQuestion = expectedQuestion,
+          expectedAnswer = expectedAnswer,
+          expectedEditLink = Some(expectedEditLink)
+        )
+      }
+
+      "display the correct info for post code" in {
+        val sectionId = PartnershipPostCodeId
+        val expectedQuestion = messages.postCode
+        val expectedAnswer = testBusinessPostcode.checkYourAnswersFormat
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.PrincipalPlacePostCodeController.show().url
+
+        sectionTest(
+          doc = generalPartnershipCyaDoc,
+          sectionId = sectionId,
+          expectedQuestion = expectedQuestion,
+          expectedAnswer = expectedAnswer,
+          expectedEditLink = Some(expectedEditLink)
+        )
+      }
+
+      "display the correct info for Joint Venture or Property" in {
+        val sectionId = JointVenturePropertyId
+        val expectedQuestion = messages.jointVentureOrProperty
+        val expectedAnswer = MessageLookup.Base.no
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.JointVentureOrPropertyController.show().url
+
+        sectionTest(
+          doc = generalPartnershipCyaDoc,
+          sectionId = sectionId,
+          expectedQuestion = expectedQuestion,
+          expectedAnswer = expectedAnswer,
+          expectedEditLink = Some(expectedEditLink)
+        )
+      }
     }
 
-    "display the correct info for company utr" in {
-      val sectionId = CompanyUtrId
-      val expectedQuestion = messages.companyUtr
-      val expectedAnswer = testCompanyUtr
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipUtrController.show().url
+    "it IS a Joint Venture or Property Partnership" should {
 
-      sectionTest(
-        doc = generalPartnershipCyaDoc,
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
+      lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
+        entityType = GeneralPartnership,
+        companyUtr = None,
+        companyNumber = None,
+        postCode = None,
+        postAction = testCall,
+        jointVentureProperty = Some(true)
+      )(FakeRequest(), applicationMessages, appConfig)
+
+      lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
+
+      val testPage = TestView(
+        name = "General Partnership Joint Venture or Property Check Your Answers View",
+        title = messages.title,
+        heading = messages.heading,
+        page = generalPartnershipCyaPage
       )
-    }
 
-    "display the correct info for post code" in {
-      val sectionId = PartnershipPostCodeId
-      val expectedQuestion = messages.postCode
-      val expectedAnswer = testBusinessPostcode.checkYourAnswersFormat
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.PrincipalPlacePostCodeController.show().url
+      testPage.shouldHaveForm("Check Your Answers Form")(actionCall = testCall)
 
-      sectionTest(
-        doc = generalPartnershipCyaDoc,
-        sectionId = sectionId,
-        expectedQuestion = expectedQuestion,
-        expectedAnswer = expectedAnswer,
-        expectedEditLink = Some(expectedEditLink)
-      )
+
+      "display the correct info for business entity" in {
+        val sectionId = BusinessEntityId
+        val expectedQuestion = messages.businessEntity
+        val expectedAnswer = CaptureBusinessEntity.radioGeneralPartnership
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
+
+        sectionTest(
+          doc = generalPartnershipCyaDoc,
+          sectionId = sectionId,
+          expectedQuestion = expectedQuestion,
+          expectedAnswer = expectedAnswer,
+          expectedEditLink = Some(expectedEditLink)
+        )
+      }
+
+      "display the correct info for Joint Venture or Property" in {
+        val sectionId = JointVenturePropertyId
+        val expectedQuestion = messages.jointVentureOrProperty
+        val expectedAnswer = MessageLookup.Base.yes
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.JointVentureOrPropertyController.show().url
+
+        sectionTest(
+          doc = generalPartnershipCyaDoc,
+          sectionId = sectionId,
+          expectedQuestion = expectedQuestion,
+          expectedAnswer = expectedAnswer,
+          expectedEditLink = Some(expectedEditLink)
+        )
+      }
     }
   }
-
 }
