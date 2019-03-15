@@ -23,12 +23,11 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, Gen
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreJointVentureInformationStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.YesNo.YesNoSessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType}
 
 class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -52,7 +51,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       val res = get("/check-your-answers-partnership",
         Map(
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-          SessionKeys.jointVentureOrPropertyKey -> YesNoSessionFormatter.toString(Yes)
+          SessionKeys.jointVentureOrPropertyKey -> true.toString
         )
       )
 
@@ -191,7 +190,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
               Map(
                 SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
                 SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.jointVentureOrPropertyKey -> YesNoSessionFormatter.toString(Yes)
+                SessionKeys.jointVentureOrPropertyKey -> true.toString
               )
             )()
 
@@ -215,7 +214,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
               Map(
                 SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
                 SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.jointVentureOrPropertyKey -> YesNoSessionFormatter.toString(Yes)
+                SessionKeys.jointVentureOrPropertyKey -> true.toString
               )
             )()
 

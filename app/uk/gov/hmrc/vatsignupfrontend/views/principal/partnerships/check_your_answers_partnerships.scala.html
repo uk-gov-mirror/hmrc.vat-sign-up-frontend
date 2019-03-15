@@ -27,7 +27,7 @@
   companyUtr: Option[String],
   companyNumber: Option[String],
   postCode: Option[PostCode],
-  jointVentureProperty: Option[YesNo],
+  jointVentureProperty: Option[Boolean],
   postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
@@ -81,10 +81,10 @@
 
 @jointVentureOrProperty() = @{
     jointVentureProperty match {
-        case Some(yesno)=>
+        case Some(isJointVentureProperty)=>
             val rowName = JointVenturePropertyId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.joint_vernture_or_property")
-            val rowAnswer = Messages(s"base.${yesno.stringValue.toLowerCase}")
+            val rowAnswer = if (isJointVentureProperty) Messages("base.yes") else Messages("base.no")
             val rowUrl = partnershipRoutes.JointVentureOrPropertyController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")

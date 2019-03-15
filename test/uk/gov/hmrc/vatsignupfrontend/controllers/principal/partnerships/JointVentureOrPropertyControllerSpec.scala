@@ -106,7 +106,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
           }
 
           s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_yes} to session" in {
-            session(result).getModel[YesNo](SessionKeys.jointVentureOrPropertyKey) shouldBe Some(Yes)
+            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
           }
         }
 
@@ -125,7 +125,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
           }
 
           s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_no} to session" in {
-            session(result).getModel[YesNo](SessionKeys.jointVentureOrPropertyKey) shouldBe Some(No)
+            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
           }
         }
       }

@@ -49,13 +49,13 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
     authorised() {
 
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optJointVentureProperty = request.session.getModel[YesNo](SessionKeys.jointVentureOrPropertyKey)
+      val optJointVentureProperty = request.session.get(SessionKeys.jointVentureOrPropertyKey).map(_.toBoolean)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
       (optJointVentureProperty, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
-        case (Some(Yes), Some(GeneralPartnership), _, _, _) =>
+        case (Some(true), Some(GeneralPartnership), _, _, _) =>
           Future.successful(Ok(check_your_answers_partnerships(
             entityType = GeneralPartnership,
             companyUtr = None,
@@ -94,14 +94,14 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optJointVentureProperty = request.session.getModel[YesNo](SessionKeys.jointVentureOrPropertyKey)
+      val optJointVentureProperty = request.session.getModel[Boolean](SessionKeys.jointVentureOrPropertyKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
 
       (optVatNumber, optJointVentureProperty, optBusinessEntityType) match {
-        case (Some(vrn), Some(Yes), Some(GeneralPartnership)) =>
+        case (Some(vrn), Some(true), Some(GeneralPartnership)) =>
           storeJointVentureInformationService.storeJointVentureInformation(vrn) map {
             case Right(StoreJointVentureInformationSuccess) => Redirect(principalRoutes.DirectDebitResolverController.show())
             case Left(StoreJointVentureInformationFailureResponse(status)) =>

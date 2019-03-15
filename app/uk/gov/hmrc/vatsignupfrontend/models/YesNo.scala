@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models
 
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionFormatter
-
 sealed trait YesNo {
   val stringValue : String
 }
@@ -28,20 +26,4 @@ object Yes extends YesNo {
 
 object No extends YesNo {
   override val stringValue: String = "No"
-}
-
-object YesNo {
-
-  implicit object YesNoSessionFormatter extends SessionFormatter[YesNo] {
-    override def fromString(string: String): Option[YesNo] = string match {
-      case Yes.stringValue => Some(Yes)
-      case No.stringValue => Some(No)
-      case _ => None
-    }
-
-    override def toString(entity: YesNo): String = entity match {
-      case Yes => Yes.stringValue
-      case No => No.stringValue
-    }
-  }
 }

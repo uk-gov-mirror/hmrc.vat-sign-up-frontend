@@ -162,7 +162,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         companyNumber = None,
         postCode = Some(testBusinessPostcode),
         postAction = testCall,
-        jointVentureProperty = Some(No)
+        jointVentureProperty = Some(false)
       )(FakeRequest(), applicationMessages, appConfig)
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
@@ -246,7 +246,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         companyNumber = None,
         postCode = None,
         postAction = testCall,
-        jointVentureProperty = Some(Yes)
+        jointVentureProperty = Some(true)
       )(FakeRequest(), applicationMessages, appConfig)
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)

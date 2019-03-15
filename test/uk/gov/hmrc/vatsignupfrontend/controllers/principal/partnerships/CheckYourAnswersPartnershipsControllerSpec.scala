@@ -32,7 +32,6 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHtt
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSessionFormatter
-import uk.gov.hmrc.vatsignupfrontend.models.YesNo.YesNoSessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, _}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreJointVentureInformationService, MockStorePartnershipInformationService}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
@@ -59,7 +58,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                             postCode: Option[PostCode],
                             entityType: Option[PartnershipEntityType],
                             businessEntity: Option[BusinessEntity],
-                            jointVentureProperty: Option[YesNo]): Iterable[(String, String)] =
+                            jointVentureProperty: Option[Boolean]): Iterable[(String, String)] =
     (
       (vatNumber map (vatNumberKey -> _))
         ++ (sautr map (partnershipSautrKey -> _))
@@ -67,7 +66,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
         ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
         ++ (entityType map CompanyTypeSessionFormatter.toString map (partnershipTypeKey -> _))
         ++ (businessEntity map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
-        ++ (jointVentureProperty map YesNoSessionFormatter.toString map (jointVentureOrPropertyKey -> _))
+        ++ (jointVentureProperty map (jointVentureOrPropertyKey -> _.toString))
       )
 
 
@@ -77,7 +76,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                      postCode: Option[PostCode] = None,
                      entityType: Option[PartnershipEntityType] = None,
                      businessEntity: Option[BusinessEntity] = None,
-                     jointVentureProperty: Option[YesNo] = None
+                     jointVentureProperty: Option[Boolean] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
       sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity, jointVentureProperty).toSeq: _*
@@ -89,7 +88,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                       crn: Option[String] = None,
                       postCode: Option[PostCode] = None,
                       entityType: Option[PartnershipEntityType] = None,
-                      jointVentureProperty: Option[YesNo] = None
+                      jointVentureProperty: Option[Boolean] = None
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
       sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity, jointVentureProperty).toSeq: _*
@@ -114,7 +113,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(Yes)
+                  jointVentureProperty = Some(true)
                 ))
 
                 status(result) shouldBe Status.OK
@@ -135,7 +134,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 ))
@@ -155,7 +154,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   postCode = Some(testBusinessPostcode)
                 ))
 
@@ -173,7 +172,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   sautr = Some(testSaUtr)
                 ))
 
@@ -362,7 +361,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                   val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(Yes)
+                    jointVentureProperty = Some(true)
                   )))
                   status(result) shouldBe Status.SEE_OTHER
                   redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
@@ -380,7 +379,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                   lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(Yes)
+                    jointVentureProperty = Some(true)
                   )))
 
                   intercept[InternalServerException](result)
@@ -399,7 +398,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                   vatNumber = None,
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(Yes)
+                  jointVentureProperty = Some(true)
                 )))
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
@@ -415,7 +414,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  jointVentureProperty = Some(Yes)
+                  jointVentureProperty = Some(true)
                 )))
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -442,7 +441,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                   val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(No),
+                    jointVentureProperty = Some(false),
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
                   )))
@@ -466,7 +465,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                   lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(No),
+                    jointVentureProperty = Some(false),
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
                   )))
@@ -486,7 +485,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   vatNumber = None,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
@@ -506,7 +505,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 )))
@@ -526,7 +525,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   postCode = Some(testBusinessPostcode)
                 )))
 
@@ -545,7 +544,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(No),
+                  jointVentureProperty = Some(false),
                   sautr = Some(testSaUtr)
                 )))
 
@@ -682,7 +681,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(No),
+                jointVentureProperty = Some(false),
                 vatNumber = None,
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode)
@@ -702,7 +701,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               mockAuthAdminRole()
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                jointVentureProperty = Some(No),
+                jointVentureProperty = Some(false),
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode)
               )))
@@ -722,7 +721,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(No),
+                jointVentureProperty = Some(false),
                 postCode = Some(testBusinessPostcode)
               )))
 
@@ -741,7 +740,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(No),
+                jointVentureProperty = Some(false),
                 sautr = Some(testSaUtr)
               )))
 
