@@ -148,7 +148,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "SA UTR is missing from the session" should {
 
-              "Redirect to Capture Pship SA UTR" in {
+              "Redirect to Capture Business Entity" in {
                 mockAuthAdminRole()
                 enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
@@ -160,13 +160,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 ))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+                redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
               }
             }
 
             "Business Postcode is missing from the session" should {
 
-              "Redirect to Capture Business Postcode" in {
+              "Redirect to Capture Business Entity" in {
                 mockAuthAdminRole()
                 enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
@@ -178,14 +178,14 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 ))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+                redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
               }
             }
           }
 
           "No answer has been provided for Joint Venture or Property" should {
 
-            "Redirect to Joint Venture or Property page" in {
+            "Redirect to Capture Business Entity" in {
               mockAuthAdminRole()
               enable(GeneralPartnershipJourney)
               enable(JointVenturePropertyJourney)
@@ -195,7 +195,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               ))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.JointVentureOrPropertyController.show().url)
+              redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
             }
           }
         }
@@ -223,7 +223,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "SA UTR is missing from the session" should {
 
-            "Redirect to Capture Pship SA UTR" in {
+            "Redirect to Capture Business Entity" in {
               mockAuthAdminRole()
               enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
@@ -234,13 +234,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               ))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+              redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
             }
           }
 
           "Business Postcode is missing from the session" should {
 
-            "Redirect to Capture Business Postcode" in {
+            "Redirect to Capture Business Entity" in {
               mockAuthAdminRole()
               enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
@@ -251,7 +251,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               ))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+              redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
             }
           }
         }
@@ -284,7 +284,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
         "SA UTR is missing from the session" should {
 
-          "redirect to the capture partnership SA UTR page" in {
+          "redirect to the Capture Business Entity page" in {
             mockAuthAdminRole()
             enable(LimitedPartnershipJourney)
 
@@ -296,13 +296,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+            redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
 
         "Business PostCode is missing from the session" should {
 
-          "redirect to the capture partnership SA UTR page" in {
+          "redirect to the Capture Business Entity page" in {
             mockAuthAdminRole()
             enable(LimitedPartnershipJourney)
 
@@ -314,13 +314,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+            redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
 
         "CRN is missing from the session" should {
 
-          "redirect to the capture CRN page" in {
+          "redirect to the Capture Business Entity page" in {
             mockAuthAdminRole()
             enable(LimitedPartnershipJourney)
 
@@ -332,25 +332,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CapturePartnershipCompanyNumberController.show().url)
-          }
-        }
-
-        "entity Type is missing from the session" should {
-
-          "redirect to the capture CRN page" in {
-            mockAuthAdminRole()
-            enable(LimitedPartnershipJourney)
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(
-              businessEntity = Some(LimitedPartnership),
-              sautr = Some(testSaUtr),
-              postCode = Some(testBusinessPostcode),
-              crn = Some(testCompanyNumber)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CapturePartnershipCompanyNumberController.show().url)
+            redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
       }
@@ -536,7 +518,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "SA UTR is missing from session" should {
 
-              "Redirect to Partnership SA UTR capture page" in {
+              "Redirect to Capture Business Entity page" in {
                 enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
 
@@ -549,13 +531,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 )))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
+                redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
               }
             }
 
             "Business PostCode is missing from session" should {
 
-              "Redirect to Partnership SA UTR capture page" in {
+              "Redirect to Capture Business Entity page" in {
                 enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
 
@@ -568,14 +550,14 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 )))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(routes.PrincipalPlacePostCodeController.show().url)
+                redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
               }
             }
           }
 
           "Joint Venture or Property answer is missing from session" should {
 
-            "Redirect Joint Venture or Property  page" in {
+            "Redirect Capture Business Entity page" in {
               enable(GeneralPartnershipJourney)
               enable(JointVenturePropertyJourney)
 
@@ -586,7 +568,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               )))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.JointVentureOrPropertyController.show().url)
+              redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
             }
           }
         }
@@ -732,7 +714,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "SA UTR is missing from session" should {
 
-            "Redirect to Partnership SA UTR capture page" in {
+            "Redirect to Capture Business Entity page" in {
               enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
 
@@ -745,13 +727,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               )))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
+              redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
             }
           }
 
           "Business PostCode is missing from session" should {
 
-            "Redirect to Partnership SA UTR capture page" in {
+            "Redirect to Capture Business Entity page" in {
               enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
 
@@ -764,7 +746,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               )))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.PrincipalPlacePostCodeController.show().url)
+              redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
             }
           }
         }
@@ -933,7 +915,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
         "SA UTR is missing from session" should {
 
-          "Redirect to Partnership SA UTR capture page" in {
+          "Redirect to Capture Business Entity page" in {
             enable(GeneralPartnershipJourney)
             enable(JointVenturePropertyJourney)
 
@@ -947,13 +929,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             )))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
+            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
 
         "Business PostCode is missing from session" should {
 
-          "Redirect to Partnership SA UTR capture page" in {
+          "Redirect to Capture Business Entity page" in {
             enable(GeneralPartnershipJourney)
             enable(JointVenturePropertyJourney)
 
@@ -967,13 +949,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             )))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.PrincipalPlacePostCodeController.show().url)
+            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
 
         "CRN is missing from session" should {
 
-          "Redirect to Capture Partnership Company Number page" in {
+          "Redirect to Capture Business Entity page" in {
             enable(GeneralPartnershipJourney)
             enable(JointVenturePropertyJourney)
 
@@ -987,13 +969,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             )))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipCompanyNumberController.show().url)
+            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
 
         "Partnership Entity Type is missing from session" should {
 
-          "Redirect to Partnership Company Number page" in {
+          "Redirect to Capture Business Entitypage" in {
             enable(GeneralPartnershipJourney)
             enable(JointVenturePropertyJourney)
 
@@ -1007,7 +989,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             )))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipCompanyNumberController.show().url)
+            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
           }
         }
       }
