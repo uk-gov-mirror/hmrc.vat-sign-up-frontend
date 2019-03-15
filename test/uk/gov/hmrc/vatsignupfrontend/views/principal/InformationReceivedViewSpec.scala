@@ -70,22 +70,19 @@ class InformationReceivedViewSpec extends ViewSpec {
         document.select("#what-happens-next h2").text() shouldBe messages.Section.heading
       }
 
-      s"has a paragraph '${messages.Section.line1}'" in {
-        document.select("#what-happens-next p").text() should include(messages.Section.line1)
-      }
-      s"has a paragraph '${messages.Section.line2}'" in {
-        document.select("#what-happens-next p").text() should include(messages.Section.line2)
+      s"has a paragraph '${messages.Section.line}'" in {
+        document.select("#what-happens-next p").text() should include(messages.Section.line)
       }
 
-      s"has a bullet point '${messages.Section.bullet1}'" in {
+      s"has a bullet point '${messages.Section.bullet1}' which has a link to relevant software options" in {
         document.select("#what-happens-next li").text() should include(messages.Section.bullet1)
-      }
-
-      s"has a bullet point '${messages.Section.bullet2}' which has a link to relevant software options" in {
-        document.select("#what-happens-next li").text() should include(messages.Section.bullet2)
         val link = document.getElementById("softwareOptionsUrl")
         link.attr("href") shouldBe conf.govUK + messages.Section.link
         link.text() shouldBe messages.Section.linkText
+      }
+
+      s"has a bullet point '${messages.Section.bullet2}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.bullet2)
       }
 
       s"has a bullet point '${messages.Section.bullet3}'" in {
@@ -100,12 +97,7 @@ class InformationReceivedViewSpec extends ViewSpec {
         document.select("#what-happens-next li").text() should include(messages.Section.bullet5)
       }
 
-      s"has a paragraph '${messages.Section.line3}'" in {
-        document.select("#what-happens-next p").text() should include(messages.Section.line3)
-      }
-
     }
-
 
     "have a sign out button" in {
       val b = document.getElementById("sign-out-button")
