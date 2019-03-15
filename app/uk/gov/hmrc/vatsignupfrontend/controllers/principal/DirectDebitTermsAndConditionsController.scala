@@ -45,6 +45,6 @@ class DirectDebitTermsAndConditionsController @Inject()(val controllerComponents
         Future.successful(Redirect(routes.CaptureEmailController.show()))
       else
         Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
-    }.map(_.addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> "true"))
+    } .map(_.addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> true.toString))
   }
 }
