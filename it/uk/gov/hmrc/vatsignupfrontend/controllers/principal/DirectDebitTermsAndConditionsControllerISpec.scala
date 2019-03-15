@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.acceptedDirectDebitTermsKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, DirectDebitTermsJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
@@ -50,6 +50,22 @@ class DirectDebitTermsAndConditionsControllerISpec extends ComponentSpecBase wit
         httpStatus(SEE_OTHER),
         redirectUri(routes.AgreeCaptureEmailController.show().url)
       )
+    }
+
+    "POST /direct-debit-terms-and-conditions" should {
+
+      lazy val res = post("/direct-debit-terms-and-conditions")()
+
+      "return a redirect to Agree Capture Email" in {
+        stubAuth(OK, successfulAuthResponse())
+        enable(DirectDebitTermsJourney)
+        enable(ContactPreferencesJourney)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureEmailController.show().url)
+        )
+      }
     }
 
     "Add the acceptDirectDebitTermsKey to the session" in {
