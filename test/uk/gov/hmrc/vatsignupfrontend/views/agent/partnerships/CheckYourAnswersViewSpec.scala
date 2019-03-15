@@ -29,7 +29,9 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
+import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.JointVenturePropertyId
 import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 
 
 class CheckYourAnswersViewSpec extends ViewSpec {
@@ -54,7 +56,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     section.attr("class") shouldBe "tabular-data__data-2"
   }
 
-  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String], doc: Document) = {
+  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String], doc: Document): Unit = {
     val accountingPeriod = doc.getElementById(sectionId)
     val question = doc.getElementById(questionId(sectionId))
     val answer = doc.getElementById(answerId(sectionId))
@@ -80,6 +82,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     lazy val expectedUrlUtr = partnershipRoutes.CapturePartnershipUtrController.show().url
     lazy val expectedUrlPostCode = partnershipRoutes.PartnershipPostCodeController.show().url
     lazy val expectedUrlCompanyNumber = partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url
+    lazy val expectedUrlJointVenturePropertyUrl = partnershipRoutes.JointVenturePropertyController.show().url
 
     "the saUtr and the post code are given for a general partnership" should {
       val testPage = TestView(
@@ -87,10 +90,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         title = messages.title,
         heading = messages.heading,
         page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = testSaUtr,
+          utr = Some(testSaUtr),
           entityType = GeneralPartnership,
-          testBusinessPostcode,
-          None,
+          Some(testBusinessPostcode),
+          companyNumber = None,
+          jointVentureProperty = None,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
       )
@@ -98,31 +102,41 @@ class CheckYourAnswersViewSpec extends ViewSpec {
       testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
       "render the page correctly" in {
+
+        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPage.document)
+        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPage.document)
+
+        testPage.document.getElementById(utrAnswer).text shouldBe testSaUtr
+        testPage.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
+        testPage.document.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+      }
+    }
+
+    "the General Partnership is a Joint Venture or Property Partnerhsip" should {
+      "render the page correctly" in {
         lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = testSaUtr,
+          utr = Some(testSaUtr),
           entityType = GeneralPartnership,
-          postCode = testBusinessPostcode,
+          postCode = None,
           companyNumber = None,
+          jointVentureProperty = Some(true),
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
         lazy val doc = Jsoup.parse(page.body)
 
-        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), doc)
-
-        doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
-        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+        sectionTest(JointVenturePropertyId, messages.jointVentureProperty, MessageLookup.Base.yes, Some(expectedUrlJointVenturePropertyUrl), doc)
       }
     }
+
     "the saUtr, company number and the post code are given for a limited partnership" should {
       "render the page correctly" in {
         lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = testSaUtr,
-          entityType = GeneralPartnership,
-          postCode = testBusinessPostcode,
+          utr = Some(testSaUtr),
+          entityType = LimitedPartnership,
+          Some(testBusinessPostcode),
           companyNumber = Some(testCompanyNumber),
+          jointVentureProperty = None,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
@@ -133,7 +147,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         sectionTest(CompanyNumberId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCompanyNumber), doc)
 
         doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
+        doc.getElementById(businessEntityAnswer).text shouldBe messages.limitedPartnership
         doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
       }
     }

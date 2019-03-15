@@ -821,6 +821,7 @@ object MessageLookup {
     val yourBusinessPostCode = "Where is your client's principal place of business?"
     val generalPartnership: String = "General partnership"
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
+    val jointVentureProperty: String = "Is your client either a Joint Venture or Property Partnership?"
   }
 
   object UnplannedOutage {

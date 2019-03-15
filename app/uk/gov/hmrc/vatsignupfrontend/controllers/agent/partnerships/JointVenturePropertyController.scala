@@ -24,8 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.jointVentureOrPropertyForm
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.joint_venture_or_property
 
 import scala.concurrent.Future
@@ -38,7 +37,7 @@ class JointVenturePropertyController @Inject()(val controllerComponents: Control
     authorised() {
       Future.successful(
         Ok(joint_venture_or_property(
-          jointVentureOrPropertyForm(true),
+          jointVentureOrPropertyForm(isAgent = true),
           postAction = routes.JointVenturePropertyController.submit()
         ))
       )
