@@ -41,8 +41,10 @@ class DirectDebitTermsAndConditionsController @Inject()(val controllerComponents
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      if (isEnabled(ContactPreferencesJourney)) Future.successful(Redirect(routes.CaptureEmailController.show()))
-      else Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+      if (isEnabled(ContactPreferencesJourney))
+        Future.successful(Redirect(routes.CaptureEmailController.show()))
+      else
+        Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
     }.map(_.addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> "true"))
   }
 }
