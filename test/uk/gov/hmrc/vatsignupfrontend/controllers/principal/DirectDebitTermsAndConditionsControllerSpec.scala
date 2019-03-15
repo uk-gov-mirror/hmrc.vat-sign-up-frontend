@@ -22,7 +22,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, DirectDebitTermsJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 
 class DirectDebitTermsAndConditionsControllerSpec extends ControllerSpec {
@@ -85,6 +85,24 @@ class DirectDebitTermsAndConditionsControllerSpec extends ControllerSpec {
 
     s"have a redirectLocation to '${routes.AgreeCaptureEmailController.show().url}'" in {
       redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+    }
+
+    "Add to session the SessionKey 'acceptedDirectDebitTermsKey' with value set to 'true'" in {
+      session(result).get(SessionKeys.acceptedDirectDebitTermsKey) shouldBe Some("true")
+    }
+  }
+
+  "Calling the submit action of the Direct Debit Terms and Conditions controller when Contact Preference is enabled" should {
+    lazy val result = TestDirectDebitTermsAndConditionsController.submit(testPostRequest)
+
+    "return status SEE_OTHER (303)" in {
+      mockAuthAdminRole()
+      enable(ContactPreferencesJourney)
+      status(result) shouldBe Status.SEE_OTHER
+    }
+
+    s"have a redirectLocation to '${routes.CaptureEmailController.show().url}'" in {
+      redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
     }
 
     "Add to session the SessionKey 'acceptedDirectDebitTermsKey' with value set to 'true'" in {
