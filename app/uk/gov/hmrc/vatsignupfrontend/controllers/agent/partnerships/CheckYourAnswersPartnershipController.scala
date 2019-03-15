@@ -98,11 +98,15 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optJointVentureProperty = request.session.getModel[Boolean](SessionKeys.jointVentureOrPropertyKey)
-      val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
-      val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
-      val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-      val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
+
+      (optVatNumber, optBusinessEntityType) match {
+        case (Some(vrn), Some(GeneralPartnership)) => submitGeneralPartnershipAnswers(vrn)
+        case (Some(vrn), Some(entity: LimitedPartnershipBase)) => submitLimitedPartnershipAnswers(vrn, entity)
+        case (None, _) => Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
+        case (_, None) => Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
+      }
+    }
+  }
 
       (optVatNumber, optJointVentureProperty, optBusinessEntityType) match {
         case (Some(vrn), Some(true), Some(GeneralPartnership)) =>
