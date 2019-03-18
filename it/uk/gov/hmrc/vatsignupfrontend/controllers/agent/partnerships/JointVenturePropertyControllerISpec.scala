@@ -35,9 +35,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
   }
 
   "GET /client/joint-venture-or-property-partnership" should {
-
     "return an OK" in {
-
       val res = get("/client/joint-venture-or-property-partnership")
 
       res should have(
@@ -47,12 +45,12 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
   }
 
   "POST /joint-venture-or-property-partnership" when {
-
     "form value is YES" should {
-
       "redirect to Check Your Answers Partnership page" in {
-
-        val res = post("/client/joint-venture-or-property-partnership", Map(SessionKeys.partnershipSautrKey -> testSaUtr))(JointVentureOrPropertyForm.yesNo -> option_yes)
+        val res = post(
+          uri = "/client/joint-venture-or-property-partnership",
+          cookies = Map(SessionKeys.partnershipSautrKey -> testSaUtr)
+        )(JointVentureOrPropertyForm.yesNo -> option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -65,10 +63,10 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
     }
 
     "form value is NO" should {
-
       "redirect to Choose Software error page" in {
-
-        val res = post("/client/joint-venture-or-property-partnership")(JointVentureOrPropertyForm.yesNo -> option_no)
+        val res = post("/client/joint-venture-or-property-partnership")(
+          JointVentureOrPropertyForm.yesNo -> option_no
+        )
 
         res should have(
           httpStatus(SEE_OTHER),

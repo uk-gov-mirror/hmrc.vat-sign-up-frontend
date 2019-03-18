@@ -104,9 +104,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
           PartnershipEntityType.GeneralPartnership,
           None,
           Some(testBusinessPostCode)
-        )(
-          NO_CONTENT
-        )
+        )(NO_CONTENT)
 
         val res = post("/client/check-your-answers",
           Map(
@@ -133,9 +131,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
           PartnershipEntityType.GeneralPartnership,
           None,
           Some(testBusinessPostCode)
-        )(
-          FORBIDDEN
-        )
+        )(FORBIDDEN)
 
         val res = post("/client/check-your-answers",
           Map(
@@ -162,9 +158,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
           PartnershipEntityType.LimitedPartnership,
           Some(testCompanyNumber),
           Some(testBusinessPostCode)
-        )(
-          NO_CONTENT
-        )
+        )(NO_CONTENT)
 
         val res = post("/client/check-your-answers",
           Map(
