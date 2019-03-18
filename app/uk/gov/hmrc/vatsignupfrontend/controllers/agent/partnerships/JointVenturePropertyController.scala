@@ -37,7 +37,7 @@ class JointVenturePropertyController @Inject()(val controllerComponents: Control
     authorised() {
       Future.successful(
         Ok(joint_venture_or_property(
-          jointVentureOrPropertyForm(true),
+          jointVenturePropertyForm = jointVentureOrPropertyForm(isAgent = true),
           postAction = routes.JointVenturePropertyController.submit()
         ))
       )
@@ -46,22 +46,19 @@ class JointVenturePropertyController @Inject()(val controllerComponents: Control
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        jointVentureOrPropertyForm(isAgent = true).bindFromRequest.fold(
-          formWithErrors => BadRequest(joint_venture_or_property(
-            jointVenturePropertyForm = formWithErrors,
-            routes.JointVenturePropertyController.submit()
-          )),
-          {
-            case Yes => Redirect(routes.CheckYourAnswersPartnershipController.show())
-              .removingFromSession(SessionKeys.partnershipSautrKey)
-              .removingFromSession(SessionKeys.businessPostCodeKey)
-              .addingToSession(SessionKeys.jointVentureOrPropertyKey -> true.toString)
-            case No => Redirect(routes.CapturePartnershipUtrController.show())
-              .addingToSession(SessionKeys.jointVentureOrPropertyKey -> false.toString)
-          }
-        )
-      )
+      Future.successful(jointVentureOrPropertyForm(isAgent = true).bindFromRequest.fold(
+        formWithErrors => BadRequest(joint_venture_or_property(
+          jointVenturePropertyForm = formWithErrors,
+          postAction = routes.JointVenturePropertyController.submit()
+        )), {
+          case Yes => Redirect(routes.CheckYourAnswersPartnershipController.show())
+            .removingFromSession(SessionKeys.partnershipSautrKey)
+            .removingFromSession(SessionKeys.businessPostCodeKey)
+            .addingToSession(SessionKeys.jointVentureOrPropertyKey -> true.toString)
+          case No => Redirect(routes.CapturePartnershipUtrController.show())
+            .addingToSession(SessionKeys.jointVentureOrPropertyKey -> false.toString)
+        }
+      ))
     }
   }
 }

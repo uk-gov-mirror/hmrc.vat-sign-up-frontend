@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser.{StoreJointVentureInformationFailureResponse, StoreJointVentureInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.{StoreJointVentureInformationService, StorePartnershipInformationService}
@@ -38,7 +38,10 @@ import scala.concurrent.Future
 class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: ControllerComponents,
                                                       val storePartnershipInformationService: StorePartnershipInformationService,
                                                       val storeJointVentureInformationService: StoreJointVentureInformationService)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)) {
+  extends AuthenticatedController(
+    retrievalPredicate = AgentEnrolmentPredicate,
+    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)
+  ) {
 
   override protected def featureEnabled[T](func: => T): T =
     if (featureSwitches exists isEnabled) func
@@ -64,21 +67,21 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             jointVentureProperty = optJointVentureProperty,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
-        case (Some(_), _, Some(GeneralPartnership), _, Some(utr), Some(postcode)) =>
+        case (Some(_), _, Some(GeneralPartnership), _, Some(_), Some(_)) =>
           Future.successful(Ok(check_your_answers(
             entityType = GeneralPartnership,
-            utr = Some(utr),
+            utr = optPartnershipUtr,
             companyNumber = None,
-            postCode = Some(postcode),
+            postCode = optPartnershipPostCode,
             jointVentureProperty = optJointVentureProperty,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
-        case (Some(_), _, Some(entity: LimitedPartnershipBase), Some(crn), Some(utr), Some(postcode)) =>
+        case (Some(_), _, Some(entity: LimitedPartnershipBase), Some(_), Some(_), Some(_)) =>
           Future.successful(Ok(check_your_answers(
             entityType = entity,
-            utr = Some(utr),
-            companyNumber = Some(crn),
-            postCode = Some(postcode),
+            utr = optPartnershipUtr,
+            companyNumber = optPartnershipCrn,
+            postCode = optPartnershipPostCode,
             jointVentureProperty = None,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
@@ -89,7 +92,6 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       }
     }
   }
-
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -111,25 +113,43 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
           }
         case (Some(vrn), _, Some(GeneralPartnership)) =>
           (optPartnershipUtr, optPartnershipPostCode) match {
-            case (Some(utr), Some(postcode)) =>
+            case (Some(utr), Some(_)) =>
               storePartnershipInformationService.storePartnershipInformation(
                 vatNumber = vrn,
                 sautr = utr,
-                postCode = Some(postcode)
-              ) map handleStorePartnershipResult
+                postCode = optPartnershipPostCode
+              ) map {
+                case Right(StorePartnershipInformationSuccess) =>
+                  Redirect(agentRoutes.EmailRoutingController.route())
+                case Left(PartnershipUtrNotFound) =>
+                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                case Left(StorePartnershipKnownFactsFailure) =>
+                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                case Left(StorePartnershipInformationFailureResponse(status)) =>
+                  throw new InternalServerException("Store Partnership failed with status code: " + status)
+              }
             case _ =>
               Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
           }
         case (Some(vrn), _, Some(entity: LimitedPartnershipBase)) =>
           (optPartnershipUtr, optPartnershipPostCode, optPartnershipCrn, optPartnershipType) match {
-            case (Some(utr), Some(postcode), Some(crn), Some(partnershipType)) =>
+            case (Some(utr), Some(_), Some(crn), Some(partnershipType)) =>
               storePartnershipInformationService.storePartnershipInformation(
                 vatNumber = vrn,
                 sautr = utr,
                 companyNumber = crn,
                 partnershipEntity = partnershipType,
-                postCode = Some(postcode)
-              ) map handleStorePartnershipResult
+                postCode = optPartnershipPostCode
+              ) map {
+                case Right(StorePartnershipInformationSuccess) =>
+                  Redirect(agentRoutes.EmailRoutingController.route())
+                case Left(PartnershipUtrNotFound) =>
+                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                case Left(StorePartnershipKnownFactsFailure) =>
+                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                case Left(StorePartnershipInformationFailureResponse(status)) =>
+                  throw new InternalServerException("Store Partnership failed with status code: " + status)
+              }
             case _ =>
               Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
           }
@@ -141,14 +161,4 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
     }
   }
 
-  private val handleStorePartnershipResult: StorePartnershipInformationResponse => Result = {
-    case Right(StorePartnershipInformationSuccess) =>
-      Redirect(agentRoutes.EmailRoutingController.route())
-    case Left(PartnershipUtrNotFound) =>
-      Redirect(routes.CouldNotConfirmPartnershipController.show())
-    case Left(StorePartnershipKnownFactsFailure) =>
-      Redirect(routes.CouldNotConfirmPartnershipController.show())
-    case Left(StorePartnershipInformationFailureResponse(status)) =>
-      throw new InternalServerException("Store Partnership failed with status code: " + status)
-  }
 }

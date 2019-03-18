@@ -37,10 +37,8 @@ import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
 import scala.concurrent.Future
 
-class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
-  with MockStorePartnershipInformationService
-  with MockStoreJointVentureInformationService {
+class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+  with MockStorePartnershipInformationService with MockStoreJointVentureInformationService {
 
   object TestCheckYourAnswersPartnershipController extends CheckYourAnswersPartnershipController(
     mockControllerComponents, mockStorePartnershipInformationService, mockStoreJointVentureInformationService
@@ -52,14 +50,12 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
                             entityType: Option[BusinessEntity] = None,
                             companyNumber: Option[String],
                             partnershipEntityType: Option[PartnershipEntityType]): Iterable[(String, String)] =
-    (
-      (vatNumber map (vatNumberKey -> _))
-        ++ (sautr map (partnershipSautrKey -> _))
-        ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
-        ++ (entityType map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
-        ++ (partnershipEntityType map CompanyTypeSessionFormatter.toString map (partnershipTypeKey -> _))
-        ++ (companyNumber map (companyNumberKey -> _))
-      )
+    ((vatNumber map (vatNumberKey -> _))
+      ++ (sautr map (partnershipSautrKey -> _))
+      ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
+      ++ (entityType map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
+      ++ (partnershipEntityType map CompanyTypeSessionFormatter.toString map (partnershipTypeKey -> _))
+      ++ (companyNumber map (companyNumberKey -> _)))
 
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
@@ -99,6 +95,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           sautr = Some(testSaUtr),
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -115,6 +112,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           sautr = Some(testSaUtr),
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -130,6 +128,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           postCode = Some(testBusinessPostcode),
           vatNumber = None
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureVatNumberController.show().url)
       }
@@ -143,6 +142,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           sautr = Some(testSaUtr),
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
@@ -155,6 +155,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           entityType = Some(GeneralPartnership),
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
@@ -167,6 +168,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           entityType = Some(GeneralPartnership),
           sautr = Some(testSaUtr)
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
@@ -183,17 +185,16 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
             testVatNumber,
             testSaUtr,
             Some(testBusinessPostcode)
-          )(
-            Future.successful(Right(StorePartnershipInformationSuccess))
-          )
+          )(Future.successful(Right(StorePartnershipInformationSuccess)))
+
           val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
             entityType = Some(GeneralPartnership),
             sautr = Some(testSaUtr),
             postCode = Some(testBusinessPostcode)
           ))
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
-
         }
       }
 
@@ -207,9 +208,8 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
             testCompanyNumber,
             PartnershipEntityType.LimitedPartnership,
             Some(testBusinessPostcode)
-          )(
-            Future.successful(Right(StorePartnershipInformationSuccess))
-          )
+          )(Future.successful(Right(StorePartnershipInformationSuccess)))
+
           val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
             entityType = Some(LimitedPartnership),
             partnershipEntityType = Some(PartnershipEntityType.LimitedPartnership),
@@ -217,9 +217,9 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
             sautr = Some(testSaUtr),
             postCode = Some(testBusinessPostcode)
           ))
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
-
         }
       }
       "store partnership info returned KnownFactsMismatchFailure" should {
@@ -230,32 +230,29 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
             testVatNumber,
             testSaUtr,
             Some(testBusinessPostcode)
-          )(
-            Future.successful(Left(StorePartnershipKnownFactsFailure))
-          )
+          )(Future.successful(Left(StorePartnershipKnownFactsFailure)))
+
           val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
             entityType = Some(GeneralPartnership),
             sautr = Some(testSaUtr),
             postCode = Some(testBusinessPostcode)
           ))
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
-
         }
       }
       "store partnership info returned KnownFactsMismatchFailure for a limited partnership" should {
         "go to Could not confirm partnership Page" in {
           mockAuthRetrieveAgentEnrolment()
-
           mockStorePartnershipInformation(
             testVatNumber,
             testSaUtr,
             testCompanyNumber,
             PartnershipEntityType.LimitedPartnership,
             Some(testBusinessPostcode)
-          )(
-            Future.successful(Left(StorePartnershipKnownFactsFailure))
-          )
+          )(Future.successful(Left(StorePartnershipKnownFactsFailure)))
+
           val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
             entityType = Some(LimitedPartnership),
             partnershipEntityType = Some(PartnershipEntityType.LimitedPartnership),
@@ -263,22 +260,20 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
             sautr = Some(testSaUtr),
             postCode = Some(testBusinessPostcode)
           ))
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
-
         }
       }
       "store partnership info returned StorePartnershipInformationFailureResponse" should {
         "throw Internal Server Exception" in {
           mockAuthRetrieveAgentEnrolment()
-
           mockStorePartnershipInformation(
             testVatNumber,
             testSaUtr,
             Some(testBusinessPostcode)
-          )(
-            Future.successful(Left(StorePartnershipInformationFailureResponse(500)))
-          )
+          )(Future.successful(Left(StorePartnershipInformationFailureResponse(500))))
+
           intercept[InternalServerException](await(TestCheckYourAnswersPartnershipController.submit(testPostRequest(
             entityType = Some(GeneralPartnership),
             sautr = Some(testSaUtr),
@@ -290,37 +285,33 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
     "store partnership info returned PartnershipUtrNotFound" should {
       "go to Could not confirm partnership Page" in {
         mockAuthRetrieveAgentEnrolment()
-
         mockStorePartnershipInformation(
           testVatNumber,
           testSaUtr,
           Some(testBusinessPostcode)
-        )(
-          Future.successful(Left(PartnershipUtrNotFound))
-        )
+        )(Future.successful(Left(PartnershipUtrNotFound)))
+
         val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
           entityType = Some(GeneralPartnership),
           sautr = Some(testSaUtr),
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
-
       }
     }
     "store partnership info returned PartnershipUtrNotFound for a limited partnership" should {
       "go to Could not confirm partnership page" in {
         mockAuthRetrieveAgentEnrolment()
-
         mockStorePartnershipInformation(
           testVatNumber,
           testSaUtr,
           testCompanyNumber,
           PartnershipEntityType.LimitedPartnership,
           Some(testBusinessPostcode)
-        )(
-          Future.successful(Left(PartnershipUtrNotFound))
-        )
+        )(Future.successful(Left(PartnershipUtrNotFound)))
+
         val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
           entityType = Some(LimitedPartnership),
           partnershipEntityType = Some(PartnershipEntityType.LimitedPartnership),
@@ -328,6 +319,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           sautr = Some(testSaUtr),
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
 
@@ -357,6 +349,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           sautr = None,
           postCode = Some(testBusinessPostcode)
         ))
+
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)
       }
