@@ -736,6 +736,7 @@ agent.check-your-answers.business_entity                               = What ty
 agent.check-your-answers.utr                                           = What is your client''s Unique Taxpayer Reference (UTR)?
 agent.check-your-answers.company_number                                = What is your client''s company number?
 agent.check-your-answers.business_post_code                            = Where is your client''s principal place of business?
+agent.check-your-answers.joint_venture_or_property                     = Is your client either a Joint Venture or Property Partnership?
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
@@ -935,5 +936,5 @@ principal.partnership.joint_venture_or_property.title                 = Are you 
 principal.partnership.joint_venture_or_property.heading               = Are you either a Joint Venture or Property Partnership?
 
 ## Agent Joint Venture or Property Partnership
-agent.partnership.joint_venture_or_property.title                 = Is your client either a Joint Venture or Property Partnership?
-agent.partnership.joint_venture_or_property.heading               = Is your client either a Joint Venture or Property Partnership?
+agent.partnership.joint_venture_or_property.title                     = Is your client either a Joint Venture or Property Partnership?
+agent.partnership.joint_venture_or_property.heading                   = Is your client either a Joint Venture or Property Partnership?
