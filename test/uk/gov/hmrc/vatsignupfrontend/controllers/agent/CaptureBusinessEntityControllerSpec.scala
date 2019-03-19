@@ -84,29 +84,41 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "redirect to capture partnership utr" when {
+      "redirect to resolve partnership" when {
         "the business entity is general partnership" in {
           mockAuthRetrieveAgentEnrolment()
-
           enable(GeneralPartnershipJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(partnerships.routes.CapturePartnershipUtrController.show().url)
+          redirectLocation(result) shouldBe Some(partnerships.routes.ResolvePartnershipController.resolve().url)
 
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
         }
       }
 
-      "redirect to the capture partnership company number page" when {
+      "redirect to resolve partnership when the joint venture or property feature switch" when {
+        "the business entity is general partnership" in {
+          mockAuthRetrieveAgentEnrolment()
+          enable(GeneralPartnershipJourney)
+          enable(JointVenturePropertyJourney)
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(partnerships.routes.ResolvePartnershipController.resolve().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
+        }
+      }
+
+      "redirect to resolve partnership" when {
         "the business entity is limited partnership" in {
           mockAuthRetrieveAgentEnrolment()
-
           enable(LimitedPartnershipJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedPartnership))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url)
+          redirectLocation(result) shouldBe Some(partnerships.routes.ResolvePartnershipController.resolve().url)
 
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
 

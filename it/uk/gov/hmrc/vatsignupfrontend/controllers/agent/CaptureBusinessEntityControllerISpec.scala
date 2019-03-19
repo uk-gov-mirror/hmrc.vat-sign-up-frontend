@@ -32,6 +32,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     disable(DivisionJourney)
     disable(GeneralPartnershipJourney)
     disable(LimitedPartnershipJourney)
+    disable(JointVenturePropertyJourney)
   }
 
   "GET /business-type" should {
@@ -73,7 +74,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "redirect to capture partnership utr" when {
+    "redirect to resolve partnership" when {
       "the business entity is general partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(GeneralPartnershipJourney)
@@ -82,12 +83,26 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(partnerships.routes.CapturePartnershipUtrController.show().url)
+          redirectUri(partnerships.routes.ResolvePartnershipController.resolve().url)
+        )
+      }
+    }
+    "redirect to resolve partnership when joint venture or property feature switch is enabled" when {
+      "the business entity is general partnership" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        enable(GeneralPartnershipJourney)
+        enable(JointVenturePropertyJourney)
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(partnerships.routes.ResolvePartnershipController.resolve().url)
         )
       }
     }
 
-    "redirect to the capture partnership company number page" when {
+    "redirect to the resolve partnership page" when {
       "the business entity is limited partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(LimitedPartnershipJourney)
@@ -96,7 +111,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(partnerships.routes.AgentCapturePartnershipCompanyNumberController.show().url)
+          redirectUri(partnerships.routes.ResolvePartnershipController.resolve().url)
         )
       }
     }

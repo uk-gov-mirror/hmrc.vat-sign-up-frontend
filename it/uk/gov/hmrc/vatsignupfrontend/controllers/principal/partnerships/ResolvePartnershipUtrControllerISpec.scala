@@ -34,7 +34,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
 
   "GET /resolve-partnership-utr" when {
     "the partnership utr is on the profile" when {
-      "company name and company number are not in session" should {
+      "the user is a general partnership" should {
         "redirect to the confirm general partnership page" in {
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
@@ -48,13 +48,12 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
           )
         }
       }
-      "company name and company number are in session" should {
+      "the user is a limited partnership" should {
         "redirect to the confirm limited partnership page" in {
           stubAuth(OK, successfulAuthResponse(partnershipEnrolment))
 
           val res = get("/resolve-partnership-utr", Map(
             SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
-
           ))
 
           res should have(
@@ -83,7 +82,9 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
           enable(JointVenturePropertyJourney)
           stubAuth(OK, successfulAuthResponse())
 
-          val res = get("/resolve-partnership-utr")
+          val res = get("/resolve-partnership-utr", Map(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+          ))
 
           res should have(
             httpStatus(SEE_OTHER),

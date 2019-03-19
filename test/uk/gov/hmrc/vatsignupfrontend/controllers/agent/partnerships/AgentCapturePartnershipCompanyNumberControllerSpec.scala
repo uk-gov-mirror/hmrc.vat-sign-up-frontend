@@ -109,20 +109,6 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
         }
       }
 
-      "company number failed prefix validation" should {
-        "throw an InternalServerException" in {
-          mockAuthAdminRole()
-          // TODO Redirect to error page
-
-          val testCrn = "BR12345"
-          val request = testPostRequest(testCrn)
-
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
-
-          intercept[InternalServerException](await(result))
-        }
-      }
-
       "get company name returned not found" should {
         "throw an InternalServerException" in {
           mockAuthAdminRole()

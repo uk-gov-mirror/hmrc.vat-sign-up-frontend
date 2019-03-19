@@ -20,13 +20,12 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentJointVentureOrProperty => Messages, Base => BaseMessages}
-import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.yesNo
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 
 class JointVenturePropertyControllerSpec extends ControllerSpec {
 

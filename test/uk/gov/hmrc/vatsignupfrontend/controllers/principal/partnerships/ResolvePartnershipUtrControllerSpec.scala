@@ -81,18 +81,40 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
     "the user does not have a IR-SA-PART-ORG enrolment" when {
-      "the joint venture feature switch is enabled" should {
-        "go to the joint venture page" in {
-          enable(GeneralPartnershipJourney)
-          enable(JointVenturePropertyJourney)
+      "the joint venture feature switch is enabled" when {
+        "the user is a General Partnership" should {
+          "go to the joint venture page" in {
+            enable(GeneralPartnershipJourney)
+            enable(JointVenturePropertyJourney)
 
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
 
-          val result = TestResolvePartnershipUtrController.resolve(testGetRequest)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.JointVentureOrPropertyController.show().url)
+            val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+            ))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.JointVentureOrPropertyController.show().url)
+          }
+        }
+        "the user is a Limited Partnership" should {
+          "go to the capture partnership UTR page" in {
+            enable(GeneralPartnershipJourney)
+            enable(JointVenturePropertyJourney)
+
+            mockAuthorise(
+              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+
+            val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
+              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
+            ))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
+          }
         }
       }
       "the joint venture feature switch is disabled" should {

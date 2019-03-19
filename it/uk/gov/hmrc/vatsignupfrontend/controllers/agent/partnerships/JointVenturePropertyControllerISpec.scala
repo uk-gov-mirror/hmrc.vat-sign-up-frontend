@@ -29,8 +29,8 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(JointVenturePropertyJourney)
     stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    enable(JointVenturePropertyJourney)
   }
 
   "GET /client/joint-venture-or-property-partnership" should {
@@ -62,7 +62,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
     }
 
     "form value is NO" should {
-      "redirect to Choose Software error page" in {
+      "redirect to Capture partnership UTR page" in {
         val res = post("/client/joint-venture-or-property-partnership")(
           JointVentureOrPropertyForm.yesNo -> option_no
         )

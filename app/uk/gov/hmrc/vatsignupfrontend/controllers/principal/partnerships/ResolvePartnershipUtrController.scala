@@ -51,7 +51,7 @@ class ResolvePartnershipUtrController @Inject()(val controllerComponents: Contro
               Redirect(routes.ConfirmGeneralPartnershipController.show())
                 addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
             )
-          case (None, _) if isEnabled(JointVenturePropertyJourney) =>
+          case (None, Some(GeneralPartnership)) if isEnabled(JointVenturePropertyJourney) =>
             Future.successful(Redirect(routes.JointVentureOrPropertyController.show()))
           case (None, _) =>
             Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
