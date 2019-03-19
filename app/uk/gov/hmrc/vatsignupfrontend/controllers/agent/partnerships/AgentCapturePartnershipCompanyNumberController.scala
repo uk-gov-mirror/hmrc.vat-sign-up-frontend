@@ -76,27 +76,20 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
               ))
             ),
           companyNumber =>
-            if (companyNumber.startsWith("BR")) {
-              Future.successful(
-                throw new InternalServerException("Invalid CRN")
-                // TODO Redirect to error page
-              )
-            } else {
-              getCompanyNameService.getCompanyName(companyNumber) map {
-                case Right(GetCompanyNameSuccess(companyName, companyType: PartnershipCompanyType)) =>
-                  val partnershipEntity = toPartnershipEntityType(companyType)
-                  Redirect(routes.ConfirmPartnershipController.show())
-                    .addingToSession(
-                      SessionKeys.companyNumberKey -> companyNumber,
-                      SessionKeys.companyNameKey -> companyName
-                    ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
-                case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
-                  Redirect(routes.NotALimitedPartnershipController.show())
-                case Left(CompanyNumberNotFound) =>
-                  Redirect(routes.CouldNotFindPartnershipController.show())
-                case Left(GetCompanyNameFailureResponse(status)) =>
-                  throw new InternalServerException(s"getCompanyName failed: status=$status")
-              }
+            getCompanyNameService.getCompanyName(companyNumber) map {
+              case Right(GetCompanyNameSuccess(companyName, companyType: PartnershipCompanyType)) =>
+                val partnershipEntity = toPartnershipEntityType(companyType)
+                Redirect(routes.ConfirmPartnershipController.show())
+                  .addingToSession(
+                    SessionKeys.companyNumberKey -> companyNumber,
+                    SessionKeys.companyNameKey -> companyName
+                  ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
+              case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
+                Redirect(routes.NotALimitedPartnershipController.show())
+              case Left(CompanyNumberNotFound) =>
+                Redirect(routes.CouldNotFindPartnershipController.show())
+              case Left(GetCompanyNameFailureResponse(status)) =>
+                throw new InternalServerException(s"getCompanyName failed: status=$status")
             }
         )
       }
