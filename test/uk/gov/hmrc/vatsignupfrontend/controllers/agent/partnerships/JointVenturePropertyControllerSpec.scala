@@ -20,13 +20,12 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentJointVentureOrProperty => Messages, Base => BaseMessages}
-import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.yesNo
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 
 class JointVenturePropertyControllerSpec extends ControllerSpec {
 
@@ -41,115 +40,72 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
       .withSession(SessionKeys.partnershipSautrKey -> "utr")
   }
 
-  "Calling the show action of Joint Venture Property controller" should {
-
+  "Calling the show action of Joint Venture Property controller" when {
     "Joint venture property journey is enabled" should {
-
-      lazy val result = TestJointVenturePropertyController.show(testGetRequest)
-
-      "return status OK (200)" in {
-        mockAuthRetrieveAgentEnrolment()
+      "return an OK" in {
         enable(JointVenturePropertyJourney)
-        status(result) shouldBe Status.OK
-      }
+        mockAuthRetrieveAgentEnrolment()
 
-      "return Html" in {
+        val result = await(TestJointVenturePropertyController.show(testGetRequest))
+        status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-      }
-
-      "display the correct page" in {
-        titleOf(result) shouldBe Messages.title
       }
     }
 
     "Joint venture property journey is disabled" should {
-
-      lazy val result = TestJointVenturePropertyController.show(testGetRequest)
-
-      "return status NOT_FOUND (404)" in {
-        intercept[NotFoundException](result)
+      "return NOT_FOUND" in {
+        intercept[NotFoundException](await(TestJointVenturePropertyController.show(testGetRequest)))
       }
     }
   }
 
   "Calling the submit action of Joint Venture Property controller" when {
-
     "Joint venture property journey is enabled" when {
-
       "Yes is submitted" should {
-
-        lazy val result = TestJointVenturePropertyController.submit(testPostRequest(option_yes))
-
-        "return status SEE_OTHER (303)" in {
-          mockAuthRetrieveAgentEnrolment()
+        "redirect to Check Your Answers page" in {
           enable(JointVenturePropertyJourney)
-          status(result) shouldBe Status.SEE_OTHER
-        }
+          mockAuthRetrieveAgentEnrolment()
 
-        "redirect to Check Your Answers Partnership page" in {
-          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipController.show().url)
-        }
+          val result = await(TestJointVenturePropertyController.submit(testPostRequest(option_yes)))
 
-        s"remove ${SessionKeys.partnershipSautrKey} from session" in {
           session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
-        }
-
-        s"remove ${SessionKeys.businessPostCodeKey} from session" in {
-          session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
-        }
-
-        s"add ${SessionKeys.jointVentureOrPropertyKey} = $option_yes to session" in {
-          session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
+          session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some("true")
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipController.show().url)
         }
       }
 
       "No is submitted" should {
-
-        lazy val result = TestJointVenturePropertyController.submit(testPostRequest(option_no))
-
-        "return status SEE_OTHER (303)" in {
-          mockAuthRetrieveAgentEnrolment()
-          enable(JointVenturePropertyJourney)
-          status(result) shouldBe Status.SEE_OTHER
-        }
-
         "redirect to Capture Partnership UTR page" in {
-          redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
-        }
+          enable(JointVenturePropertyJourney)
+          mockAuthRetrieveAgentEnrolment()
 
-        s"add ${SessionKeys.jointVentureOrPropertyKey} = $option_no to session" in {
+          val result = await(TestJointVenturePropertyController.submit(testPostRequest(option_no)))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
           session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
         }
       }
 
       "An error is submitted" should {
-
-        lazy val result = TestJointVenturePropertyController.submit(testPostRequest(""))
-
-        "return status BAD_REQUEST (400)" in {
-          mockAuthRetrieveAgentEnrolment()
+        "return status BAD_REQUEST" in {
           enable(JointVenturePropertyJourney)
-          status(result) shouldBe Status.BAD_REQUEST
-        }
+          mockAuthRetrieveAgentEnrolment()
 
-        "return Html" in {
+          val result = await(TestJointVenturePropertyController.submit(testPostRequest("")))
+
+          status(result) shouldBe Status.BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
-        }
-
-        "display the correct page" in {
-          titleOf(result) shouldBe s"${BaseMessages.errPrefix} ${Messages.title}"
         }
       }
     }
 
     "Joint venture property journey is disabled" should {
-
-      lazy val result = TestJointVenturePropertyController.submit(testPostRequest(option_yes))
-
-      "return status NOT_FOUND (404)" in {
-        intercept[NotFoundException](result)
+      "return NOT_FOUND" in {
+        intercept[NotFoundException](await(TestJointVenturePropertyController.submit(testPostRequest(option_yes))))
       }
     }
   }
