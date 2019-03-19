@@ -29,8 +29,8 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    stubAuth(OK, successfulAuthResponse(agentEnrolment))
     enable(JointVenturePropertyJourney)
+    stubAuth(OK, successfulAuthResponse(agentEnrolment))
   }
 
   "GET /client/joint-venture-or-property-partnership" should {
