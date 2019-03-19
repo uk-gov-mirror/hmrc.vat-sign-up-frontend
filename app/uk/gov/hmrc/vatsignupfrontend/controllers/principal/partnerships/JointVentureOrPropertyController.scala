@@ -42,7 +42,7 @@ class JointVentureOrPropertyController @Inject()(val controllerComponents: Contr
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        jointVentureOrPropertyForm(isAgent = true).bindFromRequest.fold(
+        jointVentureOrPropertyForm(isAgent = false).bindFromRequest.fold(
           formWithErrors => BadRequest(joint_venture_or_property(formWithErrors, routes.JointVentureOrPropertyController.submit()))
           , {
             case Yes =>
