@@ -56,13 +56,13 @@ class CancelDirectDebitViewSpec extends ViewSpec {
     )
 
     testPage.shouldHaveParaSeq(
-      messages.line1
+      messages.line1,
+      messages.line2
     )
 
     testPage.shouldHaveBulletSeq(
       messages.bullet1,
-      messages.bullet2,
-      messages.bullet3
+      messages.bullet2
     )
 
     testPage.shouldHaveSignOutButton(isAgent = false, text =  messages.buttonText)
