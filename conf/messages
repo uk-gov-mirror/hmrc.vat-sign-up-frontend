@@ -160,8 +160,10 @@ error.principal.receive_email_notifications.field                      = Select 
 error.principal.receive_email_notifications.summary                    = Select if you want to be contacted by email or letters only
 error.agent.receive_email_notifications.field                          = Select if you want to be contacted by email or letters only
 error.agent.receive_email_notifications.summary                        = Select if you want to be contacted by email or letters only
-error.principal.partnership.joint_venture_or_property.field            = Select an option
-error.principal.partnership.joint_venture_or_property.summary          = Select an option
+error.principal.partnership.joint_venture_or_property.field            = Select yes if you are a Joint Venture or Property Partnership
+error.principal.partnership.joint_venture_or_property.summary          = Select if you are a Joint Venture or Property Partnership
+error.agent.partnership.joint_venture_or_property.field                = Select yes if your client is a Joint Venture or Property Partnership
+error.agent.partnership.joint_venture_or_property.summary              = Select if your client is a Joint Venture or Property Partnership
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet

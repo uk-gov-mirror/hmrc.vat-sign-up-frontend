@@ -22,14 +22,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => BaseMessages}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalJointVentureOrProperty => Messages}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 
 class JointVentureOrPropertyControllerSpec extends ControllerSpec {
 
@@ -40,126 +36,90 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
   def testPostRequest(answer: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/joint-venture-or-property-partnership").withFormUrlEncodedBody(yesNo -> answer)
 
-  "Calling the show action of the Joint Venture or Property controller" should {
-
-    lazy val result = await(TestJointVentureOrPropertyController.show(testGetRequest))
-
-    "user is authenticated and journey enabled" should {
-
-      "return status OK (200)" in {
-        mockAuthAdminRole()
+  "Calling the show action of the Joint Venture or Property controller" when {
+    "The Joint Venture journey is enabled" should {
+      "return OK" in {
         enable(JointVenturePropertyJourney)
+        mockAuthAdminRole()
+
+        lazy val result = await(TestJointVentureOrPropertyController.show(testGetRequest))
+
         status(result) shouldBe Status.OK
-      }
-
-      "return content type html" in {
         contentType(result) shouldBe Some("text/html")
-      }
-
-      "return charset utf-8" in {
         charset(result) shouldBe Some("utf-8")
-      }
-
-      "render the Joint Venture or Property view" in {
-        titleOf(result) shouldBe Messages.title
       }
     }
 
-    "the journey is disabled" should {
-
-      "return status NOT_FOUND (404)" in {
+    "The Joint Venture journey is disabled" should {
+      "return NOT_FOUND" in {
         disable(JointVenturePropertyJourney)
-        lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_no))
-        intercept[NotFoundException](result)
+        mockAuthAdminRole()
+
+        intercept[NotFoundException](await(TestJointVentureOrPropertyController.submit(
+          testPostRequest(answer = YesNoMapping.option_no)
+        )))
       }
     }
   }
 
   "Calling the submit action of the Joint Venture or Property controller" when {
-
-    "user is authenticated" when {
-
+    "The Joint Venture journey is enabled" when {
       "form successfully submitted" when {
-
         "the choice is YES" should {
-
-          lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_yes)
-            .withSession(SessionKeys.partnershipSautrKey -> "utr", SessionKeys.businessPostCodeKey -> "postcode")
-          )
-
-          "return status SEE_OTHER (303)" in {
-            mockAuthAdminRole()
+          "redirect to CheckYourAnswersPartnership" in {
             enable(JointVenturePropertyJourney)
+            mockAuthAdminRole()
+
+            val result = await(TestJointVentureOrPropertyController.submit(
+              testPostRequest(answer = YesNoMapping.option_yes).withSession(
+                SessionKeys.partnershipSautrKey -> "utr",
+                SessionKeys.businessPostCodeKey -> "postcode"
+              )
+            ))
+
             status(result) shouldBe Status.SEE_OTHER
-          }
-
-          s"remove ${SessionKeys.partnershipSautrKey} from session" in {
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
-          }
-
-          s"remove ${SessionKeys.businessPostCodeKey} from session" in {
             session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
-          }
-
-          s"redirect to '${routes.CheckYourAnswersPartnershipsController.show().url}'" in {
+            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
           }
-
-          s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_yes} to session" in {
-            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
-          }
         }
-
         "the choice is NO" should {
-
-          lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_no))
-
-          "return status SEE_OTHER (303)" in {
-            mockAuthAdminRole()
+          "redirect to CapturePartnershipUtr" in {
             enable(JointVenturePropertyJourney)
+            mockAuthAdminRole()
+
+            val result = await(TestJointVentureOrPropertyController.submit(
+              testPostRequest(answer = YesNoMapping.option_no)
+            ))
+
             status(result) shouldBe Status.SEE_OTHER
-          }
-
-          s"redirect to '${routes.CapturePartnershipUtrController.show().url}'" in {
             redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
-          }
-
-          s"add ${SessionKeys.jointVentureOrPropertyKey} = ${YesNoMapping.option_no} to session" in {
             session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
           }
         }
       }
-
       "form submitted with errors" should {
-
-        lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(""))
-
-        "return status BAD_REQUEST (400)" in {
-          mockAuthAdminRole()
+        "return BAD_REQUEST" in {
           enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestJointVentureOrPropertyController.submit(testPostRequest("")))
+
           status(result) shouldBe Status.BAD_REQUEST
-        }
-
-        "return content type html" in {
           contentType(result) shouldBe Some("text/html")
-        }
-
-        "return charset utf-8" in {
           charset(result) shouldBe Some("utf-8")
-        }
-
-        "render the Joint Venture or Property view" in {
-          titleOf(result) shouldBe BaseMessages.errPrefix + " " + Messages.title
         }
       }
     }
 
-    "the journey is disabled" should {
-
-      "return status NOT_FOUND (404)" in {
+    "The Joint Venture journey is disabled" should {
+      "return NOT_FOUND" in {
         disable(JointVenturePropertyJourney)
-        lazy val result = TestJointVentureOrPropertyController.submit(testPostRequest(answer = YesNoMapping.option_no))
-        intercept[NotFoundException](result)
+
+        intercept[NotFoundException](await(TestJointVentureOrPropertyController.submit(
+          testPostRequest(answer = YesNoMapping.option_no)
+        )))
       }
     }
   }

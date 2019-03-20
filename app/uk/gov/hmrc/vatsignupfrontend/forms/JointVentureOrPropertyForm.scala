@@ -28,7 +28,7 @@ object JointVentureOrPropertyForm {
   def jointVentureOrPropertyForm(isAgent: Boolean): Form[YesNo] = {
     val journey = if (isAgent) "agent" else "principal"
     Form(single(
-      yesNo -> of(yesNoMapping(s"error.$journey.partnerships.joint_venture_or_property"))
+      yesNo -> of(yesNoMapping(s"error.$journey.partnership.joint_venture_or_property"))
     ))
   }
 

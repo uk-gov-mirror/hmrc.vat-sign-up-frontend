@@ -24,7 +24,6 @@ import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testSaUtr
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 
 class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
