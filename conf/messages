@@ -910,8 +910,8 @@ principal.direct_debit_terms_and_conditions.not_agree_link            = I do not
 ## Contact Preferences Receive Email Notifications
 principal.receive_email_notifications.title                           = How should we contact the business about VAT?
 principal.receive_email_notifications.heading                         = How should we contact the business about VAT?
-principal.receive_email_notifications.line_1                          = We can email you when the business has a new message about VAT in their HMRC account.
-principal.receive_email_notifications.line_2                          = In some cases we will need to send you letters, even if you have chosen emails only.
+principal.receive_email_notifications.line_1                          = We can email you when you have a new message about VAT in your HMRC account.
+principal.receive_email_notifications.line_2                          = In some cases, we will need to send you letters. This is because the law requires us to do so.
 principal.receive_email_notifications.digital                         = Send emails to {0}
 principal.receive_email_notifications.paper                           = Send letters only
 
