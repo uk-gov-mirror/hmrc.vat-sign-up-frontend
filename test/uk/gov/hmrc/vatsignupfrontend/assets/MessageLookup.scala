@@ -964,7 +964,7 @@ object MessageLookup {
     val heading: String = "How should we contact the business about VAT?"
     val title = heading + ServiceName.principalSuffix
     val line1 = "We can email you when you have a new message about VAT in your HMRC account."
-    val line2 = "In some cases, we will need to send you letters. This is because the law requires us to do so."
+    val line2 = "We may still need to send you letters if this is the only service available or if the law requires us to do so."
     val radioDigital: String = "digital"
     val radioPaper: String = "paper"
 
