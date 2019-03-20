@@ -283,13 +283,13 @@ agent.capture_client_email.line_1                                      = We''ll 
 agent.capture_client_email.bullet_1                                    = send a Direct Debit advance notice 10 working days before each payment is taken
 agent.capture_client_email.bullet_2                                    = send VAT notifications
 agent.capture_client_email.line_2                                      = If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit.
-agent.capture_client_email.hint                                        = For example, me@me.com
+agent.capture_client_email.hint                                        = For example, yourname@example.com
 
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = What is your email address?
 agent.capture_agent_email.heading                                      = What is your email address?
 agent.capture_agent_email.line_1                                       = We will only send you an email to let you know when you can report your client''s VAT through compatible software. This might take up to 72 hours.
-agent.capture_agent_email.hint                                         = For example, me@me.com
+agent.capture_agent_email.hint                                         = For example, yourname@example.com
 
 ## Agent Confirm Email page
 agent.confirm_email.title                                              = Check your client''s email address

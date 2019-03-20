@@ -182,7 +182,7 @@ object MessageLookup {
     val heading: String = "What is your email address?"
     val title = heading + ServiceName.agentSuffix
     val line1 = "We will only send you an email to let you know when you can report your client's VAT through compatible software. This might take up to 72 hours."
-    val hint = "For example, me@me.com"
+    val hint = "For example, yourname@example.com"
   }
 
   object CaptureClientEmail {
@@ -192,7 +192,7 @@ object MessageLookup {
     val bullet1 = "send a Direct Debit advance notice 10 working days before each payment is taken"
     val bullet2 = "send VAT notifications"
     val line2 = "If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit."
-    val hint = "For example, me@me.com"
+    val hint = "For example, yourname@example.com"
   }
 
   object ConfirmEmail {
