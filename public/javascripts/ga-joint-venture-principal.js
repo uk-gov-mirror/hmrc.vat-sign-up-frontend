@@ -9,7 +9,7 @@ $(document).ready($(function () {
         if (typeof ga === "function") {
             e.preventDefault();
             ga('send', 'event', 'mtdvat', {
-                'eventAction': 'joint venture selection',
+                'eventAction': 'principal joint venture selection',
                 'eventLabel': jointVentureSelection || errorMsg,
                 'hitCallback' : function () {
                     form.off('submit', on_submit_function);
