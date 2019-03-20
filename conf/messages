@@ -916,12 +916,12 @@ principal.receive_email_notifications.digital                         = Send ema
 principal.receive_email_notifications.paper                           = Send letters only
 
 ## Agent Contact Preferences Receive Email Notifications
-agent.receive_email_notifications.title                               = Does your client want to receive emails about VAT?
-agent.receive_email_notifications.heading                             = Does your client want to receive emails about VAT?
-agent.receive_email_notifications.line_1                              = We can email your client when they have a new message about VAT in their HMRC account. Your client will be able to change the preference later.
-agent.receive_email_notifications.line_2                              = In some cases we will need to send your client letters, even if you have chosen emails only.
-agent.receive_email_notifications.yes                                 = Yes, send emails
-agent.receive_email_notifications.no                                  = No, send my client letters only
+agent.receive_email_notifications.title                               = How should we contact your client about VAT?
+agent.receive_email_notifications.heading                             = How should we contact your client about VAT?
+agent.receive_email_notifications.line_1                              = We can email your client when they have a new message about VAT in their HMRC account. Your client will be able to change the contact preference later.
+agent.receive_email_notifications.line_2                              = We may still need to send your client letters if this is the only service available or if the law requires us to do so.
+agent.receive_email_notifications.yes                                 = Send emails only
+agent.receive_email_notifications.no                                  = Send my client letters only
 
 ## Send Your Application
 principal.send_your_application.title                                 = Send your application
