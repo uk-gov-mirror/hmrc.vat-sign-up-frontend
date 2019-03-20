@@ -902,9 +902,9 @@ principal.cancel_direct_debit.bullet_3                                = wait 7 t
 principal.cancel_direct_debit.line_2                                  = Go back to Direct debit terms and conditions
 
 ## Direct Debit Terms and Conditions
-principal.direct_debit_terms_and_conditions.title                     = Terms and Conditions
-principal.direct_debit_terms_and_conditions.heading                   = Terms and Conditions
-principal.direct_debit_terms_and_conditions.line_1                    = You will need to read and agree to the <a id="termsAndConditionsLink" href="{0}" target="_blank">Direct Debit terms and conditions (opens in a new window or tab)</a> to continue.
+principal.direct_debit_terms_and_conditions.title                     = Direct Debit terms and conditions
+principal.direct_debit_terms_and_conditions.heading                   = Direct Debit terms and conditions
+principal.direct_debit_terms_and_conditions.line                      = You will need to read and agree to the <a id="termsAndConditionsLink" href="{0}" target="_blank">Direct Debit terms and conditions (opens in a new window or tab)</a> to continue.
 principal.direct_debit_terms_and_conditions.not_agree_link            = I do not agree
 
 ## Contact Preferences Receive Email Notifications

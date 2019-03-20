@@ -953,7 +953,7 @@ object MessageLookup {
   }
 
   object PrincipalDirectDebitTermsAndConditions {
-    val heading = "Terms and Conditions"
+    val heading = "Direct Debit terms and conditions"
     val title = heading + ServiceName.principalSuffix
     val link1 = "Direct Debit terms and conditions (opens in a new window or tab)"
     val line = s"You will need to read and agree to the $link1 to continue."
