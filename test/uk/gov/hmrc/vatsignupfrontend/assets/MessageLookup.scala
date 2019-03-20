@@ -454,7 +454,7 @@ object MessageLookup {
     val line1 = "We will email you to confirm you've signed up your business to use software to submit its VAT Returns (this can take up to 72 hours)."
     val line2 = "We'll email you a Direct Debit advance notice 10 working days before each payment is taken."
     val line3 = "If you do not want to receive Direct Debit notices by email, you will need to cancel your Direct Debit."
-    val hint = "For example, me@me.com"
+    val hint = "For example, yourname@example.com"
   }
 
   object PrincipalAgreeCaptureEmail {
