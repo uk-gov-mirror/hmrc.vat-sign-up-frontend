@@ -24,7 +24,11 @@
 
 @(jointVenturePropertyForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.partnership.joint_venture_or_property.title"), bodyClasses = None, showSignOutLink = true, form = Some(jointVenturePropertyForm)) {
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-joint-venture.js")></script>
+}
+
+@agent_main_template(title = Messages("agent.partnership.joint_venture_or_property.title"), bodyClasses = None, scriptElem = Some(scripts), showSignOutLink = true, form = Some(jointVenturePropertyForm)) {
 
     @summaryErrorHelper(jointVenturePropertyForm)
 
