@@ -974,12 +974,12 @@ object MessageLookup {
   }
 
   object AgentReceiveEmailNotifications {
-    val heading: String = "Does your client want to receive emails about VAT?"
+    val heading: String = "How should we contact your client about VAT?"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "We can email your client when they have a new message about VAT in their HMRC account. Your client will be able to change the preference later."
-    val line2 = "In some cases we will need to send your client letters, even if you have chosen emails only."
-    val digital = "Yes, send emails"
-    val paper: String = "No, send my client letters only"
+    val line1 = "We can email your client when they have a new message about VAT in their HMRC account. Your client will be able to change the contact preference later."
+    val line2 = "We may still need to send your client letters if this is the only service available or if the law requires us to do so."
+    val digital = "Send emails only"
+    val paper: String = "Send my client letters only"
     val error = "Select if you want to be contacted by email or letters only"
   }
 
