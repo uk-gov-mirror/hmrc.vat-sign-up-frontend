@@ -19,10 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VatGroupJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatGroupInformationHttpParser.{StoreVatGroupInformationFailureResponse, StoreVatGroupInformationSuccess}
@@ -33,11 +32,6 @@ import scala.concurrent.Future
 class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreVatGroupInformationService {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(VatGroupJourney)
-  }
-
   object TestVatGroupResolverController extends VatGroupResolverController(
     mockControllerComponents,
     mockStoreVatGroupInformationService
@@ -46,54 +40,40 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   lazy val testGetRequest = FakeRequest("GET", "/vat-group-resolver")
 
   "calling the resolve method on VatGroupResolverController" when {
-    "the group feature switch is on" when {
-      "store group information returns StoreVatGroupInformationSuccess" should {
-        "goto agree capture email" in {
-          mockAuthAdminRole()
-          mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
+    "store group information returns StoreVatGroupInformationSuccess" should {
+      "goto agree capture email" in {
+        mockAuthAdminRole()
+        mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
 
-          val res = await(TestVatGroupResolverController.resolve(testGetRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber
-          )))
+        val res = await(TestVatGroupResolverController.resolve(testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber
+        )))
 
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
-        }
-      }
-      "store group information returns StoreVatGroupInformationFailureResponse" should {
-        "throw internal server exception" in {
-          mockAuthAdminRole()
-          mockStoreVatGroupInformation(testVatNumber)(Future.successful(Left(StoreVatGroupInformationFailureResponse(INTERNAL_SERVER_ERROR))))
-
-          intercept[InternalServerException] {
-            await(TestVatGroupResolverController.resolve(testGetRequest.withSession(
-              SessionKeys.vatNumberKey -> testVatNumber
-            )))
-          }
-        }
-      }
-      "vat number is not in session" should {
-        "goto resolve vat number" in {
-          mockAuthAdminRole()
-          mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
-
-          val res = await(TestVatGroupResolverController.resolve(testGetRequest))
-
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-        }
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
       }
     }
+    "store group information returns StoreVatGroupInformationFailureResponse" should {
+      "throw internal server exception" in {
+        mockAuthAdminRole()
+        mockStoreVatGroupInformation(testVatNumber)(Future.successful(Left(StoreVatGroupInformationFailureResponse(INTERNAL_SERVER_ERROR))))
 
-    "the group feature switch is off" should {
-      "throw not found exception" in {
-        disable(VatGroupJourney)
-
-        intercept[NotFoundException] {
+        intercept[InternalServerException] {
           await(TestVatGroupResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
         }
+      }
+    }
+    "vat number is not in session" should {
+      "goto resolve vat number" in {
+        mockAuthAdminRole()
+        mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
+
+        val res = await(TestVatGroupResolverController.resolve(testGetRequest))
+
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
       }
     }
   }

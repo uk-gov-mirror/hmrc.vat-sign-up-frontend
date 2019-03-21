@@ -17,13 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VatGroupJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatGroupInformationHttpParser.{StoreVatGroupInformationFailureResponse, StoreVatGroupInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatGroupInformationService
@@ -34,7 +32,7 @@ import scala.concurrent.Future
 class VatGroupResolverController @Inject()(val controllerComponents: ControllerComponents,
                                            storeVatGroupInformationService: StoreVatGroupInformationService
                                           )
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(VatGroupJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

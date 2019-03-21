@@ -129,7 +129,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "redirect to Vat Group Resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
-          enable(VatGroupJourney)
           val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(vatGroup)))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.VatGroupResolverController.resolve().url)

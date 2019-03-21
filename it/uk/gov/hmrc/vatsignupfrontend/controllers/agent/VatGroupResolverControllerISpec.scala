@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VatGroupJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{agentEnrolment, stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatGroupInformationStub._
@@ -26,45 +25,39 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class VatGroupResolverControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(VatGroupJourney)
-  }
-
   "GET /vat-group-resolver" when {
-    "the group feature switch is on" when {
-      "store group information returned NO_CONTENT" should {
-        "goto email" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "store group information returned NO_CONTENT" should {
+      "goto email" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-          stubStoreVatGroupInformation(testVatNumber)(NO_CONTENT)
+        stubStoreVatGroupInformation(testVatNumber)(NO_CONTENT)
 
-          val res = get("/client/vat-group-resolver", Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
+        val res = get("/client/vat-group-resolver", Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.EmailRoutingController.route().url)
-          )
-        }
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.EmailRoutingController.route().url)
+        )
       }
-      "store group information returned failure status" should {
-        "return INTERNAL_SERVER_ERROR" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    }
+    "store group information returned failure status" should {
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-          stubStoreVatGroupInformation(testVatNumber)(INTERNAL_SERVER_ERROR)
+        stubStoreVatGroupInformation(testVatNumber)(INTERNAL_SERVER_ERROR)
 
-          val res = get("/client/vat-group-resolver", Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
+        val res = get("/client/vat-group-resolver", Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))
 
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-          )
-        }
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
       }
-      "there is no vat number in session" should {
+    }
+    "there is no vat number in session" should {
         "goto capture vat number" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
@@ -78,19 +71,6 @@ class VatGroupResolverControllerISpec extends ComponentSpecBase with CustomMatch
           )
         }
       }
-    }
-
-    "the group feature switch is off" should {
-      "return NOT_FOUND" in {
-        disable(VatGroupJourney)
-
-        val res = get("/client/vat-group-resolver")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
   }
 
 }
