@@ -27,7 +27,6 @@
     postAction: Call,
     generalPartnershipEnabled: Boolean,
     limitedPartnershipEnabled: Boolean,
-    vatGroupEnabled: Boolean,
     divisionEnabled: Boolean,
     unincorporatedAssociationEnabled: Boolean,
     trustEnabled: Boolean,
@@ -43,8 +42,6 @@
 @generalPartnershipOption = @{ Some((generalPartnership, Messages("agent.capture_entity_type.generalPartnership"))).filter(_ => generalPartnershipEnabled) }
 
 @limitedPartnershipOption = @{ Some((limitedPartnership, Messages("agent.capture_entity_type.limitedPartnership"))).filter(_ => limitedPartnershipEnabled) }
-
-@vatGroupOption = @{ Some((vatGroup, Messages("agent.capture_entity_type.vatGroup"))).filter(_ => vatGroupEnabled) }
 
 @divisionOption = @{ Some((division, Messages("agent.capture_entity_type.division"))).filter(_ => divisionEnabled) }
 
@@ -74,7 +71,7 @@
                 (limitedCompany, Messages("agent.capture_entity_type.limitedCompany"))
             ) ++ generalPartnershipOption
               ++ limitedPartnershipOption
-              ++ vatGroupOption
+              ++ Seq((vatGroup, Messages("agent.capture_entity_type.vatGroup")))
               ++ divisionOption
               ++ unincorporatedAssociationOption
               ++ trustOption
