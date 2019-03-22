@@ -48,7 +48,7 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
   "calling the resolve method on UnincorporatedAssociationResolverController" when {
     "the unincorporated association feature switch is on" when {
       "store unincorporated association information returns StoreUnincorporatedAssociationInformationSuccess" should {
-        "goto email routing" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreUnincorporatedAssociationInformation(testVatNumber)(
             Future.successful(Right(StoreUnincorporatedAssociationInformationSuccess))
@@ -59,7 +59,7 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
         }
       }
       "store unincorporated association information fails" should {

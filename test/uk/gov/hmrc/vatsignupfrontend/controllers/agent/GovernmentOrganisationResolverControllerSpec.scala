@@ -48,7 +48,7 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
   "calling the resolve method on GovernmentOrganisationController" when {
     "the Gov organisation feature switch is on" when {
       "store government organisation information returns StoreGovernmentOrganisationSuccess" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
@@ -57,7 +57,7 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
         }
       }
       "store government organisation information returns StoreGovernmentOrganisationFailureResponse" should {

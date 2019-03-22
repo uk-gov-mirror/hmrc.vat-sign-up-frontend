@@ -83,14 +83,14 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       def callSubmit: Future[Result] = TestConfirmClientDetailsController.submit(request)
 
       "and store nino is successful" should {
-        "redirect to EmailRoutingController" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
 
           val result = callSubmit
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
+          redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
 
           result.session(request).get(SessionKeys.userDetailsKey) shouldBe None
         }

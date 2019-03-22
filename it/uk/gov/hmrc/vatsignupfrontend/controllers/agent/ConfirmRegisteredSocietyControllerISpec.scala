@@ -65,7 +65,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
 
 
   "POST /client/confirm-registered-society" should {
-    "redirect to email routing controller" when {
+    "redirect to the capture agent email pager" when {
       "the registered society is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, None)
@@ -78,7 +78,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.EmailRoutingController.route().url)
+          redirectUri(routes.CaptureAgentEmailController.show().url)
         )
       }
     }

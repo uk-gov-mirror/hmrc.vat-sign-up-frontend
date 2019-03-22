@@ -34,7 +34,7 @@ class UnincorporatedAssociationResolverControllerISpec extends ComponentSpecBase
   "GET /unincorporated-association-resolver" when {
     "the unincorporated association feature switch is on" when {
       "store unincorporated association information returned NO_CONTENT" should {
-        "goto email routing" in {
+        "go to the capture agent email page" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
           stubStoreUnincorporatedAssociationInformation(testVatNumber)(NO_CONTENT)
@@ -45,7 +45,7 @@ class UnincorporatedAssociationResolverControllerISpec extends ComponentSpecBase
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.EmailRoutingController.route().url)
+            redirectUri(routes.CaptureAgentEmailController.show().url)
           )
         }
       }

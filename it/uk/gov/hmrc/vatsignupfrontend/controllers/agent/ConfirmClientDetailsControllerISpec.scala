@@ -53,7 +53,7 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
 
   "POST /confirm-client" when {
     "store nino is successful" should {
-      "redirect to EmailRoutingController" in {
+      "go to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
 
@@ -61,7 +61,7 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.EmailRoutingController.route().url)
+          redirectUri(routes.CaptureAgentEmailController.show().url)
         )
       }
     }

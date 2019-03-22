@@ -107,7 +107,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       (optVatNumber, optJointVentureProperty, optBusinessEntityType) match {
         case (Some(vrn), Some(true), Some(GeneralPartnership)) =>
           storeJointVentureInformationService.storeJointVentureInformation(vrn) map {
-            case Right(StoreJointVentureInformationSuccess) => Redirect(agentRoutes.EmailRoutingController.route())
+            case Right(StoreJointVentureInformationSuccess) => Redirect(agentRoutes.CaptureAgentEmailController.show())
             case Left(StoreJointVentureInformationFailureResponse(status)) =>
               throw new InternalServerException("Store Joint Venture Partnership Information failed with status code: " + status)
           }
@@ -120,7 +120,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
                 postCode = optPartnershipPostCode
               ) map {
                 case Right(StorePartnershipInformationSuccess) =>
-                  Redirect(agentRoutes.EmailRoutingController.route())
+                  Redirect(agentRoutes.CaptureAgentEmailController.show())
                 case Left(PartnershipUtrNotFound) =>
                   Redirect(routes.CouldNotConfirmPartnershipController.show())
                 case Left(StorePartnershipKnownFactsFailure) =>
@@ -142,7 +142,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
                 postCode = optPartnershipPostCode
               ) map {
                 case Right(StorePartnershipInformationSuccess) =>
-                  Redirect(agentRoutes.EmailRoutingController.route())
+                  Redirect(agentRoutes.CaptureAgentEmailController.show())
                 case Left(PartnershipUtrNotFound) =>
                   Redirect(routes.CouldNotConfirmPartnershipController.show())
                 case Left(StorePartnershipKnownFactsFailure) =>

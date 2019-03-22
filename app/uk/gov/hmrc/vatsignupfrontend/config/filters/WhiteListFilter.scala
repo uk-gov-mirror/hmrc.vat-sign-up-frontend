@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsignupfrontend.config.filters
 
-
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer

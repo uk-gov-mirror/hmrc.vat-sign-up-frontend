@@ -48,7 +48,7 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
   "calling the resolve method on CharityResolverController" when {
     "the charity feature switch is on" when {
       "store charity information returns StoreCharityInformationSuccess" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
 
@@ -57,7 +57,7 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
         }
       }
       "store charity information returns StoreCharityInformationFailureResponse" should {

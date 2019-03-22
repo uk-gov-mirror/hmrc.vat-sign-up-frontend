@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, VerifyAgentEmail, VerifyClientEmail}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 @Singleton
 class ConfirmAgentEmailController @Inject()(val controllerComponents: ControllerComponents,
                                             val storeEmailAddressService: StoreEmailAddressService)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(VerifyAgentEmail)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -69,10 +69,8 @@ class ConfirmAgentEmailController @Inject()(val controllerComponents: Controller
               Redirect(routes.VerifyAgentEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) if isEnabled(ContactPreferencesJourney) =>
               Redirect(routes.ContactPreferenceController.show().url)
-            case Right(StoreEmailAddressSuccess(true)) if isEnabled(VerifyClientEmail) =>
-              Redirect(routes.AgreeCaptureClientEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
-              Redirect(routes.TermsController.show().url)
+              Redirect(routes.AgreeCaptureClientEmailController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
           }

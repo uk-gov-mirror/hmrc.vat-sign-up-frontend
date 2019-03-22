@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
 class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
+
   "GET /sent-client-email" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))

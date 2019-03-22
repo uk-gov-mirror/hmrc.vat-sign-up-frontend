@@ -24,23 +24,13 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, VerifyAgentEmail}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
 
 class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreEmailAddressService {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(VerifyAgentEmail)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(VerifyAgentEmail)
-  }
 
   object TestConfirmAgentEmailController extends ConfirmAgentEmailController(mockControllerComponents, mockStoreEmailAddressService)
 
@@ -117,7 +107,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         }
         "contact preferences is disabled" should {
 
-          "redirect to Terms page" in {
+          "redirect to AgreeCaptureClientEmailController page" in {
             mockAuthRetrieveAgentEnrolment()
             mockStoreTransactionEmailAddressSuccess(
               vatNumber = testVatNumber,
@@ -130,7 +120,7 @@ class ConfirmAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
             ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            redirectLocation(result) shouldBe Some(routes.AgreeCaptureClientEmailController.show().url)
           }
         }
       }

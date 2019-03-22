@@ -76,7 +76,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   }
 
   "Calling the submit action of the Confirm Company controller" should {
-    "go to the 'emails' router" in {
+    "go to the capture agent email page" in {
       mockAuthRetrieveAgentEnrolment()
       mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = None)
 
@@ -87,7 +87,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
 
       val result = TestConfirmCompanyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
+      redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
     }
 
     "throw internal server exception if store company number fails" in {

@@ -17,21 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class AgentEmailVerifiedControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(VerifyAgentEmail)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(VerifyAgentEmail)
-  }
 
   "GET /client/email-verified" should {
     "return an OK" in {
@@ -41,16 +30,6 @@ class AgentEmailVerifiedControllerISpec extends ComponentSpecBase with CustomMat
 
       res should have(
         httpStatus(OK)
-      )
-    }
-    "return an NOT_FOUND if VerifyAgentEmail is disabled" in {
-      disable(VerifyAgentEmail)
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-      val res = get("/client/email-verified")
-
-      res should have(
-        httpStatus(NOT_FOUND)
       )
     }
   }

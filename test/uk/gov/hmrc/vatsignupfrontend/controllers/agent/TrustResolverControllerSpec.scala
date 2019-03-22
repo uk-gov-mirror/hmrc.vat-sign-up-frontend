@@ -48,7 +48,7 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   "calling the resolve method on TrustResolverController" when {
     "the trust feature switch is on" when {
       "store trust information returns StoreTrustInformationSuccess" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
 
@@ -57,7 +57,7 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
         }
       }
       "store trust information returns StoreTrustInformationFailureResponse" should {

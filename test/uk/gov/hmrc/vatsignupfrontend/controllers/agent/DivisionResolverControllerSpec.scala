@@ -48,7 +48,7 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   "calling the resolve method on DivisionResolverController" when {
     "the group feature switch is on" when {
       "store division information returns StoreAdministrativeDivisionSuccess" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
           mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Right(StoreAdministrativeDivisionSuccess)))
 
@@ -57,7 +57,7 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
           )))
 
           status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
         }
       }
       "store division information returns StoreAdministrativeDivisionFailureResponse" should {

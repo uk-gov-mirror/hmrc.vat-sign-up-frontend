@@ -64,7 +64,7 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
         case (Some(vatNumber), Some(companyNumber)) =>
           storeRegisteredSocietyService.storeRegisteredSociety(vatNumber, companyNumber, None) map {
             case Right(_) =>
-              Redirect(routes.EmailRoutingController.route().url)
+              Redirect(routes.CaptureAgentEmailController.show().url)
             case Left(status) =>
               throw new InternalServerException("storeRegisteredSociety failed: status =" + status)
           }
