@@ -25,10 +25,9 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers,
 
 class OverseasResolverControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-
   "GET /overseas-resolver" when {
     "store overseas information returned NO_CONTENT" should {
-      "goto email" in {
+      "go to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         stubStoreOverseasInformation(testVatNumber)(NO_CONTENT)
@@ -39,7 +38,7 @@ class OverseasResolverControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.EmailRoutingController.route().url)
+          redirectUri(routes.CaptureAgentEmailController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)

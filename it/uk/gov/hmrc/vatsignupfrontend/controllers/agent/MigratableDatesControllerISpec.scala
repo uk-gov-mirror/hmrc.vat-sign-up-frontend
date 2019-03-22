@@ -25,7 +25,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
-
 class MigratableDatesControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   val testDate: LocalDate = LocalDate.now()

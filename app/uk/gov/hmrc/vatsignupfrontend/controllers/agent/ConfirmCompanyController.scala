@@ -63,7 +63,7 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
         case (Some(vatNumber), Some(companyNumber)) =>
           storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, companyUtr = None) map {
             case Right(_) =>
-              Redirect(routes.EmailRoutingController.route().url)
+              Redirect(routes.CaptureAgentEmailController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
           }

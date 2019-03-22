@@ -34,7 +34,7 @@ class TrustResolverControllerISpec extends ComponentSpecBase with CustomMatchers
   "GET /trust-resolver" when {
     "the trust feature switch is on" when {
       "store trust information returned NO_CONTENT" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
           stubStoreTrustInformation(testVatNumber)(NO_CONTENT)
@@ -45,7 +45,7 @@ class TrustResolverControllerISpec extends ComponentSpecBase with CustomMatchers
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.EmailRoutingController.route().url)
+            redirectUri(routes.CaptureAgentEmailController.show().url)
           )
         }
       }

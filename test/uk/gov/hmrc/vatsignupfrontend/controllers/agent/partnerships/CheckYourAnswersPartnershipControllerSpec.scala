@@ -178,7 +178,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
   "calling the submit action of the Check Your Answers Partnership controller" when {
     "all prerequisite data are in" when {
       "store partnership info returned StorePartnershipInformationSuccess" should {
-        "go to Capture Email Page" in {
+        "go to the capture agent email age" in {
           mockAuthRetrieveAgentEnrolment()
 
           mockStorePartnershipInformation(
@@ -194,12 +194,12 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           ))
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
+          redirectLocation(result) shouldBe Some(agentRoutes.CaptureAgentEmailController.show().url)
         }
       }
 
       "store partnership info returned StorePartnershipInformationSuccess for a limited partnership" should {
-        "go to Capture Email Page" in {
+        "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
 
           mockStorePartnershipInformation(
@@ -219,7 +219,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           ))
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(agentRoutes.EmailRoutingController.route().url)
+          redirectLocation(result) shouldBe Some(agentRoutes.CaptureAgentEmailController.show().url)
         }
       }
       "store partnership info returned KnownFactsMismatchFailure" should {

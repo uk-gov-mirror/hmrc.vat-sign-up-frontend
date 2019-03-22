@@ -33,7 +33,7 @@ class GovernmentOrganisationResolverControllerISpec extends ComponentSpecBase wi
 
   "GET /government-organisation-resolver" when {
     "store government organisation information returned NO_CONTENT" should {
-      "goto email" in {
+      "go to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         stubStoreGovernmentOrganisationInformation(testVatNumber)(NO_CONTENT)
@@ -44,7 +44,7 @@ class GovernmentOrganisationResolverControllerISpec extends ComponentSpecBase wi
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.EmailRoutingController.route().url)
+          redirectUri(routes.CaptureAgentEmailController.show().url)
         )
       }
     }

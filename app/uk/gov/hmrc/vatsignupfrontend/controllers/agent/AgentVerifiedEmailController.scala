@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, VerifyAgentEmail, VerifyClientEmail}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified
 
@@ -28,13 +28,12 @@ import scala.concurrent.Future
 
 @Singleton
 class AgentVerifiedEmailController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(VerifyAgentEmail)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val continueLink = if(isEnabled(ContactPreferencesJourney)) routes.ContactPreferenceController.show().url
-      else if(isEnabled(VerifyClientEmail)) routes.AgreeCaptureClientEmailController.show().url
-      else routes.TermsController.show().url
+      else routes.AgreeCaptureClientEmailController.show().url
 
       Future.successful(Ok(agent_email_verified(continueLink)))
     }

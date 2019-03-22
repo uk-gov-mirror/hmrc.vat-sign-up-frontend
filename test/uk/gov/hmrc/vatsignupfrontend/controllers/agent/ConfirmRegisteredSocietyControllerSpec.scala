@@ -83,7 +83,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
   }
 
   "Calling the submit action of the Confirm Registered Society controller" should {
-    "go to the email routing controller" in {
+    "go to the capture agent email page" in {
       mockAuthRetrieveAgentEnrolment()
       mockStoreRegisteredSocietySuccess(
         vatNumber = testVatNumber,
@@ -98,7 +98,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
       val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.EmailRoutingController.route().url)
+      redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
     }
 
     "throw internal server exception if store registered society fails" in {

@@ -34,7 +34,7 @@ class CharityResolverControllerISpec extends ComponentSpecBase with CustomMatche
   "GET /charity-resolver" when {
     "the charity feature switch is on" when {
       "store charity information returned NO_CONTENT" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
           stubStoreCharityInformation(testVatNumber)(NO_CONTENT)
@@ -45,7 +45,7 @@ class CharityResolverControllerISpec extends ComponentSpecBase with CustomMatche
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.EmailRoutingController.route().url)
+            redirectUri(routes.CaptureAgentEmailController.show().url)
           )
         }
       }

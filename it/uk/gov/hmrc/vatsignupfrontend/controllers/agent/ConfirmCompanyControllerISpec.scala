@@ -45,7 +45,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
   "POST /client/confirm-company" should {
 
     "the company number is successfully stored" should {
-      "redirect to EmailRoutingController" in {
+      "redirect to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber)
 
@@ -53,7 +53,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.EmailRoutingController.route().url)
+          redirectUri(routes.CaptureAgentEmailController.show().url)
         )
 
       }

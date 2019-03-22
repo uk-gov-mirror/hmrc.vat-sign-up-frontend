@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.VerifyAgentEmail
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_agent_email
@@ -30,7 +29,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CaptureAgentEmailController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(VerifyAgentEmail)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateEmailForm = emailForm(isAgent = false)
 

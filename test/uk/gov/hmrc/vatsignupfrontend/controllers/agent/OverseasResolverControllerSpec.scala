@@ -43,7 +43,7 @@ class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "calling the resolve method on OverseasResolverController" when {
     "store overseas information returns StoreOverseasInformationSuccess" should {
-      "goto email" in {
+      "go to the capture agent email page" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
 
@@ -52,7 +52,7 @@ class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val res = await(TestOverseasResolverController.resolve(request))
 
         status(res) shouldBe SEE_OTHER
-        redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+        redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
         res.session(request) get SessionKeys.businessEntityKey contains Overseas.toString
       }
     }

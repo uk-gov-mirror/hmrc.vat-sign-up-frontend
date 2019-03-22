@@ -21,45 +21,28 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, VerifyAgentEmail, VerifyClientEmail}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified
 import play.api.i18n.Messages.Implicits._
-
 
 class AgentVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   object TestAgentVerifiedEmailController extends AgentVerifiedEmailController(mockControllerComponents)
 
-  "Calling the show action of the AgentVerifiedEmailController" when {
-      implicit lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
-      "the capture client email feature switch is disabled" should {
-        "go to the Agent email Verified page with a link to the terms of participation page" in {
-          enable(VerifyAgentEmail)
+  "Calling the show action of the AgentVerifiedEmailController" should {
+    implicit lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
 
-          mockAuthRetrieveAgentEnrolment()
-          val result = await(TestAgentVerifiedEmailController.show(testGetRequest))
+    "go to the Agent email Verified page with a link to the agree to capture client email page" in {
+      mockAuthRetrieveAgentEnrolment()
+      val result = await(TestAgentVerifiedEmailController.show(testGetRequest))
 
-          status(result) shouldBe Status.OK
-          contentAsString(result) shouldBe agent_email_verified(routes.TermsController.show().url).body
-        }
-      }
-
-    "the capture client email feature switch is enabled" should {
-      "go to the Agent email Verified page with a link to the agree to capture client email page" in {
-        enable(VerifyAgentEmail)
-        enable(VerifyClientEmail)
-
-        mockAuthRetrieveAgentEnrolment()
-        val result = await(TestAgentVerifiedEmailController.show(testGetRequest))
-
-        status(result) shouldBe Status.OK
-        contentAsString(result) shouldBe agent_email_verified(routes.AgreeCaptureClientEmailController.show().url).body
-      }
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe agent_email_verified(routes.AgreeCaptureClientEmailController.show().url).body
     }
+
     "the contact preference feature switch is enabled" should {
       "go to the Agent email Verified page with a link to the Contact Preferences page" in {
-        enable(VerifyAgentEmail)
         enable(ContactPreferencesJourney)
 
         mockAuthRetrieveAgentEnrolment()

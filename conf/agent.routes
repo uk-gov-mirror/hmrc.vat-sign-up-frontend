@@ -55,7 +55,7 @@ GET         /could-not-confirm-company                          uk.gov.hmrc.vats
 POST        /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.submit
 
 # manage the routing of the email flow
-GET         /email                                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
+#GET         /email                                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
 
 #Agree Capture Email
 GET         /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgreeCaptureClientEmailController.show

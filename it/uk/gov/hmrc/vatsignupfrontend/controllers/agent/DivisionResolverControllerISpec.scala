@@ -34,7 +34,7 @@ class DivisionResolverControllerISpec extends ComponentSpecBase with CustomMatch
   "GET /division-resolver" when {
     "the group feature switch is on" when {
       "store division information returned NO_CONTENT" should {
-        "goto email" in {
+        "go to the capture agent email page" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
           stubStoreDivisionInformation(testVatNumber)(NO_CONTENT)
@@ -45,7 +45,7 @@ class DivisionResolverControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.EmailRoutingController.route().url)
+            redirectUri(routes.CaptureAgentEmailController.show().url)
           )
         }
       }

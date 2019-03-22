@@ -96,7 +96,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
   "POST /client/partnership-check-your-answers" when {
     "store partnership is successful" should {
-      "redirect to capture email" in {
+      "redirect to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
@@ -117,7 +117,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(agentRoutes.EmailRoutingController.route().url)
+          redirectUri(agentRoutes.CaptureAgentEmailController.show().url)
         )
       }
     }
@@ -150,7 +150,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
     }
 
     "store partnership is successful for a limited partnership" should {
-      "redirect to capture email" in {
+      "redirect to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
@@ -173,7 +173,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(agentRoutes.EmailRoutingController.route().url)
+          redirectUri(agentRoutes.CaptureAgentEmailController.show().url)
         )
       }
     }

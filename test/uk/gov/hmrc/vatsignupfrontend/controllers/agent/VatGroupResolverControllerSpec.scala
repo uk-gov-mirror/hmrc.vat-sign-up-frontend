@@ -41,7 +41,7 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   "calling the resolve method on VatGroupResolverController" when {
     "store group information returns StoreVatGroupInformationSuccess" should {
-      "goto email" in {
+      "go to the capture agent email page" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
 
@@ -50,7 +50,7 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         )))
 
         status(res) shouldBe SEE_OTHER
-        redirectLocation(res) shouldBe Some(routes.EmailRoutingController.route().url)
+        redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
       }
     }
     "store group information returns StoreVatGroupInformationFailureResponse" should {

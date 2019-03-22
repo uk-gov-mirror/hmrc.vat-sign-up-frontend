@@ -28,8 +28,6 @@ object FeatureSwitch {
 
   val switches: Set[FeatureSwitch] = Set(
     StubIncorporationInformation,
-    VerifyAgentEmail,
-    VerifyClientEmail,
     BTAClaimSubscription,
     GeneralPartnershipJourney,
     LimitedPartnershipJourney,
@@ -59,16 +57,6 @@ object FeatureSwitch {
 case object StubIncorporationInformation extends FeatureSwitch {
   override val name: String = s"$prefix.stub-incorporation-information"
   override val displayText: String = "Use Stub for Incorporation Information Connection"
-}
-
-case object VerifyAgentEmail extends FeatureSwitch {
-  override val name: String = s"$prefix.verify-agent-email"
-  override val displayText: String = "Enable agent email verification in agent flow"
-}
-
-case object VerifyClientEmail extends FeatureSwitch {
-  override val name: String = s"$prefix.verify-client-email"
-  override val displayText: String = "Enable client email verification in agent flow"
 }
 
 case object BTAClaimSubscription extends FeatureSwitch {
