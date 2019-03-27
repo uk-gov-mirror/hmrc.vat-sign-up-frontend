@@ -80,7 +80,7 @@ class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with Cu
           stubAuth(OK, successfulAuthResponse())
           stubStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             GeneralPartnership,
             companyNumber = None,
             postCode = None
@@ -103,7 +103,7 @@ class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with Cu
       stubAuth(OK, successfulAuthResponse())
       stubStorePartnershipInformation(
         testVatNumber,
-        testSaUtr,
+        Some(testSaUtr),
         GeneralPartnership,
         companyNumber = None,
         postCode = None

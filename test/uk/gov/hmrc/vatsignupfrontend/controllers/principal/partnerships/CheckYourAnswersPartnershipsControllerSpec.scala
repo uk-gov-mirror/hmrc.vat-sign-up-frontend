@@ -398,7 +398,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   mockAuthAdminRole()
                   mockStorePartnershipInformation(
                     vatNumber = testVatNumber,
-                    sautr = testSaUtr,
+                    sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
                   )(Right(StorePartnershipInformationSuccess))
 
@@ -421,7 +421,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   mockAuthAdminRole()
                   mockStorePartnershipInformation(
                     vatNumber = testVatNumber,
-                    sautr = testSaUtr,
+                    sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
                   )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
 
@@ -533,7 +533,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
                   vatNumber = testVatNumber,
-                  sautr = testSaUtr,
+                  sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 )(Right(StorePartnershipInformationSuccess))
 
@@ -555,7 +555,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
                   vatNumber = testVatNumber,
-                  sautr = testSaUtr,
+                  sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 )(Left(StorePartnershipKnownFactsFailure))
 
@@ -577,7 +577,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
                   vatNumber = testVatNumber,
-                  sautr = testSaUtr,
+                  sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 )(Left(PartnershipUtrNotFound))
 
@@ -599,7 +599,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
                   vatNumber = testVatNumber,
-                  sautr = testSaUtr,
+                  sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
 
@@ -697,7 +697,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               mockAuthAdminRole()
               mockStorePartnershipInformation(
                 vatNumber = testVatNumber,
-                sautr = testSaUtr,
+                sautr = Some(testSaUtr),
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
@@ -723,7 +723,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               mockAuthAdminRole()
               mockStorePartnershipInformation(
                 vatNumber = testVatNumber,
-                sautr = testSaUtr,
+                sautr = Some(testSaUtr),
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
@@ -749,7 +749,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               mockAuthAdminRole()
               mockStorePartnershipInformation(
                 vatNumber = testVatNumber,
-                sautr = testSaUtr,
+                sautr = Some(testSaUtr),
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
@@ -775,7 +775,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               mockAuthAdminRole()
               mockStorePartnershipInformation(
                 vatNumber = testVatNumber,
-                sautr = testSaUtr,
+                sautr = Some(testSaUtr),
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)

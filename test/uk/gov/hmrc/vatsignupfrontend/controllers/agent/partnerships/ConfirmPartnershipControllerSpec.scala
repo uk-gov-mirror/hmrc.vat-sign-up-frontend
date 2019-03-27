@@ -22,7 +22,6 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
@@ -179,36 +178,36 @@ class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       val result = TestConfirmPartnershipController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
-      }
     }
+  }
 
 
-    "redirect to Capture Partnership Company Number if company name is missing" in {
-      mockAuthRetrieveAgentEnrolment()
+  "redirect to Capture Partnership Company Number if company name is missing" in {
+    mockAuthRetrieveAgentEnrolment()
 
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.companyNumberKey -> testCompanyNumber,
-        SessionKeys.partnershipTypeKey -> testPartnershipType
-      )
+    val request = testPostRequest.withSession(
+      SessionKeys.vatNumberKey -> testVatNumber,
+      SessionKeys.companyNumberKey -> testCompanyNumber,
+      SessionKeys.partnershipTypeKey -> testPartnershipType
+    )
 
-      val result = TestConfirmPartnershipController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
-      }
+    val result = TestConfirmPartnershipController.submit(request)
+    status(result) shouldBe Status.SEE_OTHER
+    redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
+  }
 
 
-    "redirect to Capture Partnership Company Number if partnership type is missing" in {
-      mockAuthRetrieveAgentEnrolment()
+  "redirect to Capture Partnership Company Number if partnership type is missing" in {
+    mockAuthRetrieveAgentEnrolment()
 
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.companyNameKey -> testCompanyName,
-        SessionKeys.companyNumberKey -> testCompanyNumber
-      )
+    val request = testPostRequest.withSession(
+      SessionKeys.vatNumberKey -> testVatNumber,
+      SessionKeys.companyNameKey -> testCompanyName,
+      SessionKeys.companyNumberKey -> testCompanyNumber
+    )
 
-      val result = TestConfirmPartnershipController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
-      }
+    val result = TestConfirmPartnershipController.submit(request)
+    status(result) shouldBe Status.SEE_OTHER
+    redirectLocation(result) shouldBe Some(routes.AgentCapturePartnershipCompanyNumberController.show().url)
+  }
 }

@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class StorePartnershipInformationService @Inject()(storePartnershipInformationConnector: StorePartnershipInformationConnector) {
 
   def storePartnershipInformation(vatNumber: String,
-                                  sautr: String,
+                                  sautr: Option[String],
                                   postCode: Option[PostCode]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] =
     storePartnershipInformationConnector.storePartnershipInformation(
@@ -41,7 +41,7 @@ class StorePartnershipInformationService @Inject()(storePartnershipInformationCo
     )
 
   def storePartnershipInformation(vatNumber: String,
-                                  sautr: String,
+                                  sautr: Option[String],
                                   companyNumber: String,
                                   partnershipEntity: PartnershipEntityType,
                                   postCode: Option[PostCode])(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] =
