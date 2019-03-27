@@ -119,7 +119,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
             stubStorePartnershipInformation(
               vatNumber = testVatNumber,
               partnershipEntityType = generalPartnershipType,
-              sautr = testSaUtr,
+              sautr = Some(testSaUtr),
               companyNumber = None,
               postCode = Some(testBusinessPostCode)
             )(NO_CONTENT)
@@ -147,7 +147,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
             stubStorePartnershipInformation(
               vatNumber = testVatNumber,
               partnershipEntityType = generalPartnershipType,
-              sautr = testSaUtr,
+              sautr = Some(testSaUtr),
               companyNumber = None,
               postCode = Some(testBusinessPostCode)
             )(BAD_REQUEST)
@@ -224,7 +224,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           stubStorePartnershipInformation(
             vatNumber = testVatNumber,
             partnershipEntityType = limitedPartnershipType,
-            sautr = testSaUtr,
+            sautr = Some(testSaUtr),
             companyNumber = Some(testCompanyNumber),
             postCode = Some(testBusinessPostCode)
           )(NO_CONTENT)
@@ -254,7 +254,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           stubStorePartnershipInformation(
             vatNumber = testVatNumber,
             partnershipEntityType = limitedPartnershipType,
-            sautr = testSaUtr,
+            sautr = Some(testSaUtr),
             companyNumber = Some(testCompanyNumber),
             postCode = Some(testBusinessPostCode)
           )(BAD_REQUEST)
@@ -285,7 +285,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         stubStorePartnershipInformation(
           vatNumber = testVatNumber,
           partnershipEntityType = generalPartnershipType,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           companyNumber = None,
           postCode = Some(testBusinessPostCode)
         )(FORBIDDEN)

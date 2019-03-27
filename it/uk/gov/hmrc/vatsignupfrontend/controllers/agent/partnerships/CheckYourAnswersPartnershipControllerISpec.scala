@@ -100,7 +100,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
-          testSaUtr,
+          Some(testSaUtr),
           PartnershipEntityType.GeneralPartnership,
           None,
           Some(testBusinessPostCode)
@@ -127,7 +127,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
-          testSaUtr,
+          Some(testSaUtr),
           PartnershipEntityType.GeneralPartnership,
           None,
           Some(testBusinessPostCode)
@@ -154,7 +154,7 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStorePartnershipInformation(
           testVatNumber,
-          testSaUtr,
+          Some(testSaUtr),
           PartnershipEntityType.LimitedPartnership,
           Some(testCompanyNumber),
           Some(testBusinessPostCode)

@@ -116,7 +116,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             case (Some(utr), Some(_)) =>
               storePartnershipInformationService.storePartnershipInformation(
                 vatNumber = vrn,
-                sautr = utr,
+                sautr = Some(utr),
                 postCode = optPartnershipPostCode
               ) map {
                 case Right(StorePartnershipInformationSuccess) =>
@@ -136,7 +136,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             case (Some(utr), Some(_), Some(crn), Some(partnershipType)) =>
               storePartnershipInformationService.storePartnershipInformation(
                 vatNumber = vrn,
-                sautr = utr,
+                sautr = Some(utr),
                 companyNumber = crn,
                 partnershipEntity = partnershipType,
                 postCode = optPartnershipPostCode

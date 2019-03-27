@@ -37,7 +37,7 @@ trait MockStorePartnershipInformationService extends BeforeAndAfterEach with Moc
   }
 
   def mockStorePartnershipInformation(vatNumber: String,
-                                      sautr: String,
+                                      sautr: Option[String],
                                       postCode: Option[PostCode])(returnValue: Future[StorePartnershipInformationResponse]): Unit = {
     when(mockStorePartnershipInformationService.storePartnershipInformation(
       ArgumentMatchers.eq(vatNumber),
@@ -48,7 +48,7 @@ trait MockStorePartnershipInformationService extends BeforeAndAfterEach with Moc
   }
 
   def mockStorePartnershipInformation(vatNumber: String,
-                                      sautr: String,
+                                      sautr: Option[String],
                                       companyNumber: String,
                                       partnershipEntity: PartnershipEntityType,
                                       postCode: Option[PostCode])(returnValue: Future[StorePartnershipInformationResponse]): Unit = {

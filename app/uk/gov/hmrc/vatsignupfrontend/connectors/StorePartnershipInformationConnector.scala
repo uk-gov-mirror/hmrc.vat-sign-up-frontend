@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.utils.JsonUtils._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,31 +31,24 @@ import scala.concurrent.{ExecutionContext, Future}
 class StorePartnershipInformationConnector @Inject()(val http: HttpClient,
                                                      val applicationConfig: AppConfig
                                                     )(implicit ec: ExecutionContext) {
-  val sautrKey = "sautr"
-  val partnershipTypeKey = "partnershipType"
+  val SautrKey = "sautr"
+  val PartnershipTypeKey = "partnershipType"
   val CompanyNumberKey = "crn"
-  val postCodeKey = "postCode"
+  val PostCodeKey = "postCode"
 
   def storePartnershipInformation(vatNumber: String,
-                                  sautr: String,
+                                  sautr: Option[String],
                                   partnershipType: PartnershipEntityType,
                                   companyNumber: Option[String],
                                   postCode: Option[PostCode]
                                  )(implicit hc: HeaderCarrier): Future[StorePartnershipInformationResponse] = {
-    val body = Json.obj(
-      partnershipTypeKey -> partnershipType,
-      sautrKey -> sautr
-    ).++(
-      companyNumber match {
-        case Some(crn) => Json.obj(CompanyNumberKey -> crn)
-        case _ => Json.obj()
-      }
-    ).++(
-      postCode match {
-        case Some(pc) => Json.obj(postCodeKey -> pc.postCode)
-        case _ => Json.obj()
-      }
-    )
+    val body = (Json.obj(
+      PartnershipTypeKey -> partnershipType
+    ) + (SautrKey -> sautr)
+      + (CompanyNumberKey -> companyNumber)
+      + (PostCodeKey -> (postCode map (_.postCode)))
+      )
+
     http.POST[JsObject, StorePartnershipInformationResponse](applicationConfig.storePartnershipInformationUrl(vatNumber), body)
   }
 

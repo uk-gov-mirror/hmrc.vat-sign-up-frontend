@@ -20,30 +20,24 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType._
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.utils.JsonUtils._
 
 object StorePartnershipInformationStub extends WireMockMethods with FeatureSwitching {
 
-  private def toJson(sautr: String,
+  private def toJson(sautr: Option[String],
                      partnershipType: PartnershipEntityType,
                      companyNumber: Option[String],
                      postCode: Option[PostCode]
-                    ) = Json.obj(
-    "partnershipType" -> Json.toJson(partnershipType),
-    "sautr" -> sautr
-  ).++(
-    companyNumber match {
-      case Some(crn) => Json.obj("crn" -> crn)
-      case _ => Json.obj()
-    }
-  ).++(
-    postCode match {
-      case Some(pc) => Json.obj("postCode" -> pc.postCode)
-      case _ => Json.obj()
-    }
-  )
+                    ) =
+    (Json.obj(
+      "partnershipType" -> Json.toJson(partnershipType)
+    ) + ("sautr" -> sautr)
+      + ("crn" -> companyNumber)
+      + ("postCode" -> (postCode map (_.postCode)))
+      )
 
   def stubStorePartnershipInformation(vatNumber: String,
-                                      sautr: String,
+                                      sautr: Option[String],
                                       partnershipEntityType: PartnershipEntityType,
                                       companyNumber: Option[String],
                                       postCode: Option[PostCode]

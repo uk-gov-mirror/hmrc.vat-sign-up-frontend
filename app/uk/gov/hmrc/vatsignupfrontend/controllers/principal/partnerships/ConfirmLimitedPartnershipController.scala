@@ -83,7 +83,7 @@ class ConfirmLimitedPartnershipController @Inject()(val controllerComponents: Co
               case Yes =>
                 storePartnershipInformationService.storePartnershipInformation(
                   vatNumber = vatNumber,
-                  sautr = partnershipUtr,
+                  sautr = Some(partnershipUtr),
                   companyNumber = companyNumber,
                   partnershipEntity = partnershipType,
                   postCode = None
