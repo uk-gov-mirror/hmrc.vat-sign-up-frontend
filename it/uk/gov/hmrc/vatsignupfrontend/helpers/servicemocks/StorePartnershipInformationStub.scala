@@ -33,8 +33,8 @@ object StorePartnershipInformationStub extends WireMockMethods with FeatureSwitc
       "partnershipType" -> Json.toJson(partnershipType)
     ) + ("sautr" -> sautr)
       + ("crn" -> companyNumber)
-      + ("postCode" -> (postCode map (_.postCode))
-      ))
+      + ("postCode" -> (postCode map (_.postCode)))
+      )
 
   def stubStorePartnershipInformation(vatNumber: String,
                                       sautr: Option[String],

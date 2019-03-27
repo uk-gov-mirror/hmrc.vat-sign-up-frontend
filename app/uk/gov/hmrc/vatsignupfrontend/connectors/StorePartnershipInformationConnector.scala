@@ -46,7 +46,8 @@ class StorePartnershipInformationConnector @Inject()(val http: HttpClient,
       PartnershipTypeKey -> partnershipType
     ) + (SautrKey -> sautr)
       + (CompanyNumberKey -> companyNumber)
-      + (PostCodeKey -> (postCode map (_.postCode))))
+      + (PostCodeKey -> (postCode map (_.postCode)))
+      )
 
     http.POST[JsObject, StorePartnershipInformationResponse](applicationConfig.storePartnershipInformationUrl(vatNumber), body)
   }
