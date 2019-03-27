@@ -37,7 +37,7 @@ class DoYouHaveAUtrViewSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.do_you_have_a_utr(
-    doYouHaveAUtrForm,
+    doYouHaveAUtrForm(isAgent = false),
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,

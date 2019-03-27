@@ -310,6 +310,10 @@ POST        /direct-debit-terms-and-conditions                  uk.gov.hmrc.vats
 GET         /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.ReceiveEmailNotificationsController.show
 POST        /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.principal.ReceiveEmailNotificationsController.submit
 
-# Receive Email Notification
+# Joint venture
 GET         /joint-venture-or-property-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.JointVentureOrPropertyController.show
 POST        /joint-venture-or-property-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.JointVentureOrPropertyController.submit
+
+# Do you have a utr
+GET         /do-you-have-a-utr                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.DoYouHaveAUtrController.show
+POST        /do-you-have-a-utr                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.DoYouHaveAUtrController.submit

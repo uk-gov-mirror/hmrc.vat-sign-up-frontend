@@ -25,9 +25,15 @@ object DoYouHaveAUtrForm {
 
   val yesNo: String = "yes_no"
 
-  val doYouHaveAUtrForm: Form[YesNo] = Form(
+  def doYouHaveAUtrForm(isAgent: Boolean): Form[YesNo] = Form(
     single(
-      yesNo -> of(yesNoMapping("error.principal.partnership.do_you_have_a_utr"))
+      yesNo -> of(yesNoMapping(
+        error =
+          if (isAgent)
+            "error.agent.partnership.do_you_have_a_utr"
+          else
+            "error.principal.partnership.do_you_have_a_utr"
+      ))
     )
   )
 
