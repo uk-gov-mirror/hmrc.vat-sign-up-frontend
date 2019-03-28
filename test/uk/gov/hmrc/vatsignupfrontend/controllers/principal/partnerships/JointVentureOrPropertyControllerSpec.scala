@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
@@ -39,7 +39,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
   "Calling the show action of the Joint Venture or Property controller" when {
     "The Joint Venture journey is enabled" should {
       "return OK" in {
-        enable(JointVenturePropertyJourney)
+        enable(OptionalSautrJourney)
         mockAuthAdminRole()
 
         lazy val result = await(TestJointVentureOrPropertyController.show(testGetRequest))
@@ -52,7 +52,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
 
     "The Joint Venture journey is disabled" should {
       "return NOT_FOUND" in {
-        disable(JointVenturePropertyJourney)
+        disable(OptionalSautrJourney)
         mockAuthAdminRole()
 
         intercept[NotFoundException](await(TestJointVentureOrPropertyController.submit(
@@ -67,7 +67,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
       "form successfully submitted" when {
         "the choice is YES" should {
           "redirect to CheckYourAnswersPartnership" in {
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
             val result = await(TestJointVentureOrPropertyController.submit(
@@ -86,7 +86,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
         }
         "the choice is NO" should {
           "redirect to CapturePartnershipUtr" in {
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
             val result = await(TestJointVentureOrPropertyController.submit(
@@ -101,7 +101,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
       }
       "form submitted with errors" should {
         "return BAD_REQUEST" in {
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
           mockAuthAdminRole()
 
           val result = await(TestJointVentureOrPropertyController.submit(testPostRequest("")))
@@ -115,7 +115,7 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
 
     "The Joint Venture journey is disabled" should {
       "return NOT_FOUND" in {
-        disable(JointVenturePropertyJourney)
+        disable(OptionalSautrJourney)
 
         intercept[NotFoundException](await(TestJointVentureOrPropertyController.submit(
           testPostRequest(answer = YesNoMapping.option_no)

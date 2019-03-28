@@ -25,7 +25,7 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, OptionalSautrJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -85,7 +85,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "the user is a General Partnership" should {
           "go to the joint venture page" in {
             enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
 
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
@@ -102,7 +102,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "the user is a Limited Partnership" should {
           "go to the capture partnership UTR page" in {
             enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
 
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments

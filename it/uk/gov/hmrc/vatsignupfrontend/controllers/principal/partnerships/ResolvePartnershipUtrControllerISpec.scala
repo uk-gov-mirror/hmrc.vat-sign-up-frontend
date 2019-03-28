@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, OptionalSautrJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -79,7 +79,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
       }
       "the joint venture feature switch is enabled" should {
         "go to the joint venture page" in {
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
           stubAuth(OK, successfulAuthResponse())
 
           val res = get("/resolve-partnership-utr", Map(

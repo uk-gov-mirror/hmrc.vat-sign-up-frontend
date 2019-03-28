@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 
 @Singleton
 class JointVentureOrPropertyController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(JointVenturePropertyJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(OptionalSautrJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

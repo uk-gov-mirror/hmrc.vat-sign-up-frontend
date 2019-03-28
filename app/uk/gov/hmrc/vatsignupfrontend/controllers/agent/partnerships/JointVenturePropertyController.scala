@@ -31,7 +31,7 @@ import scala.concurrent.Future
 
 @Singleton
 class JointVenturePropertyController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(JointVenturePropertyJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(OptionalSautrJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
