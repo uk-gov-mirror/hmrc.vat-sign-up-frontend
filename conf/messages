@@ -36,10 +36,8 @@ base.company_number                                                    = Change 
 
 ## Errors
 error.title_prefix                                                     = 'Error: '
-error.principal.business-entity.field                                  = Select if you are registered as a sole trader or limited company
-error.principal.business-entity.summary                                = Select if you are registered as a sole trader or limited company
-error.agent.business-entity.field                                      = Select if your client is registered as a sole trader or limited company
-error.agent.business-entity.summary                                    = Select if your client is registered as a sole trader or limited company
+error.business-entity.field                                            = Select the type of business or group you are signing up
+error.business-entity.summary                                          = Select the type of business or group you are signing up, choose other if you are not sure
 error.agent.company_number_not_entered.field                           = Enter your client''s company number
 error.agent.company_number_not_entered.summary                         = Enter your client''s company number
 error.principal.company_number_not_entered.field                       = Enter your company number
