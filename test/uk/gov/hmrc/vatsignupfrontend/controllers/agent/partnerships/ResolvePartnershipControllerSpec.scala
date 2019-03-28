@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, OptionalSautrJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
@@ -77,7 +77,7 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the user is a General Partnership and Joint Venture or Property feature switch is disabled" should {
       "redirect to capture partnership utr page" in {
         enable(GeneralPartnershipJourney)
-        disable(JointVenturePropertyJourney)
+        disable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
@@ -91,7 +91,7 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the user is a General Partnership and the Joint Venture or Property feature switch is enabled" should {
       "redirect to joint venture or property page" in {
         enable(GeneralPartnershipJourney)
-        enable(JointVenturePropertyJourney)
+        enable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(

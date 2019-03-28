@@ -41,7 +41,7 @@ object FeatureSwitch {
     DirectDebitTermsJourney,
     ContactPreferencesJourney,
     SendYourApplication,
-    JointVenturePropertyJourney
+    OptionalSautrJourney
   )
 
   def apply(str: String): FeatureSwitch =
@@ -129,9 +129,9 @@ case object ContactPreferencesJourney extends FeatureSwitch {
   override val displayText: String = "Enable the Contact Preferences Journey"
 }
 
-case object JointVenturePropertyJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.joint-venture-property-journey"
-  override val displayText: String = "Enable Joint Venture and Property Partnership Journey"
+case object OptionalSautrJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.optional-sautr-journey"
+  override val displayText: String = "Enable the 'Do you have an SAUTR' question for general partnerships"
 }
 case object SendYourApplication extends FeatureSwitch {
   override val name: String = s"$prefix.send-your-application"

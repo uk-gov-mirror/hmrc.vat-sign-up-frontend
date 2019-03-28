@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, OptionalSautrJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -42,7 +42,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
   "GET /check-your-answers-partnership" should {
     "return an OK for a Joint Venture or Property Partnership" in {
-      enable(JointVenturePropertyJourney)
+      enable(OptionalSautrJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
@@ -59,7 +59,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
     }
 
     "return an OK for a general partnership" in {
-      disable(JointVenturePropertyJourney)
+      disable(OptionalSautrJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
@@ -99,7 +99,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       "return a not found" in {
         disable(GeneralPartnershipJourney)
         disable(LimitedPartnershipJourney)
-        disable(JointVenturePropertyJourney)
+        disable(OptionalSautrJourney)
 
         val res = get("/check-your-answers-partnership")
 
@@ -173,7 +173,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       "the user IS a Joint Venture or Property Partnership" when {
         "store joint venture information is successful" should {
           "redirect to agree to Direct Debit resolver" in {
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
             stubAuth(OK, successfulAuthResponse())
             stubStoreJointVentureInformation(vatNumber = testVatNumber)(NO_CONTENT)
 
@@ -195,7 +195,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
         "store joint venture information failed" should {
           "throw internal server error" in {
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
             stubAuth(OK, successfulAuthResponse())
             stubStoreJointVentureInformation(testVatNumber)(BAD_REQUEST)
 

@@ -101,7 +101,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "the business entity is general partnership" in {
           mockAuthRetrieveAgentEnrolment()
           enable(GeneralPartnershipJourney)
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
           status(result) shouldBe Status.SEE_OTHER

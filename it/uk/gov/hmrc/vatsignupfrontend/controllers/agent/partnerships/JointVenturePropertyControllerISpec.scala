@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -30,7 +30,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
   override def beforeEach(): Unit = {
     super.beforeEach()
     stubAuth(OK, successfulAuthResponse(agentEnrolment))
-    enable(JointVenturePropertyJourney)
+    enable(OptionalSautrJourney)
   }
 
   "GET /client/joint-venture-or-property-partnership" should {

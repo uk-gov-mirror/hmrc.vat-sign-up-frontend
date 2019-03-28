@@ -32,7 +32,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     disable(DivisionJourney)
     disable(GeneralPartnershipJourney)
     disable(LimitedPartnershipJourney)
-    disable(JointVenturePropertyJourney)
+    disable(OptionalSautrJourney)
   }
 
   "GET /business-type" should {
@@ -91,7 +91,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       "the business entity is general partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(GeneralPartnershipJourney)
-        enable(JointVenturePropertyJourney)
+        enable(OptionalSautrJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
 

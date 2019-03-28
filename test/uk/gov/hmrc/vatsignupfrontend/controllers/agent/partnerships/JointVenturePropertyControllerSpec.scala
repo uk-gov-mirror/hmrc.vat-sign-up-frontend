@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
@@ -43,7 +43,7 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
   "Calling the show action of Joint Venture Property controller" when {
     "Joint venture property journey is enabled" should {
       "return an OK" in {
-        enable(JointVenturePropertyJourney)
+        enable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val result = await(TestJointVenturePropertyController.show(testGetRequest))
@@ -64,7 +64,7 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
     "Joint venture property journey is enabled" when {
       "Yes is submitted" should {
         "redirect to Check Your Answers page" in {
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
           val result = await(TestJointVenturePropertyController.submit(testPostRequest(option_yes)))
@@ -78,7 +78,7 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
 
       "No is submitted" should {
         "redirect to Capture Partnership UTR page" in {
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
           val result = await(TestJointVenturePropertyController.submit(testPostRequest(option_no)))
@@ -91,7 +91,7 @@ class JointVenturePropertyControllerSpec extends ControllerSpec {
 
       "An error is submitted" should {
         "return status BAD_REQUEST" in {
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
           val result = await(TestJointVenturePropertyController.submit(testPostRequest("")))

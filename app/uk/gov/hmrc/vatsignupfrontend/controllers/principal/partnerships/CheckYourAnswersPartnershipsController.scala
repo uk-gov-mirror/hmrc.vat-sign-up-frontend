@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, OptionalSautrJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser._
@@ -40,7 +40,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
                                                        val storeJointVentureInformationService: StoreJointVentureInformationService)
   extends AuthenticatedController(
     retrievalPredicate = AdministratorRolePredicate,
-    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney, JointVenturePropertyJourney)
+    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney, OptionalSautrJourney)
   ) {
 
   override protected def featureEnabled[T](func: => T): T =
