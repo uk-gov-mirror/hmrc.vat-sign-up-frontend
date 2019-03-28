@@ -75,7 +75,7 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
-            session(result).get(SessionKeys.optionalUtrKey) shouldBe Some(true.toString)
+            session(result).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(true.toString)
           }
         }
 
@@ -94,7 +94,7 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
             status(result) shouldBe Status.SEE_OTHER
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
             session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
-            session(result).get(SessionKeys.optionalUtrKey) shouldBe Some(false.toString)
+            session(result).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
           }
         }

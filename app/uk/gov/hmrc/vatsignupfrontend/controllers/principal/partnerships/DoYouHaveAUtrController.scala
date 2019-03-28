@@ -58,12 +58,12 @@ class DoYouHaveAUtrController @Inject()(val controllerComponents: ControllerComp
           {
             case Yes =>
               Redirect(routes.CapturePartnershipUtrController.show())
-                .addingToSession(SessionKeys.optionalUtrKey -> true.toString)
+                .addingToSession(SessionKeys.hasOptionalSautrKey -> true.toString)
             case No =>
               Redirect(routes.CheckYourAnswersPartnershipsController.show())
                 .removingFromSession(SessionKeys.partnershipSautrKey)
                 .removingFromSession(SessionKeys.businessPostCodeKey)
-                .addingToSession(SessionKeys.optionalUtrKey -> false.toString)
+                .addingToSession(SessionKeys.hasOptionalSautrKey -> false.toString)
           }
         )
       )

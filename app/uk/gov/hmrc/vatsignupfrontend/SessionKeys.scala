@@ -45,5 +45,5 @@ object SessionKeys {
   val acceptedDirectDebitTermsKey = "acceptedDirectDebitTerms"
   val jointVentureOrPropertyKey = "jointVentureOrProperty"
   val contactPreferenceKey = "contactPreference"
-  val optionalUtrKey = "optionalUtr"
+  val hasOptionalSautrKey = "hasOptionalSautr"
 }

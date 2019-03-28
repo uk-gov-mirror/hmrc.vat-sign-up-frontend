@@ -19,11 +19,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
-import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm
+import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testBusinessPostCode, testSaUtr}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testSaUtr, testBusinessPostCode}
 
 class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -46,14 +46,14 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
   "POST /do-you-have-a-utr" when {
     "form value is Yes" should {
       "redirect to CapturePartnershipUtr page" in {
-        val res = post("/do-you-have-a-utr")(JointVentureOrPropertyForm.yesNo -> option_yes)
+        val res = post("/do-you-have-a-utr")(DoYouHaveAUtrForm.yesNo -> option_yes)
 
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.optionalUtrKey) shouldBe Some(true.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(true.toString)
       }
     }
 
@@ -64,7 +64,7 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
           cookies = Map(SessionKeys.partnershipSautrKey -> testSaUtr,
             SessionKeys.businessPostCodeKey -> testBusinessPostCode.postCode
           )
-        )(JointVentureOrPropertyForm.yesNo -> option_no)
+        )(DoYouHaveAUtrForm.yesNo -> option_no)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -73,7 +73,7 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessPostCodeKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.optionalUtrKey) shouldBe Some(false.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
       }
     }
   }
