@@ -81,9 +81,9 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
     "the user does not have a IR-SA-PART-ORG enrolment" when {
-      "the joint venture feature switch is enabled" when {
+      "the optional Sautr feature switch is enabled" when {
         "the user is a General Partnership" should {
-          "go to the joint venture page" in {
+          "go to the Do You Have A Utr page" in {
             enable(GeneralPartnershipJourney)
             enable(OptionalSautrJourney)
 
@@ -96,7 +96,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
             ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.JointVentureOrPropertyController.show().url)
+            redirectLocation(result) should contain(routes.DoYouHaveAUtrController.show().url)
           }
         }
         "the user is a Limited Partnership" should {
@@ -117,7 +117,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
           }
         }
       }
-      "the joint venture feature switch is disabled" should {
+      "the optional sautr switch is disabled" should {
         "go to the capture partnership UTR page" in {
           enable(GeneralPartnershipJourney)
 
