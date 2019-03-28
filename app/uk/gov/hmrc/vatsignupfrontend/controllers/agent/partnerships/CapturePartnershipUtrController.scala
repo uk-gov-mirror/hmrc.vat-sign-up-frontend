@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm.partnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.capture_partnership_utr
@@ -33,14 +32,8 @@ import scala.concurrent.Future
 @Singleton
 class CapturePartnershipUtrController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(
-    AgentEnrolmentPredicate,
-    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)
+    AgentEnrolmentPredicate
   ) {
-
-  override def featureEnabled[T](func: => T): T =
-    if (featureSwitches exists isEnabled) func
-    else throw new NotFoundException(featureSwitchError)
-
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>

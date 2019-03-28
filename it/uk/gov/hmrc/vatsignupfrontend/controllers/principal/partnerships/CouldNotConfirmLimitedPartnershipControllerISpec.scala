@@ -17,17 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CouldNotConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
 
   "GET /error/could-not-confirm-limited-partnership" should {
     "return an OK" in {
@@ -37,15 +31,6 @@ class CouldNotConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase
       val res = get("/error/could-not-confirm-limited-partnership")
 
       res should have(httpStatus(OK))
-    }
-    "return NOT_FOUND if the feature switch is off" in {
-      disable(LimitedPartnershipJourney)
-
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/error/could-not-confirm-limited-partnership")
-
-      res should have(httpStatus(NOT_FOUND))
     }
   }
 
@@ -60,15 +45,6 @@ class CouldNotConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase
       (httpStatus(SEE_OTHER),
         redirectUri(principalRoutes.CaptureBusinessEntityController.show().url)
       )
-    }
-    "return NOT_FOUND if the feature switch is off" in {
-      disable(LimitedPartnershipJourney)
-
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = post("/error/could-not-confirm-limited-partnership")()
-
-      res should have(httpStatus(NOT_FOUND))
     }
   }
 

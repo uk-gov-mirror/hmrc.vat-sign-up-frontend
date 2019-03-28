@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -44,12 +44,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
   object TestCheckYourAnswersController extends CheckYourAnswersPartnershipsController(
     mockControllerComponents, mockStorePartnershipInformationService, mockStoreJointVentureInformationService
   )
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
 
   val generalPartnershipType: String = PartnershipEntityType.GeneralPartnership.toString
   val limitedPartnershipType: String = PartnershipEntityType.LimitedPartnership.toString
@@ -95,12 +89,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
   "Calling the show action of the Check your answers controller" when {
     "Partnership Entity is General Partnership" when {
-      "the General Partnership feature is enabled" when {
         "the Joint Venture or Property Partnership feature is enabled" when {
           "The partnership is Joint Venture or Property" when {
             "All prerequisite data is in session" should {
               "Render the check your answers page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -113,13 +105,11 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 contentType(result) shouldBe Some("text/html")
                 charset(result) shouldBe Some("utf-8")
               }
-            }
           }
 
           "The partnership is NOT a Joint Venture or Property" when {
             "All prerequisite data is in session" should {
               "Render the check your answers page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -138,7 +128,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "SA UTR is missing from the session" should {
               "Redirect to Capture Business Entity" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -155,7 +144,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "Business Postcode is missing from the session" should {
               "Redirect to Capture Business Entity" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -173,7 +161,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "No answer has been provided for Joint Venture or Property" should {
             "Redirect to Capture Business Entity" in {
-              enable(GeneralPartnershipJourney)
               enable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -190,7 +177,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
         "the Joint Venture or Property Partnership feature is disabled" when {
           "All prerequisite data is in session" should {
             "Render the check your answers page" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -208,7 +194,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "SA UTR is missing from the session" should {
             "Redirect to Capture Business Entity" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -224,7 +209,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "Business Postcode is missing from the session" should {
             "Redirect to Capture Business Entity" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -242,75 +226,69 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
     }
 
     "Partnership Entity is of type Limited Partnership" when {
-      "the Limited Partnership feature is enabled" when {
-        "All prerequisite data is in session" should {
-          "Render the check your answers page" in {
-            enable(LimitedPartnershipJourney)
-            mockAuthAdminRole()
+      "All prerequisite data is in session" should {
+        "Render the check your answers page" in {
+          mockAuthAdminRole()
 
-            val result = TestCheckYourAnswersController.show(testGetRequest(
-              businessEntity = Some(LimitedPartnership),
-              sautr = Some(testSaUtr),
-              postCode = Some(testBusinessPostcode),
-              crn = Some(testCompanyNumber),
-              entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
-            ))
+          val result = TestCheckYourAnswersController.show(testGetRequest(
+            businessEntity = Some(LimitedPartnership),
+            sautr = Some(testSaUtr),
+            postCode = Some(testBusinessPostcode),
+            crn = Some(testCompanyNumber),
+            entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
+          ))
 
-            status(result) shouldBe Status.OK
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
+          status(result) shouldBe Status.OK
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
+      }
 
-        "SA UTR is missing from the session" should {
-          "redirect to the Capture Business Entity page" in {
-            enable(LimitedPartnershipJourney)
-            mockAuthAdminRole()
+      "SA UTR is missing from the session" should {
+        "redirect to the Capture Business Entity page" in {
+          mockAuthAdminRole()
 
-            val result = TestCheckYourAnswersController.show(testGetRequest(
-              businessEntity = Some(LimitedPartnership),
-              postCode = Some(testBusinessPostcode),
-              crn = Some(testCompanyNumber),
-              entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
-            ))
+          val result = TestCheckYourAnswersController.show(testGetRequest(
+            businessEntity = Some(LimitedPartnership),
+            postCode = Some(testBusinessPostcode),
+            crn = Some(testCompanyNumber),
+            entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
+          ))
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
-          }
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
         }
+      }
 
-        "Business PostCode is missing from the session" should {
-          "redirect to the Capture Business Entity page" in {
-            enable(LimitedPartnershipJourney)
-            mockAuthAdminRole()
+      "Business PostCode is missing from the session" should {
+        "redirect to the Capture Business Entity page" in {
+          mockAuthAdminRole()
 
-            val result = TestCheckYourAnswersController.show(testGetRequest(
-              businessEntity = Some(LimitedPartnership),
-              sautr = Some(testSaUtr),
-              crn = Some(testCompanyNumber),
-              entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
-            ))
+          val result = TestCheckYourAnswersController.show(testGetRequest(
+            businessEntity = Some(LimitedPartnership),
+            sautr = Some(testSaUtr),
+            crn = Some(testCompanyNumber),
+            entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
+          ))
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
-          }
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
         }
+      }
 
-        "CRN is missing from the session" should {
-          "redirect to the Capture Business Entity page" in {
-            enable(LimitedPartnershipJourney)
-            mockAuthAdminRole()
+      "CRN is missing from the session" should {
+        "redirect to the Capture Business Entity page" in {
+          mockAuthAdminRole()
 
-            val result = TestCheckYourAnswersController.show(testGetRequest(
-              businessEntity = Some(LimitedPartnership),
-              sautr = Some(testSaUtr),
-              postCode = Some(testBusinessPostcode),
-              entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
-            ))
+          val result = TestCheckYourAnswersController.show(testGetRequest(
+            businessEntity = Some(LimitedPartnership),
+            sautr = Some(testSaUtr),
+            postCode = Some(testBusinessPostcode),
+            entityType = Some(PartnershipEntityType.LimitedLiabilityPartnership)
+          ))
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
-          }
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
         }
       }
     }
@@ -318,30 +296,27 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
   "Calling the submit action of the Check your answers controller" when {
     "Partnership Entity is General Partnership" when {
-      "the General Partnership feature is enabled" when {
-        "the Joint Venture or Property Partnership feature is enabled" when {
-          "The partnership is Joint Venture or Property" when {
-            "All prerequisite data is in session" when {
-              "the storeJointVenturePropertyInformation is successful" should {
-                "Redirect to the Direct Debit resolver" in {
-                  enable(GeneralPartnershipJourney)
-                  enable(JointVenturePropertyJourney)
-                  mockAuthAdminRole()
-                  mockStoreJointVentureInformation(testVatNumber)(Right(StoreJointVentureInformationSuccess))
+      "the Joint Venture or Property Partnership feature is enabled" when {
+        "The partnership is Joint Venture or Property" when {
+          "All prerequisite data is in session" when {
+            "the storeJointVenturePropertyInformation is successful" should {
+              "Redirect to the Direct Debit resolver" in {
+                enable(JointVenturePropertyJourney)
+                mockAuthAdminRole()
+                mockStoreJointVentureInformation(testVatNumber)(Right(StoreJointVentureInformationSuccess))
 
-                  val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                    businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(true)
-                  )))
+                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                  businessEntity = Some(GeneralPartnership),
+                  jointVentureProperty = Some(true)
+                )))
 
-                  status(result) shouldBe Status.SEE_OTHER
-                  redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
-                }
+                status(result) shouldBe Status.SEE_OTHER
+                redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
               }
+
 
               "the storeJointVenturePropertyInformation fails" should {
                 "throw an internal server error exception" in {
-                  enable(GeneralPartnershipJourney)
                   enable(JointVenturePropertyJourney)
                   mockAuthAdminRole()
                   mockStoreJointVentureInformation(testVatNumber)(Left(StoreJointVentureInformationFailureResponse(BAD_REQUEST)))
@@ -358,7 +333,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "VRN is missing from session" should {
               "Redirect to VRN Capture page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -375,7 +349,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "Business Entity is missing from session" should {
               "Redirect to Capture Business Entity page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -393,7 +366,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             "All prerequisite data is in session" when {
               "the storeJointVenturePropertyInformation is successful" should {
                 "Redirect to the Direct Debit resolver" in {
-                  enable(GeneralPartnershipJourney)
                   enable(JointVenturePropertyJourney)
                   mockAuthAdminRole()
                   mockStorePartnershipInformation(
@@ -416,7 +388,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
               "the storeJointVenturePropertyInformation fails" should {
                 "throw an internal server error exception" in {
-                  enable(GeneralPartnershipJourney)
                   enable(JointVenturePropertyJourney)
                   mockAuthAdminRole()
                   mockStorePartnershipInformation(
@@ -439,7 +410,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "VRN is missing from session" should {
               "Redirect to Resolve VAT Number controller" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -458,7 +428,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "Business Entity is missing from session" should {
               "Redirect to Capture Business Entity page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -475,7 +444,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "SA UTR is missing from session" should {
               "Redirect to Capture Business Entity page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -492,7 +460,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "Business PostCode is missing from session" should {
               "Redirect to Capture Business Entity page" in {
-                enable(GeneralPartnershipJourney)
                 enable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
 
@@ -510,7 +477,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "Joint Venture or Property answer is missing from session" should {
             "Redirect Capture Business Entity page" in {
-              enable(GeneralPartnershipJourney)
               enable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -528,7 +494,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
           "All prerequisite data is held in session" when {
             "storePartnershipInformation is successful" should {
               "Redirect to the Direct Debit resolver" in {
-                enable(GeneralPartnershipJourney)
                 disable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
@@ -550,7 +515,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "storePartnershipInformation fails due to Known Facts Failure" should {
               "Redirect to the Known Facts Error page" in {
-                enable(GeneralPartnershipJourney)
                 disable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
@@ -572,7 +536,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "storePartnershipInformation fails due to Partnership Utr NotFound" should {
               "Redirect to the Known Facts Error page" in {
-                enable(GeneralPartnershipJourney)
                 disable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
@@ -594,7 +557,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
             "storePartnershipInformation fails with other exception" should {
               "throw an Internal Server Exception" in {
-                enable(GeneralPartnershipJourney)
                 disable(JointVenturePropertyJourney)
                 mockAuthAdminRole()
                 mockStorePartnershipInformation(
@@ -617,7 +579,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "VRN is missing from session" should {
             "Redirect to Resolve VAT Number controller" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -636,7 +597,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "Business Entity is missing from session" should {
             "Redirect to Capture Business Entity page" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -653,7 +613,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "SA UTR is missing from session" should {
             "Redirect to Capture Business Entity page" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -670,7 +629,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
           "Business PostCode is missing from session" should {
             "Redirect to Capture Business Entity page" in {
-              enable(GeneralPartnershipJourney)
               disable(JointVenturePropertyJourney)
               mockAuthAdminRole()
 
@@ -689,219 +647,207 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
     }
 
     "Partnership Entity is of type Limited Partnership" when {
-      "the Limited Partnership feature is enabled" when {
-        "All prerequisite data is in session" should {
-          "storePartnershipInformation is successful" should {
-            "Redirect to the Direct Debit resolver" in {
-              enable(LimitedPartnershipJourney)
-              mockAuthAdminRole()
-              mockStorePartnershipInformation(
-                vatNumber = testVatNumber,
-                sautr = testSaUtr,
-                companyNumber = testCompanyNumber,
-                partnershipEntity = PartnershipEntityType.LimitedPartnership,
-                postCode = Some(testBusinessPostcode)
-              )(Right(StorePartnershipInformationSuccess))
-
-              val result = TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(LimitedPartnership),
-                entityType = Some(PartnershipEntityType.LimitedPartnership),
-                sautr = Some(testSaUtr),
-                postCode = Some(testBusinessPostcode),
-                crn = Some(testCompanyNumber)
-              ))
-
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
-            }
-          }
-
-          "storePartnershipInformation fails due to Known Facts Failure" should {
-            "Redirect to the Known Facts Error page" in {
-              enable(GeneralPartnershipJourney)
-              disable(JointVenturePropertyJourney)
-              mockAuthAdminRole()
-              mockStorePartnershipInformation(
-                vatNumber = testVatNumber,
-                sautr = testSaUtr,
-                companyNumber = testCompanyNumber,
-                partnershipEntity = PartnershipEntityType.LimitedPartnership,
-                postCode = Some(testBusinessPostcode)
-              )(Left(StorePartnershipKnownFactsFailure))
-
-              val result = TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(LimitedPartnership),
-                entityType = Some(PartnershipEntityType.LimitedPartnership),
-                sautr = Some(testSaUtr),
-                postCode = Some(testBusinessPostcode),
-                crn = Some(testCompanyNumber)
-              ))
-
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
-            }
-          }
-
-          "storePartnershipInformation fails due to Partnership Utr NotFound" should {
-            "Redirect to the Known Facts Error page" in {
-              enable(GeneralPartnershipJourney)
-              disable(JointVenturePropertyJourney)
-              mockAuthAdminRole()
-              mockStorePartnershipInformation(
-                vatNumber = testVatNumber,
-                sautr = testSaUtr,
-                companyNumber = testCompanyNumber,
-                partnershipEntity = PartnershipEntityType.LimitedPartnership,
-                postCode = Some(testBusinessPostcode)
-              )(Left(PartnershipUtrNotFound))
-
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(LimitedPartnership),
-                entityType = Some(PartnershipEntityType.LimitedPartnership),
-                sautr = Some(testSaUtr),
-                postCode = Some(testBusinessPostcode),
-                crn = Some(testCompanyNumber)
-              )))
-
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
-            }
-          }
-
-          "storePartnershipInformation fails with other exception" should {
-            "throw an Internal Server Exception" in {
-              enable(GeneralPartnershipJourney)
-              disable(JointVenturePropertyJourney)
-              mockAuthAdminRole()
-              mockStorePartnershipInformation(
-                vatNumber = testVatNumber,
-                sautr = testSaUtr,
-                companyNumber = testCompanyNumber,
-                partnershipEntity = PartnershipEntityType.LimitedPartnership,
-                postCode = Some(testBusinessPostcode)
-              )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
-
-              lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(LimitedPartnership),
-                entityType = Some(PartnershipEntityType.LimitedPartnership),
-                sautr = Some(testSaUtr),
-                postCode = Some(testBusinessPostcode),
-                crn = Some(testCompanyNumber)
-              )))
-
-              intercept[InternalServerException](result)
-            }
-          }
-        }
-
-        "VRN is missing from session" should {
-          "Redirect to Resolve VAT Number controller" in {
-            enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
+      "All prerequisite data is in session" should {
+        "storePartnershipInformation is successful" should {
+          "Redirect to the Direct Debit resolver" in {
             mockAuthAdminRole()
-
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-              businessEntity = Some(LimitedPartnership),
-              entityType = Some(PartnershipEntityType.LimitedPartnership),
-              vatNumber = None,
-              sautr = Some(testSaUtr),
-              postCode = Some(testBusinessPostcode),
-              crn = Some(testCompanyNumber)
-            )))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
-          }
-        }
-
-        "Business Entity is missing from session" should {
-          "Redirect to Capture Business Entity page" in {
-            enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
-            mockAuthAdminRole()
-
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-              entityType = Some(PartnershipEntityType.LimitedPartnership),
-              sautr = Some(testSaUtr),
-              postCode = Some(testBusinessPostcode),
-              crn = Some(testCompanyNumber)
-            )))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-          }
-        }
-
-        "SA UTR is missing from session" should {
-          "Redirect to Capture Business Entity page" in {
-            enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
-            mockAuthAdminRole()
-
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-              businessEntity = Some(LimitedPartnership),
-              entityType = Some(PartnershipEntityType.LimitedPartnership),
-              postCode = Some(testBusinessPostcode),
-              crn = Some(testCompanyNumber)
-            )))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-          }
-        }
-
-        "Business PostCode is missing from session" should {
-          "Redirect to Capture Business Entity page" in {
-            enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
-            mockAuthAdminRole()
-
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-              businessEntity = Some(LimitedPartnership),
-              entityType = Some(PartnershipEntityType.LimitedPartnership),
-              sautr = Some(testSaUtr),
-              crn = Some(testCompanyNumber)
-            )))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-          }
-        }
-
-        "CRN is missing from session" should {
-          "Redirect to Capture Business Entity page" in {
-            enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
-            mockAuthAdminRole()
-
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-              businessEntity = Some(LimitedPartnership),
-              entityType = Some(PartnershipEntityType.LimitedPartnership),
-              sautr = Some(testSaUtr),
+            mockStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              sautr = testSaUtr,
+              companyNumber = testCompanyNumber,
+              partnershipEntity = PartnershipEntityType.LimitedPartnership,
               postCode = Some(testBusinessPostcode)
-            )))
+            )(Right(StorePartnershipInformationSuccess))
+
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
+              businessEntity = Some(LimitedPartnership),
+              entityType = Some(PartnershipEntityType.LimitedPartnership),
+              sautr = Some(testSaUtr),
+              postCode = Some(testBusinessPostcode),
+              crn = Some(testCompanyNumber)
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
+            redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
           }
         }
 
-        "Partnership Entity Type is missing from session" should {
-          "Redirect to Capture Business Entitypage" in {
-            enable(GeneralPartnershipJourney)
-            enable(JointVenturePropertyJourney)
+        "storePartnershipInformation fails due to Known Facts Failure" should {
+          "Redirect to the Known Facts Error page" in {
+            disable(JointVenturePropertyJourney)
             mockAuthAdminRole()
+            mockStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              sautr = testSaUtr,
+              companyNumber = testCompanyNumber,
+              partnershipEntity = PartnershipEntityType.LimitedPartnership,
+              postCode = Some(testBusinessPostcode)
+            )(Left(StorePartnershipKnownFactsFailure))
+
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
+              businessEntity = Some(LimitedPartnership),
+              entityType = Some(PartnershipEntityType.LimitedPartnership),
+              sautr = Some(testSaUtr),
+              postCode = Some(testBusinessPostcode),
+              crn = Some(testCompanyNumber)
+            ))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+          }
+        }
+
+        "storePartnershipInformation fails due to Partnership Utr NotFound" should {
+          "Redirect to the Known Facts Error page" in {
+            disable(JointVenturePropertyJourney)
+            mockAuthAdminRole()
+            mockStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              sautr = testSaUtr,
+              companyNumber = testCompanyNumber,
+              partnershipEntity = PartnershipEntityType.LimitedPartnership,
+              postCode = Some(testBusinessPostcode)
+            )(Left(PartnershipUtrNotFound))
 
             val result = await(TestCheckYourAnswersController.submit(testPostRequest(
               businessEntity = Some(LimitedPartnership),
+              entityType = Some(PartnershipEntityType.LimitedPartnership),
               sautr = Some(testSaUtr),
               postCode = Some(testBusinessPostcode),
               crn = Some(testCompanyNumber)
             )))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
+            redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
           }
+        }
+
+        "storePartnershipInformation fails with other exception" should {
+          "throw an Internal Server Exception" in {
+            disable(JointVenturePropertyJourney)
+            mockAuthAdminRole()
+            mockStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              sautr = testSaUtr,
+              companyNumber = testCompanyNumber,
+              partnershipEntity = PartnershipEntityType.LimitedPartnership,
+              postCode = Some(testBusinessPostcode)
+            )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
+
+            lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+              businessEntity = Some(LimitedPartnership),
+              entityType = Some(PartnershipEntityType.LimitedPartnership),
+              sautr = Some(testSaUtr),
+              postCode = Some(testBusinessPostcode),
+              crn = Some(testCompanyNumber)
+            )))
+
+            intercept[InternalServerException](result)
+          }
+        }
+      }
+
+      "VRN is missing from session" should {
+        "Redirect to Resolve VAT Number controller" in {
+          enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            businessEntity = Some(LimitedPartnership),
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            vatNumber = None,
+            sautr = Some(testSaUtr),
+            postCode = Some(testBusinessPostcode),
+            crn = Some(testCompanyNumber)
+          )))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
+        }
+      }
+
+      "Business Entity is missing from session" should {
+        "Redirect to Capture Business Entity page" in {
+          enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            sautr = Some(testSaUtr),
+            postCode = Some(testBusinessPostcode),
+            crn = Some(testCompanyNumber)
+          )))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
+        }
+      }
+
+      "SA UTR is missing from session" should {
+        "Redirect to Capture Business Entity page" in {
+          enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            businessEntity = Some(LimitedPartnership),
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            postCode = Some(testBusinessPostcode),
+            crn = Some(testCompanyNumber)
+          )))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
+        }
+      }
+
+      "Business PostCode is missing from session" should {
+        "Redirect to Capture Business Entity page" in {
+          enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            businessEntity = Some(LimitedPartnership),
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            sautr = Some(testSaUtr),
+            crn = Some(testCompanyNumber)
+          )))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
+        }
+      }
+
+      "CRN is missing from session" should {
+        "Redirect to Capture Business Entity page" in {
+          enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            businessEntity = Some(LimitedPartnership),
+            entityType = Some(PartnershipEntityType.LimitedPartnership),
+            sautr = Some(testSaUtr),
+            postCode = Some(testBusinessPostcode)
+          )))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
+        }
+      }
+
+      "Partnership Entity Type is missing from session" should {
+        "Redirect to Capture Business Entity Page" in {
+          enable(JointVenturePropertyJourney)
+          mockAuthAdminRole()
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            businessEntity = Some(LimitedPartnership),
+            sautr = Some(testSaUtr),
+            postCode = Some(testBusinessPostcode),
+            crn = Some(testCompanyNumber)
+          )))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
         }
       }
     }

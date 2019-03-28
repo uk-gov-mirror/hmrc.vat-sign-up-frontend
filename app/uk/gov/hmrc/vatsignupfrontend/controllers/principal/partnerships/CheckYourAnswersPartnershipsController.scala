@@ -18,11 +18,10 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser._
@@ -39,13 +38,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
                                                        val storePartnershipInformationService: StorePartnershipInformationService,
                                                        val storeJointVentureInformationService: StoreJointVentureInformationService)
   extends AuthenticatedController(
-    retrievalPredicate = AdministratorRolePredicate,
-    featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney, JointVenturePropertyJourney)
-  ) {
-
-  override protected def featureEnabled[T](func: => T): T =
-    if (featureSwitches exists isEnabled) func
-    else throw new NotFoundException(featureSwitchError)
+    retrievalPredicate = AdministratorRolePredicate){
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

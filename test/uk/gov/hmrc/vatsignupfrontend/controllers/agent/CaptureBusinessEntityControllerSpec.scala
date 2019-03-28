@@ -35,12 +35,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   implicit val testGetRequest = FakeRequest("GET", "/business-type")
 
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-  }
-
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
 
@@ -87,8 +81,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "redirect to resolve partnership" when {
         "the business entity is general partnership" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(GeneralPartnershipJourney)
-
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(partnerships.routes.ResolvePartnershipController.resolve().url)
@@ -100,7 +92,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "redirect to resolve partnership when the joint venture or property feature switch" when {
         "the business entity is general partnership" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(GeneralPartnershipJourney)
           enable(JointVenturePropertyJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
@@ -114,7 +105,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "redirect to resolve partnership" when {
         "the business entity is limited partnership" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(LimitedPartnershipJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(limitedPartnership))
           status(result) shouldBe Status.SEE_OTHER

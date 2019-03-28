@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, JointVenturePropertyJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -30,12 +30,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySession
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType}
 
 class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
 
   val generalPartnershipType = PartnershipEntityType.GeneralPartnership
   val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
@@ -93,20 +87,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       res should have(
         httpStatus(OK)
       )
-    }
-
-    "if all feature switches are disabled" should {
-      "return a not found" in {
-        disable(GeneralPartnershipJourney)
-        disable(LimitedPartnershipJourney)
-        disable(JointVenturePropertyJourney)
-
-        val res = get("/check-your-answers-partnership")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
     }
   }
 

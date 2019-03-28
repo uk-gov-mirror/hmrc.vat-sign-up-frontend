@@ -22,7 +22,6 @@ import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.UnincorporatedAssociation
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -30,8 +29,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   override def afterAll(): Unit = {
     super.afterAll()
     disable(DivisionJourney)
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
     disable(JointVenturePropertyJourney)
   }
 
@@ -77,7 +74,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "redirect to resolve partnership" when {
       "the business entity is general partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(GeneralPartnershipJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
 
@@ -90,7 +86,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "redirect to resolve partnership when joint venture or property feature switch is enabled" when {
       "the business entity is general partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(GeneralPartnershipJourney)
         enable(JointVenturePropertyJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
@@ -105,7 +100,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "redirect to the resolve partnership page" when {
       "the business entity is limited partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(LimitedPartnershipJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> limitedPartnership)
 

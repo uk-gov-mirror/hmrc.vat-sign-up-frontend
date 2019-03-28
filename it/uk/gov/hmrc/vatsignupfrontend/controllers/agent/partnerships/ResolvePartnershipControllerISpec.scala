@@ -18,25 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedCompany, LimitedPartnership}
 
 class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-  }
 
   "GET /resolve-partnership" when {
     "the user is a general partnership and joint venture feature switch is disabled" should {

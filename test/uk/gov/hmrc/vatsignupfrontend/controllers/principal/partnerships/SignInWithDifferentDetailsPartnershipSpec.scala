@@ -20,9 +20,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class SignInWithDifferentDetailsPartnershipSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -33,7 +31,6 @@ class SignInWithDifferentDetailsPartnershipSpec extends UnitSpec with GuiceOneAp
 
   "Calling the show action of the Sign in with different details controller" should {
     "return OK" in {
-      enable(GeneralPartnershipJourney)
 
       mockAuthAdminRole()
 
@@ -41,12 +38,6 @@ class SignInWithDifferentDetailsPartnershipSpec extends UnitSpec with GuiceOneAp
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-    }
-
-    "throw NOT_FOUND_EXCEPTION if the feature switches are disabled" in {
-      mockAuthAdminRole()
-
-      intercept[NotFoundException](await(TestSignInWithDifferentDetailsPartnershipController.show(testGetRequest)))
     }
   }
 

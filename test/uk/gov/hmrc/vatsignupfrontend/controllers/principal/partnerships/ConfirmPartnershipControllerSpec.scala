@@ -24,22 +24,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(LimitedPartnershipJourney)
-  }
 
   object TestConfirmPartnershipController extends ConfirmPartnershipController(mockControllerComponents)
 

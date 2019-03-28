@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 
@@ -34,16 +33,6 @@ class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneApp
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/error/could-not-confirm-partnership ")
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(LimitedPartnershipJourney)
-  }
 
   "Calling the show action of the Could not confirm Partnership controller" should {
     "show the could not confirm partnership  page" in {

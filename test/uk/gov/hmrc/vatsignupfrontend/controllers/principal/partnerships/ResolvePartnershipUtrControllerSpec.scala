@@ -25,7 +25,7 @@ import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, JointVenturePropertyJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -43,7 +43,6 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "the user has a IR-SA-PART-ORG enrolment" when {
       "the user is a Limited Partnership" should {
         "redirect to confirm limited partnership page" in {
-          enable(LimitedPartnershipJourney)
           mockAuthRetrievePartnershipEnrolment()
 
           val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
@@ -57,7 +56,6 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
       "the user is a General Partnership" should {
         "redirect to confirm general partnership page" in {
-          enable(GeneralPartnershipJourney)
           mockAuthRetrievePartnershipEnrolment()
 
           val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
@@ -70,21 +68,11 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
         }
       }
-      "both FS are disabled" should {
-        "Return technical difficulties" in {
-          disable(GeneralPartnershipJourney)
-          disable(LimitedPartnershipJourney)
-          mockAuthRetrievePartnershipEnrolment()
-
-          intercept[InternalServerException](await(TestResolvePartnershipUtrController.resolve(testGetRequest)))
-        }
-      }
     }
     "the user does not have a IR-SA-PART-ORG enrolment" when {
       "the joint venture feature switch is enabled" when {
         "the user is a General Partnership" should {
           "go to the joint venture page" in {
-            enable(GeneralPartnershipJourney)
             enable(JointVenturePropertyJourney)
 
             mockAuthorise(
@@ -101,7 +89,6 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
         "the user is a Limited Partnership" should {
           "go to the capture partnership UTR page" in {
-            enable(GeneralPartnershipJourney)
             enable(JointVenturePropertyJourney)
 
             mockAuthorise(
@@ -119,7 +106,6 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
       "the joint venture feature switch is disabled" should {
         "go to the capture partnership UTR page" in {
-          enable(GeneralPartnershipJourney)
 
           mockAuthorise(
             retrievals = Retrievals.credentialRole and Retrievals.allEnrolments

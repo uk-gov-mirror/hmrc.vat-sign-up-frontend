@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_known_facts
 
@@ -29,12 +28,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CouldNotConfirmKnownFactsController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate,
-    featureSwitches = Set(LimitedPartnershipJourney, GeneralPartnershipJourney)) {
-
-  override protected def featureEnabled[T](func: => T): T =
-    if (featureSwitches exists isEnabled) func
-    else throw new NotFoundException(featureSwitchError)
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
