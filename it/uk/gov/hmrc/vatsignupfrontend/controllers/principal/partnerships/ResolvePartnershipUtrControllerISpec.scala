@@ -65,7 +65,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
     }
 
     "the partnership utr is not on the profile" when {
-      "the joint venture feature switch is disabled" should {
+      "the optional sautr feature switch is disabled" should {
         "go to Capture Partnership UTR page" in {
           stubAuth(OK, successfulAuthResponse())
 
@@ -77,8 +77,8 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
           )
         }
       }
-      "the joint venture feature switch is enabled" should {
-        "go to the joint venture page" in {
+      "the optional Sautr feature switch is enabled" should {
+        "go to the Do You Have A Utr page" in {
           enable(OptionalSautrJourney)
           stubAuth(OK, successfulAuthResponse())
 
@@ -88,7 +88,7 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.JointVentureOrPropertyController.show().url)
+            redirectUri(routes.DoYouHaveAUtrController.show().url)
           )
         }
       }
