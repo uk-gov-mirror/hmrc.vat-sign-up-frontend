@@ -1010,4 +1010,10 @@ object MessageLookup {
     val title: String = heading + ServiceName.principalSuffix
     val line: String = "This is a 10-digit number. You can find it on letters to the partnership from HMRC."
   }
+
+  object AgentDoesYourClientHaveAUtr {
+    val heading: String = "Does your client's partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
+    val title: String = heading + ServiceName.agentSuffix
+    val line: String = "This is a 10-digit number. You can find it on letters to the partnership from HMRC."
+  }
 }
