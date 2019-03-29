@@ -76,7 +76,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       companyNumber = Some(testCompanyNumber),
       postCode = Some(testBusinessPostcode),
       postAction = testCall,
-      jointVentureProperty = None
+      hasOptionalSautr = None
     )(FakeRequest(), applicationMessages, appConfig)
 
     lazy val limitedPartnershipCyaDoc = Jsoup.parse(limitedPartnershipCyaPage.body)
@@ -154,7 +154,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
   "General Partnership Check Your Answers View" when {
 
-    "it is NOT a Joint Venture or Property Partnership" should {
+    "the user does not have an Sautr" should {
 
       lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
         entityType = GeneralPartnership,
@@ -162,13 +162,13 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         companyNumber = None,
         postCode = Some(testBusinessPostcode),
         postAction = testCall,
-        jointVentureProperty = Some(false)
+        hasOptionalSautr = Some(false)
       )(FakeRequest(), applicationMessages, appConfig)
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
 
       val testPage = TestView(
-        name = "General Partnership NOT Joint Venture or Property Check Your Answers",
+        name = "General Partnership without Sautr Check Your Answers",
         title = messages.title,
         heading = messages.heading,
         page = generalPartnershipCyaPage
@@ -222,11 +222,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         )
       }
 
-      "display the correct info for Joint Venture or Property" in {
-        val sectionId = JointVenturePropertyId
-        val expectedQuestion = messages.jointVentureOrProperty
+      "display the correct info for Do You Have A Utr" in {
+        val sectionId = HasOptionalSautrId
+        val expectedQuestion = messages.hasOptionalSautr
         val expectedAnswer = MessageLookup.Base.no
-        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.JointVentureOrPropertyController.show().url
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.DoYouHaveAUtrController.show().url
 
         sectionTest(
           doc = generalPartnershipCyaDoc,
@@ -238,7 +238,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       }
     }
 
-    "it IS a Joint Venture or Property Partnership" should {
+    "the user has an Sautr" should {
 
       lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
         entityType = GeneralPartnership,
@@ -246,13 +246,13 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         companyNumber = None,
         postCode = None,
         postAction = testCall,
-        jointVentureProperty = Some(true)
+        hasOptionalSautr = Some(true)
       )(FakeRequest(), applicationMessages, appConfig)
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
 
       val testPage = TestView(
-        name = "General Partnership Joint Venture or Property Check Your Answers View",
+        name = "General Partnership with Sautr Check Your Answers View",
         title = messages.title,
         heading = messages.heading,
         page = generalPartnershipCyaPage
@@ -276,11 +276,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         )
       }
 
-      "display the correct info for Joint Venture or Property" in {
-        val sectionId = JointVenturePropertyId
-        val expectedQuestion = messages.jointVentureOrProperty
+      "display the correct info for Do You Have A Sautr" in {
+        val sectionId = HasOptionalSautrId
+        val expectedQuestion = messages.hasOptionalSautr
         val expectedAnswer = MessageLookup.Base.yes
-        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.JointVentureOrPropertyController.show().url
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.DoYouHaveAUtrController.show().url
 
         sectionTest(
           doc = generalPartnershipCyaDoc,
