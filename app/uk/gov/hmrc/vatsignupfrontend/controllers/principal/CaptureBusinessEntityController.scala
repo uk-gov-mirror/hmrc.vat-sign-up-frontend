@@ -35,13 +35,12 @@ import scala.concurrent.Future
 @Singleton
 class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
-  val validateBusinessEntityForm: Form[BusinessEntity] = businessEntityForm(isAgent = false)
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
         Ok(capture_business_entity(
-          businessEntityForm = validateBusinessEntityForm,
+          businessEntityForm = businessEntityForm,
           postAction = routes.CaptureBusinessEntityController.submit(),
           divisionEnabled = isEnabled(DivisionJourney),
           unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
@@ -56,7 +55,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      validateBusinessEntityForm.bindFromRequest.fold(
+      businessEntityForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(
             BadRequest(capture_business_entity(
