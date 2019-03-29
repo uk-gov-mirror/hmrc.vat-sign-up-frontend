@@ -28,7 +28,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser.{StoreJointVentureInformationFailureResponse, StoreJointVentureInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSessionFormatter
@@ -54,14 +53,14 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                             postCode: Option[PostCode],
                             entityType: Option[PartnershipEntityType],
                             businessEntity: Option[BusinessEntity],
-                            jointVentureProperty: Option[Boolean]): Iterable[(String, String)] =
+                            hasOptionalSautr: Option[Boolean]): Iterable[(String, String)] =
     ((vatNumber map (vatNumberKey -> _))
       ++ (sautr map (partnershipSautrKey -> _))
       ++ (crn map (companyNumberKey -> _))
       ++ (postCode map jsonSessionFormatter[PostCode].toString map (partnershipPostCodeKey -> _))
       ++ (entityType map CompanyTypeSessionFormatter.toString map (partnershipTypeKey -> _))
       ++ (businessEntity map BusinessEntitySessionFormatter.toString map (businessEntityKey -> _))
-      ++ (jointVentureProperty map (jointVentureOrPropertyKey -> _.toString)))
+      ++ (hasOptionalSautr map (hasOptionalSautrKey -> _.toString)))
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      sautr: Option[String] = None,
@@ -69,10 +68,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                      postCode: Option[PostCode] = None,
                      entityType: Option[PartnershipEntityType] = None,
                      businessEntity: Option[BusinessEntity] = None,
-                     jointVentureProperty: Option[Boolean] = None
+                     hasOptionalSautr: Option[Boolean] = None
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers").withSession(
-      sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity, jointVentureProperty).toSeq: _*
+      sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity, hasOptionalSautr).toSeq: _*
     )
 
   def testPostRequest(vatNumber: Option[String] = Some(testVatNumber),
@@ -81,25 +80,25 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                       crn: Option[String] = None,
                       postCode: Option[PostCode] = None,
                       entityType: Option[PartnershipEntityType] = None,
-                      jointVentureProperty: Option[Boolean] = None
+                      hasOptionalSautr: Option[Boolean] = None
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers").withSession(
-      sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity, jointVentureProperty).toSeq: _*
+      sessionValues(vatNumber, sautr, crn, postCode, entityType, businessEntity, hasOptionalSautr).toSeq: _*
     )
 
   "Calling the show action of the Check your answers controller" when {
     "Partnership Entity is General Partnership" when {
       "the Optional SAUTR Partnership feature is enabled" when {
-        "The partnership is Joint Venture or Property" when {
+        "The partnership does not have an SAUTR" when {
           "All prerequisite data is in session" should {
             "Render the check your answers page" in {
               enable(OptionalSautrJourney)
               mockAuthAdminRole()
 
-              val result = TestCheckYourAnswersController.show(testGetRequest(
-                businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(true)
-              ))
+                val result = TestCheckYourAnswersController.show(testGetRequest(
+                  businessEntity = Some(GeneralPartnership),
+                  hasOptionalSautr = Some(false)
+                ))
 
               status(result) shouldBe Status.OK
               contentType(result) shouldBe Some("text/html")
@@ -107,7 +106,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             }
           }
 
-          "The partnership is NOT a Joint Venture or Property" when {
+          "The partnership has an Sautr" when {
             "All prerequisite data is in session" should {
               "Render the check your answers page" in {
                 enable(OptionalSautrJourney)
@@ -115,7 +114,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(false),
+                  hasOptionalSautr = Some(true),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 ))
@@ -133,7 +132,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(false),
+                  hasOptionalSautr = Some(true),
                   postCode = Some(testBusinessPostcode)
                 ))
 
@@ -149,7 +148,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = TestCheckYourAnswersController.show(testGetRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(false),
+                  hasOptionalSautr = Some(true),
                   sautr = Some(testSaUtr)
                 ))
 
@@ -159,7 +158,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             }
           }
 
-          "No answer has been provided for Joint Venture or Property" should {
+          "No answer has been provided for Do You Have A Utr" should {
             "Redirect to Capture Business Entity" in {
               enable(OptionalSautrJourney)
               mockAuthAdminRole()
@@ -174,7 +173,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
           }
         }
 
-        "the Joint Venture or Property Partnership feature is disabled" when {
+        "the Optional Sautr feature is disabled" when {
           "All prerequisite data is in session" should {
             "Render the check your answers page" in {
               disable(OptionalSautrJourney)
@@ -296,34 +295,39 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
   "Calling the submit action of the Check your answers controller" when {
     "Partnership Entity is General Partnership" when {
-      "the Joint Venture or Property Partnership feature is enabled" when {
-        "The partnership is Joint Venture or Property" when {
-          "All prerequisite data is in session" when {
-            "the storeJointVenturePropertyInformation is successful" should {
-              "Redirect to the Direct Debit resolver" in {
-                enable(OptionalSautrJourney)
-                mockAuthAdminRole()
-                mockStoreJointVentureInformation(testVatNumber)(Right(StoreJointVentureInformationSuccess))
+        "the Optional Sautr feature is enabled" when {
+          "The partnership does not have an Sautr" when {
+            "All prerequisite data is in session" when {
+              "the storeJointVenturePropertyInformation is successful" should {
+                "Redirect to the Direct Debit resolver" in {
+                  enable(OptionalSautrJourney)
+                  mockAuthAdminRole()
+                  mockStorePartnershipInformation(
+                    vatNumber = testVatNumber,
+                    sautr = None,
+                    postCode = None
+                  )(Right(StorePartnershipInformationSuccess))
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(true)
-                )))
+                  val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                    businessEntity = Some(GeneralPartnership)
+                  )))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
               }
 
-
-              "the storeJointVenturePropertyInformation fails" should {
+              "the storePartnershipInformation fails" should {
                 "throw an internal server error exception" in {
                   enable(OptionalSautrJourney)
                   mockAuthAdminRole()
-                  mockStoreJointVentureInformation(testVatNumber)(Left(StoreJointVentureInformationFailureResponse(BAD_REQUEST)))
+                  mockStorePartnershipInformation(
+                    vatNumber = testVatNumber,
+                    sautr = None,
+                    postCode = None
+                  )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
 
                   lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                    businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(true)
+                    businessEntity = Some(GeneralPartnership)
                   )))
 
                   intercept[InternalServerException](result)
@@ -338,8 +342,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                   vatNumber = None,
-                  businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(true)
+                  businessEntity = Some(GeneralPartnership)
                 )))
 
                 status(result) shouldBe Status.SEE_OTHER
@@ -352,9 +355,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 enable(OptionalSautrJourney)
                 mockAuthAdminRole()
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  jointVentureProperty = Some(true)
-                )))
+                val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -362,9 +363,9 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             }
           }
 
-          "The partnership is NOT Joint Venture or Property" when {
+          "The partnership has an Sautr" when {
             "All prerequisite data is in session" when {
-              "the storeJointVenturePropertyInformation is successful" should {
+              "the storePartnershipInformation is successful" should {
                 "Redirect to the Direct Debit resolver" in {
                   enable(OptionalSautrJourney)
                   mockAuthAdminRole()
@@ -376,7 +377,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                   val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(false),
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
                   )))
@@ -386,7 +386,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 }
               }
 
-              "the storeJointVenturePropertyInformation fails" should {
+              "the storePartnershipInformation fails" should {
                 "throw an internal server error exception" in {
                   enable(OptionalSautrJourney)
                   mockAuthAdminRole()
@@ -398,7 +398,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                   lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
-                    jointVentureProperty = Some(false),
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
                   )))
@@ -415,7 +414,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(false),
                   vatNumber = None,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
@@ -432,7 +430,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 mockAuthAdminRole()
 
                 val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  jointVentureProperty = Some(false),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
                 )))
@@ -441,56 +438,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
               }
             }
-
-            "SA UTR is missing from session" should {
-              "Redirect to Capture Business Entity page" in {
-                enable(OptionalSautrJourney)
-                mockAuthAdminRole()
-
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(false),
-                  postCode = Some(testBusinessPostcode)
-                )))
-
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-              }
-            }
-
-            "Business PostCode is missing from session" should {
-              "Redirect to Capture Business Entity page" in {
-                enable(OptionalSautrJourney)
-                mockAuthAdminRole()
-
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                  businessEntity = Some(GeneralPartnership),
-                  jointVentureProperty = Some(false),
-                  sautr = Some(testSaUtr)
-                )))
-
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-              }
-            }
-          }
-
-          "Joint Venture or Property answer is missing from session" should {
-            "Redirect Capture Business Entity page" in {
-              enable(OptionalSautrJourney)
-              mockAuthAdminRole()
-
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(GeneralPartnership)
-              )))
-
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-            }
           }
         }
 
-        "the Optional SaUtr Journey feature is disabled" when {
+        "the Optional Sautr feature is disabled" when {
           "All prerequisite data is held in session" when {
             "storePartnershipInformation is successful" should {
               "Redirect to the Direct Debit resolver" in {
@@ -584,7 +535,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(false),
                 vatNumber = None,
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode)
@@ -601,41 +551,8 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               mockAuthAdminRole()
 
               val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                jointVentureProperty = Some(false),
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode)
-              )))
-
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-            }
-          }
-
-          "SA UTR is missing from session" should {
-            "Redirect to Capture Business Entity page" in {
-              disable(OptionalSautrJourney)
-              mockAuthAdminRole()
-
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(false),
-                postCode = Some(testBusinessPostcode)
-              )))
-
-              status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
-            }
-          }
-
-          "Business PostCode is missing from session" should {
-            "Redirect to Capture Business Entity page" in {
-              disable(OptionalSautrJourney)
-              mockAuthAdminRole()
-
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                businessEntity = Some(GeneralPartnership),
-                jointVentureProperty = Some(false),
-                sautr = Some(testSaUtr)
               )))
 
               status(result) shouldBe Status.SEE_OTHER

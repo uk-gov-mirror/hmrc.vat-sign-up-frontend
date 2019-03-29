@@ -41,7 +41,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         uri = "/check-your-answers-partnership",
         cookies = Map(
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-          SessionKeys.jointVentureOrPropertyKey -> true.toString
+          SessionKeys.hasOptionalSautrKey -> false.toString
         )
       )
 
@@ -89,7 +89,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
   "POST /check-your-answers-partnership" when {
     "the user is a general partnership" when {
-      "the user is NOT a Joint Venture or Property Partnership" when {
+      "the user is has an optional Sautr" when {
         "store partnership information is successful" should {
           "redirect to agree to Direct Debit resolver" in {
             stubAuth(OK, successfulAuthResponse())
@@ -147,18 +147,23 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
       }
 
-      "the user IS a Joint Venture or Property Partnership" when {
-        "store joint venture information is successful" should {
+      "the user does not have an Sautr" when {
+        "store partnership information is successful" should {
           "redirect to agree to Direct Debit resolver" in {
             stubAuth(OK, successfulAuthResponse())
-            stubStoreJointVentureInformation(vatNumber = testVatNumber)(NO_CONTENT)
+            stubStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              sautr = None,
+              partnershipEntityType = generalPartnershipType,
+              companyNumber = None,
+              postCode = None
+            )(NO_CONTENT)
 
             val res = post(
               uri = "/check-your-answers-partnership",
               cookies = Map(
                 SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.jointVentureOrPropertyKey -> true.toString
+                SessionKeys.vatNumberKey -> testVatNumber
               )
             )()
 
@@ -169,17 +174,22 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           }
         }
 
-        "store joint venture information failed" should {
+        "store partnership information failed" should {
           "throw internal server error" in {
             stubAuth(OK, successfulAuthResponse())
-            stubStoreJointVentureInformation(testVatNumber)(BAD_REQUEST)
+            stubStorePartnershipInformation(
+              vatNumber = testVatNumber,
+              sautr = None,
+              partnershipEntityType = generalPartnershipType,
+              companyNumber = None,
+              postCode = None
+            )(BAD_REQUEST)
 
             val res = post(
               uri = "/check-your-answers-partnership",
               cookies = Map(
                 SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.jointVentureOrPropertyKey -> true.toString
+                SessionKeys.vatNumberKey -> testVatNumber
               )
             )()
 
