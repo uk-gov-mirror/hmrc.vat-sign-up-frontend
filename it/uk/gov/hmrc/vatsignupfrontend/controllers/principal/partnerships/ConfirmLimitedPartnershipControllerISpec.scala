@@ -86,7 +86,7 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
           stubAuth(OK, successfulAuthResponse())
           stubStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             LimitedPartnership,
             companyNumber = Some(testCompanyNumber),
             postCode = None
@@ -115,7 +115,7 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
       stubAuth(OK, successfulAuthResponse())
       stubStorePartnershipInformation(
         testVatNumber,
-        testSaUtr,
+        Some(testSaUtr),
         LimitedPartnership,
         companyNumber = Some(testCompanyNumber),
         postCode = None

@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, JointVenturePropertyJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -29,14 +28,13 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType}
 
-class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   val generalPartnershipType = PartnershipEntityType.GeneralPartnership
   val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
 
   "GET /check-your-answers-partnership" should {
     "return an OK for a Joint Venture or Property Partnership" in {
-      enable(JointVenturePropertyJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
@@ -53,7 +51,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
     }
 
     "return an OK for a general partnership" in {
-      disable(JointVenturePropertyJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
@@ -99,7 +96,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
             stubStorePartnershipInformation(
               vatNumber = testVatNumber,
               partnershipEntityType = generalPartnershipType,
-              sautr = testSaUtr,
+              sautr = Some(testSaUtr),
               companyNumber = None,
               postCode = Some(testBusinessPostCode)
             )(NO_CONTENT)
@@ -127,7 +124,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
             stubStorePartnershipInformation(
               vatNumber = testVatNumber,
               partnershipEntityType = generalPartnershipType,
-              sautr = testSaUtr,
+              sautr = Some(testSaUtr),
               companyNumber = None,
               postCode = Some(testBusinessPostCode)
             )(BAD_REQUEST)
@@ -153,7 +150,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       "the user IS a Joint Venture or Property Partnership" when {
         "store joint venture information is successful" should {
           "redirect to agree to Direct Debit resolver" in {
-            enable(JointVenturePropertyJourney)
             stubAuth(OK, successfulAuthResponse())
             stubStoreJointVentureInformation(vatNumber = testVatNumber)(NO_CONTENT)
 
@@ -175,7 +171,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
         "store joint venture information failed" should {
           "throw internal server error" in {
-            enable(JointVenturePropertyJourney)
             stubAuth(OK, successfulAuthResponse())
             stubStoreJointVentureInformation(testVatNumber)(BAD_REQUEST)
 
@@ -204,7 +199,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           stubStorePartnershipInformation(
             vatNumber = testVatNumber,
             partnershipEntityType = limitedPartnershipType,
-            sautr = testSaUtr,
+            sautr = Some(testSaUtr),
             companyNumber = Some(testCompanyNumber),
             postCode = Some(testBusinessPostCode)
           )(NO_CONTENT)
@@ -234,7 +229,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
           stubStorePartnershipInformation(
             vatNumber = testVatNumber,
             partnershipEntityType = limitedPartnershipType,
-            sautr = testSaUtr,
+            sautr = Some(testSaUtr),
             companyNumber = Some(testCompanyNumber),
             postCode = Some(testBusinessPostCode)
           )(BAD_REQUEST)
@@ -265,7 +260,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         stubStorePartnershipInformation(
           vatNumber = testVatNumber,
           partnershipEntityType = generalPartnershipType,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           companyNumber = None,
           postCode = Some(testBusinessPostCode)
         )(FORBIDDEN)
@@ -286,7 +281,5 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         )
       }
     }
-
   }
-
 }

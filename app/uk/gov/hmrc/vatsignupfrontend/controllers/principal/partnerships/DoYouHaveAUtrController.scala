@@ -23,36 +23,47 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.joint_venture_or_property
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.do_you_have_a_utr
+import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm._
 
 import scala.concurrent.Future
 
 @Singleton
-class JointVentureOrPropertyController @Inject()(val controllerComponents: ControllerComponents)
+class DoYouHaveAUtrController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(OptionalSautrJourney)) {
+  // TODO: change to OptionalSautrJourney feature switch
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(joint_venture_or_property(jointVentureOrPropertyForm(isAgent = false), routes.JointVentureOrPropertyController.submit())))
+      Future.successful(
+        Ok(do_you_have_a_utr(
+          doYouHaveAUtrForm(isAgent = false),
+          routes.DoYouHaveAUtrController.submit()
+        ))
+      )
     }
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        jointVentureOrPropertyForm(isAgent = false).bindFromRequest.fold(
-          formWithErrors => BadRequest(joint_venture_or_property(formWithErrors, routes.JointVentureOrPropertyController.submit()))
-          , {
+        doYouHaveAUtrForm(isAgent = false).bindFromRequest.fold(
+          formWithErrors =>
+            BadRequest(do_you_have_a_utr(
+              formWithErrors,
+              routes.DoYouHaveAUtrController.submit()
+            ))
+          ,
+          {
             case Yes =>
+              Redirect(routes.CapturePartnershipUtrController.show())
+                .addingToSession(SessionKeys.optionalUtrKey -> true.toString)
+            case No =>
               Redirect(routes.CheckYourAnswersPartnershipsController.show())
                 .removingFromSession(SessionKeys.partnershipSautrKey)
                 .removingFromSession(SessionKeys.businessPostCodeKey)
-                .addingToSession(SessionKeys.jointVentureOrPropertyKey -> true.toString)
-            case No =>
-              Redirect(routes.CapturePartnershipUtrController.show())
-                .addingToSession(SessionKeys.jointVentureOrPropertyKey -> false.toString)
+                .addingToSession(SessionKeys.optionalUtrKey -> false.toString)
           }
         )
       )

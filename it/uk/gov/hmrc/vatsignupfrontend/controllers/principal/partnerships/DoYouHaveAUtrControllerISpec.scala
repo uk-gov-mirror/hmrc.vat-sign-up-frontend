@@ -23,8 +23,9 @@ import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testSaUtr, testBusinessPostCode}
 
-class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomMatchers {
+class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -32,9 +33,9 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
     stubAuth(OK, successfulAuthResponse())
   }
 
-  "GET /joint-venture-or-property-partnership" should {
+  "GET /do-you-have-a-utr" should {
     "return an OK" in {
-      val res = get("/joint-venture-or-property-partnership")
+      val res = get("/do-you-have-a-utr")
 
       res should have(
         httpStatus(OK)
@@ -42,13 +43,28 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
     }
   }
 
-  "POST /joint-venture-or-property-partnership" when {
-    "form value is YES" should {
+  "POST /do-you-have-a-utr" when {
+    "form value is Yes" should {
+      "redirect to CapturePartnershipUtr page" in {
+        val res = post("/do-you-have-a-utr")(JointVentureOrPropertyForm.yesNo -> option_yes)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CapturePartnershipUtrController.show().url)
+        )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.optionalUtrKey) shouldBe Some(true.toString)
+      }
+    }
+
+    "form value is NO" should {
       "redirect to Check Your Answers Partnership page" in {
         val res = post(
-          uri = "/joint-venture-or-property-partnership",
-          cookies = Map(SessionKeys.partnershipSautrKey -> "utr", SessionKeys.businessPostCodeKey -> "postcode")
-        )(JointVentureOrPropertyForm.yesNo -> option_yes)
+          uri = "/do-you-have-a-utr",
+          cookies = Map(SessionKeys.partnershipSautrKey -> testSaUtr,
+            SessionKeys.businessPostCodeKey -> testBusinessPostCode.postCode
+          )
+        )(JointVentureOrPropertyForm.yesNo -> option_no)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -57,20 +73,7 @@ class JointVenturePropertyControllerISpec extends ComponentSpecBase with CustomM
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessPostCodeKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
-      }
-    }
-
-    "form value is NO" should {
-      "redirect to Choose Software error page" in {
-        val res = post("/joint-venture-or-property-partnership")(JointVentureOrPropertyForm.yesNo -> option_no)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CapturePartnershipUtrController.show().url)
-        )
-
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.optionalUtrKey) shouldBe Some(false.toString)
       }
     }
   }

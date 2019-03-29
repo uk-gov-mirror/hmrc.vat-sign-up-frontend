@@ -26,23 +26,24 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testBusinessPostcode}
 
-class JointVentureOrPropertyControllerSpec extends ControllerSpec {
+class DoYouHaveAUtrControllerSpec extends ControllerSpec {
 
-  object TestJointVentureOrPropertyController extends JointVentureOrPropertyController(mockControllerComponents)
+  object TestDoYouHaveAUtrController extends DoYouHaveAUtrController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/joint-venture-or-property-partnership")
+  val testGetRequest = FakeRequest("GET", "/do-you-have-a-utr")
 
   def testPostRequest(answer: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/joint-venture-or-property-partnership").withFormUrlEncodedBody(yesNo -> answer)
+    FakeRequest("POST", "/do-you-have-a-utr").withFormUrlEncodedBody(yesNo -> answer)
 
-  "Calling the show action of the Joint Venture or Property controller" when {
-    "The Joint Venture journey is enabled" should {
+  "Calling the show action of the Do You Have A Utr Controller" when {
+    "The feature switch is enabled" should {
       "return OK" in {
         enable(OptionalSautrJourney)
         mockAuthAdminRole()
 
-        lazy val result = await(TestJointVentureOrPropertyController.show(testGetRequest))
+        lazy val result = await(TestDoYouHaveAUtrController.show(testGetRequest))
 
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
@@ -50,61 +51,61 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
       }
     }
 
-    "The Joint Venture journey is disabled" should {
+    "The feature switch is disabled" should {
       "return NOT_FOUND" in {
         disable(OptionalSautrJourney)
         mockAuthAdminRole()
 
-        intercept[NotFoundException](await(TestJointVentureOrPropertyController.submit(
-          testPostRequest(answer = YesNoMapping.option_no)
-        )))
+        intercept[NotFoundException](await(TestDoYouHaveAUtrController.show(testGetRequest)))
       }
     }
   }
 
-  "Calling the submit action of the Joint Venture or Property controller" when {
-    "The Joint Venture journey is enabled" when {
+  "Calling the submit action of the Do You Have A Utr Controller" when {
+    "The feature switch is enabled" when {
       "form successfully submitted" when {
-        "the choice is YES" should {
+        "the choice is yes" should {
+          "redirect to CapturePartnershipUtr" in {
+            enable(OptionalSautrJourney)
+            mockAuthAdminRole()
+
+            val result = await(TestDoYouHaveAUtrController.submit(
+              testPostRequest(answer = YesNoMapping.option_yes)
+            ))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
+            session(result).get(SessionKeys.optionalUtrKey) shouldBe Some(true.toString)
+          }
+        }
+
+        "the choice is No" should {
           "redirect to CheckYourAnswersPartnership" in {
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestJointVentureOrPropertyController.submit(
-              testPostRequest(answer = YesNoMapping.option_yes).withSession(
-                SessionKeys.partnershipSautrKey -> "utr",
-                SessionKeys.businessPostCodeKey -> "postcode"
+            val result = await(TestDoYouHaveAUtrController.submit(
+              testPostRequest(answer = YesNoMapping.option_no).withSession(
+                SessionKeys.partnershipSautrKey -> testSaUtr,
+                SessionKeys.businessPostCodeKey -> testBusinessPostcode.postCode
               )
             ))
 
             status(result) shouldBe Status.SEE_OTHER
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
             session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
-            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(true.toString)
+            session(result).get(SessionKeys.optionalUtrKey) shouldBe Some(false.toString)
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
           }
         }
-        "the choice is NO" should {
-          "redirect to CapturePartnershipUtr" in {
-            enable(OptionalSautrJourney)
-            mockAuthAdminRole()
-
-            val result = await(TestJointVentureOrPropertyController.submit(
-              testPostRequest(answer = YesNoMapping.option_no)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
-            session(result).get(SessionKeys.jointVentureOrPropertyKey) shouldBe Some(false.toString)
-          }
-        }
       }
+
       "form submitted with errors" should {
         "return BAD_REQUEST" in {
           enable(OptionalSautrJourney)
           mockAuthAdminRole()
 
-          val result = await(TestJointVentureOrPropertyController.submit(testPostRequest("")))
+          val result = await(TestDoYouHaveAUtrController.submit(testPostRequest("")))
 
           status(result) shouldBe Status.BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
@@ -113,11 +114,11 @@ class JointVentureOrPropertyControllerSpec extends ControllerSpec {
       }
     }
 
-    "The Joint Venture journey is disabled" should {
+    "The feature switch is disabled" should {
       "return NOT_FOUND" in {
         disable(OptionalSautrJourney)
 
-        intercept[NotFoundException](await(TestJointVentureOrPropertyController.submit(
+        intercept[NotFoundException](await(TestDoYouHaveAUtrController.submit(
           testPostRequest(answer = YesNoMapping.option_no)
         )))
       }

@@ -177,7 +177,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
 
           mockStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             Some(testBusinessPostcode)
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
@@ -198,7 +198,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
 
           mockStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             testCompanyNumber,
             PartnershipEntityType.LimitedPartnership,
             Some(testBusinessPostcode)
@@ -222,7 +222,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
 
           mockStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             Some(testBusinessPostcode)
           )(Future.successful(Left(StorePartnershipKnownFactsFailure)))
 
@@ -241,7 +241,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           mockAuthRetrieveAgentEnrolment()
           mockStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             testCompanyNumber,
             PartnershipEntityType.LimitedPartnership,
             Some(testBusinessPostcode)
@@ -264,7 +264,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           mockAuthRetrieveAgentEnrolment()
           mockStorePartnershipInformation(
             testVatNumber,
-            testSaUtr,
+            Some(testSaUtr),
             Some(testBusinessPostcode)
           )(Future.successful(Left(StorePartnershipInformationFailureResponse(500))))
 
@@ -281,7 +281,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
         mockAuthRetrieveAgentEnrolment()
         mockStorePartnershipInformation(
           testVatNumber,
-          testSaUtr,
+          Some(testSaUtr),
           Some(testBusinessPostcode)
         )(Future.successful(Left(PartnershipUtrNotFound)))
 
@@ -300,7 +300,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
         mockAuthRetrieveAgentEnrolment()
         mockStorePartnershipInformation(
           testVatNumber,
-          testSaUtr,
+          Some(testSaUtr),
           testCompanyNumber,
           PartnershipEntityType.LimitedPartnership,
           Some(testBusinessPostcode)

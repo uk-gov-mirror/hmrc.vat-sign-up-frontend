@@ -39,7 +39,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
   implicit val hc = HeaderCarrier()
 
   def mockConnector(vatNumber: String,
-                    sautr: String,
+                    sautr: Option[String],
                     partnershipType: PartnershipEntityType,
                     companyNumber: Option[String],
                     postCode:Option[PostCode]): Unit = {
@@ -60,7 +60,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
       "call store partnership connector with general partnership" in {
         mockConnector(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           partnershipType = GeneralPartnership,
           companyNumber = None,
           postCode = None
@@ -68,7 +68,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           postCode = None
         )
 
@@ -80,7 +80,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
       "call store partnership connector with limited partnership" in {
         mockConnector(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           partnershipType = LimitedPartnership,
           companyNumber = Some(testCompanyNumber),
           postCode = None
@@ -88,7 +88,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           partnershipEntity = LimitedPartnership,
           companyNumber = testCompanyNumber,
           postCode = None
@@ -102,7 +102,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
       "call store partnership connector with general partnership" in {
         mockConnector(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           partnershipType = GeneralPartnership,
           companyNumber = None,
           postCode = Some(testBusinessPostcode)
@@ -110,7 +110,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           postCode = Some(testBusinessPostcode)
         )
 
@@ -122,7 +122,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
       "call store partnership connector with limited partnership" in {
         mockConnector(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           partnershipType = LimitedPartnership,
           companyNumber = Some(testCompanyNumber),
           postCode = Some(testBusinessPostcode)
@@ -130,7 +130,7 @@ class StorePartnershipInformationServiceSpec extends UnitSpec with MockitoSugar 
 
         val res = TestStorePartnershipInformationService.storePartnershipInformation(
           vatNumber = testVatNumber,
-          sautr = testSaUtr,
+          sautr = Some(testSaUtr),
           partnershipEntity = LimitedPartnership,
           companyNumber = testCompanyNumber,
           postCode = Some(testBusinessPostcode)

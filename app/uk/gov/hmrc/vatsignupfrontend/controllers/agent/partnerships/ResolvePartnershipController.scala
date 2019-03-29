@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, LimitedPartnershipBase}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionUtils
@@ -43,7 +43,7 @@ class ResolvePartnershipController @Inject()(val controllerComponents: Controlle
             Future.successful(
               Redirect(routes.AgentCapturePartnershipCompanyNumberController.show())
             )
-          case Some(GeneralPartnership) if isEnabled(JointVenturePropertyJourney) =>
+          case Some(GeneralPartnership) if isEnabled(OptionalSautrJourney) =>
             Future.successful(
               Redirect(routes.JointVenturePropertyController.show())
             )

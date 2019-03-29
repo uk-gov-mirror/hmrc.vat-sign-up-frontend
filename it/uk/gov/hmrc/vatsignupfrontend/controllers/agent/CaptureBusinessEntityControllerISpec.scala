@@ -29,7 +29,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   override def afterAll(): Unit = {
     super.afterAll()
     disable(DivisionJourney)
-    disable(JointVenturePropertyJourney)
+    disable(OptionalSautrJourney)
   }
 
   "GET /business-type" should {
@@ -86,7 +86,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "redirect to resolve partnership when joint venture or property feature switch is enabled" when {
       "the business entity is general partnership" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(JointVenturePropertyJourney)
+        enable(OptionalSautrJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
 

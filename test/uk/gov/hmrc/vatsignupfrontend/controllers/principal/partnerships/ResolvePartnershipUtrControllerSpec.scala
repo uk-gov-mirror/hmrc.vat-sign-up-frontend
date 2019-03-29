@@ -22,10 +22,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
-import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -70,10 +69,10 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
     "the user does not have a IR-SA-PART-ORG enrolment" when {
-      "the joint venture feature switch is enabled" when {
+      "the optional Sautr feature switch is enabled" when {
         "the user is a General Partnership" should {
-          "go to the joint venture page" in {
-            enable(JointVenturePropertyJourney)
+          "go to the Do You Have A Utr page" in {
+            enable(OptionalSautrJourney)
 
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
@@ -84,12 +83,12 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
             ))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.JointVentureOrPropertyController.show().url)
+            redirectLocation(result) should contain(routes.DoYouHaveAUtrController.show().url)
           }
         }
         "the user is a Limited Partnership" should {
           "go to the capture partnership UTR page" in {
-            enable(JointVenturePropertyJourney)
+            enable(OptionalSautrJourney)
 
             mockAuthorise(
               retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
@@ -104,7 +103,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
           }
         }
       }
-      "the joint venture feature switch is disabled" should {
+      "the optional sautr switch is disabled" should {
         "go to the capture partnership UTR page" in {
 
           mockAuthorise(

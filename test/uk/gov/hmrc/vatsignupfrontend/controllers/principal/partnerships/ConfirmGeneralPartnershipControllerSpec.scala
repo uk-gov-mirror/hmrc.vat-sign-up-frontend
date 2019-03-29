@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testVatNumber}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.{StorePartnershipInformationFailureResponse, StorePartnershipInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 
@@ -92,7 +92,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
           mockAuthAdminRole()
           mockStorePartnershipInformation(
             vatNumber = testVatNumber,
-            sautr = testSaUtr,
+            sautr = Some(testSaUtr),
             postCode = None
           )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
@@ -124,7 +124,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       mockAuthAdminRole()
       mockStorePartnershipInformation(
         vatNumber = testVatNumber,
-        sautr = testSaUtr,
+        sautr = Some(testSaUtr),
         postCode = None
       )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 

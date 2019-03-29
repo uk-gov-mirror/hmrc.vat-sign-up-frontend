@@ -92,7 +92,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "redirect to resolve partnership when the joint venture or property feature switch" when {
         "the business entity is general partnership" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(JointVenturePropertyJourney)
+          enable(OptionalSautrJourney)
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(generalPartnership))
           status(result) shouldBe Status.SEE_OTHER

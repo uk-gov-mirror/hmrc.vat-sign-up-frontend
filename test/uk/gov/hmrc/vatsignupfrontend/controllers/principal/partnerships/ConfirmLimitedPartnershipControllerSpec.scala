@@ -122,7 +122,7 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
           mockAuthAdminRole()
           mockStorePartnershipInformation(
             vatNumber = testVatNumber,
-            sautr = testSaUtr,
+            sautr = Some(testSaUtr),
             companyNumber = testCompanyNumber,
             partnershipEntity = LimitedPartnership,
             postCode = None
@@ -162,7 +162,7 @@ class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       mockAuthAdminRole()
       mockStorePartnershipInformation(
         vatNumber = testVatNumber,
-        sautr = testSaUtr,
+        sautr = Some(testSaUtr),
         companyNumber = testCompanyNumber,
         partnershipEntity = LimitedPartnership,
         postCode = None

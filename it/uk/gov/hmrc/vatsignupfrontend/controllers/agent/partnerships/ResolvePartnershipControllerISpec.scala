@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.JointVenturePropertyJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -30,7 +30,7 @@ class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMat
     "the user is a general partnership and joint venture feature switch is disabled" should {
       "redirect to the capture partnership utr page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        disable(JointVenturePropertyJourney)
+        disable(OptionalSautrJourney)
 
         val res = get("/client/resolve-partnership", Map(
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
@@ -45,7 +45,7 @@ class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMat
     "the user is a general partnership and joint venture feature switch is enabled" should {
       "redirect to the joint venture or property partnership page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(JointVenturePropertyJourney)
+        enable(OptionalSautrJourney)
 
         val res = get("/client/resolve-partnership", Map(
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)

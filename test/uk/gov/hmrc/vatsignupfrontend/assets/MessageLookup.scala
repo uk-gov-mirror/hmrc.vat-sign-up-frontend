@@ -1004,4 +1004,10 @@ object MessageLookup {
     val heading: String = "Is your client either a Joint Venture or Property Partnership?"
     val title = heading + ServiceName.agentSuffix
   }
+
+  object PrincipalDoYouHaveAUtr {
+    val heading: String = "Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
+    val title: String = heading + ServiceName.principalSuffix
+    val line: String = "This is a 10-digit number. You can find it on letters to the partnership from HMRC."
+  }
 }
