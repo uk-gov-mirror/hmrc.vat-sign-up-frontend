@@ -71,7 +71,7 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) should contain(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
     }
-    "the user is a General Partnership and Joint Venture or Property feature switch is disabled" should {
+    "the user is a General Partnership and the Optional SA UTR feature switch is disabled" should {
       "redirect to capture partnership utr page" in {
         disable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
@@ -84,8 +84,8 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
       }
     }
-    "the user is a General Partnership and the Joint Venture or Property feature switch is enabled" should {
-      "redirect to joint venture or property page" in {
+    "the user is a General Partnership and the Optional SA UTR feature switch is enabled" should {
+      "redirect to does your client have a UTR page" in {
         enable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
@@ -94,7 +94,7 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         ))
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.JointVenturePropertyController.show().url)
+        redirectLocation(result) should contain(routes.DoesYourClientHaveAUtrController.show().url)
       }
     }
   }

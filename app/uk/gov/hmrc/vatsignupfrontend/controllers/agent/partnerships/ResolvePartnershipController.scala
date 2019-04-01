@@ -45,7 +45,7 @@ class ResolvePartnershipController @Inject()(val controllerComponents: Controlle
             )
           case Some(GeneralPartnership) if isEnabled(OptionalSautrJourney) =>
             Future.successful(
-              Redirect(routes.JointVenturePropertyController.show())
+              Redirect(routes.DoesYourClientHaveAUtrController.show())
             )
           case Some(GeneralPartnership) =>
             Future.successful(
