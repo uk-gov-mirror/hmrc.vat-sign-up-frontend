@@ -160,8 +160,6 @@ error.agent.receive_email_notifications.field                          = Select 
 error.agent.receive_email_notifications.summary                        = Select if you want to be contacted by email or letters only
 error.principal.partnership.joint_venture_or_property.field            = Select yes if you are a Joint Venture or Property Partnership
 error.principal.partnership.joint_venture_or_property.summary          = Select if you are a Joint Venture or Property Partnership
-error.agent.partnership.joint_venture_or_property.field                = Select yes if your client is a Joint Venture or Property Partnership
-error.agent.partnership.joint_venture_or_property.summary              = Select if your client is a Joint Venture or Property Partnership
 error.principal.partnership.do_you_have_a_utr.field                    = Select yes if you have a Unique Taxpayer Reference number
 error.principal.partnership.do_you_have_a_utr.summary                  = Select yes if you have a Unique Taxpayer Reference number
 
@@ -738,7 +736,7 @@ agent.check-your-answers.business_entity                               = What ty
 agent.check-your-answers.utr                                           = What is your client''s Unique Taxpayer Reference (UTR)?
 agent.check-your-answers.company_number                                = What is your client''s company number?
 agent.check-your-answers.business_post_code                            = Where is your client''s principal place of business?
-agent.check-your-answers.joint_venture_or_property                     = Is your client either a Joint Venture or Property Partnership?
+agent.check-your-answers.does_your_client_have_a_utr                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
@@ -936,10 +934,6 @@ agent.send_your_application.line                                      = By submi
 ## Principle Joint Venture or Property Partnership
 principal.partnership.joint_venture_or_property.title                 = Are you either a Joint Venture or Property Partnership?
 principal.partnership.joint_venture_or_property.heading               = Are you either a Joint Venture or Property Partnership?
-
-## Agent Joint Venture or Property Partnership
-agent.partnership.joint_venture_or_property.title                     = Is your client either a Joint Venture or Property Partnership?
-agent.partnership.joint_venture_or_property.heading                   = Is your client either a Joint Venture or Property Partnership?
 
 ## Do you Have a UTR
 principal.partnership.do_you_have_a_utr.title                         = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?

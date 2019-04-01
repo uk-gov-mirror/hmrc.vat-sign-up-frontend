@@ -49,6 +49,42 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
       )
     }
 
+    "return an OK for general partnership with an optional SA UTR" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/check-your-answers",
+        Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.partnershipSautrKey -> testSaUtr,
+          SessionKeys.businessEntityKey -> GeneralPartnership.toString,
+          SessionKeys.hasOptionalSautrKey -> true.toString,
+          SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
+        )
+      )
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
+
+    "return an OK for general partnership without an optional SA UTR" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/check-your-answers",
+        Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.partnershipSautrKey -> testSaUtr,
+          SessionKeys.businessEntityKey -> GeneralPartnership.toString,
+          SessionKeys.hasOptionalSautrKey -> false.toString,
+          SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
+        )
+      )
+
+      res should have(
+        httpStatus(OK)
+      )
+    }
+
     "return an OK for limited partnership" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
