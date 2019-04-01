@@ -80,17 +80,6 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
 
   "POST /confirm-partnership-company" should {
 
-      "LimitedPartnershipJourney is disabled" should {
-        "return an NOT_FOUND" in {
-
-          val res = post("/confirm-partnership-company")()
-
-          res should have(
-            httpStatus(NOT_FOUND)
-          )
-        }
-      }
-
     "redirect to resolve partnership utr" in {
 
       stubAuth(OK, successfulAuthResponse())
