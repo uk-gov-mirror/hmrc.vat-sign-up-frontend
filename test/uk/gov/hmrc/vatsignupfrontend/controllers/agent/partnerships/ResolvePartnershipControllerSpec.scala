@@ -20,10 +20,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, OptionalSautrJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
@@ -37,7 +37,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   "Calling the resolve action of the Resolve Partnership Controller" when {
     "the user is a Limited Partnership" should {
       "redirect to capture partnership company number page" in {
-        enable(LimitedPartnershipJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
@@ -50,7 +49,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "the user is a Limited Liability Partnership" should {
       "redirect to capture partnership company number page" in {
-        enable(LimitedPartnershipJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
@@ -63,7 +61,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "the user is a Scottish Limited Partnership" should {
       "redirect to capture partnership company number page" in {
-        enable(LimitedPartnershipJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
@@ -76,7 +73,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "the user is a General Partnership and Joint Venture or Property feature switch is disabled" should {
       "redirect to capture partnership utr page" in {
-        enable(GeneralPartnershipJourney)
         disable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
@@ -90,7 +86,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "the user is a General Partnership and the Joint Venture or Property feature switch is enabled" should {
       "redirect to joint venture or property page" in {
-        enable(GeneralPartnershipJourney)
         enable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
@@ -100,17 +95,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.JointVenturePropertyController.show().url)
-      }
-    }
-    "both partnership feature switches are disabled" should {
-      "Return not found exception" in {
-        disable(GeneralPartnershipJourney)
-        disable(LimitedPartnershipJourney)
-        mockAuthRetrieveAgentEnrolment()
-
-        intercept[NotFoundException](
-          await(TestResolvePartnershipController.resolve(testGetRequest))
-        )
       }
     }
   }

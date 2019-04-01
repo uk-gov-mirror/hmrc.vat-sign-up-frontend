@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -25,25 +24,12 @@ class SignInWithDifferentDetailsPartnershipControllerISpec extends ComponentSpec
 
   "GET /right-partnership-utr" should {
     "return an OK" in {
-      enable(GeneralPartnershipJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/right-partnership-utr")
 
       res should have(
         httpStatus(OK)
-      )
-    }
-
-    "return an Not Found if the feature switches are disabled" in {
-      disable(GeneralPartnershipJourney)
-      disable(LimitedPartnershipJourney)
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/right-partnership-utr")
-
-      res should have(
-        httpStatus(NOT_FOUND)
       )
     }
   }

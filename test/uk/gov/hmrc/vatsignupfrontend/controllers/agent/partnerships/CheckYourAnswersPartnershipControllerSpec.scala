@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -79,11 +78,6 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
     FakeRequest("POST", "/check-your-answers").withSession(
       sessionValues(vatNumber, sautr, postCode, entityType, companyNumber, partnershipEntityType).toSeq: _*
     )
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-  }
 
   "Calling the show action of the Check your answers controller" when {
     "all prerequisite data are in session for general partnership" should {

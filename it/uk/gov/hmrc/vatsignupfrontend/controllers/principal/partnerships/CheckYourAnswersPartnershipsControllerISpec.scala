@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, OptionalSautrJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -29,20 +28,13 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, PartnershipEntityType}
 
-class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
+class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   val generalPartnershipType = PartnershipEntityType.GeneralPartnership
   val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
 
   "GET /check-your-answers-partnership" should {
     "return an OK for a Joint Venture or Property Partnership" in {
-      enable(OptionalSautrJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
@@ -59,7 +51,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
     }
 
     "return an OK for a general partnership" in {
-      disable(OptionalSautrJourney)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
@@ -93,20 +84,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       res should have(
         httpStatus(OK)
       )
-    }
-
-    "if all feature switches are disabled" should {
-      "return a not found" in {
-        disable(GeneralPartnershipJourney)
-        disable(LimitedPartnershipJourney)
-        disable(OptionalSautrJourney)
-
-        val res = get("/check-your-answers-partnership")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
     }
   }
 
@@ -173,7 +150,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
       "the user does not have an Sautr" when {
         "store partnership information is successful" should {
           "redirect to agree to Direct Debit resolver" in {
-            enable(OptionalSautrJourney)
             stubAuth(OK, successfulAuthResponse())
             stubStorePartnershipInformation(
               vatNumber = testVatNumber,
@@ -200,7 +176,6 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
         "store partnership information failed" should {
           "throw internal server error" in {
-            enable(OptionalSautrJourney)
             stubAuth(OK, successfulAuthResponse())
             stubStorePartnershipInformation(
               vatNumber = testVatNumber,
@@ -316,7 +291,5 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
         )
       }
     }
-
   }
-
 }

@@ -22,22 +22,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class CouldNotConfirmKnownFactsSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-  }
 
   object TestCouldNotConfirmKnownFactsController extends CouldNotConfirmKnownFactsController(mockControllerComponents)
 

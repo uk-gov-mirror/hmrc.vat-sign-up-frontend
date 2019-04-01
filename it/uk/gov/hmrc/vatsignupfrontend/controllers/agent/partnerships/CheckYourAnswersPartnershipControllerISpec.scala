@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipJourney, LimitedPartnershipJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -30,18 +30,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartners
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
 class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-  }
 
   "GET /client/check-your-answers" should {
     "return an OK for general partnership" in {
@@ -77,19 +65,6 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
 
       res should have(
         httpStatus(OK)
-      )
-    }
-
-    "return an NOT FOUND" in {
-      disable(GeneralPartnershipJourney)
-      disable(LimitedPartnershipJourney)
-
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-      val res = get("/client/check-your-answers")
-
-      res should have(
-        httpStatus(NOT_FOUND)
       )
     }
   }

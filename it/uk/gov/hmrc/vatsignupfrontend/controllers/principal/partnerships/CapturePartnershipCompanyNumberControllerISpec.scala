@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -27,16 +26,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedPartnership, 
 
 class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    enable(LimitedPartnershipJourney)
-  }
-
   "GET /partnership-company-number" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
@@ -45,17 +34,6 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
 
       res should have(
         httpStatus(OK)
-      )
-    }
-
-    "return an NOT FOUND" in {
-      disable(LimitedPartnershipJourney)
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/partnership-company-number")
-
-      res should have(
-        httpStatus(NOT_FOUND)
       )
     }
   }

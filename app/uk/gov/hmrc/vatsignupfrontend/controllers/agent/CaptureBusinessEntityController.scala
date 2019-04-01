@@ -41,8 +41,6 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         Ok(capture_business_entity(
           businessEntityForm,
           routes.CaptureBusinessEntityController.submit(),
-          isEnabled(GeneralPartnershipJourney),
-          isEnabled(LimitedPartnershipJourney),
           isEnabled(DivisionJourney),
           isEnabled(UnincorporatedAssociationJourney),
           isEnabled(TrustJourney),
@@ -62,8 +60,6 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             BadRequest(capture_business_entity(
               formWithErrors,
               routes.CaptureBusinessEntityController.submit(),
-              isEnabled(GeneralPartnershipJourney),
-              isEnabled(LimitedPartnershipJourney),
               isEnabled(DivisionJourney),
               isEnabled(UnincorporatedAssociationJourney),
               isEnabled(TrustJourney),

@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class CouldNotFindPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -33,16 +32,6 @@ class CouldNotFindPartnershipControllerSpec extends UnitSpec with GuiceOneAppPer
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/error/company-number-not-found ")
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(LimitedPartnershipJourney)
-  }
 
   "Calling the show action of the Could not find Partnership controller" should {
     "show the could not find partnership  page" in {

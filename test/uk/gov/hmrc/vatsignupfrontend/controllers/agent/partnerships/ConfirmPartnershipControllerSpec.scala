@@ -31,16 +31,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 class ConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(LimitedPartnershipJourney)
-  }
-
   object TestConfirmPartnershipController extends ConfirmPartnershipController(mockControllerComponents)
 
   val testGetRequest = FakeRequest("GET", "/confirm-partnership-company")

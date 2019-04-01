@@ -29,8 +29,6 @@ object FeatureSwitch {
   val switches: Set[FeatureSwitch] = Set(
     StubIncorporationInformation,
     BTAClaimSubscription,
-    GeneralPartnershipJourney,
-    LimitedPartnershipJourney,
     DivisionJourney,
     UnincorporatedAssociationJourney,
     TrustJourney,
@@ -62,16 +60,6 @@ case object StubIncorporationInformation extends FeatureSwitch {
 case object BTAClaimSubscription extends FeatureSwitch {
   override val name: String = s"$prefix.bta-claim-subscription"
   override val displayText: String = "Enable users from BTA to claim their subscription through VAT sign up"
-}
-
-case object GeneralPartnershipJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.general-partnership-journey"
-  override val displayText: String = "Enable users to enter general partnership flow"
-}
-
-case object LimitedPartnershipJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.limited-partnership-journey"
-  override val displayText: String = "Enable users to enter limited partnership flow"
 }
 
 case object UnplannedShutter extends FeatureSwitch {

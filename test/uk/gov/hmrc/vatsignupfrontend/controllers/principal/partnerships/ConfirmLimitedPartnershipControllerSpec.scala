@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
@@ -39,11 +38,6 @@ import scala.concurrent.Future
 
 class ConfirmLimitedPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStorePartnershipInformationService {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
 
   object TestConfirmLimitedPartnershipController extends ConfirmLimitedPartnershipController(
     mockControllerComponents,

@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -26,30 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(LimitedPartnershipJourney)
-  }
-
   "GET /confirm-partnership-company" when {
-    "LimitedPartnershipJourney is disabled" should {
-      "return an NOT_FOUND" in {
-        disable(LimitedPartnershipJourney)
-
-        val res = get("/confirm-partnership-company")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
-
-    "LimitedPartnershipJourney is enabled" should {
       "return an OK" in {
 
         stubAuth(OK, successfulAuthResponse())
@@ -100,22 +76,9 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         }
       }
 
-    }
   }
 
   "POST /confirm-partnership-company" should {
-
-      "LimitedPartnershipJourney is disabled" should {
-        "return an NOT_FOUND" in {
-          disable(LimitedPartnershipJourney)
-
-          val res = post("/confirm-partnership-company")()
-
-          res should have(
-            httpStatus(NOT_FOUND)
-          )
-        }
-      }
 
     "redirect to resolve partnership utr" in {
 

@@ -24,8 +24,6 @@
 
 @(businessEntityForm: Form[BusinessEntity],
     postAction: Call,
-    generalPartnershipEnabled: Boolean,
-    limitedPartnershipEnabled: Boolean,
     divisionEnabled: Boolean,
     unincorporatedAssociationEnabled: Boolean,
     trustEnabled: Boolean,
@@ -37,10 +35,6 @@
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
 }
-
-@generalPartnershipOption = @{ Some((generalPartnership, Messages("principal.capture_entity_type.generalPartnership"))).filter(_ => generalPartnershipEnabled) }
-
-@limitedPartnershipOption = @{ Some((limitedPartnership, Messages("principal.capture_entity_type.limitedPartnership"))).filter(_ => limitedPartnershipEnabled) }
 
 @divisionOption = @{ Some((division, Messages("principal.capture_entity_type.division"))).filter(_ => divisionEnabled) }
 
@@ -67,11 +61,11 @@
             inline = false,
             options = Seq(
                 (soleTrader, Messages("principal.capture_entity_type.soleTrader")),
-                (limitedCompany, Messages("principal.capture_entity_type.limitedCompany"))
-            ) ++ generalPartnershipOption
-              ++ limitedPartnershipOption
-              ++ Seq((vatGroup, Messages("principal.capture_entity_type.vatGroup")))
-              ++ divisionOption
+                (limitedCompany, Messages("principal.capture_entity_type.limitedCompany")),
+                (generalPartnership, Messages("principal.capture_entity_type.generalPartnership")),
+                (limitedPartnership, Messages("principal.capture_entity_type.limitedPartnership")),
+                (vatGroup, Messages("principal.capture_entity_type.vatGroup"))
+             )++ divisionOption
               ++ unincorporatedAssociationOption
               ++ trustOption
               ++ registeredSocietyOption

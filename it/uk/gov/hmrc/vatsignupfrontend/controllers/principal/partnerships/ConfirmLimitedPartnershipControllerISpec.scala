@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.LimitedPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping.{option_no, option_yes}
@@ -30,11 +29,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.LimitedPartner
 
 
 class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(LimitedPartnershipJourney)
-  }
 
   "GET /confirm-partnership" should {
     "return an OK" in {
@@ -57,7 +51,6 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
 
   "if feature switch is disabled" should {
     "return a not found" in {
-      disable(LimitedPartnershipJourney)
 
       val res = get("/confirm-partnership")
 

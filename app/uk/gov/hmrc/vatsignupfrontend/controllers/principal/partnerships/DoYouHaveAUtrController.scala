@@ -23,9 +23,9 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.do_you_have_a_utr
-import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm._
 
 import scala.concurrent.Future
 

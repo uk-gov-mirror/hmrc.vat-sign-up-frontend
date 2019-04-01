@@ -18,23 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.yesNo
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping.{option_no, option_yes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.GeneralPartnership
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping.{option_no, option_yes}
 
 
 class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-  }
 
   "GET /confirm-partnership-utr" should {
     "return an OK" in {
@@ -44,18 +38,6 @@ class ConfirmGeneralPartnershipControllerISpec extends ComponentSpecBase with Cu
 
       res should have(
         httpStatus(OK)
-      )
-    }
-  }
-
-  "if feature switch is disabled" should {
-    "return a not found" in {
-      disable(GeneralPartnershipJourney)
-
-      val res = get("/confirm-partnership-utr")
-
-      res should have(
-        httpStatus(NOT_FOUND)
       )
     }
   }

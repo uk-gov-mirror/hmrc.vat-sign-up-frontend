@@ -17,29 +17,22 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.partnership_ppob
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.partnership_ppob
 
 import scala.concurrent.Future
 
 @Singleton
 class PartnershipPostCodeController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(GeneralPartnershipJourney, LimitedPartnershipJourney)) {
-
-  override def featureEnabled[T](func: => T): T =
-    if (featureSwitches exists isEnabled) func
-    else throw new NotFoundException(featureSwitchError)
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val postCodeForm: PrevalidationAPI[PostCode] = partnershipPostCodeForm(isAgent = true)
 

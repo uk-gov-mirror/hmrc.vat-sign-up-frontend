@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipJourney, LimitedPartnershipJourney}
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -25,67 +24,16 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class PartnershipPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GeneralPartnershipJourney)
-    enable(LimitedPartnershipJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-  }
-
   "GET /principal-place-postcode" when {
-    "both feature switches are enabled" should {
-      "return an OK" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get("/client/principal-place-postcode")
+      val res = get("/client/principal-place-postcode")
 
-        res should have(
-          httpStatus(OK)
-        )
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
-    "only general partnership is enabled" should {
-      "return an OK" in {
-        enable(GeneralPartnershipJourney)
-        disable(LimitedPartnershipJourney)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get("/client/principal-place-postcode")
-
-        res should have(
-          httpStatus(OK)
-        )
-      }
-    }
-    "only limited partnership is enabled" should {
-      "return an OK" in {
-        disable(GeneralPartnershipJourney)
-        enable(LimitedPartnershipJourney)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get("/client/principal-place-postcode")
-
-        res should have(
-          httpStatus(OK)
-        )
-      }
-    }
-  }
-  "return an Not Found if both feature switch are disabled" in {
-    disable(GeneralPartnershipJourney)
-    disable(LimitedPartnershipJourney)
-    stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-    val res = get("/client/principal-place-postcode")
-
-    res should have(
-      httpStatus(NOT_FOUND)
-    )
   }
 
   "POST /principal-place-postcode" should {
