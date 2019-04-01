@@ -26,18 +26,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /confirm-partnership-company" when {
-    "LimitedPartnershipJourney is disabled" should {
-      "return an NOT_FOUND" in {
-
-        val res = get("/confirm-partnership-company")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
-
-    "LimitedPartnershipJourney is enabled" should {
       "return an OK" in {
 
         stubAuth(OK, successfulAuthResponse())
@@ -88,7 +76,6 @@ class ConfirmPartnershipControllerISpec extends ComponentSpecBase with CustomMat
         }
       }
 
-    }
   }
 
   "POST /confirm-partnership-company" should {

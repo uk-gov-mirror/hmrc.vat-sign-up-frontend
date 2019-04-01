@@ -25,38 +25,14 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class PartnershipPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /principal-place-postcode" when {
-    "both feature switches are enabled" should {
-      "return an OK" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get("/client/principal-place-postcode")
+      val res = get("/client/principal-place-postcode")
 
-        res should have(
-          httpStatus(OK)
-        )
-      }
-    }
-    "only general partnership is enabled" should {
-      "return an OK" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get("/client/principal-place-postcode")
-
-        res should have(
-          httpStatus(OK)
-        )
-      }
-    }
-    "only limited partnership is enabled" should {
-      "return an OK" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get("/client/principal-place-postcode")
-
-        res should have(
-          httpStatus(OK)
-        )
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
   }
 
