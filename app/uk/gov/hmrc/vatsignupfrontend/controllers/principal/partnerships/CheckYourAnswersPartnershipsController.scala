@@ -18,8 +18,8 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, Result}
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
@@ -37,8 +37,7 @@ import scala.concurrent.Future
 class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents: ControllerComponents,
                                                        val storePartnershipInformationService: StorePartnershipInformationService,
                                                        val storeJointVentureInformationService: StoreJointVentureInformationService)
-  extends AuthenticatedController(
-    retrievalPredicate = AdministratorRolePredicate){
+  extends AuthenticatedController(retrievalPredicate = AdministratorRolePredicate){
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
