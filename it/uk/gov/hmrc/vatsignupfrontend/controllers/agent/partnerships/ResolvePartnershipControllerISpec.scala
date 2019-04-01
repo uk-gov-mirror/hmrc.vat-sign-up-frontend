@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedCompany,
 class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /resolve-partnership" when {
-    "the user is a general partnership and joint venture feature switch is disabled" should {
+    "the user is a general partnership and the Optional SA UTR feature switch is disabled" should {
       "redirect to the capture partnership utr page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         disable(OptionalSautrJourney)
@@ -42,8 +42,8 @@ class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMat
         )
       }
     }
-    "the user is a general partnership and joint venture feature switch is enabled" should {
-      "redirect to the joint venture or property partnership page" in {
+    "the user is a general partnership and the Optional SA UTR feature switch is enabled" should {
+      "redirect to the does your client have a UTR page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         enable(OptionalSautrJourney)
 
@@ -53,7 +53,7 @@ class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMat
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.JointVenturePropertyController.show().url)
+          redirectUri(routes.DoesYourClientHaveAUtrController.show().url)
         )
       }
     }
