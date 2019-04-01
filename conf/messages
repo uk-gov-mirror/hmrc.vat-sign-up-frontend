@@ -945,3 +945,8 @@ agent.partnership.joint_venture_or_property.heading                   = Is your 
 principal.partnership.do_you_have_a_utr.title                         = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 principal.partnership.do_you_have_a_utr.heading                       = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 principal.partnership.do_you_have_a_utr.line                          = This is a 10-digit number. You can find it on letters to the partnership from HMRC.
+
+## Agent - Does Your Client Have a UTR
+agent.partnership.does_your_client_have_a_utr.title                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+agent.partnership.does_your_client_have_a_utr.heading                 = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+agent.partnership.does_your_client_have_a_utr.line                    = This is a 10-digit number. You can find it on letters to the partnership from HMRC.
