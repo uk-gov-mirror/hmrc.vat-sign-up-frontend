@@ -24,10 +24,9 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreJointVentureInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreJointVentureInformationService, StorePartnershipInformationService}
+import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers
 
@@ -35,8 +34,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: ControllerComponents,
-                                                      val storePartnershipInformationService: StorePartnershipInformationService,
-                                                      val storeJointVentureInformationService: StoreJointVentureInformationService)
+                                                      val storePartnershipInformationService: StorePartnershipInformationService)
   extends AuthenticatedController(retrievalPredicate = AgentEnrolmentPredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
@@ -44,40 +42,31 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optJointVentureProperty = request.session.get(SessionKeys.jointVentureOrPropertyKey).map(_.toBoolean)
+      val optHasOptionalSautr = request.session.getModel[Boolean](SessionKeys.hasOptionalSautrKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
 
-      (optVatNumber, optJointVentureProperty, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
-        case (Some(_), Some(true), Some(GeneralPartnership), _, _, _) =>
-          Future.successful(Ok(check_your_answers(
-            entityType = GeneralPartnership,
-            utr = None,
-            companyNumber = None,
-            postCode = None,
-            jointVentureProperty = optJointVentureProperty,
-            postAction = routes.CheckYourAnswersPartnershipController.submit()
-          )))
-        case (Some(_), _, Some(GeneralPartnership), _, Some(_), Some(_)) =>
+      (optVatNumber, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr) match {
+        case (Some(_), Some(GeneralPartnership), _, _) =>
           Future.successful(Ok(check_your_answers(
             entityType = GeneralPartnership,
             utr = optPartnershipUtr,
             companyNumber = None,
             postCode = optPartnershipPostCode,
-            jointVentureProperty = optJointVentureProperty,
+            hasOptionalSautr = optHasOptionalSautr,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
-        case (Some(_), _, Some(entity: LimitedPartnershipBase), Some(_), Some(_), Some(_)) =>
+        case (Some(_), Some(entity: LimitedPartnershipBase), Some(_), Some(_)) =>
           Future.successful(Ok(check_your_answers(
             entityType = entity,
             utr = optPartnershipUtr,
             companyNumber = optPartnershipCrn,
             postCode = optPartnershipPostCode,
-            jointVentureProperty = None,
+            hasOptionalSautr = None,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
-        case (None, _, _, _, _, _) =>
+        case (None, _, _, _) =>
           Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
         case _ =>
           Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
@@ -90,45 +79,34 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optJointVentureProperty = request.session.getModel[Boolean](SessionKeys.jointVentureOrPropertyKey)
+      val optHasOptionalSautr = request.session.getModel[Boolean](SessionKeys.hasOptionalSautrKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val optPartnershipType = request.session.getModel[PartnershipEntityType](SessionKeys.partnershipTypeKey)
 
-      (optVatNumber, optJointVentureProperty, optBusinessEntityType) match {
-        case (Some(vrn), Some(true), Some(GeneralPartnership)) =>
-          storeJointVentureInformationService.storeJointVentureInformation(vrn) map {
-            case Right(StoreJointVentureInformationSuccess) => Redirect(agentRoutes.CaptureAgentEmailController.show())
-            case Left(StoreJointVentureInformationFailureResponse(status)) =>
-              throw new InternalServerException("Store Joint Venture Partnership Information failed with status code: " + status)
+      (optVatNumber, optBusinessEntityType) match {
+        case (Some(vrn), Some(GeneralPartnership)) =>
+          storePartnershipInformationService.storePartnershipInformation(
+            vatNumber = vrn,
+            sautr = optPartnershipUtr,
+            postCode = optPartnershipPostCode
+          ) map {
+            case Right(StorePartnershipInformationSuccess) =>
+              Redirect(agentRoutes.CaptureAgentEmailController.show())
+            case Left(PartnershipUtrNotFound) =>
+              Redirect(routes.CouldNotConfirmPartnershipController.show())
+            case Left(StorePartnershipKnownFactsFailure) =>
+              Redirect(routes.CouldNotConfirmPartnershipController.show())
+            case Left(StorePartnershipInformationFailureResponse(status)) =>
+              throw new InternalServerException("Store Partnership failed with status code: " + status)
           }
-        case (Some(vrn), _, Some(GeneralPartnership)) =>
-          (optPartnershipUtr, optPartnershipPostCode) match {
-            case (Some(utr), Some(_)) =>
+        case (Some(vrn), Some(entity: LimitedPartnershipBase)) =>
+          (optPartnershipCrn, optPartnershipType, optPartnershipUtr) match {
+            case (Some(crn), Some(partnershipType), Some(utr)) =>
               storePartnershipInformationService.storePartnershipInformation(
                 vatNumber = vrn,
-                sautr = Some(utr),
-                postCode = optPartnershipPostCode
-              ) map {
-                case Right(StorePartnershipInformationSuccess) =>
-                  Redirect(agentRoutes.CaptureAgentEmailController.show())
-                case Left(PartnershipUtrNotFound) =>
-                  Redirect(routes.CouldNotConfirmPartnershipController.show())
-                case Left(StorePartnershipKnownFactsFailure) =>
-                  Redirect(routes.CouldNotConfirmPartnershipController.show())
-                case Left(StorePartnershipInformationFailureResponse(status)) =>
-                  throw new InternalServerException("Store Partnership failed with status code: " + status)
-              }
-            case _ =>
-              Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
-          }
-        case (Some(vrn), _, Some(entity: LimitedPartnershipBase)) =>
-          (optPartnershipUtr, optPartnershipPostCode, optPartnershipCrn, optPartnershipType) match {
-            case (Some(utr), Some(_), Some(crn), Some(partnershipType)) =>
-              storePartnershipInformationService.storePartnershipInformation(
-                vatNumber = vrn,
-                sautr = Some(utr),
+                sautr = optPartnershipUtr,
                 companyNumber = crn,
                 partnershipEntity = partnershipType,
                 postCode = optPartnershipPostCode
@@ -145,7 +123,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             case _ =>
               Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
           }
-        case (None, _, _) =>
+        case (None, _) =>
           Future.successful(Redirect(agentRoutes.CaptureVatNumberController.show()))
         case _ =>
           Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))

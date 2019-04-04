@@ -821,7 +821,7 @@ object MessageLookup {
     val yourBusinessPostCode = "Where is your client's principal place of business?"
     val generalPartnership: String = "General partnership"
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
-    val jointVentureProperty: String = "Is your client either a Joint Venture or Property Partnership?"
+    val hasOptionalSautr: String = "Does your client's partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
   }
 
   object UnplannedOutage {
@@ -998,11 +998,6 @@ object MessageLookup {
   object PrincipalJointVentureOrProperty {
     val heading: String = "Are you either a Joint Venture or Property Partnership?"
     val title = heading + ServiceName.principalSuffix
-  }
-
-  object AgentJointVentureOrProperty {
-    val heading: String = "Is your client either a Joint Venture or Property Partnership?"
-    val title = heading + ServiceName.agentSuffix
   }
 
   object PrincipalDoYouHaveAUtr {

@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
-import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.JointVenturePropertyId
+import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.HasOptionalSautrId
 import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 
@@ -82,7 +82,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     lazy val expectedUrlUtr = partnershipRoutes.CapturePartnershipUtrController.show().url
     lazy val expectedUrlPostCode = partnershipRoutes.PartnershipPostCodeController.show().url
     lazy val expectedUrlCompanyNumber = partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url
-    lazy val expectedUrlJointVenturePropertyUrl = partnershipRoutes.JointVenturePropertyController.show().url
+    lazy val expectedSaUtrUrl = partnershipRoutes.DoesYourClientHaveAUtrController.show().url
 
     "the saUtr and the post code are given for a general partnership" should {
       val testPage = TestView(
@@ -94,7 +94,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           entityType = GeneralPartnership,
           Some(testBusinessPostcode),
           companyNumber = None,
-          jointVentureProperty = None,
+          hasOptionalSautr = None,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
       )
@@ -112,20 +112,20 @@ class CheckYourAnswersViewSpec extends ViewSpec {
       }
     }
 
-    "the General Partnership is a Joint Venture or Property Partnerhsip" should {
+    "the General Partnership has an optional SA UTR" should {
       "render the page correctly" in {
         lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
           utr = Some(testSaUtr),
           entityType = GeneralPartnership,
           postCode = None,
           companyNumber = None,
-          jointVentureProperty = Some(true),
+          hasOptionalSautr = Some(true),
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
         lazy val doc = Jsoup.parse(page.body)
 
-        sectionTest(JointVenturePropertyId, messages.jointVentureProperty, MessageLookup.Base.yes, Some(expectedUrlJointVenturePropertyUrl), doc)
+        sectionTest(HasOptionalSautrId, messages.hasOptionalSautr, MessageLookup.Base.yes, Some(expectedSaUtrUrl), doc)
       }
     }
 
@@ -136,7 +136,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           entityType = LimitedPartnership,
           Some(testBusinessPostcode),
           companyNumber = Some(testCompanyNumber),
-          jointVentureProperty = None,
+          hasOptionalSautr = None,
           postAction = testCall
         )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
