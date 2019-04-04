@@ -26,11 +26,11 @@
   entityType: BusinessEntity,
   postCode: Option[PostCode],
   companyNumber: Option[String],
-  jointVentureProperty: Option[Boolean],
+  hasOptionalSautr: Option[Boolean],
   postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
-@import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, JointVenturePropertyId}
+@import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, HasOptionalSautrId}
 
 @businessEntityCheck() = @{
     val rowName = BusinessEntityId
@@ -76,13 +76,13 @@
         case _ => Html("")
     }
 }
-@jointVentureOrProperty() = @{
-    jointVentureProperty match {
-        case Some(isJointVentureProperty)=>
-            val rowName = JointVenturePropertyId
-            val rowQuestion = Messages("agent.check-your-answers.joint_venture_or_property")
-            val rowAnswer = if (isJointVentureProperty) Messages("base.yes") else Messages("base.no")
-            val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.JointVenturePropertyController.show().url
+@hasOptionalSautrQuestion() = @{
+    hasOptionalSautr match {
+        case Some(hasSautrAnswer)=>
+            val rowName = HasOptionalSautrId
+            val rowQuestion = Messages("agent.check-your-answers.does_your_client_have_a_utr")
+            val rowAnswer = if (hasSautrAnswer) Messages("base.yes") else Messages("base.no")
+            val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.DoesYourClientHaveAUtrController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")
     }
@@ -94,7 +94,7 @@
 
     <div class="form-group">
         @businessEntityCheck()
-        @jointVentureOrProperty()
+        @hasOptionalSautrQuestion()
         @partnershipCompanyNumber()
         @utrNumber()
         @placeOfBusiness()
@@ -104,5 +104,4 @@
     @form(action = postAction) {
         @continueButton()
     }
-
 }

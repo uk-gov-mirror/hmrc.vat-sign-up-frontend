@@ -169,10 +169,6 @@ GET         /error/sign-up-in-progress                          uk.gov.hmrc.vats
 GET         /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.show
 POST        /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.submit
 
-# Joint Venture or Property Partnership page
-GET         /joint-venture-or-property-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.JointVenturePropertyController.show
-POST        /joint-venture-or-property-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.JointVenturePropertyController.submit
-
 # Resolve Partnership
 GET         /resolve-partnership                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ResolvePartnershipController.resolve
 
