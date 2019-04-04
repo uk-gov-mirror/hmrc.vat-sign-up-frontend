@@ -34,7 +34,7 @@
 
     <p>@Messages("agent.receive_email_notifications.line_2")</p>
 
-    @form(action = postAction) {
+    @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
 
         @radioHelper(
             parentForm = receiveEmailNotificationForm,
@@ -47,7 +47,7 @@
             field = receiveEmailNotificationForm(contactPreference)
         )
 
-        @continueButton()
+        @continueButton(gaEventString = Some("mtdvat:selectedOption (agent):value"))
     }
 
 }
