@@ -54,6 +54,8 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
     testPage.shouldHaveTextField(partnershipUtr, messages.heading)
 
+    testPage.shouldHavePara(messages.line)
+
     testPage.shouldHaveContinueButton()
   }
 
