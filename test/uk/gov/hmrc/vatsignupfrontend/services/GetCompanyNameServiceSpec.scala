@@ -22,15 +22,12 @@ import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.connectors.GetCompanyNameConnector
-import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Random
 
 class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
 
@@ -51,57 +48,6 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
 
       // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
       await(r) shouldBe result
-    }
-  }
-
-  def validateCompanyNumber(companyNumber: String): Unit = {
-    val validation = CompanyNumberForm.companyNumberForm(isAgent = false, isPartnership = false).bind(Map("companyNumber" -> companyNumber))
-    validation.errors shouldBe Seq.empty
-    validation.get shouldBe companyNumber
-  }
-
-  "padCompanyNumber" when {
-    import TestStoreVatNumberService.padCompanyNumber
-    val randomDigit = (Random.nextInt(9) + 1).toString
-    "the company number has no prefix" should {
-      "pad the number with leading zeros" in {
-        val needPaddingResult = padCompanyNumber(randomDigit)
-        needPaddingResult shouldBe "0" * 7 + randomDigit
-        validateCompanyNumber(needPaddingResult)
-
-        val noPaddingResult = padCompanyNumber(randomDigit * 8)
-        noPaddingResult shouldBe randomDigit * 8
-        validateCompanyNumber(noPaddingResult)
-      }
-    }
-    "the company number has a prefix" should {
-      "pad the number portion with leading zeros" in {
-        validCompanyNumberPrefixes.foreach { prefix =>
-          val needPaddingResult = padCompanyNumber(prefix + randomDigit)
-          needPaddingResult shouldBe prefix + "0" * 5 + randomDigit
-          validateCompanyNumber(needPaddingResult)
-
-          val noPaddingResult = padCompanyNumber(prefix + (randomDigit * 6))
-          noPaddingResult shouldBe prefix + (randomDigit * 6)
-          validateCompanyNumber(noPaddingResult)
-        }
-      }
-      "the company number has a prefix and a suffix" should {
-        "not pad the company number" in {
-          validCompanyNumberPrefixes.foreach { prefix =>
-            val noPaddingResult = padCompanyNumber(prefix + (randomDigit * 5) + "R")
-            noPaddingResult shouldBe prefix + (randomDigit * 5) + "R"
-            validateCompanyNumber(noPaddingResult)
-          }
-        }
-      }
-    }
-    "illegal company number" should {
-      "throw exception" in {
-        intercept[IllegalArgumentException] {
-          padCompanyNumber(randomDigit * 9)
-        }
-      }
     }
   }
 

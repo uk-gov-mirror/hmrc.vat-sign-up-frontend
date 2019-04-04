@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers
 
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.CompanyNumber._
-
 import scala.annotation.tailrec
 import scala.util.Random
 
@@ -57,9 +55,7 @@ object TestConstantsGenerator {
     case 2 => randomCrnNumericNoLeadingZeros
   }
 
-  private lazy val prefixes = validCompanyNumberPrefixes.toList
-
-  def randomPrefix: String = prefixes(rand.nextInt(prefixes.size)).toLowerCase
+  def randomPrefix: String = rand.nextString(2).toLowerCase
 
   def randomCrnNumeric: String = "%08d".format(rand.nextInt(UPPER_BOUND_8_DIGIT_NUMBER) + 1)
 

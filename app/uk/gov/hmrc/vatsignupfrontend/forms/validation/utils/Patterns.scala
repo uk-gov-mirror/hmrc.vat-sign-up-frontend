@@ -57,22 +57,4 @@ object Patterns {
 
   def validPostcode(text: String): Boolean = text matches postcodeRegex
 
-  object CompanyNumber {
-    val allNumbersRegex: Regex = "^([0-9]{1,8})$".r
-    val withPrefixRegex: Regex = "^([A-z][A-z0-9])([A-z0-9]{0,6})$".r
-
-    // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/426891/uniformResourceIdentifiersCustomerGuide.pdf
-    lazy val validCompanyNumberPrefixes = Set(
-      "AC", "ZC", "FC", "GE",
-      "LP", "OC", "SE", "SA",
-      "SZ", "SF", "GS", "SL",
-      "SO", "SC", "ES", "NA",
-      "NZ", "NF", "GN", "NL",
-      "NC", "R0", "NI", "EN",
-      "IP", "SP", "IC", "SI",
-      "NP", "NV", "RC", "SR",
-      "NR", "NO"//, "BR" TODO: Enable BR prefix when NonUK with UK established ready for E2E testing
-    )
-  }
-
 }
