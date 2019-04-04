@@ -18,7 +18,8 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.agentEnrolmentKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
@@ -32,19 +33,18 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
-      val optAgentEnrolment = enrolments.getEnrolment(agentEnrolmentKey)
-      val optVatNumber = enrolments.vatNumber
+    authorised()(Retrievals.allEnrolments and Retrievals.affinityGroup) {
+      case enrolments ~ optAffinityGroup =>
+        val optAgentEnrolment = enrolments.getEnrolment(agentEnrolmentKey)
+        val optVatNumber = enrolments.vatNumber
 
-      (optAgentEnrolment, optVatNumber) match {
-        case (Some(agent), _) =>
+        if (optAgentEnrolment.isDefined || (optAffinityGroup contains Agent)) {
           Future.successful(Redirect(routes.AgentUsingPrincipalJourneyController.show()))
-        case (_, Some(vatNumber)) =>
+        } else if (optVatNumber.isDefined) {
           Future.successful(Redirect(routes.MultipleVatCheckController.show()))
-        case _ =>
+        } else {
           Future.successful(Redirect(routes.CaptureVatNumberController.show()))
-       }
+        }
     }
   }
-
 }
