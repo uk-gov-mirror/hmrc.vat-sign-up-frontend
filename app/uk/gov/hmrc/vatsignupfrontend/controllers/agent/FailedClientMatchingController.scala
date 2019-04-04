@@ -33,17 +33,8 @@ class FailedClientMatchingController @Inject()(val controllerComponents: Control
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(failed_client_matching(routes.FailedClientMatchingController.submit()))
+        Ok(failed_client_matching(routes.SignUpAnotherClientController.submit()))
       )
     }
   }
-
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      Future.successful(
-        Redirect(routes.CaptureClientDetailsController.show())
-      )
-    }
-  }
-
 }
