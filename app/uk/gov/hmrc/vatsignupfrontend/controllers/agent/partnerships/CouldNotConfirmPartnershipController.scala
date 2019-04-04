@@ -33,13 +33,11 @@ class CouldNotConfirmPartnershipController @Inject()(val controllerComponents: C
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(could_not_confirm_partnership(routes.CouldNotConfirmPartnershipController.submit())))
-    }
-  }
-
-  def submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      Future.successful(Redirect(agentRoutes.CaptureBusinessEntityController.show()))
+      Future.successful(
+        Ok(could_not_confirm_partnership(
+          agentRoutes.SignUpAnotherClientController.submit()
+        ))
+      )
     }
   }
 
