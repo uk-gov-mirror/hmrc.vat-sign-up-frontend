@@ -36,18 +36,4 @@ class CouldNotConfirmPartnershipControllerISpec extends ComponentSpecBase with C
     }
   }
 
-  "POST /client/error/could-not-confirm-partnership" should {
-    "redirect to the capture vat number page" in {
-
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-      val res = post("/client/error/could-not-confirm-partnership")()
-
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(agentRoutes.CaptureBusinessEntityController.show().url)
-      )
-    }
-  }
-
 }

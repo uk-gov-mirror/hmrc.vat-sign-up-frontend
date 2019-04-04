@@ -18,41 +18,31 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.could_not_confirm_partnership
+
 
 class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   object TestCouldNotConfirmPartnershipController extends CouldNotConfirmPartnershipController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/could-not-confirm-partnership ")
-
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/error/could-not-confirm-partnership ")
+  implicit lazy val testGetRequest = FakeRequest("GET", "/error/could-not-confirm-partnership ")
 
   "Calling the show action of the Could not confirm Partnership controller" should {
     "show the could not confirm partnership  page" in {
       mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
-      val result = TestCouldNotConfirmPartnershipController.show(request)
+      lazy val result = TestCouldNotConfirmPartnershipController.show(request)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-    }
-  }
-
-  "Calling the submit action of the Could not confirm Partnership controller" should {
-    "redirect to business entity page" in {
-      mockAuthRetrieveAgentEnrolment()
-
-      val result = TestCouldNotConfirmPartnershipController.submit(testPostRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) should contain(agentRoutes.CaptureBusinessEntityController.show().url)
+      contentAsString(result) shouldBe could_not_confirm_partnership(agentRoutes.SignUpAnotherClientController.submit()).body
     }
   }
 
