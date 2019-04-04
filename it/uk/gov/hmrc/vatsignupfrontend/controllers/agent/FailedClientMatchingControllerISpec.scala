@@ -33,18 +33,4 @@ class FailedClientMatchingControllerISpec extends ComponentSpecBase with CustomM
       )
     }
   }
-
-  "POST /error/incorrect-details" should {
-    "redirect to the capture client details page" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-      val res = post("/client/error/incorrect-details")()
-
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.CaptureClientDetailsController.show().url)
-      )
-    }
-  }
-
 }
