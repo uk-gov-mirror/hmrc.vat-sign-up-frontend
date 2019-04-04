@@ -35,7 +35,7 @@
 
     <p>@Messages("principal.receive_email_notifications.line_2")</p>
 
-        @form(action = postAction) {
+        @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
 
         @radioHelper(
             parentForm = contactPreferencesForm,
@@ -48,7 +48,7 @@
             field = contactPreferencesForm(contactPreference)
         )
 
-        @continueButton()
+        @continueButton(gaEventString = Some("mtdvat:selectedOption:value"))
     }
 
 }
