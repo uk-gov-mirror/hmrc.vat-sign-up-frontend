@@ -771,8 +771,8 @@ agent.capture_partnership_company_number.heading                       = What is
 agent.capture_partnership_company_number.line_1                        = If you are not sure, <a id="companiesHouse" href={0} target="_blank">check the Companies House register (opens in a new window or tab)</a>.
 
 ## Agent Partnership Postcode
-agent.partnership_postcode.title                                       = Where is the client''s principal place of business?
-agent.partnership_postcode.heading                                     = Where is the client''s principal place of business?
+agent.partnership_postcode.title                                       = Where is your client''s partnership registered for Self Assessment?
+agent.partnership_postcode.heading                                     = Where is your client''s partnership registered for Self Assessment?
 agent.partnership_postcode.label                                       = UK postcode
 
 ## Principal Capture Partnership UTR

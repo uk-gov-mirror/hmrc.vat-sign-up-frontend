@@ -787,7 +787,7 @@ object MessageLookup {
   }
 
   object AgentPartnershipPostcode {
-    val heading = "Where is the client's principal place of business?"
+    val heading = "Where is your client's partnership registered for Self Assessment?"
     val title = heading + ServiceName.agentSuffix
     val label = "UK postcode"
   }
