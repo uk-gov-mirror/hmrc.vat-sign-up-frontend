@@ -162,6 +162,8 @@ error.principal.partnership.joint_venture_or_property.field            = Select 
 error.principal.partnership.joint_venture_or_property.summary          = Select if you are a Joint Venture or Property Partnership
 error.principal.partnership.do_you_have_a_utr.field                    = Select yes if you have a Unique Taxpayer Reference number
 error.principal.partnership.do_you_have_a_utr.summary                  = Select yes if you have a Unique Taxpayer Reference number
+error.agent.partnership.do_you_have_a_utr.field                        = Select yes if you have your client''s Unique Taxpayer Reference number
+error.agent.partnership.do_you_have_a_utr.summary                      = Select yes if you have your client''s Unique Taxpayer Reference number
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
