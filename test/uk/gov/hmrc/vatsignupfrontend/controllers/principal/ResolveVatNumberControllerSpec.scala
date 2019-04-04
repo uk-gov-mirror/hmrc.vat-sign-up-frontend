@@ -24,7 +24,7 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testAgentEnrolment
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
 
@@ -37,7 +37,9 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   "Calling the resolve action of the Resolve Vat Number controller" when {
     "the user has a VAT-DEC enrolment" should {
       "redirect to Multiple Vat Check page" in {
-        mockAuthRetrieveVatDecEnrolment()
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.affinityGroup)
+        )(Future.successful(new ~(Some(Admin), new ~(Enrolments(Set(testVatDecEnrolment)), None))))
         val request = testGetRequest
 
         val result = TestResolveVatNumberController.resolve(request)
@@ -50,8 +52,8 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "the user does not have a VAT-DEC enrolment" should {
       "redirect to Capture VAT number page" in {
         mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.affinityGroup)
+        )(Future.successful(new ~(Some(Admin), new ~(Enrolments(Set()), None))))
 
         val result = TestResolveVatNumberController.resolve(testGetRequest)
 
@@ -64,8 +66,21 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "the user has an agent enrolment" should {
       "redirect to the agent using principal journey page" in {
         mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set(testAgentEnrolment)))))
+          retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.affinityGroup)
+        )(Future.successful(new ~(Some(Admin), new ~(Enrolments(Set(testAgentEnrolment)), None))))
+
+        val result = TestResolveVatNumberController.resolve(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.AgentUsingPrincipalJourneyController.show().url)
+      }
+    }
+
+    "the user has an agent affinity group" should {
+      "redirect to the agent using principal journey page" in {
+        mockAuthorise(
+          retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.affinityGroup)
+        )(Future.successful(new ~(Some(Admin), new ~(Enrolments(Set(testAgentEnrolment)), None))))
 
         val result = TestResolveVatNumberController.resolve(testGetRequest)
 
