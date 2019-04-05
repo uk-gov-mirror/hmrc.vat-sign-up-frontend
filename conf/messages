@@ -266,8 +266,8 @@ agent.confirm_company_number.companyNumber.heading                     = Company
 agent.confirm_company_number.link                                      = Change company number
 
 ## Agent Capture Partnership UTR
-agent.capture_partnership_utr.title                                    = What is your client''s Partnership Unique Reference (UTR) number?
-agent.capture_partnership_utr.heading                                  = What is your client''s Partnership Unique Reference (UTR) number?
+agent.capture_partnership_utr.title                                    = What is your client''s Partnership Unique Taxpayer Reference (UTR) number?
+agent.capture_partnership_utr.heading                                  = What is your client''s Partnership Unique Taxpayer Reference (UTR) number?
 agent.capture_partnership_utr.line                                     = This is a 10 digit number. You can find it on letters to the partnership from HM Revenue & Customs.
 
 ## Agent Agree Receive Email page
