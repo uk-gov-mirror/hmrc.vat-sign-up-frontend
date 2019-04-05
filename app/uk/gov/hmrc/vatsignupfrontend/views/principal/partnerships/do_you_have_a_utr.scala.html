@@ -38,7 +38,7 @@
 
     <p>@Messages("principal.partnership.do_you_have_a_utr.line")</p>
 
-    @form(action = postAction) {
+    @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
         @radioHelper(
             parentForm = doYouHaveAUtrForm,
             inline = true,
@@ -49,6 +49,6 @@
             legend = Messages("principal.partnership.do_you_have_a_utr.heading"),
             field = doYouHaveAUtrForm(yesNo)
         )
-        @continueButton()
+        @continueButton(gaEventString = Some("mtdvat:doYouHaveAUtr:value"))
     }
 }

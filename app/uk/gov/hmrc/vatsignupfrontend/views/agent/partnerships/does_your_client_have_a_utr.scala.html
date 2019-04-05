@@ -32,7 +32,7 @@
 
     <p>@Messages("agent.partnership.does_your_client_have_a_utr.line")</p>
 
-    @form(action = postAction) {
+    @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
 
         @radioHelper(
             parentForm = doYouHaveAUtrForm,
@@ -45,7 +45,7 @@
             field = doYouHaveAUtrForm(yesNo)
         )
 
-        @continueButton()
+        @continueButton(gaEventString = Some("mtdvat:doYouHaveAUtrAgent:value"))
     }
 
 }
