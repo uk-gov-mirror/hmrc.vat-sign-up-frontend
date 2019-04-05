@@ -253,9 +253,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         "the user does not have a VAT-DEC enrolment" when {
           "the Vat number is not for an overseas business" should {
             "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockAuthRetrieveEmptyEnrolment()
               mockVatNumberEligibilitySuccess(testVatNumber)
 
               implicit val request = testPostRequest(testVatNumber)
@@ -268,9 +266,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             }
 
             "delete the known facts when they have been entered previously" in {
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockAuthRetrieveEmptyEnrolment()
               mockVatNumberEligibilitySuccess(testVatNumber)
 
               implicit val request = testPostRequest(testVatNumber)
@@ -295,9 +291,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             }
 
             "overseas user changes vat number to non overseas vat number" in {
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockAuthRetrieveEmptyEnrolment()
               mockVatNumberEligibilitySuccess(testVatNumber)
 
               implicit val request = testPostRequest(testVatNumber)
@@ -326,9 +320,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           "the vat number is for an overseas business" should {
             "redirect to the Capture Vat registration date controller" in {
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+              mockAuthRetrieveEmptyEnrolment()
               mockVatNumberEligibilityOverseas(testVatNumber)
 
               implicit val request = testPostRequest(testVatNumber)
@@ -343,9 +335,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
             mockVatNumberIneligibleForMtd(testVatNumber)
 
             val request = testPostRequest(testVatNumber)
@@ -356,9 +346,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to sign up after this date when the vat number is ineligible and one date is available" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
             mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
 
             val request = testPostRequest(testVatNumber)
@@ -369,9 +357,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to sign up between these dates when the vat number is ineligible and two dates are available" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
             mockVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
 
             val request = testPostRequest(testVatNumber)
@@ -382,9 +368,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "redirect to Invalid Vat Number page when the vat number is invalid" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
             mockVatNumberEligibilityInvalid(testVatNumber)
 
             val request = testPostRequest(testVatNumber)
@@ -395,9 +379,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "throw an exception for any other scenario" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
             mockVatNumberEligibilityFailure(testVatNumber)
 
             val request = testPostRequest(testVatNumber)
@@ -411,9 +393,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
     "the vat number fails checksum validation" should {
       "redirect to Invalid Vat Number page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockVatNumberEligibilitySuccess(testInvalidVatNumber)
 
         implicit val request = testPostRequest(testInvalidVatNumber)
@@ -427,9 +407,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "form unsuccessfully submitted" should {
     "reload the page with errors" in {
-      mockAuthorise(
-        retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-      )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+      mockAuthRetrieveEmptyEnrolment()
 
       val result = TestCaptureVatNumberController.submit(testPostRequest("invalid"))
       status(result) shouldBe Status.BAD_REQUEST

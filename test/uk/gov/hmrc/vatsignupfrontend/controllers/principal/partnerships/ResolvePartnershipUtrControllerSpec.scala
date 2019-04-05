@@ -74,9 +74,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "go to the Do You Have A Utr page" in {
             enable(OptionalSautrJourney)
 
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
 
             val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
               SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
@@ -90,9 +88,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "go to the capture partnership UTR page" in {
             enable(OptionalSautrJourney)
 
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
 
             val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
               SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
@@ -106,9 +102,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "the optional sautr switch is disabled" should {
         "go to the capture partnership UTR page" in {
 
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
 
           val result = TestResolvePartnershipUtrController.resolve(testGetRequest)
           status(result) shouldBe Status.SEE_OTHER

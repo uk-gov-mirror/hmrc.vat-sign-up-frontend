@@ -103,9 +103,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           "redirect to BTA Capture VAT registration date" in {
             enable(BTAClaimSubscription)
 
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set.empty))))
+            mockAuthRetrieveEmptyEnrolment()
 
             val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
@@ -121,9 +119,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           "throw an Internal Server Exception" in {
             enable(BTAClaimSubscription)
 
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set.empty))))
+            mockAuthRetrieveEmptyEnrolment()
 
             val invalidVatNumber = "1"
 

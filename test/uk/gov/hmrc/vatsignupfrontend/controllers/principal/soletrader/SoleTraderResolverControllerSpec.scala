@@ -47,17 +47,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the user has a nino on their auth profile" when {
       "citizen details successfully returns the user details" should {
         "redirect to ConfirmYourRetrievedUserDetailsController with the user details in session and a nino source of AuthProfile" in {
-          mockAuthorise(retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.nino))(
-            Future.successful(
-              new ~(
-                Some(Admin),
-                new ~(
-                  Enrolments(Set.empty),
-                  Some(testNino)
-                )
-              )
-            )
-          )
+          mockAuthNinoRetrieval(Some(testNino))
           mockCitizenDetailsSuccessByNino(testNino, testUserDetails)
 
           val res = await(TestSoleTraderResolverController.resolve(request))
@@ -70,17 +60,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "citizen details fails" should {
         "throw an InternalServerException" in {
-          mockAuthorise(retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.nino))(
-            Future.successful(
-              new ~(
-                Some(Admin),
-                new ~(
-                  Enrolments(Set.empty),
-                  Some(testNino)
-                )
-              )
-            )
-          )
+          mockAuthNinoRetrieval(Some(testNino))
           mockCitizenDetailsFailureByNino(testNino)
 
           intercept[InternalServerException](await(TestSoleTraderResolverController.resolve(request)))
@@ -90,17 +70,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the user has an IRSA enrolment" when {
       "citizen details successfully returns the user details" should {
         "redirect to ConfirmYourRetrievedUserDetailsController with the user details in session and a nino source of IRSA" in {
-          mockAuthorise(retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.nino))(
-            Future.successful(
-              new ~(
-                Some(Admin),
-                new ~(
-                  Enrolments(Set(testIRSAEnrolment)),
-                  None
-                )
-              )
-            )
-          )
+          mockAuthNinoRetrieval(None, hasIrsaEnrolment = true)
           mockCitizenDetailsSuccessBySautr(testSaUtr, testUserDetails)
 
           val res = TestSoleTraderResolverController.resolve(request)
@@ -112,17 +82,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "citizen details fails" should {
         "throw an InternalServerException" in {
-          mockAuthorise(retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.nino))(
-            Future.successful(
-              new ~(
-                Some(Admin),
-                new ~(
-                  Enrolments(Set(testIRSAEnrolment)),
-                  None
-                )
-              )
-            )
-          )
+          mockAuthNinoRetrieval(None, hasIrsaEnrolment = true)
           mockCitizenDetailsFailureBySautr(testSaUtr)
 
           intercept[InternalServerException](await(TestSoleTraderResolverController.resolve(request)))
@@ -131,18 +91,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "user has no nino or IRSA enrolment on profile" should {
       "redirect to CaptureYourDetailsController" in {
-        mockAuthorise(retrievals = Retrievals.credentialRole and (Retrievals.allEnrolments and Retrievals.nino))(
-          Future.successful(
-            new ~(
-              Some(Admin),
-              new ~(
-                Enrolments(Set.empty),
-                None
-              )
-            )
-          )
-        )
-
+        mockAuthNinoRetrieval(None)
         val res = TestSoleTraderResolverController.resolve(request)
 
         status(res) shouldBe SEE_OTHER

@@ -20,6 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
+import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve._
@@ -30,6 +31,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
   self: Suite =>
+
+  implicit class RetrievalCombiner[A](a: A) {
+    def ~[B](b: B): A ~ B = new ~(a, b)
+  }
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
@@ -49,47 +54,64 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
   def mockAuthEmptyRetrieval(): Unit =
     mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 
+  def mockAuthNinoRetrieval(optNino: Option[String], hasIrsaEnrolment: Boolean = false): Unit = {
+    val enrolments =
+      if (hasIrsaEnrolment) Enrolments(Set(testIRSAEnrolment))
+      else Enrolments(Set.empty)
+
+    mockAuthorise(
+      retrievals = (Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments) and (Retrievals.allEnrolments and Retrievals.nino)
+    )(
+      Future.successful(
+        Some(Admin) ~ None ~ enrolments ~ (enrolments ~ optNino)
+      )
+    )
+  }
+
   def mockAuthConfidenceLevelRetrieval(confidenceLevel: ConfidenceLevel): Unit =
-    mockAuthorise(retrievals = Retrievals.credentialRole and Retrievals.confidenceLevel)(Future.successful(new ~(Some
-    (Admin), confidenceLevel)))
+    mockAuthorise(
+      retrievals = (Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments) and Retrievals.confidenceLevel
+    )(
+      Future.successful(
+        Some(Admin) ~ None ~ Enrolments(Set.empty) ~ confidenceLevel
+      )
+    )
 
   def mockAuthRetrieveAgentEnrolment(): Unit =
     mockAuthorise(retrievals = Retrievals.allEnrolments)(Future.successful(Enrolments(Set(testAgentEnrolment))))
 
-  def mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment: Boolean = false): Unit = {
+  def mockPrincipalAuthSuccess(enrolments: Enrolments): Unit = {
     mockAuthorise(
-      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
+      retrievals = (Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments) and Retrievals.allEnrolments
     )(
-      Future.successful {
-        if(hasIRSAEnrolment) new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, testIRSAEnrolment)))
-        else new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment)))
-      }
+      Future.successful(
+        Some(Admin) ~ Some(Organisation) ~ enrolments ~ enrolments
+      )
     )
   }
 
-  def mockAuthRetrieveMtdVatEnrolment(): Unit =
-    mockAuthorise(
-      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-    )(Future.successful(new ~(Some(Admin), Enrolments(Set(testMtdVatEnrolment)))))
+  def mockAuthRetrieveVatDecEnrolment(hasIRSAEnrolment: Boolean = false): Unit = {
+    val enrolments = if (hasIRSAEnrolment) Enrolments(Set(testVatDecEnrolment, testIRSAEnrolment))
+    else Enrolments(Set(testVatDecEnrolment))
 
-  def mockAuthRetrieveAllVatEnrolments(): Unit =
-    mockAuthorise(
-      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-    )(Future.successful(new ~(Some(Admin), Enrolments(Set(testMtdVatEnrolment, testVatDecEnrolment)))))
+    mockPrincipalAuthSuccess(enrolments)
+  }
 
-  def mockAuthRetrieveIRCTEnrolment(): Unit =
-    mockAuthorise(
-      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-    )(Future.successful(new ~(Some(Admin), Enrolments(Set(testIRCTEnrolment)))))
+  def mockAuthRetrieveMtdVatEnrolment(): Unit = mockPrincipalAuthSuccess(Enrolments(Set(testMtdVatEnrolment)))
 
-  def mockAuthRetrievePartnershipEnrolment(): Unit =
-    mockAuthorise(
-      retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-    )(Future.successful(new ~(Some(Admin), Enrolments(Set(testPartnershipEnrolment)))))
+  def mockAuthRetrieveAllVatEnrolments(): Unit = mockPrincipalAuthSuccess(Enrolments(Set(testMtdVatEnrolment, testVatDecEnrolment)))
 
+  def mockAuthRetrieveIRCTEnrolment(): Unit = mockPrincipalAuthSuccess(Enrolments(Set(testIRCTEnrolment)))
+
+  def mockAuthRetrievePartnershipEnrolment(): Unit = mockPrincipalAuthSuccess(Enrolments(Set(testPartnershipEnrolment)))
+
+  def mockAuthRetrieveEmptyEnrolment(): Unit = mockPrincipalAuthSuccess(Enrolments(Set.empty))
 
   def mockAuthAdminRole(): Unit =
-    mockAuthorise(retrievals = Retrievals.credentialRole)(Future.successful(Some(Admin)))
+    mockAuthorise(retrievals = Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments
+    )(Future.successful(
+      Some(Admin) ~ None ~ Enrolments(Set.empty)
+    ))
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

@@ -26,7 +26,7 @@ class MigrationInProgressErrorControllerISpec extends ComponentSpecBase with Cus
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/error/sign-up-in-progress")
+      val res = get("/client/error/sign-up-in-progress")
 
       res should have(
         httpStatus(OK)

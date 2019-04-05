@@ -130,9 +130,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     }
     "the CtReferenceLookup returns that a ctutr exists for the given crn" should {
       "go to the 'Capture Registered Society UTR' page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockCtReferenceFound(testCompanyNumber)
         mockStoreRegisteredSocietySuccess(
           vatNumber = testVatNumber,
@@ -151,9 +149,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       }
 
       "throw internal server exception if ct reference lookup fails" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockCtReferenceFailure(testCompanyNumber)(BAD_REQUEST)
 
         val request = testPostRequest.withSession(
@@ -166,9 +162,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
         }
       }
       "go to the 'your vat number' page if vat number is missing" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockCtReferenceFound(testCompanyNumber)
 
         val request = testPostRequest.withSession(
@@ -183,9 +177,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     }
     "the CtReferenceLookup returns that a ctutr does not exist for the given crn" should {
       "go to the 'agree to receive emails' page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockCtReferenceNotFound(testCompanyNumber)
         mockStoreRegisteredSocietySuccess(
           vatNumber = testVatNumber,
@@ -204,9 +196,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       }
 
       "throw internal server exception if store registered society fails" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockCtReferenceNotFound(testCompanyNumber)
         mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber, None)
 
@@ -220,9 +210,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
         }
       }
       "go to the 'your vat number' page if vat number is missing" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
         mockCtReferenceNotFound(testCompanyNumber)
 
         val request = testPostRequest.withSession(
@@ -236,9 +224,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       }
     }
     "go to the 'capture registered society company number' page if company number is missing" in {
-      mockAuthorise(
-        retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-      )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+      mockAuthRetrieveEmptyEnrolment()
 
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber
