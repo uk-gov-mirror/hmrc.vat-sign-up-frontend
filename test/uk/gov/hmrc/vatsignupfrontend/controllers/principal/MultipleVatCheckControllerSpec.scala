@@ -176,9 +176,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             "the vat numbers from both enrolments don't match each other" in {
               val nonMatchingMtdVatEnrolment = Enrolment(MtdVatEnrolmentKey) withIdentifier(MtdVatReferenceKey, TestConstantsGenerator.randomVatNumber)
 
-              mockAuthorise(
-                retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-              )(Future.successful(new ~(Some(Admin), Enrolments(Set(testVatDecEnrolment, nonMatchingMtdVatEnrolment)))))
+              mockPrincipalAuthSuccess(Enrolments(Set(testVatDecEnrolment, nonMatchingMtdVatEnrolment)))
 
               val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
               status(result) shouldBe Status.SEE_OTHER

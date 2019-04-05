@@ -96,6 +96,7 @@ object AuthStub extends WireMockMethods {
 
   def confidenceLevel(confidenceLevel: ConfidenceLevel): JsValue =
     Json.obj(
+      "allEnrolments" -> JsArray(),
       "credentialRole" -> "Admin",
       "confidenceLevel" -> confidenceLevel.level
     )

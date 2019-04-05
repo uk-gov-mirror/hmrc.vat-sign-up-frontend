@@ -18,23 +18,30 @@ package uk.gov.hmrc.vatsignupfrontend.config.auth
 
 import play.api.mvc.Result
 import play.api.mvc.Results._
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals, ~}
+import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.agentEnrolmentKey
 import uk.gov.hmrc.vatsignupfrontend.controllers.RetrievalPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 
 import scala.concurrent.Future
 
-object AdministratorRolePredicate extends RetrievalPredicate[Option[CredentialRole]] {
+object AdministratorRolePredicate extends RetrievalPredicate[Option[CredentialRole] ~ Option[AffinityGroup] ~ Enrolments] {
 
-  override def retrieval: Retrieval[Option[CredentialRole]] = Retrievals.credentialRole
+  override def retrieval: Retrieval[Option[CredentialRole] ~ Option[AffinityGroup] ~ Enrolments] =
+    Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments
 
-  override def function(block: => Future[Result]): Option[CredentialRole] => Future[Result] = {
-    case Some(Admin | User) =>
+  override def function(block: => Future[Result]): Option[CredentialRole] ~ Option[AffinityGroup] ~ Enrolments => Future[Result] = {
+    case _ ~ _ ~ enrolments if enrolments.getEnrolment(agentEnrolmentKey).isDefined =>
+      Future.successful(Redirect(routes.AgentUsingPrincipalJourneyController.show()))
+    case _ ~ Some(Agent) ~ _ =>
+      Future.successful(Redirect(routes.AgentUsingPrincipalJourneyController.show()))
+    case Some(Admin | User) ~ _ ~ _ =>
       block
-    case Some(Assistant) =>
+    case Some(Assistant) ~ _ ~ _ =>
       Future.successful(Redirect(routes.AssistantCredentialErrorController.show()))
-    case None =>
+    case None ~ _ ~ _ =>
       Future.failed(new IllegalArgumentException("Non GGW credential found"))
   }
 }

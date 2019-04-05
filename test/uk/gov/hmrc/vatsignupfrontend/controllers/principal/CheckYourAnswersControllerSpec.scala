@@ -197,9 +197,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "all prerequisite data are in" when {
       "store vat number returned VatNumberStored" should {
         "goto business entity controller" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberSuccess(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -217,9 +215,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned VatNumberStored with direct debits" should {
         "goto business entity controller" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberDirectDebitSuccess(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -237,9 +233,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned SubscriptionClaimed" when {
         "goto sign up complete controller" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberSubscriptionClaimed(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -256,9 +250,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned KnownFactsMismatch" should {
         "go to the could not confirm business page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberKnownFactsMismatch(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -275,9 +267,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned InvalidVatNumber" should {
         "go to the invalid vat number page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberInvalid(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -294,9 +284,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned IneligibleVatNumber" should {
         "go to the could not use service page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberIneligible(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -313,9 +301,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned VatMigrationInProgress" should {
         "go to the migration in progress error page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberMigrationInProgress(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -332,9 +318,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned VatNumberAlreadyEnrolled" should {
         "go to the business already signed up error page" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberAlreadyEnrolled(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -351,9 +335,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
       "store vat number returned a failure" should {
         "throw internal server exception" in {
-          mockAuthorise(
-            retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-          )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+          mockAuthRetrieveEmptyEnrolment()
           mockStoreVatNumberFailure(
             vatNumber = testVatNumber,
             optPostCode = Some(testBusinessPostcode),
@@ -372,9 +354,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat number is missing" should {
       "go to capture vat number page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
 
         val result = await(TestCheckYourAnswersController.submit(testPostRequest(vatNumber = None)))
 
@@ -384,9 +364,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "vat registration date is missing" should {
       "go to capture vat registration date page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(registrationDate = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -395,9 +373,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     }
     "post code is missing" should {
       "go to business post code page" in {
-        mockAuthorise(
-          retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-        )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+        mockAuthRetrieveEmptyEnrolment()
 
         val result = TestCheckYourAnswersController.submit(testPostRequest(postCode = None))
         status(result) shouldBe Status.SEE_OTHER
@@ -408,9 +384,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "the user has filed a vat return before" when {
         "the box 5 figure is missing" should {
           "go to the capture box 5 figure page" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
 
             val result = TestCheckYourAnswersController.submit(testPostRequest(optBox5Figure = None))
             status(result) shouldBe Status.SEE_OTHER
@@ -419,9 +393,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
         "the last return month is missing" should {
           "go to the capture last return month page" in {
-            mockAuthorise(
-              retrievals = Retrievals.credentialRole and Retrievals.allEnrolments
-            )(Future.successful(new ~(Some(Admin), Enrolments(Set()))))
+            mockAuthRetrieveEmptyEnrolment()
 
             val result = TestCheckYourAnswersController.submit(testPostRequest(optLastReturnMonth = None))
             status(result) shouldBe Status.SEE_OTHER
