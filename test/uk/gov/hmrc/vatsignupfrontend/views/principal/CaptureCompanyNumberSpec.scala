@@ -32,6 +32,7 @@ class CaptureCompanyNumberSpec extends ViewSpec {
   val configuration = Configuration.load(env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val appConfig = app.injector.instanceOf[AppConfig]
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_number(
     companyNumberForm = companyNumberForm(isAgent = false, isPartnership = false).form,
@@ -51,6 +52,8 @@ class CaptureCompanyNumberSpec extends ViewSpec {
     )
 
     testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
+
+    testPage.shouldHaveALink("companiesHouse", messages.link, appConfig.companiesHouse)
 
     testPage.shouldHaveTextField(companyNumber, messages.heading)
 

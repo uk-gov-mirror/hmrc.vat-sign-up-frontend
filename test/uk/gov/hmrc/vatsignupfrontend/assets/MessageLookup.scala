@@ -88,8 +88,10 @@ object MessageLookup {
   }
 
   object CaptureCompanyNumber {
-    val heading: String = "What is your client's company number?"
+    val heading: String = "What is your client's company registration number?"
     val title = heading + ServiceName.agentSuffix
+    val link = "Companies House website (opens in a new window or tab)"
+    val line1 = s"You can find the company registration number on the $link."
   }
 
   object AgentUsingPrincipalJourney {
@@ -564,9 +566,10 @@ object MessageLookup {
   }
 
   object PrincipalCaptureCompanyNumber {
-    val heading: String = "What is your company number?"
+    val heading: String = "What is your company registration number?"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "You received this from Companies House when you set up your company. It's 8 digits and sometimes starts with 2 letters."
+    val link = "search for your company number (opens in a new window or tab)"
+    val line1 = s"You can $link on Companies House."
   }
 
   object PrincipalConfirmCompanyNumber {
@@ -695,7 +698,7 @@ object MessageLookup {
   object PrincipalCapturePartnershipCompanyNumber {
     val heading: String = "What is the partnership's company number?"
     val title = heading + ServiceName.principalSuffix
-    val linkText = "search for your company number (opens in a window or tab)"
+    val linkText = "search for your company number (opens in a new window or tab)"
     val line1 = s"You can $linkText on Companies House."
   }
 

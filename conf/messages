@@ -38,10 +38,10 @@ base.company_number                                                    = Change 
 error.title_prefix                                                     = 'Error: '
 error.business-entity.field                                            = Select the type of business or group you are signing up
 error.business-entity.summary                                          = Select the type of business or group you are signing up, choose other if you are not sure
-error.agent.company_number_not_entered.field                           = Enter your client''s company number
-error.agent.company_number_not_entered.summary                         = Enter your client''s company number
-error.principal.company_number_not_entered.field                       = Enter your company number
-error.principal.company_number_not_entered.summary                     = Enter your company number
+error.agent.company_number_not_entered.field                           = Enter your client''s company registration number
+error.agent.company_number_not_entered.summary                         = Enter your client''s company registration number
+error.principal.company_number_not_entered.field                       = Enter your company registration number
+error.principal.company_number_not_entered.summary                     = Enter your company registration number
 error.invalid_company_number_length.field                              = Enter a company number that has 8 characters or less
 error.invalid_company_number_length.summary                            = Enter a company number that has 8 characters or less
 error.agent.partnership_company_number_not_entered.field               = Enter the partnership''s company number
@@ -229,8 +229,9 @@ agent.confirm_vat_number.heading                                       = Confirm
 agent.confirm_vat_number.link                                          = Change VAT number
 
 ## Agent Capture Company Number page
-agent.capture_company_number.title                                     = What is your client''s company number?
-agent.capture_company_number.heading                                   = What is your client''s company number?
+agent.capture_company_number.title                                     = What is your client''s company registration number?
+agent.capture_company_number.heading                                   = What is your client''s company registration number?
+agent.capture_company_number.line_1                                    = You can find the company registration number on the <a id="companiesHouse" href="{0}" target="_blank">Companies House website (opens in a new window or tab)</a>.
 
 ## Agent Capture Entity Type page
 agent.capture_entity_type.title                                        = What type of business is your client registered as?
@@ -598,9 +599,9 @@ principal.confirmation.subsection.bullet_4                             = Use the
 principal.confirmation.subsection.bullet_5                             = After April, keep your business details up to date using HMRC services (this is also called business tax account). Do not use the VAT online services.
 
 ## Capture Company Number page
-principal.capture_company_number.title                                 = What is your company number?
-principal.capture_company_number.heading                               = What is your company number?
-principal.capture_company_number.line_1                                = You received this from Companies House when you set up your company. It''s 8 digits and sometimes starts with 2 letters.
+principal.capture_company_number.title                                 = What is your company registration number?
+principal.capture_company_number.heading                               = What is your company registration number?
+principal.capture_company_number.line_1                                = You can <a id="companiesHouse" href="{0}" target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Capture Company Utr page
 principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference number?
@@ -705,7 +706,7 @@ principal.confirm_partnership_utr.line_2                               = Unique 
 ## Capture Partnership Company Number
 principal.capture_partnership_company_number.title                     = What is the partnership''s company number?
 principal.capture_partnership_company_number.heading                   = What is the partnership''s company number?
-principal.capture_partnership_company_number.line_1                    = You can <a id="companiesHouse" href={0} target="_blank">search for your company number (opens in a window or tab)</a> on Companies House.
+principal.capture_partnership_company_number.line_1                    = You can <a id="companiesHouse" href={0} target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Principal Partnership Postcode
 principal.partnership_postcode.title                                   = Where is the partnership registered for Self Assessment?
