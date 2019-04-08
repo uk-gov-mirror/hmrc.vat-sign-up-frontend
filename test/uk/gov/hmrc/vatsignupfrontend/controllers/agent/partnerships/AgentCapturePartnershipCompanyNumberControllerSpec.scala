@@ -45,7 +45,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
 
     "Calling the show action of the Capture Partnership Company Number controller" should {
       "go to the Capture Partnership Company Number page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
 
         val result = TestAgentCapturePartnershipCompanyNumberController.show(testGetRequest)
         status(result) shouldBe Status.OK
@@ -57,7 +57,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
     "Calling the submit action of the Capture Partnership Company Number controller" when {
       "get company name returned successfully" should {
         "Redirect to Confirm Partnership page" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
 
           mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.LimitedPartnership)
 
@@ -74,7 +74,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
 
       "get company name returned a NonPartnershipEntity" should {
         "Redirect to Not a limited Partnership page" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
 
           mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.NonPartnershipEntity)
 
@@ -89,7 +89,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
 
       "form unsuccessfully submitted" should {
         "reload the page with errors" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
 
           val result = TestAgentCapturePartnershipCompanyNumberController.submit(testPostRequest("123456789"))
           status(result) shouldBe Status.BAD_REQUEST
@@ -100,7 +100,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
 
       "get company name returned not found" should {
         "throw an InternalServerException" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
 
           mockGetCompanyNameNotFound(testCompanyNumber)
 
@@ -115,7 +115,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
 
       "get company name fails" should {
         "throw an InternalServerException" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
 
           mockGetCompanyNameFailure(testCompanyNumber)
 

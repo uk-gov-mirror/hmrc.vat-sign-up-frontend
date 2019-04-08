@@ -41,7 +41,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
   "POST /partnership-company-number" when {
     "get company name returns LimitedPartnership" should {
       "redirect to Confirm Partnership page" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubGetCompanyName(testCompanyNumber, LimitedPartnership)
 
         val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
@@ -55,7 +55,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
 
     "get company name returns NonPartnershipEntity" should {
       "redirect to Not a Limited Partnership page" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
         val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
@@ -69,7 +69,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
 
     "get company name returns NOT_FOUND" should {
       "redirect to Could Not Find Partnership page" in {
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubGetCompanyNameCompanyNotFound(testCompanyNumber)
 
         val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
