@@ -601,7 +601,7 @@ principal.confirmation.subsection.bullet_5                             = After A
 ## Capture Company Number page
 principal.capture_company_number.title                                 = What is your company registration number?
 principal.capture_company_number.heading                               = What is your company registration number?
-principal.capture_company_number.line_1                                = You can <a id="companiesHouse" href="{0}" target="_blank">search for your company number (opens in a window or tab)</a> on Companies House.
+principal.capture_company_number.line_1                                = You can <a id="companiesHouse" href="{0}" target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Capture Company Utr page
 principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference number?
@@ -706,7 +706,7 @@ principal.confirm_partnership_utr.line_2                               = Unique 
 ## Capture Partnership Company Number
 principal.capture_partnership_company_number.title                     = What is the partnership''s company number?
 principal.capture_partnership_company_number.heading                   = What is the partnership''s company number?
-principal.capture_partnership_company_number.line_1                    = You can <a id="companiesHouse" href={0} target="_blank">search for your company number (opens in a window or tab)</a> on Companies House.
+principal.capture_partnership_company_number.line_1                    = You can <a id="companiesHouse" href={0} target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Principal Partnership Postcode
 principal.partnership_postcode.title                                   = Where is the partnership registered for Self Assessment?
