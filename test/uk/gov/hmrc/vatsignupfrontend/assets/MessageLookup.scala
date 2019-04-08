@@ -90,7 +90,7 @@ object MessageLookup {
   object CaptureCompanyNumber {
     val heading: String = "What is your client's company registration number?"
     val title = heading + ServiceName.agentSuffix
-    val link = "Companies House website"
+    val link = "Companies House website (opens in a new window or tab)"
     val line1 = s"You can find the company registration number on the $link."
   }
 
