@@ -269,6 +269,36 @@ class StoreVatNumberServiceSpec extends UnitSpec with MockStoreVatNumberConnecto
           res shouldBe Left(VatNumberAlreadyEnrolled)
         }
       }
+      "the claim subscription connector returns KnownFactsMismatch" should {
+        "return KnownFactsMismatch" in {
+          mockStoreVatNumber(
+            vatNumber = testVatNumber,
+            optPostCode = Some(testBusinessPostcode),
+            registrationDate = testDateModel.toLocalDate.toString,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )(Future.successful(Left(StoreVatNumberHttpParser.AlreadySubscribed)))
+
+          mockClaimSubscription(
+            vatNumber = testVatNumber,
+            optPostCode = Some(testBusinessPostcode),
+            registrationDate = testDateModel,
+            isFromBta = false
+          )(Future.successful(Left(ClaimSubscriptionHttpParser.KnownFactsMismatch)))
+
+          val res = await(TestStoreVatNumberService.storeVatNumber(
+            vatNumber = testVatNumber,
+            optPostCode = Some(testBusinessPostcode),
+            registrationDate = testDateModel,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          ))
+
+          res shouldBe Left(KnownFactsMismatch)
+        }
+      }
       "the claim subscription connector returns anything else" should {
         "throw an InternalServerException" in {
           mockStoreVatNumber(

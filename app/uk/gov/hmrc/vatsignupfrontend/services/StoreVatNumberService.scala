@@ -86,6 +86,8 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
             Right(SubscriptionClaimed)
           case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
             Left(VatNumberAlreadyEnrolled)
+          case Left(ClaimSubscriptionHttpParser.KnownFactsMismatch) =>
+            Left(KnownFactsMismatch)
           case Left(unexpectedError) =>
             throw new InternalServerException(s"Unexpected error in claim subscription with supplied known facts - $unexpectedError")
         }
