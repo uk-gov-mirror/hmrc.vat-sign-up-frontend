@@ -29,6 +29,7 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipIvJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxySuccessResponse
@@ -101,7 +102,9 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "and store nino is successful" when {
         "confidence level is below L200" when {
-          "identity verification is successful" when {
+          "SkipIvJourney is disabled" when {
+
+            "identity verification is successful" when {
 
               "also add UserEntered to the store nino request" in {
                 val testRedirectUrl = "/test/redirect/url"
@@ -125,10 +128,27 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 result.session.get(SessionKeys.userDetailsKey) shouldBe empty
               }
             }
+          }
+
+          "SkipIvJourney is enabled" when {
+            "redirect to direct debit resolver" in {
+
+              mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
+              enable(SkipIvJourney)
+              mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
+
+              val result = callSubmit
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+
+              result.session.get(SessionKeys.userDetailsKey) shouldBe empty
+            }
+          }
 
         }
         "and confidence level is L200 or above" should {
-          "redirect to identity verification callback" in {
+          "redirect to direct debit resolver" in {
 
             mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L200)
             mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
@@ -136,7 +156,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             val result = callSubmit
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.IdentityVerificationCallbackController.continue().url)
+            redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
 
             result.session.get(SessionKeys.userDetailsKey) shouldBe empty
           }
