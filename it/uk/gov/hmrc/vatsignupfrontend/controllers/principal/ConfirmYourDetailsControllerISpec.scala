@@ -23,6 +23,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipIvJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub._
@@ -90,6 +91,22 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
           )
         }
       }
+
+      "store SkipIvJourney is enabled" should {
+        "redirect to identity verification callback url" in {
+
+          stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
+          stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
+          enable(SkipIvJourney)
+          val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.DirectDebitResolverController.show().url)
+          )
+        }
+      }
+
     }
 
     "store nino is successful and confidence level is L200 or above" should {
@@ -102,7 +119,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.IdentityVerificationCallbackController.continue().url)
+          redirectUri(routes.DirectDebitResolverController.show().url)
         )
       }
     }
