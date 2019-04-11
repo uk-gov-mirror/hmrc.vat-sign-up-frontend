@@ -56,7 +56,13 @@ class SignUpAfterThisDateSpec extends ViewSpec {
 
     testPage.shouldHaveParaSeq(
       messages.line1,
-      messages.line2(expectedFormattedDate)
+      messages.line2(expectedFormattedDate),
+      messages.line3
+    )
+
+    testPage.shouldHaveBulletSeq(
+      messages.bullet1,
+      messages.bullet2
     )
 
     testPage.shouldHaveSignOutButton(isAgent = false)

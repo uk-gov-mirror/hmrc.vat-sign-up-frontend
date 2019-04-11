@@ -37,7 +37,14 @@
 
     <p>@Messages("principal.sign_up_between_these_dates.line_1")</p>
 
+    <ul class="bullets">
+        <li>@Messages("principal.sign_up_between_these_dates.bullet_1")</li>
+        <li>@Messages("principal.sign_up_between_these_dates.bullet_2")</li>
+    </ul>
+
     <p>@Messages("principal.sign_up_between_these_dates.line_2", formattedStartDate, formattedEndDate)</p>
+
+    <p>@Html(Messages("principal.sign_up_between_these_dates.line_3", appConfig.signUpGuidancePageUrl))</p>
 
     <div class="form-group">
         @signOutButton(isAgent = false)

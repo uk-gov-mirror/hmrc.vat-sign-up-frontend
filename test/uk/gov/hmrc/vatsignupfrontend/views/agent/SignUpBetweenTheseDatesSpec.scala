@@ -59,7 +59,13 @@ class SignUpBetweenTheseDatesSpec extends ViewSpec {
 
     testPage.shouldHaveParaSeq(
       messages.line1,
-      messages.line2(expectedFormattedStartDate, expectedFormattedEndDate)
+      messages.line2(expectedFormattedStartDate, expectedFormattedEndDate),
+      messages.line3
+    )
+
+    testPage.shouldHaveBulletSeq(
+      messages.bullet1,
+      messages.bullet2
     )
 
     testPage.shouldHaveSignOutButton(isAgent = true)
