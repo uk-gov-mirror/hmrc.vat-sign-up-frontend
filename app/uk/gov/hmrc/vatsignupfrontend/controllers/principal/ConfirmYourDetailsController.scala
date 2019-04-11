@@ -22,7 +22,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
-import uk.gov.hmrc.vatsignupfrontend.Constants.skipIvJourneyValue
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{identityVerificationContinueUrlKey, userDetailsKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents

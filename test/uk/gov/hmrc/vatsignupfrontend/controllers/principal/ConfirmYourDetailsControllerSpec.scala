@@ -131,7 +131,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
 
           "SkipIvJourney is enabled" when {
-            "redirect to identity verification callback" in {
+            "redirect to direct debit resolver" in {
 
               mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
               enable(SkipIvJourney)
@@ -148,7 +148,7 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         }
         "and confidence level is L200 or above" should {
-          "redirect to identity verification callback" in {
+          "redirect to direct debit resolver" in {
 
             mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L200)
             mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)

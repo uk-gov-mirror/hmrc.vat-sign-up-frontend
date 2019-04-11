@@ -77,7 +77,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
       }
 
       "user fails matching on CID" should {
-        "redirect to identity verification journey" in {
+        "redirect to Failed Matching Controller" in {
           val testContinueUrl = "test/continue/url"
 
           stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
@@ -92,8 +92,8 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
         }
       }
 
-      "store SkipIvJourney is enabled" should {
-        "redirect to identity verification callback url" in {
+      "SkipIvJourney is enabled" should {
+        "redirect to direct debit resolver url" in {
 
           stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
           stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
@@ -110,7 +110,7 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
     }
 
     "store nino is successful and confidence level is L200 or above" should {
-      "redirect to identity verification callback url" in {
+      "redirect to direct debit resolver url" in {
 
         stubAuth(OK, confidenceLevel(ConfidenceLevel.L200))
         stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
