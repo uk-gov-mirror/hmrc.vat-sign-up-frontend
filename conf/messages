@@ -745,26 +745,38 @@ agent.check-your-answers.does_your_client_have_a_utr                   = Does yo
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
 principal.sign_up_after_this_date.heading                              = You must come back later to sign up
-principal.sign_up_after_this_date.line_1                               = There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due.
-principal.sign_up_after_this_date.line_2                               = Please come back and sign up after {0}.
+principal.sign_up_after_this_date.line_1                               = We''re unable to set you up for Making Tax Digital for VAT at present. Either this is because:
+principal.sign_up_after_this_date.bullet_1                             = a Direct Debit payment is due shortly
+principal.sign_up_after_this_date.bullet_2                             = you are very close to a busy filing period
+principal.sign_up_after_this_date.line_2                               = You''ll be able to sign up for this service after {0}.
+principal.sign_up_after_this_date.line_3                               = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>
 
 ## Sign Up Between These Dates
 principal.sign_up_between_these_dates.title                            = You must come back later to sign up
 principal.sign_up_between_these_dates.heading                          = You must come back later to sign up
-principal.sign_up_between_these_dates.line_1                           = There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due.
-principal.sign_up_between_these_dates.line_2                           = Please come back and sign up between {0} and {1}.
+principal.sign_up_between_these_dates.line_1                           = We''re unable to set you up for Making Tax Digital for VAT at present. Either this is because:
+principal.sign_up_between_these_dates.bullet_1                         = a Direct Debit payment is due shortly
+principal.sign_up_between_these_dates.bullet_2                         = you are very close to a busy filing period
+principal.sign_up_between_these_dates.line_2                           = You''ll be able to sign up for this service between {0} and {1}.
+principal.sign_up_between_these_dates.line_3                           = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>
 
 ## Agent Sign Up After This Date
 agent.sign_up_after_this_date.title                                    = You must come back later to sign up
 agent.sign_up_after_this_date.heading                                  = You must come back later to sign up
-agent.sign_up_after_this_date.line_1                                   = There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due.
-agent.sign_up_after_this_date.line_2                                   = Please come back and sign them up after {0}.
+agent.sign_up_after_this_date.line_1                                   = We''re unable to set your client up for Making Tax Digital for VAT at present. Either this is because:
+agent.sign_up_after_this_date.bullet_1                                 = a Direct Debit payment is due shortly
+agent.sign_up_after_this_date.bullet_2                                 = you are very close to a busy filing period
+agent.sign_up_after_this_date.line_2                                   = You''ll be able to sign up your client for this service after {0}.
+agent.sign_up_after_this_date.line_3                                   = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>.
 
 ## Agent Sign Up Between These Dates
 agent.sign_up_between_these_dates.title                                = You must come back later to sign up
 agent.sign_up_between_these_dates.heading                              = You must come back later to sign up
-agent.sign_up_between_these_dates.line_1                               = There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due.
-agent.sign_up_between_these_dates.line_2                               = Please come back and sign them up between {0} and {1}.
+agent.sign_up_between_these_dates.line_1                               = We''re unable to set your client up for Making Tax Digital for VAT at present. Either this is because:
+agent.sign_up_between_these_dates.bullet_1                             = a Direct Debit payment is due shortly
+agent.sign_up_between_these_dates.bullet_2                             = you are very close to a busy filing period
+agent.sign_up_between_these_dates.line_2                               = You''ll be able to sign up your client for this service between {0} and {1}.
+agent.sign_up_between_these_dates.line_3                               = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>.
 
 ## Agent Partnership Company Number
 agent.capture_partnership_company_number.title                         = What is the company number of your client''s partnership?

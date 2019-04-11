@@ -729,33 +729,45 @@ object MessageLookup {
   object SignUpAfterThisDate {
     val heading = "You must come back later to sign up"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due."
-
-    def line2(date: String) = s"Please come back and sign up after $date."
+    val linkText = "Making Tax Digital guidance"
+    val line1 = "We're unable to set you up for Making Tax Digital for VAT at present. Either this is because:"
+    def line2(date: String) = s"You'll be able to sign up for this service after $date."
+    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val bullet1 = "a Direct Debit payment is due shortly"
+    val bullet2 = "you are very close to a busy filing period"
   }
 
   object SignUpBetweenTheseDates {
     val heading = "You must come back later to sign up"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "There is not enough time for us to set you up with Making Tax Digital for VAT before your next direct debit payment is due."
-
-    def line2(startDate: String, endDate: String) = s"Please come back and sign up between $startDate and $endDate."
+    val linkText = "Making Tax Digital guidance"
+    val line1 = "We're unable to set you up for Making Tax Digital for VAT at present. Either this is because:"
+    def line2(startDate: String, endDate: String) = s"You'll be able to sign up for this service between $startDate and $endDate."
+    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val bullet1 = "a Direct Debit payment is due shortly"
+    val bullet2 = "you are very close to a busy filing period"
   }
 
   object AgentSignUpAfterThisDate {
     val heading = "You must come back later to sign up"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due."
-
-    def line2(date: String) = s"Please come back and sign them up after $date."
+    val linkText = "Making Tax Digital guidance"
+    val line1 = "We're unable to set your client up for Making Tax Digital for VAT at present. Either this is because:"
+    def line2(date: String) = s"You'll be able to sign up your client for this service after $date."
+    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val bullet1 = "a Direct Debit payment is due shortly"
+    val bullet2 = "you are very close to a busy filing period"
   }
 
   object AgentSignUpBetweenTheseDates {
     val heading = "You must come back later to sign up"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "There is not enough time for us to set your client up with Making Tax Digital for VAT before their next direct debit payment is due."
-
-    def line2(startDate: String, endDate: String) = s"Please come back and sign them up between $startDate and $endDate."
+    val linkText = "Making Tax Digital guidance"
+    val line1 = "We're unable to set your client up for Making Tax Digital for VAT at present. Either this is because:"
+    def line2(startDate: String, endDate: String) = s"You'll be able to sign up your client for this service between $startDate and $endDate."
+    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val bullet1 = "a Direct Debit payment is due shortly"
+    val bullet2 = "you are very close to a busy filing period"
   }
 
   object AgentCapturePartnershipCompanyNumber {

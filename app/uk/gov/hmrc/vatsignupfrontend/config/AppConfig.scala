@@ -66,6 +66,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val guidancePageUrl: String = s"$govUK/guidance/use-software-to-submit-your-vat-returns"
 
+  lazy val signUpGuidancePageUrl: String = s"$govUK/guidance/sign-up-for-making-tax-digital-for-vat"
+
   private def whitelistConfig(key: String): Seq[String] =
     runModeConfiguration.getString(key).getOrElse("").split(",").toSeq
 
