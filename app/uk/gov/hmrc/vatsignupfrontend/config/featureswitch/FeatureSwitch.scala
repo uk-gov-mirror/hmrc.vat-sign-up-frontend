@@ -40,7 +40,7 @@ object FeatureSwitch {
     ContactPreferencesJourney,
     SendYourApplication,
     OptionalSautrJourney,
-    NoIvJourney
+    SkipIvJourney
   )
 
   def apply(str: String): FeatureSwitch =
@@ -127,7 +127,7 @@ case object SendYourApplication extends FeatureSwitch {
   override val displayText: String = "Enable the Send Your Application view (replaces Terms of Participation)"
 }
 
-case object NoIvJourney extends FeatureSwitch {
+case object SkipIvJourney extends FeatureSwitch {
   override val name: String = s"$prefix.no-iv-journey"
-  override val displayText: String = "Enable the No Identity Verification Journey"
+  override val displayText: String = "Enable users to skip Identity Verification Journey"
 }
