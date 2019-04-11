@@ -445,7 +445,7 @@ principal.could_not_confirm_vat_number.heading                         = We coul
 principal.could_not_confirm_vat_number.line_1                          = The VAT number you entered is not on our system.
 
 ## Principal VAT Registration Date
-principal.vat_registration_date.title                                  = When did you register for VAT?
+principal.vat_registration_date.title                                  = When did you become VAT registered?
 principal.vat_registration_date.heading                                = When did you become VAT registered?
 principal.vat_registration_date.line_1                                 = You can find this date on your VAT registration certificate.
 principal.vat_registration_date.formhint_1                             = For example, 6 4 2017

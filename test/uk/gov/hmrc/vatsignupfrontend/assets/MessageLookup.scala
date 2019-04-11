@@ -345,7 +345,7 @@ object MessageLookup {
 
   object VatRegistrationDate {
     val heading = "When did you become VAT registered?"
-    val title = "When did you register for VAT?" + ServiceName.principalSuffix
+    val title = heading + ServiceName.principalSuffix
     val line1 = "You can find this date on your VAT registration certificate."
     val formhint1 = "For example, 6 4 2017"
   }
