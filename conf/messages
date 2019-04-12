@@ -671,9 +671,11 @@ principal.multiple_vat_check.title                                     = Do you 
 principal.multiple_vat_check.heading                                   = Do you have more than one VAT registered business?
 
 ## Principal Capture Last Return Month Period
-principal.capture_last_return_month_period.title                       = When was your last VAT return date?
-principal.capture_last_return_month_period.heading                     = When was your most recent VAT payment?
-principal.capture_last_return_month_period.line                        = Select the month of your most recent VAT payment. You can find your most recent VAT payment in your online business tax account.
+principal.capture_last_return_month_period.title                       = Select the last month in your latest VAT accounting period
+principal.capture_last_return_month_period.heading                     = Select the last month in your latest VAT accounting period
+principal.capture_last_return_month_period.line                        = You can find this out by logging into your online VAT account or you can find this on your VAT return.
+principal.capture_last_return_month_period.accordion.heading           = See an example
+principal.capture_last_return_month_period.accordion.line_1            = In the accounting period January to March, the last month in that accounting period was March. You must therefore select March.
 principal.capture_last_return_month_period.january                     = January
 principal.capture_last_return_month_period.february                    = February
 principal.capture_last_return_month_period.march                       = March

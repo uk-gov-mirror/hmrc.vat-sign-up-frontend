@@ -147,9 +147,11 @@ object MessageLookup {
   }
 
   object CaptureLastReturnMonthPeriod {
-    val heading: String = "When was your most recent VAT payment?"
-    val title: String = "When was your last VAT return date?" + ServiceName.principalSuffix
-    val line: String = "Select the month of your most recent VAT payment. You can find your most recent VAT payment in your online business tax account."
+    val heading: String = "Select the last month in your latest VAT accounting period"
+    val title: String = "Select the last month in your latest VAT accounting period" + ServiceName.principalSuffix
+    val line: String = "You can find this out by logging into your online VAT account or you can find this on your VAT return."
+    val accordionHeading: String = "See an example"
+    val accordionText: String = "In the accounting period January to March, the last month in that accounting period was March. You must therefore select March."
     val months: List[String] = List("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
   }
 

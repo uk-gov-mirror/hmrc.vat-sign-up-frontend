@@ -22,8 +22,13 @@
 @import uk.gov.hmrc.vatsignupfrontend.models.Month
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.accordionHelper
 
 @(monthForm: Form[Month], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@accordionContent = {
+    <p>@Html(Messages("principal.capture_last_return_month_period.accordion.line_1"))</p>
+}
 
 @principal_main_template(title = Messages("principal.capture_last_return_month_period.title"), bodyClasses = None, form = Some(monthForm)) {
 
@@ -32,6 +37,10 @@
     <h1 class="heading-large">@Messages("principal.capture_last_return_month_period.heading")</h1>
 
     <p>@Messages("principal.capture_last_return_month_period.line")</p>
+
+    @accordionHelper(Messages("principal.capture_last_return_month_period.accordion.heading"), accordionContent)
+
+    <br>
 
     @form(action = postAction) {
         @radioHelper(
