@@ -19,10 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CharityJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCharityInformationHttpParser.{StoreCharityInformationFailureResponse, StoreCharityInformationSuccess}
@@ -33,11 +32,6 @@ import scala.concurrent.Future
 class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreCharityInformationService {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(CharityJourney)
-  }
-
   object TestCharityResolverController extends CharityResolverController(
     mockControllerComponents,
     mockStoreCharityInformationService
@@ -46,57 +40,42 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
   lazy val testGetRequest = FakeRequest("GET", "/client/charity-resolver")
 
   "calling the resolve method on CharityResolverController" when {
-    "the charity feature switch is on" when {
-      "store charity information returns StoreCharityInformationSuccess" should {
-        "go to the capture agent email page" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
+    "store charity information returns StoreCharityInformationSuccess" should {
+      "go to the capture agent email page" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
 
-          val res = await(TestCharityResolverController.resolve(testGetRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber
-          )))
+        val res = await(TestCharityResolverController.resolve(testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber
+        )))
 
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
-        }
-      }
-      "store charity information returns StoreCharityInformationFailureResponse" should {
-        "throw internal server exception" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreCharityInformation(testVatNumber)(Future.successful(Left(StoreCharityInformationFailureResponse(INTERNAL_SERVER_ERROR))))
-
-          intercept[InternalServerException] {
-            await(TestCharityResolverController.resolve(testGetRequest.withSession(
-              SessionKeys.vatNumberKey -> testVatNumber
-            )))
-          }
-        }
-      }
-      "vat number is not in session" should {
-        "goto capture vat number" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
-
-          val res = await(TestCharityResolverController.resolve(testGetRequest))
-
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)
-        }
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
       }
     }
+    "store charity information returns StoreCharityInformationFailureResponse" should {
+      "throw internal server exception" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreCharityInformation(testVatNumber)(Future.successful(Left(StoreCharityInformationFailureResponse(INTERNAL_SERVER_ERROR))))
 
-    "the charity feature switch is off" should {
-      "throw not found exception" in {
-        disable(CharityJourney)
-
-        intercept[NotFoundException] {
+        intercept[InternalServerException] {
           await(TestCharityResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
         }
       }
     }
-  }
+    "vat number is not in session" should {
+      "goto capture vat number" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
 
+        val res = await(TestCharityResolverController.resolve(testGetRequest))
+
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)
+      }
+    }
+  }
 }
 

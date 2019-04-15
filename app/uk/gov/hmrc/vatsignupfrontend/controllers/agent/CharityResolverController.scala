@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CharityJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCharityInformationHttpParser.{StoreCharityInformationFailureResponse, StoreCharityInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCharityInformationService
@@ -33,7 +32,7 @@ import scala.concurrent.Future
 class CharityResolverController @Inject()(val controllerComponents: ControllerComponents,
                                           storeCharityInformationService: StoreCharityInformationService
                                          )
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(CharityJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

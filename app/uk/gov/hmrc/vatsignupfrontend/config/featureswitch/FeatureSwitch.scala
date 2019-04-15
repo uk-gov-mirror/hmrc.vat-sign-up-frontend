@@ -33,7 +33,6 @@ object FeatureSwitch {
     UnincorporatedAssociationJourney,
     TrustJourney,
     RegisteredSocietyJourney,
-    CharityJourney,
     GovernmentOrganisationJourney,
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
@@ -86,11 +85,6 @@ case object TrustJourney extends FeatureSwitch {
 case object RegisteredSocietyJourney extends FeatureSwitch {
   override val name: String = s"$prefix.registered-society-journey"
   override val displayText: String = "Enable users to enter registered society flow"
-}
-
-case object CharityJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.charity-journey"
-  override val displayText: String = "Enable users to enter charitable incorporated organisation flow"
 }
 
 case object GovernmentOrganisationJourney extends FeatureSwitch {
