@@ -182,7 +182,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "the business type is charity" should {
       "redirect to charity resolver controller" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(CharityJourney)
 
         val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> charity)
 

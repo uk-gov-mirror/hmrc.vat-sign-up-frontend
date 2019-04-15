@@ -28,7 +28,6 @@
     unincorporatedAssociationEnabled: Boolean,
     trustEnabled: Boolean,
     registeredSocietyEnabled: Boolean,
-    charityEnabled: Boolean,
     governmentOrganisationEnabled: Boolean
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -43,8 +42,6 @@
 @trustOption = @{ Some((trust, Messages("principal.capture_entity_type.trust"))).filter(_ => trustEnabled) }
 
 @registeredSocietyOption = @{ Some((registeredSociety, Messages("principal.capture_entity_type.registeredSociety"))).filter(_ => registeredSocietyEnabled) }
-
-@charityOption = @{ Some((charity, Messages("principal.capture_entity_type.charity"))).filter(_ => charityEnabled) }
 
 @governmentOrganisationOption = @{ Some((governmentOrganisation, Messages("principal.capture_entity_type.governmentOrganisation"))).filter(_ => governmentOrganisationEnabled) }
 
@@ -64,12 +61,12 @@
                 (limitedCompany, Messages("principal.capture_entity_type.limitedCompany")),
                 (generalPartnership, Messages("principal.capture_entity_type.generalPartnership")),
                 (limitedPartnership, Messages("principal.capture_entity_type.limitedPartnership")),
-                (vatGroup, Messages("principal.capture_entity_type.vatGroup"))
+                (vatGroup, Messages("principal.capture_entity_type.vatGroup")),
+                (charity, Messages("principal.capture_entity_type.charity"))
              )++ divisionOption
               ++ unincorporatedAssociationOption
               ++ trustOption
               ++ registeredSocietyOption
-              ++ charityOption
               ++ governmentOrganisationOption
               :+ (other, Messages("principal.capture_entity_type.other")),
             legend = Messages("principal.capture_entity_type.heading"),

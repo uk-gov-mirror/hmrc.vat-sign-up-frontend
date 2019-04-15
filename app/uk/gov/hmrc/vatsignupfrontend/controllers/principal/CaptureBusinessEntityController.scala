@@ -46,7 +46,6 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
           trustEnabled = isEnabled(TrustJourney),
           registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney),
-          charityEnabled = isEnabled(CharityJourney),
           governmentOrganisationEnabled = isEnabled(GovernmentOrganisationJourney)
         ))
       )
@@ -65,7 +64,6 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
               unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
               trustEnabled = isEnabled(TrustJourney),
               registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney),
-              charityEnabled = isEnabled(CharityJourney),
               governmentOrganisationEnabled = isEnabled(GovernmentOrganisationJourney)
             ))
           ),

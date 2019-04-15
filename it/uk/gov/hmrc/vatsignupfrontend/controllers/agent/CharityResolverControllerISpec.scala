@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CharityJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{agentEnrolment, stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCharityInformationStub._
@@ -26,71 +25,52 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CharityResolverControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(CharityJourney)
-  }
 
   "GET /charity-resolver" when {
-    "the charity feature switch is on" when {
-      "store charity information returned NO_CONTENT" should {
-        "go to the capture agent email page" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "store charity information returned NO_CONTENT" should {
+      "go to the capture agent email page" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-          stubStoreCharityInformation(testVatNumber)(NO_CONTENT)
+        stubStoreCharityInformation(testVatNumber)(NO_CONTENT)
 
-          val res = get("/client/charity-resolver", Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
+        val res = get("/client/charity-resolver", Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureAgentEmailController.show().url)
-          )
-        }
-      }
-      "store charity information returned failure status" should {
-        "return INTERNAL_SERVER_ERROR" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          stubStoreCharityInformation(testVatNumber)(INTERNAL_SERVER_ERROR)
-
-          val res = get("/client/charity-resolver", Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
-
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-          )
-        }
-      }
-      "there is no vat number in session" should {
-        "goto capture vat number" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          stubStoreCharityInformation(testVatNumber)(OK)
-
-          val res = get("/client/charity-resolver")
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureVatNumberController.show().url)
-          )
-        }
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureAgentEmailController.show().url)
+        )
       }
     }
+    "store charity information returned failure status" should {
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-    "the charity feature switch is off" should {
-      "return NOT_FOUND" in {
-        disable(CharityJourney)
+        stubStoreCharityInformation(testVatNumber)(INTERNAL_SERVER_ERROR)
+
+        val res = get("/client/charity-resolver", Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+    }
+    "there is no vat number in session" should {
+      "goto capture vat number" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        stubStoreCharityInformation(testVatNumber)(OK)
 
         val res = get("/client/charity-resolver")
 
         res should have(
-          httpStatus(NOT_FOUND)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureVatNumberController.show().url)
         )
       }
     }
   }
-
 }

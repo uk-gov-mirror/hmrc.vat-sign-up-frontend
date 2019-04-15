@@ -41,7 +41,6 @@ class CaptureBusinessEntitySpec extends ViewSpec {
     unincorporatedAssociationEnabled = true,
     trustEnabled = true,
     registeredSocietyEnabled = true,
-    charityEnabled = true,
     governmentOrganisationEnabled = true
   )(
     FakeRequest(),

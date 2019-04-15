@@ -177,7 +177,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "the business entity is a charity" when {
         "redirect to the charity resolver controller" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(CharityJourney)
 
           val result = await(TestCaptureBusinessEntityController.submit(testPostRequest(charity)))
           status(result) shouldBe Status.SEE_OTHER
