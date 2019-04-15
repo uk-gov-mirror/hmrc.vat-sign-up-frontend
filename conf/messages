@@ -492,7 +492,7 @@ check-your-answers.vat_registration_date                               = What is
 check-your-answers.business_post_code                                  = What is your business postcode?
 check-your-answers.previous_vat_return                                 = Are you currently submitting VAT returns?
 check-your-answers.business_entity                                     = What type of business are you registered as?
-check-your-answers.box_5_figure                                        = What is your Box 5 amount?
+check-your-answers.box_5_figure                                        = Your VAT return total or Box 5 figure
 check-your-answers.last_return_month_period                            = When was your most recent VAT payment?
 
 # No CT Enrolment Summary page
@@ -904,9 +904,10 @@ principal.previous_vat_return.title                                   = Are you 
 principal.previous_vat_return.heading                                 = Are you currently submitting VAT returns?
 
 ## What is your box 5 Figure page
-principal.capture_box_5_figure.title                                  = What is your Box 5 amount?
-principal.capture_box_5_figure.heading                                = What is your Box 5 amount?
-principal.capture_box_5_figure.line                                   = Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online.
+principal.capture_box_5_figure.title                                  = Enter your VAT return total or Box 5 amount
+principal.capture_box_5_figure.heading                                = Enter your VAT return total or Box 5 amount
+principal.capture_box_5_figure.line                                   = You can find this amount in box number 5 on your latest VAT Return.
+principal.capture_box_5_figure.line2                                  = The format of this number needs to be two decimal places, for example £123.00.
 
 ## Cancel Direct Debit page
 principal.cancel_direct_debit.title                                   = If you do not agree to Direct Debit terms and conditions

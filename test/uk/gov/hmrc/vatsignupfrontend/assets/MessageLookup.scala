@@ -432,7 +432,7 @@ object MessageLookup {
     val vatRegistrationDate = "What is your VAT registration date?"
     val businessPostCode = "What is your business postcode?"
     val businessEntity = "What type of business are you registered as?"
-    val box5Figure = "What is your Box 5 amount?"
+    val box5Figure = "Your VAT return total or Box 5 figure"
     val lastReturnMonth = "When was your most recent VAT payment?"
     val previousVatReturn = "Are you currently submitting VAT returns?"
   }
@@ -952,9 +952,10 @@ object MessageLookup {
   }
 
   object CaptureBox5Figure {
-    val heading = "What is your Box 5 amount?"
+    val heading = "Enter your VAT return total or Box 5 amount"
     val title = heading + ServiceName.principalSuffix
-    val line = "Enter the Box 5 amount from your last VAT return. Your Box 5 amount was calculated automatically if you completed your VAT return online."
+    val line = "You can find this amount in box number 5 on your latest VAT Return."
+    val line2 = "The format of this number needs to be two decimal places, for example £123.00."
   }
 
   object CancelDirectDebit {

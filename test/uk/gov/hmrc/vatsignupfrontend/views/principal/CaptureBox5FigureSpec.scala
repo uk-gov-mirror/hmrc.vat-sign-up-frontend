@@ -53,6 +53,8 @@ class CaptureBox5FigureSpec extends ViewSpec {
 
     testPage.shouldHavePara(messages.line)
 
+    testPage.shouldHavePara(messages.line2)
+
     testPage.shouldHaveTextField(box5Figure, messages.heading)
 
     testPage.shouldHaveContinueButton()
