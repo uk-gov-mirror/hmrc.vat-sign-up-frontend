@@ -492,7 +492,7 @@ check-your-answers.vat_registration_date                               = What is
 check-your-answers.business_post_code                                  = What is your business postcode?
 check-your-answers.previous_vat_return                                 = Are you currently submitting VAT returns?
 check-your-answers.business_entity                                     = What type of business are you registered as?
-check-your-answers.box_5_figure                                        = What is your Box 5 amount?
+check-your-answers.box_5_figure                                        = Your VAT return total or Box 5 figure
 check-your-answers.last_return_month_period                            = The last month of your latest VAT accounting period
 
 # No CT Enrolment Summary page
