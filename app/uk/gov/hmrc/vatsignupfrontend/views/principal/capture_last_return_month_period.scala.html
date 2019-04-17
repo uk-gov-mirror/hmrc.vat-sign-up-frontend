@@ -26,10 +26,6 @@
 
 @(monthForm: Form[Month], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@accordionContent = {
-    <p>@Html(Messages("principal.capture_last_return_month_period.accordion.line_1"))</p>
-}
-
 @principal_main_template(title = Messages("principal.capture_last_return_month_period.title"), bodyClasses = None, form = Some(monthForm)) {
 
     @summaryErrorHelper(monthForm)
@@ -38,7 +34,12 @@
 
     <p>@Messages("principal.capture_last_return_month_period.line")</p>
 
-    @accordionHelper(Messages("principal.capture_last_return_month_period.accordion.heading"), accordionContent)
+    <div class="panel panel-border-wide">
+        <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading")</h2>
+        <p>@Messages("principal.capture_last_return_month_period.line_2")</p>
+        <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading_2")</h2>
+        <p>@Messages("principal.capture_last_return_month_period.line_3")</p>
+    </div>
 
     <br>
 
@@ -61,7 +62,9 @@
                 (option_dec, Messages("principal.capture_last_return_month_period.december"))
             ),
             legend = Messages("principal.capture_last_return_month_period.heading"),
-            field = monthForm(month)
+            field = monthForm(month),
+            hintText = Some(Messages("principal.capture_last_return_month_period.formhint_1"))
+
         )
 
         @continueButton()

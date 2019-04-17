@@ -493,7 +493,7 @@ check-your-answers.business_post_code                                  = What is
 check-your-answers.previous_vat_return                                 = Are you currently submitting VAT returns?
 check-your-answers.business_entity                                     = What type of business are you registered as?
 check-your-answers.box_5_figure                                        = Your VAT return total or Box 5 figure
-check-your-answers.last_return_month_period                            = When was your most recent VAT payment?
+check-your-answers.last_return_month_period                            = The last month of your latest VAT accounting period
 
 # No CT Enrolment Summary page
 no_ct_enrolment_summary.title                                          = Check your answers
@@ -671,11 +671,14 @@ principal.multiple_vat_check.title                                     = Do you 
 principal.multiple_vat_check.heading                                   = Do you have more than one VAT registered business?
 
 ## Principal Capture Last Return Month Period
-principal.capture_last_return_month_period.title                       = Select the last month in your latest VAT accounting period
-principal.capture_last_return_month_period.heading                     = Select the last month in your latest VAT accounting period
+principal.capture_last_return_month_period.title                       = Select the last month of your latest VAT accounting period, submitted to HMRC
+principal.capture_last_return_month_period.heading                     = Select the last month of your latest VAT accounting period, submitted to HMRC
 principal.capture_last_return_month_period.line                        = You can find this out by logging into your online VAT account or you can find this on your VAT return.
-principal.capture_last_return_month_period.accordion.heading           = See an example
-principal.capture_last_return_month_period.accordion.line_1            = In the accounting period January to March, the last month in that accounting period was March. You must therefore select March.
+principal.capture_last_return_month_period.sub_heading                 = Example 1
+principal.capture_last_return_month_period.line_2                      = You submit your VAT Return every three months or quarterly. In the ''accounting period'' January to March, the last month in that ''accounting period'' is March. You must therefore select March.
+principal.capture_last_return_month_period.sub_heading_2               = Example 2
+principal.capture_last_return_month_period.line_3                      = If you submit your VAT Return monthly, the last accounting period you ''submitted for'' was January. You must select January.
+principal.capture_last_return_month_period.formhint_1                  = Select the last month in your latest VAT accounting period.
 principal.capture_last_return_month_period.january                     = January
 principal.capture_last_return_month_period.february                    = February
 principal.capture_last_return_month_period.march                       = March

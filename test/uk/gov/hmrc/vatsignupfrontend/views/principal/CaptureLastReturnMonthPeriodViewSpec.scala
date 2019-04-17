@@ -49,12 +49,6 @@ class CaptureLastReturnMonthPeriodViewSpec extends ViewSpec {
       heading = messages.heading,
       page = page
     )
-
-    testPage.shouldHaveAccordion(
-      heading = messages.accordionHeading,
-      text = messages.accordionText
-    )
-
     testPage.shouldHaveForm("Month Form")(actionCall = testCall)
 
     "have a set of radio inputs" which {
@@ -66,8 +60,12 @@ class CaptureLastReturnMonthPeriodViewSpec extends ViewSpec {
         monthsDoc shouldEqual messages.months
       }
     }
+    testPage.shouldHaveH2(messages.subHeading)
+    testPage.shouldHaveH2(messages.subHeading2)
 
     testPage.shouldHavePara(messages.line)
+    testPage.shouldHavePara(messages.line2)
+    testPage.shouldHavePara(messages.line3)
 
     testPage.shouldHaveContinueButton()
   }

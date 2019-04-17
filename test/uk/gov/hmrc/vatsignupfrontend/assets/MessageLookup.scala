@@ -147,11 +147,14 @@ object MessageLookup {
   }
 
   object CaptureLastReturnMonthPeriod {
-    val heading: String = "Select the last month in your latest VAT accounting period"
-    val title: String = "Select the last month in your latest VAT accounting period" + ServiceName.principalSuffix
+    val heading: String = "Select the last month of your latest VAT accounting period, submitted to HMRC"
+    val title: String = "Select the last month of your latest VAT accounting period, submitted to HMRC" + ServiceName.principalSuffix
     val line: String = "You can find this out by logging into your online VAT account or you can find this on your VAT return."
-    val accordionHeading: String = "See an example"
-    val accordionText: String = "In the accounting period January to March, the last month in that accounting period was March. You must therefore select March."
+    val subHeading: String = "Example 1"
+    val subHeading2: String = "Example 2"
+    val line2: String = "You submit your VAT Return every three months or quarterly. In the 'accounting period' January to March, the last month in that 'accounting period' is March. You must therefore select March."
+    val line3: String = "If you submit your VAT Return monthly, the last accounting period you 'submitted for' was January. You must select January."
+    val formhint1 = "Select the last month in your latest VAT accounting period."
     val months: List[String] = List("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
   }
 
@@ -433,7 +436,7 @@ object MessageLookup {
     val businessPostCode = "What is your business postcode?"
     val businessEntity = "What type of business are you registered as?"
     val box5Figure = "Your VAT return total or Box 5 figure"
-    val lastReturnMonth = "When was your most recent VAT payment?"
+    val lastReturnMonth = "The last month of your latest VAT accounting period"
     val previousVatReturn = "Are you currently submitting VAT returns?"
   }
 
