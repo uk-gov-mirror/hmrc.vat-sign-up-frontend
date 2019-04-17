@@ -494,6 +494,7 @@ check-your-answers.previous_vat_return                                 = Are you
 check-your-answers.business_entity                                     = What type of business are you registered as?
 check-your-answers.box_5_figure                                        = What is your Box 5 amount?
 check-your-answers.last_return_month_period                            = The last month of your latest VAT accounting period
+
 # No CT Enrolment Summary page
 no_ct_enrolment_summary.title                                          = Check your answers
 no_ct_enrolment_summary.heading                                        = Check your answers
