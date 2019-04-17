@@ -18,6 +18,7 @@
   inline: Boolean,
   options: Seq[(String, String)],
   legend: String,
+  hintText: Option[String] = None,
   field: Field)(implicit messages: Messages)
 
 @hasError = @{
@@ -30,6 +31,7 @@
         @if(hasError){
             <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
+        @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
         @for(option <- options) {
             <div class="multiple-choice">
                 <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
