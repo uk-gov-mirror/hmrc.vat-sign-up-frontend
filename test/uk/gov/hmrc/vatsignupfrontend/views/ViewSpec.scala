@@ -106,8 +106,8 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       val signOutId = "sign-out"
       val appConfig = app.injector.instanceOf[AppConfig]
       val expectedHref =
-        if (isAgent) appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)
-        else appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)
+        if (isAgent) appConfig.ggSignOutUrl(appConfig.agentFeedbackUrl)
+        else appConfig.ggSignOutUrl(appConfig.principalFeedbackUrl)
       shouldHaveALink(signOutId, text, expectedHref)
     }
 
@@ -134,8 +134,8 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       val id = "sign-out-button"
       val appConfig = app.injector.instanceOf[AppConfig]
       val expectedHref =
-        if (isAgent) appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)
-        else appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)
+        if (isAgent) appConfig.ggSignOutUrl(appConfig.agentFeedbackUrl)
+        else appConfig.ggSignOutUrl(appConfig.principalFeedbackUrl)
       shouldHaveALink(id, text, expectedHref)
     }
 

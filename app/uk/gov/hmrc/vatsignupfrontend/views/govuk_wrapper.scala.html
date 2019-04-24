@@ -44,9 +44,9 @@
 
 @href = @{
     if(isAgent) {
-        appConfig.ggSignOutUrl(appConfig.agentFeedbackSurveyUrl)
+        appConfig.ggSignOutUrl(appConfig.agentFeedbackUrl)
     } else {
-        appConfig.ggSignOutUrl(appConfig.principalFeedbackSurveyUrl)
+        appConfig.ggSignOutUrl(appConfig.principalFeedbackUrl)
     }
 }
 

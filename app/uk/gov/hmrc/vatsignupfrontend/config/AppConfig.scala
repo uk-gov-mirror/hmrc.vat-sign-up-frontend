@@ -37,11 +37,11 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val ggUrl: String = loadConfig(s"government-gateway.url")
   lazy val ggSignInContinueUrl = s"$baseUrl$contextRoute"
 
-  lazy val feedbackSurveyUrl: String = loadConfig("feedback-survey.url")
+  lazy val feedbackUrl: String = loadConfig("feedback.url")
   lazy val exitSurveyAgentOrigin = "MTDfB-VAT-agent-led-sign-up"
   lazy val exitSurveyPrincipalOrigin = "MTDfB-VAT-sign-up"
-  lazy val agentFeedbackSurveyUrl = s"$feedbackSurveyUrl/feedback-survey/?origin=$exitSurveyAgentOrigin"
-  lazy val principalFeedbackSurveyUrl = s"$feedbackSurveyUrl/feedback-survey/?origin=$exitSurveyPrincipalOrigin"
+  lazy val agentFeedbackUrl = s"$feedbackUrl/feedback/$exitSurveyAgentOrigin"
+  lazy val principalFeedbackUrl = s"$feedbackUrl/feedback/$exitSurveyPrincipalOrigin"
   lazy val createAccountUrl: String = ggUrl + "/login/create-account"
 
   private def encodeUrl(url: String): String = URLEncoder.encode(url, "UTF-8")
