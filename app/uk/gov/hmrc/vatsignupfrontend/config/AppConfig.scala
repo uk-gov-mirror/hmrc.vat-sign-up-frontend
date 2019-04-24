@@ -193,10 +193,4 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val companiesHouse: String = loadConfig("companies-house.url")
 
-  object UnplannedOutagePage {
-    lazy val vatServices: String = loadConfig("unplanned-outage.vatServices")
-    lazy val help: String = loadConfig("unplanned-outage.help")
-    lazy val mtdReady: String = loadConfig("unplanned-outage.mtdReady")
-  }
-
 }
