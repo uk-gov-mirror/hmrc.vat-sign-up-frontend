@@ -547,6 +547,11 @@ principal.your-details.field_4                                         = Date of
 principal.your.formhint.1.line_1                                       = For example, ''QQ 12 34 56 C''.
 principal.your-details.formhint.2                                      = For example, 10 12 1990
 
+# Capture National Insurance number (NINO)
+principal.capture_nino.title                                           = What is your National Insurance number?
+principal.capture_nino.heading                                         = What is your National Insurance number?
+principal.capture_nino.formHint                                        = It''s on your National Insurance card, benefit letter, payslip or P60. For example ''QQ 12 34 56 C''.
+
 # Check your details page
 principal.your-details.summary.title                                   = Confirm your details
 principal.your-details.summary.heading                                 = Confirm your details
