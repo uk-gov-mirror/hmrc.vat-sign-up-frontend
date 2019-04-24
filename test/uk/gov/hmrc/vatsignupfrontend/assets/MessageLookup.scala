@@ -509,6 +509,12 @@ object MessageLookup {
     val formhint2 = "For example, 10 12 1990"
   }
 
+  object CaptureNino {
+    val heading: String = "What is your National Insurance number?"
+    val title = heading + ServiceName.principalSuffix
+    val formHint = "It's on your National Insurance card, benefit letter, payslip or P60. For example 'QQ 12 34 56 C'."
+  }
+
   object ConfirmDetails {
     val heading = "Confirm your details"
     val title = heading + ServiceName.principalSuffix
