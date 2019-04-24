@@ -845,19 +845,6 @@ object MessageLookup {
     val hasOptionalSautr: String = "Does your client's partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
   }
 
-  object UnplannedOutage {
-    val heading: String = "Sorry, there is a problem with the service"
-    val title = heading + ServiceName.principalSuffix
-    val line1 = "Try again later."
-    val line2 = "In the meantime:"
-    val link1 = "full list of VAT services"
-    val link2 = "'Help and support for VAT'"
-    val link3 = "how VAT businesses can get ready"
-    val bullet1 = s"get our $link1"
-    val bullet2 = s"read our $link2"
-    val bullet3 = s"find out $link3 for the Making Tax Digital programme"
-  }
-
   object VerifySoftwareError {
     val heading: String = "Making Tax Digital for VAT: verify your software"
     val title = heading + ServiceName.principalSuffix

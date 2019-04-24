@@ -63,10 +63,6 @@ case object BTAClaimSubscription extends FeatureSwitch {
   override val displayText: String = "Enable users from BTA to claim their subscription through VAT sign up"
 }
 
-case object UnplannedShutter extends FeatureSwitch {
-  override val name: String = s"$prefix.unplanned-shutter"
-  override val displayText: String = "Unplanned shutter for the service"
-}
 
 case object DivisionJourney extends FeatureSwitch {
   override val name: String = s"$prefix.division-journey"

@@ -807,15 +807,6 @@ principal.check_your_answers_partnerships.company_utr                  = What is
 principal.check_your_answers_partnerships.post_code                    = Where is the partnership registered for Self Assessment?
 principal.check_your_answers_partnerships.has_optional_sautr           = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 
-# unplanned outage page
-unplanned_outage.title                                                 = Sorry, there is a problem with the service
-unplanned_outage.heading                                               = Sorry, there is a problem with the service
-unplanned_outage.line1                                                 = Try again later.
-unplanned_outage.line2                                                 = In the meantime:
-unplanned_outage.bullet1                                               = get our <a id="vatServices" href="{0}">full list of VAT services</a>
-unplanned_outage.bullet2                                               = read our <a id="help" href="{0}">''Help and support for VAT''</a>
-unplanned_outage.bullet3                                               = find out <a id="mtdReady" href="{0}">how VAT businesses can get ready</a> for the Making Tax Digital programme
-
 ## Verify Software Error Page
 principal.verify_software_error.title                                  = Making Tax Digital for VAT: verify your software
 principal.verify_software_error.heading                                = Making Tax Digital for VAT: verify your software
