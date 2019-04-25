@@ -37,6 +37,7 @@ object SessionKeys {
   val partnershipSautrKey = "PartnershipSautr"
   val partnershipTypeKey = "PartnershipType"
   val migratableDatesKey = "MigratableDates"
+  val ninoKey = "Nino"
   val ninoSourceKey = "NinoSource"
   val previousVatReturnKey = "previousVatReturn"
   val lastReturnMonthPeriodKey = "lastReturnMonthPeriod"

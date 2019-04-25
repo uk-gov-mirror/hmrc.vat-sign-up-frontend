@@ -40,7 +40,7 @@ object FeatureSwitch {
     SendYourApplication,
     OptionalSautrJourney,
     SkipIvJourney,
-    DisableCidCheck
+    SkipCidCheck
   )
 
   def apply(str: String): FeatureSwitch =
@@ -123,7 +123,7 @@ case object SkipIvJourney extends FeatureSwitch {
   override val displayText: String = "Enable users to skip Identity Verification Journey"
 }
 
-case object DisableCidCheck extends FeatureSwitch {
+case object SkipCidCheck extends FeatureSwitch {
   override val name: String = s"$prefix.disable-cid-check"
   override val displayText: String = "Disable checking the user's NINO via CID"
 }
