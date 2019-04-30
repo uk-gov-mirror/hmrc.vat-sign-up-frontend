@@ -320,3 +320,6 @@ POST        /joint-venture-or-property-partnership              uk.gov.hmrc.vats
 # Do you have a utr
 GET         /do-you-have-a-utr                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.DoYouHaveAUtrController.show
 POST        /do-you-have-a-utr                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.DoYouHaveAUtrController.submit
+
+#Language Controller
+GET         /language/:lang                                     uk.gov.hmrc.vatsignupfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
