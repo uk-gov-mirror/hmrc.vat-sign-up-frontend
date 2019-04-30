@@ -128,13 +128,17 @@ POST        /confirmed-identity                                 uk.gov.hmrc.vats
 GET         /your-details                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.show
 POST        /your-details                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.submit
 
-# Capture National Insurance Number (NINO)
-GET         /national-insurance-number                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.CaptureNinoController.show
-POST        /national-insurance-number                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.CaptureNinoController.submit
-
 # Confirm your Retrieved User details
 GET         /confirm-your-details                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.show
 POST        /confirm-your-details                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.submit
+
+# Capture National Insurance Number (NINO)
+GET         /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.CaptureNinoController.show
+POST        /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.CaptureNinoController.submit
+
+# Confirm National Insurance Number (NINO)
+GET         /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.ConfirmNinoController.show
+POST        /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.ConfirmNinoController.submit
 
 # Sign In With Different Details Sole Trader
 GET         /sign-in-with-different-details-sole-trader         uk.gov.hmrc.vatsignupfrontend.controllers.principal.SoleTraderDifferentDetailsController.show

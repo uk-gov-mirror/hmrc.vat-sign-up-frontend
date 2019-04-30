@@ -19,10 +19,10 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCidCheck}
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testNino
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
 
 class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -45,9 +45,9 @@ class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers w
 
         val res = get(uri)
 
-        res should have {
+        res should have(
           httpStatus(OK)
-        }
+        )
       }
     }
 
@@ -58,34 +58,26 @@ class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers w
 
         val res = get(uri)
 
-        res should have {
+        res should have(
           httpStatus(NOT_FOUND)
-        }
+        )
       }
     }
   }
 
   "POST /national-insurance-number" when {
     "the NINO is valid" should {
-      "redirect to confirm details" in {
+      "redirect to confirm NINO with the NINO in session" in {
+        stubAuth(OK, successfulAuthResponse())
         val res = post(uri)(nino -> testNino)
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(principalRoutes.ConfirmYourDetailsController.show().url)
+          redirectUri(routes.ConfirmNinoController.show().url)
         )
-      }
-    }
 
-    "the NINO is invalid" should {
-      "return BAD REQUEST" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post(uri)(nino -> testNino.replace(testNino.substring(0, 1), "QQ"))
-
-        res should have(
-          httpStatus(BAD_REQUEST)
-        )
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(ninoKey)
       }
     }
   }
