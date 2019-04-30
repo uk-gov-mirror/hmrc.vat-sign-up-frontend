@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 
 import scala.concurrent.Future
 
+@Singleton
 class DirectDebitResolverController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(
     retrievalPredicate = AdministratorRolePredicate) {
