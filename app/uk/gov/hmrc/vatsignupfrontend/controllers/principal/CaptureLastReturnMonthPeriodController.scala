@@ -46,7 +46,7 @@ class CaptureLastReturnMonthPeriodController @Inject()(val controllerComponents:
       monthForm.bindFromRequest.fold(
         formWithErrors =>
           Future.successful(BadRequest(
-            capture_last_return_month_period(formWithErrors, routes.CaptureLastReturnMonthPeriodController.show())
+            capture_last_return_month_period(formWithErrors, routes.CaptureLastReturnMonthPeriodController.submit())
           )),
         lastReturnMonthPeriod =>
           Future.successful(
