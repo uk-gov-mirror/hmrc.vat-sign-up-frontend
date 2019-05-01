@@ -44,4 +44,18 @@ object StoreNinoStub extends WireMockMethods with FeatureSwitching {
   def stubStoreNinoNoMatch(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource): Unit =
     stubStoreNino(vatNumber, userDetailsModel, ninoSource)(FORBIDDEN)
 
+  // Overloaded methods for when SkipCidCheck FS is enabled.
+
+  def stubStoreNino(vatNumber: String, nino: String, ninoSource: NinoSource)(responseStatus: Int): Unit = {
+    when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/national-insurance-number",
+      body = Json.obj("nino" -> nino, ninoSourceFrontEndKey -> ninoSource))
+      .thenReturn(status = responseStatus)
+  }
+
+  def stubStoreNinoSuccess(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
+    stubStoreNino(vatNumber, nino, ninoSource)(NO_CONTENT)
+
+  def stubStoreNinoNoMatch(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
+    stubStoreNino(vatNumber, nino, ninoSource)(FORBIDDEN)
+
 }

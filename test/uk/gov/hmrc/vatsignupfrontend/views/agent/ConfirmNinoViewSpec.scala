@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.agent
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -22,23 +22,22 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PrincipalNoCtEnrolmentSummary => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ConfirmNino => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
-import uk.gov.hmrc.vatsignupfrontend.views.helpers.NoCtEnrolmentSummaryIdConstants._
 
-class NoCtEnrolmentSummarySpec extends ViewSpec {
+class ConfirmNinoViewSpec extends ViewSpec {
 
-  val testEntity = SoleTrader
+  val testNino = "AA111111A"
+
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.no_ct_enrolment_summary(
-    companyNumber = testCompanyNumber,
-    companyUtr = testCompanyUtr,
-    businessEntity = testEntity,
+  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.confirm_nino(
+    nino = testNino,
+    businessEntity = SoleTrader,
     postAction = testCall
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
@@ -60,18 +59,16 @@ class NoCtEnrolmentSummarySpec extends ViewSpec {
     section.attr("class") shouldBe "tabular-data__data-2"
   }
 
-  "Check your answers view" should {
+  "Confirm Client page view" should {
 
     val testPage = TestView(
-      name = "Check your answers View",
+      name = "Client Details View",
       title = messages.title,
       heading = messages.heading,
       page = page
     )
 
-    testPage.shouldHaveH2(messages.subHeading)
-
-    testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
+    testPage.shouldHaveForm("Client Details Form")(actionCall = testCall)
   }
 
   def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
@@ -93,39 +90,11 @@ class NoCtEnrolmentSummarySpec extends ViewSpec {
     }
   }
 
-  "display the correct info for CompanyNumber" in {
-    val sectionId = CompanyNumberId
-    val expectedQuestion = messages.companyNumber
-    val expectedAnswer = testCompanyNumber
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyNumberController.show().url
-
-    sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "display the correct info for CompanyUtr" in {
-    val sectionId = CompanyUtrId
-    val expectedQuestion = messages.companyUtr
-    val expectedAnswer = testCompanyUtr
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyUtrController.show().url
-
-    sectionTest(
-      sectionId = sectionId,
-      expectedQuestion = expectedQuestion,
-      expectedAnswer = expectedAnswer,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "display the correct info for BusinessEntity" in {
-    val sectionId = BusinessEntityId
+  "display the correct info for business entity" in {
+    val sectionId = "business-entity"
     val expectedQuestion = messages.businessEntity
-    val expectedAnswer = CaptureBusinessEntity.radioSoleTrader
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
+    val expectedAnswer = MessageLookup.CaptureBusinessEntity.radioSoleTrader
+    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureBusinessEntityController.show().url
 
     sectionTest(
       sectionId = sectionId,
@@ -134,4 +103,19 @@ class NoCtEnrolmentSummarySpec extends ViewSpec {
       expectedEditLink = Some(expectedEditLink)
     )
   }
+
+  "display the correct info for nino" in {
+    val sectionId = "nino"
+    val expectedQuestion = messages.nino
+    val expectedAnswer = testNino
+    val expectedEditLink = "" //TODO uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureNinoController.show().url
+
+    sectionTest(
+      sectionId = sectionId,
+      expectedQuestion = expectedQuestion,
+      expectedAnswer = expectedAnswer,
+      expectedEditLink = Some(expectedEditLink)
+    )
+  }
+
 }

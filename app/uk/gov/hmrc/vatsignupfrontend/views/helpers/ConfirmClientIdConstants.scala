@@ -19,9 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.views.helpers
 
 object ConfirmClientIdConstants {
 
-val DobId = "date-of-birth"
-val FirstNameId = "first-name"
-val LastNameId = "last-name"
-val NinoId = "nino"
+  val DobId = "date-of-birth"
+  val FirstNameId = "first-name"
+  val LastNameId = "last-name"
+  val NinoId = "nino"
 
 }

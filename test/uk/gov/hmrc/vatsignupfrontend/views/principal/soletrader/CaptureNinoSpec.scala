@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal.soletrader
 
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._

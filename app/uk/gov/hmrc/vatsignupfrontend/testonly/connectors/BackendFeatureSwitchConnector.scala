@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.testonly.connectors
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.testonly.models.FeatureSwitchSetting
 
 import scala.concurrent.Future
 
+@Singleton
 class BackendFeatureSwitchConnector @Inject()(http: HttpClient,
                                               appConfig: AppConfig) {
   def getBackendFeatureSwitches(implicit hc: HeaderCarrier): Future[Map[String, Boolean]] = for {

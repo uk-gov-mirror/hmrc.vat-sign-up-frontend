@@ -110,7 +110,6 @@ class ConfirmYourDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
                 val testRedirectUrl = "/test/redirect/url"
                 val testContinueUrl = "/test/continue/url"
 
-
                 mockAuthConfidenceLevelRetrieval(ConfidenceLevel.L50)
                 mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
                 mockStart(testUserDetails)(Future.successful(Right(

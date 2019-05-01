@@ -40,7 +40,8 @@ object FeatureSwitch {
     SendYourApplication,
     OptionalSautrJourney,
     SkipIvJourney,
-    SkipCidCheck
+    SkipCidCheck,
+    WelshTranslation
   )
 
   def apply(str: String): FeatureSwitch =

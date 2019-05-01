@@ -123,16 +123,18 @@ object MessageLookup {
   }
 
   object CaptureBusinessEntity {
-    val heading: String = "What type of business is your client registered as?"
-    val title = heading + ServiceName.agentSuffix
+    val agentHeading: String = "What type of business is your client registered as?"
+    val agentTitle = agentHeading + ServiceName.agentSuffix
+    val principalHeading: String = "What type of business are you registered as?"
+    val principalTitle = principalHeading + ServiceName.principalSuffix
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
     val radioGeneralPartnership: String = "General partnership"
     val radioLimitedPartnership: String = "Limited partnership (including limited liability partnerships)"
     val radioVatGroup: String = "VAT group"
-    val radioDivision: String = "Administrative Division"
-    val radioUnincorporatedAssociation: String = "Unincorporated Association"
-    val radioRegisteredSociety: String = "Registered Society (including Community Benefit Societies and Co-operative Societies)"
+    val radioDivision: String = "Administrative division"
+    val radioUnincorporatedAssociation: String = "Unincorporated association"
+    val radioRegisteredSociety: String = "Registered society (including community benefit societies and co-operative societies)"
     val radioTrust: String = "Trust"
     val radioCharity: String = "CIO (charity)"
     val radioGovernmentOrganisation: String = "Government organisations and public sector"
@@ -277,6 +279,13 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
+  object ConfirmNino {
+    val heading = "Confirm your client's details"
+    val title = heading + ServiceName.agentSuffix
+    val nino = "What is your client's National Insurance number?"
+    val businessEntity = "What type of business or group is your client?"
+  }
+
   object FailedClientMatching {
     val heading: String = "There's a problem"
     val title = heading + ServiceName.agentSuffix
@@ -410,23 +419,6 @@ object MessageLookup {
 
   }
 
-  object PrincipalCaptureBusinessEntity {
-    val heading: String = "What type of business are you registered as?"
-    val title = heading + ServiceName.principalSuffix
-    val radioSoleTrader: String = "Sole trader"
-    val radioLimitedCompany: String = "Limited company"
-    val radioGeneralPartnership: String = "General partnership"
-    val radioLimitedPartnership: String = "Limited partnership (including limited liability partnerships)"
-    val radioVatGroup: String = "VAT group"
-    val radioDivision: String = "Administrative division"
-    val radioUnincorporatedAssociation: String = "Unincorporated association"
-    val radioTrust: String = "Trust"
-    val radioRegisteredSociety = "Registered society (including community benefit societies and co-operative societies)"
-    val radioCharity = "CIO (charity)"
-    val radioGovernmentOrganisation: String = "Government organisations and public sector"
-    val radioOther: String = "Other"
-  }
-
   object PrincipalCheckYourAnswers {
     val heading = "Check your answers"
     val title = heading + ServiceName.principalSuffix
@@ -529,6 +521,20 @@ object MessageLookup {
     val lastName = "Last name"
     val nino = "National Insurance number"
     val dob = "Date of birth"
+  }
+
+  object CaptureNino {
+    val heading: String = "What is your National Insurance number?"
+    val title = heading + ServiceName.principalSuffix
+    val formHint = "It's on your National Insurance card, benefit letter, payslip or P60. For example 'QQ 12 34 56 C'."
+  }
+
+  object PrincipalConfirmNino {
+    val heading: String = "Check your answers"
+    val title = heading + ServiceName.principalSuffix
+    val subHeading = "You've told us"
+    val businessEntity = "What is your business type?"
+    val nino = "What is your National Insurance number?"
   }
 
   object PrincipalConfirmYourDetails {
