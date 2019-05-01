@@ -952,3 +952,9 @@ principal.partnership.do_you_have_a_utr.line                          = This is 
 agent.partnership.does_your_client_have_a_utr.title                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 agent.partnership.does_your_client_have_a_utr.heading                 = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 agent.partnership.does_your_client_have_a_utr.line                    = This is a 10-digit number. You can find it on letters to the partnership from HMRC.
+
+# Confirm National Insurance number (NINO)
+agent.confirm_nino.title                                              = Confirm your client''s details
+agent.confirm_nino.heading                                            = Confirm your client''s details
+agent.confirm_nino.summary.business_type                              = What type of business or group is your client?
+agent.confirm_nino.summary.nino                                       = What is your client''s National Insurance number?
