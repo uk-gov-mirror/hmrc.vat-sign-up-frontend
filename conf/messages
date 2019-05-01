@@ -552,6 +552,11 @@ principal.capture_nino.title                                           = What is
 principal.capture_nino.heading                                         = What is your National Insurance number?
 principal.capture_nino.formHint                                        = It''s on your National Insurance card, benefit letter, payslip or P60. For example ''QQ 12 34 56 C''.
 
+# Capture National Insurance number (NINO)
+agent.capture_nino.title                                               = What is your client''s National Insurance number?
+agent.capture_nino.heading                                             = What is your client''s National Insurance number?
+agent.capture_nino.formHint                                            = It''s on your client''s National Insurance card, benefit letter, payslip or P60. For example, ''QQ 12 34 56 C''.
+
 # Check your details page
 principal.your-details.summary.title                                   = Confirm your details
 principal.your-details.summary.heading                                 = Confirm your details

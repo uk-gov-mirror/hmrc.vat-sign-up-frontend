@@ -515,6 +515,12 @@ object MessageLookup {
     val formHint = "It's on your National Insurance card, benefit letter, payslip or P60. For example 'QQ 12 34 56 C'."
   }
 
+  object AgentCaptureNino {
+    val heading: String = "What is your client's National Insurance number?"
+    val title = heading + ServiceName.agentSuffix
+    val formHint = "It's on your client's National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'."
+  }
+
   object ConfirmDetails {
     val heading = "Confirm your details"
     val title = heading + ServiceName.principalSuffix
