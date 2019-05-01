@@ -279,6 +279,13 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
+  object ConfirmNino {
+    val heading = "Confirm your client's details"
+    val title = heading + ServiceName.agentSuffix
+    val nino = "What is your client's National Insurance number?"
+    val businessEntity = "What type of business or group is your client?"
+  }
+
   object FailedClientMatching {
     val heading: String = "There's a problem"
     val title = heading + ServiceName.agentSuffix
