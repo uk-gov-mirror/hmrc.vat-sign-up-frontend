@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.testonly.controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Request}
 import play.twirl.api.Html
@@ -32,6 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.testonly.views.html.feature_switch
 
 import scala.collection.immutable.ListMap
 
+@Singleton
 class FeatureSwitchController @Inject()(val messagesApi: MessagesApi,
                                         val appConfig: AppConfig,
                                         featureSwitchConnector: BackendFeatureSwitchConnector)

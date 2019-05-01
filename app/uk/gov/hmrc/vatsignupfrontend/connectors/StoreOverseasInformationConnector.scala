@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpPar
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class StoreOverseasInformationConnector @Inject()(val http: HttpClient,
                                                   val applicationConfig: AppConfig
                                                  )(implicit ec: ExecutionContext) {
