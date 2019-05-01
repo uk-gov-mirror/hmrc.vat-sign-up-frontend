@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
+@import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper
 
 
 @(utr: Option[String],
@@ -35,10 +36,7 @@
 @businessEntityCheck() = @{
     val rowName = BusinessEntityId
     val rowQuestion = Messages("agent.check-your-answers.business_entity")
-    val rowAnswer = entityType match {
-        case GeneralPartnership => Messages("agent.capture_entity_type.generalPartnership")
-        case LimitedPartnership => Messages("agent.capture_entity_type.limitedPartnership")
-    }
+    val rowAnswer = BusinessEntityHelper.getBusinessEntityName(entityType)
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureBusinessEntityController.show().url
 
     summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))

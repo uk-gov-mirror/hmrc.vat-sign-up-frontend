@@ -34,6 +34,20 @@ base.yes                                                               = Yes
 base.no                                                                = No
 base.company_number                                                    = Change your company number
 
+## Entity types
+core.capture_entity_type.soleTrader                                    = Sole trader
+core.capture_entity_type.generalPartnership                            = General partnership
+core.capture_entity_type.limitedPartnership                            = Limited partnership (including limited liability partnerships)
+core.capture_entity_type.limitedCompany                                = Limited company
+core.capture_entity_type.vatGroup                                      = VAT group
+core.capture_entity_type.division                                      = Administrative division
+core.capture_entity_type.unincorporatedAssociation                     = Unincorporated association
+core.capture_entity_type.trust                                         = Trust
+core.capture_entity_type.registeredSociety                             = Registered society (including community benefit societies and co-operative societies)
+core.capture_entity_type.charity                                       = CIO (charity)
+core.capture_entity_type.governmentOrganisation                        = Government organisations and public sector
+core.capture_entity_type.other                                         = Other
+
 ## Errors
 error.title_prefix                                                     = 'Error: '
 error.business-entity.field                                            = Select the type of business or group you are signing up
@@ -236,18 +250,6 @@ agent.capture_company_number.line_1                                    = You can
 ## Agent Capture Entity Type page
 agent.capture_entity_type.title                                        = What type of business is your client registered as?
 agent.capture_entity_type.heading                                      = What type of business is your client registered as?
-agent.capture_entity_type.soleTrader                                   = Sole trader
-agent.capture_entity_type.generalPartnership                           = General partnership
-agent.capture_entity_type.limitedPartnership                           = Limited partnership (including limited liability partnerships)
-agent.capture_entity_type.limitedCompany                               = Limited company
-agent.capture_entity_type.vatGroup                                     = VAT group
-agent.capture_entity_type.division                                     = Administrative Division
-agent.capture_entity_type.unincorporatedAssociation                    = Unincorporated Association
-agent.capture_entity_type.trust                                        = Trust
-agent.capture_entity_type.registeredSociety                            = Registered Society (including Community Benefit Societies and Co-operative Societies)
-agent.capture_entity_type.charity                                      = CIO (charity)
-agent.capture_entity_type.governmentOrganisation                      = Government organisations and public sector
-agent.capture_entity_type.other                                        = Other
 
 ## Client Details ##
 agent.client-details.title                                             = Enter your client''s details
@@ -470,18 +472,6 @@ principal.principal_place_of_business.label                            = UK post
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = What type of business are you registered as?
 principal.capture_entity_type.heading                                  = What type of business are you registered as?
-principal.capture_entity_type.soleTrader                               = Sole trader
-principal.capture_entity_type.limitedCompany                           = Limited company
-principal.capture_entity_type.generalPartnership                       = General partnership
-principal.capture_entity_type.limitedPartnership                       = Limited partnership (including limited liability partnerships)
-principal.capture_entity_type.vatGroup                                 = VAT group
-principal.capture_entity_type.division                                 = Administrative division
-principal.capture_entity_type.unincorporatedAssociation                = Unincorporated association
-principal.capture_entity_type.trust                                    = Trust
-principal.capture_entity_type.registeredSociety                        = Registered society (including community benefit societies and co-operative societies)
-principal.capture_entity_type.charity                                  = CIO (charity)
-principal.capture_entity_type.governmentOrganisation                   = Government organisations and public sector
-principal.capture_entity_type.other                                    = Other
 
 # Check your answers page
 check-your-answers.title                                               = Check your answers

@@ -21,7 +21,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCaptureBusinessEntity => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
@@ -51,8 +51,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
     val testPage = TestView(
       name = "Principal Capture Business Entity View",
-      title = messages.title,
-      heading = messages.heading,
+      title = messages.principalTitle,
+      heading = messages.principalHeading,
       page = page
     )
 
