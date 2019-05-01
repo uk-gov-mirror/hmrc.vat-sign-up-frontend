@@ -22,7 +22,7 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCaptureBusinessEntity, PrincipalNoCtEnrolmentSummary => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PrincipalNoCtEnrolmentSummary => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
@@ -124,7 +124,7 @@ class NoCtEnrolmentSummarySpec extends ViewSpec {
   "display the correct info for BusinessEntity" in {
     val sectionId = BusinessEntityId
     val expectedQuestion = messages.businessEntity
-    val expectedAnswer = PrincipalCaptureBusinessEntity.radioSoleTrader
+    val expectedAnswer = CaptureBusinessEntity.radioSoleTrader
     val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
 
     sectionTest(

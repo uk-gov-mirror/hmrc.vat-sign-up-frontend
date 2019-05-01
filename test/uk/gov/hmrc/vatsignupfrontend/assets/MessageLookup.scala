@@ -123,16 +123,18 @@ object MessageLookup {
   }
 
   object CaptureBusinessEntity {
-    val heading: String = "What type of business is your client registered as?"
-    val title = heading + ServiceName.agentSuffix
+    val agentHeading: String = "What type of business is your client registered as?"
+    val agentTitle = agentHeading + ServiceName.agentSuffix
+    val principalHeading: String = "What type of business are you registered as?"
+    val principalTitle = principalHeading + ServiceName.principalSuffix
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
     val radioGeneralPartnership: String = "General partnership"
     val radioLimitedPartnership: String = "Limited partnership (including limited liability partnerships)"
     val radioVatGroup: String = "VAT group"
-    val radioDivision: String = "Administrative Division"
-    val radioUnincorporatedAssociation: String = "Unincorporated Association"
-    val radioRegisteredSociety: String = "Registered Society (including Community Benefit Societies and Co-operative Societies)"
+    val radioDivision: String = "Administrative division"
+    val radioUnincorporatedAssociation: String = "Unincorporated association"
+    val radioRegisteredSociety: String = "Registered society (including community benefit societies and co-operative societies)"
     val radioTrust: String = "Trust"
     val radioCharity: String = "CIO (charity)"
     val radioGovernmentOrganisation: String = "Government organisations and public sector"
@@ -408,23 +410,6 @@ object MessageLookup {
       val line2 = "If you haven't submitted a VAT Return online before, then you'll also need your VAT registration certificate."
     }
 
-  }
-
-  object PrincipalCaptureBusinessEntity {
-    val heading: String = "What type of business are you registered as?"
-    val title = heading + ServiceName.principalSuffix
-    val radioSoleTrader: String = "Sole trader"
-    val radioLimitedCompany: String = "Limited company"
-    val radioGeneralPartnership: String = "General partnership"
-    val radioLimitedPartnership: String = "Limited partnership (including limited liability partnerships)"
-    val radioVatGroup: String = "VAT group"
-    val radioDivision: String = "Administrative division"
-    val radioUnincorporatedAssociation: String = "Unincorporated association"
-    val radioTrust: String = "Trust"
-    val radioRegisteredSociety = "Registered society (including community benefit societies and co-operative societies)"
-    val radioCharity = "CIO (charity)"
-    val radioGovernmentOrganisation: String = "Government organisations and public sector"
-    val radioOther: String = "Other"
   }
 
   object PrincipalCheckYourAnswers {

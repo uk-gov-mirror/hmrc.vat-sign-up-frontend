@@ -52,8 +52,8 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
     val testPage = TestView(
       name = "Capture Business Entity View",
-      title = messages.title,
-      heading = messages.heading,
+      title = messages.agentTitle,
+      heading = messages.agentHeading,
       page = page
     )
 
