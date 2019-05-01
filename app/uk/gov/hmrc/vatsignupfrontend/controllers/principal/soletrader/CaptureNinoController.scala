@@ -25,7 +25,6 @@ import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.capture_nino
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 
 import scala.concurrent.Future
 
@@ -43,14 +42,16 @@ class CaptureNinoController @Inject()(val controllerComponents: ControllerCompon
 
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
-      ninoForm.bindFromRequest.fold (
-        formWithErrors => Future.successful(
-          BadRequest(capture_nino(formWithErrors, routes.CaptureNinoController.submit()))
-        ),
-        nino => Future.successful(
-          Redirect(principalRoutes.ConfirmYourDetailsController.show()).addingToSession(ninoKey -> nino)
+      authorised() {
+        ninoForm.bindFromRequest.fold(
+          formWithErrors => Future.successful(
+            BadRequest(capture_nino(formWithErrors, routes.CaptureNinoController.submit()))
+          ),
+          nino => Future.successful(
+            Redirect(routes.ConfirmNinoController.show()).addingToSession(ninoKey -> nino)
+          )
         )
-      )
+      }
   }
 
 }

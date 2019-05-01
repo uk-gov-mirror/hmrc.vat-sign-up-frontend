@@ -25,9 +25,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCidCheck}
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testBox5Figure, testNino}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 
 class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with FeatureSwitching {
 
@@ -66,16 +65,16 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
     "a valid NINO has been submitted" should {
       "redirect to the Confirm Your Details page" in {
         mockAuthAdminRole()
-        val res = TestCaptureNinoController.submit(testPostRequest())
+        val res = await(TestCaptureNinoController.submit(testPostRequest()))
         status(res) shouldBe SEE_OTHER
-        redirectLocation(res) should contain(principalRoutes.ConfirmYourDetailsController.show().url)
+        redirectLocation(res) should contain(routes.ConfirmNinoController.show().url)
         res.session(testPostRequest()).get(SessionKeys.ninoKey) should contain(testNino)
       }
     }
     "an invalid NINO has been submitted" should {
       "display the capture NINO page, with error messages" in {
         mockAuthAdminRole()
-        val res = TestCaptureNinoController.submit(testPostRequest("QQ123456C"))
+        val res = await(TestCaptureNinoController.submit(testPostRequest("QQ123456C")))
         status(res) shouldBe BAD_REQUEST
         contentType(res) shouldBe Some("text/html")
         charset(res) shouldBe Some("utf-8")

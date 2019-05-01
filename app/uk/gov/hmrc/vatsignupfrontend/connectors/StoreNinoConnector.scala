@@ -34,6 +34,10 @@ class StoreNinoConnector @Inject()(val http: HttpClient,
 
   private def storeNinoUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/nino"
 
+  // URL for when SkipCidCheck is enabled
+  private def storeNationalInsuranceNumberUrl(vatNumber: String) =
+    s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/national-insurance-number"
+
   def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     http.PUT[JsObject, StoreNinoResponse](storeNinoUrl(vatNumber),
       Json.obj(
@@ -41,6 +45,14 @@ class StoreNinoConnector @Inject()(val http: HttpClient,
         "lastName" -> userDetailsModel.lastName,
         "nino" -> userDetailsModel.nino,
         "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate,
+        ninoSourceFrontEndKey -> ninoSource
+      )
+    )
+
+  def storeNino(vatNumber: String, nino: String, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+    http.PUT[JsObject, StoreNinoResponse](storeNationalInsuranceNumberUrl(vatNumber),
+      Json.obj(
+        "nino" -> nino,
         ninoSourceFrontEndKey -> ninoSource
       )
     )
