@@ -66,6 +66,19 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
+      "go to the capture NINO page" when {
+        "the business entity is sole trader and the skip CID check feature switch is enabled" in {
+          enable(SkipCidCheck)
+          mockAuthRetrieveAgentEnrolment()
+
+          val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(soletrader.routes.CaptureNinoController.show().url)
+
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+        }
+      }
+
       "go to the capture client details page" when {
         "the business entity is sole trader" in {
           mockAuthRetrieveAgentEnrolment()
