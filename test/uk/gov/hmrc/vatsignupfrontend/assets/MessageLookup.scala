@@ -523,12 +523,6 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
-  object CaptureNino {
-    val heading: String = "What is your National Insurance number?"
-    val title = heading + ServiceName.principalSuffix
-    val formHint = "It's on your National Insurance card, benefit letter, payslip or P60. For example 'QQ 12 34 56 C'."
-  }
-
   object PrincipalConfirmNino {
     val heading: String = "Check your answers"
     val title = heading + ServiceName.principalSuffix
