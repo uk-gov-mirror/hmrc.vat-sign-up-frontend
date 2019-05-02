@@ -30,6 +30,10 @@ POST        /client-details                                     uk.gov.hmrc.vats
 GET         /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.CaptureNinoController.show
 POST        /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.CaptureNinoController.submit
 
+# Confirm National Insurance Number (NINO)
+GET         /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.ConfirmNinoController.show
+POST        /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.ConfirmNinoController.submit
+
 # Confirm Client details
 GET         /confirm-client                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.show
 POST        /confirm-client                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.submit

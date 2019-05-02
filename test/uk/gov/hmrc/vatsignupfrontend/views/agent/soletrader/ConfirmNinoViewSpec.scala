@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.agent
+package uk.gov.hmrc.vatsignupfrontend.views.agent.soletrader
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element

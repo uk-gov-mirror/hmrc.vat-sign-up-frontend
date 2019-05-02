@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm.nino
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.ConfirmNinoController
 
 class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -63,14 +64,14 @@ class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers w
     }
     "POST /client/national-insurance-number" when {
       "the NINO is valid" should {
-        // TODO to implement Redirect page
-        "return NOT IMPLEMENTED" in {
+        "redirect to confirm nino" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
           val res = post(url)(nino -> testNino)
 
           res should have {
-            httpStatus(NOT_IMPLEMENTED)
+            httpStatus(SEE_OTHER)
+            redirectUri(ConfirmNinoController.show().url)
           }
         }
       }
