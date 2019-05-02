@@ -69,6 +69,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         entityType => {
           entityType match {
             case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+            case SoleTrader if isEnabled(SkipCidCheck) => Future.successful(Redirect(soletrader.routes.CaptureNinoController.show()))
             case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
             case GeneralPartnership | LimitedPartnership => Future.successful(Redirect(partnerships.routes.ResolvePartnershipController.resolve()))
             case VatGroup => Future.successful(Redirect(routes.VatGroupResolverController.resolve()))

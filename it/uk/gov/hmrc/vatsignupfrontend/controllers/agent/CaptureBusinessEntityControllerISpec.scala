@@ -58,6 +58,21 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
+    "redirect to capture NINO" when {
+      "the business entity is sole trader and the skip CID check feature switch is enabled" in {
+        enable(SkipCidCheck)
+
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> soleTrader)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(soletrader.routes.CaptureNinoController.show().url)
+        )
+      }
+    }
+
     "redirect to capture client details" when {
       "the business entity is sole trader" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
