@@ -63,7 +63,7 @@ class ConfirmNinoControllerISpec extends ComponentSpecBase with CustomMatchers {
   }
 
   "POST /client/confirm-national-insurance-number" should {
-    "redirect to DirectDebitResolver" in {
+    "redirect to CaptureAgentEmailController" in {
       enable(SkipCidCheck)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
       stubStoreNinoSuccess(testVatNumber, testNino, UserEntered)

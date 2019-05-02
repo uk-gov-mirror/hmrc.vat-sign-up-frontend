@@ -76,7 +76,7 @@ class ConfirmNinoControllerSpec extends UnitSpec
 
   "Calling the submit method of the Confirm NINO controller" when {
     "there is a NINO and VAT number in the user's session" should {
-      "Redirect to DirectDebitResolver" in {
+      "Redirect to the capture agent e-mail page" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreNinoSuccess(testVatNumber, testNino, UserEntered)
 
