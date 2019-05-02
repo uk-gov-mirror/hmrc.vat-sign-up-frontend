@@ -23,7 +23,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.agent_capture_nino
 
@@ -45,16 +44,16 @@ class CaptureNinoController @Inject()(val controllerComponents: ControllerCompon
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        ninoForm.bindFromRequest.fold (
+        ninoForm.bindFromRequest.fold(
           formWithErrors => {
             Future.successful(
               BadRequest(agent_capture_nino(formWithErrors, routes.CaptureNinoController.submit()))
             )
           },
-          // TODO to implement the Redirect page
-          nino => {
-            Future.successful(NotImplemented)
-          }
+          nino =>
+            Future.successful(
+              Redirect(routes.ConfirmNinoController.show()).addingToSession(ninoKey -> nino)
+            )
         )
       }
   }

@@ -27,6 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.ConfirmNinoController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm.nino
 
 class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -61,11 +62,12 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
   }
   "Calling the Submit method of the Capture NINO controller for agent" when {
     "A valid Nino has been submitted" should {
-      "Redirect page not implemented " in {
+      "Redirect to the confirm NINO page " in {
         mockAuthRetrieveAgentEnrolment()
         val res = await(TestCaptureNinoController.submit(testPostRequest()))
-        // TODO to test the redirect
-        status(res) shouldBe NOT_IMPLEMENTED
+
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) should contain(ConfirmNinoController.show().url)
       }
     }
     "An invalid NINO has not been submitted" should {
