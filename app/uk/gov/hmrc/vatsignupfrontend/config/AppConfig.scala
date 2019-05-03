@@ -17,13 +17,14 @@
 package uk.gov.hmrc.vatsignupfrontend.config
 
 import java.net.URLEncoder
-import javax.inject.{Inject, Singleton}
 
+import javax.inject.{Inject, Singleton}
 import play.api.Mode.Mode
+import play.api.i18n.Lang
 import play.api.mvc.Call
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubIncorporationInformation}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubIncorporationInformation, WelshTranslation}
 
 @Singleton
 class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig with FeatureSwitching {
@@ -31,6 +32,15 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   override protected def mode: Mode = environment.mode
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+
+  def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
+
+  def routeToSwitchLanguage: String => Call = (lang: String) => uk.gov.hmrc.vatsignupfrontend.controllers.routes.LanguageSwitchController.switchToLanguage(lang)
+
+  def languageTranslationEnabled = isEnabled(WelshTranslation)
 
   lazy val baseUrl: String = loadConfig("base.url")
   val contextRoute = "/vat-through-software/sign-up"

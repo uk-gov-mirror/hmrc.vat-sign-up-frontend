@@ -26,7 +26,8 @@ object AppDependencies {
     ws,
     "uk.gov.hmrc" %% "bootstrap-play-25" % "4.8.0",
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion
+    "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion,
+    "uk.gov.hmrc" %% "play-language" % "3.4.0"
   )
 
   def test = {
