@@ -40,7 +40,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def routeToSwitchLanguage: String => Call = (lang: String) => uk.gov.hmrc.vatsignupfrontend.controllers.routes.LanguageSwitchController.switchToLanguage(lang)
 
-  val languageTranslationEnabled = isEnabled(WelshTranslation)
+  def languageTranslationEnabled = isEnabled(WelshTranslation)
 
   lazy val baseUrl: String = loadConfig("base.url")
   val contextRoute = "/vat-through-software/sign-up"

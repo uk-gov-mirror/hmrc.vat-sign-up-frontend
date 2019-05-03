@@ -24,19 +24,20 @@ import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
 @Singleton
 class LanguageSwitchController @Inject()(val appConfig: AppConfig,
-                                         override implicit val messagesApi: MessagesApi)
-  extends Controller with I18nSupport {
+                                         override implicit val messagesApi: MessagesApi
+                                        ) extends Controller with I18nSupport {
 
   def langToCall: String => Call = appConfig.routeToSwitchLanguage
 
-  protected[controllers] def fallbackURL: String = ""
+  protected[controllers] def fallbackURL: String = principal.routes.IndexResolverController.resolve().url
 
   def languageMap: Map[String, Lang] = appConfig.languageMap
 
-  def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
-    val lang = languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
-    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
+  def switchToLanguage(language: String): Action[AnyContent] = Action {
+    implicit request =>
+      val lang = languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
+      val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
+      Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
 }
