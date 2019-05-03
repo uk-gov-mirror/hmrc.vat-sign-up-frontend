@@ -50,8 +50,6 @@
 
     @summaryErrorHelper(businessEntityForm)
 
-    <h1 class="heading-large">@Messages("agent.capture_entity_type.heading")</h1>
-
     @form(action = postAction) {
 
         @radioHelper(
@@ -71,7 +69,8 @@
               ++ governmentOrganisationOption
               :+ (other, Messages("core.capture_entity_type.other")),
             legend = Messages("agent.capture_entity_type.heading"),
-            field = businessEntityForm(businessEntity)
+            field = businessEntityForm(businessEntity),
+            hideLegend = false
         )
 
         @continueButton()

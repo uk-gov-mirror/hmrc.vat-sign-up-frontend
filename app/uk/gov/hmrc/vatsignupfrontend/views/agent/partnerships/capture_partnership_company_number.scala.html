@@ -25,19 +25,23 @@
 @agent_main_template(title = Messages("agent.capture_partnership_company_number.title"), bodyClasses = None, form = Some(partnershipCompanyNumberForm)) {
     @summaryErrorHelper(partnershipCompanyNumberForm)
 
-    <h1 class="heading-large">@Messages("agent.capture_partnership_company_number.heading")</h1>
-
-    <p>@Html(Messages("agent.capture_partnership_company_number.line_1", appConfig.companiesHouse))</p>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("agent.capture_partnership_company_number.heading")</h1>
+        </legend>
+
+        <p>@Html(Messages("agent.capture_partnership_company_number.line_1", appConfig.companiesHouse))</p>
+
         <div class="form-group">
             @inputHelper(
                 field = partnershipCompanyNumberForm(companyNumber),
                 label = Messages("agent.capture_partnership_company_number.heading"),
                 parentForm = partnershipCompanyNumberForm
             )
-        </div>
 
-        @continueButton()
+            @continueButton()
+        </div>
+    </fieldset>
     }
 }

@@ -25,19 +25,23 @@
 @principal_main_template(title = Messages("principal.capture_company_number.title"), bodyClasses = None, form = Some(companyNumberForm)) {
     @summaryErrorHelper(companyNumberForm)
 
-    <h1 class="heading-large">@Messages("principal.capture_company_number.heading")</h1>
-
-    <p>@Html(Messages("principal.capture_company_number.line_1", appConfig.companiesHouse))</p>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.capture_company_number.heading")</h1>
+        </legend>
+
+        <p>@Html(Messages("principal.capture_company_number.line_1", appConfig.companiesHouse))</p>
+
         <div class="form-group">
             @inputHelper(
                 field = companyNumberForm(companyNumber),
                 label = Messages("principal.capture_company_number.heading"),
                 parentForm = companyNumberForm
             )
-        </div>
 
-        @continueButton()
+            @continueButton()
+        </div>
+    </fieldset>
     }
 }

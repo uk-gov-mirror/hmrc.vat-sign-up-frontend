@@ -27,13 +27,16 @@
 
     @summaryErrorHelper(box5FigureForm)
 
-    <h1 class="heading-large">@Messages("principal.capture_box_5_figure.heading")</h1>
-
-    <p>@Messages("principal.capture_box_5_figure.line")</p>
-
-    <p>@Messages("principal.capture_box_5_figure.line2")</p>
-
     @form(action = postAction) {
+
+    <fieldset>
+        <legend>
+          <h1 class="heading-large">@Messages("principal.capture_box_5_figure.heading")</h1>
+        </legend>
+
+        <p>@Messages("principal.capture_box_5_figure.line")</p>
+
+        <p>@Messages("principal.capture_box_5_figure.line2")</p>
 
         <div class="form-group">
             @inputHelper(
@@ -44,7 +47,7 @@
             )
 
             @continueButton()
-
         </div>
+    </fieldset>
     }
 }

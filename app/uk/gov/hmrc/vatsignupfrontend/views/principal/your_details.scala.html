@@ -27,11 +27,13 @@
 
     @summaryErrorHelper(userDetailsForm)
 
-    <h1 class="heading-large">@Messages("principal.your-details.heading")</h1>
-
-    <p>@Messages("principal.your-details.line_1")</p>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.your-details.heading")</h1>
+        </legend>
+
+        <p>@Messages("principal.your-details.line_1")</p>
 
         <div class="form-group">
             <div class="form-field-group">
@@ -72,6 +74,6 @@
         </div>
 
         @continueButton()
-
+    </fieldset>
     }
 }

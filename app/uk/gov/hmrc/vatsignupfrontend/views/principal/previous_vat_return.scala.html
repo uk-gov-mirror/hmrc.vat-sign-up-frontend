@@ -29,9 +29,11 @@
 
     @summaryErrorHelper(previousVatReturnForm)
 
-    <h1 class="heading-large">@Messages("principal.previous_vat_return.heading")</h1>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.previous_vat_return.heading")</h1>
+        </legend>
 
         @radioHelper(
             parentForm = previousVatReturnForm,
@@ -45,6 +47,7 @@
         )
 
         @continueButton()
+    </fieldset>
     }
 
 }

@@ -43,7 +43,7 @@
 
 @partnershipCompanyNumber() = @{
     companyNumber match {
-        case Some(crn)=>
+        case Some(crn) =>
             val rowName = CompanyNumberId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.company_number")
             val rowAnswer = crn
@@ -55,7 +55,7 @@
 
 @partnershipCompanyUtr() = @{
     companyUtr match {
-        case Some(utr)=>
+        case Some(utr) =>
             val rowName = CompanyUtrId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
             val rowAnswer = utr
@@ -67,7 +67,7 @@
 
 @partnershipPostCode() = @{
     postCode match {
-        case Some(postcode)=>
+        case Some(postcode) =>
             val rowName = PartnershipPostCodeId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.post_code")
             val rowAnswer = postcode.checkYourAnswersFormat
@@ -79,7 +79,7 @@
 
 @optionalSautr() = @{
     hasOptionalSautr match {
-        case Some(hasSautr)=>
+        case Some(hasSautr) =>
             val rowName = HasOptionalSautrId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.has_optional_sautr")
             val rowAnswer = if (hasSautr) Messages("base.yes") else Messages("base.no")

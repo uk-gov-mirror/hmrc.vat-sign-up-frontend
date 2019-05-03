@@ -28,14 +28,15 @@
 
     @summaryErrorHelper(contactPreferencesForm)
 
-    <h1 class="heading-large">@Messages("principal.receive_email_notifications.heading")</h1>
+    @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
+    <fieldset>
+        <legend>
+          <h1 class="heading-large">@Messages("principal.receive_email_notifications.heading")</h1>
+        </legend>
 
-    <p>@Messages("principal.receive_email_notifications.line_1")</p>
+        <p>@Messages("principal.receive_email_notifications.line_1")</p>
 
-
-    <p>@Messages("principal.receive_email_notifications.line_2")</p>
-
-        @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
+        <p>@Messages("principal.receive_email_notifications.line_2")</p>
 
         @radioHelper(
             parentForm = contactPreferencesForm,
@@ -49,6 +50,7 @@
         )
 
         @continueButton(gaEventString = Some("mtdvat:contactPreference:value"))
+    </fieldset>
     }
 
 }

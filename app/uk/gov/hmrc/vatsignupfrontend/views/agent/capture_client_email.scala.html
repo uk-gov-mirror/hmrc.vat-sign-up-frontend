@@ -27,26 +27,29 @@
 
     @summaryErrorHelper(emailForm)
 
-    <h1 class="heading-large">@Messages("agent.capture_client_email.heading")</h1>
+    @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("agent.capture_client_email.heading")</h1>
+        </legend>
 
-    <p>@Messages("agent.capture_client_email.line_1")</p>
+        <p>@Messages("agent.capture_client_email.line_1")</p>
 
-     <ul class="list list-bullet">
+        <ul class="list list-bullet">
         @if(hasDirectDebit) {
             <li>@Messages("agent.capture_client_email.bullet_1")</li>
         }
         @if(contactPreference == Some(Digital.toString)) {
             <li>@Messages("agent.capture_client_email.bullet_2")</li>
         }
-    </ul>
+        </ul>
 
-    @if(hasDirectDebit) {
+        @if(hasDirectDebit) {
         <div class="panel panel-border-wide">
             <p>@Messages("agent.capture_client_email.line_2")</p>
         </div>
-    }
+        }
 
-    @form(action = postAction) {
         <div class="form-group">
             @inputHelper(
                 field = emailForm(email),
@@ -54,8 +57,10 @@
                 parentForm = emailForm,
                 hintText = Some(Html(Messages("agent.capture_client_email.hint")))
             )
+
             @continueButton()
         </div>
+    </fieldset>
     }
 
 }
