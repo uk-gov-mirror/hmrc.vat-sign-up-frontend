@@ -82,7 +82,9 @@
     @uiLayouts.serviceInfo(
       betaBanner = uiLayouts.betaBanner(false, appConfig.betaFeedbackUrl, appConfig.betaFeedbackUnauthenticatedUrl),
       includeGridWrapper = false,
-      serviceInfoContent = Some(serviceInfoContent))
+      serviceInfoContent = Some(serviceInfoContent),
+      includeHMRCBranding = true,
+      setLang = messages.lang.code)
 }
 
 @mainContentHeader = {

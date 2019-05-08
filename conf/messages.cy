@@ -290,7 +290,7 @@ agent.capture_client_email.hint                                        = Er engh
 agent.capture_agent_email.title                                        = Beth yw''ch cyfeiriad e-bost?
 agent.capture_agent_email.heading                                      = Beth yw''ch cyfeiriad e-bost?
 agent.capture_agent_email.line_1                                       = Byddwn ond yn anfon e-bost atoch i roi gwybod i chi pan allwch roi gwybod am TAW eich cleient drwy feddalwedd sy''n cydweddu. Gall hyn gymryd hyd at 72 awr.
-agent.capture_agent_email.hint                                         = Er enghraifft, yourname@example.com.com
+agent.capture_agent_email.hint                                         = Er enghraifft, yourname@example.com
 
 ## Agent Confirm Email page
 agent.confirm_email.title                                              = Gwirio cyfeiriad e-bost eich cleient
