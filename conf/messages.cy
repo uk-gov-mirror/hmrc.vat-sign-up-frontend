@@ -33,6 +33,19 @@ base.yes                                                               = Iawn
 base.no                                                                = Na
 base.company_number                                                    = Newid rhif eich cwmni
 
+core.capture_entity_type.soleTrader                                    = Unig fasnachwr
+core.capture_entity_type.generalPartnership                            = Partneriaeth gyffredinol
+core.capture_entity_type.limitedPartnership                            = Partneriaeth gyfyngedig (gan gynnwys partneriaethau atebolrwydd cyfyngedig)
+core.capture_entity_type.limitedCompany                                = Cwmni cyfyngedig
+core.capture_entity_type.vatGroup                                      = Grŵp TAW
+core.capture_entity_type.division                                      = Is-adran Weinyddol
+core.capture_entity_type.unincorporatedAssociation                     = Cymdeithas Anghorfforedig
+core.capture_entity_type.trust                                         = Ymddiriedolaeth
+core.capture_entity_type.registeredSociety                             = Cymdeithas Gofrestredig (gan gynnwys Cymdeithasau Budd Cymunedol a Chymdeithasau Cydweithredol)
+core.capture_entity_type.charity                                       = Sefydliad Corfforedig Elusennol (elusen)
+core.capture_entity_type.governmentOrganisation                        = Sefydliadau''r llywodraeth a''r sector preifat
+core.capture_entity_type.other                                         = Arall
+
 ## Errors
 error.title_prefix                                                     = 'Gwall: '
 error.principal.business-entity.field                                  = Dewiswch os ydych wedi cofrestru fel unig fasnachwr neu gwmni cyfyngedig
@@ -236,18 +249,6 @@ agent.capture_company_number.heading                                   = Beth yw
 ## Agent Capture Entity Type page
 agent.capture_entity_type.title                                        = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
 agent.capture_entity_type.heading                                      = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
-agent.capture_entity_type.soleTrader                                   = Unig fasnachwr
-agent.capture_entity_type.generalPartnership                           = Partneriaeth gyffredinol
-agent.capture_entity_type.limitedPartnership                           = Partneriaeth gyfyngedig (gan gynnwys partneriaethau atebolrwydd cyfyngedig)
-agent.capture_entity_type.limitedCompany                               = Cwmni cyfyngedig
-agent.capture_entity_type.vatGroup                                     = Grŵp TAW
-agent.capture_entity_type.division                                     = Is-adran Weinyddol
-agent.capture_entity_type.unincorporatedAssociation                    = Cymdeithas Anghorfforedig
-agent.capture_entity_type.trust                                        = Ymddiriedolaeth
-agent.capture_entity_type.registeredSociety                            = Cymdeithas Gofrestredig (gan gynnwys Cymdeithasau Budd Cymunedol a Chymdeithasau Cydweithredol)
-agent.capture_entity_type.charity                                      = Sefydliad Corfforedig Elusennol (elusen)
-agent.capture_entity_type.governmentOrganisation                       = Sefydliadau''r llywodraeth a''r sector preifat
-agent.capture_entity_type.other                                        = Arall
 
 ## Client Details ##
 agent.client-details.title                                             = Nodi manylion eich cleient
@@ -468,18 +469,6 @@ principal.principal_place_of_business.label                            = Cod pos
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = Fel pa fath o fusnes ydych wedi''i gofrestru?
 principal.capture_entity_type.heading                                  = Fel pa fath o fusnes ydych wedi''i gofrestru?
-principal.capture_entity_type.soleTrader                               = Unig fasnachwr
-principal.capture_entity_type.limitedCompany                           = Cwmni cyfyngedig
-principal.capture_entity_type.generalPartnership                       = Partneriaeth gyffredinol
-principal.capture_entity_type.limitedPartnership                       = Partneriaeth gyfyngedig (gan gynnwys partneriaethau atebolrwydd cyfyngedig)
-principal.capture_entity_type.vatGroup                                 = Grŵp TAW
-principal.capture_entity_type.division                                 = Is-adran weinyddol
-principal.capture_entity_type.unincorporatedAssociation                = Cymdeithas anghorfforedig
-principal.capture_entity_type.trust                                    = Ymddiriedolaeth
-principal.capture_entity_type.registeredSociety                        = Cymdeithas gofrestredig (gan gynnwys cymdeithasau budd cymunedol a chymdeithasau cydweithredol)
-principal.capture_entity_type.charity                                  = Sefydliad Corfforedig Elusennol (elusen)
-principal.capture_entity_type.governmentOrganisation                   = Sefydliadau''r llywodraeth a''r sector preifat
-principal.capture_entity_type.other                                    = Arall
 
 # Check your answers page
 check-your-answers.title                                               = Gwirio''ch atebion
