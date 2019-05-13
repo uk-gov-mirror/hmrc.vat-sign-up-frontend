@@ -18,12 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
+import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.capture_nino
 
 import scala.concurrent.Future
@@ -32,10 +33,12 @@ import scala.concurrent.Future
 class CaptureNinoController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(SkipCidCheck)) {
 
+  val validateNinoForm: PrevalidationAPI[String] = ninoForm(isAgent = false)
+
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(capture_nino(ninoForm.form, routes.CaptureNinoController.submit()))
+        Ok(capture_nino(validateNinoForm.form, routes.CaptureNinoController.submit()))
       )
     }
   }
@@ -43,7 +46,7 @@ class CaptureNinoController @Inject()(val controllerComponents: ControllerCompon
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        ninoForm.bindFromRequest.fold(
+        validateNinoForm.bindFromRequest.fold(
           formWithErrors => Future.successful(
             BadRequest(capture_nino(formWithErrors, routes.CaptureNinoController.submit()))
           ),
