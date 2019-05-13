@@ -28,9 +28,11 @@
 
     @summaryErrorHelper(haveSoftwareForm)
 
-    <h1 class="heading-large">@Messages("principal.have_software.heading")</h1>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.have_software.heading")</h1>
+        </legend>
 
         @radioHelper(
             parentForm = haveSoftwareForm,
@@ -44,6 +46,6 @@
         )
 
         @continueButton()
+    </fieldset>
     }
-
 }

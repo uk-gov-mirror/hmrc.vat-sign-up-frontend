@@ -32,8 +32,6 @@
 
     @summaryErrorHelper(jointVenturePropertyForm)
 
-    <h1 class="heading-large">@Messages("principal.partnership.joint_venture_or_property.heading")</h1>
-
     @form(action = postAction) {
 
         @radioHelper(
@@ -44,7 +42,8 @@
                 (option_no, Messages("base.no"))
             ),
             legend = Messages("principal.partnership.joint_venture_or_property.heading"),
-            field = jointVenturePropertyForm(yesNo)
+            field = jointVenturePropertyForm(yesNo),
+            hideLegend = false
         )
 
         @continueButton()

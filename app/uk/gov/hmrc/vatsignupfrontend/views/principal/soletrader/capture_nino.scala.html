@@ -25,20 +25,24 @@
 
 @principal_main_template(title = Messages("principal.capture_nino.title"), bodyClasses = None, form = Some(ninoForm)) {
 
-  @summaryErrorHelper(ninoForm)
+    @summaryErrorHelper(ninoForm)
 
-  <h1 class="heading-large">@Messages("principal.capture_nino.heading")</h1>
+    @form(action = postAction) {
+    <fieldset>
+        <legend>
+          <h1 class="heading-large">@Messages("principal.capture_nino.heading")</h1>
+        </legend>
 
-  @form(action = postAction) {
-  <div class="form-group">
-    @inputHelper(
-      field = ninoForm(nino),
-      label = Messages("principal.capture_nino.heading"),
-      hintText = Some(Html(Messages("principal.capture_nino.formHint"))),
-      parentForm = ninoForm
-    )
-  </div>
+        <div class="form-group">
+            @inputHelper(
+                field = ninoForm(nino),
+                label = Messages("principal.capture_nino.heading"),
+                hintText = Some(Html(Messages("principal.capture_nino.formHint"))),
+                parentForm = ninoForm
+            )
 
-    @continueButton()
-  }
+            @continueButton()
+        </div>
+    </fieldset>
+    }
 }

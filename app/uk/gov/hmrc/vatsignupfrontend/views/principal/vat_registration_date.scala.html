@@ -27,12 +27,13 @@
 
     @summaryErrorHelper(vatRegistrationDateForm)
 
-    <h1 class="heading-large">@Messages("principal.vat_registration_date.heading")</h1>
+    @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.vat_registration_date.heading")</h1>
+        </legend>
 
-    <p>@Messages("principal.vat_registration_date.line_1")</p>
-
-
-    @form(action = postAction)  {
+        <p>@Messages("principal.vat_registration_date.line_1")</p>
 
         <div class="form-group">
             @dateHelper(
@@ -40,9 +41,9 @@
                 parentForm = vatRegistrationDateForm,
                 hintText = Some(Messages("principal.vat_registration_date.formhint_1"))
             )
+
+            @continueButton()
         </div>
-
-        @continueButton()
-
+    </fieldset>
     }
 }

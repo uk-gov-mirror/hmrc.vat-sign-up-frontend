@@ -26,18 +26,22 @@
 
     @summaryErrorHelper(ninoForm)
 
-    <h1 class="heading-large">@Messages("agent.capture_nino.heading")</h1>
-
     @form(action = postAction) {
-    <div class="form-group">
-        @inputHelper(
-        field = ninoForm(nino),
-        label = Messages("agent.capture_nino.heading"),
-        hintText = Some(Html(Messages("agent.capture_nino.formHint"))),
-        parentForm = ninoForm
-        )
-    </div>
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("agent.capture_nino.heading")</h1>
+        </legend>
 
-    @continueButton()
+        <div class="form-group">
+        @inputHelper(
+            field = ninoForm(nino),
+            label = Messages("agent.capture_nino.heading"),
+            hintText = Some(Html(Messages("agent.capture_nino.formHint"))),
+            parentForm = ninoForm
+        )
+        </div>
+
+        @continueButton()
+    </fieldset>
     }
 }

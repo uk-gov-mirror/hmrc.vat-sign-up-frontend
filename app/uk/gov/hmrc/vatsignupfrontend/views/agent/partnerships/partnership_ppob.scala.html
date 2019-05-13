@@ -25,9 +25,13 @@
 
 @agent_main_template(title = Messages("agent.partnership_postcode.title"), bodyClasses = None, form = Some(partnershipPostCodeForm)) {
     @summaryErrorHelper(partnershipPostCodeForm)
-    <h1 class="heading-large">@Messages("agent.partnership_postcode.heading")</h1>
 
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("agent.partnership_postcode.heading")</h1>
+        </legend>
+
         <div class="form-group">
             @inputHelper(
                 field = partnershipPostCodeForm(partnershipPostCode),
@@ -35,9 +39,9 @@
                 parentForm = partnershipPostCodeForm,
                 hideLabel = false
             )
+
+            @continueButton()
         </div>
-
-        @continueButton()
+    </fieldset>
     }
-
 }

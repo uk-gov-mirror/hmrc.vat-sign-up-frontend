@@ -34,12 +34,12 @@
 
     @form(action = postAction) {
         <div class="form-group">
-            @inputHelper(
-                field = businessPostCodeForm(businessPostCode),
-                label = Messages("principal.principal_place_of_business.label"),
-                parentForm = businessPostCodeForm,
-                hideLabel = false
-            )
+        @inputHelper(
+            field = businessPostCodeForm(businessPostCode),
+            label = Messages("principal.principal_place_of_business.label"),
+            parentForm = businessPostCodeForm,
+            hideLabel = false
+        )
         </div>
 
         @continueButton()

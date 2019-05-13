@@ -26,21 +26,24 @@
 
     @summaryErrorHelper(emailForm)
 
-    <h1 class="heading-large">@Messages("principal.capture_email.heading")</h1>
-
-    <p>@Messages("principal.capture_email.line_1")</p>
-
-    @if(hasDirectDebit) {
-        <p>@Messages("principal.capture_email.line_2")</p>
-
-        <div class="panel panel-border-wide">
-
-            <p>@Messages("principal.capture_email.line_3")</p>
-
-        </div>
-    }
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.capture_email.heading")</h1>
+        </legend>
+
+        <p>@Messages("principal.capture_email.line_1")</p>
+
+        @if(hasDirectDebit) {
+            <p>@Messages("principal.capture_email.line_2")</p>
+
+            <div class="panel panel-border-wide">
+
+                <p>@Messages("principal.capture_email.line_3")</p>
+
+            </div>
+        }
+
         <div class="form-group">
             @inputHelper(
                 field = emailForm(email),
@@ -51,6 +54,7 @@
 
             @continueButton()
         </div>
+    </fieldset>
     }
 
 }

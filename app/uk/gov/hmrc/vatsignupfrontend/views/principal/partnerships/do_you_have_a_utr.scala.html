@@ -34,11 +34,10 @@
 
     @summaryErrorHelper(doYouHaveAUtrForm)
 
-    <h1 class="heading-large">@Messages("principal.partnership.do_you_have_a_utr.heading")</h1>
-
-    <p>@Messages("principal.partnership.do_you_have_a_utr.line")</p>
-
     @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
+
+        <p>@Messages("principal.partnership.do_you_have_a_utr.line")</p>
+
         @radioHelper(
             parentForm = doYouHaveAUtrForm,
             inline = true,
@@ -47,7 +46,8 @@
                 (option_no, Messages("base.no"))
             ),
             legend = Messages("principal.partnership.do_you_have_a_utr.heading"),
-            field = doYouHaveAUtrForm(yesNo)
+            field = doYouHaveAUtrForm(yesNo),
+            hideLegend = false
         )
         @continueButton(gaEventString = Some("mtdvat:doYouHaveAUtr:value"))
     }

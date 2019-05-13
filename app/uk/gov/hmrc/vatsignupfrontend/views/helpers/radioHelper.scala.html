@@ -19,15 +19,23 @@
   options: Seq[(String, String)],
   legend: String,
   hintText: Option[String] = None,
-  field: Field)(implicit messages: Messages)
+  field: Field,
+  hideLegend: Boolean = true
+)(implicit messages: Messages)
 
 @hasError = @{
     parentForm.error(field.name).isDefined
 }
 
+@wrapInHeading(content: String) = {
+  <h1 class="heading-large">
+    @content
+  </h1>
+}
+
 <div class="form-group@if(hasError){ form-field--error}">
     <fieldset id="@{field.name}" @if(inline) { class="inline" }>
-        <legend class="visuallyhidden">@legend</legend>
+        <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {legend}</legend>
         @if(hasError){
             <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }

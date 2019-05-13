@@ -30,20 +30,22 @@
 
     @summaryErrorHelper(monthForm)
 
-    <h1 class="heading-large">@Messages("principal.capture_last_return_month_period.heading")</h1>
-
-    <p>@Messages("principal.capture_last_return_month_period.line")</p>
-
-    <div class="panel panel-border-wide">
-        <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading")</h2>
-        <p>@Messages("principal.capture_last_return_month_period.line_2")</p>
-        <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading_2")</h2>
-        <p>@Messages("principal.capture_last_return_month_period.line_3")</p>
-    </div>
-
-    <br>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.capture_last_return_month_period.heading")</h1>
+        </legend>
+
+        <p>@Messages("principal.capture_last_return_month_period.line")</p>
+
+        <div class="panel panel-border-wide">
+            <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading")</h2>
+            <p>@Messages("principal.capture_last_return_month_period.line_2")</p>
+            <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading_2")</h2>
+            <p>@Messages("principal.capture_last_return_month_period.line_3")</p>
+        </div>
+        <br>
+
         @radioHelper(
             parentForm = monthForm,
             inline = false,
@@ -68,6 +70,7 @@
         )
 
         @continueButton()
+    </fieldset>
     }
 
 }
