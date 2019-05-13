@@ -21,9 +21,8 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraint
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation._
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ConstraintUtil._
-import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
-import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.Patterns.ninoRegex
+import uk.gov.hmrc.vatsignupfrontend.forms.validation.utils.ValidationHelper._
 
 object NinoForm {
 
@@ -31,10 +30,12 @@ object NinoForm {
 
   val length = 9
 
-  val isEntered: Constraint[String] = Constraint("nino.entered")(
+  def isEntered(isAgent: Boolean): Constraint[String] = Constraint("nino.entered")(
     ninoValue => validate(
       constraint = ninoValue.isEmpty,
-      principalErrMsg = "error.principal.no_entry_nino"
+      principalErrMsg = "error.principal.no_entry_nino",
+      agentErrMsg = Some("error.agent.no_entry_nino"),
+      isAgent = isAgent
     )
   )
 
@@ -55,14 +56,14 @@ object NinoForm {
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  private def ninoValidationForm() = Form(
+  private def ninoValidationForm(isAgent: Boolean) = Form(
     single(
-      nino -> text.verifying(isEntered andThen checkLength andThen checkFormat)
+      nino -> text.verifying(isEntered(isAgent) andThen checkLength andThen checkFormat)
     )
   )
 
-  def ninoForm: PrevalidationAPI[String] = PreprocessedForm(
-    validation = ninoValidationForm(),
+  def ninoForm(isAgent: Boolean): PrevalidationAPI[String] = PreprocessedForm(
+    validation = ninoValidationForm(isAgent),
     trimRules = Map(nino -> all),
     caseRules = Map(nino -> upper)
   )

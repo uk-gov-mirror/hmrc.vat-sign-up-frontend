@@ -26,36 +26,46 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 class NinoFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "the NINO form" should {
-    val notEnteredErrorKey = "error.principal.no_entry_nino"
+
+    val validateNinoForm = ninoForm(isAgent = false)
+
+    val notEnteredPrincipalErrorKey = "error.principal.no_entry_nino"
+    val notEnteredAgentErrorKey = "error.agent.no_entry_nino"
     val invalidNinoKey = "error.invalid_nino"
     val invalidLengthKey = "error.character_limit_nino"
 
     "Ensure a valid NINO passes validation" in {
       val validNino = testNino
-      val value = ninoForm.bind(Map(nino -> validNino)).value
+      val value = validateNinoForm.bind(Map(nino -> validNino)).value
       value shouldBe Some(validNino)
     }
 
     "should allow NINOs with spaces" in {
       val validNino = testNino
       val validNinoWithSpaces = validNino.grouped(2).mkString(" ")
-      val value = ninoForm.bind(Map(nino -> validNinoWithSpaces)).value
+      val value = validateNinoForm.bind(Map(nino -> validNinoWithSpaces)).value
       value shouldBe Some(validNino)
     }
 
-    "Render an error message when NINO isn't provided" in {
-      val formWithError = ninoForm.bind(Map(nino -> ""))
-      formWithError.errors should contain(FormError(nino, notEnteredErrorKey))
+    "validate that a NINO has been entered - agent" in {
+      val validateNinoForm = ninoForm(isAgent = true)
+      val formWithError = validateNinoForm.bind(Map(nino -> ""))
+      formWithError.errors should contain(FormError(nino, notEnteredAgentErrorKey))
+    }
+
+    "validate that a NINO has been entered - principal" in {
+      val formWithError = validateNinoForm.bind(Map(nino -> ""))
+      formWithError.errors should contain(FormError(nino, notEnteredPrincipalErrorKey))
     }
 
     "Validate that invalid prefixes are not allowed" in {
-      val formWithError = ninoForm.bind(Map(nino -> "QQ123456C"))
+      val formWithError = validateNinoForm.bind(Map(nino -> "QQ123456C"))
       formWithError.errors should contain(FormError(nino, invalidNinoKey))
     }
 
     "validate that short NINOs are not allowed" in {
       val shortNino = "AB12345"
-      val formWithError = ninoForm.bind(Map(nino -> shortNino))
+      val formWithError = validateNinoForm.bind(Map(nino -> shortNino))
       formWithError.errors should contain(FormError(nino, invalidLengthKey))
     }
 

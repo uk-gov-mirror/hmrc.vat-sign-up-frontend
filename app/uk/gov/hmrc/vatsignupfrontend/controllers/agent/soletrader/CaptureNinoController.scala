@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.agent_capture_nino
 
 import scala.concurrent.Future
@@ -33,10 +34,12 @@ import scala.concurrent.Future
 class CaptureNinoController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(SkipCidCheck)) {
 
+  val validateNinoForm: PrevalidationAPI[String] = ninoForm(isAgent = true)
+
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(agent_capture_nino(ninoForm.form, routes.CaptureNinoController.submit()))
+        Ok(agent_capture_nino(validateNinoForm.form, routes.CaptureNinoController.submit()))
       )
     }
   }
@@ -44,7 +47,7 @@ class CaptureNinoController @Inject()(val controllerComponents: ControllerCompon
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        ninoForm.bindFromRequest.fold(
+        validateNinoForm.bindFromRequest.fold(
           formWithErrors => {
             Future.successful(
               BadRequest(agent_capture_nino(formWithErrors, routes.CaptureNinoController.submit()))

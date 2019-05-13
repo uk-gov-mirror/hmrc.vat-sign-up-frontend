@@ -30,7 +30,7 @@ class CaptureNinoSpec extends ViewSpec {
   val configuration = Configuration.load(env)
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.capture_nino(
-    ninoForm = ninoForm.form,
+    ninoForm = ninoForm(isAgent = false).form,
     postAction = testCall)(
       FakeRequest(),
       applicationMessages,
