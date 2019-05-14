@@ -24,6 +24,10 @@
 
 @(doYouHaveAUtrForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
+@bodyContent = {
+    <p>@Messages("principal.partnership.do_you_have_a_utr.line")</p>
+}
+
 @principal_main_template(
     title = Messages("principal.partnership.do_you_have_a_utr.title"),
     bodyClasses = None,
@@ -31,12 +35,9 @@
     showSignOutLink = true,
     form = Some(doYouHaveAUtrForm)
 ) {
-
     @summaryErrorHelper(doYouHaveAUtrForm)
 
     @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
-
-        <p>@Messages("principal.partnership.do_you_have_a_utr.line")</p>
 
         @radioHelper(
             parentForm = doYouHaveAUtrForm,
@@ -47,7 +48,8 @@
             ),
             legend = Messages("principal.partnership.do_you_have_a_utr.heading"),
             field = doYouHaveAUtrForm(yesNo),
-            hideLegend = false
+            hideLegend = false,
+            bodyContent = Some(bodyContent)
         )
         @continueButton(gaEventString = Some("mtdvat:doYouHaveAUtr:value"))
     }
