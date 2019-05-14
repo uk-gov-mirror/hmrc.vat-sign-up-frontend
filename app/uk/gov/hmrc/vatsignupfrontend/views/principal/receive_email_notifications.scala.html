@@ -24,19 +24,16 @@
 
 @(email: String, contactPreferencesForm: Form[ContactPreference], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
+@bodyContent = {
+    <p>@Messages("principal.receive_email_notifications.line_1")</p>
+    <p>@Messages("principal.receive_email_notifications.line_2")</p>
+}
+
 @principal_main_template(title = Messages("principal.receive_email_notifications.title"), bodyClasses = None, showSignOutLink = true, form = Some(contactPreferencesForm)) {
 
     @summaryErrorHelper(contactPreferencesForm)
 
     @form(action = postAction, Symbol("data-journey-dynamic-radios") -> "") {
-    <fieldset>
-        <legend>
-          <h1 class="heading-large">@Messages("principal.receive_email_notifications.heading")</h1>
-        </legend>
-
-        <p>@Messages("principal.receive_email_notifications.line_1")</p>
-
-        <p>@Messages("principal.receive_email_notifications.line_2")</p>
 
         @radioHelper(
             parentForm = contactPreferencesForm,
@@ -46,11 +43,12 @@
                 (paper, Messages("principal.receive_email_notifications.paper"))
             ),
             legend = Messages("principal.receive_email_notifications.heading"),
-            field = contactPreferencesForm(contactPreference)
+            field = contactPreferencesForm(contactPreference),
+            hideLegend = false,
+            bodyContent = Some(bodyContent)
         )
 
         @continueButton(gaEventString = Some("mtdvat:contactPreference:value"))
-    </fieldset>
     }
 
 }

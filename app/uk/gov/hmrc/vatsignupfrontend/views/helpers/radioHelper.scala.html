@@ -20,7 +20,8 @@
   legend: String,
   hintText: Option[String] = None,
   field: Field,
-  hideLegend: Boolean = true
+  hideLegend: Boolean = true,
+  bodyContent: Option[Html] = None
 )(implicit messages: Messages)
 
 @hasError = @{
@@ -36,15 +37,16 @@
 <div class="form-group@if(hasError){ form-field--error}">
     <fieldset id="@{field.name}" @if(inline) { class="inline" }>
         <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
+        @bodyContent.map(content => content)
         @if(hasError){
-            <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
+        <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
         @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
         @for(option <- options) {
-            <div class="multiple-choice">
-                <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
-                <label for="@option._1">@option._2</label>
-            </div>
+        <div class="multiple-choice">
+            <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
+            <label for="@option._1">@option._2</label>
+        </div>
         }
     </fieldset>
 </div>

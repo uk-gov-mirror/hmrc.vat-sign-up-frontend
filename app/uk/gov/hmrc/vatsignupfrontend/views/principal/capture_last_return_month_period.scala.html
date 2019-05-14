@@ -26,26 +26,23 @@
 
 @(monthForm: Form[Month], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
+@bodyContent = {
+    <p>@Messages("principal.capture_last_return_month_period.line")</p>
+
+    <div class="panel panel-border-wide">
+        <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading")</h2>
+        <p>@Messages("principal.capture_last_return_month_period.line_2")</p>
+        <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading_2")</h2>
+        <p>@Messages("principal.capture_last_return_month_period.line_3")</p>
+    </div>
+    <br>
+}
+
 @principal_main_template(title = Messages("principal.capture_last_return_month_period.title"), bodyClasses = None, form = Some(monthForm)) {
 
     @summaryErrorHelper(monthForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.capture_last_return_month_period.heading")</h1>
-        </legend>
-
-        <p>@Messages("principal.capture_last_return_month_period.line")</p>
-
-        <div class="panel panel-border-wide">
-            <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading")</h2>
-            <p>@Messages("principal.capture_last_return_month_period.line_2")</p>
-            <h2 class="heading-small">@Messages("principal.capture_last_return_month_period.sub_heading_2")</h2>
-            <p>@Messages("principal.capture_last_return_month_period.line_3")</p>
-        </div>
-        <br>
-
         @radioHelper(
             parentForm = monthForm,
             inline = false,
@@ -65,12 +62,12 @@
             ),
             legend = Messages("principal.capture_last_return_month_period.heading"),
             field = monthForm(month),
-            hintText = Some(Messages("principal.capture_last_return_month_period.formhint_1"))
-
+            hintText = Some(Messages("principal.capture_last_return_month_period.formhint_1")),
+            hideLegend = false,
+            bodyContent = Some(bodyContent)
         )
 
         @continueButton()
-    </fieldset>
     }
 
 }
