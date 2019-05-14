@@ -30,11 +30,6 @@
     @summaryErrorHelper(softwareReadyForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.verify_software_ready.heading")</h1>
-        </legend>
-
         <p>@Messages("principal.verify_software_ready.line_1")</p>
 
         <div class="panel panel-border-wide">
@@ -51,11 +46,11 @@
                 (option_no, Messages("principal.verify_software_ready.no"))
             ),
             legend = Messages("principal.verify_software_ready.heading"),
-            field = softwareReadyForm(yesNo)
+            field = softwareReadyForm(yesNo),
+            hideLegend = false
         )
 
         @continueButton()
-    </fieldset>
     }
 
 }

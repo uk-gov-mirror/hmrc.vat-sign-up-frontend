@@ -35,7 +35,7 @@
 
 <div class="form-group@if(hasError){ form-field--error}">
     <fieldset id="@{field.name}" @if(inline) { class="inline" }>
-        <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {legend}</legend>
+        <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
         @if(hasError){
             <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
