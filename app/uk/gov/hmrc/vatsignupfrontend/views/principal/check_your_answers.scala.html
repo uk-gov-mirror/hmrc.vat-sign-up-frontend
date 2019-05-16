@@ -62,7 +62,7 @@
   optPreviousVatReturn match {
     case Some(answer) =>
       val rowQuestion = Messages("check-your-answers.previous_vat_return")
-      val rowAnswer = answer
+      val rowAnswer = Messages(s"base.${answer.toLowerCase}")
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.PreviousVatReturnController.show().url
       summaryRowHelper(PreviousVatReturnId, rowQuestion, rowAnswer, Some(rowUrl))
     case None => Html("")
@@ -84,7 +84,7 @@
   optLastReturnMonthPeriod match {
     case Some(answer) =>
       val rowQuestion = Messages("check-your-answers.last_return_month_period")
-      val rowAnswer = answer
+      val rowAnswer = Messages(s"principal.capture_last_return_month_period.${answer.toLowerCase}")
       val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url
       summaryRowHelper(VatLastReturnMonthId, rowQuestion, rowAnswer, Some(rowUrl))
     case None => Html("")
