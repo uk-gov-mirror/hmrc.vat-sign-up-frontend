@@ -35,10 +35,21 @@ class CaptureAgentEmailController @Inject()(val controllerComponents: Controller
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(capture_agent_email(validateEmailForm.form, routes.CaptureAgentEmailController.submit()))
-      )
+      request.session.get(SessionKeys.transactionEmailKey) match {
+        case None => Future.successful(
+          Ok(capture_agent_email(validateEmailForm.form, routes.CaptureAgentEmailController.submit()))
+        )
+        case Some(_) => Future.successful(
+          Redirect(routes.ConfirmAgentEmailController.show())
+        )
+      }
     }
+  }
+
+  val change: Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(
+      Redirect(routes.CaptureAgentEmailController.show())
+    ).removeSessionKey(SessionKeys.transactionEmailKey)
   }
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
