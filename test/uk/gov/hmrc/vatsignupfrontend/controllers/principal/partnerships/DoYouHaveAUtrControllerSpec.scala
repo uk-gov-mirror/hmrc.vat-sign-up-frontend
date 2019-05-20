@@ -87,13 +87,13 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
             val result = await(TestDoYouHaveAUtrController.submit(
               testPostRequest(answer = YesNoMapping.option_no).withSession(
                 SessionKeys.partnershipSautrKey -> testSaUtr,
-                SessionKeys.businessPostCodeKey -> testBusinessPostcode.postCode
+                SessionKeys.partnershipPostCodeKey -> testBusinessPostcode.postCode
               )
             ))
 
             status(result) shouldBe Status.SEE_OTHER
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
-            session(result).get(SessionKeys.businessPostCodeKey) shouldBe None
+            session(result).get(SessionKeys.partnershipPostCodeKey) shouldBe None
             session(result).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)
           }

@@ -62,7 +62,7 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
         val res = post(
           uri = "/do-you-have-a-utr",
           cookies = Map(SessionKeys.partnershipSautrKey -> testSaUtr,
-            SessionKeys.businessPostCodeKey -> testBusinessPostCode.postCode
+            SessionKeys.partnershipPostCodeKey -> testBusinessPostCode.postCode
           )
         )(DoYouHaveAUtrForm.yesNo -> option_no)
 
@@ -72,7 +72,7 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessPostCodeKey) shouldBe None
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipPostCodeKey) shouldBe None
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
       }
     }
