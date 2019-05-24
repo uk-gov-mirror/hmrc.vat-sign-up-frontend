@@ -95,6 +95,9 @@ POST        /business-postcode                                  uk.gov.hmrc.vats
 GET         /business-type                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityController.show
 POST        /business-type                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityController.submit
 
+GET         /business-type-other                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityOtherController.show
+POST        /business-type-other                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureBusinessEntityOtherController.submit
+
 # Check your answers
 GET         /check-your-answers                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersController.show
 POST        /check-your-answers                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersController.submit

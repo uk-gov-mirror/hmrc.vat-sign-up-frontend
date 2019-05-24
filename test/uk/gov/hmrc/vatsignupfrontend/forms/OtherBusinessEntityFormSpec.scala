@@ -16,70 +16,60 @@
 
 package uk.gov.hmrc.vatsignupfrontend.forms
 
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm.{soleTrader, limitedCompany, generalPartnership, limitedPartnership, other}
 import uk.gov.hmrc.vatsignupfrontend.models._
 
 class OtherBusinessEntityFormSpec extends UnitSpec {
+
   "businessEntityForm" should {
 
-    val businessEntityErrorKey = "error.business-entity-other"
+    val principalBusinessEntityErrorKey = "error.principal.business-entity-other"
+    val agentBusinessEntityErrorKey = "error.agent.business-entity-other"
 
-    "fail to parse a sole trader entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> soleTrader))
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
-    }
-
-    "fail to parse a limited company entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> limitedCompany))
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
-    }
-
-    "fail to parse a general partnership entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> generalPartnership))
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
-    }
-
-    "fail to parse a limited partnership entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> limitedPartnership))
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
-    }
+    val principalBusinessEntityForm: Form[BusinessEntity] = businessEntityForm(isAgent = false)
+    val agentBusinessEntityForm: Form[BusinessEntity] = businessEntityForm(isAgent = true)
 
     "successfully parse a vat group entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> vatGroup))
+      val res = principalBusinessEntityForm.bind(Map(businessEntity -> vatGroup))
       res.value should contain(VatGroup)
     }
 
     "successfully parse an unincorporated association entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> unincorporatedAssociation))
+      val res = principalBusinessEntityForm.bind(Map(businessEntity -> unincorporatedAssociation))
       res.value should contain(UnincorporatedAssociation)
     }
 
     "successfully parse a division entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> division))
+      val res = principalBusinessEntityForm.bind(Map(businessEntity -> division))
       res.value should contain(Division)
     }
 
     "successfully parse a government organisation entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> governmentOrganisation))
+      val res = principalBusinessEntityForm.bind(Map(businessEntity -> governmentOrganisation))
       res.value should contain(GovernmentOrganisation)
     }
 
-    "fail to parse a other entity" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> other))
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
+    "fail when nothing has been entered in the view - principal" in {
+      val res = principalBusinessEntityForm.bind(Map.empty[String, String])
+      res.errors should contain(FormError(businessEntity, principalBusinessEntityErrorKey))
     }
 
-    "fail when nothing has been entered in the view" in {
-      val res = businessEntityForm.bind(Map.empty[String, String])
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
+    "fail when nothing has been entered in the view - agent" in {
+      val res = agentBusinessEntityForm.bind(Map.empty[String, String])
+      res.errors should contain(FormError(businessEntity, agentBusinessEntityErrorKey))
     }
 
-    "fail when it is not an expected value in the view" in {
-      val res = businessEntityForm.bind(Map(businessEntity -> "invalid"))
-      res.errors should contain(FormError(businessEntity, businessEntityErrorKey))
+    "fail when it is not an expected value in the view - principal" in {
+      val res = principalBusinessEntityForm.bind(Map(businessEntity -> "invalid"))
+      res.errors should contain(FormError(businessEntity, principalBusinessEntityErrorKey))
+    }
+
+    "fail when it is not an expected value in the view - agent" in {
+      val res = agentBusinessEntityForm.bind(Map(businessEntity -> "invalid"))
+      res.errors should contain(FormError(businessEntity, agentBusinessEntityErrorKey))
     }
   }
+
 }
