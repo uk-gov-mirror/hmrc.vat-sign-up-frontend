@@ -1,0 +1,73 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
+@import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.play.views.html.helpers._
+
+
+@(businessEntityForm: Form[BusinessEntity],
+    postAction: Call,
+    divisionEnabled: Boolean,
+    unincorporatedAssociationEnabled: Boolean,
+    trustEnabled: Boolean,
+    registeredSocietyEnabled: Boolean,
+    governmentOrganisationEnabled: Boolean
+)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@scripts = {
+    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
+}
+
+@divisionOption = @{ Some((division, Messages("core.capture_entity_type.division"))).filter(_ => divisionEnabled) }
+
+@unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
+
+@trustOption = @{ Some((trust, Messages("core.capture_entity_type.trust"))).filter(_ => trustEnabled) }
+
+@registeredSocietyOption = @{ Some((registeredSociety, Messages("core.capture_entity_type.registeredSociety"))).filter(_ => registeredSocietyEnabled) }
+
+@governmentOrganisationOption = @{ Some((governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))).filter(_ => governmentOrganisationEnabled) }
+
+@agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts), form = Some(businessEntityForm)) {
+
+    @summaryErrorHelper(businessEntityForm)
+
+    @form(action = postAction) {
+
+        @radioHelper(
+            parentForm = businessEntityForm,
+            inline = false,
+            options = Seq(
+                (vatGroup, Messages("core.capture_entity_type.vatGroup")),
+                (charity, Messages("core.capture_entity_type.charity"))
+            ) ++ divisionOption
+              ++ unincorporatedAssociationOption
+              ++ trustOption
+              ++ registeredSocietyOption
+              ++ governmentOrganisationOption,
+            legend = Messages("agent.capture_entity_type.heading"),
+            field = businessEntityForm(businessEntity),
+            hideLegend = false
+        )
+
+        @continueButton()
+    }
+}
