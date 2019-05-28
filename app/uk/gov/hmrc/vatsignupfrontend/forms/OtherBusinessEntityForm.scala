@@ -21,17 +21,9 @@ import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 import uk.gov.hmrc.vatsignupfrontend.models._
 
-object BusinessEntityForm {
+object OtherBusinessEntityForm {
 
   val businessEntity: String = "business-entity"
-
-  val soleTrader: String = "sole-trader"
-
-  val limitedCompany: String = "limited-company"
-
-  val generalPartnership: String = "general-partnership"
-
-  val limitedPartnership: String = "limited-partnership"
 
   val vatGroup: String = "vat-group"
 
@@ -47,18 +39,12 @@ object BusinessEntityForm {
 
   val governmentOrganisation = "government-organisation"
 
-  val other: String = "other"
-
-  val businessEntityError: String = "error.business-entity"
+  val businessEntityError: String = "error.business-entity-other"
 
 
   private def formatter: Formatter[BusinessEntity] = new Formatter[BusinessEntity] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BusinessEntity] = {
       data.get(key) match {
-        case Some(`soleTrader`) => Right(SoleTrader)
-        case Some(`limitedCompany`) => Right(LimitedCompany)
-        case Some(`generalPartnership`) => Right(GeneralPartnership)
-        case Some(`limitedPartnership`) => Right(LimitedPartnership)
         case Some(`vatGroup`) => Right(VatGroup)
         case Some(`division`) => Right(Division)
         case Some(`unincorporatedAssociation`) => Right(UnincorporatedAssociation)
@@ -66,17 +52,12 @@ object BusinessEntityForm {
         case Some(`registeredSociety`) => Right(RegisteredSociety)
         case Some(`charity`) => Right(Charity)
         case Some(`governmentOrganisation`) => Right(GovernmentOrganisation)
-        case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, businessEntityError)))
       }
     }
 
     override def unbind(key: String, value: BusinessEntity): Map[String, String] = {
       val stringValue = value match {
-        case SoleTrader => soleTrader
-        case LimitedCompany => limitedCompany
-        case GeneralPartnership => generalPartnership
-        case LimitedPartnership => limitedPartnership
         case VatGroup => vatGroup
         case Division => division
         case UnincorporatedAssociation => unincorporatedAssociation
@@ -84,7 +65,6 @@ object BusinessEntityForm {
         case RegisteredSociety => registeredSociety
         case Charity => charity
         case GovernmentOrganisation => governmentOrganisation
-        case Other => other
       }
 
       Map(key -> stringValue)

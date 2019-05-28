@@ -9,10 +9,10 @@ object AppDependencies {
 
   lazy val appDependencies: Seq[ModuleID] = compile ++ test ++ it
 
-  private val domainVersion = "5.3.0"
+  private val domainVersion = "5.6.0-play-25"
   private val playWhitelistFilterVersion = "2.0.0"
 
-  private val hmrcTestVersion = "3.4.0-play-25"
+  private val hmrcTestVersion = "3.8.0-play-25"
   private val scalaTestVersion = "3.0.1"
   private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
@@ -22,9 +22,9 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc" %% "govuk-template" % "5.18.0",
-    "uk.gov.hmrc" %% "play-ui" % "7.31.0-play-25",
+    "uk.gov.hmrc" %% "play-ui" % "7.40.0-play-25",
     ws,
-    "uk.gov.hmrc" %% "bootstrap-play-25" % "4.8.0",
+    "uk.gov.hmrc" %% "bootstrap-play-25" % "4.12.0",
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion,
     "uk.gov.hmrc" %% "play-language" % "3.4.0"
