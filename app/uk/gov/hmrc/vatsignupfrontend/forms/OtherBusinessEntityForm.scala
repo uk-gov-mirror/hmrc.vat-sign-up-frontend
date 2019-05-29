@@ -39,10 +39,12 @@ object OtherBusinessEntityForm {
 
   val governmentOrganisation = "government-organisation"
 
-  val businessEntityError: String = "error.business-entity-other"
+  val principalBusinessEntityError: String = "error.principal.business-entity-other"
+
+  val agentBusinessEntityError: String = "error.agent.business-entity-other"
 
 
-  private def formatter: Formatter[BusinessEntity] = new Formatter[BusinessEntity] {
+  private def formatter(isAgent: Boolean): Formatter[BusinessEntity] = new Formatter[BusinessEntity] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BusinessEntity] = {
       data.get(key) match {
         case Some(`vatGroup`) => Right(VatGroup)
@@ -52,7 +54,8 @@ object OtherBusinessEntityForm {
         case Some(`registeredSociety`) => Right(RegisteredSociety)
         case Some(`charity`) => Right(Charity)
         case Some(`governmentOrganisation`) => Right(GovernmentOrganisation)
-        case _ => Left(Seq(FormError(key, businessEntityError)))
+        case _ => val errorMsg: String = if(isAgent) agentBusinessEntityError else principalBusinessEntityError
+          Left(Seq(FormError(key, errorMsg)))
       }
     }
 
@@ -71,9 +74,9 @@ object OtherBusinessEntityForm {
     }
   }
 
-  def businessEntityForm: Form[BusinessEntity] = Form(
+  def businessEntityForm(isAgent: Boolean): Form[BusinessEntity] = Form(
     single(
-      businessEntity -> of(formatter)
+      businessEntity -> of(formatter(isAgent = isAgent))
     )
   )
 }
