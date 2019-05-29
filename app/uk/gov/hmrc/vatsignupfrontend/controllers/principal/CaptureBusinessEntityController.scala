@@ -18,12 +18,10 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.data.Form
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Call}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -36,17 +34,20 @@ import scala.concurrent.Future
 class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
+  private lazy val businessEntityRoute: Map[BusinessEntity, Call] = Map(
+    SoleTrader -> soletrader.routes.SoleTraderResolverController.resolve(),
+    LimitedCompany -> routes.CaptureCompanyNumberController.show(),
+    GeneralPartnership -> partnerships.routes.ResolvePartnershipUtrController.resolve(),
+    LimitedPartnership -> partnerships.routes.CapturePartnershipCompanyNumberController.show(),
+    Other -> routes.CaptureBusinessEntityOtherController.show()
+  )
+
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
         Ok(capture_business_entity(
           businessEntityForm = businessEntityForm,
-          postAction = routes.CaptureBusinessEntityController.submit(),
-          divisionEnabled = isEnabled(DivisionJourney),
-          unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
-          trustEnabled = isEnabled(TrustJourney),
-          registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney),
-          governmentOrganisationEnabled = isEnabled(GovernmentOrganisationJourney)
+          postAction = routes.CaptureBusinessEntityController.submit()
         ))
       )
     }
@@ -59,42 +60,12 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           Future.successful(
             BadRequest(capture_business_entity(
               businessEntityForm = formWithErrors,
-              postAction = routes.CaptureBusinessEntityController.submit(),
-              divisionEnabled = isEnabled(DivisionJourney),
-              unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
-              trustEnabled = isEnabled(TrustJourney),
-              registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney),
-              governmentOrganisationEnabled = isEnabled(GovernmentOrganisationJourney)
+              postAction = routes.CaptureBusinessEntityController.submit()
             ))
           ),
-        businessEntity => {
-          businessEntity match {
-            case SoleTrader =>
-              Future.successful(Redirect(soletrader.routes.SoleTraderResolverController.resolve()))
-            case LimitedCompany =>
-              Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
-            case GeneralPartnership =>
-              Future.successful(Redirect(partnerships.routes.ResolvePartnershipUtrController.resolve()))
-            case LimitedPartnership =>
-              Future.successful(Redirect(partnerships.routes.CapturePartnershipCompanyNumberController.show()))
-            case VatGroup =>
-              Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
-            case Division =>
-              Future.successful(Redirect(routes.DivisionResolverController.resolve()))
-            case UnincorporatedAssociation =>
-              Future.successful(Redirect(routes.UnincorporatedAssociationResolverController.resolve()))
-            case Trust =>
-              Future.successful(Redirect(routes.TrustResolverController.resolve()))
-            case RegisteredSociety =>
-              Future.successful(Redirect(routes.CaptureRegisteredSocietyCompanyNumberController.show()))
-            case Charity =>
-              Future.successful(Redirect(routes.CharityResolverController.resolve()))
-            case GovernmentOrganisation =>
-              Future.successful(Redirect(routes.GovernmentOrganisationResolverController.resolve()))
-            case Other =>
-              Future.successful(Redirect(routes.CannotUseServiceController.show()))
-          }
-        } map (_.addingToSession(SessionKeys.businessEntityKey, businessEntity))
+        businessEntity => Future.successful(
+          Redirect(businessEntityRoute(businessEntity)).addingToSession(SessionKeys.businessEntityKey, businessEntity)
+        )
       )
     }
   }

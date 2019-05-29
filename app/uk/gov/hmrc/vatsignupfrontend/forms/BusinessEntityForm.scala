@@ -33,20 +33,6 @@ object BusinessEntityForm {
 
   val limitedPartnership: String = "limited-partnership"
 
-  val vatGroup: String = "vat-group"
-
-  val division: String = "division"
-
-  val unincorporatedAssociation: String = "unincorporated-association"
-
-  val trust: String = "trust"
-
-  val registeredSociety = "registered-society"
-
-  val charity: String = "charity"
-
-  val governmentOrganisation = "government-organisation"
-
   val other: String = "other"
 
   val businessEntityError: String = "error.business-entity"
@@ -59,13 +45,6 @@ object BusinessEntityForm {
         case Some(`limitedCompany`) => Right(LimitedCompany)
         case Some(`generalPartnership`) => Right(GeneralPartnership)
         case Some(`limitedPartnership`) => Right(LimitedPartnership)
-        case Some(`vatGroup`) => Right(VatGroup)
-        case Some(`division`) => Right(Division)
-        case Some(`unincorporatedAssociation`) => Right(UnincorporatedAssociation)
-        case Some(`trust`) => Right(Trust)
-        case Some(`registeredSociety`) => Right(RegisteredSociety)
-        case Some(`charity`) => Right(Charity)
-        case Some(`governmentOrganisation`) => Right(GovernmentOrganisation)
         case Some(`other`) => Right(Other)
         case _ => Left(Seq(FormError(key, businessEntityError)))
       }
@@ -77,13 +56,6 @@ object BusinessEntityForm {
         case LimitedCompany => limitedCompany
         case GeneralPartnership => generalPartnership
         case LimitedPartnership => limitedPartnership
-        case VatGroup => vatGroup
-        case Division => division
-        case UnincorporatedAssociation => unincorporatedAssociation
-        case Trust => trust
-        case RegisteredSociety => registeredSociety
-        case Charity => charity
-        case GovernmentOrganisation => governmentOrganisation
         case Other => other
       }
 

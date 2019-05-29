@@ -17,8 +17,8 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
-import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm
+import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -42,7 +42,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to vat group" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> vatGroup)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> vatGroup)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -55,7 +55,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to division resolver" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> division)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> division)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -68,7 +68,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to unincorporated association resolver" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> unincorporatedAssociation)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -81,7 +81,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to trust resolver" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> trust)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> trust)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -94,7 +94,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to capture society company number page" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> registeredSociety)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> registeredSociety)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -107,7 +107,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to charity resolver" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> charity)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> charity)
 
         res should have(
           httpStatus(SEE_OTHER),
@@ -120,7 +120,7 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
       "return a SEE_OTHER status and go to government organisation resolver" in {
         stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/business-type-other")(BusinessEntityForm.businessEntity -> governmentOrganisation)
+        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> governmentOrganisation)
 
         res should have(
           httpStatus(SEE_OTHER),

@@ -36,12 +36,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
 
   lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity(
     businessEntityForm,
-    postAction = testCall,
-    divisionEnabled = true,
-    unincorporatedAssociationEnabled = true,
-    trustEnabled = true,
-    registeredSocietyEnabled = true,
-    governmentOrganisationEnabled = true
+    postAction = testCall
   )(
     FakeRequest(),
     applicationMessages,

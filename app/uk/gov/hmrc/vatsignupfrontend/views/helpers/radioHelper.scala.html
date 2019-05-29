@@ -54,15 +54,15 @@
         <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
         @bodyContent.map(content => content)
         @if(hasError){
-        <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
+            <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
         @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
         @for(option <- options) {
             @showOrInterrupt(option)
-        <div class="multiple-choice">
-            <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
-            <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
-        </div>
+            <div class="multiple-choice">
+                <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
+                <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
+            </div>
         }
     </fieldset>
 </div>

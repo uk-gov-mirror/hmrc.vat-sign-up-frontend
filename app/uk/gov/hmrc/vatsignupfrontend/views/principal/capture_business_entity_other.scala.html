@@ -55,13 +55,14 @@
             parentForm = businessEntityForm,
             inline = false,
             options = Seq(
-                (vatGroup, Messages("core.capture_entity_type.vatGroup")),
-                (charity, Messages("core.capture_entity_type.charity"))
-            )++ divisionOption
-             ++ unincorporatedAssociationOption
-             ++ trustOption
-             ++ registeredSocietyOption
-             ++ governmentOrganisationOption,
+                (vatGroup, Messages("core.capture_entity_type.vatGroup"))
+            )
+            ++ trustOption
+            ++ Some((charity, Messages("core.capture_entity_type.charity")))
+            ++ unincorporatedAssociationOption
+            ++ divisionOption
+            ++ registeredSocietyOption
+            ++ governmentOrganisationOption,
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity),
             hideLegend = false

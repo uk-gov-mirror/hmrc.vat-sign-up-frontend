@@ -23,28 +23,11 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 
-@(businessEntityForm: Form[BusinessEntity],
-    postAction: Call,
-    divisionEnabled: Boolean,
-    unincorporatedAssociationEnabled: Boolean,
-    trustEnabled: Boolean,
-    registeredSocietyEnabled: Boolean,
-    governmentOrganisationEnabled: Boolean
-)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(businessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
 }
-
-@divisionOption = @{ Some((division, Messages("core.capture_entity_type.division"))).filter(_ => divisionEnabled) }
-
-@unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
-
-@trustOption = @{ Some((trust, Messages("core.capture_entity_type.trust"))).filter(_ => trustEnabled) }
-
-@registeredSocietyOption = @{ Some((registeredSociety, Messages("core.capture_entity_type.registeredSociety"))).filter(_ => registeredSocietyEnabled) }
-
-@governmentOrganisationOption = @{ Some((governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))).filter(_ => governmentOrganisationEnabled) }
 
 @agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts), form = Some(businessEntityForm)) {
 
