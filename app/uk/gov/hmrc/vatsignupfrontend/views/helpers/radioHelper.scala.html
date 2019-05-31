@@ -21,7 +21,8 @@
   hintText: Option[String] = None,
   field: Field,
   hideLegend: Boolean = true,
-  bodyContent: Option[Html] = None
+  bodyContent: Option[Html] = None,
+  orInterrupt: Option[String] = None
 )(implicit messages: Messages)
 
 @hasError = @{
@@ -34,6 +35,20 @@
   </h1>
 }
 
+@showOrInterrupt(option: (String, String)) = @{
+    if(orInterrupt.isDefined && options.last == option) {
+        <div class='multiple-choice-interrupt' aria-hidden='true'>
+            <p class='form-block'>{orInterrupt.get}</p>
+        </div>
+    }
+}
+
+@visuallyHiddenOr(option: (String, String)) = @{
+    if(orInterrupt.isDefined && options.last == option) {
+        <span class='visually-hidden'>{orInterrupt.get}</span>
+    }
+}
+
 <div class="form-group@if(hasError){ form-field--error}">
     <fieldset id="@{field.name}" @if(inline) { class="inline" }>
         <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
@@ -43,9 +58,10 @@
         }
         @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
         @for(option <- options) {
+            @showOrInterrupt(option)
         <div class="multiple-choice">
             <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
-            <label for="@option._1">@option._2</label>
+            <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
         </div>
         }
     </fieldset>
