@@ -40,10 +40,10 @@ core.capture_entity_type.generalPartnership                            = General
 core.capture_entity_type.limitedPartnership                            = Limited partnership (including limited liability partnerships)
 core.capture_entity_type.limitedCompany                                = Limited company
 core.capture_entity_type.vatGroup                                      = VAT group
-core.capture_entity_type.division                                      = Administrative division
-core.capture_entity_type.unincorporatedAssociation                     = Unincorporated association
+core.capture_entity_type.division                                      = Administrative Division
+core.capture_entity_type.unincorporatedAssociation                     = Unincorporated Association
 core.capture_entity_type.trust                                         = Trust
-core.capture_entity_type.registeredSociety                             = Registered society (including community benefit societies and co-operative societies)
+core.capture_entity_type.registeredSociety                             = Registered Society (including community benefit societies and co-operative societies)
 core.capture_entity_type.charity                                       = CIO (charity)
 core.capture_entity_type.governmentOrganisation                        = Government organisations and public sector
 core.capture_entity_type.other                                         = Other
@@ -475,8 +475,8 @@ principal.principal_place_of_business.line_2                           = If the 
 principal.principal_place_of_business.label                            = UK postcode
 
 ## Principal Capture Entity Type page
-principal.capture_entity_type.title                                    = What type of business are you registered as?
-principal.capture_entity_type.heading                                  = What type of business are you registered as?
+principal.capture_entity_type.title                                    = What type of business or group are you signing up?
+principal.capture_entity_type.heading                                  = What type of business or group are you signing up?
 
 # Check your answers page
 check-your-answers.title                                               = Check your answers

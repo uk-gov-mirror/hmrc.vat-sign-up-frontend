@@ -102,106 +102,15 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "the business type is vat group" should {
-      "return a SEE_OTHER status and go to vat group" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> vatGroup)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.VatGroupResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is division" should {
-      "return a SEE_OTHER status and go to division resolver" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> division)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.DivisionResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is unincorporated association" should {
-      "return a SEE_OTHER status and go to unincorporated association resolver" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is trust" should {
-      "return a SEE_OTHER status and go to trust resolver" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> trust)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.TrustResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is registered society" should {
-      "return a SEE_OTHER status and go to capture society company number page" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> registeredSociety)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
-        )
-      }
-    }
-
-    "the business type is a charity" should {
-      "return a SEE_OTHER status and go to charity resolver" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> charity)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CharityResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is a government organisation" should {
-      "return a SEE_OTHER status and go to government organisation resolver" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type")(BusinessEntityForm.businessEntity -> governmentOrganisation)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.GovernmentOrganisationResolverController.resolve().url)
-        )
-      }
-    }
-
     "the business type is other" should {
-      "return a SEE_OTHER status and go to cannot use service" in {
+      "return a SEE_OTHER status and go to the other business entity type page" in {
         stubAuth(OK, successfulAuthResponse())
 
         val res = post("/business-type")(BusinessEntityForm.businessEntity -> other)
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CannotUseServiceController.show().url)
+          redirectUri(routes.CaptureBusinessEntityOtherController.show().url)
         )
       }
     }

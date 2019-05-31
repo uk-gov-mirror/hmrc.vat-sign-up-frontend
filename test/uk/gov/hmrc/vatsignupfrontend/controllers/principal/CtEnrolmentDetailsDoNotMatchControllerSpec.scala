@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 
 class CtEnrolmentDetailsDoNotMatchControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 

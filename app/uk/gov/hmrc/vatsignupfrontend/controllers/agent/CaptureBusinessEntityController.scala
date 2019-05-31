@@ -40,12 +40,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
       Future.successful(
         Ok(capture_business_entity(
           businessEntityForm,
-          routes.CaptureBusinessEntityController.submit(),
-          isEnabled(DivisionJourney),
-          isEnabled(UnincorporatedAssociationJourney),
-          isEnabled(TrustJourney),
-          isEnabled(RegisteredSocietyJourney),
-          isEnabled(GovernmentOrganisationJourney)
+          routes.CaptureBusinessEntityController.submit()
         ))
       )
     }
@@ -58,12 +53,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
           Future.successful(
             BadRequest(capture_business_entity(
               formWithErrors,
-              routes.CaptureBusinessEntityController.submit(),
-              isEnabled(DivisionJourney),
-              isEnabled(UnincorporatedAssociationJourney),
-              isEnabled(TrustJourney),
-              isEnabled(RegisteredSocietyJourney),
-              isEnabled(GovernmentOrganisationJourney)
+              routes.CaptureBusinessEntityController.submit()
             ))
           ),
         entityType => {

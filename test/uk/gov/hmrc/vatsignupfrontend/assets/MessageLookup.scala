@@ -125,16 +125,16 @@ object MessageLookup {
   object CaptureBusinessEntity {
     val agentHeading: String = "What type of business or group is your client?"
     val agentTitle = agentHeading + ServiceName.agentSuffix
-    val principalHeading: String = "What type of business are you registered as?"
+    val principalHeading: String = "What type of business or group are you signing up?"
     val principalTitle = principalHeading + ServiceName.principalSuffix
     val radioSoleTrader: String = "Sole trader"
     val radioLimitedCompany: String = "Limited company"
     val radioGeneralPartnership: String = "General partnership"
     val radioLimitedPartnership: String = "Limited partnership (including limited liability partnerships)"
     val radioVatGroup: String = "VAT group"
-    val radioDivision: String = "Administrative division"
-    val radioUnincorporatedAssociation: String = "Unincorporated association"
-    val radioRegisteredSociety: String = "Registered society (including community benefit societies and co-operative societies)"
+    val radioDivision: String = "Administrative Division"
+    val radioUnincorporatedAssociation: String = "Unincorporated Association"
+    val radioRegisteredSociety: String = "Registered Society (including community benefit societies and co-operative societies)"
     val radioTrust: String = "Trust"
     val radioCharity: String = "CIO (charity)"
     val radioGovernmentOrganisation: String = "Government organisations and public sector"

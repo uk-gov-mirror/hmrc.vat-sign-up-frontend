@@ -102,103 +102,15 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      "the business entity is vat group" should {
-        "goto vat group resolver" in {
-          mockAuthAdminRole()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(vatGroup)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.VatGroupResolverController.resolve().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
-        }
-      }
-
-      "the business entity is unincorporated association" should {
-        "goto unincorporated association resolver" in {
-          mockAuthAdminRole()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(unincorporatedAssociation)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(
-            BusinessEntitySessionFormatter.toString(UnincorporatedAssociation)
-          )
-        }
-      }
-
-      "the business entity is trust" should {
-        "goto trust resolver" in {
-          mockAuthAdminRole()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(trust)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.TrustResolverController.resolve().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(
-            BusinessEntitySessionFormatter.toString(Trust)
-          )
-        }
-      }
-
-      "the business entity is registered society" should {
-        "goto the capture society company number page" in {
-          mockAuthAdminRole()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(registeredSociety)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(
-            BusinessEntitySessionFormatter.toString(RegisteredSociety)
-          )
-        }
-      }
-
-      "the business entity is a charity" should {
-        "goto charity resolver" in {
-          mockAuthAdminRole()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(charity)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CharityResolverController.resolve().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(
-            BusinessEntitySessionFormatter.toString(Charity)
-          )
-        }
-      }
-
-      "the business entity is a government organisation" should {
-        "goto government organisation resolver" in {
-          mockAuthAdminRole()
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(governmentOrganisation)
-
-          val result = await(TestCaptureBusinessEntityController.submit(request))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.GovernmentOrganisationResolverController.resolve().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(
-            BusinessEntitySessionFormatter.toString(GovernmentOrganisation)
-          )
-        }
-      }
-
       "the business entity is other" should {
-        "go to Cannot use service yet page" in {
+        "go to other what type of business are you page" in {
           mockAuthAdminRole()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(other)
 
           val result = await(TestCaptureBusinessEntityController.submit(request))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CannotUseServiceController.show().url)
+          redirectLocation(result) should contain(routes.CaptureBusinessEntityOtherController.show().url)
 
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
         }
