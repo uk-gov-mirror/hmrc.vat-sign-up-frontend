@@ -749,8 +749,9 @@ object MessageLookup {
     val title = heading + ServiceName.principalSuffix
     val linkText = "Making Tax Digital guidance"
     val line1 = "We're unable to set you up for Making Tax Digital for VAT at present. Either this is because:"
-    def line2(date: String) = s"You'll be able to sign up for this service after $date."
-    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val line2 = "If you submit monthly returns and are now unable to sign up in time to file your April return by the deadline do not worry. Please submit your return using the old method and come back after the date below to sign up in time to submit your May return. We will not charge a penalty in this instance."
+    def line3(date: String) = s"You'll be able to sign up for this service after $date."
+    val line4 = s"For the latest information and rules to follow go to $linkText"
     val bullet1 = "a Direct Debit payment is due shortly"
     val bullet2 = "you are very close to a busy filing period"
   }
@@ -760,8 +761,9 @@ object MessageLookup {
     val title = heading + ServiceName.principalSuffix
     val linkText = "Making Tax Digital guidance"
     val line1 = "We're unable to set you up for Making Tax Digital for VAT at present. Either this is because:"
-    def line2(startDate: String, endDate: String) = s"You'll be able to sign up for this service between $startDate and $endDate."
-    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val line2 = "If you submit monthly returns and are now unable to sign up in time to file your April return by the deadline do not worry. Please submit your return using the old method and come back after the date below to sign up in time to submit your May return. We will not charge a penalty in this instance."
+    def line3(startDate: String, endDate: String) = s"You'll be able to sign up for this service between $startDate and $endDate."
+    val line4 = s"For the latest information and rules to follow go to $linkText"
     val bullet1 = "a Direct Debit payment is due shortly"
     val bullet2 = "you are very close to a busy filing period"
   }
@@ -771,8 +773,9 @@ object MessageLookup {
     val title = heading + ServiceName.agentSuffix
     val linkText = "Making Tax Digital guidance"
     val line1 = "We're unable to set your client up for Making Tax Digital for VAT at present. Either this is because:"
-    def line2(date: String) = s"You'll be able to sign up your client for this service after $date."
-    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val line2 = "If you submit monthly returns for your client and are now unable to sign up in time to file the April return by the deadline do not worry. Please submit the return using the old method and come back after the date below to sign up in time to submit the May return. We will not charge a penalty in this instance."
+    def line3(date: String) = s"You'll be able to sign up your client for this service after $date."
+    val line4 = s"For the latest information and rules to follow go to $linkText"
     val bullet1 = "a Direct Debit payment is due shortly"
     val bullet2 = "you are very close to a busy filing period"
   }
@@ -782,8 +785,9 @@ object MessageLookup {
     val title = heading + ServiceName.agentSuffix
     val linkText = "Making Tax Digital guidance"
     val line1 = "We're unable to set your client up for Making Tax Digital for VAT at present. Either this is because:"
-    def line2(startDate: String, endDate: String) = s"You'll be able to sign up your client for this service between $startDate and $endDate."
-    val line3 = s"For the latest information and rules to follow go to $linkText"
+    val line2 = "If you submit monthly returns for your client and are now unable to sign up in time to file the April return by the deadline do not worry. Please submit the return using the old method and come back after the date below to sign up in time to submit the May return. We will not charge a penalty in this instance."
+    def line3(startDate: String, endDate: String) = s"You'll be able to sign up your client for this service between $startDate and $endDate."
+    val line4 = s"For the latest information and rules to follow go to $linkText"
     val bullet1 = "a Direct Debit payment is due shortly"
     val bullet2 = "you are very close to a busy filing period"
   }

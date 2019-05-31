@@ -64,7 +64,7 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
 
-        Jsoup.parse(contentAsString(result)).getElementsByTag("p").text().contains(messagesAfter.line2(dateFormat(testDate))) shouldBe true
+        Jsoup.parse(contentAsString(result)).getElementsByTag("p").text().contains(messagesAfter.line3(dateFormat(testDate))) shouldBe true
       }
     }
 
@@ -81,7 +81,7 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
 
-        Jsoup.parse(contentAsString(result)).getElementsByTag("p").text().contains(messagesBetween.line2(dateFormat(testDate), dateFormat(testDate2))) shouldBe true
+        Jsoup.parse(contentAsString(result)).getElementsByTag("p").text().contains(messagesBetween.line3(dateFormat(testDate), dateFormat(testDate2))) shouldBe true
       }
     }
   }

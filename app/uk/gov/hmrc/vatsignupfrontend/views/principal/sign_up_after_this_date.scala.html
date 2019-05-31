@@ -33,9 +33,11 @@
         <li>@Messages("principal.sign_up_after_this_date.bullet_2")</li>
     </ul>
 
-    <p>@Messages("principal.sign_up_after_this_date.line_2", DateModel.dateConvert(date).toOutputDateFormat)</p>
+    <p>@Messages("principal.sign_up_after_this_date.line_2")</p>
 
-    <p>@Html(Messages("principal.sign_up_after_this_date.line_3", appConfig.signUpGuidancePageUrl))</p>
+    <p>@Messages("principal.sign_up_after_this_date.line_3", DateModel.dateConvert(date).toOutputDateFormat)</p>
+
+    <p>@Html(Messages("principal.sign_up_after_this_date.line_4", appConfig.signUpGuidancePageUrl))</p>
 
     <div class="form-group">
         @signOutButton(isAgent = false)
