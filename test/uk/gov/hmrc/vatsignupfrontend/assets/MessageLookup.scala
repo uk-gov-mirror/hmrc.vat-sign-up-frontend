@@ -123,7 +123,7 @@ object MessageLookup {
   }
 
   object CaptureBusinessEntity {
-    val agentHeading: String = "What type of business is your client registered as?"
+    val agentHeading: String = "What type of business or group is your client?"
     val agentTitle = agentHeading + ServiceName.agentSuffix
     val principalHeading: String = "What type of business are you registered as?"
     val principalTitle = principalHeading + ServiceName.principalSuffix
@@ -139,6 +139,7 @@ object MessageLookup {
     val radioCharity: String = "CIO (charity)"
     val radioGovernmentOrganisation: String = "Government organisations and public sector"
     val radioOther: String = "Other"
+    val radioOrOther: String = "or Other"
   }
 
   object YesNo {

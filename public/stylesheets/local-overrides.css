@@ -31,3 +31,12 @@ input.form-control, textarea.form-control {
 .govuk-currency-input__inner__input {
     padding-left: 25px !important;
 }
+
+.multiple-choice-interrupt {
+    padding: 0 0 0 11px;
+    display: block;
+    float: none;
+    clear: left;
+    position: relative;
+    margin-bottom: 10px;
+}

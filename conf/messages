@@ -47,6 +47,7 @@ core.capture_entity_type.registeredSociety                             = Registe
 core.capture_entity_type.charity                                       = CIO (charity)
 core.capture_entity_type.governmentOrganisation                        = Government organisations and public sector
 core.capture_entity_type.other                                         = Other
+core.capture_entity_type.or                                            = or
 
 ## Errors
 error.title_prefix                                                     = 'Error: '
@@ -252,8 +253,8 @@ agent.capture_company_number.heading                                   = What is
 agent.capture_company_number.line_1                                    = You can find the company registration number on the <a id="companiesHouse" href="{0}" target="_blank">Companies House website (opens in a new window or tab)</a>.
 
 ## Agent Capture Entity Type page
-agent.capture_entity_type.title                                        = What type of business is your client registered as?
-agent.capture_entity_type.heading                                      = What type of business is your client registered as?
+agent.capture_entity_type.title                                        = What type of business or group is your client?
+agent.capture_entity_type.heading                                      = What type of business or group is your client?
 
 ## Client Details ##
 agent.client-details.title                                             = Enter your client''s details

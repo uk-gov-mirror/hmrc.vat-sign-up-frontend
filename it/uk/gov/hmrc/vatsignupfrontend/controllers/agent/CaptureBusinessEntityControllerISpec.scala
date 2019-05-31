@@ -125,111 +125,15 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
       }
     }
 
-    "the business type is vat group" should {
-      "return a SEE_OTHER status and go to vat group resolver" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> vatGroup)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.VatGroupResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is division" should {
-      "return a SEE_OTHER status and go to division resolver" in {
-        enable(DivisionJourney)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> division)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.DivisionResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is Unincorporated Association" should {
-      "return a SEE_OTHER status and go to the unincorporated association resolver" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(UnincorporatedAssociationJourney)
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> unincorporatedAssociation)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.UnincorporatedAssociationResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is trust" should {
-      "redirect to trust resolver controller" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(TrustJourney)
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> trust)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.TrustResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is registered society" should {
-      "redirect to capture registered society company number" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(RegisteredSocietyJourney)
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> registeredSociety)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
-        )
-      }
-    }
-
-    "the business type is charity" should {
-      "redirect to charity resolver controller" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> charity)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CharityResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is government organisation" should {
-      "redirect to government organisation resolver controller" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(GovernmentOrganisationJourney)
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> governmentOrganisation)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.GovernmentOrganisationResolverController.resolve().url)
-        )
-      }
-    }
-
-    "redirect to cannot use service" when {
+    "redirect to business entity other page" when {
       "the business entity is other" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> other)
+        val res = post("/client/business-type ")(BusinessEntityForm.businessEntity -> other)
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CannotUseServiceController.show().url)
+          redirectUri(routes.CaptureBusinessEntityOtherController.show().url)
         )
       }
     }

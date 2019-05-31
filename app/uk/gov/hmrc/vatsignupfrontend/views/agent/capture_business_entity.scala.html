@@ -58,21 +58,15 @@
             options = Seq(
                 (soleTrader, Messages("core.capture_entity_type.soleTrader")),
                 (limitedCompany, Messages("core.capture_entity_type.limitedCompany")),
-                (generalPartnership, Messages("core.capture_entity_type.generalPartnership")),
                 (limitedPartnership, Messages("core.capture_entity_type.limitedPartnership")),
-                (vatGroup, Messages("core.capture_entity_type.vatGroup")),
-                (charity, Messages("core.capture_entity_type.charity"))
-            ) ++ divisionOption
-              ++ unincorporatedAssociationOption
-              ++ trustOption
-              ++ registeredSocietyOption
-              ++ governmentOrganisationOption
-              :+ (other, Messages("core.capture_entity_type.other")),
+                (generalPartnership, Messages("core.capture_entity_type.generalPartnership")),
+                (other, Messages("core.capture_entity_type.other"))
+            ),
             legend = Messages("agent.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity),
-            hideLegend = false
+            hideLegend = false,
+            orInterrupt = Some(Messages("core.capture_entity_type.or"))
         )
-
         @continueButton()
     }
 }
