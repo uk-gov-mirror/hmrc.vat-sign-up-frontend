@@ -127,7 +127,6 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
       "the business entity is a government organisation" when {
         "redirect to the NOT IMPLEMENTED" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(GovernmentOrganisationJourney)
 
           val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(governmentOrganisation)))
           status(result) shouldBe Status.SEE_OTHER

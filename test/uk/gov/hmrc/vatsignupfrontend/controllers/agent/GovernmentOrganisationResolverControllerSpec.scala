@@ -19,24 +19,18 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GovernmentOrganisationJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser.{StoreGovernmentOrganisationInformationFailureResponse, StoreGovernmentOrganisationInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreGovernmentOrganisationInformationService
 
 import scala.concurrent.Future
 
 class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreGovernmentOrganisationInformationService {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(GovernmentOrganisationJourney)
-  }
 
   object TestGovernmentOrganisationResolverController extends GovernmentOrganisationResolverController(
     mockControllerComponents,
@@ -46,58 +40,44 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
   lazy val testGetRequest = FakeRequest("GET", "/government-organisation-resolver")
 
   "calling the resolve method on GovernmentOrganisationController" when {
-    "the Gov organisation feature switch is on" when {
-      "store government organisation information returns StoreGovernmentOrganisationSuccess" should {
-        "go to the capture agent email page" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
+    "store government organisation information returns StoreGovernmentOrganisationSuccess" should {
+      "go to the capture agent email page" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
-          val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber
-          )))
+        val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber
+        )))
 
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
-        }
-      }
-      "store government organisation information returns StoreGovernmentOrganisationFailureResponse" should {
-        "throw internal server exception" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreGovernmentOrganisationInformation(testVatNumber)(
-            Future.successful(Left(StoreGovernmentOrganisationInformationFailureResponse(INTERNAL_SERVER_ERROR)))
-          )
-
-          intercept[InternalServerException] {
-            await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
-              SessionKeys.vatNumberKey -> testVatNumber
-            )))
-          }
-        }
-      }
-      "vat number is not in session" should {
-        "goto capture vat number" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
-
-          val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest))
-
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)
-        }
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
       }
     }
-    "the Government Organisation feature switch is off" should {
-      "throw not found exception" in {
-        disable(GovernmentOrganisationJourney)
+    "store government organisation information returns StoreGovernmentOrganisationFailureResponse" should {
+      "throw internal server exception" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreGovernmentOrganisationInformation(testVatNumber)(
+          Future.successful(Left(StoreGovernmentOrganisationInformationFailureResponse(INTERNAL_SERVER_ERROR)))
+        )
 
-        intercept[NotFoundException] {
+        intercept[InternalServerException] {
           await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
         }
       }
     }
-  }
+    "vat number is not in session" should {
+      "goto capture vat number" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
+        val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest))
+
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)
+      }
+    }
+  }
 }
 
