@@ -43,8 +43,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           isEnabled(DivisionJourney),
           isEnabled(UnincorporatedAssociationJourney),
           isEnabled(TrustJourney),
-          isEnabled(RegisteredSocietyJourney),
-          isEnabled(GovernmentOrganisationJourney)
+          isEnabled(RegisteredSocietyJourney)
         ))
       )
     }
@@ -61,8 +60,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
               isEnabled(DivisionJourney),
               isEnabled(UnincorporatedAssociationJourney),
               isEnabled(TrustJourney),
-              isEnabled(RegisteredSocietyJourney),
-              isEnabled(GovernmentOrganisationJourney)
+              isEnabled(RegisteredSocietyJourney)
             ))
           ),
         entityType => {

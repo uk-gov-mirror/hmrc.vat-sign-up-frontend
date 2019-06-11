@@ -129,7 +129,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
     "the business type is government organisation" should {
       "redirect to government organisation resolver controller" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(GovernmentOrganisationJourney)
 
         val res = post("/client/business-type-other")(businessEntity -> governmentOrganisation)
 

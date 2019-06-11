@@ -54,8 +54,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           divisionEnabled = isEnabled(DivisionJourney),
           unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
           trustEnabled = isEnabled(TrustJourney),
-          registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney),
-          governmentOrganisationEnabled = isEnabled(GovernmentOrganisationJourney)
+          registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney)
         ))
       )
     }
@@ -72,8 +71,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
               divisionEnabled = isEnabled(DivisionJourney),
               unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
               trustEnabled = isEnabled(TrustJourney),
-              registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney),
-              governmentOrganisationEnabled = isEnabled(GovernmentOrganisationJourney)
+              registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney)
             ))
           ),
         businessEntity => Future.successful(

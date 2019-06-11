@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GovernmentOrganisationJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreGovernmentOrganisationInformationService
@@ -33,7 +32,7 @@ import scala.concurrent.Future
 class GovernmentOrganisationResolverController @Inject()(val controllerComponents: ControllerComponents,
                                                          storeGovernmentOrganisationInformationService: StoreGovernmentOrganisationInformationService
                                                         )
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(GovernmentOrganisationJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
