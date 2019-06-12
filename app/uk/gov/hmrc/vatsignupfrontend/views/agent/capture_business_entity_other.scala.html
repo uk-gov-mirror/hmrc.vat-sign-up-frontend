@@ -25,7 +25,6 @@
 
 @(businessEntityForm: Form[BusinessEntity],
     postAction: Call,
-    divisionEnabled: Boolean,
     unincorporatedAssociationEnabled: Boolean,
     trustEnabled: Boolean,
     registeredSocietyEnabled: Boolean
@@ -34,8 +33,6 @@
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
 }
-
-@divisionOption = @{ Some((division, Messages("core.capture_entity_type.division"))).filter(_ => divisionEnabled) }
 
 @unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
 
@@ -57,7 +54,7 @@
             )  ++ trustOption
                ++ Some((charity, Messages("core.capture_entity_type.charity")))
                ++ unincorporatedAssociationOption
-               ++ divisionOption
+               ++ Some((division, Messages("core.capture_entity_type.division")))
                ++ registeredSocietyOption
                ++ Some((governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))),
             legend = Messages("agent.capture_entity_type.heading"),

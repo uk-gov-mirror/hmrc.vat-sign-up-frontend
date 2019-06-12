@@ -69,7 +69,6 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to Division Resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
-          enable(DivisionJourney)
           val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(division)))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)

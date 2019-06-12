@@ -23,9 +23,8 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser.{StoreAdministrativeDivisionFailureResponse, StoreAdministrativeDivisionSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreAdministrativeDivisionService
 
 import scala.concurrent.Future
@@ -34,7 +33,7 @@ import scala.concurrent.Future
 class DivisionResolverController @Inject()(val controllerComponents: ControllerComponents,
                                            storeAdministrativeDivisionService: StoreAdministrativeDivisionService
                                           )
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(DivisionJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

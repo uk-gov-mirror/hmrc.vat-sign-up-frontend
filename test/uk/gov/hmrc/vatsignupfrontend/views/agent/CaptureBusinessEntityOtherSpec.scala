@@ -39,7 +39,6 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
 
     businessEntityForm,
     postAction = testCall,
-    divisionEnabled = true,
     unincorporatedAssociationEnabled = true,
     trustEnabled = true,
     registeredSocietyEnabled = true
