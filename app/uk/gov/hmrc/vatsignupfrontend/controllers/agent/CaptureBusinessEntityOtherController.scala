@@ -40,7 +40,6 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
         Ok(capture_business_entity_other(
           businessEntityForm(true),
           routes.CaptureBusinessEntityOtherController.submit(),
-          isEnabled(DivisionJourney),
           isEnabled(UnincorporatedAssociationJourney),
           isEnabled(TrustJourney),
           isEnabled(RegisteredSocietyJourney)
@@ -57,7 +56,6 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
             BadRequest(capture_business_entity_other(
               formWithErrors,
               routes.CaptureBusinessEntityOtherController.submit(),
-              isEnabled(DivisionJourney),
               isEnabled(UnincorporatedAssociationJourney),
               isEnabled(TrustJourney),
               isEnabled(RegisteredSocietyJourney)

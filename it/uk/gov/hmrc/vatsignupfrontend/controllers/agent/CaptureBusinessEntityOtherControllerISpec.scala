@@ -26,7 +26,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
 
   override def afterAll(): Unit = {
     super.afterAll()
-    disable(DivisionJourney)
     disable(OptionalSautrJourney)
   }
 
@@ -59,7 +58,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
 
     "the business type is division" should {
       "return a SEE_OTHER status and go to division resolver" in {
-        enable(DivisionJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = post("/client/business-type-other")(businessEntity -> division)

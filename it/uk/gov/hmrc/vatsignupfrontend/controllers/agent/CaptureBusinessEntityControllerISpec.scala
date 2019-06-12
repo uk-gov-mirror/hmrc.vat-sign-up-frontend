@@ -28,7 +28,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   override def afterAll(): Unit = {
     super.afterAll()
-    disable(DivisionJourney)
     disable(OptionalSautrJourney)
   }
 
