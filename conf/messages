@@ -791,7 +791,7 @@ agent.sign_up_after_this_date.heading                                  = You mus
 agent.sign_up_after_this_date.line_1                                   = We''re unable to set your client up for Making Tax Digital for VAT at present. Either this is because:
 agent.sign_up_after_this_date.bullet_1                                 = a Direct Debit payment is due shortly
 agent.sign_up_after_this_date.bullet_2                                 = you are very close to a busy filing period
-agent.sign_up_after_this_date.line_2                                   = If you submit monthly returns for your client and are now unable to sign up in time to file the April return by the deadline do not worry. Please submit the return using the old method and come back after the date below to sign up in time to submit the May return. We will not charge a penalty in this instance.
+agent.sign_up_after_this_date.line_2                                   = If you submit monthly returns for your client and are now unable to sign up in time to file the May return by the deadline do not worry. Please submit the return using the old method and come back after the date below to sign up in time to submit the June return. We will not charge a penalty in this instance.
 agent.sign_up_after_this_date.line_3                                   = You''ll be able to sign up your client for this service after {0}.
 agent.sign_up_after_this_date.line_4                                   = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>.
 
@@ -801,7 +801,7 @@ agent.sign_up_between_these_dates.heading                              = You mus
 agent.sign_up_between_these_dates.line_1                               = We''re unable to set your client up for Making Tax Digital for VAT at present. Either this is because:
 agent.sign_up_between_these_dates.bullet_1                             = a Direct Debit payment is due shortly
 agent.sign_up_between_these_dates.bullet_2                             = you are very close to a busy filing period
-agent.sign_up_between_these_dates.line_2                               = If you submit monthly returns for your client and are now unable to sign up in time to file the April return by the deadline do not worry. Please submit the return using the old method and come back after the date below to sign up in time to submit the May return. We will not charge a penalty in this instance.
+agent.sign_up_between_these_dates.line_2                               = If you submit monthly returns for your client and are now unable to sign up in time to file the May return by the deadline do not worry. Please submit the return using the old method and come back after the date below to sign up in time to submit the June return. We will not charge a penalty in this instance.
 agent.sign_up_between_these_dates.line_3                               = You''ll be able to sign up your client for this service between {0} and {1}.
 agent.sign_up_between_these_dates.line_4                               = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>.
 
