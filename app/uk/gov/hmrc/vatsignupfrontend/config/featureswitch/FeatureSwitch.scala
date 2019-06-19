@@ -40,7 +40,7 @@ object FeatureSwitch {
     SkipIvJourney,
     SkipCidCheck,
     WelshTranslation,
-    SkipCtUtrOnCotaxMismatch
+    SkipCtUtrOnCotaxNotFound
   )
 
   def apply(str: String): FeatureSwitch =
@@ -117,7 +117,7 @@ case object SkipCidCheck extends FeatureSwitch {
   override val displayText: String = "Disable checking the user's NINO via CID"
 }
 
-case object SkipCtUtrOnCotaxMismatch extends FeatureSwitch {
-  override val name: String = s"$prefix.skip-ctutr-on-cotax-mismatch"
+case object SkipCtUtrOnCotaxNotFound extends FeatureSwitch {
+  override val name: String = s"$prefix.skip-ctutr-on-cotax-not-found"
   override val displayText: String = "Enable users to skip CT UTR if there is no match on COTAX"
 }

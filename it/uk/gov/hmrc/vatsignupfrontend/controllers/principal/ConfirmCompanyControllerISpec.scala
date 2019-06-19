@@ -18,12 +18,19 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCtUtrOnCotaxNotFound
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  override def afterEach(): Unit = {
+    super.afterEach()
+    disable(SkipCtUtrOnCotaxNotFound)
+  }
 
   "GET /confirm-company" when {
     "return an OK" in {
@@ -56,27 +63,77 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             httpStatus(SEE_OTHER),
             redirectUri(routes.DirectDebitResolverController.show().url)
           )
-
         }
       }
 
-      "if not CT enrolled" should {
-        "redirect to capture company UTR page" in {
-          stubAuth(OK, successfulAuthResponse())
+      "if not CT enrolled" when {
+        "the SkipCtUtrOnCotaxNotFound feature switch is enabled" should {
+          "redirect to capture company UTR page when there is a CT reference on COTAX" in {
+            enable(SkipCtUtrOnCotaxNotFound)
+            stubAuth(OK, successfulAuthResponse())
+            stubCtReferenceFound(testCompanyNumber)
 
-          val res = post("/confirm-company",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.companyNumberKey -> testCompanyNumber
-            ))()
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureCompanyUtrController.show().url)
-          )
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
+          "skip capture company UTR page when there isn't a CT reference on COTAX" in {
+            enable(SkipCtUtrOnCotaxNotFound)
+            stubAuth(OK, successfulAuthResponse())
+            stubCtReferenceNotFound(testCompanyNumber)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.DirectDebitResolverController.show().url)
+            )
+          }
+        }
+        "the SkipCtUtrOnCotaxNotFound is disabled" should {
+          "redirect to the capture company UTR page if there is a CT UTR on COTAX" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubCtReferenceFound(testCompanyNumber)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
+          "redirect to the capture company UTR page when there isn't a CT reference on COTAX" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubCtReferenceNotFound(testCompanyNumber)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
         }
       }
-
     }
   }
 

@@ -24,9 +24,11 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCtUtrOnCotaxNotFound}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.CtReferenceLookupHttpParser.{CtReferenceLookupFailureResponse, CtReferenceNotFound}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.CtReferenceMismatch
-import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.{CtReferenceLookupService, StoreCompanyNumberService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company
 
@@ -34,9 +36,10 @@ import scala.concurrent.Future
 
 @Singleton
 class ConfirmCompanyController @Inject()(val controllerComponents: ControllerComponents,
-                                         val storeCompanyNumberService: StoreCompanyNumberService
+                                         val storeCompanyNumberService: StoreCompanyNumberService,
+                                         val ctReferenceLookupService: CtReferenceLookupService
                                         )
-  extends AuthenticatedController(AdministratorRolePredicate) {
+  extends AuthenticatedController(AdministratorRolePredicate) with FeatureSwitching {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -79,6 +82,14 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
                     case Left(errResponse) =>
                       throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
                   }
+                case None if isEnabled(SkipCtUtrOnCotaxNotFound) => ctReferenceLookupService.checkCtReferenceExists(companyNumber) map {
+                  case Right(_) =>
+                    Redirect(routes.CaptureCompanyUtrController.show())
+                  case Left(CtReferenceNotFound) =>
+                    Redirect(routes.DirectDebitResolverController.show())
+                  case Left(CtReferenceLookupFailureResponse(status)) =>
+                    throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
+                }
                 case None =>
                   Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
               }
