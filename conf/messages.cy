@@ -48,12 +48,10 @@ core.capture_entity_type.other                                         = Arall
 
 ## Errors
 error.title_prefix                                                     = 'Gwall: '
-error.principal.business-entity.field                                  = Dewiswch os ydych wedi cofrestru fel unig fasnachwr neu gwmni cyfyngedig
-error.principal.business-entity.summary                                = Dewiswch os ydych wedi cofrestru fel unig fasnachwr neu gwmni cyfyngedig
-error.agent.business-entity.field                                      = Dewiswch os yw''ch cleient wedi cofrestru fel unig fasnachwr neu gwmni cyfyngedig
-error.agent.business-entity.summary                                    = Dewiswch os yw''ch cleient wedi cofrestru fel unig fasnachwr neu gwmni cyfyngedig
-error.agent.company_number_not_entered.field                           = Nodwch rif cwmni eich cleient
-error.agent.company_number_not_entered.summary                         = Nodwch rif cwmni eich cleient
+error.business-entity.field                                            = Dewiswch y math o fusnes neu grŵp rydych yn ei gofrestru
+error.business-entity.summary                                          = Dewiswch y math o fusnes neu grŵp rydych yn ei gofrestru, dewiswch ''Arall'' os nad ydych yn siŵr
+error.agent.company_number_not_entered.field                           = Nodwch rif cofrestru cwmni''ch cleient
+error.agent.company_number_not_entered.summary                         = Nodwch rif cofrestru cwmni''ch cleient
 error.principal.company_number_not_entered.field                       = Nodwch eich rhif cwmni
 error.principal.company_number_not_entered.summary                     = Nodwch eich rhif cwmni
 error.invalid_company_number_length.field                              = Nodwch rif cwmni sydd ag 8 o gymeriadau neu lai
@@ -72,8 +70,8 @@ error.invalid_company_utr.field                                        = Dim ond
 error.invalid_company_utr.summary                                      = Dim ond rhifau o 0 i 9 y dylid eu cynnwys yng Nghyfeirnod Unigryw y Trethdalwr ar gyfer y Cwmni
 error.principal.no_vat_number_entered.field                            = Nodwch eich rhif TAW
 error.principal.no_vat_number_entered.summary                          = Nodwch eich rhif TAW
-error.agent.no_vat_number_entered.field                                = Cadarnhewch rif TAW eich cleient
-error.agent.no_vat_number_entered.summary                              = Cadarnhewch rif TAW eich cleient
+error.agent.no_vat_number_entered.field                                = Nodwch rif TAW eich cleient
+error.agent.no_vat_number_entered.summary                              = Nodwch rif TAW eich cleient
 error.invalid_vat_number_length.field                                  = Mae''n rhaid i''r rhif TAW fod yn 9 rhif
 error.invalid_vat_number_length.summary                                = Mae''n rhaid i''r rhif TAW fod yn 9 rhif
 error.invalid_vat_number.field                                         = Dim ond rhifau o 0 i 9 y dylid eu cynnwys yn y rhif TAW
@@ -106,8 +104,8 @@ error.agent.no_entry_first_name.field                                  = Nodwch 
 error.agent.no_entry_first_name.summary                                = Nodwch enw cyntaf eich cleient
 error.exceeds_max_first_name.field                                     = Mae''n rhaid i''r enw cyntaf fod yn 105 o gymeriadau neu lai
 error.exceeds_max_first_name.summary                                   = Mae''n rhaid i''r enw cyntaf fod yn 105 o gymeriadau neu lai
-error.invalid_first_name.field                                         = Dim ond llythrennau a i z, cysylltnodau, blychau a chollnodau y dylid eu cynnwys yn yr enw cyntaf
-error.invalid_first_name.summary                                       = Dim ond llythrennau a i z, cysylltnodau, blychau a chollnodau y dylid eu cynnwys yn yr enw cyntaf
+error.invalid_first_name.field                                         = Dim ond llythrennau a i z, cysylltnodau, bylchau a chollnodau y dylid eu cynnwys yn yr enw cyntaf
+error.invalid_first_name.summary                                       = Dim ond llythrennau a i z, cysylltnodau, bylchau a chollnodau y dylid eu cynnwys yn yr enw cyntaf
 error.principal.no_entry_last_name.field                               = Nodwch eich enw olaf
 error.principal.no_entry_last_name.summary                             = Nodwch eich enw olaf
 error.agent.no_entry_last_name.field                                   = Nodwch enw olaf eich cleient
@@ -172,6 +170,8 @@ error.principal.receive_email_notifications.field                      = Dewiswc
 error.principal.receive_email_notifications.summary                    = Dewiswch os ydych am i ni gysylltu â chi drwy e-bost neu lythyr yn unig
 error.agent.receive_email_notifications.field                          = Dewiswch os ydych am i ni gysylltu â chi drwy e-bost neu lythyr yn unig
 error.agent.receive_email_notifications.summary                        = Dewiswch os ydych am i ni gysylltu â chi drwy e-bost neu lythyr yn unig
+error.agent.partnership.do_you_have_a_utr.field                        = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient
+error.agent.partnership.do_you_have_a_utr.summary                      = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient
 
 ## unused?
 error.principal.partnership.joint_venture_or_property.field            = Dewiswch ''Iawn'' os ydych yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
@@ -182,7 +182,7 @@ error.agent.partnership.joint_venture_or_property.summary              = Dewiswc
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = Ni allwch ddefnyddio''r gwasanaeth hwn eto
 agent.not_enrolled_to_agent_services.heading                           = Ni allwch ddefnyddio''r gwasanaeth hwn eto
-agent.not_enrolled_to_agent_services.line_1                            = I ddefnyddio''r gwasanaeth hwn, rhaid i chi <a href="{0}"greu cyfrif gwasanaethau asiant</a>.
+agent.not_enrolled_to_agent_services.line_1                            = I ddefnyddio''r gwasanaeth hwn, rhaid i chi <a href="{0}">greu cyfrif gwasanaethau asiant</a>.
 
 ## Agent Cannot Use Service Yet page
 agent.cannot_use_service.title                                         = Nid yw busnes eich cleient yn gymwys ar hyn o bryd
@@ -243,8 +243,9 @@ agent.confirm_vat_number.heading                                       = Cadarnh
 agent.confirm_vat_number.link                                          = Newid rhif TAW
 
 ## Agent Capture Company Number page
-agent.capture_company_number.title                                     = Beth yw rhif cwmni''ch cleient?
-agent.capture_company_number.heading                                   = Beth yw rhif cwmni''ch cleient?
+agent.capture_company_number.title                                     = Beth yw rhif cofrestru cwmni''ch cleient?
+agent.capture_company_number.heading                                   = Beth yw rhif cofrestru cwmni''ch cleient?
+agent.capture_company_number.line_1                                    = Gallwch ddod o hyd i rif cofrestru''r cwmni ar <a id="companiesHouse" href="{0}" target="_blank">wefan Tŷ''r Cwmnïau (yn agor ffenestr neu dab newydd)</a>.
 
 ## Agent Capture Entity Type page
 agent.capture_entity_type.title                                        = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
@@ -256,7 +257,7 @@ agent.client-details.heading                                           = Nodi ma
 agent.client-details.line_1                                            = Byddwn yn ceisio paru''r manylion hyn â''r wybodaeth sydd gennym ar hyn o bryd.
 agent.client-details.field_1                                           = Enw cyntaf
 agent.client-details.field_2                                           = Enw olaf
-agent.client-details.field_3                                           = f
+agent.client-details.field_3                                           = Rhif Yswiriant Gwladol
 agent.client-details.field_4                                           = Dyddiad geni
 agent.client_details.formhint.1.line_1                                 = Er enghraifft, ''QQ 12 34 56 C''.
 agent.client-details.formhint.2                                        = Er enghraifft, 10 12 1990
@@ -268,8 +269,14 @@ agent.confirm_company_number.companyNumber.heading                     = Rhif y 
 agent.confirm_company_number.link                                      = Newid rhif y cwmni
 
 ## Agent Capture Partnership UTR
-agent.capture_partnership_utr.title                                    = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient?
-agent.capture_partnership_utr.heading                                  = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient?
+agent.capture_partnership_utr.title                                    = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Partneriaeth eich cleient?
+agent.capture_partnership_utr.heading                                  = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Partneriaeth eich cleient?
+agent.capture_partnership_utr.line                                     = Rhif 10 digid yw hwn. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth Gyllid a Thollau EM.
+
+## Agent - Does Your Client Have a UTR
+agent.partnership.does_your_client_have_a_utr.title                   = Oes gan bartneriaeth eich cleient Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
+agent.partnership.does_your_client_have_a_utr.heading                 = Oes gan bartneriaeth eich cleient Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
+agent.partnership.does_your_client_have_a_utr.line                    = Rhif 10 digid yw hwn. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth CThEM.
 
 ## Agent Agree Receive Email page
 agent.agree_capture_email.title                                        = Cytuno i''ch cleient gael negeseuon diogel oddi wrth CThEM
@@ -353,7 +360,7 @@ agent.confirmation.title                                               = Mae gwy
 agent.confirmation.heading                                             = Mae gwybodaeth eich cleient wedi dod i law
 agent.confirmation.subsection_1.heading                                = Yr hyn sy''n digwydd nesaf
 agent.confirmation.subsection_1.line_1                                 = Byddwn yn rhoi gwybod i chi pan allwch roi gwybod am TAW eich cleient drwy feddalwedd sy''n cydweddu. Bydd hyn yn cymryd 72 awr fel arfer.
-agent.confirmation.subsection_1.bullet_1                               = <a id="softwareOptionsUrl" href="{0}"" target="_blank">Dewiswch eich meddalwedd (yn agor ffenestr neu dab newydd)</a>. Os bydd eich cleient yn defnyddio meddalwedd hefyd, mae''n bwysig ei fod yn dewis pecyn sy''n gallu rhyngweithio â''ch un chi.
+agent.confirmation.subsection_1.bullet_1                               = <a id="softwareOptionsUrl" href="{0}"" target="_blank">Dewis eich meddalwedd (yn agor ffenestr neu dab newydd)</a>. Os bydd eich cleient yn defnyddio meddalwedd hefyd, mae''n bwysig ei fod yn dewis pecyn sy''n gallu rhyngweithio â''ch un chi.
 agent.confirmation.subsection_1.bullet_2                               = Caniatáu i''ch meddalwedd gyflwyno Ffurflenni TAW i CThEM. Efallai y bydd yn rhaid i chi fewngofnodi gyda''ch manylion Porth y Llywodraeth.
 agent.confirmation.subsection_1.bullet_3                               = Defnyddio meddalwedd i gofnodi gwerthiannau a phryniannau''ch cleient.
 agent.confirmation.subsection_1.bullet_4                               = Cyflwyno Ffurflenni TAW eich cleient cyn ei ddyddiadau cau.
@@ -744,14 +751,20 @@ principal.sign_up_between_these_dates.line_2                           = Dewch y
 ## Agent Sign Up After This Date
 agent.sign_up_after_this_date.title                                    = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
 agent.sign_up_after_this_date.heading                                  = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-agent.sign_up_after_this_date.line_1                                   = Does dim digon o amser i ni gofrestru eich cleient ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW cyn i''w daliad debyd uniongyrchol nesaf ddod yn ddyledus.
-agent.sign_up_after_this_date.line_2                                   = Dewch yn ôl i''w gofrestru ar ôl {0}.
+agent.sign_up_after_this_date.line_1                                   = Ni allwn sefydlu''ch cleient am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd. Mae hyn oherwydd y canlynol:
+agent.sign_up_after_this_date.bullet_1                                 = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
+agent.sign_up_after_this_date.bullet_2                                 = rydych yn nesáu at gyfnod cyflwyno prysur
+agent.sign_up_after_this_date.line_3                                   = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
+agent.sign_up_after_this_date.line_4                                   = I gael yr wybodaeth ddiweddaraf a''r rheolau i''w dilyn, trowch at yr <a id="mtdGuidance" href={0}>arweiniad Troi Treth yn Ddigidol</a>.
 
 ## Agent Sign Up Between These Dates
 agent.sign_up_between_these_dates.title                                = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
 agent.sign_up_between_these_dates.heading                              = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-agent.sign_up_between_these_dates.line_1                               = Does dim digon o amser i ni gofrestru eich cleient ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW cyn i''w daliad debyd uniongyrchol nesaf ddod yn ddyledus.
-agent.sign_up_between_these_dates.line_2                               = Dewch yn ôl i''w gofrestru rhwng {0} a {1}.
+agent.sign_up_between_these_dates.line_1                               = Ni allwn sefydlu''ch cleient am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd. Mae hyn oherwydd y canlynol:
+agent.sign_up_between_these_dates.bullet_1                             = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
+agent.sign_up_between_these_dates.bullet_2                             = rydych yn nesáu at gyfnod cyflwyno prysur
+agent.sign_up_between_these_dates.line_3                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn rhwng {0} a {1}.
+agent.sign_up_between_these_dates.line_4                               = I gael yr wybodaeth ddiweddaraf a''r rheolau i''w dilyn, trowch at yr <a id="mtdGuidance" href={0}>arweiniad Troi Treth yn Ddigidol</a>.
 
 ## Agent Partnership Company Number
 agent.capture_partnership_company_number.title                         = Beth yw rhif cwmni partneriaeth eich cleient?
@@ -759,8 +772,8 @@ agent.capture_partnership_company_number.heading                       = Beth yw
 agent.capture_partnership_company_number.line_1                        = Os dydych chi ddim yn siŵr, <a id="companiesHouse" href={0} target="_blank">edrychwch ar gofrestr Tŷ''r Cwmnïau (yn agor ffenestr neu dab newydd)</a>.
 
 ## Agent Partnership Postcode
-agent.partnership_postcode.title                                       = Ble mae prif leoliad busnes y cleient?
-agent.partnership_postcode.heading                                     = Ble mae prif leoliad busnes y cleient?
+agent.partnership_postcode.title                                       = Ble mae partneriaeth eich cleient wedi''i chofrestru ar gyfer Hunanasesiad?
+agent.partnership_postcode.heading                                     = Ble mae partneriaeth eich cleient wedi''i chofrestru ar gyfer Hunanasesiad?
 agent.partnership_postcode.label                                       = Cod post yn y DU
 
 ## Principal Capture Partnership UTR
@@ -927,3 +940,15 @@ principal.partnership.joint_venture_or_property.heading                = Ydych c
 
 agent.partnership.joint_venture_or_property.title                      = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
 agent.partnership.joint_venture_or_property.heading                    = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
+
+# Capture National Insurance number (NINO)
+agent.capture_nino.title                                               = Beth yw rhif Yswiriant Gwladol eich cleient?
+agent.capture_nino.heading                                             = Beth yw rhif Yswiriant Gwladol eich cleient?
+agent.capture_nino.formHint                                            = Mae hwn ar gerdyn Yswiriant Gwladol, llythyr ynghylch budd-daliadau, slip talu neu P60 eich cleient. Er enghraifft ''QQ 12 34 56 C''.
+
+# Confirm National Insurance number (NINO)
+agent.confirm_nino.title                                              = Cadarnhau manylion eich cleient
+agent.confirm_nino.heading                                            = Cadarnhau manylion eich cleient
+agent.confirm_nino.summary.business_type                              = Pa fath o fusnes neu grŵp yw''ch cleient?
+agent.confirm_nino.summary.nino                                       = Beth yw rhif Yswiriant Gwladol eich cleient?
+
