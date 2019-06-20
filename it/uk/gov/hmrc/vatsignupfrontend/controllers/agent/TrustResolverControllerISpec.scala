@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.TrustJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{agentEnrolment, stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreTrustInformationStub._
@@ -26,71 +25,51 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class TrustResolverControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(TrustJourney)
-  }
-
   "GET /trust-resolver" when {
-    "the trust feature switch is on" when {
-      "store trust information returned NO_CONTENT" should {
-        "go to the capture agent email page" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "store trust information returned NO_CONTENT" should {
+      "go to the capture agent email page" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-          stubStoreTrustInformation(testVatNumber)(NO_CONTENT)
+        stubStoreTrustInformation(testVatNumber)(NO_CONTENT)
 
-          val res = get("/client/trust-resolver", Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
+        val res = get("/client/trust-resolver", Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureAgentEmailController.show().url)
-          )
-        }
-      }
-      "store trust information returned failure status" should {
-        "return INTERNAL_SERVER_ERROR" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          stubStoreTrustInformation(testVatNumber)(INTERNAL_SERVER_ERROR)
-
-          val res = get("/client/trust-resolver", Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))
-
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-          )
-        }
-      }
-      "there is no vat number in session" should {
-        "goto capture vat number" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          stubStoreTrustInformation(testVatNumber)(OK)
-
-          val res = get("/client/trust-resolver")
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureVatNumberController.show().url)
-          )
-        }
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureAgentEmailController.show().url)
+        )
       }
     }
+    "store trust information returned failure status" should {
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-    "the trust feature switch is off" should {
-      "return NOT_FOUND" in {
-        disable(TrustJourney)
+        stubStoreTrustInformation(testVatNumber)(INTERNAL_SERVER_ERROR)
+
+        val res = get("/client/trust-resolver", Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+    }
+    "there is no vat number in session" should {
+      "goto capture vat number" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        stubStoreTrustInformation(testVatNumber)(OK)
 
         val res = get("/client/trust-resolver")
 
         res should have(
-          httpStatus(NOT_FOUND)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureVatNumberController.show().url)
         )
       }
     }
   }
-
 }

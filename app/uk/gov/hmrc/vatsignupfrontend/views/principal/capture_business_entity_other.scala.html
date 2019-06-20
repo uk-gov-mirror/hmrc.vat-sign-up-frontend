@@ -25,7 +25,6 @@
 @(businessEntityForm: Form[BusinessEntity],
     postAction: Call,
     unincorporatedAssociationEnabled: Boolean,
-    trustEnabled: Boolean,
     registeredSocietyEnabled: Boolean
 )(implicit request: Request [_], messages: Messages, appConfig: AppConfig)
 
@@ -34,8 +33,6 @@
 }
 
 @unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
-
-@trustOption = @{ Some((trust, Messages("core.capture_entity_type.trust"))).filter(_ => trustEnabled) }
 
 @registeredSocietyOption = @{ Some((registeredSociety, Messages("core.capture_entity_type.registeredSociety"))).filter(_ => registeredSocietyEnabled) }
 
@@ -49,10 +46,10 @@
             parentForm = businessEntityForm,
             inline = false,
             options = Seq(
-                (vatGroup, Messages("core.capture_entity_type.vatGroup"))
+                (vatGroup, Messages("core.capture_entity_type.vatGroup")),
+                (trust, Messages("core.capture_entity_type.trust")),
+                (charity, Messages("core.capture_entity_type.charity"))
             )
-            ++ trustOption
-            ++ Some((charity, Messages("core.capture_entity_type.charity")))
             ++ unincorporatedAssociationOption
             ++ Some((division, Messages("core.capture_entity_type.division")))
             ++ registeredSocietyOption
