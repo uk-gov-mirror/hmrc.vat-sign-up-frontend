@@ -40,7 +40,6 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
     businessEntityForm,
     postAction = testCall,
     unincorporatedAssociationEnabled = true,
-    trustEnabled = true,
     registeredSocietyEnabled = true
   )(
     FakeRequest(),

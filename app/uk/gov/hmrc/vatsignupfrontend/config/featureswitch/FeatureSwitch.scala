@@ -30,7 +30,6 @@ object FeatureSwitch {
     StubIncorporationInformation,
     BTAClaimSubscription,
     UnincorporatedAssociationJourney,
-    TrustJourney,
     RegisteredSocietyJourney,
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
@@ -66,11 +65,6 @@ case object BTAClaimSubscription extends FeatureSwitch {
 case object UnincorporatedAssociationJourney extends FeatureSwitch {
   override val name: String = s"$prefix.unincorporated-association-journey"
   override val displayText: String = "Enable users to enter unincorporated association flow"
-}
-
-case object TrustJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.trust-journey"
-  override val displayText: String = "Enable users to enter trust flow"
 }
 
 case object RegisteredSocietyJourney extends FeatureSwitch {

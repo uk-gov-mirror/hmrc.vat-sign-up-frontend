@@ -52,7 +52,6 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           businessEntityForm = businessEntityForm(false),
           postAction = routes.CaptureBusinessEntityOtherController.submit(),
           unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
-          trustEnabled = isEnabled(TrustJourney),
           registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney)
         ))
       )
@@ -68,7 +67,6 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
               businessEntityForm = formWithErrors,
               postAction = routes.CaptureBusinessEntityOtherController.submit(),
               unincorporatedAssociationEnabled = isEnabled(UnincorporatedAssociationJourney),
-              trustEnabled = isEnabled(TrustJourney),
               registeredSocietyEnabled = isEnabled(RegisteredSocietyJourney)
             ))
           ),

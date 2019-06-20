@@ -22,7 +22,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.TrustJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreTrustInformationHttpParser.{StoreTrustInformationFailureResponse, StoreTrustInformationSuccess}
@@ -33,11 +32,6 @@ import scala.concurrent.Future
 class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreTrustInformationService {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(TrustJourney)
-  }
-
   object TestTrustResolverController extends TrustResolverController(
     mockControllerComponents,
     mockStoreTrustInformationService
@@ -46,57 +40,42 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   lazy val testGetRequest = FakeRequest("GET", "/trust-resolver")
 
   "calling the resolve method on TrustResolverController" when {
-    "the trust feature switch is on" when {
-      "store trust information returns StoreTrustInformationSuccess" should {
-        "goto agree capture email" in {
-          mockAuthAdminRole()
-          mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
+    "store trust information returns StoreTrustInformationSuccess" should {
+      "goto agree capture email" in {
+        mockAuthAdminRole()
+        mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
 
-          val res = await(TestTrustResolverController.resolve(testGetRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber
-          )))
+        val res = await(TestTrustResolverController.resolve(testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber
+        )))
 
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
-        }
-      }
-      "store trust information returns StoreTrustInformationFailureResponse" should {
-        "throw internal server exception" in {
-          mockAuthAdminRole()
-          mockStoreTrustInformation(testVatNumber)(Future.successful(Left(StoreTrustInformationFailureResponse(INTERNAL_SERVER_ERROR))))
-
-          intercept[InternalServerException] {
-            await(TestTrustResolverController.resolve(testGetRequest.withSession(
-              SessionKeys.vatNumberKey -> testVatNumber
-            )))
-          }
-        }
-      }
-      "vat number is not in session" should {
-        "goto resolve vat number" in {
-          mockAuthAdminRole()
-          mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
-
-          val res = await(TestTrustResolverController.resolve(testGetRequest))
-
-          status(res) shouldBe SEE_OTHER
-          redirectLocation(res) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-        }
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
       }
     }
+    "store trust information returns StoreTrustInformationFailureResponse" should {
+      "throw internal server exception" in {
+        mockAuthAdminRole()
+        mockStoreTrustInformation(testVatNumber)(Future.successful(Left(StoreTrustInformationFailureResponse(INTERNAL_SERVER_ERROR))))
 
-    "the trust feature switch is off" should {
-      "throw not found exception" in {
-        disable(TrustJourney)
-
-        intercept[NotFoundException] {
+        intercept[InternalServerException] {
           await(TestTrustResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
           )))
         }
       }
     }
-  }
+    "vat number is not in session" should {
+      "goto resolve vat number" in {
+        mockAuthAdminRole()
+        mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
 
+        val res = await(TestTrustResolverController.resolve(testGetRequest))
+
+        status(res) shouldBe SEE_OTHER
+        redirectLocation(res) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+      }
+    }
+  }
 }
 
