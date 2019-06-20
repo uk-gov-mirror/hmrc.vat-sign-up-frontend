@@ -80,7 +80,6 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to the Unincorporated Association resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
-          enable(UnincorporatedAssociationJourney)
           val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(unincorporatedAssociation)))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)

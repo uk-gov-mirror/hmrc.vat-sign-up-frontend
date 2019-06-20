@@ -128,7 +128,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
         )
       }
     }
-
   }
 
 }

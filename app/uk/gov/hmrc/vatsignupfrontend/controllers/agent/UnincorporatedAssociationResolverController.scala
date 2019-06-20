@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.UnincorporatedAssociationJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreUnincorporatedAssociationInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreUnincorporatedAssociationInformationService
@@ -33,7 +32,7 @@ import scala.concurrent.Future
 class UnincorporatedAssociationResolverController @Inject()(val controllerComponents: ControllerComponents,
                                                             storeUnincorporatedAssociationInformationService: StoreUnincorporatedAssociationInformationService
                                                            )
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(UnincorporatedAssociationJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
