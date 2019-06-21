@@ -40,7 +40,8 @@ object FeatureSwitch {
     SkipCidCheck,
     WelshTranslation,
     SkipCtUtrOnCotaxNotFound,
-    DirectToCTUTROnMismatchedCTUTR
+    DirectToCTUTROnMismatchedCTUTR,
+    FinalCheckYourAnswer
   )
 
   def apply(str: String): FeatureSwitch =
@@ -121,4 +122,9 @@ case object DirectToCTUTROnMismatchedCTUTR extends FeatureSwitch {
   override val name: String = s"$prefix.direct-to-ctutr-on-mismatched-ctutur"
   override val displayText: String = "Direct users to capture CT UTR page when present credential causes a mismatch"
 
+}
+
+case object FinalCheckYourAnswer extends FeatureSwitch {
+  override val name: String = s"$prefix.final-check-your-answer"
+  override val displayText: String = "Enable users to view check your answers and declaration page for individual or agent "
 }
