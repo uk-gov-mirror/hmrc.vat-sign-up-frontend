@@ -72,7 +72,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
     "the business type is Unincorporated Association" should {
       "return a SEE_OTHER status and go to the unincorporated association resolver" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(UnincorporatedAssociationJourney)
 
         val res = post("/client/business-type-other")(businessEntity -> unincorporatedAssociation)
 

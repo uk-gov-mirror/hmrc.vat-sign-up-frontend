@@ -25,15 +25,12 @@
 
 @(businessEntityForm: Form[BusinessEntity],
     postAction: Call,
-    unincorporatedAssociationEnabled: Boolean,
     registeredSocietyEnabled: Boolean
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
 }
-
-@unincorporatedAssociationOption = @{ Some((unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation"))).filter(_ => unincorporatedAssociationEnabled) }
 
 @registeredSocietyOption = @{ Some((registeredSociety, Messages("core.capture_entity_type.registeredSociety"))).filter(_ => registeredSocietyEnabled) }
 
@@ -49,9 +46,10 @@
             options = Seq(
                 (vatGroup, Messages("core.capture_entity_type.vatGroup")),
                 (trust, Messages("core.capture_entity_type.trust")),
-                (charity, Messages("core.capture_entity_type.charity"))
-            )  ++ unincorporatedAssociationOption
-               ++ Some((division, Messages("core.capture_entity_type.division")))
+                (charity, Messages("core.capture_entity_type.charity")),
+                (unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation")),
+                (division, Messages("core.capture_entity_type.division"))
+            )
                ++ registeredSocietyOption
                ++ Some((governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))),
             legend = Messages("agent.capture_entity_type.heading"),
