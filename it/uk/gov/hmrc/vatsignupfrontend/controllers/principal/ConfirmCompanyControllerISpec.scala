@@ -88,6 +88,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse())
             stubCtReferenceNotFound(testCompanyNumber)
+            stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, None)
 
             val res = post("/confirm-company",
               Map(

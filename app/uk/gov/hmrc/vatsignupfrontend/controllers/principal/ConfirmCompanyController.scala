@@ -17,9 +17,9 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
@@ -66,39 +66,48 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
         val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
         val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
         val optCompanyUTR = enrolments.companyUtr
+
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-              optCompanyUTR match {
-                case Some(ctutr) =>
-                  storeCompanyNumberService.storeCompanyNumber(
-                    vatNumber = vatNumber,
-                    companyNumber = companyNumber,
-                    companyUtr = Some(ctutr)
-                  ) map {
-                    case Right(_) =>
-                      Redirect(routes.DirectDebitResolverController.show())
-                    case Left(CtReferenceMismatch) =>
-                      Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show())
-                    case Left(errResponse) =>
-                      throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
-                  }
-                case None if isEnabled(SkipCtUtrOnCotaxNotFound) => ctReferenceLookupService.checkCtReferenceExists(companyNumber) map {
+            optCompanyUTR match {
+              case Some(ctutr) => storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(ctutr))
+              case None if isEnabled(SkipCtUtrOnCotaxNotFound) =>
+                ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
                   case Right(_) =>
-                    Redirect(routes.CaptureCompanyUtrController.show())
+                    Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
                   case Left(CtReferenceNotFound) =>
-                    Redirect(routes.DirectDebitResolverController.show())
+                    storeCompanyNumberAndRedirect(vatNumber, companyNumber, None)
                   case Left(CtReferenceLookupFailureResponse(status)) =>
                     throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
                 }
-                case None =>
-                  Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-              }
+              case None =>
+                Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
+            }
           case (None, _) =>
             Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
           case _ =>
             Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
         }
       }
+    }
+  }
+
+  private def storeCompanyNumberAndRedirect(vatNumber: String,
+                                            companyNumber: String,
+                                            optCompanyUtr: Option[String]
+                                           )(implicit hc: HeaderCarrier): Future[Result] = {
+
+    storeCompanyNumberService.storeCompanyNumber(
+      vatNumber = vatNumber,
+      companyNumber = companyNumber,
+      companyUtr = optCompanyUtr
+    ) map {
+      case Right(_) =>
+        Redirect(routes.DirectDebitResolverController.show())
+      case Left(CtReferenceMismatch) =>
+        Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show())
+      case Left(errResponse) =>
+        throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
     }
   }
 

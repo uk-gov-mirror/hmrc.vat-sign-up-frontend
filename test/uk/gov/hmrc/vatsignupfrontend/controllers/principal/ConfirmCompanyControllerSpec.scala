@@ -116,6 +116,11 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
         enable(SkipCtUtrOnCotaxNotFound)
         mockAuthRetrieveVatDecEnrolment()
         mockCtReferenceNotFound(testCompanyNumber)
+        mockStoreCompanyNumberSuccess(
+          vatNumber = testVatNumber,
+          companyNumber = testCompanyNumber,
+          companyUtr = None
+        )
 
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
