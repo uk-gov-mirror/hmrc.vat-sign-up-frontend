@@ -52,8 +52,8 @@ error.business-entity.field                                            = Dewiswc
 error.business-entity.summary                                          = Dewiswch y math o fusnes neu grŵp rydych yn ei gofrestru, dewiswch ''Arall'' os nad ydych yn siŵr
 error.agent.company_number_not_entered.field                           = Nodwch rif cofrestru cwmni''ch cleient
 error.agent.company_number_not_entered.summary                         = Nodwch rif cofrestru cwmni''ch cleient
-error.principal.company_number_not_entered.field                       = Nodwch eich rhif cwmni
-error.principal.company_number_not_entered.summary                     = Nodwch eich rhif cwmni
+error.principal.company_number_not_entered.field                       = Nodwch rif cofrestru''ch cwmni
+error.principal.company_number_not_entered.summary                     = Nodwch rif cofrestru''ch cwmni
 error.invalid_company_number_length.field                              = Nodwch rif cwmni sydd ag 8 o gymeriadau neu lai
 error.invalid_company_number_length.summary                            = Nodwch rif cwmni sydd ag 8 o gymeriadau neu lai
 error.agent.partnership_company_number_not_entered.field               = Nodwch rif cwmni''r bartneriaeth
@@ -162,8 +162,8 @@ error.no_month_selected.field                                          = Dewiswc
 error.no_month_selected.summary                                        = Dewiswch fis
 error.principal.box_5_figure_not_entered.field                         = Nodwch eich swm o Flwch 5
 error.principal.box_5_figure_not_entered.summary                       = Nodwch eich swm o Flwch 5
-error.principal.box_5_figure_invalid_format.field                      = Nodwch werth hyd at 2 bwynt degol. Er enghraifft, £100.00
-error.principal.box_5_figure_invalid_format.summary                    = Nodwch werth hyd at 2 bwynt degol. Er enghraifft, £100.00
+error.principal.box_5_figure_invalid_format.field                      = Nodwch werth hyd at 2 le degol. Er enghraifft, £100.00
+error.principal.box_5_figure_invalid_format.summary                    = Nodwch werth hyd at 2 le degol. Er enghraifft, £100.00
 error.principal.box_5_figure_invalid_length.field                      = Mae''n rhaid i''r swm o Flwch 5 fod yn llai na 14 o ddigidau
 error.principal.box_5_figure_invalid_length.summary                    = Mae''n rhaid i''r swm o Flwch 5 fod yn llai na 14 o ddigidau
 error.principal.receive_email_notifications.field                      = Dewiswch os ydych am i ni gysylltu â chi drwy e-bost neu lythyr yn unig
@@ -172,6 +172,8 @@ error.agent.receive_email_notifications.field                          = Dewiswc
 error.agent.receive_email_notifications.summary                        = Dewiswch os ydych am i ni gysylltu â chi drwy e-bost neu lythyr yn unig
 error.agent.partnership.do_you_have_a_utr.field                        = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient
 error.agent.partnership.do_you_have_a_utr.summary                      = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient
+error.principal.partnership.do_you_have_a_utr.field                    = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad
+error.principal.partnership.do_you_have_a_utr.summary                  = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad
 
 ## unused?
 error.principal.partnership.joint_venture_or_property.field            = Dewiswch ''Iawn'' os ydych yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
@@ -430,7 +432,7 @@ principal.guidance.subsection_1.sub_heading_1                          = Sut mae
 principal.guidance.subsection_1.line_1                                 = I gofrestru ar gyfer y gwasanaeth hwn, mae''n rhaid i chi ddefnyddio meddalwedd i gofnodi eich pryniannau a''ch gwerthiannau. Os nad ydych eisoes yn cofnodi drwy ddefnyddio''r dull hwn, cyflwynwch eich Ffurflen TAW nesaf ar GOV.UK neu drwy''r post cyn cofrestru. Bydd hyn yn rhoi mwy o amser i chi lenwi''ch Ffurflen TAW gyntaf gan ddefnyddio meddalwedd.
 principal.guidance.subsection_1.number_1                               = Mae''n rhaid i chi ddewis meddalwedd trydydd parti perthnasol. Os ydych eisoes yn defnyddio meddalwedd, holwch eich cyflenwr i weld a allwch ei defnyddio gyda''r gwasanaeth hwn.
 principal.guidance.subsection_1.number_2                               = Cofrestrwch ar gyfer y gwasanaeth hwn a chytuno i gael negeseuon e-bost yn hytrach na llythyrau.
-principal.guidance.subsection_1.number_3                               = Caniatáu i''ch meddalwedd gyflwyno Ffurflenni TAW i CThEM. Efallai y bydd yn rhaid i chi fewngofnodi gyda''ch manylion Porth y Llywodraeth.
+principal.guidance.subsection_1.number_3                               = Ewch ati i ganiatáu i''ch meddalwedd gyflwyno Ffurflenni TAW i CThEM. Efallai y bydd yn rhaid i chi fewngofnodi gyda''ch manylion Porth y Llywodraeth.
 principal.guidance.subsection_1.number_4                               = Defnyddiwch eich meddalwedd i gofnodi eich pryniannau a''ch gwerthiannau, yna ewch ati i gyflwyno''ch Ffurflenni TAW. Byddwn yn anfon e-bost atoch i roi gwybod i chi pryd i anfon Ffurflen TAW.
 principal.guidance.subsection_1.line_2                                 = Gallwch hefyd ddewis gwneud y canlynol:
 principal.guidance.subsection_1.bullet_1                               = talu drwy''r flwyddyn, os yw''n eich helpu i reoli''ch incwm
@@ -486,8 +488,8 @@ check-your-answers.vat_registration_date                               = Beth yw
 check-your-answers.business_post_code                                  = Beth yw cod post eich busnes?
 check-your-answers.previous_vat_return                                 = Ydych chi''n cyflwyno Ffurflenni TAW ar hyn o bryd?
 check-your-answers.business_entity                                     = Fel pa fath o fusnes ydych wedi''i gofrestru?
-check-your-answers.box_5_figure                                        = Beth yw''ch swm o Flwch 5?
-check-your-answers.last_return_month_period                            = Pryd oedd eich taliad TAW diweddaraf?
+check-your-answers.box_5_figure                                        = Cyfanswm eich Ffurflen TAW neu''ch ffigur o Flwch 5
+check-your-answers.last_return_month_period                            = Mis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf
 
 # No CT Enrolment Summary page
 no_ct_enrolment_summary.title                                          = Gwirio''ch atebion
@@ -586,16 +588,16 @@ principal.confirmation.title                                           = Mae''ch
 principal.confirmation.heading                                         = Mae''ch gwybodaeth wedi dod i law
 principal.confirmation.subsection.heading                              = Yr hyn sy''n digwydd nesaf
 principal.confirmation.subsection.line                                 = Byddwn yn anfon e-bost atoch cyn pen 72 awr i gadarnhau. Peidiwch â chyflwyno Ffurflen TAW yn ystod yr amser hwn.
-principal.confirmation.subsection.bullet_1                             = Mae''n rhaid i chi ddefnyddio <a id="softwareOptionsUrl" href="{0}"" target="_blank">meddalwedd sy''n gweithio gyda''r cynllun Troi Treth yn Ddigidol (yn agor ffenestr neu dab newydd)</a>.
-principal.confirmation.subsection.bullet_2                             = Mae''n rhaid i chi ddefnyddio''r ffordd newydd o gyflwyno''ch Ffurflen TAW drwy feddalwedd gyda''r cynllun Troi Treth yn Ddigidol. Peidiwch â defnyddio''r hen ffordd o anfon eich Ffurflen TAW.
+principal.confirmation.subsection.bullet_1                             = Mae''n rhaid i chi ddefnyddio <a id="softwareOptionsUrl" href="{0}"" target="_blank">meddalwedd sy''n gweithio gyda''r cynllun Troi Treth yn Ddigidol ar gyfer TAW (yn agor ffenestr neu dab newydd)</a>.
+principal.confirmation.subsection.bullet_2                             = Mae''n rhaid i chi ddefnyddio''r ffordd newydd o gyflwyno''ch Ffurflen TAW drwy feddalwedd gyda''r cynllun Troi Treth yn Ddigidol ar gyfer TAW. Peidiwch â defnyddio''r hen ffordd o anfon eich Ffurflen TAW.
 principal.confirmation.subsection.bullet_3                             = Cadarnhewch fod eich meddalwedd wedi''i chysylltu i anfon Ffurflenni TAW i CThEM yn uniongyrchol. Efallai y bydd yn rhaid i chi fewngofnodi gan ddefnyddio''ch Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth.
 principal.confirmation.subsection.bullet_4                             = Defnyddiwch y feddalwedd i gofnodi popeth rydych yn ei werthu a''i brynu.
 principal.confirmation.subsection.bullet_5                             = O fis Ebrill ymlaen, cofiwch gadw''ch manylion busnes yn gyfredol gan ddefnyddio gwasanaethau CThEM (yr enw arall ar hyn yw''r cyfrif treth busnes). Peidiwch â defnyddio''r gwasanaethau TAW ar-lein.
 
 ## Capture Company Number page
-principal.capture_company_number.title                                 = Beth yw''ch rhif cwmni?
-principal.capture_company_number.heading                               = Beth yw''ch rhif cwmni?
-principal.capture_company_number.line_1                                = Cawsoch hwn oddi wrth Dŷ''r Cwmnïau pan wnaethoch sefydlu''ch busnes. Mae''n 8 rhif ac weithiau''n dechrau gyda 2 lythyren.
+principal.capture_company_number.title                                 = Beth yw rhif cofrestru''ch cwmni?
+principal.capture_company_number.heading                               = Beth yw rhif cofrestru''ch cwmni?
+principal.capture_company_number.line_1                                = Gallwch <a id="diff-details" href="{0}">chwilio am rif eich cwmni (yn agor ffenestr neu dab newydd)</a> ar wefan Tŷ''r Cwmnïau.
 
 ## Capture Company Utr page
 principal.capture_company_utr.title                                    = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni?
@@ -665,9 +667,14 @@ principal.multiple_vat_check.title                                     = Oes gen
 principal.multiple_vat_check.heading                                   = Oes gennych fwy nag un busnes sydd wedi''i gofrestru ar gyfer TAW?
 
 ## Principal Capture Last Return Month Period
-principal.capture_last_return_month_period.title                       = Pryd oedd dyddiad eich Ffurflen TAW ddiwethaf?
-principal.capture_last_return_month_period.heading                     = Pryd oedd eich taliad TAW diweddaraf?
-principal.capture_last_return_month_period.line                        = Dewiswch y mis pan wnaethoch eich taliad TAW diweddaraf. Gallwch ddod o hyd i''ch taliad TAW diweddaraf ar eich cyfrif treth busnes ar-lein.
+principal.capture_last_return_month_period.title                       = Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf, a gyflwynwyd i CThEM
+principal.capture_last_return_month_period.heading                     = Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf, a gyflwynwyd i CThEM
+principal.capture_last_return_month_period.line                        = Gallwch ddod o hyd i hyn drwy fewngofnodi i''ch cyfrif TAW ar-lein neu gallwch ddod o hyd i hyn ar eich Ffurflen TAW.
+principal.capture_last_return_month_period.sub_heading                 = Enghraifft 1
+principal.capture_last_return_month_period.line_2                      = Rydych yn cyflwyno''ch Ffurflen TAW bob tri mis neu yn chwarterol. Yn y ''cyfnod cyfrifyddu'' o fis Ionawr i fis Mawrth, y mis diwethaf yn y ''cyfnod cyfrifyddu'' hwnnw yw mis Mawrth. Felly, mae''n rhaid i chi ddewis mis Mawrth.
+principal.capture_last_return_month_period.sub_heading_2               = Enghraifft 2
+principal.capture_last_return_month_period.line_3                      = Os ydych chi''n cyflwyno''ch Ffurflen TAW yn fisol, y cyfnod cyfrifyddu diwethaf y gwnaethoch gyflwyno ar ei gyfer oedd mis Ionawr. Mae''n rhaid i chi ddewis mis Ionawr.
+principal.capture_last_return_month_period.formhint_1                  = Dewiswch y mis diwethaf yn eich cyfnod cyfrifyddu TAW diwetharaf.
 principal.capture_last_return_month_period.january                     = Ionawr
 principal.capture_last_return_month_period.february                    = Chwefror
 principal.capture_last_return_month_period.march                       = Mawrth
@@ -739,8 +746,12 @@ agent.check-your-answers.joint_venture_or_property                     = Ydy''ch
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
 principal.sign_up_after_this_date.heading                              = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-principal.sign_up_after_this_date.line_1                               = Does dim digon o amser i''ch cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW cyn i''ch taliad debyd uniongyrchol nesaf ddod yn ddyledus.
-principal.sign_up_after_this_date.line_2                               = Dewch yn ôl i gofrestru ar ôl {0}.
+principal.sign_up_after_this_date.line_1                               = Ni allwn sefydlu''ch cleient am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd. Mae hyn oherwydd y canlynol:
+principal.sign_up_after_this_date.bullet_1                             = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
+principal.sign_up_after_this_date.bullet_2                             = rydych yn nesáu at gyfnod cyflwyno prysur
+principal.sign_up_after_this_date.line_2                               =
+principal.sign_up_after_this_date.line_3                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
+principal.sign_up_after_this_date.line_4                               = I gael yr wybodaeth ddiweddaraf a’r rheolau i’w dilyn, trowch at yr <a id="mtdGuidance" href={0}>arweiniad Troi Treth yn Ddigidol</a>.
 
 ## Sign Up Between These Dates
 principal.sign_up_between_these_dates.title                            = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
@@ -779,7 +790,7 @@ agent.partnership_postcode.label                                       = Cod pos
 ## Principal Capture Partnership UTR
 principal.capture_partnership_utr.title                                = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer y bartneriaeth?
 principal.capture_partnership_utr.heading                              = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer y bartneriaeth?
-principal.capture_partnership_utr.line_1                               = Mae UTR yn rif 10 digid. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth Gyllid a Thollau EM.
+principal.capture_partnership_utr.line_1                               = Rhif 10 digid yw hwn.
 
 ## Principal Partnerships CYA
 principal.check_your_answers_partnerships.title                        = Gwirio''ch atebion
@@ -789,6 +800,7 @@ principal.check_your_answers_partnerships.company_number               = Beth yw
 principal.check_your_answers_partnerships.company_utr                  = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer y bartneriaeth?
 principal.check_your_answers_partnerships.post_code                    = Ymhle mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad?
 principal.check_your_answers_partnerships.joint_vernture_or_property   = Ydych chi''n Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
+principal.check_your_answers_partnerships.has_optional_sautr           = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad?
 
 unplanned_outage.title                                                 = Mae''n ddrwg gennym – mae problem gyda''r gwasanaeth
 unplanned_outage.heading                                               = Mae''n ddrwg gennym – mae problem gyda''r gwasanaeth
@@ -808,16 +820,16 @@ principal.verify_software_error.returnToGovUK                          = Yn ôl 
 ## Principal Have Software Page
 principal.have_software.title                                          = Oes gennych feddalwedd cyfrifyddu i reoli''ch cofnodion TAW?
 principal.have_software.heading                                        = Oes gennych feddalwedd cyfrifyddu i reoli''ch cofnodion TAW?
-principal.have_software.yes                                            = Oes, mae gen i feddalwedd cyfrifyddu
-principal.have_software.no                                             = Nac oes, does gen i ddim meddalwedd cyfrifyddu
+principal.have_software.yes                                            = Iawn, mae gen i feddalwedd cyfrifyddu
+principal.have_software.no                                             = Na, does gen i ddim meddalwedd cyfrifyddu
 
 ## Principal Software Ready Page
-principal.verify_software_ready.title                                  = Ydy''ch meddalwedd yn barod i gyflwyno''ch Ffurflenni TAW Troi Treth yn Ddigidol ar gyfer TAW i CThEM?
-principal.verify_software_ready.heading                                = Ydy''ch meddalwedd yn barod i gyflwyno''ch Ffurflenni TAW Troi Treth yn Ddigidol ar gyfer TAW i CThEM?
+principal.verify_software_ready.title                                  = Ydy''ch meddalwedd yn barod i gyflwyno''ch Ffurflenni TAW Troi Treth yn Ddigidol ar gyfer TAW i yn uniongyrchol CThEM?
+principal.verify_software_ready.heading                                = Ydy''ch meddalwedd yn barod i gyflwyno''ch Ffurflenni TAW Troi Treth yn Ddigidol ar gyfer TAW i yn uniongyrchol CThEM?
 principal.verify_software_ready.line_1                                 = Mae''n rhaid i''ch meddalwedd allu gweithio gyda''r cynllun Troi Treth yn Ddigidol ar gyfer TAW.
 principal.verify_software_ready.line_2                                 = Mae''n rhaid i chi gadarnhau gyda''ch darparwr bod eich meddalwedd cyfrifyddu yn barod i gyflwyno''ch Ffurflenni TAW yn uniongyrchol i CThEM.
-principal.verify_software_ready.yes                                    = Ydy, mae fy meddalwedd yn gallu cyflwyno Ffurflenni TAW drwy''r cynllun Troi Treth yn Ddigidol ar gyfer TAW
-principal.verify_software_ready.no                                     = Nac ydy, dydy fy meddalwedd ddim yn gallu cyflwyno Ffurflenni TAW drwy''r cynllun Troi Treth yn Ddigidol ar gyfer TAW
+principal.verify_software_ready.yes                                    = Iawn, mae fy meddalwedd yn gallu cyflwyno Ffurflenni TAW drwy''r cynllun Troi Treth yn Ddigidol ar gyfer TAW
+principal.verify_software_ready.no                                     = Na, dydy fy meddalwedd ddim yn gallu cyflwyno Ffurflenni TAW drwy''r cynllun Troi Treth yn Ddigidol ar gyfer TAW
 
 ## Principal Choose Software Error Page
 principal.choose_software_error.title                                  = Troi Treth yn Ddigidol ar gyfer TAW: mae angen meddalwedd
@@ -889,10 +901,10 @@ principal.previous_vat_return.title                                    = Ydych c
 principal.previous_vat_return.heading                                  = Ydych chi''n cyflwyno Ffurflenni TAW ar hyn o bryd?
 
 ## What is your box 5 Figure page
-principal.capture_box_5_figure.title                                   = Beth yw''ch swm o Flwch 5?
-principal.capture_box_5_figure.heading                                 = Beth yw''ch swm o Flwch 5?
-principal.capture_box_5_figure.line                                    = Nodwch y swm o Flwch 5 eich Ffurflen TAW ddiwethaf. Cafodd eich swm o Flwch 5 ei gyfrifo''n awtomatig os llenwoch eich Ffurflen TAW ar-lein.
-
+principal.capture_box_5_figure.title                                   = Nodwch gyfanswm eich Ffurflen TAW neu''ch swm o Flwch 5
+principal.capture_box_5_figure.heading                                 = Nodwch gyfanswm eich Ffurflen TAW neu''ch swm o Flwch 5
+principal.capture_box_5_figure.line                                    = Gallwch ddod o hyd i''r swm hwn ym mlwch rhif 5 ar eich Ffurflen TAW diweddaraf.
+principal.capture_box_5_figure.line2                                   = Mae''n rhaid i fformat y rhif hwn fod yn 2 le degol, er enghraifft £123.00.
 ## Cancel Direct Debit page
 principal.cancel_direct_debit.title                                    = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol
 principal.cancel_direct_debit.heading                                  = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol
@@ -946,9 +958,22 @@ agent.capture_nino.title                                               = Beth yw
 agent.capture_nino.heading                                             = Beth yw rhif Yswiriant Gwladol eich cleient?
 agent.capture_nino.formHint                                            = Mae hwn ar gerdyn Yswiriant Gwladol, llythyr ynghylch budd-daliadau, slip talu neu P60 eich cleient. Er enghraifft ''QQ 12 34 56 C''.
 
+principal.capture_nino.title                                           = Beth yw''ch rhif Yswiriant Gwladol?
+principal.capture_nino.heading                                         = Beth yw''ch rhif Yswiriant Gwladol?
+principal.capture_nino.formHint                                        = Mae hwn ar eich cerdyn Yswiriant Gwladol, llythyr ynghylch budd-daliadau, slip talu neu P60. Er enghraifft ''QQ 12 34 56 C''.
+
 # Confirm National Insurance number (NINO)
 agent.confirm_nino.title                                              = Cadarnhau manylion eich cleient
 agent.confirm_nino.heading                                            = Cadarnhau manylion eich cleient
 agent.confirm_nino.summary.business_type                              = Pa fath o fusnes neu grŵp yw''ch cleient?
 agent.confirm_nino.summary.nino                                       = Beth yw rhif Yswiriant Gwladol eich cleient?
 
+principal.confirm_nino.title                                          = Gwirio''ch atebion
+principal.confirm_nino.heading                                        = Yr hyn rydych wedi rhoi gwybod i ni amdano
+principal.confirm_nino.summary.business_type                          = Pa fath o fusnes sydd gennych?
+principal.confirm_nino.summary.nino                                   = Beth yw''ch rhif Yswiriant Gwladol?
+
+## Do you Have a UTR
+principal.partnership.do_you_have_a_utr.title                         = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
+principal.partnership.do_you_have_a_utr.heading                       = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
+principal.partnership.do_you_have_a_utr.line                          = Rhif 10 digid yw hwn. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth CThEM.
