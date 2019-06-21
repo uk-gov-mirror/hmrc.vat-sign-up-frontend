@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCtUtrOnCotaxNotFound
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectToCTUTROnMismatchedCTUTR, SkipCtUtrOnCotaxNotFound}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockCtReferenceLookupService, MockStoreCompanyNumberService}
@@ -232,6 +232,43 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
 
+    }
+
+    "if the DirectToCTUTROnMismatchedCTUTR feature switch is disabled" should {
+      "go to the 'CT Enrolment Details Do Not Match' page" in {
+        disable(DirectToCTUTROnMismatchedCTUTR)
+        mockAuthRetrieveIRCTEnrolment()
+        mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+
+        val request = testPostRequest.withSession(
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.vatNumberKey -> testVatNumber
+        )
+
+        val result = await(TestConfirmCompanyController.submit(request))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
+
+      }
+    }
+
+    "if the DirectToCTUTROnMismatchedCTUTR feature switch is enabled" should {
+      "go to the 'capture company UTR' page" in {
+        enable(DirectToCTUTROnMismatchedCTUTR)
+
+        mockAuthRetrieveIRCTEnrolment()
+        mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+
+        val request = testPostRequest.withSession(
+          SessionKeys.companyNumberKey -> testCompanyNumber,
+          SessionKeys.vatNumberKey -> testVatNumber
+        )
+
+        val result = await(TestConfirmCompanyController.submit(request))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureCompanyUtrController.show().url)
+
+      }
     }
   }
 }
