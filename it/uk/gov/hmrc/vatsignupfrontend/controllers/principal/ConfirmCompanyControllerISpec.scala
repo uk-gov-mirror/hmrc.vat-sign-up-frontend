@@ -18,11 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCtUtrOnCotaxNotFound
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectToCTUTROnMismatchedCTUTR, SkipCtUtrOnCotaxNotFound}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.stubStoreCompanyNumberSuccess
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub.{stubStoreCompanyNumberCtMismatch, stubStoreCompanyNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -133,6 +133,47 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
               redirectUri(routes.CaptureCompanyUtrController.show().url)
             )
           }
+        }
+
+        "the DirectToCTUTROnMismatchedCTUTR is disabled" should {
+          "redirect to the mismatch page" in {
+            disable(DirectToCTUTROnMismatchedCTUTR)
+            stubAuth(OK, successfulAuthResponse(irctEnrolment))
+            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
+            )
+
+          }
+
+        }
+
+        "the DirectToCTUTROnMismatchedCTUTR is enabled" should {
+          "redirect to the capture CTR page " in {
+            enable(DirectToCTUTROnMismatchedCTUTR)
+            stubAuth(OK, successfulAuthResponse(irctEnrolment))
+            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
+
         }
       }
     }
