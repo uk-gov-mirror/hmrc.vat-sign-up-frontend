@@ -17,23 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.RegisteredSocietyUtrForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureRegisteredSocietyUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(RegisteredSocietyJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(RegisteredSocietyJourney)
-  }
 
   "GET /registered-society-utr" when {
     "return an OK" in {

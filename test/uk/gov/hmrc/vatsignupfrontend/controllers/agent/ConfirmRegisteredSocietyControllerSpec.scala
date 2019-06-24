@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietyService
@@ -33,15 +33,6 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietySe
 class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockStoreRegisteredSocietyService with FeatureSwitching {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(RegisteredSocietyJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(RegisteredSocietyJourney)
-  }
 
   object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(
     mockControllerComponents,

@@ -18,24 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, RegisteredSocietyJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub.stubStoreRegisteredSocietySuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(RegisteredSocietyJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(RegisteredSocietyJourney)
-  }
+class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /confirm-registered-society" when {
     "return an OK" in {
@@ -46,21 +35,6 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
       res should have(
         httpStatus(OK)
       )
-    }
-  }
-
-  "GET /confirm-registered-society" when {
-    "the Registered Society feature switch is disabled" should {
-      "return a 404 not found response" in {
-        disable(RegisteredSocietyJourney)
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = get("/confirm-registered-society", Map(SessionKeys.registeredSocietyNameKey -> testCompanyName))
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
     }
   }
 

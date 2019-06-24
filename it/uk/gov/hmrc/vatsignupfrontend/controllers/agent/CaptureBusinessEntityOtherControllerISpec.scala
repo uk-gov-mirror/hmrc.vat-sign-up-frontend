@@ -98,7 +98,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
     "the business type is registered society" should {
       "redirect to capture registered society company number" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(RegisteredSocietyJourney)
 
         val res = post("/client/business-type-other")(businessEntity -> registeredSociety)
 

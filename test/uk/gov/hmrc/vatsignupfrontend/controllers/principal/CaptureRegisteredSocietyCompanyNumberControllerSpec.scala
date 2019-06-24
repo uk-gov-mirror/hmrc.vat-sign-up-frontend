@@ -24,26 +24,15 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
-import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(RegisteredSocietyJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    enable(RegisteredSocietyJourney)
-  }
 
   object TestCaptureRegisteredSocietyCompanyNumberController extends CaptureRegisteredSocietyCompanyNumberController(
     mockControllerComponents,

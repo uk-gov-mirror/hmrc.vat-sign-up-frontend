@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
@@ -35,7 +34,7 @@ import scala.concurrent.Future
 class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
                                                                 val getCompanyNameService: GetCompanyNameService
                                                                )
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(RegisteredSocietyJourney)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateCompanyNumberForm = companyNumberForm(isAgent = true, isPartnership = false)
 

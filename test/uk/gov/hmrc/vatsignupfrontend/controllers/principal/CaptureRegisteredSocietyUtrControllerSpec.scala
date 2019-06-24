@@ -26,14 +26,8 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.RegisteredSocietyUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 
 class CaptureRegisteredSocietyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(RegisteredSocietyJourney)
-  }
 
   object TestCaptureRegisteredSocietyUtrController extends CaptureRegisteredSocietyUtrController(mockControllerComponents)
 
