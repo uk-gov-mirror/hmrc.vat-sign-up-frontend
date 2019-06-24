@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -35,15 +34,6 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
   with MockControllerComponents
   with MockStoreRegisteredSocietyService {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(RegisteredSocietyJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(RegisteredSocietyJourney)
-  }
 
   object TestRegisteredSocietyController extends RegisteredSocietyCheckYourAnswersController(mockControllerComponents, mockStoreRegisteredSocietyService)
 

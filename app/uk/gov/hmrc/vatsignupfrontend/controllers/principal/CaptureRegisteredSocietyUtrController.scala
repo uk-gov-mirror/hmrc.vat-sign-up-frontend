@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.RegisteredSocietyJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.RegisteredSocietyUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_registered_society_utr
@@ -31,7 +30,7 @@ import scala.concurrent.Future
 @Singleton
 class CaptureRegisteredSocietyUtrController @Inject()(val controllerComponents: ControllerComponents)
 
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(RegisteredSocietyJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>

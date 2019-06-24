@@ -39,8 +39,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
       Future.successful(
         Ok(capture_business_entity_other(
           businessEntityForm(true),
-          routes.CaptureBusinessEntityOtherController.submit(),
-          isEnabled(RegisteredSocietyJourney)
+          routes.CaptureBusinessEntityOtherController.submit()
         ))
       )
     }
@@ -53,8 +52,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           Future.successful(
             BadRequest(capture_business_entity_other(
               formWithErrors,
-              routes.CaptureBusinessEntityOtherController.submit(),
-              isEnabled(RegisteredSocietyJourney)
+              routes.CaptureBusinessEntityOtherController.submit()
             ))
           ),
         entityType => {

@@ -23,7 +23,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -101,7 +100,6 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
       "the business entity is a registered society" when {
         "redirect to the capture registered society company number controller" in {
           mockAuthRetrieveAgentEnrolment()
-          enable(RegisteredSocietyJourney)
 
           val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(registeredSociety)))
           status(result) shouldBe Status.SEE_OTHER
