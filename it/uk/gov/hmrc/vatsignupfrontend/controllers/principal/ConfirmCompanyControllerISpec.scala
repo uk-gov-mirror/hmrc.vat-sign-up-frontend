@@ -101,6 +101,23 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
               redirectUri(routes.DirectDebitResolverController.show().url)
             )
           }
+          "the user has a CT enrolment and there isn't a CT reference on COTAX" in {
+            enable(SkipCtUtrOnCotaxNotFound)
+            stubAuth(OK, successfulAuthResponse(irctEnrolment))
+            stubCtReferenceNotFound(testCompanyNumber)
+            stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, None)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.DirectDebitResolverController.show().url)
+            )
+          }
         }
         "the SkipCtUtrOnCotaxNotFound is disabled" should {
           "redirect to the capture company UTR page if there is a CT UTR on COTAX" in {

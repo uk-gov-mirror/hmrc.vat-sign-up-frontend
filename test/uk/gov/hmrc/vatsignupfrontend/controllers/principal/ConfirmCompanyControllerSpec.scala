@@ -131,6 +131,25 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
       }
+      "skip the 'capture company UTR' page if user is CT enrolled and there isn't a UTR stored in COTAX" in {
+        enable(SkipCtUtrOnCotaxNotFound)
+        mockAuthRetrieveIRCTEnrolment()
+        mockCtReferenceNotFound(testCompanyNumber)
+        mockStoreCompanyNumberSuccess(
+          vatNumber = testVatNumber,
+          companyNumber = testCompanyNumber,
+          companyUtr = None
+        )
+
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber
+        )
+
+        val result = TestConfirmCompanyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+      }
       "throw internal server exception if get CT reference fails" in {
         enable(SkipCtUtrOnCotaxNotFound)
         mockAuthRetrieveVatDecEnrolment()

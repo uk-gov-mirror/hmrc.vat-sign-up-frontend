@@ -66,21 +66,26 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
       enrolments => {
         val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
         val optCompanyNumber = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-        val optCompanyUTR = enrolments.companyUtr
+        val optEnrolmentCtUtr = enrolments.companyUtr
 
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-            optCompanyUTR match {
-              case Some(ctutr) => storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(ctutr))
-              case None if isEnabled(SkipCtUtrOnCotaxNotFound) =>
-                ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
-                  case Right(_) =>
+            if (isEnabled(SkipCtUtrOnCotaxNotFound))
+              ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
+                case Right(_) => optEnrolmentCtUtr match {
+                  case Some(enrolmentUtr) =>
+                    storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(enrolmentUtr))
+                  case None =>
                     Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-                  case Left(CtReferenceNotFound) =>
-                    storeCompanyNumberAndRedirect(vatNumber, companyNumber, None)
-                  case Left(CtReferenceLookupFailureResponse(status)) =>
-                    throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
                 }
+                case Left(CtReferenceNotFound) =>
+                  storeCompanyNumberAndRedirect(vatNumber, companyNumber, None)
+                case Left(CtReferenceLookupFailureResponse(status)) =>
+                  throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
+              }
+            else optEnrolmentCtUtr match {
+              case Some(enrolmentUtr) =>
+                storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(enrolmentUtr))
               case None =>
                 Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
             }
