@@ -2,6 +2,7 @@
 # if the routes changes from /vat-through-software/sign-up also update uk.gov.hmrc.vatsignupfrontend.config.filters.UnplannedOutageFilter
 ->         /vat-through-software/sign-up/client              agent.Routes
 ->         /vat-through-software/sign-up                     principal.Routes
+->         /vat-through-software/sign-up                     standard.Routes
 ->         /                                                 health.Routes
 ->         /template                                         template.Routes
 

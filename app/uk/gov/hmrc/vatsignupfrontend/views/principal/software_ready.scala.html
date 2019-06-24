@@ -33,7 +33,7 @@
     </div>
 }
 
-@principal_main_template(title = Messages("principal.verify_software_ready.title"), bodyClasses = None, showSignOutLink = false, form = Some(softwareReadyForm)) {
+@principal_main_template(title = Messages("principal.verify_software_ready.title"), bodyClasses = None, showSignOutLink = false, form = Some(softwareReadyForm), enableTimeout = false) {
 
     @summaryErrorHelper(softwareReadyForm)
 

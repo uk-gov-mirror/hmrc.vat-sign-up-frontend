@@ -206,4 +206,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val companiesHouse: String = loadConfig("companies-house.url")
 
+  lazy val countdownLength: String = loadConfig("timeout.countdown")
+
+  lazy val timeoutLength: String = loadConfig("timeout.length")
+
 }
