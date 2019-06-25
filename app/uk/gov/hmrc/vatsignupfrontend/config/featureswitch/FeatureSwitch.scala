@@ -107,9 +107,8 @@ case object SkipCtUtrOnCotaxNotFound extends FeatureSwitch {
 }
 
 case object DirectToCTUTROnMismatchedCTUTR extends FeatureSwitch {
-  override val name: String = s"$prefix.direct-to-ctutr-on-mismatched-ctutur"
+  override val name: String = s"$prefix.direct-to-ctutr-on-mismatched-ctutr"
   override val displayText: String = "Direct users to capture CT UTR page when present credential causes a mismatch"
-
 }
 
 case object FinalCheckYourAnswer extends FeatureSwitch {
