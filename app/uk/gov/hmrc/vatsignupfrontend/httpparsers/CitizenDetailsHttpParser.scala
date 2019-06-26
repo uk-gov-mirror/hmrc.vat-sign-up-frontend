@@ -29,7 +29,6 @@ object CitizenDetailsHttpParser {
 
   implicit object CitizenDetailsHttpReads extends HttpReads[CitizenDetailsResponse] {
     override def read(method: String, url: String, response: HttpResponse): CitizenDetailsResponse = {
-
       def parseCitizenDetails: JsResult[UserDetailsModel] = response.json.validate[UserDetailsModel](citizenDetailsReads)
 
       response.status match {
