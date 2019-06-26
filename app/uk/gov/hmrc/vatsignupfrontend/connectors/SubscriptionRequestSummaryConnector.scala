@@ -20,19 +20,16 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsResponse
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.CitizenDetailsHttpParser.CitizenDetailsHttpReads
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryResponse
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class CitizenDetailsConnector @Inject()(val http: HttpClient,
-                                        val applicationConfig: AppConfig) {
+class SubscriptionRequestSummaryConnector @Inject()(http: HttpClient, applicationConfig: AppConfig) {
 
-  def getCitizenDetailsBySautr(sautr: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] =
-    http.GET[CitizenDetailsResponse](applicationConfig.getCitizenDetailsUrlBySautr(sautr))
+  def getSubscriptionRequest(vatNumber: String)(implicit hc: HeaderCarrier): Future[GetSubscriptionRequestSummaryResponse] = {
+    http.GET[GetSubscriptionRequestSummaryResponse](applicationConfig.subscriptionRequestSummaryUrl(vatNumber))
+  }
 
-  def getCitizenDetailsByNino(nino: String)(implicit hc: HeaderCarrier): Future[CitizenDetailsResponse] =
-    http.GET[CitizenDetailsResponse](applicationConfig.getCitizenDetailsUrlByNino(nino))
 }

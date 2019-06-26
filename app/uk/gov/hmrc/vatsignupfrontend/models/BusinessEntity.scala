@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models
 
+import play.api.libs.json._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionFormatter
 
 sealed trait BusinessEntity {
@@ -27,6 +28,8 @@ sealed trait BusinessEntity {
     case SoleTrader => SoleTraderKey
     case GeneralPartnership => GeneralPartnershipKey
     case LimitedPartnership => LimitedPartnershipKey
+    case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
+    case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
     case VatGroup => VatGroupKey
     case Division => DivisionKey
     case UnincorporatedAssociation => UnincorporatedAssociationKey
@@ -88,25 +91,37 @@ object BusinessEntity {
   val GovernmentOrganisationKey = "government-organisation"
   val OtherKey = "other"
 
+   private def stringToOptBusinessEntity(businessEntity:String): Option[BusinessEntity] = businessEntity match {
+    case LimitedCompanyKey => Some(LimitedCompany)
+    case SoleTraderKey => Some(SoleTrader)
+    case GeneralPartnershipKey => Some(GeneralPartnership)
+    case LimitedPartnershipKey => Some(LimitedPartnership)
+    case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
+    case ScottishLimitedPartnershipKey => Some(ScottishLimitedPartnership)
+    case VatGroupKey => Some(VatGroup)
+    case DivisionKey => Some(Division)
+    case UnincorporatedAssociationKey => Some(UnincorporatedAssociation)
+    case TrustKey => Some(Trust)
+    case RegisteredSocietyKey => Some(RegisteredSociety)
+    case CharityKey => Some(Charity)
+    case OverseasKey => Some(Overseas)
+    case GovernmentOrganisationKey => Some(GovernmentOrganisation)
+    case OtherKey => Some(Other)
+    case _ => None
+  }
+
+  val jsonReads: Reads[BusinessEntity] = new Reads[BusinessEntity] {
+    override def reads(json: JsValue): JsResult[BusinessEntity] =
+      json.validate[String] map stringToOptBusinessEntity match {
+        case JsSuccess(Some(businessEntity), _) => JsSuccess(businessEntity)
+        case JsSuccess(None, _) => JsError("Is not a valid BusinessEntity")
+        case JsError(errors) => JsError(errors)
+      }
+
+  }
+
   implicit object BusinessEntitySessionFormatter extends SessionFormatter[BusinessEntity] {
-    override def fromString(string: String): Option[BusinessEntity] = string match {
-      case LimitedCompanyKey => Some(LimitedCompany)
-      case SoleTraderKey => Some(SoleTrader)
-      case GeneralPartnershipKey => Some(GeneralPartnership)
-      case LimitedPartnershipKey => Some(LimitedPartnership)
-      case LimitedLiabilityPartnershipKey => Some(LimitedLiabilityPartnership)
-      case ScottishLimitedPartnershipKey => Some(ScottishLimitedPartnership)
-      case VatGroupKey => Some(VatGroup)
-      case DivisionKey => Some(Division)
-      case UnincorporatedAssociationKey => Some(UnincorporatedAssociation)
-      case TrustKey => Some(Trust)
-      case RegisteredSocietyKey => Some(RegisteredSociety)
-      case CharityKey => Some(Charity)
-      case OverseasKey => Some(Overseas)
-      case GovernmentOrganisationKey => Some(GovernmentOrganisation)
-      case OtherKey => Some(Other)
-      case _ => None
-    }
+    override def fromString(string: String): Option[BusinessEntity] = stringToOptBusinessEntity(string)
 
     override def toString(entity: BusinessEntity): String = entity match {
       case LimitedCompany => LimitedCompanyKey
