@@ -187,6 +187,3 @@ GET         /resolve-partnership                                uk.gov.hmrc.vats
 # Does Your Client Have a Utr
 GET         /does-your-client-have-a-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.DoesYourClientHaveAUtrController.show
 POST        /does-your-client-have-a-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.DoesYourClientHaveAUtrController.submit
-
-#Language Controller
-GET         /language/:lang                                     uk.gov.hmrc.vatsignupfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)

@@ -24,7 +24,7 @@
 
 @(haveSoftwareForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.have_software.title"), bodyClasses = None, showSignOutLink = false, form = Some(haveSoftwareForm)) {
+@principal_main_template(title = Messages("principal.have_software.title"), bodyClasses = None, showSignOutLink = false, form = Some(haveSoftwareForm),  enableTimeout = false) {
 
     @summaryErrorHelper(haveSoftwareForm)
 

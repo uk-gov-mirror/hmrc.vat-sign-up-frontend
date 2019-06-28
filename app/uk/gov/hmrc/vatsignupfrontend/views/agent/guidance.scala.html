@@ -22,7 +22,7 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@agent_main_template(title = Messages("agent.guidance.title"), showSignOutLink = false) {
+@agent_main_template(title = Messages("agent.guidance.title"), showSignOutLink = false,  enableTimeout = false) {
 
     <h1 class="heading-xlarge">@Messages("agent.guidance.heading")</h1>
 
