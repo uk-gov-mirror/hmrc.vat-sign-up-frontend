@@ -35,7 +35,7 @@
 
 @defaultScriptElem = {
     @if(enableTimeout) {
-        <script id="timeoutScript">
+        <script id="timeoutScript" role="dialog" tabindex="-1">
             window.GOVUK.timeoutDialog({
                 timeout: @appConfig.timeoutLength,
                 countdown: @appConfig.countdownLength,
