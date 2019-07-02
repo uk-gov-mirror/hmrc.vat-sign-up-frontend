@@ -1,11 +1,8 @@
-package uk.gov.hmrc.vatsignupfrontend.controllers
-
-import java.lang.ProcessBuilder.Redirect
+package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status.{OK, SEE_OTHER}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 
@@ -28,7 +25,7 @@ class SessionTimeoutControllerISpec extends ComponentSpecBase with CustomMatcher
   }
 
   "GET /timeout" when {
-    "a  user times out" should {
+    "a individual user times out" should {
       "redirect and sign out the user" in {
         stubAuth(OK, successfulAuthResponse())
 
@@ -37,14 +34,13 @@ class SessionTimeoutControllerISpec extends ComponentSpecBase with CustomMatcher
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri("/gg/sign-in?continue=%2Fvat-through-software%2Fsign-up&origin=vat-sign-up-frontend")
+          redirectUri("/gg/sign-in?continue=%2Fvat-through-software%2Fsign-up%2Fresolve-vat-number&origin=vat-sign-up-frontend")
         )
         val session = SessionCookieCrumbler.getSessionMap(res)
         session.keys shouldNot contain(vatNumberKey)
       }
     }
   }
-
 
 }
 
