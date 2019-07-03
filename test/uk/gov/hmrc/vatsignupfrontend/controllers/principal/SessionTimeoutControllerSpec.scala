@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers
+package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.{AnyContent, Request}
@@ -44,13 +44,13 @@ class SessionTimeoutControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
       }
     }
 
-    "redirect the user to login with a new session " when {
-      "the timeout method is used" in {
+    "redirect a individual user to login with a new session " when {
+      "the timeout method is" in {
         val fakeRequest: Request[AnyContent] = FakeRequest().withSession(vatNumberKey -> VatDecEnrolmentKey)
         val res = await(TestSessionTimeoutController.timeout(fakeRequest))
 
         res.session(fakeRequest).get(SessionKeys.vatNumberKey) shouldBe None
-        redirectLocation(res) shouldBe Some("/gg/sign-in?continue=%2Fvat-through-software%2Fsign-up&origin=vat-sign-up-frontend")
+        redirectLocation(res) shouldBe Some("/gg/sign-in?continue=%2Fvat-through-software%2Fsign-up%2Fresolve-vat-number&origin=vat-sign-up-frontend")
 
       }
     }

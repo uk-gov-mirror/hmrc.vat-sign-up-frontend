@@ -3,7 +3,3 @@
 #Language Controller
 GET         /language/:lang                                     uk.gov.hmrc.vatsignupfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-#Routes for timeout
-GET         /keep-alive                                         uk.gov.hmrc.vatsignupfrontend.controllers.SessionTimeoutController.keepAlive
-
-GET         /timeout                                            uk.gov.hmrc.vatsignupfrontend.controllers.SessionTimeoutController.timeout

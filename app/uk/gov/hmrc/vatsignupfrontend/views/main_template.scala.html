@@ -15,7 +15,8 @@
  *@
 
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.controllers.routes.SessionTimeoutController
+@import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.{SessionTimeoutController => agentSessionTimeoutController}
+@import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.{SessionTimeoutController => principalSessionTimeoutController}
 
 @(title: String,
   navTitle: Option[String] = None,
@@ -34,16 +35,29 @@
 @serviceInfoContent = {}
 
 @defaultScriptElem = {
-    @if(enableTimeout) {
-        <script id="timeoutScript" role="dialog" tabindex="-1">
-            window.GOVUK.timeoutDialog({
+@if(isAgent) {
+        @if(enableTimeout) {
+            <script id="timeoutScript" role="dialog" tabindex="-1">
+                window.GOVUK.timeoutDialog({
                 timeout: @appConfig.timeoutLength,
                 countdown: @appConfig.countdownLength,
-                keepAliveUrl: '@SessionTimeoutController.keepAlive.url',
-                signOutUrl: '@SessionTimeoutController.timeout.url'
-            });
-        </script>
-    }
+                keepAliveUrl: '@agentSessionTimeoutController.keepAlive.url',
+                signOutUrl: '@agentSessionTimeoutController.timeout.url'
+                });
+            </script>
+        }
+        } else {
+            @if(enableTimeout) {
+                <script id="timeoutScript" role="dialog" tabindex="-1">
+                    window.GOVUK.timeoutDialog({
+                    timeout: @appConfig.timeoutLength,
+                    countdown: @appConfig.countdownLength,
+                    keepAliveUrl: '@principalSessionTimeoutController.keepAlive.url',
+                    signOutUrl: '@principalSessionTimeoutController.timeout.url'
+                    });
+                </script>
+            }
+        }
 
     @scriptElem.getOrElse(HtmlFormat.empty)
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 
@@ -23,6 +23,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import scala.concurrent.Future
 
@@ -37,7 +38,7 @@ class SessionTimeoutController @Inject()(val appConfig: AppConfig,
   }
 
   val timeout: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(toGGLogin(principal.routes.GuidanceController.show().url).withNewSession)
+    Future.successful(toGGLogin(agent.routes.CaptureVatNumberController.show().url).withNewSession)
   }
 
 }

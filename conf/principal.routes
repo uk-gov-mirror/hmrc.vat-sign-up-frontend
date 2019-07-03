@@ -328,3 +328,6 @@ POST        /joint-venture-or-property-partnership              uk.gov.hmrc.vats
 GET         /do-you-have-a-utr                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.DoYouHaveAUtrController.show
 POST        /do-you-have-a-utr                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.DoYouHaveAUtrController.submit
 
+#Routes for timeout
+GET         /keep-alive                                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.SessionTimeoutController.keepAlive
+GET         /timeout                                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.SessionTimeoutController.timeout
