@@ -46,6 +46,10 @@ core.capture_entity_type.charity                                       = Sefydli
 core.capture_entity_type.governmentOrganisation                        = Sefydliadau''r llywodraeth a''r sector preifat
 core.capture_entity_type.other                                         = Arall
 
+## Contact Preferences
+core.contact_preference.paper                                          = Llythyrau
+core.contact_preference.digital                                        = E-byst
+
 ## Errors
 error.title_prefix                                                     = 'Gwall: '
 error.business-entity.field                                            = Dewiswch y math o fusnes neu grŵp rydych yn ei gofrestru

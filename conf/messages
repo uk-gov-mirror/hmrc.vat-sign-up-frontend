@@ -49,6 +49,10 @@ core.capture_entity_type.governmentOrganisation                        = Governm
 core.capture_entity_type.other                                         = Other
 core.capture_entity_type.or                                            = or
 
+## Contact Preferences
+core.contact_preference.paper                                          = Letters
+core.contact_preference.digital                                        = Emails
+
 ## Errors
 error.title_prefix                                                     = 'Error: '
 error.business-entity.field                                            = Select the type of business or group you are signing up
