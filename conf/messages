@@ -97,8 +97,8 @@ error.invalid_email.field                                              = Enter a
 error.invalid_email.summary                                            = Enter a valid email address
 error.invalid_postcode.field                                           = Postcode must only include numbers 0 to 9 and letters a to z
 error.invalid_postcode.summary                                         = Postcode must only include numbers 0 to 9 and letters a to z
-error.postcode_not_entered.field                                       = Enter your principal place of business postcode
-error.postcode_not_entered.summary                                     = Enter your principal place of business postcode
+error.postcode_not_entered.field                                       = Enter the postcode where your business is registered for VAT
+error.postcode_not_entered.summary                                     = Enter the postcode where your business is registered for VAT
 error.invalid_vat_registration_date.field                              = Enter a real date
 error.invalid_vat_registration_date.summary                            = Enter a real date
 error.invalid_vat_registration_date_characters.field                   = Enter a date using numbers 0 to 9
@@ -472,11 +472,10 @@ principal.sign_in_with_different_details_partnership.heading           = You nee
 principal.sign_in_with_different_details_partnership.line_1            = You must use a Government Gateway user ID that is linked to the Unique Taxpayer Reference for your partnership.
 
 # Principal place of Business Postcode
-principal.principal_place_of_business.title                            = Where is the principal place of business?
-principal.principal_place_of_business.heading                          = Where is the principal place of business?
-principal.principal_place_of_business.line_1                           = This is where the company carries out most of its business activities.
-principal.principal_place_of_business.line_2                           = If the company does business in different places or contract work on client premises, it is where the company keeps its financial and business records.
+principal.principal_place_of_business.title                            = What is the postcode where your business is registered for VAT?
+principal.principal_place_of_business.heading                          = What is the postcode where your business is registered for VAT?
 principal.principal_place_of_business.label                            = UK postcode
+principal.principal_place_of_business.hint                             = For example, AB1 2YZ
 
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = What type of business or group are you signing up?
