@@ -90,8 +90,8 @@ error.invalid_email.field                                              = Nodwch 
 error.invalid_email.summary                                            = Nodwch gyfeiriad e-bost dilys
 error.invalid_postcode.field                                           = Dim ond rhifau o 0 i 9 a llythrennau o a i z y dylid eu cynnwys yn y cod post
 error.invalid_postcode.summary                                         = Dim ond rhifau o 0 i 9 a llythrennau o a i z y dylid eu cynnwys yn y cod post
-error.postcode_not_entered.field                                       = Nodwch god post eich prif leoliad busnes
-error.postcode_not_entered.summary                                     = Nodwch god post eich prif leoliad busnes
+error.postcode_not_entered.field                                       = Nodwch y cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW
+error.postcode_not_entered.summary                                     = Nodwch y cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW
 error.invalid_vat_registration_date.field                              = Nodwch ddyddiad go iawn
 error.invalid_vat_registration_date.summary                            = Nodwch ddyddiad go iawn
 error.invalid_vat_registration_date_characters.field                   = Nodwch ddyddiad gan ddefnyddio''r rhifau 0 i 9
@@ -473,11 +473,10 @@ principal.sign_in_with_different_details_partnership.heading           = Mae''n 
 principal.sign_in_with_different_details_partnership.line_1            = Mae''n rhaid i chi ddefnyddio Dynodydd Defnyddiwr (ID) Porth y Llywodraeth sy''n gysylltiedig â''r Cyfeirnod Unigryw y Trethdalwr ar gyfer eich partneriaeth.
 
 # Principal place of Business Postcode
-principal.principal_place_of_business.title                            = Ble mae prif leoliad y busnes?
-principal.principal_place_of_business.heading                          = Ble mae prif leoliad y busnes?
-principal.principal_place_of_business.line_1                           = Dyma le mae''r cwmni''n cynnal y rhan fwyaf o''i weithgareddau busnes.
-principal.principal_place_of_business.line_2                           = Os yw''r cwmni yn cynnal busnes mewn gwahanol leoedd neu fod gwaith contract yn cael ei gynnal ar eiddo cleientiaid, dyma le mae''r cwmni''n cadw ei gofnodion ariannol a busnes.
+principal.principal_place_of_business.title                            = Beth yw’r cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW?
+principal.principal_place_of_business.heading                          = Beth yw’r cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW?
 principal.principal_place_of_business.label                            = Cod post yn y DU
+principal.principal_place_of_business.hint                             = Er enghraifft, AB1 2YZ
 
 ## Principal Capture Entity Type page
 principal.capture_entity_type.title                                    = Fel pa fath o fusnes ydych wedi''i gofrestru?

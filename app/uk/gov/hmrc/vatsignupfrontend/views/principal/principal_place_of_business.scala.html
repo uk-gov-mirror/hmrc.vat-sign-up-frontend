@@ -27,22 +27,25 @@
 
     @summaryErrorHelper(businessPostCodeForm)
 
-    <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
-
-    <p>@Messages("principal.principal_place_of_business.line_1")</p>
-    <p>@Messages("principal.principal_place_of_business.line_2")</p>
-
     @form(action = postAction) {
+    <fieldset>
+        <legend>
+            <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
+        </legend>
+
+
         <div class="form-group">
         @inputHelper(
             field = businessPostCodeForm(businessPostCode),
             label = Messages("principal.principal_place_of_business.label"),
+            hintText = Some(Html(Messages("principal.principal_place_of_business.hint"))),
             parentForm = businessPostCodeForm,
-            hideLabel = false
+            hideLabel = true
         )
         </div>
 
         @continueButton()
+    </fieldset>
     }
 
 }

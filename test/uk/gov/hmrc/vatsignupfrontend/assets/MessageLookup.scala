@@ -384,11 +384,10 @@ object MessageLookup {
   }
 
   object PrincipalPlaceOfBusiness {
-    val heading = "Where is the principal place of business?"
+    val heading = "What is the postcode where your business is registered for VAT?"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "This is where the company carries out most of its business activities."
-    val line2 = "If the company does business in different places or contract work on client premises, it is where the company keeps its financial and business records."
     val label = "UK postcode"
+    val hint = "For example, AB1 2YZ"
   }
 
   object PrincipalGuidance {
