@@ -49,6 +49,12 @@
     }
 }
 
+@getCheckedFlag(option: (String, String)) = {
+    @if(parentForm.data.get(field.name).contains(option._1)) {
+        checked = "checked"
+    }
+}
+
 <div class="form-group@if(hasError){ form-field--error}">
     <fieldset id="@{field.name}" @if(inline) { class="inline" }>
         <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
@@ -60,7 +66,7 @@
         @for(option <- options) {
             @showOrInterrupt(option)
             <div class="multiple-choice">
-                <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1">
+                <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
                 <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
             </div>
         }
