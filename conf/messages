@@ -2,7 +2,7 @@
 global.error.pageNotFound404.heading                                   = This page can''t be found
 global.error.InternalServerError500.heading                            = Sorry, we''re experiencing technical difficulties
 error.address.invalid.character                                        = This line contains an invalid character. Valid characters are: A-Z a-z 0-9 - '' , / & space
-
+app.common.back                                                        = Back
 
 ## Service Name
 service_name.principal_journey                                         = Use software to submit your VAT Returns
