@@ -2,6 +2,7 @@
 global.error.pageNotFound404.heading                                   = Methu dod o hyd i''r dudalen hon
 global.error.InternalServerError500.heading                            = Mae''n ddrwg gennym. Mae anawsterau technegol wedi codi
 error.address.invalid.character                                        = Mae''r llinell hon yn cynnwys cymeriad annilys. Dyma''r cymeriadau dilys: A-Z a-z 0-9 - '', / & bwlch
+app.common.back                                                        = Nôl
 
 ## Service Name
 service_name.principal_journey                                         = Defnyddio meddalwedd er mwyn cyflwyno''ch Ffurflenni TAW
