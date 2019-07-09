@@ -22,7 +22,7 @@ import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipNoSAUTR, OptionalSautrJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -48,6 +48,8 @@ class ResolvePartnershipUtrController @Inject()(val controllerComponents: Contro
             Redirect(routes.ConfirmGeneralPartnershipController.show())
               addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
           )
+        case (None, Some(GeneralPartnership)) if isEnabled(GeneralPartnershipNoSAUTR) =>
+          Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
         case (None, Some(GeneralPartnership)) if isEnabled(OptionalSautrJourney) =>
           Future.successful(Redirect(routes.DoYouHaveAUtrController.show()))
         case (None, _) =>
