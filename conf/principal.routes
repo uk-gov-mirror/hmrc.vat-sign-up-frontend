@@ -211,6 +211,7 @@ POST        /confirm-partnership-company                        uk.gov.hmrc.vats
 
 # Capture Partnership Utr
 GET         /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipUtrController.show
+GET         /partnership-no-utr                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipUtrController.noUtrSelected
 POST        /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.CapturePartnershipUtrController.submit
 
 # Capture Partnership post code
