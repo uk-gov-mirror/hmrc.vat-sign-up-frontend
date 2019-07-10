@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class CapturePartnershipUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /partnership-utr" should {
-    "return an OK" in {
+    s"return an $OK" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/partnership-utr")
@@ -36,8 +36,21 @@ class CapturePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
     }
   }
 
+  "GET /partnership-no-utr" should {
+    s"return a $SEE_OTHER to check your answers" in {
+      stubAuth(OK, successfulAuthResponse())
+
+      val res = get("/partnership-no-utr")
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CheckYourAnswersPartnershipsController.show().url)
+      )
+    }
+  }
+
   "POST /partnership-utr" should {
-    "go to PPOB page" in {
+    s"return a $SEE_OTHER to PPOB page" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/partnership-utr")(PartnershipUtrForm.partnershipUtr-> testSaUtr)

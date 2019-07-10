@@ -44,6 +44,19 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
       }
   }
 
+  val noUtrSelected: Action[AnyContent] = Action.async { implicit request =>
+      authorised() {
+        Future.successful(
+          Redirect(routes.CheckYourAnswersPartnershipsController.show())
+          .removingFromSession(
+            SessionKeys.partnershipSautrKey,
+            SessionKeys.partnershipPostCodeKey
+          )
+          .addingToSession(SessionKeys.hasOptionalSautrKey -> false.toString)
+        )
+      }
+  }
+
   val submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {

@@ -51,6 +51,12 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
     ) thenReturn response
   }
 
+  def mockFailedAuth(authorisationException: AuthorisationException = InternalError("Uh oh")): Unit = {
+    when(mockAuthConnector.authorise(ArgumentMatchers.any(), ArgumentMatchers.any()
+    )(ArgumentMatchers.any[HeaderCarrier],ArgumentMatchers.any[ExecutionContext]))
+      .thenReturn(Future.failed(authorisationException))
+  }
+
   def mockAuthEmptyRetrieval(): Unit =
     mockAuthorise(retrievals = EmptyRetrieval)(Future.successful(Unit))
 

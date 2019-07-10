@@ -21,32 +21,60 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.Yes
 
 class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   object TestCapturePartnershipUtrController extends CapturePartnershipUtrController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/partnership-utr")
+  lazy val testGetRequestForNoUtr = FakeRequest("GET", "/partnership-no-utr")
+  lazy val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
 
   def testPostRequest(utr: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/partnership-utr").withFormUrlEncodedBody(partnershipUtr -> utr)
 
-  "Calling the show action of the Partnership utr controller" when {
+  "Calling the show action of the CapturePartnershipUtrController" when {
     "go to the Partnership utr page" in {
-      mockAuthAdminRole()
+        mockAuthAdminRole()
 
-      val result = TestCapturePartnershipUtrController.show(testGetRequest)
+      val result = TestCapturePartnershipUtrController.show(testGetRequestForShow)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
 
-  "Calling the submit action of the Partnership utr controller" when {
+  "Calling the noUtrSelected action of the CapturePartnershipUtrController" should {
+    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey} & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
+      mockAuthAdminRole()
+
+      val result = TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr.withSession(
+          SessionKeys.partnershipSautrKey -> testSaUtr,
+          SessionKeys.partnershipPostCodeKey -> testBusinessPostcode.sanitisedPostCode,
+          SessionKeys.previousVatReturnKey -> Yes.stringValue)
+      )
+
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result).get shouldBe routes.CheckYourAnswersPartnershipsController.show().url
+      session(result) get SessionKeys.partnershipSautrKey shouldBe None
+      session(result) get SessionKeys.partnershipPostCodeKey shouldBe None
+      session(result) get SessionKeys.previousVatReturnKey should contain(Yes.stringValue)
+      session(result) get SessionKeys.hasOptionalSautrKey should contain(false.toString)
+    }
+    "have an auth check and return exception if not authorised" in {
+      mockFailedAuth()
+
+       intercept[AuthorisationException](await(TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr)))
+    }
+  }
+
+  "Calling the submit action of the CapturePartnershipUtrController" when {
     "form successfully submitted" should {
       "redirect to PPOB" in {
         mockAuthAdminRole()
@@ -71,5 +99,4 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
   }
-
 }
