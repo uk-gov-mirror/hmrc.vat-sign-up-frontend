@@ -31,38 +31,70 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
   val validJson = Json.parse(
     s"""{
        |  "vatNumber": "vatNumberFoo",
-       |  "businessEntity": "limited-company",
+       |  "businessEntity": {
+       |    "entityType": "limitedCompany",
+       |    "nino": "ninoFoo",
+       |    "companyNumber": "vatNumberFoo",
+       |    "sautr": "sautrFoo"
+       |  },
        |  "transactionEmail": "transEmail",
        |  "optSignUpEmail": "emailSignFoo",
        |  "contactPreference": "Digital"
        |}  """.stripMargin)
 
+  val minimalValidJson = Json.parse(
+    s"""{
+       |  "vatNumber": "vatNumberFoo",
+       |  "businessEntity": {
+       |    "entityType": "limitedCompany"
+       |  },
+       |  "transactionEmail": "transEmail",
+       |  "contactPreference": "Digital"
+       |}  """.stripMargin)
+
   val invalidJsonWrongContactPreference = Json.parse(
     s"""{
-      |  "vatNumber": "vatNumberFoo",
-      |  "businessEntity": "limited-company",
-      |  "transactionEmail": "transEmail",
-      |  "optSignUpEmail": "emailSignFoo",
-      |  "contactPreference": "FOO this is incorrect"
-      |}  """.stripMargin)
+       |  "vatNumber": "vatNumberFoo",
+       |  "businessEntity": {
+       |    "entityType": "limitedCompany",
+       |    "companyNumber": "12345678"
+       |  },
+       |  "transactionEmail": "transEmail",
+       |  "optSignUpEmail": "emailSignFoo",
+       |  "contactPreference": "FOO this is incorrect"
+       |}  """.stripMargin)
 
   val invalidJsonWrongBusinessEntityType = Json.parse(
-   s"""{
-      |  "vatNumber": "vatNumberFoo",
-      |  "businessEntity": "FOO this is incorrect",
-      |  "transactionEmail": "transEmail",
-      |  "optSignUpEmail": "emailSignFoo",
-      |  "contactPreference": "Digital"
-      |}  """.stripMargin)
+    s"""{
+       |  "vatNumber": "vatNumberFoo",
+       |  "businessEntity": {
+       |    "entityType": "FOO this is incorrect"
+       |  },
+       |  "transactionEmail": "transEmail",
+       |  "optSignUpEmail": "emailSignFoo",
+       |  "contactPreference": "Digital"
+       |}  """.stripMargin)
 
   val expectedModelForValidJson = SubscriptionRequestSummary(
     "vatNumberFoo",
     LimitedCompany,
+    Some("ninoFoo"),
+    Some("vatNumberFoo"),
+    Some("sautrFoo"),
     Some("emailSignFoo"),
     "transEmail",
     Digital
   )
-
+  val expectedModelForMinimalValidJson = SubscriptionRequestSummary(
+    "vatNumberFoo",
+    LimitedCompany,
+    None,
+    None,
+    None,
+    None,
+    "transEmail",
+    Digital
+  )
   val invalidJson = Json.parse(
     """
       |{
@@ -76,6 +108,12 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
 
       val res = SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryHttpReads.read(testHttpVerb, testUri, httpResponse)
       res.right.get shouldBe expectedModelForValidJson
+    }
+    "parse a OK as a successful Right minimal response" in {
+      val httpResponse = HttpResponse(OK, Some(minimalValidJson))
+
+      val res = SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryHttpReads.read(testHttpVerb, testUri, httpResponse)
+      res.right.get shouldBe expectedModelForMinimalValidJson
     }
     "parse a OK with invalid Json as a Left SubscriptionRequestSomethingWentWrong with log" in {
       val httpResponse = HttpResponse(OK, Some(invalidJson))
@@ -122,6 +160,9 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
   "SubscriptionRequestSummary json reads" should {
     "return model with valid model" in {
       validJson.as[SubscriptionRequestSummary] shouldBe expectedModelForValidJson
+    }
+    "return model with valid minimal model" in {
+      minimalValidJson.as[SubscriptionRequestSummary] shouldBe expectedModelForMinimalValidJson
     }
     "return exception when invalid business entity is used but everything else is valid" in {
       intercept[Exception](invalidJsonWrongBusinessEntityType.as[SubscriptionRequestSummary])

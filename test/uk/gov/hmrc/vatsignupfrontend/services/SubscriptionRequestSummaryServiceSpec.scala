@@ -62,6 +62,9 @@ class SubscriptionRequestSummaryServiceSpec extends UnitSpec with MockitoSugar {
         vatNumber,
         Division,
         None,
+        None,
+        None,
+        None,
         "emailFoo",
         Digital
       )

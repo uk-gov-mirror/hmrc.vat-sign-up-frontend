@@ -21,6 +21,9 @@ import play.api.libs.json.{JsResult, JsValue, Reads}
 case class SubscriptionRequestSummary(
                                        vatNumber: String,
                                        businessEntity: BusinessEntity,
+                                       optNino: Option[String],
+                                       optCompanyNumber: Option[String],
+                                       optSautr: Option[String],
                                        optSignUpEmail: Option[String],
                                        transactionEmail: String,
                                        contactPreference: ContactPreference
@@ -31,12 +34,15 @@ object SubscriptionRequestSummary {
     override def reads(json: JsValue): JsResult[SubscriptionRequestSummary] = {
       for {
         vatNumber         <- (json \ "vatNumber").validate[String]
-        businessEntity    <- (json \ "businessEntity").validate[BusinessEntity] (BusinessEntity.jsonReads)
+        businessEntity    <- (json \ "businessEntity" \ "entityType").validate[BusinessEntity] (BusinessEntity.jsonReadsFromBackend)
+        optNino           <- (json \ "businessEntity" \ "nino").validateOpt[String]
+        optCompanyNumber  <- (json \ "businessEntity" \ "companyNumber").validateOpt[String]
+        optSautr          <- (json \ "businessEntity" \ "sautr").validateOpt[String]
         optSignUpEmail    <- (json \ "optSignUpEmail").validateOpt[String]
         transactionEmail  <- (json \ "transactionEmail").validate[String]
         contactPreference <- (json \ "contactPreference").validate[ContactPreference] (ContactPreference.jsonReads)
       } yield {
-        SubscriptionRequestSummary(vatNumber,businessEntity,optSignUpEmail,transactionEmail,contactPreference)
+        SubscriptionRequestSummary(vatNumber, businessEntity, optNino, optCompanyNumber, optSautr, optSignUpEmail, transactionEmail, contactPreference)
       }
     }
   }

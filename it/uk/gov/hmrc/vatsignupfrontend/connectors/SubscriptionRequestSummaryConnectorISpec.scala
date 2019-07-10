@@ -20,6 +20,9 @@ class SubscriptionRequestSummaryConnectorISpec extends ComponentSpecBase {
      val model =  SubscriptionRequestSummary(
        vatNumber = "vatNumber",
        businessEntity = GeneralPartnership,
+       optNino = None,
+       optCompanyNumber = None,
+       optSautr = Some("sautr"),
        optSignUpEmail = Some("fooEmail"),
        transactionEmail = "barEmail",
        contactPreference = Digital
