@@ -78,6 +78,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val signUpGuidancePageUrl: String = s"$govUK/guidance/sign-up-for-making-tax-digital-for-vat"
 
+  lazy val findLostUtrNumberUrl: String = s"$govUK/find-lost-utr-number"
+
   private def whitelistConfig(key: String): Seq[String] =
     runModeConfiguration.getString(key).getOrElse("").split(",").toSeq
 

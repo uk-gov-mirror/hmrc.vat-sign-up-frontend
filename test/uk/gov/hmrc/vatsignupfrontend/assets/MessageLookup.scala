@@ -829,9 +829,15 @@ object MessageLookup {
   }
 
   object CapturePartnershipUtr {
-    val heading = "What is the partnership's Unique Taxpayer Reference (UTR)?"
+    val headingDeprecated = "What is the partnership's Unique Taxpayer Reference (UTR)?"
+    val heading = "What is your Partnership's Unique Taxpayer Reference (UTR)?"
+
+    val titleDeprecated = headingDeprecated + ServiceName.principalSuffix
     val title = heading + ServiceName.principalSuffix
-    val line1 = "This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs."
+    val line1Deprecated = "This is a 10-digit number. You can find it on letters to the partnership from HM Revenue & Customs."
+    val hint = "For example, 0123456789"
+    val accordionHeading = "I do not have this"
+    val accordionText = "Your UTR helps us identify your partnership. I cannot find my UTR My partnership does not have a UTR"
   }
 
   object PartnershipPrincipalPlaceOfBusiness {

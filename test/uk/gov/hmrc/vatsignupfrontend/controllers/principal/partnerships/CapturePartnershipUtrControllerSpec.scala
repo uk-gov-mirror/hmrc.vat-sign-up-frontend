@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
+import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
@@ -24,6 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -40,13 +42,23 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     FakeRequest("POST", "/partnership-utr").withFormUrlEncodedBody(partnershipUtr -> utr)
 
   "Calling the show action of the CapturePartnershipUtrController" when {
-    "go to the Partnership utr page" in {
-        mockAuthAdminRole()
-
+    s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is off" in {
+      mockAuthAdminRole()
+      disable(GeneralPartnershipNoSAUTR)
       val result = TestCapturePartnershipUtrController.show(testGetRequestForShow)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
+      Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldBe null
+    }
+    s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on" in {
+      mockAuthAdminRole()
+      enable(GeneralPartnershipNoSAUTR)
+      val result = TestCapturePartnershipUtrController.show(testGetRequestForShow)
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+      Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldNot be(null)
     }
   }
 
@@ -88,14 +100,25 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     }
 
     "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
+      s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is off" in {
         mockAuthAdminRole()
-
+        disable(GeneralPartnershipNoSAUTR)
         val result = TestCapturePartnershipUtrController.submit(testPostRequest(""))
 
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
+        Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldBe null
+      }
+      s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is on" in {
+        mockAuthAdminRole()
+        enable(GeneralPartnershipNoSAUTR)
+        val result = TestCapturePartnershipUtrController.submit(testPostRequest(""))
+
+        status(result) shouldBe Status.BAD_REQUEST
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+        Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldNot be(null)
       }
     }
   }

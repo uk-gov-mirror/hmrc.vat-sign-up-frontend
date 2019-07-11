@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm.partnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr
@@ -38,7 +39,8 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
         Future.successful(
           Ok(capture_partnership_utr(
             partnershipUtrForm.form,
-            routes.CapturePartnershipUtrController.submit())
+            routes.CapturePartnershipUtrController.submit(),
+            isEnabled(GeneralPartnershipNoSAUTR))
           )
         )
       }
@@ -65,7 +67,8 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
             Future.successful(
               BadRequest(capture_partnership_utr(
                 formWithErrors,
-                routes.CapturePartnershipUtrController.submit()
+                routes.CapturePartnershipUtrController.submit(),
+                isEnabled(GeneralPartnershipNoSAUTR)
               ))
             ),
           utr =>
