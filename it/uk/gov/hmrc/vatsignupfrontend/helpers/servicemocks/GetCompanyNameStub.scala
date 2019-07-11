@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
-import play.api.http.Status.{NOT_FOUND, OK}
+import play.api.http.Status.{NOT_FOUND, OK, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testCompanyName
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
@@ -37,7 +37,12 @@ object GetCompanyNameStub extends WireMockMethods {
   }
 
   def stubGetCompanyNameCompanyNotFound(companyNumber: String): Unit = {
-    when(method = POST, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
+    when(method = GET, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
       .thenReturn(status = NOT_FOUND, body = Json.obj())
+  }
+
+  def stubGetCompanyNameCompanyFailure(companyNumber: String): Unit = {
+    when(method = GET, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
+      .thenReturn(status = INTERNAL_SERVER_ERROR)
   }
 }
