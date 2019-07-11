@@ -25,7 +25,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
-
 class CaptureCompanyNumberSpec extends ViewSpec {
 
   val env = Environment.simple()

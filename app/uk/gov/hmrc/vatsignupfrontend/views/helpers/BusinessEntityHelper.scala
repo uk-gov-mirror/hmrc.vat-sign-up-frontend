@@ -24,8 +24,8 @@ object BusinessEntityHelper {
     businessEntity match {
       case SoleTrader => Messages("core.capture_entity_type.soleTrader")
       case GeneralPartnership => Messages("core.capture_entity_type.generalPartnership")
-      case LimitedPartnership => Messages("core.capture_entity_type.limitedPartnership")
-      case LimitedCompany => Messages("core.capture_entity_type.limitedCompany")
+      case _: LimitedPartnershipBase => Messages("core.capture_entity_type.limitedPartnership")
+      case LimitedCompany | Overseas => Messages("core.capture_entity_type.limitedCompany")
       case VatGroup => Messages("core.capture_entity_type.vatGroup")
       case Division => Messages("core.capture_entity_type.division")
       case Trust => Messages("core.capture_entity_type.trust")

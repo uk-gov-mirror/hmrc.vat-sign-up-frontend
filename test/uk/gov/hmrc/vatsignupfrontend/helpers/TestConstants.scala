@@ -36,6 +36,7 @@ object TestConstants {
   val testCompanyUtr: String = TestConstantsGenerator.randomUTRNumeric()
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testEmail: String = TestConstantsGenerator.randomEmail
+  val testAgentEmail: String = TestConstantsGenerator.randomEmail
   val testNino: String = new Generator().nextNino.nino
   val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"
   val testUri: String = "/test/uri"

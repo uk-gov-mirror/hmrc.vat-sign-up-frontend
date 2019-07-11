@@ -310,6 +310,23 @@ object MessageLookup {
     val line2 = "These terms are not contractual and your client can stop taking part in this trial at any time."
   }
 
+  object AgentCheckYourAnswersFinal {
+    val heading = "Check your answers before sending"
+    val title = heading + ServiceName.agentSuffix
+    val vrn = "VAT number"
+    val companyNumber = "Company Registration Number"
+    val companyName = "Company Name"
+    val partnershipCompanyNumber = "Partnership Company Registration Number"
+    val partnershipCompanyName = "Partnership Company Name"
+    val registeredSocietyCompanyName = "Registered Society Company Name"
+    val businessEntity = "Type of business"
+    val nino = "National Insurance Number"
+    val partnershipUtr = "Partnership UTR"
+    val agentEmail = "Your email address"
+    val contactPreference = "How to contact your client"
+    val clientEmail = "Client email address"
+  }
+
   object AgentInformationReceived {
     val heading: String = "We have received your client's information"
     val title = heading + ServiceName.agentSuffix
