@@ -851,9 +851,10 @@ principal.check_your_answers_partnerships.title                        = Check y
 principal.check_your_answers_partnerships.heading                      = Check your answers
 principal.check_your_answers_partnerships.business_entity              = What type of business or group are you signing up?
 principal.check_your_answers_partnerships.company_number               = What is the partnership''s company number?
-principal.check_your_answers_partnerships.company_utr                  = What is the partnership''s Unique Taxpayer Reference?
+principal.check_your_answers_partnerships.company_utr                  = UTR Partnership
 principal.check_your_answers_partnerships.post_code                    = Where is the partnership registered for Self Assessment?
 principal.check_your_answers_partnerships.has_optional_sautr           = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+principal.check_your_answers_partnerships.no_sautr                     = I do not have one
 
 ## Verify Software Error Page
 principal.verify_software_error.title                                  = Making Tax Digital for VAT: verify your software

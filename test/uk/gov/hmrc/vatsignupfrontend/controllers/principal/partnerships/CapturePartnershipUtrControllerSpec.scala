@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSA
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, LimitedPartnership, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr
 
 class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -38,8 +38,9 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   val testGetRequestForNoUtr = FakeRequest("GET", "/partnership-no-utr")
   val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
+
   private def viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(featureSwitchAndGeneralPartnership: Boolean,
-                                                                       form: Form[String] = partnershipUtrForm.form): String = {
+                                                                     form: Form[String] = partnershipUtrForm.form): String = {
     capture_partnership_utr(
       form,
       routes.CapturePartnershipUtrController.submit(),
@@ -89,9 +90,9 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockAuthAdminRole()
 
       val result = TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr.withSession(
-          SessionKeys.partnershipSautrKey -> testSaUtr,
-          SessionKeys.partnershipPostCodeKey -> testBusinessPostcode.sanitisedPostCode,
-          SessionKeys.previousVatReturnKey -> Yes.stringValue)
+        SessionKeys.partnershipSautrKey -> testSaUtr,
+        SessionKeys.partnershipPostCodeKey -> testBusinessPostcode.sanitisedPostCode,
+        SessionKeys.previousVatReturnKey -> Yes.stringValue)
       )
 
       status(result) shouldBe Status.SEE_OTHER
@@ -104,22 +105,92 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "have an auth check and return exception if not authorised" in {
       mockFailedAuth()
 
-       intercept[AuthorisationException](await(TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr)))
+      intercept[AuthorisationException](await(TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr)))
     }
   }
 
   "Calling the submit action of the CapturePartnershipUtrController" when {
-    "form successfully submitted" should {
-      "redirect to PPOB" in {
+    s"form successfully submitted by $GeneralPartnership with feature $GeneralPartnershipNoSAUTR is on" should {
+      "redirect to PPOB and drop hasoptional key" in {
         mockAuthAdminRole()
+        enable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest(testSaUtr)
+        implicit val request = testPostRequest(testSaUtr).withSession(
+          SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
+          SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
+        )
+
         val result = TestCapturePartnershipUtrController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+        session(result) get SessionKeys.hasOptionalSautrKey shouldBe None
+        session(result) get SessionKeys.businessEntityKey should contain(BusinessEntity.GeneralPartnershipKey)
+        session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
       }
     }
+
+    s"form successfully submitted by $GeneralPartnership with feature $GeneralPartnershipNoSAUTR is off" should {
+      "redirect to PPOB without dropping hasoptional key" in {
+        mockAuthAdminRole()
+        disable(GeneralPartnershipNoSAUTR)
+
+        implicit val request = testPostRequest(testSaUtr).withSession(
+          SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
+          SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
+        )
+
+        val result = TestCapturePartnershipUtrController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+        session(result) get SessionKeys.hasOptionalSautrKey should contain(Yes.stringValue)
+        session(result) get SessionKeys.businessEntityKey should contain(BusinessEntity.GeneralPartnershipKey)
+        session(result) get SessionKeys.partnershipSautrKey should  contain(testSaUtr)
+      }
+
+    }
+
+    s"form successfully submitted by $LimitedPartnership with feature $GeneralPartnershipNoSAUTR is on" should {
+      "redirect to PPOB without dropping hasoptional key" in {
+        mockAuthAdminRole()
+        enable(GeneralPartnershipNoSAUTR)
+
+        implicit val request = testPostRequest(testSaUtr).withSession(
+          SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
+          SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
+        )
+
+        val result = TestCapturePartnershipUtrController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+        session(result) get SessionKeys.hasOptionalSautrKey should contain(Yes.stringValue)
+        session(result) get SessionKeys.businessEntityKey should contain(BusinessEntity.LimitedPartnershipKey)
+        session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
+      }
+    }
+
+    s"form successfully submitted by $LimitedPartnership with feature $GeneralPartnershipNoSAUTR is off" should {
+      "rredirect to PPOB without dropping hasoptional key" in {
+        mockAuthAdminRole()
+        disable(GeneralPartnershipNoSAUTR)
+
+        implicit val request = testPostRequest(testSaUtr).withSession(
+          SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
+          SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
+        )
+
+        val result = TestCapturePartnershipUtrController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
+        session(result) get SessionKeys.hasOptionalSautrKey should contain(Yes.stringValue)
+        session(result) get SessionKeys.businessEntityKey should contain(BusinessEntity.LimitedPartnershipKey)
+        session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
+      }
+    }
+
 
     "form unsuccessfully submitted" should {
       s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is off" in {
@@ -167,4 +238,5 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
   }
+
 }

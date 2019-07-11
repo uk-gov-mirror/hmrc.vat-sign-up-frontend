@@ -824,10 +824,11 @@ principal.check_your_answers_partnerships.title                        = Gwirio'
 principal.check_your_answers_partnerships.heading                      = Gwirio''ch atebion
 principal.check_your_answers_partnerships.business_entity              = Pa fath o fusnes neu grŵp ydych chi''n ei gofrestru?
 principal.check_your_answers_partnerships.company_number               = Beth yw rhif cwmni''r bartneriaeth?
-principal.check_your_answers_partnerships.company_utr                  = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer y bartneriaeth?
+principal.check_your_answers_partnerships.company_utr                  = UTR Partneriaeth
 principal.check_your_answers_partnerships.post_code                    = Ymhle mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad?
 principal.check_your_answers_partnerships.joint_vernture_or_property   = Ydych chi''n Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
 principal.check_your_answers_partnerships.has_optional_sautr           = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad?
+principal.check_your_answers_partnerships.no_sautr                     = Nid oes gennyf un
 
 unplanned_outage.title                                                 = Mae''n ddrwg gennym – mae problem gyda''r gwasanaeth
 unplanned_outage.heading                                               = Mae''n ddrwg gennym – mae problem gyda''r gwasanaeth

@@ -18,11 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -47,6 +49,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val noSAUTRFeatureSwitch = isEnabled(GeneralPartnershipNoSAUTR)
 
       (optHasOptionalSautr, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
         case (Some(false), Some(GeneralPartnership), _, _, _) =>
@@ -56,6 +59,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             companyNumber = None,
             postCode = None,
             hasOptionalSautr = optHasOptionalSautr,
+            generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
         case (_, Some(GeneralPartnership), _, Some(_), Some(_)) =>
@@ -65,6 +69,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             companyNumber = None,
             postCode = optPartnershipPostCode,
             hasOptionalSautr = optHasOptionalSautr,
+            generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
         case (_, Some(entity: LimitedPartnershipBase), Some(_), Some(_), Some(_)) =>
@@ -74,6 +79,7 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             companyNumber = optPartnershipCrn,
             postCode = optPartnershipPostCode,
             hasOptionalSautr = None,
+            generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
         case _ =>
