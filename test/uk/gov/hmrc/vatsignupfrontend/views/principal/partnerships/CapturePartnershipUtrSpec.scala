@@ -40,7 +40,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
     uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr(
       partnershipUtrForm = partnershipUtrForm.form,
       postAction = testCall,
-      generalPartnershipNoSAUTRAndGeneralPartnership = generalPartnershipNoSAUTRFSwitchAndGeneralPartnership
+      displayNoSautrLink = generalPartnershipNoSAUTRFSwitchAndGeneralPartnership
     )(
       FakeRequest(),
       applicationMessages,
