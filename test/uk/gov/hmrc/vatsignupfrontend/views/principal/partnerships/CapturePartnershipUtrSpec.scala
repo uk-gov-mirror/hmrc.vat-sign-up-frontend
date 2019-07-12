@@ -36,11 +36,11 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = (generalPartnershipNoSAUTRFSwitch: Boolean) => {
+  lazy val page = (generalPartnershipNoSAUTRFSwitchAndGeneralPartnership: Boolean) => {
     uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr(
       partnershipUtrForm = partnershipUtrForm.form,
       postAction = testCall,
-      generalPartnershipNoSAUTRFeatureSwitch = generalPartnershipNoSAUTRFSwitch
+      generalPartnershipNoSAUTRAndGeneralPartnership = generalPartnershipNoSAUTRFSwitchAndGeneralPartnership
     )(
       FakeRequest(),
       applicationMessages,

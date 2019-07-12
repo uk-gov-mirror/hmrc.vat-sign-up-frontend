@@ -29,7 +29,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSA
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.Yes
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, LimitedPartnership, Yes}
 
 class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -51,14 +51,28 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       charset(result) shouldBe Some("utf-8")
       Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldBe null
     }
-    s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on" in {
+    s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on && $GeneralPartnership" in {
       mockAuthAdminRole()
       enable(GeneralPartnershipNoSAUTR)
-      val result = TestCapturePartnershipUtrController.show(testGetRequestForShow)
+      val result = TestCapturePartnershipUtrController.show(testGetRequestForShow.withSession(
+        SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
+      ))
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
       Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldNot be(null)
+    }
+
+    s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on && $LimitedPartnership" in {
+      mockAuthAdminRole()
+      enable(GeneralPartnershipNoSAUTR)
+      val result = TestCapturePartnershipUtrController.show(testGetRequestForShow.withSession(
+        SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
+      ))
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+      Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldBe null
     }
   }
 
@@ -110,15 +124,29 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         charset(result) shouldBe Some("utf-8")
         Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldBe null
       }
-      s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is on" in {
+      s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is on && $GeneralPartnership" in {
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
-        val result = TestCapturePartnershipUtrController.submit(testPostRequest(""))
+        val result = TestCapturePartnershipUtrController.submit(testPostRequest("").withSession(
+          SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
+        ))
 
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
         Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldNot be(null)
+      }
+      s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is on && $LimitedPartnership" in {
+        mockAuthAdminRole()
+        enable(GeneralPartnershipNoSAUTR)
+        val result = TestCapturePartnershipUtrController.submit(testPostRequest("").withSession(
+          SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
+        ))
+
+        status(result) shouldBe Status.BAD_REQUEST
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+        Jsoup.parse(contentAsString(result)).getElementById("partnershipUtr-accordion-link1") shouldBe null
       }
     }
   }

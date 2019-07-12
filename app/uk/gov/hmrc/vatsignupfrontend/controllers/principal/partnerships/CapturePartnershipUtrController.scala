@@ -17,13 +17,15 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Request}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm.partnershipUtrForm
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr
 
 import scala.concurrent.Future
@@ -40,7 +42,7 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
           Ok(capture_partnership_utr(
             partnershipUtrForm.form,
             routes.CapturePartnershipUtrController.submit(),
-            isEnabled(GeneralPartnershipNoSAUTR))
+            generalPartnershipNoSAUTRAndGeneralPartnership)
           )
         )
       }
@@ -68,7 +70,7 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
               BadRequest(capture_partnership_utr(
                 formWithErrors,
                 routes.CapturePartnershipUtrController.submit(),
-                isEnabled(GeneralPartnershipNoSAUTR)
+                generalPartnershipNoSAUTRAndGeneralPartnership
               ))
             ),
           utr =>
@@ -77,5 +79,10 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
               .addingToSession(SessionKeys.partnershipSautrKey -> utr))
         )
       }
+  }
+
+  private def generalPartnershipNoSAUTRAndGeneralPartnership(implicit request: Request[AnyContent]): Boolean = {
+    val generalPartnership = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).contains(GeneralPartnership)
+    generalPartnership && isEnabled(GeneralPartnershipNoSAUTR)
   }
 }
