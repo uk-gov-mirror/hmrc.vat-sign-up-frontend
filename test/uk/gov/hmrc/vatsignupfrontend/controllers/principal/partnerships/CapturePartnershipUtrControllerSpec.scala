@@ -38,12 +38,12 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   val testGetRequestForNoUtr = FakeRequest("GET", "/partnership-no-utr")
   val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
-  private def viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(boolean: Boolean,
+  private def viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(featureSwitchAndGeneralPartnership: Boolean,
                                                                        form: Form[String] = partnershipUtrForm.form): String = {
     capture_partnership_utr(
       form,
       routes.CapturePartnershipUtrController.submit(),
-      boolean)(testGetRequestForNoUtr, mockMessagesApi.preferred(testGetRequestForNoUtr), mockAppConfig).body
+      featureSwitchAndGeneralPartnership)(testGetRequestForNoUtr, mockMessagesApi.preferred(testGetRequestForNoUtr), mockAppConfig).body
   }
 
   def testPostRequest(utr: String): FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -57,7 +57,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(false)
+      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(false)
     }
     s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on && $GeneralPartnership" in {
       mockAuthAdminRole()
@@ -68,7 +68,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(true)
+      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(true)
     }
 
     s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on && $LimitedPartnership" in {
@@ -80,7 +80,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(false)
+      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(false)
     }
   }
 
@@ -130,8 +130,8 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(
-          boolean = false,
+        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(
+          featureSwitchAndGeneralPartnership = false,
           form = partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr)
         )
       }
@@ -145,8 +145,8 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(
-          boolean = true,
+        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(
+          featureSwitchAndGeneralPartnership = true,
           form = partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr)
         )
       }
@@ -160,8 +160,8 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnershipAs(
-          boolean = false,
+        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(
+          featureSwitchAndGeneralPartnership = false,
           form = partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr)
         )
       }
