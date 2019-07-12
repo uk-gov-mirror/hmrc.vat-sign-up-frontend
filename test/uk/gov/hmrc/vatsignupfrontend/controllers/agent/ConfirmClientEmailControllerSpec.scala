@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
@@ -78,15 +79,31 @@ class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
       }
       "email is verified" should {
-        "redirect to Terms page" in {
-          mockAuthRetrieveAgentEnrolment()
-          mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
+        "redirect to Terms page" when {
+          "the final check your answer feature switch is disabled" in {
+            disable(FinalCheckYourAnswer)
+            mockAuthRetrieveAgentEnrolment()
+            mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
 
-          val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-            SessionKeys.vatNumberKey -> testVatNumber))
+            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber))
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+          }
+        }
+        "redirect to the final check your answers page" when {
+          "the final check your answer feature switch is enabled" in {
+            enable(FinalCheckYourAnswer)
+            mockAuthRetrieveAgentEnrolment()
+            mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
+
+            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
+          }
         }
       }
     }

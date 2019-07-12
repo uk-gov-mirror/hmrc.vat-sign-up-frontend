@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -39,18 +40,37 @@ class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatche
   }
 
   "POST /sent-client-email" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return a redirect to the terms controller" when {
+      "the final check your answer feature switch is disabled" in {
+        disable(FinalCheckYourAnswer)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/sent-client-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
+        val res = post("/client/sent-client-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.TermsController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.TermsController.show().url)
+        )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
-      session.keys should contain(emailKey)
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(emailKey)
+      }
+    }
+    "return a redirect to the final check your answer controller" when {
+      "the final check your answer feature switch is enabled" in {
+        enable(FinalCheckYourAnswer)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post("/client/sent-client-email", Map(SessionKeys.emailKey -> testEmail))(EmailForm.email -> testEmail)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersFinalController.show().url)
+        )
+
+        val session = SessionCookieCrumbler.getSessionMap(res)
+        session.keys should contain(emailKey)
+      }
     }
   }
 }

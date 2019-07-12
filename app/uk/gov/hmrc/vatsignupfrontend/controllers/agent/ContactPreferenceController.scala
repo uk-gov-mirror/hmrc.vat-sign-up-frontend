@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{ContactPreference, Digital, Paper}
@@ -68,6 +68,8 @@ class ContactPreferenceController @Inject()(val controllerComponents: Controller
           case (Digital, false) | (_, true) =>
             Redirect(routes.CaptureClientEmailController.show())
               .addingToSession(SessionKeys.contactPreferenceKey, contactPreference)
+          case (Paper, false) if isEnabled(FinalCheckYourAnswer) =>
+            Redirect(routes.CheckYourAnswersFinalController.show())
           case (Paper, false) =>
             Redirect(routes.TermsController.show())
         }
