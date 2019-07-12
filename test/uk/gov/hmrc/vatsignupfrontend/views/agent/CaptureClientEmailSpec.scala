@@ -23,7 +23,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureClientEmail => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{Digital, Paper}
+import uk.gov.hmrc.vatsignupfrontend.models.Digital
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class CaptureClientEmailSpec extends ViewSpec {

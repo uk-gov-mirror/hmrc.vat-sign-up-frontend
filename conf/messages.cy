@@ -362,6 +362,22 @@ agent.terms.bullet_3                                                   = rhoi gw
 agent.terms.bullet_4                                                   = rhoi gwybod i CThEM os yw''ch cleient eisiau gadael y treial hwn
 agent.terms.line_2                                                     = Nid yw''r telerau hyn yn gontractiol, a gall eich cleient roi''r gorau i gymryd rhan yn y treial hwn ar unrhyw adeg.
 
+## Agent final confirmation page
+agent.check_your_answers_final.title                                   = Gwiriwch eich atebion cyn anfon
+agent.check_your_answers_final.heading                                 = Gwiriwch eich atebion cyn anfon
+agent.check_your_answers_final.vat_number                              = Rhif TAW
+agent.check_your_answers_final.business_entity                         = Math o fusnes
+agent.check_your_answers_final.nino                                    = Rhif Yswiriant Gwladol
+agent.check_your_answers_final.company_number                          = Rhif Cofrestru''r Cwmni
+agent.check_your_answers_final.partnership_company_number              = Rhif Cofrestru''r Cwmni Partneriaeth
+agent.check_your_answers_final.company_name                            = Enw'’r cwmni
+agent.check_your_answers_final.partnership_company_name                = Enw''r Cwmni Partneriaeth
+agent.check_your_answers_final.partnership_utr                         = UTR Partneriaeth
+agent.check_your_answers_final.registered_society_company_name         = Enw cwmni’'r gymdeithas gofrestredig
+agent.check_your_answers_final.agent_email                             = Eich cyfeiriad e-bost
+agent.check_your_answers_final.contact_preference                      = Sut i gysylltu â''ch cleient
+agent.check_your_answers_final.client_email                            = Cyfeiriad e-bost y cleient
+
 ## Agent Confirmation page
 agent.confirmation.title                                               = Mae gwybodaeth eich cleient wedi dod i law
 agent.confirmation.heading                                             = Mae gwybodaeth eich cleient wedi dod i law

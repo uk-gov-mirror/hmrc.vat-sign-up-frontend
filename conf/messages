@@ -359,6 +359,22 @@ agent.terms.bullet_3                                                   = tell HM
 agent.terms.bullet_4                                                   = tell HMRC if your client wants to leave this trial
 agent.terms.line_2                                                     = These terms are not contractual and your client can stop taking part in this trial at any time.
 
+## Agent final confirmation page
+agent.check_your_answers_final.title                                   = Check your answers before sending
+agent.check_your_answers_final.heading                                 = Check your answers before sending
+agent.check_your_answers_final.vat_number                              = VAT number
+agent.check_your_answers_final.business_entity                         = Type of business
+agent.check_your_answers_final.nino                                    = National Insurance Number
+agent.check_your_answers_final.company_number                          = Company Registration Number
+agent.check_your_answers_final.partnership_company_number              = Partnership Company Registration Number
+agent.check_your_answers_final.company_name                            = Company Name
+agent.check_your_answers_final.partnership_company_name                = Partnership Company Name
+agent.check_your_answers_final.partnership_utr                         = Partnership UTR
+agent.check_your_answers_final.registered_society_company_name         = Registered Society Company Name
+agent.check_your_answers_final.agent_email                             = Your email address
+agent.check_your_answers_final.contact_preference                      = How to contact your client
+agent.check_your_answers_final.client_email                            = Client email address
+
 ## Agent Confirmation page
 agent.confirmation.title                                               = We have received your client''s information
 agent.confirmation.heading                                             = We have received your client''s information

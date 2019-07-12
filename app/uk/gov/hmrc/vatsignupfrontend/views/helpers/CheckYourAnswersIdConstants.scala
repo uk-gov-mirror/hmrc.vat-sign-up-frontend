@@ -28,8 +28,11 @@ object CheckYourAnswersIdConstants {
   val CrnId = "company-number"
   val CompanyNameId = "company-name"
   val UtrId = "utr"
+  val PartnershipUtrId = "partnership-utr"
   val PreviousVatReturnId = "previous-vat-return"
   val EmailAddressId = "email"
   val ContactPreferenceId = "contact-preference"
+  val AgentEmailId = "agent-email"
+  val ClientEmailId = "client-email"
 
 }

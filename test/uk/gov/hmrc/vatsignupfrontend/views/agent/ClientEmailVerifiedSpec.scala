@@ -22,7 +22,6 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ClientVerifiedEmail => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class ClientEmailVerifiedSpec extends ViewSpec {

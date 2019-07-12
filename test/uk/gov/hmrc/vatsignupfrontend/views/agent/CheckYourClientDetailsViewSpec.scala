@@ -20,13 +20,10 @@ import java.time.LocalDate
 
 import org.jsoup.Jsoup
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel}
-import org.scalatest.Matchers._
-import org.jsoup.nodes.{Document, Element}
+import org.jsoup.nodes.Element
 import play.api.i18n.Messages.Implicits.applicationMessages
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
