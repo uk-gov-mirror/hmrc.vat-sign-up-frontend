@@ -63,7 +63,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
   "Show action on the Check Your Answer Final Controller" when {
     "vat number is missing from session" should {
       "go to Capture Vat page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
 
         val res = TestCheckYourAnswersFinalController.show(testGetRequest(vatNumber = None))
         status(res) shouldBe SEE_OTHER
@@ -73,7 +73,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "vat number is in session" should {
       "subscription request summary returns internal server error" should {
         "return Internal Server Error" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
           mockGetSubscriptionRequest(testVatNumber)(
             Future.successful(Left(SubscriptionRequestUnexpectedError(INTERNAL_SERVER_ERROR, "Unexpected status from Backend")))
           )
@@ -82,7 +82,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
       "subscription request summary returns other errors regarding data" should {
         "redirect to Capture VAT page - restart the journey" in {
-          mockAuthAdminRole()
+          mockAuthRetrieveAgentEnrolment()
           mockGetSubscriptionRequest(testVatNumber)(
             Future.successful(Left(SubscriptionRequestExistsButNotComplete))
           )
@@ -98,7 +98,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "subscription request summary contains a company number" should {
           "get company name service returns NOT_FOUND error" should {
             "return Internal Server Error" in {
-              mockAuthAdminRole()
+              mockAuthRetrieveAgentEnrolment()
               mockGetSubscriptionRequest(testVatNumber)(
                 Future.successful(Right(
                   SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
@@ -110,7 +110,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
           }
           "get company name service returns INTERNAL_SERVER_ERROR" should {
             "return Internal Server Error" in {
-              mockAuthAdminRole()
+              mockAuthRetrieveAgentEnrolment()
               mockGetSubscriptionRequest(testVatNumber)(
                 Future.successful(Right(
                   SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
@@ -123,7 +123,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
           "get company name service returns data" should {
             "display the Check Your Answers Final Page" should {
               "for Limited Company" in {
-                mockAuthAdminRole()
+                mockAuthRetrieveAgentEnrolment()
                 mockGetSubscriptionRequest(testVatNumber)(
                   Future.successful(Right(
                     SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
@@ -134,7 +134,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
                 status(res) shouldBe OK
               }
               "for Limited Partnership" in {
-                mockAuthAdminRole()
+                mockAuthRetrieveAgentEnrolment()
                 mockGetSubscriptionRequest(testVatNumber)(
                   Future.successful(Right(
                     SubscriptionRequestSummary(testVatNumber, LimitedPartnership, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
@@ -145,7 +145,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
                 status(res) shouldBe OK
               }
               "for Registered Society" in {
-                mockAuthAdminRole()
+                mockAuthRetrieveAgentEnrolment()
                 mockGetSubscriptionRequest(testVatNumber)(
                   Future.successful(Right(
                     SubscriptionRequestSummary(testVatNumber, RegisteredSociety, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
@@ -161,7 +161,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
         "subscription request summary doesn't contain a company number" should {
           "display the Check Your Answers Final Page" should {
             "for Sole Trader" in {
-              mockAuthAdminRole()
+              mockAuthRetrieveAgentEnrolment()
               mockGetSubscriptionRequest(testVatNumber)(
                 Future.successful(Right(
                   SubscriptionRequestSummary(testVatNumber, SoleTrader, Some(testNino), None, None, None, testEmail, Digital)))
@@ -171,7 +171,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
               status(res) shouldBe OK
             }
             "for General Partnership" in {
-              mockAuthAdminRole()
+              mockAuthRetrieveAgentEnrolment()
               mockGetSubscriptionRequest(testVatNumber)(
                 Future.successful(Right(
                   SubscriptionRequestSummary(testVatNumber, GeneralPartnership, None, None, Some(testSaUtr), None, testEmail, Digital)))
@@ -189,7 +189,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
     "submission service returns a successful submission response" should {
       "redirect to the confirmation controller" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         mockSubmitSuccess(testVatNumber)
 
         val res = TestCheckYourAnswersFinalController.submit(testPostRequest())
@@ -200,7 +200,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
     "submission service fails" should {
       "goto technical difficulties" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         mockSubmitFailure(testVatNumber)
 
         intercept[InternalServerException] {

@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FinalCheckYourAnswer, SkipCidCheck}
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -39,7 +39,7 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
                                                 val subscriptionRequestSummary: SubscriptionRequestSummaryConnector,
                                                 val submissionService: SubmissionService,
                                                 val getCompanyNameService: GetCompanyNameService
-                                               ) extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(FinalCheckYourAnswer)) {
+                                               ) extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(FinalCheckYourAnswer)) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
