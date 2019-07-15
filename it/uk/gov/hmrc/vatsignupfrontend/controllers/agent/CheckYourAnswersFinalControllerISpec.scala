@@ -33,7 +33,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
     "the subscription request summary returned INTERNAL SERVER ERROR" should {
       "return INTERNAL_SERVER_ERROR" in {
         enable(FinalCheckYourAnswer)
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubGetSubscriptionRequestException(testVatNumber)(INTERNAL_SERVER_ERROR)
 
         val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
@@ -47,7 +47,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
     "the subscription request summary returned other error" should {
       "return SEE_OTHER and restart journey" in {
         enable(FinalCheckYourAnswer)
-        stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubGetSubscriptionRequestInvalidJson(testVatNumber)(SEE_OTHER)
 
         val res = get("/client/check-your-answers-final")
@@ -75,7 +75,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
             )
 
             enable(FinalCheckYourAnswer)
-            stubAuth(OK, successfulAuthResponse())
+            stubAuth(OK, successfulAuthResponse(agentEnrolment))
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyNameCompanyFailure(testCompanyNumber)
 
@@ -100,7 +100,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
             )
 
             enable(FinalCheckYourAnswer)
-            stubAuth(OK, successfulAuthResponse())
+            stubAuth(OK, successfulAuthResponse(agentEnrolment))
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyNameCompanyNotFound(testCompanyNumber)
 
@@ -126,7 +126,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
             )
 
             enable(FinalCheckYourAnswer)
-            stubAuth(OK, successfulAuthResponse())
+            stubAuth(OK, successfulAuthResponse(agentEnrolment))
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
             val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
@@ -151,7 +151,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
           )
 
           enable(FinalCheckYourAnswer)
-          stubAuth(OK, successfulAuthResponse())
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
           stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
 
           val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
@@ -167,7 +167,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
     "the submission was successful" should {
       "redirect to the confirmation page" in {
         enable(FinalCheckYourAnswer)
-        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubSubmissionSuccess()
 
         val res = post("/client/check-your-answers-final", cookies = Map(
@@ -183,7 +183,7 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
     "the submission is unsuccessful" should {
       "return INTERNAL_SERVER_ERROR" in {
         enable(FinalCheckYourAnswer)
-        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubSubmissionFailure()
 
         val res = post("/client/check-your-answers-final", cookies = Map(
