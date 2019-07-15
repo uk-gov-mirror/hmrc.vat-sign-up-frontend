@@ -9,6 +9,8 @@
 
     .tabular-data__data-1 {
         width: 40%;
+        word-break: break-word;
+        padding-right: 1em;
     }
 }
 
