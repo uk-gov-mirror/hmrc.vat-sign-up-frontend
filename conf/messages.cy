@@ -808,9 +808,16 @@ agent.partnership_postcode.heading                                     = Ble mae
 agent.partnership_postcode.label                                       = Cod post yn y DU
 
 ## Principal Capture Partnership UTR
-principal.capture_partnership_utr.title                                = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer y bartneriaeth?
-principal.capture_partnership_utr.heading                              = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer y bartneriaeth?
-principal.capture_partnership_utr.line_1                               = Rhif 10 digid yw hwn.
+principal.capture_partnership_utr.deprecated.title                     = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer y bartneriaeth?
+principal.capture_partnership_utr.title                                = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich Partneriaeth?
+principal.capture_partnership_utr.deprecated.heading                   = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer y bartneriaeth?
+principal.capture_partnership_utr.heading                              = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich Partneriaeth?
+principal.capture_partnership_utr.deprecated.line_1                    = Rhif 10 digid yw hwn.
+principal.capture_partnership_utr.hint                                 = Er enghraifft, 0123456789
+principal.capture_partnership_utr.accordion.heading                    = Nid oes gennyf hwn
+principal.capture_partnership_utr.accordion.line_1                     = Mae''ch UTR yn ein helpu i ddod o hyd i''ch partneriaeth.
+principal.capture_partnership_utr.accordion.link_1                     = Ni allaf ddod o hyd i''m UTR
+principal.capture_partnership_utr.accordion.link_2                     = Nid oes gan fy mhartneriaeth UTR
 
 ## Principal Partnerships CYA
 principal.check_your_answers_partnerships.title                        = Gwirio''ch atebion
