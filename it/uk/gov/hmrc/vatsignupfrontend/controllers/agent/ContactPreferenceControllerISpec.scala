@@ -19,13 +19,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.contactPreferenceKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreContactPreferenceStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsignupfrontend.models.Digital
+import uk.gov.hmrc.vatsignupfrontend.models.{Digital, Paper}
 
 class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -51,28 +51,64 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
 
     "Storing the contact-preference is successful" should {
 
-      "return a redirect" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreContactPreferenceSuccess(Digital)
+      "return a redirect to the capture client email" when {
+        "digital is selected" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubStoreContactPreferenceSuccess(Digital)
 
-        val res = post(
-          "/client/receive-email-notifications",
-          Map(SessionKeys.vatNumberKey -> testVatNumber)
-        )(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
+          val res = post(
+            "/client/receive-email-notifications",
+            Map(SessionKeys.vatNumberKey -> testVatNumber)
+          )(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureClientEmailController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureClientEmailController.show().url)
+          )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(contactPreferenceKey)
+          val session = SessionCookieCrumbler.getSessionMap(res)
+          session.keys should contain(contactPreferenceKey)
+        }
+      }
+      "return a redirect to the final check your answer page" when {
+        "paper is selected and the final check your answer feature switch is enabled" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubStoreContactPreferenceSuccess(Paper)
+          enable(FinalCheckYourAnswer)
+
+          val res = post(
+            "/client/receive-email-notifications",
+            Map(SessionKeys.vatNumberKey -> testVatNumber)
+          )(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CheckYourAnswersFinalController.show().url)
+          )
+        }
+      }
+      "return a redirect to the terms page" when {
+        "paper is selected and the final check your answer feature switch is disabled" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubStoreContactPreferenceSuccess(Paper)
+          disable(FinalCheckYourAnswer)
+
+          val res = post(
+            "/client/receive-email-notifications",
+            Map(SessionKeys.vatNumberKey -> testVatNumber)
+          )(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.TermsController.show().url)
+          )
+        }
       }
     }
 
     "Storing the contact-preference is NOT successful" should {
 
-      "return a redirect" in {
+      "have an internal server error" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreContactPreferenceFailure(Digital)
 

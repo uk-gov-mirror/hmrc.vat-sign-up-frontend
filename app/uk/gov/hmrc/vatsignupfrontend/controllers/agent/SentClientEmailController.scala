@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.sent_client_email
 
@@ -49,6 +49,10 @@ class SentClientEmailController @Inject()(val controllerComponents: ControllerCo
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       request.session.get(SessionKeys.emailKey) match {
+        case Some(email) if email.nonEmpty & isEnabled(FinalCheckYourAnswer) =>
+          Future.successful(
+            Redirect(routes.CheckYourAnswersFinalController.show())
+          )
         case Some(email) if email.nonEmpty =>
           Future.successful(
             Redirect(routes.TermsController.show())

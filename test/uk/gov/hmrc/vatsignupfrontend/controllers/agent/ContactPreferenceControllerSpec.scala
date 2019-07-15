@@ -22,7 +22,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -109,7 +109,25 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
           "user does not have a direct debit" should {
 
-            "redirect to Terms page" in {
+            "redirect to Terms page" when {
+              "the final check your answers feature switch is disabled" in {
+                disable(FinalCheckYourAnswer)
+                enable(ContactPreferencesJourney)
+                mockAuthRetrieveAgentEnrolment()
+                mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
+
+                val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
+                  .withFormUrlEncodedBody(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
+
+                val result = TestContactPreferenceController.submit()(request)
+
+                status(result) shouldBe Status.SEE_OTHER
+                redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+              }
+            }
+
+            "redirect to the final check your answers page when the feature switch is enabled" in {
+              enable(FinalCheckYourAnswer)
               enable(ContactPreferencesJourney)
               mockAuthRetrieveAgentEnrolment()
               mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
@@ -120,7 +138,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
               val result = TestContactPreferenceController.submit()(request)
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+              redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
             }
           }
 

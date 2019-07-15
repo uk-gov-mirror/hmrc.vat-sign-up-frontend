@@ -45,7 +45,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
                optNino: Option[String] = None,
                optPartnershipUtr: Option[String] = None,
                agentEmail: String = testAgentEmail,
-               clientEmail: String = testEmail,
+               optClientEmail: Option[String] = Some(testEmail),
                skipCidCheck: Boolean = true,
                contactPreference: ContactPreference = Digital
               ): Html =
@@ -57,7 +57,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       optNino = optNino,
       optPartnershipUtr = optPartnershipUtr,
       agentEmail = agentEmail,
-      clientEmail = clientEmail,
+      optClientEmail = optClientEmail,
       contactPreference = contactPreference,
       skipCidCheck = skipCidCheck,
       postAction = testCall

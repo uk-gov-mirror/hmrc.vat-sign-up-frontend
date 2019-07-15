@@ -32,7 +32,7 @@
   optCompanyName: Option[String] = None,
   optPartnershipUtr: Option[String] = None,
   agentEmail: String,
-  clientEmail: String,
+  optClientEmail: Option[String],
   contactPreference: ContactPreference,
   skipCidCheck: Boolean,
   postAction: Call
@@ -110,8 +110,10 @@
 }
 
 @clientEmailRow = @{
-  val rowQuestion = Messages("agent.check_your_answers_final.client_email")
-  summaryRowHelper(ClientEmailId, rowQuestion, clientEmail, Some(CaptureClientEmailController.show().url))
+  optClientEmail.map { clientEmail =>
+    val rowQuestion = Messages("agent.check_your_answers_final.client_email")
+    summaryRowHelper(ClientEmailId, rowQuestion, clientEmail, Some(CaptureClientEmailController.show().url))
+  }
 }
 
 @agent_main_template(title = Messages("agent.check_your_answers_final.title"), showSignOutLink = true) {
