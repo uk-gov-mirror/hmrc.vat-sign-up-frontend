@@ -876,9 +876,10 @@ object MessageLookup {
     val title = heading + ServiceName.principalSuffix
     val businessEntity = "What type of business or group are you signing up?"
     val companyNumber = "What is the partnership's company number?"
-    val companyUtr = "What is the partnership's Unique Taxpayer Reference?"
+    val companyUtr = "UTR Partnership"
     val postCode = "Where is the partnership registered for Self Assessment?"
     val hasOptionalSautr = "Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
+    val noSautr = "I do not have one"
   }
 
   object AgentCheckYourAnswers {

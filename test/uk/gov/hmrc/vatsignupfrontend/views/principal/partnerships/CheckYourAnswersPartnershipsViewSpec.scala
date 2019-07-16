@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PartnershipsCYA => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership, No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
 
@@ -76,7 +76,8 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       companyNumber = Some(testCompanyNumber),
       postCode = Some(testBusinessPostcode),
       postAction = testCall,
-      hasOptionalSautr = None
+      hasOptionalSautr = None,
+      generalPartnershipNoSAUTRFeatureSwitch = false
     )(FakeRequest(), applicationMessages, appConfig)
 
     lazy val limitedPartnershipCyaDoc = Jsoup.parse(limitedPartnershipCyaPage.body)
@@ -124,7 +125,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       val sectionId = CompanyUtrId
       val expectedQuestion = messages.companyUtr
       val expectedAnswer = testCompanyUtr
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipUtrController.show().url
+      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
 
       sectionTest(
         doc = limitedPartnershipCyaDoc,
@@ -150,6 +151,68 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       )
     }
 
+    "check your answers for limited  partnership" should {
+
+      def limitedPartnershipCyaPage(hasOptionalSautr: Option[Boolean], companyUtr: Option[String]): Document = {
+        val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
+          entityType = LimitedPartnership,
+          companyUtr = companyUtr,
+          companyNumber = None,
+          postCode = None,
+          postAction = testCall,
+          generalPartnershipNoSAUTRFeatureSwitch = true,
+          hasOptionalSautr = hasOptionalSautr
+        )(FakeRequest(), applicationMessages, appConfig)
+
+        Jsoup.parse(page.body)
+      }
+
+      "display the correct information with the GeneralPartnershipNoSAUTR feature switch on" when {
+        "a limited company user does not have a SUTR" in {
+          val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.DoYouHaveAUtrController.show().url
+          val testDoc = limitedPartnershipCyaPage(hasOptionalSautr = Some(false), companyUtr = None)
+
+          sectionTest(
+            doc = testDoc,
+            sectionId = HasOptionalSautrId,
+            expectedQuestion = messages.hasOptionalSautr,
+            expectedAnswer = MessageLookup.Base.no,
+            expectedEditLink = Some(expectedEditLink)
+          )
+
+          val companyUtrIdRow = s"$CompanyUtrId-row"
+          Option(testDoc.getElementById(companyUtrIdRow)) shouldBe None
+        }
+
+        "a limited company user has a SaUTR displaying hasOptionalSaUTR " in {
+          val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.DoYouHaveAUtrController.show().url
+          val testDoc = limitedPartnershipCyaPage(hasOptionalSautr = Some(true), companyUtr = Some(testCompanyUtr))
+          sectionTest(
+            doc = testDoc,
+            sectionId = HasOptionalSautrId,
+            expectedQuestion = messages.hasOptionalSautr,
+            expectedAnswer = MessageLookup.Base.yes,
+            expectedEditLink = Some(expectedEditLink)
+          )
+
+        }
+
+        "a limited company user has a SaUTR displaying there SaUTR" in {
+          val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
+          val testDoc = limitedPartnershipCyaPage(hasOptionalSautr = Some(true), companyUtr = Some(testCompanyUtr))
+
+          sectionTest(
+            doc = testDoc,
+            sectionId = CompanyUtrId,
+            expectedQuestion = messages.companyUtr,
+            expectedAnswer = testCompanyUtr,
+            expectedEditLink = Some(expectedEditLink)
+          )
+        }
+
+      }
+    }
+
   }
 
   "General Partnership Check Your Answers View" when {
@@ -162,7 +225,8 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         companyNumber = None,
         postCode = Some(testBusinessPostcode),
         postAction = testCall,
-        hasOptionalSautr = Some(false)
+        hasOptionalSautr = Some(false),
+        generalPartnershipNoSAUTRFeatureSwitch = false
       )(FakeRequest(), applicationMessages, appConfig)
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
@@ -196,7 +260,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         val sectionId = CompanyUtrId
         val expectedQuestion = messages.companyUtr
         val expectedAnswer = testCompanyUtr
-        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipUtrController.show().url
+        val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
 
         sectionTest(
           doc = generalPartnershipCyaDoc,
@@ -246,7 +310,8 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         companyNumber = None,
         postCode = None,
         postAction = testCall,
-        hasOptionalSautr = Some(true)
+        hasOptionalSautr = Some(true),
+        generalPartnershipNoSAUTRFeatureSwitch = false
       )(FakeRequest(), applicationMessages, appConfig)
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
@@ -291,5 +356,60 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         )
       }
     }
+
+    "check your answers for general partnership" should {
+
+      def generalPartnershipCyaPage(companyUtr: Option[String], hasOptionalSautr: Option[Boolean] ): Document = {
+        val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
+          entityType = GeneralPartnership,
+          companyUtr = companyUtr,
+          companyNumber = None,
+          postCode = None,
+          postAction = testCall,
+          generalPartnershipNoSAUTRFeatureSwitch = true,
+          hasOptionalSautr = hasOptionalSautr
+        )(FakeRequest(), applicationMessages, appConfig)
+
+        Jsoup.parse(page.body)
+      }
+
+      "display the GeneralPartnershipNoSAUTR feature switched message" when {
+        "the GeneralPartnershipNoSAUTR feature switch is turned on with a SaUTR showing the SaUTR" in {
+          val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
+          val testSaUTR = Some(testCompanyUtr)
+          val testDoc = generalPartnershipCyaPage(testSaUTR, None)
+
+          sectionTest(
+            doc = testDoc,
+            sectionId = CompanyUtrId,
+            expectedQuestion = messages.companyUtr,
+            expectedAnswer = testCompanyUtr,
+            expectedEditLink = Some(expectedEditLink)
+          )
+
+          val hasOptionalSautrIdIdRow = s"$HasOptionalSautrId-row"
+          Option(testDoc.getElementById(hasOptionalSautrIdIdRow)) shouldBe None
+        }
+
+        "the GeneralPartnershipNoSAUTR feature switch is turned on without a SaUTR" in {
+          val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
+          val testSaUTR = None
+          val testDoc = generalPartnershipCyaPage(testSaUTR, Some(false))
+
+          sectionTest(
+            doc = testDoc,
+            sectionId = HasOptionalSautrId,
+            expectedQuestion = messages.companyUtr,
+            expectedAnswer = messages.noSautr,
+            expectedEditLink = Some(expectedEditLink)
+          )
+
+          val companyUtrIdRow = s"$CompanyUtrId-row"
+          Option(testDoc.getElementById(companyUtrIdRow)) shouldBe None
+        }
+
+      }
+    }
+
   }
 }
