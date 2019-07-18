@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -31,41 +31,33 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(ContactPreferencesJourney)
   }
 
   override def afterEach(): Unit = {
     super.afterEach()
-    disable(ContactPreferencesJourney)
   }
 
   "GET /receive-email-notifications" when {
-    "ContactPreferencesJourney is disabled" should {
-      "return an NOT_FOUND" in {
-        disable(ContactPreferencesJourney)
+    "return an NOT_FOUND" in {
+      val res = get("/receive-email-notifications")
 
-        val res = get("/receive-email-notifications")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
     }
 
-    "ContactPreferenceJourney is enabled" when {
-      "email is in session" should {
-        "return an OK" in {
+    "email is in session" should {
+      "return an OK" in {
 
-          stubAuth(OK, successfulAuthResponse())
+        stubAuth(OK, successfulAuthResponse())
 
-          val res = get("/receive-email-notifications", Map(
-            SessionKeys.emailKey -> testEmail
-          ))
+        val res = get("/receive-email-notifications", Map(
+          SessionKeys.emailKey -> testEmail
+        ))
 
-          res should have(
-            httpStatus(OK)
-          )
-        }
+        res should have(
+          httpStatus(OK)
+        )
       }
 
       "email is not in session" should {
@@ -84,16 +76,12 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
   }
 
   "POST /receive-email-notifications" when {
-    "ContactPreferencesJourney is disabled" should {
-      "return an NOT_FOUND" in {
-        disable(ContactPreferencesJourney)
+    "return an NOT_FOUND" in {
+      val res = post("/receive-email-notifications")()
 
-        val res = post("/receive-email-notifications")()
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
+      res should have(
+        httpStatus(NOT_FOUND)
+      )
     }
 
     "ContactPreferencesJourney is enabled and vat number is in session" when {
@@ -157,7 +145,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
       }
     }
     "FinalCheckYourAnswers is enabled" when {
-      "the choice is paper and user has Direct Debit" should{
+      "the choice is paper and user has Direct Debit" should {
         "redirect to the check your answers final page" in {
           enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse())

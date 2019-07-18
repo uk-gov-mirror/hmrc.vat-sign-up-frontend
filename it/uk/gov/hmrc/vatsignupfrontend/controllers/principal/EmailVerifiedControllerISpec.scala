@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status.{OK, SEE_OTHER}
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -36,47 +35,15 @@ class EmailVerifiedControllerISpec extends ComponentSpecBase with CustomMatchers
   }
 
   "POST /email-verified" should {
-    "return a Not Implemented" when {
-      "the contact preferences feature switch is enabled" in {
-        stubAuth(OK, successfulAuthResponse())
-        enable(ContactPreferencesJourney)
+    "return a Not Implemented" in {
+      stubAuth(OK, successfulAuthResponse())
 
-        val res = post("/email-verified")()
+      val res = post("/email-verified")()
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.ReceiveEmailNotificationsController.show().url)
-        )
-      }
-    }
-    "redirect to Terms" when {
-      "the contact preferences feature switch is not enabled" in {
-        stubAuth(OK, successfulAuthResponse())
-        disable(ContactPreferencesJourney)
-
-        val res = post("/email-verified")()
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.TermsController.show().url)
-        )
-      }
-    }
-
-    "redirect to check your answers final page" when {
-      "the contact preferences feature switch is not enabled and final check your answers is enabled" in {
-        enable(FinalCheckYourAnswer)
-        disable(ContactPreferencesJourney)
-        stubAuth(OK, successfulAuthResponse())
-        disable(ContactPreferencesJourney)
-
-        val res = post("/email-verified")()
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CheckYourAnswersFinalController.show().url)
-        )
-      }
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.ReceiveEmailNotificationsController.show().url)
+      )
     }
   }
 

@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, DirectDebitTermsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.direct_debit_terms_and_conditions
 
@@ -41,10 +41,7 @@ class DirectDebitTermsAndConditionsController @Inject()(val controllerComponents
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      if (isEnabled(ContactPreferencesJourney))
-        Future.successful(Redirect(routes.CaptureEmailController.show()))
-      else
-        Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+      Future.successful(Redirect(routes.CaptureEmailController.show()))
     } map (_.addingToSession(SessionKeys.acceptedDirectDebitTermsKey -> true.toString))
   }
 }

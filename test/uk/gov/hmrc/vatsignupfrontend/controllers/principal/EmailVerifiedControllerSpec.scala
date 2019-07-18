@@ -21,8 +21,6 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
@@ -30,60 +28,29 @@ class EmailVerifiedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   object TestEmailVerifiedController extends EmailVerifiedController(mockControllerComponents)
 
   "Calling the show action of the Email Verified controller" should {
-      lazy val testGetRequest = FakeRequest("GET", "/email-verified")
+    lazy val testGetRequest = FakeRequest("GET", "/email-verified")
 
-      "go to the Email Verified page" in {
-        mockAuthAdminRole()
+    "go to the Email Verified page" in {
+      mockAuthAdminRole()
 
-        val result = TestEmailVerifiedController.show(testGetRequest)
+      val result = TestEmailVerifiedController.show(testGetRequest)
 
-        status(result) shouldBe Status.OK
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
-      }
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
+  }
 
   "Calling the submit action of the Email Verified controller" should {
     lazy val testPostRequest = FakeRequest("POST", "/email-verified")
-    "return a not implemented" when {
-      "the contact preferences feature switch is enabled" in {
-        mockAuthAdminRole()
-        enable(ContactPreferencesJourney)
+    "return a not implemented" in {
+      mockAuthAdminRole()
 
-        val result = TestEmailVerifiedController.submit(testPostRequest)
+      val result = TestEmailVerifiedController.submit(testPostRequest)
 
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ReceiveEmailNotificationsController.show().url)
-      }
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.ReceiveEmailNotificationsController.show().url)
     }
-    "the final CYA feature switch is disabled" when {
-      "redirect to Terms controller" when {
-        "the contact preferences feature switch is disabled" in {
-          mockAuthAdminRole()
-          disable(ContactPreferencesJourney)
-
-          val result = TestEmailVerifiedController.submit(testPostRequest)
-
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
-        }
-      }
-    }
-    "the final CYA feature switch is enabled" when {
-      "redirect to check your answers final controller" when {
-        "the contact preferences feature switch is disabled" in {
-          mockAuthAdminRole()
-          enable(FinalCheckYourAnswer)
-          disable(ContactPreferencesJourney)
-
-          val result = TestEmailVerifiedController.submit(testPostRequest)
-
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
-        }
-      }
-    }
-
   }
 
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.config.featureswitch
 
-import FeatureSwitch.prefix
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitch.prefix
 
 sealed trait FeatureSwitch {
   val name: String
@@ -31,7 +31,6 @@ object FeatureSwitch {
     BTAClaimSubscription,
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
-    ContactPreferencesJourney,
     SendYourApplication,
     OptionalSautrJourney,
     SkipIvJourney,
@@ -78,15 +77,11 @@ case object DirectDebitTermsJourney extends FeatureSwitch {
   override val displayText: String = "Enable the Direct Debit T&Cs Journey"
 }
 
-case object ContactPreferencesJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.contact-preferences-journey"
-  override val displayText: String = "Enable the Contact Preferences Journey"
-}
-
 case object OptionalSautrJourney extends FeatureSwitch {
   override val name: String = s"$prefix.optional-sautr-journey"
   override val displayText: String = "Enable the 'Do you have an SAUTR' question for general partnerships"
 }
+
 case object SendYourApplication extends FeatureSwitch {
   override val name: String = s"$prefix.send-your-application"
   override val displayText: String = "Enable the Send Your Application view (replaces Terms of Participation)"

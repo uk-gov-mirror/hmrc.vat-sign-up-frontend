@@ -23,14 +23,14 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, DirectDebitTermsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
   object TestDirectDebitResolverController extends DirectDebitResolverController(mockControllerComponents)
 
-  private def sessionValues(directDebitFlag: Option[String]): Iterable[(String, String)] = directDebitFlag map(hasDirectDebitKey -> _)
+  private def sessionValues(directDebitFlag: Option[String]): Iterable[(String, String)] = directDebitFlag map (hasDirectDebitKey -> _)
 
   def testGetRequest(directDebitFlag: Option[String] = None): FakeRequest[AnyContentAsEmpty.type] = {
     FakeRequest("GET", "/direct-debit-resolver")
@@ -68,8 +68,8 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
           status(result) shouldBe SEE_OTHER
         }
 
-        "redirect to the Agree Capture Email page" in {
-          redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        "redirect to the Capture Email page" in {
+          redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
         }
       }
     }
@@ -87,28 +87,12 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
           status(result) shouldBe SEE_OTHER
         }
 
-        "redirect to the Agree Capture Email page" in {
-          redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
-        }
-      }
-
-      "the contact preference feature switch has been enabled" should {
-
-        lazy val result = TestDirectDebitResolverController.show(testGetRequest())
-
-        "return status SEE_OTHER (303)" in {
-          mockAuthAdminRole()
-          enable(ContactPreferencesJourney)
-
-          status(result) shouldBe SEE_OTHER
-        }
-
-        "redirect to the Agree Capture Email page" in {
+        "redirect to the Capture Email page" in {
           redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
         }
       }
 
-      "both Direct Debit and Contact Preference feature switches have been disabled" should {
+      "Direct Debit feature switch is disabled" should {
 
         lazy val result = TestDirectDebitResolverController.show(testGetRequest())
 
@@ -119,8 +103,8 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
           status(result) shouldBe SEE_OTHER
         }
 
-        "redirect to the Agree Capture Email page" in {
-          redirectLocation(result) shouldBe Some(routes.AgreeCaptureEmailController.show().url)
+        "redirect to the Capture Email page" in {
+          redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
         }
       }
     }
