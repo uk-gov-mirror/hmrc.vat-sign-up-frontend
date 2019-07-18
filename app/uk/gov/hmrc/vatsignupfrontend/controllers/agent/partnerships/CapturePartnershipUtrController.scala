@@ -60,7 +60,6 @@ class CapturePartnershipUtrController @Inject()(val controllerComponents: Contro
             SessionKeys.partnershipSautrKey,
             SessionKeys.partnershipPostCodeKey
           )
-          .addingToSession(SessionKeys.hasOptionalSautrKey -> false.toString)
       )
     }
   }

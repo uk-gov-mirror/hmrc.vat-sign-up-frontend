@@ -28,6 +28,7 @@
   postCode: Option[PostCode],
   companyNumber: Option[String],
   hasOptionalSautr: Option[Boolean],
+  generalPartnershipNoSAUTR: Boolean,
   postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
@@ -47,6 +48,12 @@
             val rowName = UtrId
             val rowQuestion = Messages("agent.check-your-answers.utr")
             val rowAnswer = sautr
+            val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
+            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+        case _ if generalPartnershipNoSAUTR =>
+            val rowName = UtrId
+            val rowQuestion = Messages("agent.check-your-answers.utr")
+            val rowAnswer = Messages("agent.check-your-answers.client_has_no_sautr")
             val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")
@@ -76,7 +83,7 @@
 }
 @hasOptionalSautrQuestion() = @{
     hasOptionalSautr match {
-        case Some(hasSautrAnswer)=>
+        case Some(hasSautrAnswer) =>
             val rowName = HasOptionalSautrId
             val rowQuestion = Messages("agent.check-your-answers.does_your_client_have_a_utr")
             val rowAnswer = if (hasSautrAnswer) Messages("base.yes") else Messages("base.no")

@@ -22,6 +22,7 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswers => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
@@ -29,9 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
-import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.HasOptionalSautrId
-import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
+import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, HasOptionalSautrId}
 
 
 class CheckYourAnswersViewSpec extends ViewSpec {
@@ -85,70 +84,175 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     lazy val expectedSaUtrUrl = partnershipRoutes.DoesYourClientHaveAUtrController.show().url
 
     "the saUtr and the post code are given for a general partnership" should {
-      val testPage = TestView(
-        name = "Check your answers View",
-        title = messages.title,
-        heading = messages.heading,
-        page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = Some(testSaUtr),
-          entityType = GeneralPartnership,
-          Some(testBusinessPostcode),
-          companyNumber = None,
-          hasOptionalSautr = None,
-          postAction = testCall
-        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
-      )
+      "render the page correctly" when {
+        val testPageGeneralPartnershipFSEnabled = TestView(
+          name = "Check your answers View - General parnership fs enabled",
+          title = messages.title,
+          heading = messages.heading,
+          page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = Some(testSaUtr),
+            entityType = GeneralPartnership,
+            Some(testBusinessPostcode),
+            companyNumber = None,
+            hasOptionalSautr = None,
+            generalPartnershipNoSAUTR = true,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+        )
 
-      testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
+        val testPageGeneralPartnershipFSDisabled = TestView(
+          name = "Check your answers View - General parnership fs disabled",
+          title = messages.title,
+          heading = messages.heading,
+          page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = Some(testSaUtr),
+            entityType = GeneralPartnership,
+            Some(testBusinessPostcode),
+            companyNumber = None,
+            hasOptionalSautr = None,
+            generalPartnershipNoSAUTR = true,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+        )
 
-      "render the page correctly" in {
+        testPageGeneralPartnershipFSEnabled.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
-        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPage.document)
-        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPage.document)
+        testPageGeneralPartnershipFSDisabled.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
-        testPage.document.getElementById(utrAnswer).text shouldBe testSaUtr
-        testPage.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
-        testPage.document.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+        "the GeneralPartnershipNoSAUTR feature switch is enabled" in {
+          sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSEnabled.document)
+          sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPageGeneralPartnershipFSEnabled.document)
+
+          testPageGeneralPartnershipFSEnabled.document.getElementById(utrAnswer).text shouldBe testSaUtr
+          testPageGeneralPartnershipFSEnabled.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
+          testPageGeneralPartnershipFSEnabled.document.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+        }
+        "the GeneralPartnershipNoSAUTR feature switch is disabled" in {
+          sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSDisabled.document)
+          sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPageGeneralPartnershipFSDisabled.document)
+
+          testPageGeneralPartnershipFSDisabled.document.getElementById(utrAnswer).text shouldBe testSaUtr
+          testPageGeneralPartnershipFSDisabled.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
+          testPageGeneralPartnershipFSDisabled.document.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+        }
       }
     }
 
     "the General Partnership has an optional SA UTR" should {
-      "render the page correctly" in {
-        lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = Some(testSaUtr),
-          entityType = GeneralPartnership,
-          postCode = None,
-          companyNumber = None,
-          hasOptionalSautr = Some(true),
-          postAction = testCall
-        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+      "render the page correctly" when {
+        "the GeneralPartnershipNoSAUTR feature switch is disabled and hasOptionalSautr is true" in {
+          lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = Some(testSaUtr),
+            entityType = GeneralPartnership,
+            postCode = None,
+            companyNumber = None,
+            hasOptionalSautr = Some(true),
+            generalPartnershipNoSAUTR = false,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
-        lazy val doc = Jsoup.parse(page.body)
+          lazy val doc = Jsoup.parse(page.body)
 
-        sectionTest(HasOptionalSautrId, messages.hasOptionalSautr, MessageLookup.Base.yes, Some(expectedSaUtrUrl), doc)
+          Option(doc.getElementById(utrAnswer)).map(_.text) shouldBe Some(testSaUtr)
+          sectionTest(
+            sectionId = HasOptionalSautrId,
+            expectedQuestion = messages.hasOptionalSautr,
+            expectedAnswer = MessageLookup.Base.yes,
+            expectedEditLink = Some(expectedSaUtrUrl),
+            doc = doc
+          )
+        }
+        "the GeneralPartnershipNoSAUTR feature switch is disabled and hasOptionalSautr is false" in {
+          lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = None,
+            entityType = GeneralPartnership,
+            postCode = None,
+            companyNumber = None,
+            hasOptionalSautr = Some(false),
+            generalPartnershipNoSAUTR = false,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+
+          lazy val doc = Jsoup.parse(page.body)
+
+          Option(doc.getElementById(utrAnswer)).isDefined shouldBe false
+          sectionTest(
+            sectionId = HasOptionalSautrId,
+            expectedQuestion = messages.hasOptionalSautr,
+            expectedAnswer = MessageLookup.Base.no,
+            expectedEditLink = Some(expectedSaUtrUrl),
+            doc = doc
+          )
+        }
+        "the GeneralPartnershipNoSAUTR feature switch is enabled" in {
+          lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = None,
+            entityType = GeneralPartnership,
+            postCode = None,
+            companyNumber = None,
+            hasOptionalSautr = None,
+            generalPartnershipNoSAUTR = true,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+
+          lazy val doc = Jsoup.parse(page.body)
+
+          Option(doc.getElementById(s"$HasOptionalSautrId-row")).isDefined shouldBe false
+          sectionTest(
+            sectionId = UtrId,
+            expectedQuestion = messages.yourUtr,
+            expectedAnswer = messages.noSAUTR,
+            expectedEditLink = Some(expectedUrlUtr),
+            doc = doc
+          )
+        }
       }
     }
 
     "the saUtr, company number and the post code are given for a limited partnership" should {
-      "render the page correctly" in {
-        lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-          utr = Some(testSaUtr),
-          entityType = LimitedPartnership,
-          Some(testBusinessPostcode),
-          companyNumber = Some(testCompanyNumber),
-          hasOptionalSautr = None,
-          postAction = testCall
-        )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+      "render the page correctly" when {
+        "the GeneralPartnershipNoSAUTR feature switch is enabled" in {
+          lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = Some(testSaUtr),
+            entityType = LimitedPartnership,
+            Some(testBusinessPostcode),
+            companyNumber = Some(testCompanyNumber),
+            hasOptionalSautr = None,
+            generalPartnershipNoSAUTR = true,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
-        lazy val doc = Jsoup.parse(page.body)
+          lazy val doc = Jsoup.parse(page.body)
 
-        sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
-        sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), doc)
-        sectionTest(CompanyNumberId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCompanyNumber), doc)
+          sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
+          sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), doc)
+          sectionTest(CompanyNumberId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCompanyNumber), doc)
 
-        doc.getElementById(utrAnswer).text shouldBe testSaUtr
-        doc.getElementById(businessEntityAnswer).text shouldBe messages.limitedPartnership
-        doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+          doc.getElementById(utrAnswer).text shouldBe testSaUtr
+          doc.getElementById(businessEntityAnswer).text shouldBe messages.limitedPartnership
+          doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+        }
+        "the GeneralPartnershipNoSAUTR feature switch is disabled" in {
+          lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
+            utr = Some(testSaUtr),
+            entityType = LimitedPartnership,
+            Some(testBusinessPostcode),
+            companyNumber = Some(testCompanyNumber),
+            hasOptionalSautr = None,
+            generalPartnershipNoSAUTR = false,
+            postAction = testCall
+          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+
+          lazy val doc = Jsoup.parse(page.body)
+
+          sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), doc)
+          sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), doc)
+          sectionTest(CompanyNumberId, messages.yourCompanyNumber, testCompanyNumber, Some(expectedUrlCompanyNumber), doc)
+
+          doc.getElementById(utrAnswer).text shouldBe testSaUtr
+          doc.getElementById(businessEntityAnswer).text shouldBe messages.limitedPartnership
+          doc.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
+        }
       }
     }
   }

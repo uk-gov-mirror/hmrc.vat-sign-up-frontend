@@ -788,6 +788,8 @@ agent.check-your-answers.utr                                           = What is
 agent.check-your-answers.company_number                                = What is your client''s company number?
 agent.check-your-answers.business_post_code                            = Where is your client''s principal place of business?
 agent.check-your-answers.does_your_client_have_a_utr                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+agent.check-your-answers.client_has_no_sautr                           = My client does not have one
+
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
