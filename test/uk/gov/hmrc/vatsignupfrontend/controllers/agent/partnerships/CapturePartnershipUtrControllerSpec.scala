@@ -21,10 +21,14 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.Yes
 
 class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -43,6 +47,30 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+  "Calling the noUtrSelected action of the CapturePartnershipUtrController" should {
+    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey} & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestCapturePartnershipUtrController.noUtrSelected(testGetRequest.withSession(
+        SessionKeys.partnershipSautrKey -> testSaUtr,
+        SessionKeys.partnershipPostCodeKey -> testBusinessPostcode.sanitisedPostCode,
+        SessionKeys.previousVatReturnKey -> Yes.stringValue
+      ))
+
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result).get shouldBe routes.CheckYourAnswersPartnershipController.show().url
+      session(result) get SessionKeys.partnershipSautrKey shouldBe None
+      session(result) get SessionKeys.partnershipPostCodeKey shouldBe None
+      session(result) get SessionKeys.previousVatReturnKey should contain(Yes.stringValue)
+      session(result) get SessionKeys.hasOptionalSautrKey should contain(false.toString)
+    }
+    "have an auth check and return exception if not authorised" in {
+      mockFailedAuth()
+
+      intercept[AuthorisationException](await(TestCapturePartnershipUtrController.noUtrSelected(testGetRequest)))
     }
   }
 
