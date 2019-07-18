@@ -830,9 +830,14 @@ object MessageLookup {
   }
 
   object AgentCapturePartnershipUtr {
-    val heading: String = "What is your client's Partnership Unique Taxpayer Reference (UTR) number?"
+    val heading: String = "What is your client's partnership Unique Taxpayer Reference (UTR)?"
     val title = heading + ServiceName.agentSuffix
     val line = "This is a 10 digit number. You can find it on letters to the partnership from HM Revenue & Customs."
+    val hint = "For example, 0123456789"
+    val accordionHeading = "I do not have this"
+    val accordionText = "Entering your client's UTR will help us identify the correct partnership."
+    val accordionLink1 = "How your client can find their UTR"
+    val accordionLink2 = "My client's partnership does not have a UTR"
   }
 
   object ConfirmPartnership {

@@ -119,6 +119,7 @@ GET         /error/sign-up-later                                uk.gov.hmrc.vats
 
 # Partnership UTR
 GET         /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.show
+GET         /partnership-no-utr                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.noUtrSelected
 POST        /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.submit
 
 # Partnership PPOB

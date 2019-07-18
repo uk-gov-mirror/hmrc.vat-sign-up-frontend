@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -52,6 +53,20 @@ class CapturePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
 
       res should have(
         httpStatus(OK)
+      )
+    }
+  }
+
+
+  "GET /partnership-no-utr" should {
+    s"return a $SEE_OTHER to check your answers" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/partnership-no-utr")
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CheckYourAnswersPartnershipController.show().url)
       )
     }
   }
