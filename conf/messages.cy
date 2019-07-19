@@ -279,6 +279,11 @@ agent.confirm_company_number.link                                      = Newid r
 agent.capture_partnership_utr.title                                    = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Partneriaeth eich cleient?
 agent.capture_partnership_utr.heading                                  = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Partneriaeth eich cleient?
 agent.capture_partnership_utr.line                                     = Rhif 10 digid yw hwn. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth Gyllid a Thollau EM.
+agent.capture_partnership_utr.hint                                     = Er enghraifft, 0123456789
+agent.capture_partnership_utr.accordion.heading                        = Nid oes gennyf hwn
+agent.capture_partnership_utr.accordion.line_1                         = Bydd nodi UTR eich cleient yn ein helpu i ddod o hyd i''r bartneriaeth gywir.
+agent.capture_partnership_utr.accordion.link_1                         = Sut y gall eich cleient ddod o hyd i''w UTR
+agent.capture_partnership_utr.accordion.link_2                         = Nid oes gan bartneriaeth fy nghleient UTR
 
 ## Agent - Does Your Client Have a UTR
 agent.partnership.does_your_client_have_a_utr.title                   = Oes gan bartneriaeth eich cleient Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
