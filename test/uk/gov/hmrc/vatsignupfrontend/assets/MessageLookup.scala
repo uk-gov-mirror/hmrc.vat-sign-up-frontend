@@ -896,6 +896,7 @@ object MessageLookup {
     val generalPartnership: String = "General partnership"
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
     val hasOptionalSautr: String = "Does your client's partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
+    val noSAUTR: String = "My client does not have one"
   }
 
   object VerifySoftwareError {

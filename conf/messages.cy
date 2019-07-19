@@ -762,6 +762,7 @@ agent.check-your-answers.utr                                           = Beth yw
 agent.check-your-answers.company_number                                = Beth yw rhif cwmni''ch cleient?
 agent.check-your-answers.business_post_code                            = Ble mae prif leoliad busnes eich cleient?
 agent.check-your-answers.joint_venture_or_property                     = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
+agent.check-your-answers.client_has_no_sautr                           = Nid oes gan fy cleient un
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen

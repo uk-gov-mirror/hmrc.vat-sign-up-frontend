@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -46,6 +47,8 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
+      val noSAUTRFeatureSwitch = isEnabled(GeneralPartnershipNoSAUTR)
+      val isGeneralPartnership = optBusinessEntityType.contains(GeneralPartnership)
 
       (optVatNumber, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr) match {
         case (Some(_), Some(GeneralPartnership), _, _) =>
@@ -55,6 +58,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             companyNumber = None,
             postCode = optPartnershipPostCode,
             hasOptionalSautr = optHasOptionalSautr,
+            generalPartnershipNoSAUTR = noSAUTRFeatureSwitch && isGeneralPartnership,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
         case (Some(_), Some(entity: LimitedPartnershipBase), Some(_), Some(_)) =>
@@ -64,6 +68,7 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             companyNumber = optPartnershipCrn,
             postCode = optPartnershipPostCode,
             hasOptionalSautr = None,
+            generalPartnershipNoSAUTR = noSAUTRFeatureSwitch && isGeneralPartnership,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
         case (None, _, _, _) =>

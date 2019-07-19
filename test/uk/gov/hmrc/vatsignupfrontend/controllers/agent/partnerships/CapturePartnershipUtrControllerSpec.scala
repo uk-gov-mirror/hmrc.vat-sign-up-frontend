@@ -65,7 +65,6 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       session(result) get SessionKeys.partnershipSautrKey shouldBe None
       session(result) get SessionKeys.partnershipPostCodeKey shouldBe None
       session(result) get SessionKeys.previousVatReturnKey should contain(Yes.stringValue)
-      session(result) get SessionKeys.hasOptionalSautrKey should contain(false.toString)
     }
     "have an auth check and return exception if not authorised" in {
       mockFailedAuth()
