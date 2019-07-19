@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
@@ -67,10 +66,8 @@ class ConfirmAgentEmailController @Inject()(val controllerComponents: Controller
           storeEmailAddressService.storeTransactionEmailAddress(vatNumber, transactionEmail) map {
             case Right(StoreEmailAddressSuccess(false)) =>
               Redirect(routes.VerifyAgentEmailController.show().url)
-            case Right(StoreEmailAddressSuccess(true)) if isEnabled(ContactPreferencesJourney) =>
-              Redirect(routes.ContactPreferenceController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
-              Redirect(routes.AgreeCaptureClientEmailController.show().url)
+              Redirect(routes.ContactPreferenceController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
           }

@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
@@ -64,17 +63,12 @@ class ConfirmEmailController @Inject()(val controllerComponents: ControllerCompo
 
       (optVatNumber, optEmail) match {
         case (Some(vatNumber), Some(email)) => {
-          if (isEnabled(ContactPreferencesJourney))
-            storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email)
-          else
-            storeEmailAddressService.storeEmailAddress(vatNumber, email)
+          storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email)
         } map {
           case Right(StoreEmailAddressSuccess(false)) =>
             Redirect(routes.VerifyEmailController.show().url)
           case Right(StoreEmailAddressSuccess(true)) =>
-            if(isEnabled(ContactPreferencesJourney)) Redirect(routes.ReceiveEmailNotificationsController.show())
-            else if(isEnabled(FinalCheckYourAnswer)) Redirect(routes.CheckYourAnswersFinalController.show())
-            else Redirect(routes.TermsController.show())
+            Redirect(routes.ReceiveEmailNotificationsController.show())
           case Left(errResponse) =>
             throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
         }

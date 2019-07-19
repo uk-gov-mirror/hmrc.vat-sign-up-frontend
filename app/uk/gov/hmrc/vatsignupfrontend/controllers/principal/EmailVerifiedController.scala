@@ -20,7 +20,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.email_verified
 
@@ -40,20 +39,7 @@ class EmailVerifiedController @Inject()(val controllerComponents: ControllerComp
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      if (isEnabled(ContactPreferencesJourney)) {
-        Future.successful(
-         Redirect(routes.ReceiveEmailNotificationsController.show())
-        )
-      } else {
-        if (isEnabled(FinalCheckYourAnswer))
-          Future.successful(
-            Redirect(routes.CheckYourAnswersFinalController.show())
-          )
-        else
-          Future.successful(
-            Redirect(routes.TermsController.show().url)
-          )
-      }
+      Future.successful(Redirect(routes.ReceiveEmailNotificationsController.show()))
     }
   }
 

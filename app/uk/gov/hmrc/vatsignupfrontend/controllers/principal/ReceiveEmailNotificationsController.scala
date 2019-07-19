@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.models.Digital
@@ -36,7 +36,7 @@ class ReceiveEmailNotificationsController @Inject()(storeContactPreferenceServic
                                                     storeEmailAddressService: StoreEmailAddressService,
                                                     val controllerComponents: ControllerComponents
                                                    )
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(ContactPreferencesJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

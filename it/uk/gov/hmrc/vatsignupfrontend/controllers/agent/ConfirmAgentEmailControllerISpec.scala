@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.transactionEmailKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ContactPreferencesJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -43,7 +42,6 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
     }
   }
 
-
   "POST /confirm-email" should {
     "redirect to verify agent email page" when {
       "the email is successfully stored and returned with email not verified" in {
@@ -57,24 +55,6 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
 
         res should have(
           redirectUri(routes.VerifyAgentEmailController.show().url)
-        )
-
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(transactionEmailKey)
-      }
-    }
-
-    "redirect to Agree Capture Client Email page" when {
-      "the email is successfully stored and returned with email verified flag" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreTransactionEmailAddressSuccess(emailVerified = true)
-
-        val res = post("/client/confirm-email", Map(
-          SessionKeys.transactionEmailKey -> testEmail,
-          SessionKeys.vatNumberKey -> testVatNumber
-        ))(EmailForm.email -> testEmail)
-        res should have(
-          redirectUri(routes.AgreeCaptureClientEmailController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)
@@ -102,8 +82,7 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
     }
 
     "redirect to contact preferences page" when {
-      "the email is successfully stored and returned with email verified flag and contact prefs journey is enabled" in {
-        enable(ContactPreferencesJourney)
+      "the email is successfully stored and returned with email verified flag" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreTransactionEmailAddressSuccess(emailVerified = true)
 

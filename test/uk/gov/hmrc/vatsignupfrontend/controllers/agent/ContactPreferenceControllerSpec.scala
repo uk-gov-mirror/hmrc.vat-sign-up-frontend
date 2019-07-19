@@ -22,7 +22,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -41,7 +41,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
     lazy val result = TestContactPreferenceController.show(testGetRequest)
 
     "return status OK (200)" in {
-      enable(ContactPreferencesJourney)
       mockAuthRetrieveAgentEnrolment()
       status(result) shouldBe Status.OK
     }
@@ -72,7 +71,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
         "contact preference is Digital" should {
 
           "redirect to Capture Client Email page" in {
-            enable(ContactPreferencesJourney)
             mockAuthRetrieveAgentEnrolment()
             mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Digital)
 
@@ -92,7 +90,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
           "user has direct debit" should {
 
             "redirect to Capture Client Email page" in {
-              enable(ContactPreferencesJourney)
               mockAuthRetrieveAgentEnrolment()
               mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
 
@@ -112,7 +109,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
             "redirect to Terms page" when {
               "the final check your answers feature switch is disabled" in {
                 disable(FinalCheckYourAnswer)
-                enable(ContactPreferencesJourney)
                 mockAuthRetrieveAgentEnrolment()
                 mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
 
@@ -128,7 +124,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
             "redirect to the final check your answers page when the feature switch is enabled" in {
               enable(FinalCheckYourAnswer)
-              enable(ContactPreferencesJourney)
               mockAuthRetrieveAgentEnrolment()
               mockStoreContactPreferenceSuccess(vatNumber = testVatNumber, contactPreference = Paper)
 
@@ -148,7 +143,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
       "call to store contact preference is NOT successful" when {
 
         "redirect to Capture Client Email page" in {
-          enable(ContactPreferencesJourney)
           mockAuthRetrieveAgentEnrolment()
           mockStoreContactPreferenceFailure(vatNumber = testVatNumber, contactPreference = Digital)
 
@@ -165,7 +159,6 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
     "vat number is NOT in session" should {
 
       "redirect to Capture Client VRN page" in {
-        enable(ContactPreferencesJourney)
         mockAuthRetrieveAgentEnrolment()
 
         val request = testPostRequest.withFormUrlEncodedBody(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)

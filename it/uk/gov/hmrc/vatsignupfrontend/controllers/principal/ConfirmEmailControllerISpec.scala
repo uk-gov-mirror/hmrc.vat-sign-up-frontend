@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.emailKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -39,12 +38,9 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     }
   }
 
-
   "POST /confirm-email" should {
     "redirect to verify email page" when {
       "the email is successfully stored and returned with email not verified on the contact preference journey" in {
-        enable(ContactPreferencesJourney)
-
         stubAuth(OK, successfulAuthResponse())
         stubStoreTransactionEmailAddressSuccess(emailVerified = false)
 
@@ -62,8 +58,6 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
 
     "redirect to receive email notifications controller" when {
       "the email is successfully stored and returned with email verified flag on the contact preference journey" in {
-        enable(ContactPreferencesJourney)
-
         stubAuth(OK, successfulAuthResponse())
         stubStoreTransactionEmailAddressSuccess(emailVerified = true)
 
@@ -79,58 +73,6 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
       }
     }
 
-    "redirect to verify email page" when {
-      "the email is successfully stored and returned with email not verified" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreEmailAddressSuccess(emailVerified = false)
-
-        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.VerifyEmailController.show().url)
-        )
-
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
-      }
-    }
-
-    "redirect to terms" when {
-      "the email is successfully stored and returned with email verified flag and the contact preference journey is disabled" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreEmailAddressSuccess(emailVerified = true)
-
-        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.TermsController.show().url)
-        )
-
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
-      }
-    }
-
-    "redirect to check your answers final page" when {
-      "Final chec your answers is enabled and contact preference journey is disabled" in {
-        enable(FinalCheckYourAnswer)
-        disable(ContactPreferencesJourney)
-        stubAuth(OK, successfulAuthResponse())
-        stubStoreEmailAddressSuccess(emailVerified = true)
-
-        val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CheckYourAnswersFinalController.show().url)
-        )
-
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(emailKey)
-      }
-    }
     "throw an internal server error" when {
       "storing the email has been unsuccessful" in {
         stubAuth(OK, successfulAuthResponse())

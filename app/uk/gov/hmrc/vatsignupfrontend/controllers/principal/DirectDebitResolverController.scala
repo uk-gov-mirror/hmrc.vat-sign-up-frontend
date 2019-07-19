@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, DirectDebitTermsJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 
 import scala.concurrent.Future
@@ -37,10 +37,8 @@ class DirectDebitResolverController @Inject()(val controllerComponents: Controll
 
       if (directDebitFlagFromSession && isEnabled(DirectDebitTermsJourney))
         Future.successful(Redirect(routes.DirectDebitTermsAndConditionsController.show()))
-      else if (isEnabled(ContactPreferencesJourney))
-        Future.successful(Redirect(routes.CaptureEmailController.show()))
       else
-        Future.successful(Redirect(routes.AgreeCaptureEmailController.show()))
+        Future.successful(Redirect(routes.CaptureEmailController.show()))
     }
   }
 

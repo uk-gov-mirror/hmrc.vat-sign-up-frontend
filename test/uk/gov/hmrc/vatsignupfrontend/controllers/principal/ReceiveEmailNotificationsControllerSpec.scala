@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{ContactPreferencesJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -38,7 +38,6 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    enable(ContactPreferencesJourney)
   }
 
   object TestReceiveEmailController extends ReceiveEmailNotificationsController(
@@ -74,19 +73,6 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
         val result = TestReceiveEmailController.show(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
-      }
-    }
-
-    "the feature switch is disabled" should {
-      "return Not Found exception" in {
-        mockAuthAdminRole()
-
-        disable(ContactPreferencesJourney)
-        intercept[NotFoundException] {
-          await(TestReceiveEmailController.submit(testPostRequest("digital").withSession(
-            SessionKeys.emailKey -> testEmail
-          )))
-        }
       }
     }
 
