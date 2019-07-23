@@ -1094,4 +1094,14 @@ object MessageLookup {
     val letter: String = "Letters"
   }
 
+  object PrincipalReturnDue {
+    val heading: String = "As you're not ready to use software yet, you should send your next VAT Return using your usual method"
+    val title: String = heading + ServiceName.principalSuffix
+    val line_1: String = "From April 2019 it became mandatory to submit VAT Returns using compatible software if your annual taxable turnover is above £85,000."
+    val line_2: String = "You can choose to sign up if your annual taxable turnover is below £85,000."
+    val link_id: String = "mtdGuidance"
+    val link = "http://www.gov.uk/guidance/check-when-a-business-must-follow-the-rules-for-making-tax-digital-for-vat"
+    val link_text = "Find out if and when you (or your clients) need to follow the rules"
+    val line_3: String = s"${link_text} for Making Tax Digital for VAT, or apply for an exemption."
+  }
 }

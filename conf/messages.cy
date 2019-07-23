@@ -1027,3 +1027,10 @@ principal.check_your_answers_final.company_number                     = Rhif cof
 principal.check_your_answers_final.company_name                       = Enw''r cwmni
 principal.check_your_answers_final.email_address                      = Cyfeiriad e-bost y busnes
 principal.check_your_answers_final.contact_preference                 = Sut y byddwn yn cysylltu â chi
+
+# Return due
+principal.return_due.title                                            = Gan nad ydych yn barod i ddefnyddio meddalwedd eto, dylech anfon eich Ffurflen TAW nesaf drwy''ch dull arferol
+principal.return_due.heading                                          = Gan nad ydych yn barod i ddefnyddio meddalwedd eto, dylech anfon eich Ffurflen TAW nesaf drwy''ch dull arferol
+principal.return_due.line_1                                           = O fis Ebrill 2019, daeth yn orfodol i gyflwyno''ch Ffurflenni TAW drwy ddefnyddio meddalwedd sy''n cydweddu os yw''ch trosiant trethadwy blynyddol uwchben £85,000.
+principal.return_due.line_2                                           = Gallwch ddewis cofrestru os yw''ch trosiant trethadwy blynyddol yn is na £85,000.
+principal.return_due.line_3                                           = <a id="mtdGuidance" href={0}>Cadarnhewch a oes angen i chi (neu''ch cleientiaid) ddilyn rheolau''r<a> cynllun Troi Treth yn Ddigidol ar gyfer TAW, a phryd y mae angen eu dilyn, neu wneud cais am eithriad.
