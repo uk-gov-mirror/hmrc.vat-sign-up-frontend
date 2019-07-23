@@ -1041,3 +1041,12 @@ principal.return_due.heading                                          = As you''
 principal.return_due.line_1                                           = From April 2019 it became mandatory to submit VAT Returns using compatible software if your annual taxable turnover is above £85,000.
 principal.return_due.line_2                                           = You can choose to sign up if your annual taxable turnover is below £85,000.
 principal.return_due.line_3                                           = <a id="mtdGuidance" href={0}>Find out if and when you (or your clients) need to follow the rules</a> for Making Tax Digital for VAT, or apply for an exemption.
+
+#Making tax digital software
+principal.making_tax_digital_software.title                           = Things you must know and do
+principal.making_tax_digital_software.heading                         = Things you must know and do
+principal.making_tax_digital_software.line_1                          = This is a new way of keeping your VAT Records and submitting your VAT Returns online by using software which is compatible with HMRC.
+principal.making_tax_digital_software.line_2                          = Things you must do first:
+principal.making_tax_digital_software.bullet_1                        = get software which connects you to HMRC
+principal.making_tax_digital_software.bullet_2                        = start keeping your VAT Records using this software
+principal.making_tax_digital_software.find_software                   = Find out more information about Making Tax Digital for VAT (opens in a new tab)

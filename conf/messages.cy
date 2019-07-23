@@ -1034,3 +1034,12 @@ principal.return_due.heading                                          = Gan nad 
 principal.return_due.line_1                                           = O fis Ebrill 2019, daeth yn orfodol i gyflwyno''ch Ffurflenni TAW drwy ddefnyddio meddalwedd sy''n cydweddu os yw''ch trosiant trethadwy blynyddol uwchben £85,000.
 principal.return_due.line_2                                           = Gallwch ddewis cofrestru os yw''ch trosiant trethadwy blynyddol yn is na £85,000.
 principal.return_due.line_3                                           = <a id="mtdGuidance" href={0}>Cadarnhewch a oes angen i chi (neu''ch cleientiaid) ddilyn rheolau''r<a> cynllun Troi Treth yn Ddigidol ar gyfer TAW, a phryd y mae angen eu dilyn, neu wneud cais am eithriad.
+
+#Making tax digital software
+principal.making_tax_digital_software.title                           = Pethau y mae''n rhaid i chi eu gwybod a''u gwneud
+principal.making_tax_digital_software.heading                         = Pethau y mae''n rhaid i chi eu gwybod a''u gwneud
+principal.making_tax_digital_software.line_1                          = Mae hwn yn ddull newydd o gadw''ch cofnodion TAW a chyflwyno''ch Ffurflenni TAW ar-lein drwy ddefnyddio meddalwedd sy''n cydweddu â CThEM.
+principal.making_tax_digital_software.line_2                          = Pethau y mae''n rhaid i chi eu gwneud gyntaf:
+principal.making_tax_digital_software.bullet_1                        = cael gafael ar feddalwedd sy''n eich cysylltu â CThEM
+principal.making_tax_digital_software.bullet_2                        = dechrau cadw''ch cofnodion TAW gan ddefnyddio''r feddalwedd hon
+principal.making_tax_digital_software.find_software                   = Dysgu rhagor ynghylch Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)
