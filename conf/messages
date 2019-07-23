@@ -1034,3 +1034,10 @@ principal.check_your_answers_final.company_number                     = Company 
 principal.check_your_answers_final.company_name                       = Company Name
 principal.check_your_answers_final.email_address                      = Business Email Address
 principal.check_your_answers_final.contact_preference                 = How we contact you
+
+# Return due
+principal.return_due.title                                            = As you''re not ready to use software yet, you should send your next VAT Return using your usual method
+principal.return_due.heading                                          = As you''re not ready to use software yet, you should send your next VAT Return using your usual method
+principal.return_due.line_1                                           = From April 2019 it became mandatory to submit VAT Returns using compatible software if your annual taxable turnover is above £85,000.
+principal.return_due.line_2                                           = You can choose to sign up if your annual taxable turnover is below £85,000.
+principal.return_due.line_3                                           = <a id="mtdGuidance" href={0}>Find out if and when you (or your clients) need to follow the rules</a> for Making Tax Digital for VAT, or apply for an exemption.
