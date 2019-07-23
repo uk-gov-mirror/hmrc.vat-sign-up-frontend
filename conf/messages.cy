@@ -182,6 +182,9 @@ error.principal.partnership.do_you_have_a_utr.field                    = Dewiswc
 error.principal.partnership.do_you_have_a_utr.summary                  = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad
 error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
 error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
+error.principal.no_option_selected.field                               = Dewiswch opsiwn
+error.principal.no_option_selected.summary                             = Dewiswch opsiwn
+
 ## unused?
 error.principal.partnership.joint_venture_or_property.field            = Dewiswch ''Iawn'' os ydych yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
 error.principal.partnership.joint_venture_or_property.summary          = Dewiswch os ydych yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
@@ -1069,3 +1072,10 @@ principal.use_spreadsheets.line_2                                     = Os:
 principal.use_spreadsheets.bullet_1                                   = nad oes gennych y feddalwedd hon, ewch ati i''w chael a''i gosod ar eich cyfrifiadur
 principal.use_spreadsheets.bullet_2                                   = oes gennych y feddalwedd hon, gwiriwch ei bod yn cydweddu a''i bod yn bodloni''ch anghenion busnes
 principal.use_spreadsheets.get_software                               = Dysgu sut i gael a dewis meddalwedd bontio (yn agor tab newydd)
+
+# Have you got software
+principal.have_you_got_software.title                                 = Sut yr ydych yn cadw''ch cofnodion TAW ar hyn o bryd?
+principal.have_you_got_software.heading                               = Sut yr ydych yn cadw''ch cofnodion TAW ar hyn o bryd?
+principal.have_you_got_software.accounting_software                   = Rwy''n defnyddio meddalwedd gyfrifyddu
+principal.have_you_got_software.spreadsheets                          = Rwy''n defnyddio taenlenni
+principal.have_you_got_software.neither                               = Dydw i ddim yn defnyddio''r naill na''r llall o''r rheiny

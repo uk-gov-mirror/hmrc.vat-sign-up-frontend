@@ -188,6 +188,8 @@ error.principal.partnership.do_you_have_a_utr.field                    = Select 
 error.principal.partnership.do_you_have_a_utr.summary                  = Select yes if you have a Unique Taxpayer Reference number
 error.agent.partnership.do_you_have_a_utr.field                        = Select yes if you have your client''s Unique Taxpayer Reference number
 error.agent.partnership.do_you_have_a_utr.summary                      = Select yes if you have your client''s Unique Taxpayer Reference number
+error.principal.no_option_selected.field                               = You must select an option
+error.principal.no_option_selected.summary                             = You must select an option
 
 error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
 error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
@@ -1076,3 +1078,10 @@ principal.use_spreadsheets.line_2                                     = If you:
 principal.use_spreadsheets.bullet_1                                   = do not have this software, get and set it up on your computer
 principal.use_spreadsheets.bullet_2                                   = do have it, check it is compatible and meets your business needs
 principal.use_spreadsheets.get_software                               = Find out how to get and select bridging software (opens in a new tab)
+
+# Have you got software
+principal.have_you_got_software.title                                 = How do you currently keep your VAT records?
+principal.have_you_got_software.heading                               = How do you currently keep your VAT records?
+principal.have_you_got_software.accounting_software                   = I use accounting software
+principal.have_you_got_software.spreadsheets                          = I use spreadsheets
+principal.have_you_got_software.neither                               = I use neither

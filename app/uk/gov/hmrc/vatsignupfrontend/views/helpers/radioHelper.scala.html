@@ -22,7 +22,8 @@
   field: Field,
   hideLegend: Boolean = true,
   bodyContent: Option[Html] = None,
-  orInterrupt: Option[String] = None
+  orInterrupt: Option[String] = None,
+  showErrorAfter: Boolean = false
 )(implicit messages: Messages)
 
 @hasError = @{
@@ -55,20 +56,30 @@
     }
 }
 
-<div class="form-group@if(hasError){ form-field--error}">
+<div class="form-group@if(showErrorAfter == false & hasError){ form-field--error}">
     <fieldset id="@{field.name}" @if(inline) { class="inline" }>
         <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
         @bodyContent.map(content => content)
-        @if(hasError){
+        @if(showErrorAfter == false & hasError){
             <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
         }
         @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
-        @for(option <- options) {
-            @showOrInterrupt(option)
-            <div class="multiple-choice">
-                <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
-                <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
-            </div>
-        }
+        <div class="@if(showErrorAfter & hasError){form-group form-field--error interrupt-cards}">
+            @for(option <- options) {
+                @showOrInterrupt(option)
+                <div class="multiple-choice">
+                    <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
+                    <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
+                </div>
+            }
+        </div>
+
     </fieldset>
+    @if(showErrorAfter & hasError){
+        <div class="@if(hasError){ form-field--error interrupt-cards}">
+            <span class="error-notification" role="tooltip" id="error-message-@field.name">
+                @{Messages(s"${parentForm.error(field.name).get.message}.field")}
+            </span>
+        </div>
+    }
 </div>

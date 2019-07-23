@@ -1,0 +1,59 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.play.views.html.helpers._
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.forms.HaveYouGotSoftwareForm._
+@import uk.gov.hmrc.vatsignupfrontend.forms.submapping.HaveSoftwareMapping._
+@import uk.gov.hmrc.vatsignupfrontend.models.HaveSoftware
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{radioHelper, continueButton}
+
+@(haveSoftwareForm: Form[HaveSoftware], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@principal_main_template(
+    title = Messages("principal.have_you_got_software.title"),
+    bodyClasses = None,
+    form = Some(haveSoftwareForm),
+    mainClass = Some("full-width")
+) {
+    <div class="grid-row interrupt-card">
+        <div class="column-two-thirds">
+
+            @form(action = postAction) {
+                @radioHelper(
+                    parentForm = haveSoftwareForm,
+                    inline = false,
+                    options = Seq(
+                        (option_accounting_software, Messages("principal.have_you_got_software.accounting_software")),
+                        (option_spreadsheets, Messages("principal.have_you_got_software.spreadsheets")),
+                        (option_neither, Messages("principal.have_you_got_software.neither"))
+                ),
+                legend = Messages("principal.have_you_got_software.heading"),
+                field = haveSoftwareForm(software),
+                hideLegend = false,
+                showErrorAfter = true
+            )
+
+            <div class='actions'>
+                @continueButton()
+            </div>
+            }
+
+        </div>
+    </div>
+}
