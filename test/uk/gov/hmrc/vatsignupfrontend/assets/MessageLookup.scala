@@ -1104,4 +1104,16 @@ object MessageLookup {
     val link_text = "Find out if and when you (or your clients) need to follow the rules"
     val line_3: String = s"${link_text} for Making Tax Digital for VAT, or apply for an exemption."
   }
+
+  object MakingTaxDigitalSoftware {
+    val heading = "Things you must know and do"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "This is a new way of keeping your VAT Records and submitting your VAT Returns online by using software which is compatible with HMRC."
+    val line2 = "Things you must do first:"
+    val bullet1 = "get software which connects you to HMRC"
+    val bullet2 = "start keeping your VAT Records using this software"
+    val findSoftware = "Find out more information about Making Tax Digital for VAT (opens in a new tab)"
+    val linkId = "find-software-link"
+  }
+
 }
