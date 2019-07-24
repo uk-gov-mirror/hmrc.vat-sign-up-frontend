@@ -22,7 +22,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.{routes => principalRoutes}
 
 class MakingTaxDigitalSoftwareController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
 
@@ -30,6 +29,6 @@ class MakingTaxDigitalSoftwareController @Inject()(val controllerComponents: Con
   implicit final val appConfig: AppConfig = controllerComponents.appConfig
 
   def show: Action[AnyContent] = Action { implicit request =>
-    Ok(eligibility.making_tax_digital_software(principalRoutes.HaveYouGotSoftwareController.show()))
+    Ok(eligibility.making_tax_digital_software(routes.HaveYouGotSoftwareController.show()))
   }
 }
