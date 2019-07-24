@@ -14,40 +14,59 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.principal.eligibility
 
+import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalReturnDue => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{MakingTaxDigitalSoftware => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class ReturnDueSpec extends ViewSpec {
+class MakingTaxDigitalSoftwareViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.return_due()(
+  val conf = new AppConfig(configuration, env)
+
+  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.making_tax_digital_software(testCall)(
     FakeRequest(),
     applicationMessages,
-    new AppConfig(configuration, env)
+    conf
   )
 
-  "The Return Due view" should {
+  lazy val document = Jsoup.parse(page.body)
+
+  "Making Tax Digital Software View" should {
+
     val testPage = TestView(
-      name = "Return Due View",
+      name = "Making Tax Digital View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
+
     testPage.shouldHaveParaSeq(
-      messages.line_1,
-      messages.line_2,
-      messages.line_3
+      messages.line1,
+      messages.line2
     )
-    testPage.shouldHaveALink(messages.link_id, messages.link_text, messages.link)
+
+    testPage.shouldHaveBulletSeq(
+      messages.bullet1,
+      messages.bullet2
+    )
+
+    testPage.shouldHaveALink(messages.linkId, messages.findSoftware, conf.softwareOptionsUrl)
+
+    testPage shouldHaveContinueButton()
 
   }
+
 }
