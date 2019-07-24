@@ -20,6 +20,7 @@ base.accept_and_send                                                   = Accept 
 base.continue_to_sign_up                                               = Continue to sign up
 base.error_heading                                                     = There''s a problem
 base.sign_out                                                          = Sign out
+base.sign_up                                                           = Sign up
 base.logout                                                            = Logout
 base.sign_up_client                                                    = Sign up your client
 base.sign_up_another_client                                            = Sign up another client
@@ -1066,4 +1067,12 @@ principal.got_software.para                                           = Check th
 principal.got_software.bullet_1                                       = your software connects with HMRC
 principal.got_software.bullet_2                                       = if you use an accountant make sure your software works with their software
 principal.got_software.check_software                                 = Check if your software is compatible (opens in a new tab)
-principal.got_software.sign_up                                        = Sign up
+
+#Use spreadsheets
+principal.use_spreadsheets.title                                      = You''ll need bridging software to continue using your spreadsheets
+principal.use_spreadsheets.heading                                    = You''ll need bridging software to continue using your spreadsheets
+principal.use_spreadsheets.line_1                                     = This software connects your spreadsheets to HMRC.
+principal.use_spreadsheets.line_2                                     = If you:
+principal.use_spreadsheets.bullet_1                                   = do not have this software, get and set it up on your computer
+principal.use_spreadsheets.bullet_2                                   = do have it, check it is compatible and meets your business needs
+principal.use_spreadsheets.get_software                               = Find out how to get and select bridging software (opens in a new tab)

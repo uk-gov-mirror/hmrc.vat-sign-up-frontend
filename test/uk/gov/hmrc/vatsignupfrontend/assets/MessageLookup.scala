@@ -1134,4 +1134,16 @@ object MessageLookup {
     val signUp = "Sign up"
   }
 
+  object UseSpreadsheets {
+    val heading = "You'll need bridging software to continue using your spreadsheets"
+    val title: String = heading + ServiceName.principalSuffix
+    val line1 = "This software connects your spreadsheets to HMRC."
+    val line2 = "If you:"
+    val bullet1 = "do not have this software, get and set it up on your computer"
+    val bullet2 = "do have it, check it is compatible and meets your business needs"
+    val findSoftware = "Find out how to get and select bridging software (opens in a new tab)"
+    val linkId = "find-software-link"
+    val signUp = "Sign up"
+  }
+
 }

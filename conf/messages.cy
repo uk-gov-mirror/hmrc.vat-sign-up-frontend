@@ -20,6 +20,7 @@ base.accept_and_send                                                   = Derbyn 
 base.continue_to_sign_up                                               = Yn eich blaen i gofrestru
 base.error_heading                                                     = Mae problem wedi codi
 base.sign_out                                                          = Allgofnodi
+base.sign_up                                                           = Cofrestru
 base.logout                                                            = Allgofnodi
 base.sign_up_client                                                    = Cofrestru''ch cleient
 base.sign_up_another_client                                            = Cofrestru cleient arall
@@ -1059,3 +1060,12 @@ principal.got_software.bullet_1                                       = mae''ch 
 principal.got_software.bullet_2                                       = os ydych yn defnyddio cyfrifydd, sicrhewch fod eich meddalwedd yn gweithio gyda''i feddalwedd ef
 principal.got_software.check_software                                 = Gwirio a yw''ch meddalwedd yn cydweddu (yn agor tab newydd)
 principal.got_software.sign_up                                        = Cofrestru
+
+#Use spreadsheets
+principal.use_spreadsheets.title                                      = Bydd angen meddalwedd bontio arnoch i barhau i ddefnyddio''ch taenlenni
+principal.use_spreadsheets.heading                                    = Bydd angen meddalwedd bontio arnoch i barhau i ddefnyddio''ch taenlenni
+principal.use_spreadsheets.line_1                                     = Mae''r feddalwedd hon yn cysylltu''ch taenlenni â CThEM.
+principal.use_spreadsheets.line_2                                     = Os:
+principal.use_spreadsheets.bullet_1                                   = nad oes gennych y feddalwedd hon, ewch ati i''w chael a''i gosod ar eich cyfrifiadur
+principal.use_spreadsheets.bullet_2                                   = oes gennych y feddalwedd hon, gwiriwch ei bod yn cydweddu a''i bod yn bodloni''ch anghenion busnes
+principal.use_spreadsheets.get_software                               = Dysgu sut i gael a dewis meddalwedd bontio (yn agor tab newydd)
