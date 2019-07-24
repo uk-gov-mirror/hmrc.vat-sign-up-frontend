@@ -21,7 +21,7 @@
 @(action: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @principal_main_template(
-    title = Messages("principal.got_software.title"),
+    title = Messages("principal.use_spreadsheets.title"),
     showSignOutLink = false,
     enableTimeout = false,
     mainClass = Some("full-width")
@@ -31,16 +31,17 @@
 
         <div class="column-two-thirds">
 
-            <h1 class="heading-large">@messages("principal.got_software.heading")</h1>
+            <h1 class="heading-large">@messages("principal.use_spreadsheets.heading")</h1>
 
-            <p>@messages("principal.got_software.para")</p>
+            <p>@messages("principal.use_spreadsheets.line_1")</p>
+            <p>@messages("principal.use_spreadsheets.line_2")</p>
 
             <ul class="list list-bullet">
-                <li>@messages("principal.got_software.bullet_1")</li>
-                <li>@messages("principal.got_software.bullet_2")</li>
+                <li>@messages("principal.use_spreadsheets.bullet_1")</li>
+                <li>@messages("principal.use_spreadsheets.bullet_2")</li>
             </ul>
 
-            <a id="software-compatible-link" href=@appConfig.makingTaxDigitalSoftwareUrl target="_blank">@messages("principal.got_software.check_software")</a>
+            <a id="find-software-link" href=@appConfig.softwareOptionsUrl target="_blank">@messages("principal.use_spreadsheets.get_software")</a>
 
             @form(action) {
                 <div class='actions'>
