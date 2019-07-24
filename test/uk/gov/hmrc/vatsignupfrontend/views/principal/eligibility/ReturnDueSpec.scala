@@ -14,56 +14,40 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.principal.eligibility
 
-import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{GotSoftware => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalReturnDue => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class GotSoftwareViewSpec extends ViewSpec {
+class ReturnDueSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  val conf = new AppConfig(configuration, env)
-
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.got_software(testCall)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.return_due()(
     FakeRequest(),
     applicationMessages,
-    conf
+    new AppConfig(configuration, env)
   )
 
-  lazy val document = Jsoup.parse(page.body)
-
-  "Got Software" should {
-
+  "The Return Due view" should {
     val testPage = TestView(
-      name = "Got Software View",
+      name = "Return Due View",
       title = messages.title,
       heading = messages.heading,
-      page = page,
-      haveSignOutInBanner = false
+      page = page
     )
-
-    testPage.shouldHavePara(messages.para)
-
-    testPage.shouldHaveBulletSeq(
-      messages.bullet1,
-      messages.bullet2
+    testPage.shouldHaveParaSeq(
+      messages.line_1,
+      messages.line_2,
+      messages.line_3
     )
-
-    testPage.shouldHaveALink(messages.linkId, messages.softwareCompatible, conf.makingTaxDigitalSoftwareUrl)
-
-    testPage shouldHaveSubmitButton messages.signUp
+    testPage.shouldHaveALink(messages.link_id, messages.link_text, messages.link)
 
   }
-
 }

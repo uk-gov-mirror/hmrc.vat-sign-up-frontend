@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.principal.eligibility
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{MakingTaxDigitalSoftware => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{GotSoftware => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class MakingTaxDigitalSoftwareViewSpec extends ViewSpec {
+class GotSoftwareViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
@@ -35,7 +35,7 @@ class MakingTaxDigitalSoftwareViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.making_tax_digital_software(testCall)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.got_software(testCall)(
     FakeRequest(),
     applicationMessages,
     conf
@@ -43,29 +43,26 @@ class MakingTaxDigitalSoftwareViewSpec extends ViewSpec {
 
   lazy val document = Jsoup.parse(page.body)
 
-  "Making Tax Digital Software View" should {
+  "Got Software" should {
 
     val testPage = TestView(
-      name = "Making Tax Digital View",
+      name = "Got Software View",
       title = messages.title,
       heading = messages.heading,
       page = page,
       haveSignOutInBanner = false
     )
 
-    testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
-    )
+    testPage.shouldHavePara(messages.para)
 
     testPage.shouldHaveBulletSeq(
       messages.bullet1,
       messages.bullet2
     )
 
-    testPage.shouldHaveALink(messages.linkId, messages.findSoftware, conf.softwareOptionsUrl)
+    testPage.shouldHaveALink(messages.linkId, messages.softwareCompatible, conf.makingTaxDigitalSoftwareUrl)
 
-    testPage shouldHaveContinueButton()
+    testPage shouldHaveSubmitButton messages.signUp
 
   }
 
