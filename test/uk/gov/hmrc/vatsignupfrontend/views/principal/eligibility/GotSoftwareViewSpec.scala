@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.views.principal
+package uk.gov.hmrc.vatsignupfrontend.views.principal.eligibility
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
@@ -35,7 +35,7 @@ class GotSoftwareViewSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.got_software(testCall)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.got_software(testCall)(
     FakeRequest(),
     applicationMessages,
     conf
