@@ -1043,3 +1043,12 @@ principal.making_tax_digital_software.line_2                          = Pethau y
 principal.making_tax_digital_software.bullet_1                        = cael gafael ar feddalwedd sy''n eich cysylltu â CThEM
 principal.making_tax_digital_software.bullet_2                        = dechrau cadw''ch cofnodion TAW gan ddefnyddio''r feddalwedd hon
 principal.making_tax_digital_software.find_software                   = Dysgu rhagor ynghylch Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)
+
+#Got software
+principal.got_software.title                                          = Mae''n rhaid i''ch meddalwedd gyfrifyddu bresennol gydweddu â CThEM.
+principal.got_software.heading                                        = Mae''n rhaid i''ch meddalwedd gyfrifyddu bresennol gydweddu â CThEM.
+principal.got_software.para                                           = Gwiriwch y canlynol cyn cofrestru:
+principal.got_software.bullet_1                                       = mae''ch meddalwedd yn cysylltu â CThEM
+principal.got_software.bullet_2                                       = os ydych yn defnyddio cyfrifydd, sicrhewch fod eich meddalwedd yn gweithio gyda''i feddalwedd ef
+principal.got_software.check_software                                 = Gwirio a yw''ch meddalwedd yn cydweddu (yn agor tab newydd)
+principal.got_software.sign_up                                        = Cofrestru
