@@ -1116,4 +1116,15 @@ object MessageLookup {
     val linkId = "find-software-link"
   }
 
+  object GotSoftware {
+    val heading = "Your existing accounting software must be compatible with HMRC"
+    val title: String = heading + ServiceName.principalSuffix
+    val para = "Check the following first before signing up:"
+    val bullet1 = "your software connects with HMRC"
+    val bullet2 = "if you use an accountant make sure your software works with their software"
+    val softwareCompatible = "Check if your software is compatible (opens in a new tab)"
+    val linkId = "software-compatible-link"
+    val signUp = "Sign up"
+  }
+
 }

@@ -1050,3 +1050,12 @@ principal.making_tax_digital_software.line_2                          = Things y
 principal.making_tax_digital_software.bullet_1                        = get software which connects you to HMRC
 principal.making_tax_digital_software.bullet_2                        = start keeping your VAT Records using this software
 principal.making_tax_digital_software.find_software                   = Find out more information about Making Tax Digital for VAT (opens in a new tab)
+
+#Got software
+principal.got_software.title                                          = Your existing accounting software must be compatible with HMRC
+principal.got_software.heading                                        = Your existing accounting software must be compatible with HMRC
+principal.got_software.para                                           = Check the following first before signing up:
+principal.got_software.bullet_1                                       = your software connects with HMRC
+principal.got_software.bullet_2                                       = if you use an accountant make sure your software works with their software
+principal.got_software.check_software                                 = Check if your software is compatible (opens in a new tab)
+principal.got_software.sign_up                                        = Sign up
