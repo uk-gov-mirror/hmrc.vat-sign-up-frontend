@@ -81,3 +81,32 @@ input.form-control, textarea.form-control {
 .actions {
     margin: 30px 0 15px;
 }
+.interrupt-card .multiple-choice [type=radio]+label::before {
+    background-color: #ffffff;
+    border-color: #000000;
+}
+
+.interrupt-card .multiple-choice [type=radio]+label::after {
+    border: 10px solid #000000;
+}
+
+.interrupt-card .multiple-choice input[type=radio] {
+    -webkit-appearance: none;
+    z-index: unset;
+    opacity: unset;
+    border: none;
+    background-color: transparent;
+}
+
+.interrupt-card .form-field--error{
+    background-color: transparent;
+    border-left: 5px solid #ffffff;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.interrupt-card .error-notification {
+    font-size: 19px;
+    color: #ffffff;
+    padding-bottom: 0;
+}
