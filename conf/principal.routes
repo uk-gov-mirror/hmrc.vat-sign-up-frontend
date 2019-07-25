@@ -7,7 +7,11 @@ GET         /                                                   uk.gov.hmrc.vats
 GET         /index                                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.IndexResolverController.resolve
 
 # Eligibility Use Spreadsheets
+
 GET         /interruption/use-spreadsheets                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.UseSpreadsheetsController.show
+
+# Eligibility Making Tax Digital Software
+GET        /interruption/making-tax-digital-software           uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.MakingTaxDigitalSoftwareController.show
 
 # Eligibility have you got software
 GET         /interruption/have-you-got-software                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.HaveYouGotSoftwareController.show
