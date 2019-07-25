@@ -1079,3 +1079,11 @@ principal.have_you_got_software.heading                               = Sut yr y
 principal.have_you_got_software.accounting_software                   = Rwy''n defnyddio meddalwedd gyfrifyddu
 principal.have_you_got_software.spreadsheets                          = Rwy''n defnyddio taenlenni
 principal.have_you_got_software.neither                               = Dydw i ddim yn defnyddio''r naill na''r llall o''r rheiny
+
+# Not Got Software
+principal.not_got_software.title                                      = Mae''n rhaid i chi gael meddalwedd sy''n cydweddu yn gyntaf
+principal.not_got_software.heading                                    = Mae''n rhaid i chi gael meddalwedd sy''n cydweddu yn gyntaf
+principal.not_got_software.line_1                                     = Cyn i chi gofrestru, mae''n rhaid i chi wneud y canlynol:
+principal.not_got_software.line_2                                     = Sefydlu meddalwedd gyfrifyddu sy''n cydweddu ac sydd fwyaf addas i''ch anghenion busnes.
+principal.not_got_software.line_3                                     = Gwirio bod y feddalwedd a ddewiswyd gennych yn gweithio ac yn cysylltu â CThEM.
+principal.not_got_software.line_4                                     = Cael gafael ar ragor o wybodaeth am gynhyrchion a chwmnïau meddalwedd.
