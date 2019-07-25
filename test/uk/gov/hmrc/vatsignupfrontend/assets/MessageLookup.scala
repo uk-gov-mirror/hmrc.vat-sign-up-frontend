@@ -1153,4 +1153,15 @@ object MessageLookup {
     val spreadsheets: String = "I use spreadsheets"
     val neither: String = "I use neither"
   }
+
+  object NotGotSoftware {
+    val heading: String = "You must get compatible software first"
+    val title: String = heading + ServiceName.principalSuffix
+    val line_1: String = "Before you sign up you must:"
+    val line_2: String = "Set up compatible accounting software which is best suited to your business needs."
+    val line_3: String = "Check your chosen software works and connects to HMRC."
+    val link_id: String = "mtdGuidance"
+    val link = "http://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
+    val link_text = "Get more information about software products and companies"
+  }
 }

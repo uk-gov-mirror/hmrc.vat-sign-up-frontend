@@ -1085,3 +1085,11 @@ principal.have_you_got_software.heading                               = How do y
 principal.have_you_got_software.accounting_software                   = I use accounting software
 principal.have_you_got_software.spreadsheets                          = I use spreadsheets
 principal.have_you_got_software.neither                               = I use neither
+
+# Not Got Software
+principal.not_got_software.title                                      = You must get compatible software first
+principal.not_got_software.heading                                    = You must get compatible software first
+principal.not_got_software.line_1                                     = Before you sign up you must:
+principal.not_got_software.line_2                                     = Set up compatible accounting software which is best suited to your business needs.
+principal.not_got_software.line_3                                     = Check your chosen software works and connects to HMRC.
+principal.not_got_software.line_4                                     = Get more information about software products and companies
