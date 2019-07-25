@@ -19,6 +19,9 @@ GET         /interruption/got-software                          uk.gov.hmrc.vats
 # Eligibility Not Got Software
 GET         /interruption/not-got-software                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.NotGotSoftwareController.show
 
+# Eligibility Return Due
+GET         /error/return-due                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.ReturnDueController.show
+
 # Verify Software Error page
 GET         /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.show
 POST        /error/verify-software                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.VerifySoftwareErrorController.submit
