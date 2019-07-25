@@ -19,7 +19,6 @@
 package uk.gov.hmrc.vatsignupfrontend.config
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.i18n.MessagesApi
 import play.api.mvc.Results.NotFound
 import play.api.mvc.{Request, RequestHeader, Result}
@@ -30,6 +29,8 @@ import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 import uk.gov.hmrc.vatsignupfrontend.views
+
+import scala.concurrent.Future
 
 
 @Singleton
@@ -42,6 +43,13 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     views.html.error_template(pageTitle, heading, message)
+
+  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
+    exception match {
+      case _: AuthorisationException => Future.successful(resolveError(request, exception))
+      case _ => super.onServerError(request, exception)
+    }
+  }
 
   override def resolveError(rh: RequestHeader, ex: Throwable): Result = {
     ex match {
