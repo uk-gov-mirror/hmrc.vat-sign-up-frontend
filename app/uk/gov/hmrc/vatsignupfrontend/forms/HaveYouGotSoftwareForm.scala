@@ -18,16 +18,18 @@ package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.HaveSoftwareMapping._
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.HaveSoftwareMapping
 import uk.gov.hmrc.vatsignupfrontend.models.HaveSoftware
 
 object HaveYouGotSoftwareForm {
 
   val software: String = "software"
 
+  implicit val mapping = HaveSoftwareMapping
+
   val haveYouGotSoftwareForm: Form[HaveSoftware] = Form(
     single(
-      software -> of(haveSoftwareMapping("error.principal.no_option_selected"))
+      software -> of[HaveSoftware]
     )
   )
 

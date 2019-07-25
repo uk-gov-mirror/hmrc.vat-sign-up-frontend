@@ -9,6 +9,10 @@ GET         /index                                              uk.gov.hmrc.vats
 # Eligibility Use Spreadsheets
 GET         /interruption/use-spreadsheets                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.UseSpreadsheetsController.show
 
+# Eligibility have you got software
+GET         /interruption/have-you-got-software                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.HaveYouGotSoftwareController.show
+POST        /interruption/have-you-got-software                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.HaveYouGotSoftwareController.submit
+
 # Eligibility Got Software
 GET         /interruption/got-software                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.GotSoftwareController.show
 

@@ -20,29 +20,28 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 
-object HaveSoftwareMapping {
+object HaveSoftwareMapping extends Formatter[HaveSoftware] {
 
   val option_accounting_software: String = "I use accounting software"
   val option_spreadsheets: String = "I use spreadsheets"
   val option_neither: String = "I use neither"
 
-  def haveSoftwareMapping(error: String): Formatter[HaveSoftware] = new Formatter[HaveSoftware] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], HaveSoftware] = {
-      data.get(key) match {
-        case Some(`option_accounting_software`) => Right(AccountingSoftware)
-        case Some(`option_spreadsheets`) => Right(Spreadsheets)
-        case Some(`option_neither`) => Right(Neither)
-        case _ => Left(Seq(FormError(key, error)))
-      }
-    }
-
-    override def unbind(key: String, value: HaveSoftware): Map[String, String] = {
-      val stringValue = value match {
-        case AccountingSoftware => option_accounting_software
-        case Spreadsheets => option_spreadsheets
-        case Neither => option_neither
-      }
-      Map(key->stringValue)
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], HaveSoftware] = {
+    data.get(key) match {
+      case Some(`option_accounting_software`) => Right(AccountingSoftware)
+      case Some(`option_spreadsheets`) => Right(Spreadsheets)
+      case Some(`option_neither`) => Right(Neither)
+      case _ => Left(Seq(FormError(key, "error.principal.no_option_selected")))
     }
   }
+
+  override def unbind(key: String, value: HaveSoftware): Map[String, String] = {
+    val stringValue = value match {
+      case AccountingSoftware => option_accounting_software
+      case Spreadsheets => option_spreadsheets
+      case Neither => option_neither
+    }
+    Map(key -> stringValue)
+  }
+
 }
