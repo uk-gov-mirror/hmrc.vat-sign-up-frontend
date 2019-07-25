@@ -1149,6 +1149,7 @@ object MessageLookup {
   object PrincipalHaveYouGotSoftware {
     val heading: String = "How do you currently keep your VAT records?"
     val title: String = heading + ServiceName.principalSuffix
+    val error: String = "You must select an option"
     val accounting_software: String = "I use accounting software"
     val spreadsheets: String = "I use spreadsheets"
     val neither: String = "I use neither"
