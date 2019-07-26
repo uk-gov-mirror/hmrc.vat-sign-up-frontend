@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.forms
+package uk.gov.hmrc.vatsignupfrontend.forms.eligibility
+
 import play.api.data.{Form, FormError}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping

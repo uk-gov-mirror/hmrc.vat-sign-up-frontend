@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.forms
+package uk.gov.hmrc.vatsignupfrontend.forms.eligibility
 
 import play.api.data.Form
-import play.api.data.Forms._
-import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
+import play.api.data.Forms.{of, single}
+import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping.yesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.models.YesNo
 
 object AreYouReadySubmitSoftwareForm {

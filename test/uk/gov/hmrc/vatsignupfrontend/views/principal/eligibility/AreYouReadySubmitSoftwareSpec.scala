@@ -24,7 +24,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AreYouReadySubmitSoftware => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.forms.AreYouReadySubmitSoftwareForm
+import uk.gov.hmrc.vatsignupfrontend.forms.eligibility.AreYouReadySubmitSoftwareForm
 import uk.gov.hmrc.vatsignupfrontend.models.YesNo
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 

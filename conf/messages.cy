@@ -180,8 +180,8 @@ error.agent.partnership.do_you_have_a_utr.field                        = Dewiswc
 error.agent.partnership.do_you_have_a_utr.summary                      = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient
 error.principal.partnership.do_you_have_a_utr.field                    = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad
 error.principal.partnership.do_you_have_a_utr.summary                  = Dewiswch ''Iawn'' os oes gennych Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad
-error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
-error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
+error.principal.are_you_ready_submit_software.summary                  = Dewiswch opsiwn
+error.principal.are_you_ready_submit_software.field                    = Dewiswch opsiwn
 error.principal.no_option_selected.field                               = Dewiswch opsiwn
 error.principal.no_option_selected.summary                             = Dewiswch opsiwn
 

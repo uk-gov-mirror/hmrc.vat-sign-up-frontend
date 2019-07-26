@@ -190,7 +190,6 @@ error.agent.partnership.do_you_have_a_utr.field                        = Select 
 error.agent.partnership.do_you_have_a_utr.summary                      = Select yes if you have your client''s Unique Taxpayer Reference number
 error.principal.no_option_selected.field                               = You must select an option
 error.principal.no_option_selected.summary                             = You must select an option
-
 error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
 error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
 ## Not enrolled to Agent Services page
