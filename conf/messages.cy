@@ -792,22 +792,26 @@ principal.sign_up_between_these_dates.line_1                           = Does di
 principal.sign_up_between_these_dates.line_2                           = Dewch yn ôl i gofrestru rhwng {0} a {1}.
 
 ## Agent Sign Up After This Date
-agent.sign_up_after_this_date.title                                    = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-agent.sign_up_after_this_date.heading                                  = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-agent.sign_up_after_this_date.line_1                                   = Ni allwn sefydlu''ch cleient am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd. Mae hyn oherwydd y canlynol:
+agent.sign_up_after_this_date.title                                    = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru''ch cleient
+agent.sign_up_after_this_date.heading                                  = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru''ch cleient
+agent.sign_up_after_this_date.line_1                                   = Ni allwch gofrestru''ch cleient ar gyfer y cynllun Troi Treth yn Ddigidol ar hyn o bryd.
+agent.sign_up_after_this_date.line_2                                   = Mae hyn naill ai oherwydd:
 agent.sign_up_after_this_date.bullet_1                                 = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
-agent.sign_up_after_this_date.bullet_2                                 = rydych yn nesáu at gyfnod cyflwyno prysur
-agent.sign_up_after_this_date.line_3                                   = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
-agent.sign_up_after_this_date.line_4                                   = I gael yr wybodaeth ddiweddaraf a''r rheolau i''w dilyn, trowch at yr <a id="mtdGuidance" href={0}>arweiniad Troi Treth yn Ddigidol</a>.
+agent.sign_up_after_this_date.bullet_2                                 = mae''n agos at gyfnod cyflwyno
+agent.sign_up_after_this_date.line_3                                   = Cyflwynwch ei Ffurflen Dreth bresennol drwy''ch dull arferol. Wedyn gallwch gofrestru''ch cleient ar gyfer y cynllun Troi Treth yn Ddigidol fel bod modd i chi ddefnyddio meddalwedd sy''n cydweddu i gyflwyno''i Ffurflen Dreth nesaf. Ni fyddwn yn codi cosb ar eich cleient am hyn.
+agent.sign_up_after_this_date.line_4                                   = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
+agent.sign_up_after_this_date.line_5                                   = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
 ## Agent Sign Up Between These Dates
-agent.sign_up_between_these_dates.title                                = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-agent.sign_up_between_these_dates.heading                              = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-agent.sign_up_between_these_dates.line_1                               = Ni allwn sefydlu''ch cleient am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd. Mae hyn oherwydd y canlynol:
+agent.sign_up_between_these_dates.title                                = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru''ch cleient
+agent.sign_up_between_these_dates.heading                              = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru''ch cleient
+agent.sign_up_between_these_dates.line_1                               = Ni allwch gofrestru''ch cleient ar gyfer y cynllun Troi Treth yn Ddigidol ar hyn o bryd.
+agent.sign_up_between_these_dates.line_2                               = Mae hyn naill ai oherwydd:
 agent.sign_up_between_these_dates.bullet_1                             = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
-agent.sign_up_between_these_dates.bullet_2                             = rydych yn nesáu at gyfnod cyflwyno prysur
-agent.sign_up_between_these_dates.line_3                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn rhwng {0} a {1}.
-agent.sign_up_between_these_dates.line_4                               = I gael yr wybodaeth ddiweddaraf a''r rheolau i''w dilyn, trowch at yr <a id="mtdGuidance" href={0}>arweiniad Troi Treth yn Ddigidol</a>.
+agent.sign_up_between_these_dates.bullet_2                             = mae''n agos at gyfnod cyflwyno
+agent.sign_up_between_these_dates.line_3                               = Cyflwynwch ei Ffurflen Dreth bresennol drwy''ch dull arferol. Wedyn gallwch gofrestru''ch cleient ar gyfer y cynllun Troi Treth yn Ddigidol fel bod modd i chi ddefnyddio meddalwedd sy''n cydweddu i gyflwyno''i Ffurflen Dreth nesaf. Ni fyddwn yn codi cosb ar eich cleient am hyn.
+agent.sign_up_between_these_dates.line_4                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn rhwng {0} a {1}.
+agent.sign_up_between_these_dates.line_5                               = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
 ## Agent Partnership Company Number
 agent.capture_partnership_company_number.title                         = Beth yw rhif cwmni partneriaeth eich cleient?

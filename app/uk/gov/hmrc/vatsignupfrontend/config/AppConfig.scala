@@ -191,6 +191,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val makingTaxDigitalSoftwareUrl: String = loadConfig("software-choices.url")
 
+  lazy val makingTaxDigitalForVatCollection: String = govUK + "/government/collections/making-tax-digital-for-vat"
+
   lazy val recoverAccountUrl: String = govUK + "/log-in-register-hmrc-online-services/problems-signing-in"
 
   lazy val directDebitTermsAndConditionsUrl: String = "https://www.tax.service.gov.uk/direct-debit/vat/terms-and-conditions"

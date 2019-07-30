@@ -60,8 +60,9 @@ class SignUpBetweenTheseDatesSpec extends ViewSpec {
     testPage.shouldHaveParaSeq(
       messages.line1,
       messages.line2,
-      messages.line3(expectedFormattedStartDate, expectedFormattedEndDate),
-      messages.line4
+      messages.line3,
+      messages.line4(expectedFormattedStartDate, expectedFormattedEndDate),
+      messages.line5
     )
 
     testPage.shouldHaveBulletSeq(
