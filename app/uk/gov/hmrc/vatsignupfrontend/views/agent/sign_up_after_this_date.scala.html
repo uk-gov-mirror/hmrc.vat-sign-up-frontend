@@ -28,16 +28,18 @@
 
     <p>@Messages("agent.sign_up_after_this_date.line_1")</p>
 
+    <p>@Messages("agent.sign_up_after_this_date.line_2")</p>
+
     <ul class="bullets">
         <li>@Messages("agent.sign_up_after_this_date.bullet_1")</li>
         <li>@Messages("agent.sign_up_after_this_date.bullet_2")</li>
     </ul>
 
-    <p>@Messages("agent.sign_up_after_this_date.line_2")</p>
+    <p>@Messages("agent.sign_up_after_this_date.line_3")</p>
 
-    <p>@Messages("agent.sign_up_after_this_date.line_3", DateModel.dateConvert(date).toOutputDateFormat)</p>
+    <p>@Messages("agent.sign_up_after_this_date.line_4", DateModel.dateConvert(date).toOutputDateFormat)</p>
 
-    <p>@Html(Messages("agent.sign_up_after_this_date.line_4", appConfig.signUpGuidancePageUrl))</p>
+    <p>@Html(Messages("agent.sign_up_after_this_date.line_5", appConfig.makingTaxDigitalForVatCollection))</p>
 
     <div class="form-group">
         @signOutButton(isAgent = true)

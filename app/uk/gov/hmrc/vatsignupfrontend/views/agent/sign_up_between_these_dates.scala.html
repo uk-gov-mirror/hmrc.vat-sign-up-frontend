@@ -36,16 +36,18 @@
 
     <p>@Messages("agent.sign_up_between_these_dates.line_1")</p>
 
+    <p>@Messages("agent.sign_up_between_these_dates.line_2")</p>
+
     <ul class="bullets">
         <li>@Messages("agent.sign_up_between_these_dates.bullet_1")</li>
         <li>@Messages("agent.sign_up_between_these_dates.bullet_2")</li>
     </ul>
 
-    <p>@Messages("agent.sign_up_between_these_dates.line_2")</p>
+    <p>@Messages("agent.sign_up_between_these_dates.line_3")</p>
 
-    <p>@Messages("agent.sign_up_between_these_dates.line_3", formattedStartDate, formattedEndDate)</p>
+    <p>@Messages("agent.sign_up_between_these_dates.line_4", formattedStartDate, formattedEndDate)</p>
 
-    <p>@Html(Messages("agent.sign_up_between_these_dates.line_4", appConfig.signUpGuidancePageUrl))</p>
+    <p>@Html(Messages("agent.sign_up_between_these_dates.line_5", appConfig.makingTaxDigitalForVatCollection))</p>
 
     <div class="form-group">
         @signOutButton(isAgent = true)
