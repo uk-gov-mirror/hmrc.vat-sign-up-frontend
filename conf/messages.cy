@@ -786,10 +786,15 @@ principal.sign_up_after_this_date.line_4                               = Byddwn 
 principal.sign_up_after_this_date.line_5                               = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
 ## Sign Up Between These Dates
-principal.sign_up_between_these_dates.title                            = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-principal.sign_up_between_these_dates.heading                          = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-principal.sign_up_between_these_dates.line_1                           = Does dim digon o amser i''ch cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW cyn i''ch taliad debyd uniongyrchol nesaf ddod yn ddyledus.
-principal.sign_up_between_these_dates.line_2                           = Dewch yn ôl i gofrestru rhwng {0} a {1}.
+principal.sign_up_between_these_dates.title                            = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru
+principal.sign_up_between_these_dates.heading                          = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru
+principal.sign_up_between_these_dates.line_1                           = Ni allwn eich cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd.
+principal.sign_up_between_these_dates.line_2                           = Mae hyn naill ai oherwydd:
+principal.sign_up_between_these_dates.bullet_1                         = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
+principal.sign_up_between_these_dates.bullet_2                         = rydych yn agos at gyfnod cyflwyno
+principal.sign_up_between_these_dates.line_3                           = Cyflwynwch eich Ffurflen Dreth bresennol drwy’ch dull arferol, wedyn cofrestrwch i ddefnyddio meddalwedd sy’n cydweddu i gyflwyno’ch Ffurflen Dreth nesaf.
+principal.sign_up_between_these_dates.line_4                           = Dewch yn ôl i gofrestru rhwng {0} a {1}.
+principal.sign_up_between_these_dates.line_5                           = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
 ## Agent Sign Up After This Date
 agent.sign_up_after_this_date.title                                    = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru''ch cleient

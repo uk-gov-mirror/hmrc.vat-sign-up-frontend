@@ -76,8 +76,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val guidancePageUrl: String = s"$govUK/guidance/use-software-to-submit-your-vat-returns"
 
-  lazy val signUpGuidancePageUrl: String = s"$govUK/guidance/sign-up-for-making-tax-digital-for-vat"
-
   lazy val findLostUtrNumberUrl: String = s"$govUK/find-lost-utr-number"
 
   lazy val checkNeedForMtdUrl: String = s"$govUK/guidance/check-when-a-business-must-follow-the-rules-for-making-tax-digital-for-vat"
