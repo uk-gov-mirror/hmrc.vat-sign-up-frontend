@@ -57,8 +57,9 @@ class SignUpAfterThisDateSpec extends ViewSpec {
     testPage.shouldHaveParaSeq(
       messages.line1,
       messages.line2,
-      messages.line3(expectedFormattedDate),
-      messages.line4
+      messages.line3,
+      messages.line4(expectedFormattedDate),
+      messages.line5
     )
 
     testPage.shouldHaveBulletSeq(
@@ -71,4 +72,3 @@ class SignUpAfterThisDateSpec extends ViewSpec {
   }
 
 }
-
