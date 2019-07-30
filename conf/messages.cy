@@ -775,14 +775,15 @@ agent.check-your-answers.joint_venture_or_property                     = Ydy''ch
 agent.check-your-answers.client_has_no_sautr                           = Nid oes gan fy cleient un
 
 ## Sign Up After This Date
-principal.sign_up_after_this_date.title                                = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-principal.sign_up_after_this_date.heading                              = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
-principal.sign_up_after_this_date.line_1                               = Ni allwn sefydlu''ch cleient am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd. Mae hyn oherwydd y canlynol:
+principal.sign_up_after_this_date.title                                = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru
+principal.sign_up_after_this_date.heading                              = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru
+principal.sign_up_after_this_date.line_1                               = Ni allwn eich cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW ar hyn o bryd.
+principal.sign_up_after_this_date.line_2                               = Mae hyn naill ai oherwydd:
 principal.sign_up_after_this_date.bullet_1                             = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
-principal.sign_up_after_this_date.bullet_2                             = rydych yn nesáu at gyfnod cyflwyno prysur
-principal.sign_up_after_this_date.line_2                               =
-principal.sign_up_after_this_date.line_3                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
-principal.sign_up_after_this_date.line_4                               = I gael yr wybodaeth ddiweddaraf a’r rheolau i’w dilyn, trowch at yr <a id="mtdGuidance" href={0}>arweiniad Troi Treth yn Ddigidol</a>.
+principal.sign_up_after_this_date.bullet_2                             = rydych yn agos at gyfnod cyflwyno
+principal.sign_up_after_this_date.line_3                               = Cyflwynwch eich Ffurflen Dreth bresennol drwy’ch dull arferol, wedyn cofrestrwch i ddefnyddio meddalwedd sy’n cydweddu i gyflwyno’ch Ffurflen Dreth nesaf.
+principal.sign_up_after_this_date.line_4                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
+principal.sign_up_after_this_date.line_5                               = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
 ## Sign Up Between These Dates
 principal.sign_up_between_these_dates.title                            = Mae''n rhaid i chi ddod yn ôl i gofrestru yn nes ymlaen
