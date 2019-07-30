@@ -29,17 +29,21 @@
 
     <div class="interrupt-card">
 
-        <h1 class="heading-large">@messages("principal.making_tax_digital_software.heading")</h1>
+        <div class="form-group">
 
-        <p>@messages("principal.making_tax_digital_software.line_1")</p>
-        <p>@messages("principal.making_tax_digital_software.line_2")</p>
+            <h1 class="heading-large">@messages("principal.making_tax_digital_software.heading")</h1>
 
-        <ul class="list list-bullet">
-            <li>@messages("principal.making_tax_digital_software.bullet_1")</li>
-            <li>@messages("principal.making_tax_digital_software.bullet_2")</li>
-        </ul>
+            <p>@messages("principal.making_tax_digital_software.line_1")</p>
+            <p>@messages("principal.making_tax_digital_software.line_2")</p>
 
-        <a id="find-software-link" href=@appConfig.softwareOptionsUrl target="_blank">@messages("principal.making_tax_digital_software.find_software")</a>
+            <ul class="list list-bullet">
+                <li>@messages("principal.making_tax_digital_software.bullet_1")</li>
+                <li>@messages("principal.making_tax_digital_software.bullet_2")</li>
+            </ul>
+
+            <a id="find-software-link" href=@appConfig.softwareOptionsUrl target="_blank">@messages("principal.making_tax_digital_software.find_software")</a>
+
+        </div>
 
         @form(action) {
             <div class='actions'>
