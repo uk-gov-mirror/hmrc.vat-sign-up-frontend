@@ -809,12 +809,13 @@ principal.sign_up_after_this_date.line_5                               = Find mo
 ## Sign Up Between These Dates
 principal.sign_up_between_these_dates.title                            = You must come back later to sign up
 principal.sign_up_between_these_dates.heading                          = You must come back later to sign up
-principal.sign_up_between_these_dates.line_1                           = We''re unable to set you up for Making Tax Digital for VAT at present. Either this is because:
+principal.sign_up_between_these_dates.line_1                           = We''re unable to sign you up for Making Tax Digital for VAT at present.
+principal.sign_up_between_these_dates.line_2                           = This is either because:
 principal.sign_up_between_these_dates.bullet_1                         = a Direct Debit payment is due shortly
-principal.sign_up_between_these_dates.bullet_2                         = you are very close to a busy filing period
-principal.sign_up_between_these_dates.line_2                           = If you submit monthly returns and are now unable to sign up in time to file your May return by the deadline do not worry. Please submit your return using the old method and come back after the date below to sign up in time to submit your June return. We will not charge a penalty in this instance.
-principal.sign_up_between_these_dates.line_3                           = You''ll be able to sign up for this service between {0} and {1}.
-principal.sign_up_between_these_dates.line_4                           = For the latest information and rules to follow go to <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>
+principal.sign_up_between_these_dates.bullet_2                         = you are close to a filing period
+principal.sign_up_between_these_dates.line_3                           = Submit your current return using your usual method, then sign up to use compatible software to submit your next return. We will not charge you a penalty for this.
+principal.sign_up_between_these_dates.line_4                           = You''ll be able to sign up for this service between {0} and {1}.
+principal.sign_up_between_these_dates.line_5                           = Find more information about <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>
 
 ## Agent Sign Up After This Date
 agent.sign_up_after_this_date.title                                    = You must come back later to sign up your client

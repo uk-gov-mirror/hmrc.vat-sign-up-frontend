@@ -24,13 +24,14 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.api.i18n.Messages.Implicits._
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SignUpAfterThisDate => messagesAfter, SignUpBetweenTheseDates => messagesBetween}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates._
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.{sign_up_after_this_date, sign_up_between_these_dates}
 
 class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -57,14 +58,14 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
       "one migratable date is available" in {
         mockAuthAdminRole()
         val testDate = LocalDate.now()
-        val request = testGetRequest(date = Some(testDate))
+        implicit val request = testGetRequest(date = Some(testDate))
 
         val result = TestMigratableDatesController.show(request)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
 
-        Jsoup.parse(contentAsString(result)).getElementsByTag("p").text().contains(messagesAfter.line4(dateFormat(testDate))) shouldBe true
+        contentAsString(result) shouldBe sign_up_after_this_date(testDate).body
       }
     }
 
@@ -74,14 +75,14 @@ class MigratableDatesControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         val testDate = LocalDate.now()
         val testDate2 = testDate.plusDays(1)
 
-        val request = testGetRequest(Some(testDate), Some(testDate2))
+        implicit val request = testGetRequest(Some(testDate), Some(testDate2))
 
         val result = TestMigratableDatesController.show(request)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
 
-        Jsoup.parse(contentAsString(result)).getElementsByTag("p").text().contains(messagesBetween.line3(dateFormat(testDate), dateFormat(testDate2))) shouldBe true
+        contentAsString(result) shouldBe sign_up_between_these_dates(testDate, testDate2).body
       }
     }
   }
