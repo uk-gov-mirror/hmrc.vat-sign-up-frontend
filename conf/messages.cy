@@ -166,8 +166,8 @@ error.invalid_registered_society_utr.field                             = Dim ond
 error.invalid_registered_society_utr.summary                           = Dim ond rhifau o 0 i 9 y dylid eu cynnwys yng Nghyfeirnod Unigryw y Trethdalwr ar gyfer cymdeithas gofrestredig
 error.no_month_selected.field                                          = Dewiswch fis
 error.no_month_selected.summary                                        = Dewiswch fis
-error.principal.box_5_figure_not_entered.field                         = Nodwch eich swm o Flwch 5
-error.principal.box_5_figure_not_entered.summary                       = Nodwch eich swm o Flwch 5
+error.principal.box_5_figure_not_entered.field                         = Nodwch gyfanswm eich Ffurflen TAW neu'ch swm o Flwch 5
+error.principal.box_5_figure_not_entered.summary                       = Nodwch gyfanswm eich Ffurflen TAW neu'ch swm o Flwch 5
 error.principal.box_5_figure_invalid_format.field                      = Nodwch werth hyd at 2 le degol. Er enghraifft, £100.00
 error.principal.box_5_figure_invalid_format.summary                    = Nodwch werth hyd at 2 le degol. Er enghraifft, £100.00
 error.principal.box_5_figure_invalid_length.field                      = Mae''n rhaid i''r swm o Flwch 5 fod yn llai na 14 o ddigidau
@@ -956,10 +956,10 @@ principal.previous_vat_return.title                                    = Ydych c
 principal.previous_vat_return.heading                                  = Ydych chi''n cyflwyno Ffurflenni TAW ar hyn o bryd?
 
 ## What is your box 5 Figure page
-principal.capture_box_5_figure.title                                   = Nodwch gyfanswm eich Ffurflen TAW neu''ch swm o Flwch 5
-principal.capture_box_5_figure.heading                                 = Nodwch gyfanswm eich Ffurflen TAW neu''ch swm o Flwch 5
-principal.capture_box_5_figure.line                                    = Gallwch ddod o hyd i''r swm hwn ym mlwch rhif 5 ar eich Ffurflen TAW diweddaraf.
-principal.capture_box_5_figure.line2                                   = Mae''n rhaid i fformat y rhif hwn fod yn 2 le degol, er enghraifft £123.00.
+principal.capture_box_5_figure.title                                   = Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
+principal.capture_box_5_figure.heading                                 = Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
+principal.capture_box_5_figure.line                                    = Mae’r swm hwn i’w weld ym mlwch 5 o’r Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
+principal.capture_box_5_figure.line2                                   = Mae angen i fformat y rhif hwn fod yn ddau le degol, er enghraifft £123.00.
 ## Cancel Direct Debit page
 principal.cancel_direct_debit.title                                    = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol
 principal.cancel_direct_debit.heading                                  = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol

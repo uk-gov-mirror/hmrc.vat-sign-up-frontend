@@ -1007,9 +1007,9 @@ object MessageLookup {
   }
 
   object CaptureBox5Figure {
-    val heading = "Enter your VAT return total or Box 5 amount"
+    val heading = "What is your latest VAT Return total?"
     val title = heading + ServiceName.principalSuffix
-    val line = "You can find this amount in box number 5 on your latest VAT Return."
+    val line = "You can find this amount in box number 5 on your latest VAT Return submitted to HMRC."
     val line2 = "The format of this number needs to be two decimal places, for example £123.00."
   }
 
