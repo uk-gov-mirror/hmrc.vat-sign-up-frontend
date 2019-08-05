@@ -43,6 +43,7 @@ object TestConstants {
   val testPartnershipType: String = "limitedPartnership"
 
   val testBox5Figure = "99999999999.99"
+  val testBox5FigureNegative = "-99999999999.99"
   val testLastReturnMonthPeriod = January.toString
 
   val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)

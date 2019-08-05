@@ -74,6 +74,16 @@ class CaptureBox5FigureControllerISpec extends ComponentSpecBase with CustomMatc
           redirectUri(routes.CaptureLastReturnMonthPeriodController.show().url)
         )
       }
+      "redirect to CaptureLastMonthReturnPeriod Page with negative values" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = post("/box-5-figure")(Box5FigureForm.box5Figure -> testBox5FigureNegative)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureLastReturnMonthPeriodController.show().url)
+        )
+      }
     }
   }
 }
