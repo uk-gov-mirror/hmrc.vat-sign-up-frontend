@@ -39,7 +39,7 @@ class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   lazy val testGetRequest = FakeRequest("GET", "/box-5-figure")
 
-  lazy val testPostRequest = FakeRequest("POST", "/box-5-figure").withFormUrlEncodedBody(box5Figure -> testBox5Figure)
+  private def testPostRequest(box5Value: String = testBox5Figure) = FakeRequest("POST", "/box-5-figure").withFormUrlEncodedBody(box5Figure -> box5Value)
 
   "calling the show method on CaptureBox5FigureController" when {
     "the AdditionalKnownFacts feature switch is enabled" should {
@@ -69,12 +69,23 @@ class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
       "redirect to CaptureLastMonthReturnPeriod page" in {
         mockAuthAdminRole()
 
-        val result = await(TestCaptureBox5FigureController.submit(testPostRequest))
+        val result = await(TestCaptureBox5FigureController.submit(testPostRequest()))
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-        result.session(testPostRequest).get(SessionKeys.box5FigureKey) should contain(testBox5Figure)
+        result.session(testPostRequest()).get(SessionKeys.box5FigureKey) should contain(testBox5Figure)
       }
+
+      "redirect to CaptureLastMonthReturnPeriod page with negative values" in {
+        mockAuthAdminRole()
+
+        val result = await(TestCaptureBox5FigureController.submit(testPostRequest(testBox5FigureNegative)))
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+        result.session(testPostRequest(testBox5FigureNegative)).get(SessionKeys.box5FigureKey) should contain(testBox5FigureNegative)
+      }
+
       "form unsuccessfully submitted" should {
         "reload the page with errors" in {
           val testPostRequest = FakeRequest("POST", "/box-5-figure")

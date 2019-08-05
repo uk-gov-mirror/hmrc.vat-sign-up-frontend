@@ -49,6 +49,7 @@ object IntegrationTestConstants {
   val testEndDate: LocalDate = testStartDate.plusMonths(3)
   val testPartnershipType: String = "limitedPartnership"
   val testBox5Figure: String = "1234.56"
+  val testBox5FigureNegative = "-1234.56"
   val testLastReturnMonth: String = January.toString
   val testPreviousVatSubmitted: String = Yes.stringValue
 }

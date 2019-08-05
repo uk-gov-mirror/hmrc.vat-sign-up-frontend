@@ -28,7 +28,9 @@ object Box5FigureForm {
 
   val box5Figure = "box5Figure"
 
-  val maxLength = 14
+  val defaultMaxLength = 14
+
+  val negativeValueMaxLength = 15
 
   val isEntered: Constraint[String] = Constraint("box_5_figure.entered")(
     boxFiveValue => validate(
@@ -46,7 +48,7 @@ object Box5FigureForm {
 
   val checkLength: Constraint[String] = Constraint("box_5_figure.invalid_length")(
     boxFiveValue => validateNot(
-      constraint = boxFiveValue.length <= maxLength,
+      constraint = if (boxFiveValue.contains("-")) boxFiveValue.length <= negativeValueMaxLength else boxFiveValue.length <= defaultMaxLength,
       principalErrMsg = "error.principal.box_5_figure_invalid_length"
     )
   )

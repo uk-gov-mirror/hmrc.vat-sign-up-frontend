@@ -45,7 +45,7 @@ object Patterns {
 
   val numericRegex = "^[0-9]*$"
 
-  val box5FigureRegex = "^([0-9]*)([.])([0-9]{2})*$"
+  val box5FigureRegex = "^-?([0-9]*)([.])([0-9]{2})*$"
 
   val postcodeRegex = """^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$|BFPO\s?[0-9]{1,3}$"""
 
