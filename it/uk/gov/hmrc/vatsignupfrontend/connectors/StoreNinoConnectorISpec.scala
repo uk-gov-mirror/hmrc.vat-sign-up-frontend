@@ -42,53 +42,7 @@ class StoreNinoConnectorISpec extends ComponentSpecBase {
     nino = testNino
   )
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-  }
-
-  "storeNino using UserDetailsModel" when {
-    "Backend returns a NO_CONTENT response" should {
-      "return StoreNinoSuccess" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(NO_CONTENT)
-
-        val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
-
-        await(res) shouldBe Right(StoreNinoSuccess)
-      }
-    }
-
-    "Backend returns a FORBIDDEN response" should {
-      "return the nino returned" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(FORBIDDEN)
-
-        val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
-
-        await(res) shouldBe Left(NoMatchFoundFailure)
-      }
-    }
-
-    "Backend returns a NOT_FOUND response" should {
-      "return the nino returned" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(NOT_FOUND)
-
-        val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
-
-        await(res) shouldBe Left(NoVATNumberFailure)
-      }
-    }
-
-    "Backend returns a BAD_REQUEST response" should {
-      "return a UserMatchFailureResponseModel" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testUserDetails, UserEntered)(BAD_REQUEST)
-
-        val res = connector.storeNino(testVatNumber, testUserDetails, UserEntered)
-
-        await(res) shouldBe Left(StoreNinoFailureResponse(BAD_REQUEST))
-      }
-    }
-  }
-
-  "storeNino using nino string" when {
+  "storeNino" when {
     "Backend returns a NO_CONTENT response" should {
       "return StoreNinoSuccess" in {
         StoreNinoStub.stubStoreNino(testVatNumber, testNino, UserEntered)(NO_CONTENT)
@@ -129,6 +83,5 @@ class StoreNinoConnectorISpec extends ComponentSpecBase {
       }
     }
   }
-
 
 }

@@ -55,7 +55,7 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     "store nino is successful" should {
       "go to the capture agent email page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
+        stubStoreNinoSuccess(testVatNumber, testUserDetails.nino, UserEntered)
 
         val res = post("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
@@ -69,7 +69,7 @@ class ConfirmClientDetailsControllerISpec extends ComponentSpecBase with CustomM
     "store nino returned no match" should {
       "redirect to the failed client matching page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
+        stubStoreNinoNoMatch(testVatNumber, testUserDetails.nino, UserEntered)
 
         val res = post("/client/confirm-client", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 

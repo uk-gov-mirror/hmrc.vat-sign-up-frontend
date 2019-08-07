@@ -33,7 +33,6 @@ object FeatureSwitch {
     DirectDebitTermsJourney,
     SendYourApplication,
     OptionalSautrJourney,
-    SkipIvJourney,
     SkipCidCheck,
     WelshTranslation,
     SkipCtUtrOnCotaxNotFound,
@@ -85,11 +84,6 @@ case object OptionalSautrJourney extends FeatureSwitch {
 case object SendYourApplication extends FeatureSwitch {
   override val name: String = s"$prefix.send-your-application"
   override val displayText: String = "Enable the Send Your Application view (replaces Terms of Participation)"
-}
-
-case object SkipIvJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.no-iv-journey"
-  override val displayText: String = "Enable users to skip Identity Verification Journey"
 }
 
 case object SkipCidCheck extends FeatureSwitch {

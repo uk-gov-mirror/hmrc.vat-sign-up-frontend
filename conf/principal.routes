@@ -126,8 +126,6 @@ POST        /check-your-answers                                 uk.gov.hmrc.vats
 GET         /check-your-answers-final                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersFinalController.show
 POST        /check-your-answers-final                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersFinalController.submit
 
-GET         /identity-verified                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationCallbackController.continue
-
 # Could not confirm business
 GET         /could-not-confirm-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.show
 POST        /could-not-confirm-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CouldNotConfirmBusinessController.submit
@@ -140,16 +138,8 @@ POST        /vat-could-not-confirm-business                     uk.gov.hmrc.vats
 GET         /error/company-number-incorrect                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.PartnershipAsCompanyErrorController.show
 POST        /error/company-number-incorrect                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.PartnershipAsCompanyErrorController.submit
 
-# Failed Identity Verification
-GET         /could-not-confirm-identity                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.show
-POST        /could-not-confirm-identity                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedIdentityVerificationController.submit
-
 # Incorrect Enrolment Vat Number
 GET         /error/sign-in-with-different-details               uk.gov.hmrc.vatsignupfrontend.controllers.principal.IncorrectEnrolmentVatNumberController.show
-
-# Success Identity Verification
-GET         /confirmed-identity                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationSuccessController.show
-POST        /confirmed-identity                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.IdentityVerificationSuccessController.submit
 
 # Capture your details
 GET         /your-details                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.show

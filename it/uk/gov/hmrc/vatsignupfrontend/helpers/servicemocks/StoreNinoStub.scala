@@ -32,20 +32,6 @@ object StoreNinoStub extends WireMockMethods with FeatureSwitching {
     ninoSourceFrontEndKey -> ninoSource
   )
 
-  def stubStoreNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource)(responseStatus: Int): Unit = {
-    when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/nino",
-      body = toJson(userDetailsModel, ninoSource))
-      .thenReturn(status = responseStatus)
-  }
-
-  def stubStoreNinoSuccess(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource): Unit =
-    stubStoreNino(vatNumber, userDetailsModel, ninoSource)(NO_CONTENT)
-
-  def stubStoreNinoNoMatch(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource): Unit =
-    stubStoreNino(vatNumber, userDetailsModel, ninoSource)(FORBIDDEN)
-
-  // Overloaded methods for when SkipCidCheck FS is enabled.
-
   def stubStoreNino(vatNumber: String, nino: String, ninoSource: NinoSource)(responseStatus: Int): Unit = {
     when(method = PUT, uri = s"/vat-sign-up/subscription-request/vat-number/$vatNumber/national-insurance-number",
       body = Json.obj("nino" -> nino, ninoSourceFrontEndKey -> ninoSource))
@@ -57,5 +43,8 @@ object StoreNinoStub extends WireMockMethods with FeatureSwitching {
 
   def stubStoreNinoNoMatch(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
     stubStoreNino(vatNumber, nino, ninoSource)(FORBIDDEN)
+
+  def stubStoreNinoNotFound(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
+    stubStoreNino(vatNumber, nino, ninoSource)(NOT_FOUND)
 
 }

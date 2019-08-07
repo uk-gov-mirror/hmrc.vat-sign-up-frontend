@@ -39,9 +39,6 @@ class StoreNinoService @Inject()(applicationConfig: AppConfig,
     if (applicationConfig.hasEnabledTestOnlyRoutes) hc.copy(trueClientIp = Some("VATSUBSC"))
     else hc
 
-  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
-    storeNinoConnector.storeNino(vatNumber, userDetailsModel, ninoSource)(amendHCForTest, ec)
-
   def storeNino(vatNumber:String, nino: String, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     storeNinoConnector.storeNino(vatNumber, nino, ninoSource)(hc, ec)
 
