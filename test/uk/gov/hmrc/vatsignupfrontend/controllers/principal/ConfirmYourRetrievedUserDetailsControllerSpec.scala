@@ -65,7 +65,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
   "Calling the submit action of the Confirm Your Retrieved User Details controller" should {
     "redirect to agree to capture emails page when nino is successfully stored from IRSA" in {
       mockAuthAdminRole()
-      mockStoreNinoSuccess(testVatNumber, testUserDetails, IRSA)
+      mockStoreNinoSuccess(testVatNumber, testUserDetails.nino, IRSA)
 
       val result = TestConfirmYourRetrievedUserDetailsController.submit(
         testPostRequest.withSession(
@@ -80,7 +80,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
 
     "redirect to agree to capture emails page when nino is successfully stored from Auth Profile" in {
       mockAuthAdminRole()
-      mockStoreNinoSuccess(testVatNumber, testUserDetails, AuthProfile)
+      mockStoreNinoSuccess(testVatNumber, testUserDetails.nino, AuthProfile)
 
       val result = TestConfirmYourRetrievedUserDetailsController.submit(
         testPostRequest.withSession(
@@ -115,7 +115,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
 
     "throw exception when backend returns NoVATNumberFailure" in {
       mockAuthAdminRole()
-      mockStoreNinoNoVatStored(testVatNumber, testUserDetails, IRSA)
+      mockStoreNinoNoVatStored(testVatNumber, testUserDetails.nino, IRSA)
 
       intercept[InternalServerException] {
         await(TestConfirmYourRetrievedUserDetailsController.submit(
@@ -130,7 +130,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
 
     "throw exception when backend returns StoreNinoFailureResponse" in {
       mockAuthAdminRole()
-      mockStoreNinoFailure(testVatNumber, testUserDetails, IRSA)
+      mockStoreNinoFailure(testVatNumber, testUserDetails.nino, IRSA)
 
       intercept[InternalServerException] {
         await(TestConfirmYourRetrievedUserDetailsController.submit(
@@ -145,7 +145,7 @@ class ConfirmYourRetrievedUserDetailsControllerSpec extends UnitSpec with GuiceO
 
     "throw exception when backend returns any other response" in {
       mockAuthAdminRole()
-      mockStoreNinoNoMatch(testVatNumber, testUserDetails, IRSA)
+      mockStoreNinoNoMatch(testVatNumber, testUserDetails.nino, IRSA)
 
       intercept[InternalServerException] {
         await(TestConfirmYourRetrievedUserDetailsController.submit(

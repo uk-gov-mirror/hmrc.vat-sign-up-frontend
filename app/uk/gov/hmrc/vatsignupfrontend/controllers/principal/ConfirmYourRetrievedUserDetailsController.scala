@@ -62,7 +62,7 @@ class ConfirmYourRetrievedUserDetailsController @Inject()(val controllerComponen
 
       (optVatNumber, optUserDetails, optNinoSource) match {
         case (Some(vatNumber), Some(userDetails), Some(ninoSource)) =>
-          storeNinoService.storeNino(vatNumber, userDetails, ninoSource) flatMap {
+          storeNinoService.storeNino(vatNumber, userDetails.nino, ninoSource) flatMap {
             case Right(_) => Future.successful(Redirect(routes.DirectDebitResolverController.show()))
             case Left(NoVATNumberFailure) =>
               Future.failed(new InternalServerException(s"Failure calling store nino: vat number is not found"))

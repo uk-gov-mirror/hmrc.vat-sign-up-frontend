@@ -85,7 +85,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "and store nino is successful" should {
         "go to the capture agent email page" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
+          mockStoreNinoSuccess(testVatNumber, testUserDetails.nino, UserEntered)
 
           val result = callSubmit
 
@@ -99,7 +99,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "but store nino returned no match" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
+          mockStoreNinoNoMatch(testVatNumber, testUserDetails.nino, UserEntered)
 
           val result = callSubmit
 
@@ -113,7 +113,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "but store nino returned no vat" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, UserEntered)
+          mockStoreNinoNoVatStored(testVatNumber, testUserDetails.nino, UserEntered)
 
           val result = callSubmit
 
@@ -126,7 +126,7 @@ class ConfirmClientDetailsControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "but store nino returned failure" should {
         "throw internal server exception" in {
           mockAuthRetrieveAgentEnrolment()
-          mockStoreNinoNoVatStored(testVatNumber, testUserDetails, UserEntered)
+          mockStoreNinoNoVatStored(testVatNumber, testUserDetails.nino, UserEntered)
 
           val result = callSubmit
 

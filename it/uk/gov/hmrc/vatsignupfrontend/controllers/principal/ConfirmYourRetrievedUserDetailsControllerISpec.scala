@@ -52,9 +52,9 @@ class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase w
   }
 
   "POST /confirm-your-details" should {
-    "redirect to agree to receive email page if nino successfully stored with a NINO source of IRSA" in {
+    "redirect to direct debit resolver if nino successfully stored with a NINO source of IRSA" in {
       stubAuth(OK, successfulAuthResponse(irsaEnrolment))
-      stubStoreNinoSuccess(testVatNumber, testUserDetails, IRSA)
+      stubStoreNinoSuccess(testVatNumber, testUserDetails.nino, IRSA)
 
       val res = post("/confirm-your-details", Map(
         SessionKeys.vatNumberKey -> testVatNumber,
@@ -68,9 +68,9 @@ class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase w
       )
     }
 
-    "redirect to agree to receive email page if nino successfully stored with a NINO source of AuthProfile" in {
+    "redirect to direct debit resolver if nino successfully stored with a NINO source of AuthProfile" in {
       stubAuth(OK, successfulAuthResponse(irsaEnrolment))
-      stubStoreNinoSuccess(testVatNumber, testUserDetails, AuthProfile)
+      stubStoreNinoSuccess(testVatNumber, testUserDetails.nino, AuthProfile)
 
       val res = post("/confirm-your-details", Map(
         SessionKeys.vatNumberKey -> testVatNumber,
@@ -108,7 +108,7 @@ class ConfirmYourRetrievedUserDetailsControllerISpec extends ComponentSpecBase w
 
     "throw InternalServerError if nino unsuccessfully stored" in {
       stubAuth(OK, successfulAuthResponse(irsaEnrolment))
-      stubStoreNino(testVatNumber, testUserDetails, IRSA)(BAD_REQUEST)
+      stubStoreNino(testVatNumber, testUserDetails.nino, IRSA)(BAD_REQUEST)
 
       val res = post("/confirm-your-details", Map(
         SessionKeys.vatNumberKey -> testVatNumber,

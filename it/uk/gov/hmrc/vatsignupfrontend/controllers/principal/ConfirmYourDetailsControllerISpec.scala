@@ -21,16 +21,12 @@ import java.util.UUID
 
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipIvJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel, UserEntered}
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.IdentityVerificationStub._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.IdentityVerificationProxyHttpParser.IdentityVerificationProxySuccessResponse
 
 class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -56,48 +52,11 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
   }
 
   "POST /confirm-details" when {
-    "store nino is successful and confidence level is below L200" when {
+    "store nino is successful" when {
       "user matches record on CID" should {
-        "redirect to identity verification journey" in {
-          val testContinueUrl = "test/continue/url"
-
-          stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
-          stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
-          stubIdentityVerificationProxy(testUserDetails)(CREATED, IdentityVerificationProxySuccessResponse(testContinueUrl, ""))
-
-          val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
-
-          val expectedRedirectUrl = appConfig.identityVerificationFrontendRedirectionUrl(testContinueUrl)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(expectedRedirectUrl)
-          )
-        }
-      }
-
-      "user fails matching on CID" should {
-        "redirect to Failed Matching Controller" in {
-          val testContinueUrl = "test/continue/url"
-
-          stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
-          stubStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
-
-          val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.FailedMatchingController.show().url)
-          )
-        }
-      }
-
-      "SkipIvJourney is enabled" should {
         "redirect to direct debit resolver url" in {
-
-          stubAuth(OK, confidenceLevel(ConfidenceLevel.L50))
-          stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
-          enable(SkipIvJourney)
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreNinoSuccess(testVatNumber, testUserDetails.nino, UserEntered)
           val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
           res should have(
@@ -107,27 +66,27 @@ class ConfirmYourDetailsControllerISpec extends ComponentSpecBase with CustomMat
         }
       }
 
-    }
+      "user fails matching on CID" should {
+        "redirect to Failed Matching Controller" in {
+          val testContinueUrl = "test/continue/url"
 
-    "store nino is successful and confidence level is L200 or above" should {
-      "redirect to direct debit resolver url" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreNinoNoMatch(testVatNumber, testUserDetails.nino, UserEntered)
 
-        stubAuth(OK, confidenceLevel(ConfidenceLevel.L200))
-        stubStoreNinoSuccess(testVatNumber, testUserDetails, UserEntered)
+          val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 
-        val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.DirectDebitResolverController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.FailedMatchingController.show().url)
+          )
+        }
       }
     }
 
-    "store nino returned no match" should {
+    "store nino returned not found" should {
       "INTERNAL_SERVER_ERROR" in {
         stubAuth(OK, successfulAuthResponse())
-        stubStoreNinoNoMatch(testVatNumber, testUserDetails, UserEntered)
+        stubStoreNinoNotFound(testVatNumber, testUserDetails.nino, UserEntered)
 
         val res = post("/confirm-details", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.userDetailsKey -> testUserDetailsJson))()
 

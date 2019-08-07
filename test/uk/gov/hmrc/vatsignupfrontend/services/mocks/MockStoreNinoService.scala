@@ -38,28 +38,6 @@ trait MockStoreNinoService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreNinoService)
   }
 
-  private def mockStoreNino(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource)(returnValue: Future[StoreNinoResponse]): Unit = {
-    when(mockStoreNinoService.storeNino(
-      ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(useDetails), ArgumentMatchers.eq(ninoSource)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(returnValue)
-  }
-
-  def mockStoreNinoSuccess(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, useDetails, ninoSource)(Future.successful(Right(StoreNinoSuccess)))
-
-  def mockStoreNinoNoMatch(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(NoMatchFoundFailure)))
-
-  def mockStoreNinoNoVatStored(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(NoVATNumberFailure)))
-
-  def mockStoreNinoFailure(vatNumber: String, useDetails: UserDetailsModel, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, useDetails, ninoSource)(Future.successful(Left(StoreNinoFailureResponse(INTERNAL_SERVER_ERROR))))
-
-
-  // Overloaded methods for when SkipCidCheck FS is enabled
-
   private def mockStoreNino(vatNumber: String, nino: String, ninoSource: NinoSource)(returnValue: Future[StoreNinoResponse]): Unit = {
     when(mockStoreNinoService.storeNino(
       ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(nino), ArgumentMatchers.eq(ninoSource)
