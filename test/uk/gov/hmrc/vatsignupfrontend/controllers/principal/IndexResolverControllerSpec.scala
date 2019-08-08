@@ -30,12 +30,12 @@ class IndexResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
   lazy val testGetRequest = FakeRequest("GET", "/index")
 
   "Calling the resolve action of the Index Resolver controller" should {
-    "show the Have Software page" in {
+    "show the Are You Ready To Submit With Software page" in {
       val request = testGetRequest
 
       val result = TestIndexResolverController.resolve(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.HaveSoftwareController.show().url)
+      redirectLocation(result) shouldBe Some(eligibility.routes.AreYouReadySubmitSoftwareController.show().url)
     }
   }
 
