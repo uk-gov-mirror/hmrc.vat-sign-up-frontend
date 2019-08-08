@@ -22,13 +22,13 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class IndexResolverControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /index" should {
-    "redirect to the Have Software page" in {
+    "redirect to the Are You Ready To Submit With Software page" in {
 
       val res = get("/index")
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.HaveSoftwareController.show().url)
+        redirectUri(eligibility.routes.AreYouReadySubmitSoftwareController.show().url)
       )
     }
   }

@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 class IndexResolverController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController {
 
   val resolve: Action[AnyContent] = Action { implicit request =>
-      Redirect(routes.HaveSoftwareController.show())
+      Redirect(eligibility.routes.AreYouReadySubmitSoftwareController.show())
   }
 
 }
