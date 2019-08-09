@@ -476,7 +476,8 @@ principal.guidance.subsection_2.line_2                                 = Os nad 
 ## VAT number page
 principal.vat_number.title                                             = Beth yw''ch rhif TAW?
 principal.vat_number.heading                                           = Beth yw''ch rhif TAW?
-principal.vat_number.line_1                                            = Dyma''r rhif 9 digid ar eich tystysgrif cofrestru ar gyfer TAW.
+principal.vat_number.line_1                                            = Dyma’r 9 rhif ar eich tystysgrif cofrestru ar gyfer TAW. Weithiau, mae’n cael ei alw’n rhif cofrestru TAW neu VRN.
+principal.vat_number.hint                                              = Er enghraifft, 123456789
 
 ## Principal Could not confirm VAT number
 principal.could_not_confirm_vat_number.title                           = Doedd dim modd cadarnhau eich rhif TAW

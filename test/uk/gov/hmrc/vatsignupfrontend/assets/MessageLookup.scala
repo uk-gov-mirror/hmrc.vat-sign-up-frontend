@@ -353,7 +353,7 @@ object MessageLookup {
   object VatNumber {
     val heading: String = "What is your VAT number?"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "This is the 9-digit number on your VAT registration certificate."
+    val line1 = "This is the 9 numbers on your VAT registration certificate. It is sometimes called a VAT registration number or VRN."
   }
 
   object CouldNotConfirmVatNumber {
