@@ -698,11 +698,11 @@ principal.multiple_vat_check.title                                     = Oes gen
 principal.multiple_vat_check.heading                                   = Oes gennych fwy nag un busnes sydd wedi''i gofrestru ar gyfer TAW?
 
 ## Principal Capture Last Return Month Period
-principal.capture_last_return_month_period.title                       = Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf, a gyflwynwyd i CThEM
-principal.capture_last_return_month_period.heading                     = Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf, a gyflwynwyd i CThEM
-principal.capture_last_return_month_period.line                        = Gallwch ddod o hyd i hyn drwy fewngofnodi i''ch cyfrif TAW ar-lein neu gallwch ddod o hyd i hyn ar eich Ffurflen TAW.
+principal.capture_last_return_month_period.title                       = Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf
+principal.capture_last_return_month_period.heading                     = Dewiswch fis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf
+principal.capture_last_return_month_period.line                        = Gallwch ddod o hyd i hyn drwy fewngofnodi i''ch cyfrif TAW ar-lein. Gallwch hefyd ddod o hyd i hyn ar y Ffurflen TAW ddiweddaraf y gwnaethoch ei chyflwyno i CThEM.
 principal.capture_last_return_month_period.sub_heading                 = Enghraifft 1
-principal.capture_last_return_month_period.line_2                      = Rydych yn cyflwyno''ch Ffurflen TAW bob tri mis neu yn chwarterol. Yn y ''cyfnod cyfrifyddu'' o fis Ionawr i fis Mawrth, y mis diwethaf yn y ''cyfnod cyfrifyddu'' hwnnw yw mis Mawrth. Felly, mae''n rhaid i chi ddewis mis Mawrth.
+principal.capture_last_return_month_period.line_2                      = Rydych yn cyflwyno''ch Ffurflen TAW yn chwarterol (bob tri mis). Yn y ''cyfnod cyfrifyddu'' o fis Ionawr i fis Mawrth, y mis diwethaf yn y ''cyfnod cyfrifyddu'' hwnnw yw mis Mawrth. Felly, mae''n rhaid i chi ddewis mis Mawrth.
 principal.capture_last_return_month_period.sub_heading_2               = Enghraifft 2
 principal.capture_last_return_month_period.line_3                      = Os ydych chi''n cyflwyno''ch Ffurflen TAW yn fisol, y cyfnod cyfrifyddu diwethaf y gwnaethoch gyflwyno ar ei gyfer oedd mis Ionawr. Mae''n rhaid i chi ddewis mis Ionawr.
 principal.capture_last_return_month_period.formhint_1                  = Dewiswch y mis diwethaf yn eich cyfnod cyfrifyddu TAW diwetharaf.
