@@ -718,11 +718,11 @@ principal.multiple_vat_check.title                                     = Do you 
 principal.multiple_vat_check.heading                                   = Do you have more than one VAT registered business?
 
 ## Principal Capture Last Return Month Period
-principal.capture_last_return_month_period.title                       = Select the last month of your latest VAT accounting period, submitted to HMRC
-principal.capture_last_return_month_period.heading                     = Select the last month of your latest VAT accounting period, submitted to HMRC
-principal.capture_last_return_month_period.line                        = You can find this out by logging into your online VAT account or you can find this on your VAT return.
+principal.capture_last_return_month_period.title                       = Select the last month of your latest VAT accounting period
+principal.capture_last_return_month_period.heading                     = Select the last month of your latest VAT accounting period
+principal.capture_last_return_month_period.line                        = You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
 principal.capture_last_return_month_period.sub_heading                 = Example 1
-principal.capture_last_return_month_period.line_2                      = You submit your VAT Return every three months or quarterly. In the ''accounting period'' January to March, the last month in that ''accounting period'' is March. You must therefore select March.
+principal.capture_last_return_month_period.line_2                      = You submit your VAT Return quarterly (every three months). In the ''accounting period'' January to March, the last month in that ''accounting period'' is March. You must therefore select March.
 principal.capture_last_return_month_period.sub_heading_2               = Example 2
 principal.capture_last_return_month_period.line_3                      = If you submit your VAT Return monthly, the last accounting period you ''submitted for'' was January. You must select January.
 principal.capture_last_return_month_period.formhint_1                  = Select the last month in your latest VAT accounting period.

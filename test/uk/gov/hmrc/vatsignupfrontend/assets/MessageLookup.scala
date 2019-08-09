@@ -150,12 +150,12 @@ object MessageLookup {
   }
 
   object CaptureLastReturnMonthPeriod {
-    val heading: String = "Select the last month of your latest VAT accounting period, submitted to HMRC"
-    val title: String = "Select the last month of your latest VAT accounting period, submitted to HMRC" + ServiceName.principalSuffix
-    val line: String = "You can find this out by logging into your online VAT account or you can find this on your VAT return."
+    val heading: String = "Select the last month of your latest VAT accounting period"
+    val title: String = heading + ServiceName.principalSuffix
+    val line: String = "You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC."
     val subHeading: String = "Example 1"
     val subHeading2: String = "Example 2"
-    val line2: String = "You submit your VAT Return every three months or quarterly. In the 'accounting period' January to March, the last month in that 'accounting period' is March. You must therefore select March."
+    val line2: String = "You submit your VAT Return quarterly (every three months). In the 'accounting period' January to March, the last month in that 'accounting period' is March. You must therefore select March."
     val line3: String = "If you submit your VAT Return monthly, the last accounting period you 'submitted for' was January. You must select January."
     val formhint1 = "Select the last month in your latest VAT accounting period."
     val months: List[String] = List("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
