@@ -36,11 +36,11 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page = (generalPartnershipNoSAUTRFSwitchAndGeneralPartnership: Boolean) => {
+  lazy val page = (showGeneralPartnershipSpecific: Boolean) => {
     uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr(
       partnershipUtrForm = partnershipUtrForm.form,
       postAction = testCall,
-      displayNoSautrLink = generalPartnershipNoSAUTRFSwitchAndGeneralPartnership
+      showGeneralPartnershipSpecific = showGeneralPartnershipSpecific
     )(
       FakeRequest(),
       applicationMessages,
@@ -48,25 +48,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
     )
   }
 
-  s"The Capture Partnership Utr view with $GeneralPartnershipNoSAUTR false" should {
-    val testPage = TestView(
-      name = "Capture Partnership Utr View",
-      title = messages.titleDeprecated,
-      heading = messages.headingDeprecated,
-      page = page(false)
-    )
-
-    testPage.shouldHaveForm("Partnership Utr Form")(actionCall = testCall)
-
-    specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForFalse(testPage)
-
-    testPage.shouldHaveTextField(partnershipUtr, messages.headingDeprecated)
-
-    testPage.shouldHavePara(messages.line1Deprecated)
-
-    testPage.shouldHaveContinueButton()
-  }
-  s"The Capture Partnership Utr view with $GeneralPartnershipNoSAUTR true" should {
+  s"The Capture Partnership Utr view with showGeneralPartnershipSpecific true" should {
     val testPage = TestView(
       name = "Capture Partnership Utr View",
       title = messages.title,
@@ -76,18 +58,41 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Partnership Utr Form")(actionCall = testCall)
 
-    specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForTrue(testPage)
-
     testPage.shouldHaveAccordion(messages.accordionHeading, messages.accordionText)
 
+    specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForTrue(testPage)
+
     testPage.shouldHaveTextField(partnershipUtr, messages.heading)
+
+    testPage.shouldHavePara(messages.line1)
 
     testPage.shouldHaveContinueButton()
   }
 
+  s"The Capture Partnership Utr view with showGeneralPartnershipSpecific false" should {
+    val testPage = TestView(
+      name = "Capture Partnership Utr View",
+      title = messages.title,
+      heading = messages.heading,
+      page = page(false)
+    )
+
+    testPage.shouldHaveForm("Partnership Utr Form")(actionCall = testCall)
+
+    specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForFalse(testPage)
+
+    testPage.shouldHaveTextField(partnershipUtr, messages.heading)
+
+    testPage.shouldHavePara(messages.line1)
+
+    testPage.shouldHaveALink("partnershipUtr-limited-link", messages.cannotFind, appConfig.findLostUtrNumberUrl)
+
+    testPage.shouldHaveContinueButton()
+
+  }
+
   private def specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForFalse(testPage: TestView): Unit = {
     s"certain elements should not exist as $GeneralPartnershipNoSAUTR is off" in {
-      testPage.document.getElementById("partnershipUtr-hint") shouldBe null
       testPage.document.getElementById("partnershipUtr-accordion-link1") shouldBe null
       testPage.document.getElementById("partnershipUtr-accordion-link2") shouldBe null
       testPage.document.getElementsByTag("details").size shouldBe 0
@@ -95,8 +100,6 @@ class CapturePartnershipUtrSpec extends ViewSpec {
   }
   private def specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForTrue(testPage: TestView): Unit = {
     s"hint exists, hrefs for links in summary are correct, line 1 no longer exists in view as $GeneralPartnershipNoSAUTR is on" in {
-      testPage.document.getElementById("partnershipUtr-hint").text() shouldBe messages.hint
-      testPage.document.getElementById("partnershipUtr-line1") shouldBe null
       testPage.document.getElementById("partnershipUtr-accordion-link1").attr("href") shouldBe appConfig.findLostUtrNumberUrl
       testPage.document.getElementById("partnershipUtr-accordion-link2").attr("href") shouldBe routes.CapturePartnershipUtrController.noUtrSelected().url
     }

@@ -21,73 +21,56 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton, accordionHelper}
 
-@(partnershipUtrForm: Form[String], postAction: Call, displayNoSautrLink: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(partnershipUtrForm: Form[String], postAction: Call, showGeneralPartnershipSpecific: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @accordionContent = {
-<p>@Html(Messages("principal.capture_partnership_utr.accordion.line_1"))</p>
-<p>
-    <a id="partnershipUtr-accordion-link1" href="@{appConfig.findLostUtrNumberUrl}">
-        @Html(Messages("principal.capture_partnership_utr.accordion.link_1"))
-    </a>
-</p>
-<p>
-    <a id="partnershipUtr-accordion-link2" href="@{routes.CapturePartnershipUtrController.noUtrSelected().url}">
-        @Html(Messages("principal.capture_partnership_utr.accordion.link_2"))
-    </a>
-</p>
+    <p>@Messages("principal.capture_partnership_utr.accordion.line_1")</p>
+    <p>
+        <a id="partnershipUtr-accordion-link1" href="@{appConfig.findLostUtrNumberUrl}">
+            @Messages("principal.capture_partnership_utr.accordion.link_1")
+        </a>
+    </p>
+    <p>
+        <a id="partnershipUtr-accordion-link2" href="@{routes.CapturePartnershipUtrController.noUtrSelected().url}">
+            @Messages("principal.capture_partnership_utr.accordion.link_2")
+        </a>
+    </p>
 }
 
-@if(displayNoSautrLink) {
-    @principal_main_template(title = Messages("principal.capture_partnership_utr.title"), bodyClasses = None, form = Some(partnershipUtrForm)) {
-        @summaryErrorHelper(partnershipUtrForm)
+@principal_main_template(title = Messages("principal.capture_partnership_utr.title"), bodyClasses = None, form = Some(partnershipUtrForm)) {
 
-        @form(action = postAction) {
+    @summaryErrorHelper(partnershipUtrForm)
+
+    @form(action = postAction) {
         <fieldset>
             <legend>
                 <h1 class="heading-large">@Messages("principal.capture_partnership_utr.heading")</h1>
             </legend>
 
+            <p id="partnershipUtr-line1">@Messages("principal.capture_partnership_utr.line_1")</p>
+
             <div class="form-group">
                     @inputHelper(
-                    field = partnershipUtrForm(partnershipUtr),
-                    label = Messages("principal.capture_partnership_utr.heading"),
-                    parentForm = partnershipUtrForm,
-                    hintText = Some(Html(Messages("principal.capture_partnership_utr.hint")))
+                        field = partnershipUtrForm(partnershipUtr),
+                        label = Messages("principal.capture_partnership_utr.heading"),
+                        parentForm = partnershipUtrForm
                     )
 
-                    @accordionHelper(
-                    Messages("principal.capture_partnership_utr.accordion.heading"),
-                    accordionContent
-                    )
-
-
+                    @if(showGeneralPartnershipSpecific) {
+                        @accordionHelper(
+                            Messages("principal.capture_partnership_utr.accordion.heading"),
+                            accordionContent
+                        )
+                    } else {
+                        <p>
+                            <a id="partnershipUtr-limited-link" href="@{appConfig.findLostUtrNumberUrl}">
+                                @Messages("principal.capture_partnership_utr.accordion.link_1")
+                            </a>
+                        </p>
+                    }
             </div>
             @continueButton()
         </fieldset>
-            }
-          }
-} else {
-    @principal_main_template(title = Messages("principal.capture_partnership_utr.deprecated.title"), bodyClasses = None, form = Some(partnershipUtrForm)) {
-    @summaryErrorHelper(partnershipUtrForm)
-
-    @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.capture_partnership_utr.deprecated.heading")</h1>
-        </legend>
-
-        <p id="partnershipUtr-line1">@Messages("principal.capture_partnership_utr.deprecated.line_1")</p>
-
-        <div class="form-group">
-            @inputHelper(
-            field = partnershipUtrForm(partnershipUtr),
-            label = Messages("principal.capture_partnership_utr.deprecated.heading"),
-            parentForm = partnershipUtrForm
-            )
-
-            @continueButton()
-        </div>
-    </fieldset>
-        }
     }
+
 }
