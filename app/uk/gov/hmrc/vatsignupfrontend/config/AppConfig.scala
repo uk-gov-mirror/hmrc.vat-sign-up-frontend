@@ -195,6 +195,8 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val directDebitTermsAndConditionsUrl: String = "https://www.tax.service.gov.uk/direct-debit/vat/terms-and-conditions"
 
+  lazy val findLostCompanyUtr: String = "https://www.tax.service.gov.uk/ask-for-copy-of-your-corporation-tax-utr"
+
   /*
   *  This checks to see if the testOnlyDoNotUseInAppConf route is set in configuration instead of the default prod.Routes
   *  This flag can be used by the application to check if the test only routes are enabled. i.e. this flag can be used to

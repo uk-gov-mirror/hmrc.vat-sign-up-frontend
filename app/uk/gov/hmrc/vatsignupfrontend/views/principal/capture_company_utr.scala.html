@@ -38,9 +38,12 @@
                 label = Messages("principal.capture_company_utr.heading"),
                 parentForm = companyUtrForm
             )
-
+            <div class="form-group">
+                <a id="lost-Utr" href="@{appConfig.findLostCompanyUtr}">@Messages("principal.capture_company_utr.link_text")</a>
+            </div>
             @continueButton()
         </div>
+
     </fieldset>
     }
 }

@@ -632,9 +632,10 @@ object MessageLookup {
   }
 
   object PrincipalCaptureCompanyUtr {
-    val heading: String = "What is your company's Unique Taxpayer Reference number?"
+    val heading: String = "What is your company's Unique Taxpayer Reference?"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR."
+    val line1 = "This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called 'reference', 'UTR' or 'official use'."
+    val linkText = "I have lost my UTR"
   }
 
   object PrincipalTerms {
