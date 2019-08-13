@@ -58,8 +58,8 @@ error.business-entity.field                                            = Dewiswc
 error.business-entity.summary                                          = Dewiswch y math o fusnes neu grŵp rydych yn ei gofrestru, dewiswch ''Arall'' os nad ydych yn siŵr
 error.agent.company_number_not_entered.field                           = Nodwch rif cofrestru cwmni''ch cleient
 error.agent.company_number_not_entered.summary                         = Nodwch rif cofrestru cwmni''ch cleient
-error.principal.company_number_not_entered.field                       = Nodwch rif cofrestru''ch cwmni
-error.principal.company_number_not_entered.summary                     = Nodwch rif cofrestru''ch cwmni
+error.principal.company_number_not_entered.field                       = Nodwch Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cwmni
+error.principal.company_number_not_entered.summary                     = Nodwch Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cwmni
 error.invalid_company_number_length.field                              = Nodwch rif cwmni sydd ag 8 o gymeriadau neu lai
 error.invalid_company_number_length.summary                            = Nodwch rif cwmni sydd ag 8 o gymeriadau neu lai
 error.agent.partnership_company_number_not_entered.field               = Nodwch rif cwmni''r bartneriaeth
@@ -633,7 +633,8 @@ principal.capture_company_number.line_1                                = Gallwch
 ## Capture Company Utr page
 principal.capture_company_utr.title                                    = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni?
 principal.capture_company_utr.heading                                  = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni?
-principal.capture_company_utr.line_1                                   = Mae hwn i''w weld ar lythyrau oddi wrth CThEM ynghylch Treth Gorfforaeth. Mae''n 10 rhif ac weithiau''n cael ei alw''n Gyfeirnod Unigryw y Trethdalwr (UTR).
+principal.capture_company_utr.line_1                                   = Mae''n 10 rhif, er enghraifft, 1234567890. Bydd i''w weld ar Ffurflenni Treth a llythyrau eraill am Dreth Gorfforaeth. Efallai y bydd yn cael ei alw''n ''cyfeirnod'', ''UTR'' neu ''defnydd swyddogol''.
+principal.capture_company_utr.link_text                                = Rwyf wedi colli fy Nghyfeirnod Unigryw y Trethdalwr (UTR)
 
 ## Company Name Not Found page
 principal.company_name_not_found.title                                 = Doedd dim modd cadarnhau''ch cwmni

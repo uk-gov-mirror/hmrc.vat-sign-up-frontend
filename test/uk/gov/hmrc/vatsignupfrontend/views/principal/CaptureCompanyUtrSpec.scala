@@ -30,6 +30,7 @@ class CaptureCompanyUtrSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
+  val appConfig = new AppConfig(configuration, env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
@@ -38,7 +39,7 @@ class CaptureCompanyUtrSpec extends ViewSpec {
     postAction = testCall)(
     FakeRequest(),
     applicationMessages,
-    new AppConfig(configuration, env)
+    appConfig
   )
 
   "The Capture Company Utr view" should {
@@ -55,6 +56,8 @@ class CaptureCompanyUtrSpec extends ViewSpec {
     testPage.shouldHaveTextField(companyUtr, messages.heading)
 
     testPage.shouldHavePara(messages.line1)
+
+    testPage.shouldHaveALink(id="lost-Utr", messages.linkText, appConfig.findLostCompanyUtr)
 
     testPage.shouldHaveContinueButton()
   }

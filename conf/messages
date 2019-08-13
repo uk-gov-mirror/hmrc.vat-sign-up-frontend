@@ -74,8 +74,8 @@ error.principal.partnership_company_number_not_entered.field           = Enter t
 error.principal.partnership_company_number_not_entered.summary         = Enter the partnership''s company number
 error.invalid_company_number_characters.field                          = Company number must only include numbers 0 to 9 and letters a to z
 error.invalid_company_number_characters.summary                        = Company number must only include numbers 0 to 9 and letters a to z
-error.no_entry_company_utr.field                                       = Enter your company''s Unique Taxpayer Reference number
-error.no_entry_company_utr.summary                                     = Enter your company''s Unique Taxpayer Reference number
+error.no_entry_company_utr.field                                       = Enter your company''s Unique Taxpayer Reference
+error.no_entry_company_utr.summary                                     = Enter your company''s Unique Taxpayer Reference
 error.character_limit_company_utr.field                                = Company Unique Taxpayer Reference number must be 10 numbers
 error.character_limit_company_utr.summary                              = Company Unique Taxpayer Reference number must be 10 numbers
 error.invalid_company_utr.field                                        = Company Unique Taxpayer Reference number must only include numbers 0 to 9
@@ -651,9 +651,10 @@ principal.capture_company_number.heading                               = What is
 principal.capture_company_number.line_1                                = You can <a id="companiesHouse" href="{0}" target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Capture Company Utr page
-principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference number?
-principal.capture_company_utr.heading                                  = What is your company''s Unique Taxpayer Reference number?
-principal.capture_company_utr.line_1                                   = You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR.
+principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference?
+principal.capture_company_utr.heading                                  = What is your company''s Unique Taxpayer Reference?
+principal.capture_company_utr.line_1                                   = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called ''reference'', ''UTR'' or ''official use''.
+principal.capture_company_utr.link_text                                = I have lost my UTR
 
 ## Company Name Not Found page
 principal.company_name_not_found.title                                 = We could not confirm your company

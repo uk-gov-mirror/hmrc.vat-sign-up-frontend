@@ -48,7 +48,7 @@ class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
   }
 
   "Calling the submit action of the Capture Company Utr controller" should {
-    "goto confirm Company number page" in {
+    "go to confirm Company number page" in {
       mockAuthAdminRole()
 
       val request = testPostRequest(testCompanyUtr)
