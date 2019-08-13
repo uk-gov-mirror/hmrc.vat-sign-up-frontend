@@ -192,9 +192,10 @@ error.agent.partnership.joint_venture_or_property.field                = Dewiswc
 error.agent.partnership.joint_venture_or_property.summary              = Dewiswch os yw''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
 
 ## Not enrolled to Agent Services page
-agent.not_enrolled_to_agent_services.title                             = Ni allwch ddefnyddio''r gwasanaeth hwn eto
-agent.not_enrolled_to_agent_services.heading                           = Ni allwch ddefnyddio''r gwasanaeth hwn eto
-agent.not_enrolled_to_agent_services.line_1                            = I ddefnyddio''r gwasanaeth hwn, rhaid i chi <a href="{0}">greu cyfrif gwasanaethau asiant</a>.
+agent.not_enrolled_to_agent_services.title                             = Nid ydych wedi mewngofnodi gan ddefnyddio cyfrif gwasanaethau asiant
+agent.not_enrolled_to_agent_services.heading                           = Nid ydych wedi mewngofnodi gan ddefnyddio cyfrif gwasanaethau asiant
+agent.not_enrolled_to_agent_services.line_1                            = I fynd yn eich blaen, <a href="{0}">mewngofnodwch eto gan ddefnyddio cyfrif gwasanaethau asiant</a>.
+agent.not_enrolled_to_agent_services.line_2                            = Os nad oes gennych un, <a href="{0}">ewch ati i greu cyfrif gwasanaethau asiant</a>.
 
 ## Agent Cannot Use Service Yet page
 agent.cannot_use_service.title                                         = Nid yw busnes eich cleient yn gymwys ar hyn o bryd

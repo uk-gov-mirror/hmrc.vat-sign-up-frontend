@@ -44,10 +44,9 @@ class NotEnrolledToAgentServicesSpec extends ViewSpec {
       haveSignOutInBanner = false
     )
 
-    testPage.shouldHavePara(messages.line1)
+    testPage.shouldHaveParaSeq(messages.line1, messages.line2)
 
     testPage.shouldHaveSignOutButton(isAgent = true)
-
   }
 
 }
