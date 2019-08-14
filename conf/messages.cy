@@ -915,7 +915,8 @@ agent.migration_in_progress_error.line                                 = Mae cyf
 ## Capture Registered Society Utr page
 principal.capture_registered_society_utr.title                         = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cymdeithas gofrestredig?
 principal.capture_registered_society_utr.heading                       = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cymdeithas gofrestredig?
-principal.capture_registered_society_utr.line_1                        = Mae hwn i''w weld ar lythyrau oddi wrth CThEM ynghylch Treth Gorfforaeth. Mae''n 10 rhif ac weithiau''n cael ei alw''n Gyfeirnod Unigryw y Trethdalwr (UTR).
+principal.capture_registered_society_utr.line_1                        = Mae''n 10 rhif, er enghraifft, 1234567890. Bydd i''w weld ar Ffurflenni Treth a llythyrau eraill am Dreth Gorfforaeth. Efallai y bydd yn cael ei alw''n ''cyfeirnod'', ''UTR'' neu ''defnydd swyddogol''.
+principal.capture_registered_society_utr.link                          = Rwyf wedi colli fy Nghyfeirnod Unigryw y Trethdalwr (UTR)
 
 ## Check your answers Registered Society
 principal.check-your-answers-registered-society.title                  = Gwirio''ch atebion
