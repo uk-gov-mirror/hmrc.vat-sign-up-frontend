@@ -164,8 +164,8 @@ error.software_ready.field                                             = Choose 
 error.software_ready.summary                                           = Choose yes or no, if your software is ready to submit with Making Tax Digital for VAT or not
 error.previous_vat_return.field                                        = Select yes if you are submitting VAT returns
 error.previous_vat_return.summary                                      = Select yes if you are submitting VAT returns
-error.no_entry_registered_society_utr.field                            = Enter your registered society''s Unique Taxpayer Reference number
-error.no_entry_registered_society_utr.summary                          = Enter your registered society''s Unique Taxpayer Reference number
+error.no_entry_registered_society_utr.field                            = Enter your registered society''s Unique Taxpayer Reference
+error.no_entry_registered_society_utr.summary                          = Enter your registered society''s Unique Taxpayer Reference
 error.character_limit_registered_society_utr.field                     = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.character_limit_registered_society_utr.summary                   = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.invalid_registered_society_utr.field                             = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
@@ -925,9 +925,10 @@ agent.migration_in_progress_error.heading                             = Your cli
 agent.migration_in_progress_error.line                                = Your client''s Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours.
 
 ## Capture Registered Society Utr page
-principal.capture_registered_society_utr.title                        = What is your registered society''s Unique Taxpayer Reference number?
-principal.capture_registered_society_utr.heading                      = What is your registered society''s Unique Taxpayer Reference number?
-principal.capture_registered_society_utr.line_1                       = You can find it on letters about Corporation Tax from HMRC. It is 10-digits and is sometimes called a UTR.
+principal.capture_registered_society_utr.title                        = What is your registered society''s Unique Taxpayer Reference?
+principal.capture_registered_society_utr.heading                      = What is your registered society''s Unique Taxpayer Reference?
+principal.capture_registered_society_utr.line_1                       = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called ''reference'', ''UTR'' or ''official use''.
+principal.capture_registered_society_utr.link                         = I have lost my UTR
 
 ## Check your answers Registered Society
 principal.check-your-answers-registered-society.title                 = Check your answers

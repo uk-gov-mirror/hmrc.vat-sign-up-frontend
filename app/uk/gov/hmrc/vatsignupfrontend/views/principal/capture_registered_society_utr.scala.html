@@ -39,7 +39,9 @@
                 label = Messages("principal.capture_registered_society_utr.heading"),
                 parentForm = registeredSocietyUtrForm
             )
-
+            <p>
+                <a id="lost-Utr" href= @appConfig.findLostUtrNumberUrl>@Messages("principal.capture_registered_society_utr.link")</a>
+            </p>
             @continueButton()
         </div>
     </fieldset>
