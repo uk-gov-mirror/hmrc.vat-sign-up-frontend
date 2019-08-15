@@ -937,9 +937,9 @@ principal.capture_registered_society_utr.link                         = I have l
 principal.check-your-answers-registered-society.title                 = Check your answers
 principal.check-your-answers-registered-society.heading               = Check your answers
 principal.check-your-answers-registered-society.sub_heading           = You''ve told us
-principal.check-your-answers-registered-society.company_number        = What is your company number?
-principal.check-your-answers-registered-society.ct_reference          = What is your registered society''s Unique Taxpayer Reference?
-principal.check-your-answers-registered-society.business_entity       = What is your business type?
+principal.check-your-answers-registered-society.company_number        = Your company number
+principal.check-your-answers-registered-society.ct_reference          = Your company''s Unique Taxpayer Reference
+principal.check-your-answers-registered-society.business_entity       = Your business type
 principal.check-your-answers-registered-society.registered_society    = Registered Society
 
 ## Bta Business already signed up
