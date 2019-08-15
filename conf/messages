@@ -600,8 +600,8 @@ principal.capture_nino.formHint                                        = It''s o
 principal.confirm_nino.title                                           = Check your answers
 principal.confirm_nino.heading                                         = Check your answers
 principal.confirm_nino.summary.sub_heading                             = You''ve told us
-principal.confirm_nino.summary.business_type                           = What is your business type?
-principal.confirm_nino.summary.nino                                    = What is your National Insurance number?
+principal.confirm_nino.summary.business_type                           = Your business type
+principal.confirm_nino.summary.nino                                    = Your National Insurance number
 
 ## Confirm your details page
 principal.confirm-your-details.title                                   = Confirm your details

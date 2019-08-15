@@ -1026,9 +1026,10 @@ agent.confirm_nino.summary.business_type                              = Pa fath 
 agent.confirm_nino.summary.nino                                       = Beth yw rhif Yswiriant Gwladol eich cleient?
 
 principal.confirm_nino.title                                          = Gwirio''ch atebion
-principal.confirm_nino.heading                                        = Yr hyn rydych wedi rhoi gwybod i ni amdano
-principal.confirm_nino.summary.business_type                          = Pa fath o fusnes sydd gennych?
-principal.confirm_nino.summary.nino                                   = Beth yw''ch rhif Yswiriant Gwladol?
+principal.confirm_nino.heading                                        = Gwirio''ch atebion
+principal.confirm_nino.summary.sub_heading                            = Yr hyn rydych wedi rhoi gwybod i ni amdano
+principal.confirm_nino.summary.business_type                          = Y math o fusnes sydd gennych
+principal.confirm_nino.summary.nino                                   = Eich rhif Yswiriant Gwladol
 
 ## Do you Have a UTR
 principal.partnership.do_you_have_a_utr.title                         = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?

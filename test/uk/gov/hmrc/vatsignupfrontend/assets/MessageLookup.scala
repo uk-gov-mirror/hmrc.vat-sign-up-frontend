@@ -544,8 +544,8 @@ object MessageLookup {
     val heading: String = "Check your answers"
     val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
-    val businessEntity = "What is your business type?"
-    val nino = "What is your National Insurance number?"
+    val businessEntity = "Your business type"
+    val nino = "Your National Insurance number"
   }
 
   object PrincipalConfirmYourDetails {
