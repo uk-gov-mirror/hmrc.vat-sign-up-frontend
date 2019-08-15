@@ -57,9 +57,10 @@ object MessageLookup {
   }
 
   object NotEnrolledToAS {
-    val heading: String = "You can't use this service yet"
+    val heading: String = "You need to sign in with an agent services account"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "To use this service, you need to set up an agent services account."
+    val line1 = "Sign in again with an agent services account to continue."
+    val line2 = "If you do not have one, create an agent services account."
   }
 
   object NoAgentClientRelationship {

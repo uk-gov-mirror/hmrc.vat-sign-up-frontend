@@ -44,8 +44,10 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val baseUrl: String = loadConfig("base.url")
   val contextRoute = "/vat-through-software/sign-up"
+  val contextAgentRoute = "/vat-through-software/sign-up/client"
   lazy val ggUrl: String = loadConfig(s"government-gateway.url")
   lazy val ggSignInContinueUrl = s"$baseUrl$contextRoute"
+  lazy val ggAgentSignInContinueUrl = s"$baseUrl$contextAgentRoute"
 
   lazy val feedbackUrl: String = loadConfig("feedback.url")
   lazy val exitSurveyAgentOrigin = "MTDfB-VAT-agent-led-sign-up"
@@ -59,6 +61,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-out?continue=${encodeUrl(redirectionUrl)}"
 
   def ggSignInUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-in?continue=${encodeUrl(redirectionUrl + "/resolve-vat-number")}"
+  def ggAgentSignInUrl(redirectionUrl: String = ggAgentSignInContinueUrl): String = s"$ggUrl/gg/sign-in?continue=${encodeUrl(redirectionUrl + "/vat-number")}"
 
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MTDVAT"

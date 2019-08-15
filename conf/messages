@@ -193,9 +193,10 @@ error.principal.no_option_selected.summary                             = You mus
 error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
 error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
 ## Not enrolled to Agent Services page
-agent.not_enrolled_to_agent_services.title                             = You can''t use this service yet
-agent.not_enrolled_to_agent_services.heading                           = You can''t use this service yet
-agent.not_enrolled_to_agent_services.line_1                            = To use this service, you need to <a href="{0}">set up an agent services account</a>.
+agent.not_enrolled_to_agent_services.title                             = You need to sign in with an agent services account
+agent.not_enrolled_to_agent_services.heading                           = You need to sign in with an agent services account
+agent.not_enrolled_to_agent_services.line_1                            = <a href="{0}">Sign in again with an agent services account</a> to continue.
+agent.not_enrolled_to_agent_services.line_2                            = If you do not have one, <a href="{0}">create an agent services account</a>.
 
 ## Agent Cannot Use Service Yet page
 agent.cannot_use_service.title                                         = Your client''s business is not eligible at this time
