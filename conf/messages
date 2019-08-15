@@ -512,13 +512,12 @@ principal.capture_entity_type.heading                                  = What ty
 check-your-answers.title                                               = Check your answers
 check-your-answers.heading                                             = Check your answers
 check-your-answers.sub_heading                                         = You''ve told us
-check-your-answers.your_vat_number                                     = What is your VAT number?
-check-your-answers.vat_registration_date                               = What is your VAT registration date?
-check-your-answers.business_post_code                                  = What is your business postcode?
-check-your-answers.previous_vat_return                                 = Are you currently submitting VAT returns?
-check-your-answers.business_entity                                     = What type of business are you registered as?
-check-your-answers.box_5_figure                                        = Your VAT return total or Box 5 figure
-check-your-answers.last_return_month_period                            = The last month of your latest VAT accounting period
+check-your-answers.your_vat_number                                     = Your VAT number
+check-your-answers.vat_registration_date                               = Your VAT registration date
+check-your-answers.business_post_code                                  = Where your business is registered for VAT
+check-your-answers.previous_vat_return                                 = If you are currently submitting VAT returns
+check-your-answers.box_5_figure                                        = Your VAT return total or Box 5 amount
+check-your-answers.last_return_month_period                            = The last month in your latest accounting period
 
 # No CT Enrolment Summary page
 no_ct_enrolment_summary.title                                          = Check your answers

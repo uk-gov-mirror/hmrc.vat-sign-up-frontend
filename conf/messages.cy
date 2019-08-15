@@ -515,13 +515,12 @@ principal.capture_entity_type.heading                                  = Fel pa 
 check-your-answers.title                                               = Gwirio''ch atebion
 check-your-answers.heading                                             = Gwirio''ch atebion
 check-your-answers.sub_heading                                         = Yr hyn rydych wedi rhoi gwybod i ni amdano
-check-your-answers.your_vat_number                                     = Beth yw''ch rhif TAW?
-check-your-answers.vat_registration_date                               = Beth yw''ch dyddiad cofrestru TAW?
-check-your-answers.business_post_code                                  = Beth yw cod post eich busnes?
-check-your-answers.previous_vat_return                                 = Ydych chi''n cyflwyno Ffurflenni TAW ar hyn o bryd?
-check-your-answers.business_entity                                     = Fel pa fath o fusnes ydych wedi''i gofrestru?
-check-your-answers.box_5_figure                                        = Cyfanswm eich Ffurflen TAW neu''ch ffigur o Flwch 5
-check-your-answers.last_return_month_period                            = Mis diwethaf eich cyfnod cyfrifyddu TAW diweddaraf
+check-your-answers.your_vat_number                                     = Eich rhif TAW
+check-your-answers.vat_registration_date                               = Eich dyddiad cofrestru TAW
+check-your-answers.business_post_code                                  = Ble mae''ch busnes wedi''i gofrestru ar gyfer TAW
+check-your-answers.previous_vat_return                                 = Os ydych yn cyflwyno Ffurflenni TAW ar hyn o bryd
+check-your-answers.box_5_figure                                        = Cyfanswm eich Ffurflen TAW neu''ch swm o Flwch 5
+check-your-answers.last_return_month_period                            = Y mis diwethaf yn eich cyfnod cyfrifyddu diweddaraf
 
 # No CT Enrolment Summary page
 no_ct_enrolment_summary.title                                          = Gwirio''ch atebion

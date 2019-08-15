@@ -441,13 +441,12 @@ object MessageLookup {
     val heading = "Check your answers"
     val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
-    val yourVatNumber = "What is your VAT number?"
-    val vatRegistrationDate = "What is your VAT registration date?"
-    val businessPostCode = "What is your business postcode?"
-    val businessEntity = "What type of business are you registered as?"
-    val box5Figure = "Your VAT return total or Box 5 figure"
-    val lastReturnMonth = "The last month of your latest VAT accounting period"
-    val previousVatReturn = "Are you currently submitting VAT returns?"
+    val yourVatNumber = "Your VAT number"
+    val vatRegistrationDate = "Your VAT registration date"
+    val businessPostCode = "Where your business is registered for VAT"
+    val previousVatReturn = "If you are currently submitting VAT returns"
+    val box5Figure = "Your VAT return total or Box 5 amount"
+    val lastReturnMonth = "The last month in your latest accounting period"
   }
 
   object PrincipalNoCtEnrolmentSummary {
