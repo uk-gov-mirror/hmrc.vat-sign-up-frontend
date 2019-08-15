@@ -652,20 +652,20 @@ object MessageLookup {
 
   object PrincipalInformationReceived {
 
-    val heading: String = "We have received your information"
+    val heading: String = "We have received your request to sign up"
     val title = heading + ServiceName.principalSuffix
+    val vatNumber = "VAT registration number"
 
     object Section {
-      val link = "/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
-      val linkText = "software that works with Making Tax Digital for VAT (opens in a new window or tab)"
+      val line = "You'll get a confirmation email within the next 3 days."
+      val line2 = "Do not submit a VAT Return during this time."
 
-      val heading = "What happens next"
-      val line = "We will send you an email within 72 hours to confirm. Do not submit a VAT Return during this time."
-      val bullet1 = s"You must use ${linkText}."
-      val bullet2 = "You must only use the new way of submitting your VAT Return through software with Making Tax Digital for VAT. Do not use the old way of sending your VAT Return."
-      val bullet3 = "Check that your software is connected to send VAT Returns to HMRC directly. You might need to sign in with your Government Gateway user ID."
-      val bullet4 = "Use the software to record all your sales and purchases."
-      val bullet5 = "After April, keep your business details up to date using HMRC services (this is also called business tax account). Do not use the VAT online services."
+      val heading = "Next steps"
+      val bullet1 = "Stop using VAT online services. Do not use your old way of sending your VAT Return to HMRC."
+      val bullet2 = "Start using your compatible software to keep records of your business sales and purchases, also called income and expenditure."
+      val bullet3 = "Allow and authorise your software to connect to HMRC."
+      val bullet4 = "Only use this software to submit your VAT Returns to HMRC."
+      val bullet5 = "Manage and update all your business details by signing in to HMRC services (this is also called a Business tax account)."
     }
 
   }

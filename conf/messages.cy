@@ -615,15 +615,17 @@ principal.terms.bullet_5                                               = rhoi gw
 principal.terms.line_2                                                 = Nid yw''r telerau hyn yn gontractiol, a gallwch roi''r gorau i gymryd rhan yn y treial ar unrhyw adeg.
 
 ## Confirmation page
-principal.confirmation.title                                           = Mae''ch gwybodaeth wedi dod i law
-principal.confirmation.heading                                         = Mae''ch gwybodaeth wedi dod i law
-principal.confirmation.subsection.heading                              = Yr hyn sy''n digwydd nesaf
-principal.confirmation.subsection.line                                 = Byddwn yn anfon e-bost atoch cyn pen 72 awr i gadarnhau. Peidiwch â chyflwyno Ffurflen TAW yn ystod yr amser hwn.
-principal.confirmation.subsection.bullet_1                             = Mae''n rhaid i chi ddefnyddio <a id="softwareOptionsUrl" href="{0}"" target="_blank">meddalwedd sy''n gweithio gyda''r cynllun Troi Treth yn Ddigidol ar gyfer TAW (yn agor ffenestr neu dab newydd)</a>.
-principal.confirmation.subsection.bullet_2                             = Mae''n rhaid i chi ddefnyddio''r ffordd newydd o gyflwyno''ch Ffurflen TAW drwy feddalwedd gyda''r cynllun Troi Treth yn Ddigidol ar gyfer TAW. Peidiwch â defnyddio''r hen ffordd o anfon eich Ffurflen TAW.
-principal.confirmation.subsection.bullet_3                             = Cadarnhewch fod eich meddalwedd wedi''i chysylltu i anfon Ffurflenni TAW i CThEM yn uniongyrchol. Efallai y bydd yn rhaid i chi fewngofnodi gan ddefnyddio''ch Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth.
-principal.confirmation.subsection.bullet_4                             = Defnyddiwch y feddalwedd i gofnodi popeth rydych yn ei werthu a''i brynu.
-principal.confirmation.subsection.bullet_5                             = O fis Ebrill ymlaen, cofiwch gadw''ch manylion busnes yn gyfredol gan ddefnyddio gwasanaethau CThEM (yr enw arall ar hyn yw''r cyfrif treth busnes). Peidiwch â defnyddio''r gwasanaethau TAW ar-lein.
+principal.confirmation.title                                           = Mae''ch cais i gofrestru wedi dod i law
+principal.confirmation.heading                                         = Mae''ch cais i gofrestru wedi dod i law
+principal.confirmation.vat_registration_number                         = Rhif cofrestru TAW
+principal.confirmation.line                                            = Byddwch yn cael e-bost cadarnhau cyn pen 3 diwrnod.
+principal.confirmation.line2                                           = Peidiwch â chyflwyno Ffurflen TAW yn ystod yr amser hwn.
+principal.confirmation.subsection.heading                              = Camau nesaf
+principal.confirmation.subsection.bullet_1                             = Rhowch y gorau i ddefnyddio gwasanaethau TAW ar-lein. Peidiwch â defnyddio''ch hen ffordd o anfon eich Ffurflen TAW i CThEM.
+principal.confirmation.subsection.bullet_2                             = Dechreuwch ddefnyddio''ch meddalwedd sy''n cydweddu er mwyn cadw cofnodion o''ch gwerthiannau a phryniannau busnes, a elwir hefyd yn incwm a gwariant.
+principal.confirmation.subsection.bullet_3                             = Ewch ati i ganiatáu i''ch meddalwedd gysylltu â CThEM ac i awdurdodi hynny.
+principal.confirmation.subsection.bullet_4                             = Defnyddiwch y feddalwedd hon i gyflwyno''ch Ffurflenni TAW i CThEM yn unig.
+principal.confirmation.subsection.bullet_5                             = Rheolwch a diweddarwch eich holl fanylion busnes drwy fewngofnodi i Wasanaethau CThEM (yr enw arall ar hyn yw''r Cyfrif Treth Busnes).
 
 ## Capture Company Number page
 principal.capture_company_number.title                                 = Beth yw rhif cofrestru''ch cwmni?
