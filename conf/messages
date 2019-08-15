@@ -865,10 +865,11 @@ principal.capture_partnership_utr.accordion.link_2                     = My part
 ## Principal Partnerships CYA
 principal.check_your_answers_partnerships.title                        = Check your answers
 principal.check_your_answers_partnerships.heading                      = Check your answers
-principal.check_your_answers_partnerships.business_entity              = What type of business or group are you signing up?
-principal.check_your_answers_partnerships.company_number               = What is the partnership''s company number?
-principal.check_your_answers_partnerships.company_utr                  = UTR Partnership
-principal.check_your_answers_partnerships.post_code                    = Where is the partnership registered for Self Assessment?
+principal.check_your_answers_partnerships.sub_heading                  = You''ve told us
+principal.check_your_answers_partnerships.business_entity              = Type of business or group
+principal.check_your_answers_partnerships.company_number               = Partnership''s company number
+principal.check_your_answers_partnerships.company_utr                  = The partnership''s Unique Taxpayer Reference
+principal.check_your_answers_partnerships.post_code                    = The postcode where the partnership is registered for Self Assessment
 principal.check_your_answers_partnerships.has_optional_sautr           = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 principal.check_your_answers_partnerships.no_sautr                     = I do not have one
 
@@ -876,7 +877,7 @@ principal.check_your_answers_partnerships.no_sautr                     = I do no
 principal.are_you_ready_submit_software.title                          = Are you ready to submit your next VAT Return using software compatible with Making Tax Digital?
 principal.are_you_ready_submit_software.heading                        = Are you ready to submit your next VAT Return using software compatible with Making Tax Digital?
 principal.are_you_ready_submit_software.line_1                         = Once you''ve signed up for Making Tax Digital, you can only send in your VAT Return using software.
-principal.are_you_ready_submit_software.line_2                          = If you''re not ready to use software yet, you should send your next VAT Return using your usual method.
+principal.are_you_ready_submit_software.line_2                         = If you''re not ready to use software yet, you should send your next VAT Return using your usual method.
 
 ## Verify Software Error Page
 principal.verify_software_error.title                                  = Making Tax Digital for VAT: verify your software

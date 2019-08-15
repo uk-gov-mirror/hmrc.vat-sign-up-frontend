@@ -844,10 +844,10 @@ principal.capture_partnership_utr.accordion.link_2                     = Nid oes
 ## Principal Partnerships CYA
 principal.check_your_answers_partnerships.title                        = Gwirio''ch atebion
 principal.check_your_answers_partnerships.heading                      = Gwirio''ch atebion
-principal.check_your_answers_partnerships.business_entity              = Pa fath o fusnes neu grŵp ydych chi''n ei gofrestru?
-principal.check_your_answers_partnerships.company_number               = Beth yw rhif cwmni''r bartneriaeth?
-principal.check_your_answers_partnerships.company_utr                  = UTR Partneriaeth
-principal.check_your_answers_partnerships.post_code                    = Ymhle mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad?
+principal.check_your_answers_partnerships.business_entity              = Math o fusnes neu grŵp
+principal.check_your_answers_partnerships.company_number               = Rhif cofrestru''r bartneriaeth
+principal.check_your_answers_partnerships.company_utr                  = Cyfeirnod Unigryw y Trethdalwr ar gyfer y Bartneriaeth
+principal.check_your_answers_partnerships.post_code                    = Y cod post ble mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad
 principal.check_your_answers_partnerships.joint_vernture_or_property   = Ydych chi''n Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
 principal.check_your_answers_partnerships.has_optional_sautr           = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad?
 principal.check_your_answers_partnerships.no_sautr                     = Nid oes gennyf un
@@ -864,7 +864,7 @@ unplanned_outage.bullet3                                               = ewch i 
 principal.are_you_ready_submit_software.title                          = Ydych chi''n barod i gyflwyno''ch Ffurflen TAW nesaf drwy ddefnyddio meddalwedd sy''n cydweddu â''r cynllun Troi Treth yn Ddigidol?
 principal.are_you_ready_submit_software.heading                        = Ydych chi''n barod i gyflwyno''ch Ffurflen TAW nesaf drwy ddefnyddio meddalwedd sy''n cydweddu â''r cynllun Troi Treth yn Ddigidol?
 principal.are_you_ready_submit_software.line_1                         = Ar ôl i chi gofrestru ar gyfer Troi Treth yn Ddigidol, gallwch ond anfon eich Ffurflen TAW drwy ddefnyddio meddalwedd.
-principal.are_you_ready_submit_software.line_2                          = Os nad ydych yn barod i ddefnyddio meddalwedd eto, dylech anfon eich Ffurflen TAW nesaf drwy’ch dull arferol.
+principal.are_you_ready_submit_software.line_2                         = Os nad ydych yn barod i ddefnyddio meddalwedd eto, dylech anfon eich Ffurflen TAW nesaf drwy’ch dull arferol.
 
 ## Verify Software Error Page
 principal.verify_software_error.title                                  = Troi Treth yn Ddigidol ar gyfer TAW: dilysu''ch meddalwedd
