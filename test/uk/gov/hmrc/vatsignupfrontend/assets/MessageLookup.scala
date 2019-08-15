@@ -976,10 +976,10 @@ object MessageLookup {
     val heading = "Check your answers"
     val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
-    val businessEntity = "What is your business type?"
+    val businessEntity = "Your business type"
     val registeredSociety = "Registered Society"
-    val companyNumber = "What is your company number?"
-    val companyUtr = "What is your registered society's Unique Taxpayer Reference?"
+    val companyNumber = "Your company number"
+    val companyUtr = "Your company's Unique Taxpayer Reference"
   }
 
   object BtaBusinessAlreadySignedUp {

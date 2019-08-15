@@ -925,9 +925,9 @@ principal.capture_registered_society_utr.link                          = Rwyf we
 principal.check-your-answers-registered-society.title                  = Gwirio''ch atebion
 principal.check-your-answers-registered-society.heading                = Gwirio''ch atebion
 principal.check-your-answers-registered-society.sub_heading            = Yr hyn rydych wedi rhoi gwybod i ni amdano
-principal.check-your-answers-registered-society.company_number         = Beth yw''ch rhif cwmni?
-principal.check-your-answers-registered-society.ct_reference           = Beth yw Cyfeirnod Unigryw y Trethdalwr eich cymdeithas gofrestredig?
-principal.check-your-answers-registered-society.business_entity        = Pa fath o fusnes sydd gennych?
+principal.check-your-answers-registered-society.company_number         = Eich rhif cwmni
+principal.check-your-answers-registered-society.ct_reference           = Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni
+principal.check-your-answers-registered-society.business_entity        = Y math o fusnes sydd gennych
 principal.check-your-answers-registered-society.registered_society     = Cymdeithas gofrestredig
 
 ## Bta Business already signed up
