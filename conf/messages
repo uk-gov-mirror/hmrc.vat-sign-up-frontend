@@ -635,15 +635,17 @@ principal.terms.bullet_5                                               = tell HM
 principal.terms.line_2                                                 = These terms are not contractual and you can stop taking part in the trial at any time.
 
 ## Confirmation page
-principal.confirmation.title                                           = We have received your information
-principal.confirmation.heading                                         = We have received your information
-principal.confirmation.subsection.heading                              = What happens next
-principal.confirmation.subsection.line                                 = We will send you an email within 72 hours to confirm. Do not submit a VAT Return during this time.
-principal.confirmation.subsection.bullet_1                             = You must use <a id="softwareOptionsUrl" href="{0}" target="_blank">software that works with Making Tax Digital for VAT (opens in a new window or tab)</a>.
-principal.confirmation.subsection.bullet_2                             = You must only use the new way of submitting your VAT Return through software with Making Tax Digital for VAT. Do not use the old way of sending your VAT Return.
-principal.confirmation.subsection.bullet_3                             = Check that your software is connected to send VAT Returns to HMRC directly. You might need to sign in with your Government Gateway user ID.
-principal.confirmation.subsection.bullet_4                             = Use the software to record all your sales and purchases.
-principal.confirmation.subsection.bullet_5                             = After April, keep your business details up to date using HMRC services (this is also called business tax account). Do not use the VAT online services.
+principal.confirmation.title                                           = We have received your request to sign up
+principal.confirmation.heading                                         = We have received your request to sign up
+principal.confirmation.vat_registration_number                         = VAT registration number
+principal.confirmation.line                                            = You''ll get a confirmation email within the next 3 days.
+principal.confirmation.line2                                           = Do not submit a VAT Return during this time.
+principal.confirmation.subsection.heading                              = Next steps
+principal.confirmation.subsection.bullet_1                             = Stop using VAT online services. Do not use your old way of sending your VAT Return to HMRC.
+principal.confirmation.subsection.bullet_2                             = Start using your compatible software to keep records of your business sales and purchases, also called income and expenditure.
+principal.confirmation.subsection.bullet_3                             = Allow and authorise your software to connect to HMRC.
+principal.confirmation.subsection.bullet_4                             = Only use this software to submit your VAT Returns to HMRC.
+principal.confirmation.subsection.bullet_5                             = Manage and update all your business details by signing in to HMRC services (this is also called a Business tax account).
 
 ## Capture Company Number page
 principal.capture_company_number.title                                 = What is your company registration number?

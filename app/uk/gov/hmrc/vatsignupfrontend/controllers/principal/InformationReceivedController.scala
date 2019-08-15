@@ -34,7 +34,17 @@ class InformationReceivedController @Inject()(val controllerComponents: Controll
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(information_received(request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).get)))
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+
+      (optVatNumber, optBusinessEntity) match {
+        case (Some(vatNumber), Some(businessEntity)) =>
+          Future.successful(
+            Ok(information_received(businessEntity, vatNumber))
+          )
+        case _ =>
+          Future.successful(Redirect(routes.CaptureVatNumberController.show))
+      }
     }
   }
 

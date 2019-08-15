@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
 
-@(entityType: BusinessEntity)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(entityType: BusinessEntity, vatRegistrationNumber: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-complete.js")></script>
@@ -30,14 +30,24 @@
     <div data-entity-type="@entityType.toString" class="govuk-box-highlight">
         <section id="confirmation-heading">
             <h1 class="heading-xlarge">@Messages("principal.confirmation.heading")</h1>
+
+            <dl id="vat-registration-number">
+                <dt class="font-medium">@Messages("principal.confirmation.vat_registration_number")</dt>
+                <dd class="bold-medium">@vatRegistrationNumber</dd>
+            </dl>
         </section>
+    </div>
+
+    <p>@Messages("principal.confirmation.line")</p>
+
+    <div class="panel panel-border-wide">
+        <p>@Messages("principal.confirmation.line2")</p>
     </div>
 
     <section id="what-happens-next">
         <h2 class="heading-medium">@Messages("principal.confirmation.subsection.heading")</h2>
-        <p>@Messages("principal.confirmation.subsection.line")</p>
         <ol class="list list-number">
-            <li>@Html(Messages("principal.confirmation.subsection.bullet_1", appConfig.softwareOptionsUrl))</li>
+            <li>@Messages("principal.confirmation.subsection.bullet_1")</li>
             <li>@Messages("principal.confirmation.subsection.bullet_2")</li>
             <li>@Messages("principal.confirmation.subsection.bullet_3")</li>
             <li>@Messages("principal.confirmation.subsection.bullet_4")</li>
