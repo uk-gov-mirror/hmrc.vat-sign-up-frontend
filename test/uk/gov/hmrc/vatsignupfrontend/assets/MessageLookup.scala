@@ -453,9 +453,9 @@ object MessageLookup {
     val heading = "Check your answers"
     val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"
-    val companyNumber = "What is your company number?"
-    val companyUtr = "What is your company Unique Taxpayer Reference?"
-    val businessEntity = "What is your business type?"
+    val companyNumber = "Your company number"
+    val companyUtr = "Your company's Unique Taxpayer Reference"
+    val businessEntity = "Your business type"
   }
 
   object PrincipalCannotUseServiceYet {

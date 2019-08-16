@@ -523,9 +523,9 @@ check-your-answers.last_return_month_period                            = The las
 no_ct_enrolment_summary.title                                          = Check your answers
 no_ct_enrolment_summary.heading                                        = Check your answers
 no_ct_enrolment_summary.sub_heading                                    = You''ve told us
-no_ct_enrolment_summary.company_number                                 = What is your company number?
-no_ct_enrolment_summary.company_utr                                    = What is your company Unique Taxpayer Reference?
-no_ct_enrolment_summary.business_entity                                = What is your business type?
+no_ct_enrolment_summary.company_number                                 = Your company number
+no_ct_enrolment_summary.company_utr                                    = Your company''s Unique Taxpayer Reference
+no_ct_enrolment_summary.business_entity                                = Your business type
 
 ## Principal Capture Email page
 principal.capture_email.title                                          = What is the business email address?
