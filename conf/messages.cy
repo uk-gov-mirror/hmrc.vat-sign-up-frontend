@@ -526,9 +526,9 @@ check-your-answers.last_return_month_period                            = Y mis d
 no_ct_enrolment_summary.title                                          = Gwirio''ch atebion
 no_ct_enrolment_summary.heading                                        = Gwirio''ch atebion
 no_ct_enrolment_summary.sub_heading                                    = Yr hyn rydych wedi rhoi gwybod i ni amdano
-no_ct_enrolment_summary.company_number                                 = Beth yw''ch rhif cwmni?
-no_ct_enrolment_summary.company_utr                                    = Beth yw Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni?
-no_ct_enrolment_summary.business_entity                                = Pa fath o fusnes sydd gennych?
+no_ct_enrolment_summary.company_number                                 = Eich rhif cwmni
+no_ct_enrolment_summary.company_utr                                    = Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni
+no_ct_enrolment_summary.business_entity                                = Y math o fusnes sydd gennych
 
 ## Principal Capture Email page
 principal.capture_email.title                                          = Beth yw cyfeiriad e-bost y busnes?
