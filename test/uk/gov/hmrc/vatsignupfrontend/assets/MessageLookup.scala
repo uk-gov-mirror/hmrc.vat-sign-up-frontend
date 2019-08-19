@@ -281,11 +281,12 @@ object MessageLookup {
     val dob = "Date of birth"
   }
 
-  object ConfirmNino {
+  object AgentConfirmNino {
     val heading = "Confirm your client's details"
     val title = heading + ServiceName.agentSuffix
-    val nino = "What is your client's National Insurance number?"
-    val businessEntity = "What type of business or group is your client?"
+    val businessEntity = "Business type"
+    val nino = "National Insurance number"
+
   }
 
   object FailedClientMatching {

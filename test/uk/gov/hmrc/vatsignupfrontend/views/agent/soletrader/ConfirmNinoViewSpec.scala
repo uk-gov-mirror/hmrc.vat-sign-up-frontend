@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ConfirmNino => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentConfirmNino => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec

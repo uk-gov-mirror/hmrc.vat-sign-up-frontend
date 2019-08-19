@@ -1022,8 +1022,8 @@ principal.capture_nino.formHint                                        = Mae hwn
 # Confirm National Insurance number (NINO)
 agent.confirm_nino.title                                              = Cadarnhau manylion eich cleient
 agent.confirm_nino.heading                                            = Cadarnhau manylion eich cleient
-agent.confirm_nino.summary.business_type                              = Pa fath o fusnes neu grŵp yw''ch cleient?
-agent.confirm_nino.summary.nino                                       = Beth yw rhif Yswiriant Gwladol eich cleient?
+agent.confirm_nino.summary.business_type                              = Math o fusnes
+agent.confirm_nino.summary.nino                                       = Rhif Yswiriant Gwladol
 
 principal.confirm_nino.title                                          = Gwirio''ch atebion
 principal.confirm_nino.heading                                        = Gwirio''ch atebion
