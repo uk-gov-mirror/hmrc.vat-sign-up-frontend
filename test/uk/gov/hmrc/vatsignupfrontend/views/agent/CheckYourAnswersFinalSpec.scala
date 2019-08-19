@@ -32,6 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.utils.SummarySectionTesting
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_answers_final
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper.getBusinessEntityName
+import uk.gov.hmrc.vatsignupfrontend.views.helpers.ContactPreferenceHelper
 
 class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
 
@@ -86,7 +87,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
           doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
           doc.sectionTest(NinoId, msg.nino, testNino, Some(soletraderRoutes.CaptureNinoController.show().url))
           doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-          doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+          doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
           doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
         }
         "the SkipCidCheck feature switch is not enabled" should {
@@ -110,7 +111,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
             doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
             doc.sectionTest(NinoId, msg.nino, testNino, Some(CaptureClientDetailsController.show().url))
             doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-            doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+            doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
             doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
           }
         }
@@ -137,7 +138,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(LimitedCompany), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(CrnId, msg.companyNumber, testCompanyNumber, Some(CaptureCompanyNumberController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show().url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show().url))
       }
     }
@@ -162,7 +163,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(GeneralPartnership), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -194,7 +195,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(CompanyNameId, msg.partnershipCompanyName, testCompanyName, None)
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -231,7 +232,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(CompanyNameId, msg.partnershipCompanyName, testCompanyName, None)
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -268,7 +269,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(CompanyNameId, msg.partnershipCompanyName, testCompanyName, None)
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -292,7 +293,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(VatGroup), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -316,7 +317,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Charity), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -340,7 +341,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Division), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -364,7 +365,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(UnincorporatedAssociation), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -388,7 +389,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Trust), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -411,10 +412,10 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
 
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(RegisteredSociety), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(CrnId, msg.companyNumber, testCompanyNumber, Some(CaptureRegisteredSocietyCompanyNumberController.show().url))
+        doc.sectionTest(CrnId, msg.registeredSocietyCompanyNumber, testCompanyNumber, Some(CaptureRegisteredSocietyCompanyNumberController.show().url))
         doc.sectionTest(CompanyNameId, msg.registeredSocietyCompanyName, testCompanyName, None)
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show().url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show().url))
       }
     }
@@ -438,7 +439,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(GovernmentOrganisation), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
@@ -461,7 +462,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
 
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show().url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, Digital.toString, Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show().url))
       }
     }

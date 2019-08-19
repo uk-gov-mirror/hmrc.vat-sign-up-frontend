@@ -318,9 +318,10 @@ object MessageLookup {
     val vrn = "VAT number"
     val companyNumber = "Company Registration Number"
     val companyName = "Company Name"
-    val partnershipCompanyNumber = "Partnership Company Registration Number"
-    val partnershipCompanyName = "Partnership Company Name"
+    val partnershipCompanyNumber = "Partnership number"
+    val partnershipCompanyName = "Partnership name"
     val registeredSocietyCompanyName = "Registered Society Company Name"
+    val registeredSocietyCompanyNumber = "Society Registration number"
     val businessEntity = "Type of business"
     val nino = "National Insurance Number"
     val partnershipUtr = "Partnership UTR"
@@ -895,9 +896,10 @@ object MessageLookup {
   object AgentCheckYourAnswers {
     val heading = "Confirm your client's details"
     val title = heading + ServiceName.agentSuffix
-    val yourUtr = "What is your client's Unique Taxpayer Reference (UTR)?"
-    val yourCompanyNumber = "What is your client's company number?"
-    val yourBusinessPostCode = "Where is your client's principal place of business?"
+    val yourUtr = "Unique Taxpayer Reference"
+    val generalPartnershipUtr = "Partnership Self Assessment UTR"
+    val yourCompanyNumber = "partnership company number"
+    val yourBusinessPostCode = "Where your client's partnership is registered for Self Assessment"
     val generalPartnership: String = "General partnership"
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
     val hasOptionalSautr: String = "Does your client's partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
@@ -1102,7 +1104,7 @@ object MessageLookup {
     val company_name: String = "Company Name"
     val email_address: String = "Business Email Address"
     val contact_preference: String = "How we contact you"
-    val digital: String = "Emails"
+    val digital: String = "Email"
     val letter: String = "Letters"
   }
 

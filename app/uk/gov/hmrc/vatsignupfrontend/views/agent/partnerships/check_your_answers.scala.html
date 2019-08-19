@@ -46,13 +46,17 @@
     utr match {
         case Some(sautr) =>
             val rowName = UtrId
-            val rowQuestion = Messages("agent.check-your-answers.utr")
+            val rowQuestion = if(entityType == GeneralPartnership) {
+                Messages("agent.check-your-answers-general.utr")
+            } else {
+                Messages("agent.check-your-answers.utr")
+            }
             val rowAnswer = sautr
             val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ if generalPartnershipNoSAUTR =>
             val rowName = UtrId
-            val rowQuestion = Messages("agent.check-your-answers.utr")
+            val rowQuestion = Messages("agent.check-your-answers-general.utr")
             val rowAnswer = Messages("agent.check-your-answers.client_has_no_sautr")
             val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
@@ -107,6 +111,6 @@
     </div>
 
     @form(action = postAction) {
-        @continueButton()
+        @continueButton(Some(messages("base.confirmAndContinue")))
     }
 }

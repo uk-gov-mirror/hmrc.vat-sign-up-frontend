@@ -120,7 +120,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         testPageGeneralPartnershipFSDisabled.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
         "the GeneralPartnershipNoSAUTR feature switch is enabled" in {
-          sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSEnabled.document)
+          sectionTest(UtrId, messages.generalPartnershipUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSEnabled.document)
           sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPageGeneralPartnershipFSEnabled.document)
 
           testPageGeneralPartnershipFSEnabled.document.getElementById(utrAnswer).text shouldBe testSaUtr
@@ -128,7 +128,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           testPageGeneralPartnershipFSEnabled.document.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
         }
         "the GeneralPartnershipNoSAUTR feature switch is disabled" in {
-          sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSDisabled.document)
+          sectionTest(UtrId, messages.generalPartnershipUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSDisabled.document)
           sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPageGeneralPartnershipFSDisabled.document)
 
           testPageGeneralPartnershipFSDisabled.document.getElementById(utrAnswer).text shouldBe testSaUtr
@@ -200,7 +200,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           Option(doc.getElementById(s"$HasOptionalSautrId-row")).isDefined shouldBe false
           sectionTest(
             sectionId = UtrId,
-            expectedQuestion = messages.yourUtr,
+            expectedQuestion = messages.generalPartnershipUtr,
             expectedAnswer = messages.noSAUTR,
             expectedEditLink = Some(expectedUrlUtr),
             doc = doc

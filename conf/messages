@@ -52,7 +52,7 @@ core.capture_entity_type.or                                            = or
 
 ## Contact Preferences
 core.contact_preference.paper                                          = Letters
-core.contact_preference.digital                                        = Emails
+core.contact_preference.digital                                        = Email
 
 ## Errors
 error.title_prefix                                                     = 'Error: '
@@ -376,11 +376,12 @@ agent.check_your_answers_final.vat_number                              = VAT num
 agent.check_your_answers_final.business_entity                         = Type of business
 agent.check_your_answers_final.nino                                    = National Insurance Number
 agent.check_your_answers_final.company_number                          = Company Registration Number
-agent.check_your_answers_final.partnership_company_number              = Partnership Company Registration Number
+agent.check_your_answers_final.partnership_company_number              = Partnership number
 agent.check_your_answers_final.company_name                            = Company Name
-agent.check_your_answers_final.partnership_company_name                = Partnership Company Name
+agent.check_your_answers_final.partnership_company_name                = Partnership name
 agent.check_your_answers_final.partnership_utr                         = Partnership UTR
 agent.check_your_answers_final.registered_society_company_name         = Registered Society Company Name
+agent.check_your_answers_final.registered_society_company_number       = Society Registration number
 agent.check_your_answers_final.agent_email                             = Your email address
 agent.check_your_answers_final.contact_preference                      = How to contact your client
 agent.check_your_answers_final.client_email                            = Client email address
@@ -791,10 +792,11 @@ principal.partnership_known_facts_incorrect.line_1                    = The info
 # Check your answers page Partnership
 agent.check-your-answers.title                                         = Confirm your client''s details
 agent.check-your-answers.heading                                       = Confirm your client''s details
-agent.check-your-answers.business_entity                               = What type of business is your client registered as?
-agent.check-your-answers.utr                                           = What is your client''s Unique Taxpayer Reference (UTR)?
-agent.check-your-answers.company_number                                = What is your client''s company number?
-agent.check-your-answers.business_post_code                            = Where is your client''s principal place of business?
+agent.check-your-answers.business_entity                               = Business type
+agent.check-your-answers.utr                                           = Unique Taxpayer Reference
+agent.check-your-answers-general.utr                                   = Partnership Self Assessment UTR
+agent.check-your-answers.company_number                                = partnership company number
+agent.check-your-answers.business_post_code                            = Where your client''s partnership is registered for Self Assessment
 agent.check-your-answers.does_your_client_have_a_utr                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 agent.check-your-answers.client_has_no_sautr                           = My client does not have one
 
