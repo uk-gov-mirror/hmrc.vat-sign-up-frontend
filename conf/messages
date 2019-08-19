@@ -1034,8 +1034,8 @@ agent.partnership.does_your_client_have_a_utr.line                    = This is 
 # Confirm National Insurance number (NINO)
 agent.confirm_nino.title                                              = Confirm your client''s details
 agent.confirm_nino.heading                                            = Confirm your client''s details
-agent.confirm_nino.summary.business_type                              = What type of business or group is your client?
-agent.confirm_nino.summary.nino                                       = What is your client''s National Insurance number?
+agent.confirm_nino.summary.business_type                              = Business type
+agent.confirm_nino.summary.nino                                       = National Insurance number
 
 #Check your answers final
 principal.check_your_answers_final.title                              = Check your answers before sending
