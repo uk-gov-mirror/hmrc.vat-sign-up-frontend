@@ -50,7 +50,7 @@ core.capture_entity_type.other                                         = Arall
 
 ## Contact Preferences
 core.contact_preference.paper                                          = Llythyrau
-core.contact_preference.digital                                        = E-byst
+core.contact_preference.digital                                        = E-bost
 
 ## Errors
 error.title_prefix                                                     = 'Gwall: '
@@ -92,8 +92,8 @@ error.invalid_email.field                                              = Nodwch 
 error.invalid_email.summary                                            = Nodwch gyfeiriad e-bost dilys
 error.invalid_postcode.field                                           = Dim ond rhifau o 0 i 9 a llythrennau o a i z y dylid eu cynnwys yn y cod post
 error.invalid_postcode.summary                                         = Dim ond rhifau o 0 i 9 a llythrennau o a i z y dylid eu cynnwys yn y cod post
-error.postcode_not_entered.field                                       = Nodwch y cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW
-error.postcode_not_entered.summary                                     = Nodwch y cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW
+error.postcode_not_entered.field                                       = Nodwch y cod post ble mae''ch busnes wedi''i gofrestru ar gyfer TAW
+error.postcode_not_entered.summary                                     = Nodwch y cod post ble mae''ch busnes wedi''i gofrestru ar gyfer TAW
 error.invalid_vat_registration_date.field                              = Nodwch ddyddiad go iawn
 error.invalid_vat_registration_date.summary                            = Nodwch ddyddiad go iawn
 error.invalid_vat_registration_date_characters.field                   = Nodwch ddyddiad gan ddefnyddio''r rhifau 0 i 9
@@ -374,17 +374,18 @@ agent.terms.bullet_4                                                   = rhoi gw
 agent.terms.line_2                                                     = Nid yw''r telerau hyn yn gontractiol, a gall eich cleient roi''r gorau i gymryd rhan yn y treial hwn ar unrhyw adeg.
 
 ## Agent final confirmation page
-agent.check_your_answers_final.title                                   = Gwiriwch eich atebion cyn anfon
-agent.check_your_answers_final.heading                                 = Gwiriwch eich atebion cyn anfon
+agent.check_your_answers_final.title                                   = Gwiriwch eich atebion cyn eu hanfon
+agent.check_your_answers_final.heading                                 = Gwiriwch eich atebion cyn eu hanfon
 agent.check_your_answers_final.vat_number                              = Rhif TAW
 agent.check_your_answers_final.business_entity                         = Math o fusnes
 agent.check_your_answers_final.nino                                    = Rhif Yswiriant Gwladol
 agent.check_your_answers_final.company_number                          = Rhif Cofrestru''r Cwmni
-agent.check_your_answers_final.partnership_company_number              = Rhif Cofrestru''r Cwmni Partneriaeth
-agent.check_your_answers_final.company_name                            = Enw'’r cwmni
-agent.check_your_answers_final.partnership_company_name                = Enw''r Cwmni Partneriaeth
-agent.check_your_answers_final.partnership_utr                         = UTR Partneriaeth
-agent.check_your_answers_final.registered_society_company_name         = Enw cwmni’'r gymdeithas gofrestredig
+agent.check_your_answers_final.partnership_company_number              = Rhif y bartneriaeth
+agent.check_your_answers_final.company_name                            = Enw'''r cwmni
+agent.check_your_answers_final.partnership_company_name                = Enw''r bartneriaeth
+agent.check_your_answers_final.partnership_utr                         = UTR y bartneriaeth
+agent.check_your_answers_final.registered_society_company_name         = Enw cwmni'''r gymdeithas gofrestredig
+agent.check_your_answers_final.registered_society_company_number       = Rhif cofrestru''r gymdeithas
 agent.check_your_answers_final.agent_email                             = Eich cyfeiriad e-bost
 agent.check_your_answers_final.contact_preference                      = Sut i gysylltu â''ch cleient
 agent.check_your_answers_final.client_email                            = Cyfeiriad e-bost y cleient
@@ -477,7 +478,7 @@ principal.guidance.subsection_2.line_2                                 = Os nad 
 ## VAT number page
 principal.vat_number.title                                             = Beth yw''ch rhif TAW?
 principal.vat_number.heading                                           = Beth yw''ch rhif TAW?
-principal.vat_number.line_1                                            = Dyma’r 9 rhif ar eich tystysgrif cofrestru ar gyfer TAW. Weithiau, mae’n cael ei alw’n rhif cofrestru TAW neu VRN.
+principal.vat_number.line_1                                            = Dyma''r 9 rhif ar eich tystysgrif cofrestru ar gyfer TAW. Weithiau, mae''n cael ei alw''n rhif cofrestru TAW neu VRN.
 principal.vat_number.hint                                              = Er enghraifft, 123456789
 
 ## Principal Could not confirm VAT number
@@ -502,8 +503,8 @@ principal.sign_in_with_different_details_partnership.heading           = Mae''n 
 principal.sign_in_with_different_details_partnership.line_1            = Mae''n rhaid i chi ddefnyddio Dynodydd Defnyddiwr (ID) Porth y Llywodraeth sy''n gysylltiedig â''r Cyfeirnod Unigryw y Trethdalwr ar gyfer eich partneriaeth.
 
 # Principal place of Business Postcode
-principal.principal_place_of_business.title                            = Beth yw’r cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW?
-principal.principal_place_of_business.heading                          = Beth yw’r cod post ble mae’ch busnes wedi’i gofrestru ar gyfer TAW?
+principal.principal_place_of_business.title                            = Beth yw''r cod post ble mae''ch busnes wedi''i gofrestru ar gyfer TAW?
+principal.principal_place_of_business.heading                          = Beth yw''r cod post ble mae''ch busnes wedi''i gofrestru ar gyfer TAW?
 principal.principal_place_of_business.label                            = Cod post yn y DU
 principal.principal_place_of_business.hint                             = Er enghraifft, AB1 2YZ
 
@@ -771,12 +772,13 @@ principal.partnership_known_facts_incorrect.line_1                     = Dydy''r
 # Check your answers page Partnership
 agent.check-your-answers.title                                         = Cadarnhau manylion eich cleient
 agent.check-your-answers.heading                                       = Cadarnhau manylion eich cleient
-agent.check-your-answers.business_entity                               = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
-agent.check-your-answers.utr                                           = Beth yw Cyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer eich cleient?
-agent.check-your-answers.company_number                                = Beth yw rhif cwmni''ch cleient?
-agent.check-your-answers.business_post_code                            = Ble mae prif leoliad busnes eich cleient?
+agent.check-your-answers.business_entity                               = Math o fusnes
+agent.check-your-answers.utr                                           = Cyfeirnod Unigryw y Trethdalwr (UTR)
+agent.check-your-answers-general.utr                                   = UTR Hunanasesiad y bartneriaeth
+agent.check-your-answers.company_number                                = rhif cwmni y bartneriaeth
+agent.check-your-answers.business_post_code                            = Ble mae partneriaeth eich cleient wedi''i chofrestru ar gyfer Hunanasesiad
 agent.check-your-answers.joint_venture_or_property                     = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
-agent.check-your-answers.client_has_no_sautr                           = Nid oes gan fy cleient un
+agent.check-your-answers.client_has_no_sautr                           = Does dim un gan fy nghleient
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = Mae''n rhaid i chi ddod yn ôl yn nes ymlaen i gofrestru
@@ -785,7 +787,7 @@ principal.sign_up_after_this_date.line_1                               = Ni allw
 principal.sign_up_after_this_date.line_2                               = Mae hyn naill ai oherwydd:
 principal.sign_up_after_this_date.bullet_1                             = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
 principal.sign_up_after_this_date.bullet_2                             = rydych yn agos at gyfnod cyflwyno
-principal.sign_up_after_this_date.line_3                               = Cyflwynwch eich Ffurflen Dreth bresennol drwy’ch dull arferol, wedyn cofrestrwch i ddefnyddio meddalwedd sy’n cydweddu i gyflwyno’ch Ffurflen Dreth nesaf.
+principal.sign_up_after_this_date.line_3                               = Cyflwynwch eich Ffurflen Dreth bresennol drwy''ch dull arferol, wedyn cofrestrwch i ddefnyddio meddalwedd sy''n cydweddu i gyflwyno''ch Ffurflen Dreth nesaf.
 principal.sign_up_after_this_date.line_4                               = Byddwn yn gallu cofrestru''ch cleient ar gyfer y gwasanaeth hwn ar ôl {0}.
 principal.sign_up_after_this_date.line_5                               = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
@@ -796,7 +798,7 @@ principal.sign_up_between_these_dates.line_1                           = Ni allw
 principal.sign_up_between_these_dates.line_2                           = Mae hyn naill ai oherwydd:
 principal.sign_up_between_these_dates.bullet_1                         = mae taliad Debyd Uniongyrchol yn ddyledus cyn hir
 principal.sign_up_between_these_dates.bullet_2                         = rydych yn agos at gyfnod cyflwyno
-principal.sign_up_between_these_dates.line_3                           = Cyflwynwch eich Ffurflen Dreth bresennol drwy’ch dull arferol, wedyn cofrestrwch i ddefnyddio meddalwedd sy’n cydweddu i gyflwyno’ch Ffurflen Dreth nesaf.
+principal.sign_up_between_these_dates.line_3                           = Cyflwynwch eich Ffurflen Dreth bresennol drwy''ch dull arferol, wedyn cofrestrwch i ddefnyddio meddalwedd sy''n cydweddu i gyflwyno''ch Ffurflen Dreth nesaf.
 principal.sign_up_between_these_dates.line_4                           = Dewch yn ôl i gofrestru rhwng {0} a {1}.
 principal.sign_up_between_these_dates.line_5                           = Dewch o hyd i ragor o wybodaeth am y cynllun <a id="mtdGuidance" href={0}>Troi Treth yn Ddigidol</a>.
 
@@ -838,7 +840,7 @@ principal.capture_partnership_utr.heading                              = Beth yw
 principal.capture_partnership_utr.line_1                               = Mae''n 10 rhif, er enghraifft, 1234567890. Bydd i''w weld ar Ffurflenni Treth a llythyrau eraill am Dreth Gorfforaeth. Efallai y bydd yn cael ei alw''n ''cyfeirnod'', ''UTR'' neu ''defnydd swyddogol''.
 principal.capture_partnership_utr.accordion.heading                    = Nid oes gennyf hwn
 principal.capture_partnership_utr.accordion.line_1                     = Mae''ch UTR yn ein helpu i ddod o hyd i''ch partneriaeth.
-principal.capture_partnership_utr.accordion.link_1                     = Ni allaf ddod o hyd i’m Cyfeirnod Unigryw y Trethdalwr (UTR)
+principal.capture_partnership_utr.accordion.link_1                     = Ni allaf ddod o hyd i''m Cyfeirnod Unigryw y Trethdalwr (UTR)
 principal.capture_partnership_utr.accordion.link_2                     = Nid oes gan fy mhartneriaeth UTR
 
 ## Principal Partnerships CYA
@@ -864,7 +866,7 @@ unplanned_outage.bullet3                                               = ewch i 
 principal.are_you_ready_submit_software.title                          = Ydych chi''n barod i gyflwyno''ch Ffurflen TAW nesaf drwy ddefnyddio meddalwedd sy''n cydweddu â''r cynllun Troi Treth yn Ddigidol?
 principal.are_you_ready_submit_software.heading                        = Ydych chi''n barod i gyflwyno''ch Ffurflen TAW nesaf drwy ddefnyddio meddalwedd sy''n cydweddu â''r cynllun Troi Treth yn Ddigidol?
 principal.are_you_ready_submit_software.line_1                         = Ar ôl i chi gofrestru ar gyfer Troi Treth yn Ddigidol, gallwch ond anfon eich Ffurflen TAW drwy ddefnyddio meddalwedd.
-principal.are_you_ready_submit_software.line_2                         = Os nad ydych yn barod i ddefnyddio meddalwedd eto, dylech anfon eich Ffurflen TAW nesaf drwy’ch dull arferol.
+principal.are_you_ready_submit_software.line_2                         = Os nad ydych yn barod i ddefnyddio meddalwedd eto, dylech anfon eich Ffurflen TAW nesaf drwy''ch dull arferol.
 
 ## Verify Software Error Page
 principal.verify_software_error.title                                  = Troi Treth yn Ddigidol ar gyfer TAW: dilysu''ch meddalwedd
@@ -960,7 +962,7 @@ principal.previous_vat_return.heading                                  = Ydych c
 ## What is your box 5 Figure page
 principal.capture_box_5_figure.title                                   = Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
 principal.capture_box_5_figure.heading                                 = Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
-principal.capture_box_5_figure.line                                    = Mae’r swm hwn i’w weld ym mlwch 5 o’r Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
+principal.capture_box_5_figure.line                                    = Mae''r swm hwn i''w weld ym mlwch 5 o''r Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
 principal.capture_box_5_figure.line2                                   = Mae angen i fformat y rhif hwn fod yn ddau le degol, er enghraifft £123.00.
 ## Cancel Direct Debit page
 principal.cancel_direct_debit.title                                    = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol
@@ -1038,12 +1040,12 @@ principal.partnership.do_you_have_a_utr.line                          = Rhif 10 
 
 
 #Check your answers final
-principal.check_your_answers_final.title                              = Gwiriwch eich atebion cyn anfon
-principal.check_your_answers_final.heading                            = Gwiriwch eich atebion cyn anfon
+principal.check_your_answers_final.title                              = Gwiriwch eich atebion cyn eu hanfon
+principal.check_your_answers_final.heading                            = Gwiriwch eich atebion cyn eu hanfon
 principal.check_your_answers_final.vat_number                         = Rhif TAW
 principal.check_your_answers_final.business_entity                    = Math o fusnes
 principal.check_your_answers_final.nino                               = Rhif Yswiriant Gwladol
-principal.check_your_answers_final.partnership_utr                    = UTR Partneriaeth
+principal.check_your_answers_final.partnership_utr                    = UTR y bartneriaeth
 principal.check_your_answers_final.partnership_company_number         = Rhif Cofrestru''r Cwmni Partneriaeth
 principal.check_your_answers_final.partnership_name                   = Enw''r Cwmni Partneriaeth
 principal.check_your_answers_final.registered_society_name            = Enw cwmni''r gymdeithas gofrestredig

@@ -67,6 +67,7 @@
   optCompanyNumber.map { crn =>
     val row1Question = businessEntity match {
       case _: LimitedPartnershipBase | GeneralPartnership => Messages("agent.check_your_answers_final.partnership_company_number")
+      case RegisteredSociety => Messages("agent.check_your_answers_final.registered_society_company_number")
       case _ => Messages("agent.check_your_answers_final.company_number")
     }
 
@@ -106,7 +107,7 @@
 
 @contactPreferenceRow = @{
   val rowQuestion = Messages("agent.check_your_answers_final.contact_preference")
-  summaryRowHelper(ContactPreferenceId, rowQuestion, contactPreference.toString, Some(ContactPreferenceController.show().url))
+  summaryRowHelper(ContactPreferenceId, rowQuestion, messages(s"core.contact_preference.${contactPreference.toString.toLowerCase()}"), Some(ContactPreferenceController.show().url))
 }
 
 @clientEmailRow = @{
