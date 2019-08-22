@@ -896,9 +896,8 @@ object MessageLookup {
   object AgentCheckYourAnswers {
     val heading = "Confirm your client's details"
     val title = heading + ServiceName.agentSuffix
-    val yourUtr = "Unique Taxpayer Reference"
-    val generalPartnershipUtr = "Partnership Self Assessment UTR"
-    val yourCompanyNumber = "partnership company number"
+    val yourUtr = "Partnership Self Assessment UTR"
+    val yourCompanyNumber = "Partnership company number"
     val yourBusinessPostCode = "Where your client's partnership is registered for Self Assessment"
     val generalPartnership: String = "General partnership"
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
