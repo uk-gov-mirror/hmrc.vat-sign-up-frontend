@@ -221,4 +221,5 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val timeoutLength: String = loadConfig("timeout.length")
 
+  lazy val administrativeDivisionList: Set[String] = loadConfig("administrative-divisions").split(",").toSet
 }
