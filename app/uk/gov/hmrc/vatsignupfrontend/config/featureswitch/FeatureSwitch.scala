@@ -38,7 +38,8 @@ object FeatureSwitch {
     SkipCtUtrOnCotaxNotFound,
     DirectToCTUTROnMismatchedCTUTR,
     FinalCheckYourAnswer,
-    GeneralPartnershipNoSAUTR
+    GeneralPartnershipNoSAUTR,
+    DivisionLookupJourney
   )
 
   def apply(str: String): FeatureSwitch =
@@ -109,4 +110,9 @@ case object FinalCheckYourAnswer extends FeatureSwitch {
 case object GeneralPartnershipNoSAUTR extends FeatureSwitch {
   override val name: String = s"$prefix.General-partnership-no-sautr"
   override val displayText: String = "Enable users to view General Partnership No SAUTR page for individual or agent "
+}
+
+case object DivisionLookupJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.division-lookup-journey"
+  override val displayText: String = "Check VRN against list of known Administrative Divisions"
 }
