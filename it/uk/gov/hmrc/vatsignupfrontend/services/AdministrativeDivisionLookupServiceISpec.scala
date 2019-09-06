@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.services
 
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.ComponentSpecBase
 
 class AdministrativeDivisionLookupServiceISpec extends ComponentSpecBase {
@@ -23,19 +24,35 @@ class AdministrativeDivisionLookupServiceISpec extends ComponentSpecBase {
   val administrativeDivisionVatNumber2 = "000000001"
   val nonAdministrativeDivisionVatNumber = "000000002"
 
-  override val config: Map[String, String] = super.config + ("administrative-divisions" ->  s"$administrativeDivisionVatNumber1,$administrativeDivisionVatNumber2)")
+  override val config: Map[String, String] = super.config + ("administrative-divisions" -> s"$administrativeDivisionVatNumber1,$administrativeDivisionVatNumber2)")
   val administrativeDivisionLookupService: AdministrativeDivisionLookupService = app.injector.instanceOf[AdministrativeDivisionLookupService]
 
-  "isAdministrativeDivision" should {
-    "return true" when {
-      "the VAT number is in the administrative division config list" in {
-        administrativeDivisionLookupService.isAdministrativeDivision(administrativeDivisionVatNumber1) shouldBe true
+  "isAdministrativeDivision" when {
+    s"the $DivisionLookupJourney feature switch is enabled" when {
+      "the VAT number is in the administrative division config list" should {
+        "return true" in {
+          enable(DivisionLookupJourney)
+
+          administrativeDivisionLookupService.isAdministrativeDivision(administrativeDivisionVatNumber1) shouldBe true
+        }
+      }
+      "the VAT number is not in the administrative division config list" should {
+        "return false" in {
+          enable(DivisionLookupJourney)
+
+          administrativeDivisionLookupService.isAdministrativeDivision(nonAdministrativeDivisionVatNumber) shouldBe false
+        }
       }
     }
-    "return false" when {
-      "the VAT number is not in the administrative division config list" in {
-        administrativeDivisionLookupService.isAdministrativeDivision(nonAdministrativeDivisionVatNumber) shouldBe false
+    s"the $DivisionLookupJourney feature switch is disabled" when {
+        "the VAT number is not in the administrative division config list" should {
+          "return false" in {
+            disable(DivisionLookupJourney)
+
+          administrativeDivisionLookupService.isAdministrativeDivision(administrativeDivisionVatNumber1) shouldBe false
+        }
       }
     }
   }
+
 }

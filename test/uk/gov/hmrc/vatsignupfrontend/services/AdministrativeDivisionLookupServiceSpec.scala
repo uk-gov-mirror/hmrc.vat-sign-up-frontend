@@ -20,9 +20,10 @@ import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import org.mockito.Mockito._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class AdministrativeDivisionLookupServiceSpec extends UnitSpec with MockitoSugar {
+class AdministrativeDivisionLookupServiceSpec extends UnitSpec with MockitoSugar with FeatureSwitching {
 
   class Setup {
     val mockAppConfig: AppConfig = mock[AppConfig]
@@ -31,17 +32,26 @@ class AdministrativeDivisionLookupServiceSpec extends UnitSpec with MockitoSugar
 
   }
 
-  "isAdministrativeDivision" should {
-    "return true" when {
-      "the vat number is in the list of administrative divisions" in new Setup {
-        when(mockAppConfig.administrativeDivisionList).thenReturn(Set(testVatNumber))
+  "isAdministrativeDivision" when {
+    s"the $DivisionLookupJourney feature switch is enabled" when {
+      "the vat number is in the list of administrative divisions" should {
+        "return true" in new Setup {
+          enable(DivisionLookupJourney)
+          when(mockAppConfig.administrativeDivisionList).thenReturn(Set(testVatNumber))
 
-        TestAdministrativeDivisionLookupService.isAdministrativeDivision(testVatNumber) shouldBe true
+          TestAdministrativeDivisionLookupService.isAdministrativeDivision(testVatNumber) shouldBe true
+        }
+      }
+      "the vat number is not in the list of administrative divisions" in new Setup {
+        enable(DivisionLookupJourney)
+        when(mockAppConfig.administrativeDivisionList).thenReturn(Set.empty[String])
+
+        TestAdministrativeDivisionLookupService.isAdministrativeDivision(testVatNumber) shouldBe false
       }
     }
-    "return false" when {
-      "the vat number is not in the list of administrative divisions" in new Setup {
-        when(mockAppConfig.administrativeDivisionList).thenReturn(Set.empty[String])
+    s"the $DivisionLookupJourney feature switch is disabled" should {
+      "return false" in new Setup {
+        disable(DivisionLookupJourney)
 
         TestAdministrativeDivisionLookupService.isAdministrativeDivision(testVatNumber) shouldBe false
       }
