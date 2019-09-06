@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import org.jsoup.Jsoup
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -24,15 +26,37 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  "GET /business-type-other" should {
-    "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
+  "GET /business-type-other" when {
+    "the DivisionLookupJourney featureswitch is disabled" should {
+      "return an OK and the page should contain the division option" in {
+        stubAuth(OK, successfulAuthResponse())
+        disable(DivisionLookupJourney)
 
-      val res = get("/business-type-other")
+        val res = get("/business-type-other")
+        val doc = Jsoup.parse(res.body)
 
-      res should have(
-        httpStatus(OK)
-      )
+        res should have(
+          httpStatus(OK)
+        )
+
+        doc.select("input[id=division]").isEmpty shouldBe false
+        doc.select("label[for=division]").isEmpty shouldBe false
+      }
+    }
+    "the DivisionLookupJourney featureswitch is enabled" should {
+      "return an OK and the page should NOT contain the division option" in {
+        stubAuth(OK, successfulAuthResponse())
+        enable(DivisionLookupJourney)
+
+        val res = get("/business-type-other")
+        val doc = Jsoup.parse(res.body)
+
+        res should have(
+          httpStatus(OK)
+        )
+
+        doc.select("input[id=division]").isEmpty shouldBe true
+      }
     }
   }
 

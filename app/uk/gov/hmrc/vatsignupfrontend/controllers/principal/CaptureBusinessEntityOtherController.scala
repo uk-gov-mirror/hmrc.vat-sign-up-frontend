@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent, Call}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -49,6 +49,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
       Future.successful(
         Ok(capture_business_entity_other(
           businessEntityForm = businessEntityForm(false),
+          divisionLookupEnabled = isEnabled(DivisionLookupJourney),
           postAction = routes.CaptureBusinessEntityOtherController.submit()
         ))
       )
@@ -62,6 +63,7 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           Future.successful(
             BadRequest(capture_business_entity_other(
               businessEntityForm = formWithErrors,
+              divisionLookupEnabled = isEnabled(DivisionLookupJourney),
               postAction = routes.CaptureBusinessEntityOtherController.submit()
             ))
           ),
