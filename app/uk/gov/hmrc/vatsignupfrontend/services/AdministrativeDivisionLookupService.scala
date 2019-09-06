@@ -18,9 +18,10 @@ package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FeatureSwitching}
 
 @Singleton
-class AdministrativeDivisionLookupService @Inject()(appConfig: AppConfig) {
+class AdministrativeDivisionLookupService @Inject()(appConfig: AppConfig) extends FeatureSwitching {
   def isAdministrativeDivision(vatNumber: String): Boolean =
-    appConfig.administrativeDivisionList.contains(vatNumber)
+    isEnabled(DivisionLookupJourney) && appConfig.administrativeDivisionList.contains(vatNumber)
 }
