@@ -17,11 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstants}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser.StoreAdministrativeDivisionFailureResponse
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -29,18 +31,59 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   override def afterAll(): Unit = {
     super.afterAll()
     disable(OptionalSautrJourney)
+    disable(DivisionLookupJourney)
   }
 
+
   "GET /business-type" should {
-    "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return See Other" when {
+      "the session VRN is an Administrative division and feature switch is enabled" in {
+        enable(DivisionLookupJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/business-type")
 
-      res should have(
-        httpStatus(OK)
-      )
+        val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVRN))
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DivisionResolverController.resolve().url)
+        )
+      }
+      "no VRN in session" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = get("/client/business-type")
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureVatNumberController.show().url)
+        )
+      }
     }
+
+    "return an OK" when {
+      "the session VRN is not Administrative division" in {
+        enable(DivisionLookupJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> IntegrationTestConstants.testVatNumber))
+
+        res should have(
+          httpStatus(OK)
+        )
+      }
+      "the feature switch is disabled and given an Administrative division" in {
+        disable(DivisionLookupJourney)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVRN))
+
+        res should have(
+          httpStatus(OK)
+        )
+      }
+    }
+
   }
 
   "POST /business-type" should {
