@@ -17,23 +17,61 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
-  "GET /business-type" should {
-    "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
+  val administrativeDivisionVatNumber1 = "000000000"
+  val administrativeDivisionVatNumber2 = "000000001"
+  val nonAdministrativeDivisionVatNumber = "000000002"
 
-      val res = get("/business-type")
+  override val config: Map[String, String] = super.config + ("administrative-divisions" -> s"$administrativeDivisionVatNumber1,$administrativeDivisionVatNumber2)")
 
-      res should have(
-        httpStatus(OK)
-      )
+
+    "there is no VRN in session" should {
+      "return a redirect to capture vat number" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val res = get("/business-type")
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureVatNumberController.show().url)
+        )
+      }
     }
-  }
+
+    "there is a VRN in session and it is a division VRN" should {
+      "redirect to DivisionResolverController" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        enable(DivisionLookupJourney)
+        val res = get("/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVatNumber1))
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DivisionResolverController.resolve().url)
+        )
+      }
+    }
+
+
+    "there is a VRN in session and it is not a division VRN" should {
+      "return an OK" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+        val res = get("/business-type", Map(SessionKeys.vatNumberKey -> testVatNumber))
+
+        res should have(
+          httpStatus(OK)
+        )
+      }
+    }
+
 
   "POST /business-type" when {
     "the business type is sole trader" should {
@@ -118,3 +156,4 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   }
 
 }
+
