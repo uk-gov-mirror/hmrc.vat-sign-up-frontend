@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Call}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -34,12 +34,24 @@ import scala.concurrent.Future
 class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: ControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
+  private lazy val businessEntityRoute: Map[BusinessEntity, Call] = Map(
+     VatGroup -> routes.VatGroupResolverController.resolve(),
+     Division -> routes.DivisionResolverController.resolve(),
+     UnincorporatedAssociation -> routes.UnincorporatedAssociationResolverController.resolve(),
+     Trust -> routes.TrustResolverController.resolve(),
+     RegisteredSociety -> routes.CaptureRegisteredSocietyCompanyNumberController.show(),
+     Charity -> routes.CharityResolverController.resolve(),
+     GovernmentOrganisation -> routes.GovernmentOrganisationResolverController.resolve()
+
+  )
+
+      val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
         Ok(capture_business_entity_other(
           businessEntityForm(true),
-          routes.CaptureBusinessEntityOtherController.submit()
+          divisionLookupEnabled = isEnabled(DivisionLookupJourney),
+          postAction = routes.CaptureBusinessEntityOtherController.submit()
         ))
       )
     }
@@ -52,20 +64,12 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           Future.successful(
             BadRequest(capture_business_entity_other(
               formWithErrors,
-              routes.CaptureBusinessEntityOtherController.submit()
+              divisionLookupEnabled = isEnabled(DivisionLookupJourney),
+              postAction = routes.CaptureBusinessEntityOtherController.submit()
             ))
           ),
-        entityType => {
-          entityType match {
-            case VatGroup => Future.successful(Redirect(routes.VatGroupResolverController.resolve()))
-            case Division => Future.successful(Redirect(routes.DivisionResolverController.resolve()))
-            case UnincorporatedAssociation => Future.successful(Redirect(routes.UnincorporatedAssociationResolverController.resolve()))
-            case Trust => Future.successful(Redirect(routes.TrustResolverController.resolve()))
-            case RegisteredSociety => Future.successful(Redirect(routes.CaptureRegisteredSocietyCompanyNumberController.show()))
-            case Charity => Future.successful(Redirect(routes.CharityResolverController.resolve()))
-            case GovernmentOrganisation => Future.successful(Redirect(routes.GovernmentOrganisationResolverController.resolve()))
-          }
-        } map (_.addingToSession(SessionKeys.businessEntityKey, entityType))
+        businessEntity => Future.successful(
+        Redirect(businessEntityRoute(businessEntity)).addingToSession(SessionKeys.businessEntityKey, businessEntity))
       )
     }
   }

@@ -21,6 +21,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
@@ -34,9 +35,9 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity_other(
-
+  def page(divisionLookupEnabled: Boolean): HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity_other(
     businessEntityForm,
+    divisionLookupEnabled,
     postAction = testCall
   )(
     FakeRequest(),
@@ -50,13 +51,13 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
       name = "Capture Business Entity View",
       title = messages.agentTitle,
       heading = messages.agentHeading,
-      page = page
+      page = page(divisionLookupEnabled = false)
     )
 
     testPage.shouldHaveForm("Business Entity Form")(actionCall = testCall)
 
     "have a set of radio inputs" which {
-      lazy val doc = Jsoup.parse(page.body)
+      lazy val doc = Jsoup.parse(page(divisionLookupEnabled = false).body)
 
       "for the option 'VAT group'" should {
         "have the text 'VAT group'" in {
@@ -73,21 +74,32 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
         }
       }
 
-      "for the option 'Division'" should {
-        "have the text 'Division'" in {
-          doc.select("label[for=division]").text() shouldEqual messages.radioDivision
-        }
-        "have an input under the label that" should {
-          lazy val optionLabel = doc.select("#division")
-          "have the id 'division'" in {
-            optionLabel.attr("id") shouldEqual "division"
+      "for the option 'Division'" when {
+        "the DivisionLookupJourney featureSwitch is enabled" should {
+          "not show the 'Administrative division' option" in {
+            lazy val doc = Jsoup.parse(page(divisionLookupEnabled = true).body)
+            val divisionRadio = doc.select("input[id=division]")
+            val divisionLabel = doc.select("label[for=division]")
+
+            divisionRadio.isEmpty shouldBe true
+            divisionLabel.isEmpty shouldBe true
           }
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
+        }
+        "the DivisionLookupJourney featureSwitch is disabled" should {
+          "have the text 'Administrative division'" in {
+            doc.select("label[for=division]").text() shouldEqual messages.radioDivision
+          }
+          "have an input under the label that" should {
+            lazy val optionLabel = doc.select("#division")
+            "have the id 'division'" in {
+              optionLabel.attr("id") shouldEqual "division"
+            }
+            "be of type radio" in {
+              optionLabel.attr("type") shouldEqual "radio"
+            }
           }
         }
       }
-
       "for the option 'Unincorporated association'" should {
         "have the text 'Unincorporated Association'" in {
           doc.select("label[for=unincorporated-association]").text() shouldEqual messages.radioUnincorporatedAssociation
