@@ -17,8 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.mvc.{Action, AnyContent, Call}
+import play.api.mvc._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
@@ -26,13 +25,17 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.services.AdministrativeDivisionLookupService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity
+import play.api.mvc.Results._
 
 import scala.concurrent.Future
 
 @Singleton
-class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+class CaptureBusinessEntityController @Inject()(
+                                                 val controllerComponents: ControllerComponents,
+                                                 administrativeDivisionLookupService: AdministrativeDivisionLookupService
+                                               ) extends AuthenticatedController(AdministratorRolePredicate) {
 
   private lazy val businessEntityRoute: Map[BusinessEntity, Call] = Map(
     SoleTrader -> soletrader.routes.SoleTraderResolverController.resolve(),
@@ -44,12 +47,18 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(capture_business_entity(
-          businessEntityForm = businessEntityForm,
-          postAction = routes.CaptureBusinessEntityController.submit()
+      request.session.get(SessionKeys.vatNumberKey) match {
+        case Some(vatNumber) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
+          Future.successful(Redirect(routes.DivisionResolverController.resolve())
+            .addingToSession(SessionKeys.businessEntityKey, Division.asInstanceOf[BusinessEntity]))
+        case Some(_) => Future.successful(Ok(
+          capture_business_entity(
+            businessEntityForm = businessEntityForm,
+            postAction = routes.CaptureBusinessEntityController.submit()
+          )
         ))
-      )
+        case None => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
+      }
     }
   }
 
@@ -64,7 +73,8 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
             ))
           ),
         businessEntity => Future.successful(
-          Redirect(businessEntityRoute(businessEntity)).addingToSession(SessionKeys.businessEntityKey, businessEntity)
+          Redirect(businessEntityRoute(businessEntity))
+            .addingToSession(SessionKeys.businessEntityKey, businessEntity)
         )
       )
     }

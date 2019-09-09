@@ -27,24 +27,41 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockAdministrativeDivisionLookupService
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockAdministrativeDivisionLookupService {
 
-  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents)
+  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents, mockAdministrativeDivisionLookupService)
 
-  val testGetRequest = FakeRequest("GET", "/business-type")
+  lazy val testGetRequest = FakeRequest("GET", "/business-type").withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
 
-  "Calling the show action of the Capture Entity Type controller" should {
-    "go to the Capture Entity Type page" in {
-      mockAuthAdminRole()
+  "Calling the show action of the Capture Entity Type controller" when {
+    "the VRN belongs to a VAT division" should {
+      "redirect the user to the DivisionResolverController" in {
+        mockAuthAdminRole()
+        mockIsAdministrativeDivision(testVatNumber)(true)
 
-      val result = TestCaptureBusinessEntityController.show(testGetRequest)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+        val result = TestCaptureBusinessEntityController.show(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)
+      }
+    }
+
+    "the VRN does not belong to a VAT division" should {
+      "go to the Capture Entity Type page" in {
+        mockAuthAdminRole()
+        mockIsAdministrativeDivision(testVatNumber)(false)
+
+        val result = TestCaptureBusinessEntityController.show(testGetRequest)
+        status(result) shouldBe Status.OK
+        contentType(result) shouldBe Some("text/html")
+        charset(result) shouldBe Some("utf-8")
+      }
     }
   }
 
