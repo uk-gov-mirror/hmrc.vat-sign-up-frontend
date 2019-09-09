@@ -23,11 +23,24 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 @(businessEntityForm: Form[BusinessEntity],
-    postAction: Call
+  divisionLookupEnabled: Boolean,
+  postAction: Call
 )(implicit request: Request [_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
+}
+
+@entities = @{
+  Seq(
+    (vatGroup, Messages("core.capture_entity_type.vatGroup")),
+    (trust, Messages("core.capture_entity_type.trust")),
+    (charity, Messages("core.capture_entity_type.charity")),
+    (unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation")),
+    (division, Messages("core.capture_entity_type.division")),
+    (registeredSociety, Messages("core.capture_entity_type.registeredSociety")),
+    (governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))
+  ).filterNot { case (entity, message) => divisionLookupEnabled && entity == "division" }
 }
 
 @principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts), form = Some(businessEntityForm)) {
@@ -39,15 +52,7 @@
         @radioHelper(
             parentForm = businessEntityForm,
             inline = false,
-            options = Seq(
-                (vatGroup, Messages("core.capture_entity_type.vatGroup")),
-                (trust, Messages("core.capture_entity_type.trust")),
-                (charity, Messages("core.capture_entity_type.charity")),
-                (unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation")),
-                (division, Messages("core.capture_entity_type.division")),
-                (registeredSociety, Messages("core.capture_entity_type.registeredSociety")),
-                (governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))
-            ),
+            options = entities,
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity),
             hideLegend = false
