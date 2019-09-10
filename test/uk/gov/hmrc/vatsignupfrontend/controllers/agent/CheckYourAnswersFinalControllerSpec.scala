@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
+import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -23,18 +24,17 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockSubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.{SubscriptionRequestExistsButNotComplete, SubscriptionRequestUnexpectedError}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedLiabilityPartnership, NonPartnershipEntity}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockGetCompanyNameService, MockStoreVatNumberService, MockSubmissionService}
-
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockGetCompanyNameService, MockStoreVatNumberService, MockSubmissionService}
 import scala.concurrent.Future
 
-class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockAdministrativeDivisionLookupService
   with MockControllerComponents
   with MockStoreVatNumberService
   with MockSubmissionService
@@ -43,7 +43,11 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   object TestCheckYourAnswersFinalController
     extends CheckYourAnswersFinalController(
-      mockControllerComponents, mockStoreVatNumberService, mockSubscriptionRequestSummaryConnector, mockSubmissionService, mockGetCompanyNameService
+      mockControllerComponents,
+      mockStoreVatNumberService,
+      mockSubscriptionRequestSummaryConnector,
+      mockSubmissionService,
+      mockGetCompanyNameService
     )
 
   override def beforeEach(): Unit = {
@@ -93,7 +97,6 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
         }
       }
-
       "subscription request summary returns data" should {
         "subscription request summary contains a company number" should {
           "get company name service returns NOT_FOUND error" should {
@@ -183,10 +186,44 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
     }
+    "the business entity is division" when {
+      "the DivisionLookupJourney featureswitch is disabled" should {
+        "contain a row for business entity" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockGetSubscriptionRequest(testVatNumber)(
+            Future.successful(Right(
+              SubscriptionRequestSummary(testVatNumber, Division, None, None, None, None, testEmail, Digital)))
+          )
+          mockIsAdministrativeDivision(testVatNumber)(isAdministrativeDivision = true)
+          disable(DivisionLookupJourney)
+
+          val res = await(TestCheckYourAnswersFinalController.show(testGetRequest(vatNumber = Some(testVatNumber))))
+          val doc = Jsoup.parse(contentAsString(res))
+
+          status(res) shouldBe OK
+          doc.select("#business-entity-row").isEmpty shouldBe false
+        }
+      }
+      "the DivisionLookupJourney featureswitch is enabled" should {
+        "not contain a row for business entity" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockGetSubscriptionRequest(testVatNumber)(
+            Future.successful(Right(
+              SubscriptionRequestSummary(testVatNumber, Division, None, None, None, None, testEmail, Digital)))
+          )
+          mockIsAdministrativeDivision(testVatNumber)(isAdministrativeDivision = true)
+          enable(DivisionLookupJourney)
+
+          val res = TestCheckYourAnswersFinalController.show(testGetRequest(vatNumber = Some(testVatNumber)))
+          val doc = Jsoup.parse(contentAsString(res))
+          status(res) shouldBe OK
+          doc.select("#business-entity-row").isEmpty shouldBe true
+        }
+      }
+    }
 
   }
   "Submit action on the Check Your Answer Final Controller" when {
-
     "submission service returns a successful submission response" should {
       "redirect to the confirmation controller" in {
         mockAuthRetrieveAgentEnrolment()
@@ -197,7 +234,6 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
         redirectLocation(res) shouldBe Some(routes.ConfirmationController.show().url)
       }
     }
-
     "submission service fails" should {
       "goto technical difficulties" in {
         mockAuthRetrieveAgentEnrolment()
@@ -209,6 +245,5 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
   }
-
 
 }
