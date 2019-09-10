@@ -25,36 +25,29 @@
 @import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.{routes => soletraderRoutes}
 @import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
 
-@(vatNumber: String,
-  businessEntity: BusinessEntity,
-  optNino: Option[String] = None,
-  optCompanyNumber: Option[String] = None,
+@(subSummary: SubscriptionRequestSummary,
+  optBusinessEntity: Option[BusinessEntity],
   optCompanyName: Option[String] = None,
-  optPartnershipUtr: Option[String] = None,
-  agentEmail: String,
-  optClientEmail: Option[String],
-  contactPreference: ContactPreference,
   skipCidCheck: Boolean,
   postAction: Call
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @vatNumberRow = @{
   val rowQuestion = Messages("agent.check_your_answers_final.vat_number")
-  summaryRowHelper(VatNumberId, rowQuestion, vatNumber, Some(CaptureVatNumberController.show().url))
+  summaryRowHelper(VatNumberId, rowQuestion, subSummary.vatNumber, Some(CaptureVatNumberController.show().url))
 }
 
 @businessEntityRow = @{
-  businessEntity match {
-    case Overseas => Html("")
-    case _ => {
+  optBusinessEntity match {
+    case Some(businessEntity) =>
       val rowQuestion = Messages("agent.check_your_answers_final.business_entity")
       summaryRowHelper(BusinessEntityId, rowQuestion, getBusinessEntityName(businessEntity), Some(CaptureBusinessEntityController.show().url))
-    }
+    case _ => Html("")
   }
 }
 
 @ninoRow = @{
-  optNino.map { nino =>
+  subSummary.optNino.map { nino =>
     val rowQuestion = Messages("agent.check_your_answers_final.nino")
     val changeUrl = if (skipCidCheck) Some(soletraderRoutes.CaptureNinoController.show().url)
       else Some(CaptureClientDetailsController.show().url)
@@ -64,23 +57,23 @@
 }
 
 @companySection = @{
-  optCompanyNumber.map { crn =>
-    val row1Question = businessEntity match {
-      case _: LimitedPartnershipBase | GeneralPartnership => Messages("agent.check_your_answers_final.partnership_company_number")
-      case RegisteredSociety => Messages("agent.check_your_answers_final.registered_society_company_number")
+  subSummary.optCompanyNumber.map { crn =>
+    val row1Question = optBusinessEntity match {
+      case Some(_: LimitedPartnershipBase | GeneralPartnership) => Messages("agent.check_your_answers_final.partnership_company_number")
+      case Some(RegisteredSociety) => Messages("agent.check_your_answers_final.registered_society_company_number")
       case _ => Messages("agent.check_your_answers_final.company_number")
     }
 
-    val row1ChangeUrl = businessEntity match {
-      case _: LimitedPartnershipBase | GeneralPartnership => Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url)
-      case RegisteredSociety => Some(CaptureRegisteredSocietyCompanyNumberController.show().url)
+    val row1ChangeUrl = optBusinessEntity match {
+      case Some(_: LimitedPartnershipBase | GeneralPartnership) => Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url)
+      case Some(RegisteredSociety) => Some(CaptureRegisteredSocietyCompanyNumberController.show().url)
       case _ => Some(CaptureCompanyNumberController.show().url)
     }
 
     optCompanyName.map { companyName =>
-      val row2Question = businessEntity match {
-        case _: LimitedPartnershipBase | GeneralPartnership => Messages("agent.check_your_answers_final.partnership_company_name")
-        case RegisteredSociety => Messages("agent.check_your_answers_final.registered_society_company_name")
+      val row2Question = optBusinessEntity match {
+        case Some(_: LimitedPartnershipBase | GeneralPartnership) => Messages("agent.check_your_answers_final.partnership_company_name")
+        case Some(RegisteredSociety) => Messages("agent.check_your_answers_final.registered_society_company_name")
         case _ => Messages("agent.check_your_answers_final.company_name")
       }
 
@@ -94,7 +87,7 @@
 }
 
 @partnershipUtrRow = @{
-  optPartnershipUtr.map { utr =>
+  subSummary.optSautr.map { utr =>
     val rowQuestion = Messages("agent.check_your_answers_final.partnership_utr")
     summaryRowHelper(PartnershipUtrId, rowQuestion, utr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
   }
@@ -102,16 +95,16 @@
 
 @agentEmailRow = @{
   val rowQuestion = Messages("agent.check_your_answers_final.agent_email")
-  summaryRowHelper(AgentEmailId, rowQuestion, agentEmail, Some(CaptureAgentEmailController.show().url))
+  summaryRowHelper(AgentEmailId, rowQuestion, subSummary.transactionEmail, Some(CaptureAgentEmailController.show().url))
 }
 
 @contactPreferenceRow = @{
   val rowQuestion = Messages("agent.check_your_answers_final.contact_preference")
-  summaryRowHelper(ContactPreferenceId, rowQuestion, messages(s"core.contact_preference.${contactPreference.toString.toLowerCase()}"), Some(ContactPreferenceController.show().url))
+  summaryRowHelper(ContactPreferenceId, rowQuestion, messages(s"core.contact_preference.${subSummary.contactPreference.toString.toLowerCase()}"), Some(ContactPreferenceController.show().url))
 }
 
 @clientEmailRow = @{
-  optClientEmail.map { clientEmail =>
+  subSummary.optSignUpEmail.map { clientEmail =>
     val rowQuestion = Messages("agent.check_your_answers_final.client_email")
     summaryRowHelper(ClientEmailId, rowQuestion, clientEmail, Some(CaptureClientEmailController.show().url))
   }

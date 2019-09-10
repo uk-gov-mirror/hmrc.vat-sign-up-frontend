@@ -22,12 +22,13 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FinalCheckYourAnswer, SkipCidCheck}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FinalCheckYourAnswer, SkipCidCheck}
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.SubscriptionRequestUnexpectedError
+import uk.gov.hmrc.vatsignupfrontend.models.{Division, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.{GetCompanyNameService, StoreVatNumberService, SubmissionService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_answers_final
 
@@ -54,18 +55,18 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
             case Left(_) => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
             case Right(summary) =>
               optCompanyNameFromOptCompanyNumber(summary.optCompanyNumber).map { optCompanyName =>
+                val optBusinessEntity = summary.businessEntity match {
+                  case Overseas => None
+                  case Division if isEnabled(DivisionLookupJourney) => None
+                  case _ => Some(summary.businessEntity)
+                }
+
                 Ok(check_your_answers_final(
-                  summary.vatNumber,
-                  summary.businessEntity,
-                  summary.optNino,
-                  summary.optCompanyNumber,
-                  optCompanyName,
-                  summary.optSautr,
-                  summary.transactionEmail,
-                  summary.optSignUpEmail,
-                  summary.contactPreference,
-                  isEnabled(SkipCidCheck),
-                  routes.CheckYourAnswersFinalController.submit()
+                  subSummary = summary,
+                  optBusinessEntity = optBusinessEntity,
+                  optCompanyName = optCompanyName,
+                  skipCidCheck = isEnabled(SkipCidCheck),
+                  postAction = routes.CheckYourAnswersFinalController.submit()
                 ))
               }
           }

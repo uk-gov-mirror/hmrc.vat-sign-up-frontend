@@ -28,46 +28,55 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.{routes => sol
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswersFinal => msg}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.utils.SummarySectionTesting
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_answers_final
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper.getBusinessEntityName
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.ContactPreferenceHelper
 
-class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
+class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with FeatureSwitching {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def testView(vatNumber: String = testVatNumber,
-               businessEntity: BusinessEntity,
-               optCompanyNumber: Option[String] = None,
-               optCompanyName: Option[String] = None,
-               optNino: Option[String] = None,
-               optPartnershipUtr: Option[String] = None,
-               agentEmail: String = testAgentEmail,
-               optClientEmail: Option[String] = Some(testEmail),
-               skipCidCheck: Boolean = true,
-               contactPreference: ContactPreference = Digital
-              ): Html =
-    check_your_answers_final(
-      vatNumber = vatNumber,
+  def testSubmissionRequestSummary(vrn: String = testVatNumber,
+                                   businessEntity: BusinessEntity,
+                                   optNino: Option[String] = None,
+                                   optCrn: Option[String] = None,
+                                   optUtr: Option[String] = None,
+                                   agentEmail: String = testAgentEmail,
+                                   optClientEmail: Option[String] = Some(testEmail),
+                                    contactPreference: ContactPreference = Digital
+                                  ) =
+    SubscriptionRequestSummary(
+      vatNumber = vrn,
       businessEntity = businessEntity,
-      optCompanyNumber = optCompanyNumber,
-      optCompanyName = optCompanyName,
       optNino = optNino,
-      optPartnershipUtr = optPartnershipUtr,
-      agentEmail = agentEmail,
-      optClientEmail = optClientEmail,
-      contactPreference = contactPreference,
-      skipCidCheck = skipCidCheck,
-      postAction = testCall
-    )(viewTestRequest, applicationMessages, new AppConfig(configuration, env))
+      optCompanyNumber = optCrn,
+      optSautr = optUtr,
+      optSignUpEmail= optClientEmail,
+      transactionEmail = agentEmail,
+      contactPreference = contactPreference
+    )
+
+  def testView(summary: SubscriptionRequestSummary,
+               optBusinessEntity: Option[BusinessEntity],
+               optCompanyName: Option[String] = None,
+               skipCidCheck: Boolean = true
+              ): Html = check_your_answers_final(
+    subSummary = summary,
+    optBusinessEntity = optBusinessEntity,
+    optCompanyName = optCompanyName,
+    skipCidCheck = skipCidCheck,
+    postAction = testCall
+  )(viewTestRequest, applicationMessages, new AppConfig(configuration, env))
 
   "The final check your answers page" when {
     "The business is a Sole trader" when {
       "the SkipCidCheck feature switch is enabled" should {
-        lazy val page = testView(businessEntity = SoleTrader, optNino = Some(testNino))
+        val summary = testSubmissionRequestSummary(businessEntity = SoleTrader, optNino = Some(testNino))
+        lazy val page = testView(summary = summary, optBusinessEntity = Some(SoleTrader))
         lazy val doc = Jsoup.parse(page.body)
 
         val testPage = TestView(
@@ -80,9 +89,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         testPage.shouldHaveAcceptAndSendButton()
 
         "have rows for VRN, NINO, agent email, client email and contact preference" in {
-          val page = testView(businessEntity = SoleTrader, optNino = Some(testNino))
-          val doc = Jsoup.parse(page.body)
-
           doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
           doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
           doc.sectionTest(NinoId, msg.nino, testNino, Some(soletraderRoutes.CaptureNinoController.show().url))
@@ -91,7 +97,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
           doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
         }
         "the SkipCidCheck feature switch is not enabled" should {
-          lazy val page = testView(businessEntity = SoleTrader, optNino = Some(testNino), skipCidCheck = false)
+          val summary = testSubmissionRequestSummary(businessEntity = SoleTrader, optNino = Some(testNino))
+          lazy val page = testView(summary = summary, optBusinessEntity = Some(SoleTrader), skipCidCheck = false)
           lazy val doc = Jsoup.parse(page.body)
 
           val testPage = TestView(
@@ -104,9 +111,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
           testPage.shouldHaveAcceptAndSendButton()
 
           "have rows for VRN, NINO, agent email, client email and contact preference" in {
-            val page = testView(businessEntity = SoleTrader, optNino = Some(testNino), skipCidCheck = false)
-            val doc = Jsoup.parse(page.body)
-
             doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
             doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
             doc.sectionTest(NinoId, msg.nino, testNino, Some(CaptureClientDetailsController.show().url))
@@ -118,7 +122,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a Limited company or overseas trader with UK establishment" should {
-      lazy val page = testView(businessEntity = LimitedCompany, optCompanyNumber = Some(testCompanyNumber), optCompanyName = Some(testCompanyName))
+      val summary = testSubmissionRequestSummary(businessEntity = LimitedCompany, optCrn = Some(testCompanyNumber))
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(LimitedCompany), optCompanyName = Some(testCompanyName))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -131,9 +136,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, CRN, Company name, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = LimitedCompany, optCompanyNumber = Some(testCompanyNumber), optCompanyName = Some(testCompanyName))
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(LimitedCompany), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(CrnId, msg.companyNumber, testCompanyNumber, Some(CaptureCompanyNumberController.show().url))
@@ -143,7 +145,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a General Partnership" should {
-      lazy val page = testView(businessEntity = GeneralPartnership, optPartnershipUtr = Some(testCompanyUtr))
+      val summary = testSubmissionRequestSummary(businessEntity = GeneralPartnership, optUtr = Some(testCompanyUtr))
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(GeneralPartnership))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -156,9 +159,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, Partnership UTR, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = GeneralPartnership, optPartnershipUtr = Some(testCompanyUtr))
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(GeneralPartnership), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
@@ -168,7 +168,17 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a Limited Partnership" should {
-      lazy val page = testView(businessEntity = LimitedPartnership, optPartnershipUtr = Some(testCompanyUtr))
+      val summary = testSubmissionRequestSummary(businessEntity = LimitedPartnership,
+        optUtr = Some(testCompanyUtr),
+        optCrn = Some(testCompanyNumber)
+      )
+
+      lazy val page = testView(
+        summary = summary,
+        optBusinessEntity = Some(LimitedPartnership),
+        optCompanyName = Some(testCompanyName)
+      )
+
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -181,14 +191,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, CRN, Company name, Partnership UTR, agent email, client email and contact preference" in {
-        val page = testView(
-          businessEntity = LimitedPartnership,
-          optCompanyNumber = Some(testCompanyNumber),
-          optCompanyName = Some(testCompanyName),
-          optPartnershipUtr = Some(testCompanyUtr)
-        )
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(LimitedPartnership), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(CrnId, msg.partnershipCompanyNumber, testCompanyNumber, Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url))
@@ -200,12 +202,18 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a Scottish Partnership" should {
-      lazy val page = testView(
+      val summary = testSubmissionRequestSummary(
         businessEntity = ScottishLimitedPartnership,
-        optCompanyNumber = Some(testCompanyNumber),
-        optCompanyName = Some(testCompanyName),
-        optPartnershipUtr = Some(testCompanyUtr)
+        optCrn = Some(testCompanyNumber),
+        optUtr = Some(testCompanyUtr)
       )
+
+      lazy val page = testView(
+        summary = summary,
+        optBusinessEntity = Some(ScottishLimitedPartnership),
+        optCompanyName = Some(testCompanyName)
+      )
+
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -218,14 +226,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, CRN, Company name, Partnership UTR, agent email, client email and contact preference" in {
-        val page = testView(
-          businessEntity = ScottishLimitedPartnership,
-          optCompanyNumber = Some(testCompanyNumber),
-          optCompanyName = Some(testCompanyName),
-          optPartnershipUtr = Some(testCompanyUtr)
-        )
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(ScottishLimitedPartnership), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(CrnId, msg.partnershipCompanyNumber, testCompanyNumber, Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url))
@@ -237,12 +237,18 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a Limited Liability Partnership" should {
-      lazy val page = testView(
+      val summary = testSubmissionRequestSummary(
         businessEntity = LimitedLiabilityPartnership,
-        optCompanyNumber = Some(testCompanyNumber),
-        optCompanyName = Some(testCompanyName),
-        optPartnershipUtr = Some(testCompanyUtr)
+        optCrn = Some(testCompanyNumber),
+        optUtr = Some(testCompanyUtr)
       )
+
+      lazy val page = testView(
+        summary = summary,
+        optBusinessEntity = Some(LimitedLiabilityPartnership),
+        optCompanyName = Some(testCompanyName)
+      )
+
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -255,14 +261,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, CRN, Company name, Partnership UTR, agent email, client email and contact preference" in {
-        val page = testView(
-          businessEntity = LimitedLiabilityPartnership,
-          optCompanyNumber = Some(testCompanyNumber),
-          optCompanyName = Some(testCompanyName),
-          optPartnershipUtr = Some(testCompanyUtr)
-        )
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(LimitedLiabilityPartnership), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(CrnId, msg.partnershipCompanyNumber, testCompanyNumber, Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url))
@@ -274,7 +272,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a VAT group" should {
-      lazy val page = testView(businessEntity = VatGroup)
+      val summary = testSubmissionRequestSummary(businessEntity = VatGroup)
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(VatGroup))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -287,9 +286,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = VatGroup)
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(VatGroup), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
@@ -298,7 +294,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a Charity" should {
-      lazy val page = testView(businessEntity = Charity)
+      val summary = testSubmissionRequestSummary(businessEntity = Charity)
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(Charity))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -311,9 +308,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = Charity)
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Charity), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
@@ -321,32 +315,57 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
-    "The business is a Division" should {
-      lazy val page = testView(businessEntity = Division)
-      lazy val doc = Jsoup.parse(page.body)
+    "The business is a Division" when {
+      "the DivisionLookupJourney feature switch is disabled" should {
+        disable(DivisionLookupJourney)
+        val summary = testSubmissionRequestSummary(businessEntity = Division)
+        lazy val page = testView(summary = summary, optBusinessEntity = Some(Division))
+        lazy val doc = Jsoup.parse(page.body)
 
-      val testPage = TestView(
-        name = "Final check your answers - Division",
-        title = msg.title,
-        heading = msg.heading,
-        page = page
-      )
+        val testPage = TestView(
+          name = "Final check your answers - Division",
+          title = msg.title,
+          heading = msg.heading,
+          page = page
+        )
 
-      testPage.shouldHaveAcceptAndSendButton()
+        testPage.shouldHaveAcceptAndSendButton()
 
-      "have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = Division)
-        val doc = Jsoup.parse(page.body)
+        "have rows for business entity, VRN, agent email, client email and contact preference" in {
+          doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
+          doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Division), Some(CaptureBusinessEntityController.show().url))
+          doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+          doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
+          doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        }
+      }
+      "the DivisionLookupJourney feature switch is enabled" should {
+        enable(DivisionLookupJourney)
+        val summary = testSubmissionRequestSummary(businessEntity = Division)
+        lazy val page = testView(summary = summary, optBusinessEntity = None)
+        lazy val doc = Jsoup.parse(page.body)
 
-        doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
-        doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Division), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        val testPage = TestView(
+          name = "Final check your answers - Division",
+          title = msg.title,
+          heading = msg.heading,
+          page = page
+        )
+
+        testPage.shouldHaveAcceptAndSendButton()
+
+        "have rows for VRN, agent email, client email and contact preference but NOT business entity" in {
+          doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
+          doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+          doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
+          doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+          doc.select("#business-entity-row").isEmpty shouldBe true
+        }
       }
     }
     "The business is an Unincorporated Association" should {
-      lazy val page = testView(businessEntity = UnincorporatedAssociation)
+      val summary = testSubmissionRequestSummary(businessEntity = UnincorporatedAssociation)
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(UnincorporatedAssociation))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -359,9 +378,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = UnincorporatedAssociation)
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(UnincorporatedAssociation), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
@@ -370,7 +386,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is an Trust" should {
-      lazy val page = testView(businessEntity = Trust)
+      val summary = testSubmissionRequestSummary(businessEntity = Trust)
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(Trust))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -383,9 +400,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = Trust)
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Trust), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
@@ -394,7 +408,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is a Registered Society" should {
-      lazy val page = testView(businessEntity = RegisteredSociety, optCompanyNumber = Some(testCompanyNumber), optCompanyName = Some(testCompanyName))
+      val summary = testSubmissionRequestSummary(businessEntity = RegisteredSociety, optCrn = Some(testCompanyNumber))
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(RegisteredSociety), optCompanyName = Some(testCompanyName))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -407,9 +422,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, CRN, Company name, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = RegisteredSociety, optCompanyNumber = Some(testCompanyNumber), optCompanyName = Some(testCompanyName))
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(RegisteredSociety), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(CrnId, msg.registeredSocietyCompanyNumber, testCompanyNumber, Some(CaptureRegisteredSocietyCompanyNumberController.show().url))
@@ -420,7 +432,9 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is an Government Organisation" should {
-      lazy val page = testView(businessEntity = GovernmentOrganisation)
+      val summary = testSubmissionRequestSummary(businessEntity = GovernmentOrganisation)
+
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(GovernmentOrganisation))
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -433,9 +447,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = GovernmentOrganisation)
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(GovernmentOrganisation), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
@@ -444,7 +455,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       }
     }
     "The business is overseas without a UK establishment" should {
-      lazy val page = testView(businessEntity = Overseas)
+      val summary = testSubmissionRequestSummary(businessEntity = Overseas)
+      lazy val page = testView(summary = summary, optBusinessEntity = None)
       lazy val doc = Jsoup.parse(page.body)
 
       val testPage = TestView(
@@ -457,9 +469,6 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting {
       testPage.shouldHaveAcceptAndSendButton()
 
       "NOT have business entity and have rows for VRN, agent email, client email and contact preference" in {
-        val page = testView(businessEntity = Overseas)
-        val doc = Jsoup.parse(page.body)
-
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show().url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
