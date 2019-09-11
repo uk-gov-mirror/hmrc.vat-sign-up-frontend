@@ -44,7 +44,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         case Some(vatNumber) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
           Future.successful(
             Redirect(routes.DivisionResolverController.resolve())
-          )
+              .addingToSession(SessionKeys.businessEntityKey, Division.asInstanceOf[BusinessEntity]))
         case Some(_) =>
           Future.successful(
             Ok(capture_business_entity(

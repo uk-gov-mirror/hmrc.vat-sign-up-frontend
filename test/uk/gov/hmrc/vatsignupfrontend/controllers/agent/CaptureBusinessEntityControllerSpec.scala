@@ -53,6 +53,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         val result = TestCaptureBusinessEntityController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)
+        result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Division))
       }
     }
 
