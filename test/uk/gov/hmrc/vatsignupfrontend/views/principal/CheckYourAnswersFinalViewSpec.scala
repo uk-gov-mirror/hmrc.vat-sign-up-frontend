@@ -24,6 +24,7 @@ import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAnswersFinal => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testCompanyName, testCompanyNumber, testCompanyUtr, testEmail, testNino, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
@@ -41,7 +42,8 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
            optCompanyNumber: Option[String] = None,
            optCompanyName: Option[String] = None,
            emailAddress: String = testEmail,
-           contactPreference: ContactPreference = Digital
+           contactPreference: ContactPreference = Digital,
+           isAdministrativeDivision: Boolean = false
           ): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers_final(
     vatNumber = testVatNumber,
     businessEntity = optBusinessEntity,
@@ -51,7 +53,8 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
     optCompanyName = optCompanyName,
     emailAddress = emailAddress,
     contactPreference = contactPreference,
-    postAction = testCall
+    postAction = testCall,
+    isAdministrativeDivision
   )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
 
   lazy val pageDefault = page()
@@ -74,7 +77,7 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
   lazy val pageRegisteredSociety = page(
     optBusinessEntity = RegisteredSociety,
     optCompanyNumber = Some(testCompanyNumber),
-    optCompanyName= Some(testCompanyName)
+    optCompanyName = Some(testCompanyName)
   )
   lazy val pageLetters = page(contactPreference = Paper)
 
@@ -93,6 +96,13 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
 
   def editLinkStyleCorrectness(section: Element): Unit = {
     section.attr("class") shouldBe "tabular-data__data-2"
+  }
+
+  def sectionExists(page:Html, sectionId: String): Boolean = {
+    lazy val doc = Jsoup.parse(page.body)
+    val result = Option(doc.getElementById(sectionId))
+
+    result.isDefined
   }
 
   def sectionTest(page: Html, sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]): Unit = {
@@ -147,6 +157,16 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
       expectedEditLink = Some(expectedEditLink)
     )
   }
+  "not display business entity" when {
+    "business entity is overseas" in {
+      sectionExists(page(optBusinessEntity = Overseas), BusinessEntityId) shouldBe false
+    }
+
+    "isAdministrativeDivision is true" in {
+      sectionExists(page(isAdministrativeDivision = false), BusinessEntityId) shouldBe false
+    }
+  }
+
   "display national insurance number" when {
     "business entity is Sole Trader" in {
       val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.routes.SoleTraderResolverController.resolve().url

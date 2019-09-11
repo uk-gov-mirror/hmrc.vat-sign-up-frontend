@@ -31,7 +31,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.{SubscriptionRequestExistsButNotComplete, SubscriptionRequestUnexpectedError}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedLiabilityPartnership, NonPartnershipEntity}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockGetCompanyNameService, MockStoreVatNumberService, MockSubmissionService}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockGetCompanyNameService, MockStoreVatNumberService, MockSubmissionService}
 
 import scala.concurrent.Future
 
@@ -40,11 +40,13 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
   with MockStoreVatNumberService
   with MockSubmissionService
   with MockSubscriptionRequestSummaryConnector
-  with MockGetCompanyNameService {
+  with MockGetCompanyNameService
+  with MockAdministrativeDivisionLookupService {
 
   object TestCheckYourAnswersFinalController
     extends CheckYourAnswersFinalController(
-      mockControllerComponents, mockStoreVatNumberService, mockSubscriptionRequestSummaryConnector, mockSubmissionService, mockGetCompanyNameService
+      mockControllerComponents, mockStoreVatNumberService, mockSubscriptionRequestSummaryConnector, mockSubmissionService,
+      mockGetCompanyNameService, mockAdministrativeDivisionLookupService
     )
 
   override def beforeEach(): Unit = {

@@ -17,19 +17,20 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, DivisionLookupJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.SubscriptionRequestUnexpectedError
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.{GetCompanyNameService, StoreVatNumberService, SubmissionService}
+import uk.gov.hmrc.vatsignupfrontend.services.{AdministrativeDivisionLookupService, GetCompanyNameService, StoreVatNumberService, SubmissionService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers_final
 
 import scala.concurrent.Future
@@ -39,17 +40,21 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
                                                 val storeVatNumberService: StoreVatNumberService,
                                                 val subscriptionRequestSummary: SubscriptionRequestSummaryConnector,
                                                 val submissionService: SubmissionService,
-                                                val getCompanyNameService: GetCompanyNameService
+                                                val getCompanyNameService: GetCompanyNameService,
+                                                val administrativeDivisionLookupService: AdministrativeDivisionLookupService
                                                ) extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(FinalCheckYourAnswer)) {
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+
       optVatNumber match {
         case None =>
           Future.successful(Redirect(routes.CaptureVatNumberController.show()))
         case Some(vatNumber) =>
           subscriptionRequestSummary.getSubscriptionRequest(vatNumber) flatMap {
-            case Left(SubscriptionRequestUnexpectedError(status, _)) => throw new InternalServerException(s"Subscription Request summary failed with status = $status")
+            case Left(SubscriptionRequestUnexpectedError(status, _)) =>
+              throw new InternalServerException(s"Subscription Request summary failed with status = $status")
             case Left(_) => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
             case Right(summary) => {
               summary.optCompanyNumber match {
@@ -66,7 +71,8 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
                         Some(companyName),
                         summary.transactionEmail,
                         summary.contactPreference,
-                        routes.CheckYourAnswersFinalController.submit()
+                        routes.CheckYourAnswersFinalController.submit(),
+                        isAdministrativeDivision = administrativeDivisionLookupService.isAdministrativeDivision(vatNumber)
                       ))
                   }
                 case None =>
@@ -79,7 +85,8 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
                     None,
                     summary.transactionEmail,
                     summary.contactPreference,
-                    routes.CheckYourAnswersFinalController.submit()
+                    routes.CheckYourAnswersFinalController.submit(),
+                    isAdministrativeDivision = administrativeDivisionLookupService.isAdministrativeDivision(vatNumber)
                   )))
               }
             }
