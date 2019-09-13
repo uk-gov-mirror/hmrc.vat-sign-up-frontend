@@ -35,12 +35,14 @@ class ConfirmationController @Inject()(val controllerComponents: ControllerCompo
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(
-        Ok(confirmation(
-          request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).get,
-          routes.SignUpAnotherClientController.submit()
-        ))
-      )
+      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+
+      optBusinessEntity match {
+        case Some(businessEntity) =>
+          Future.successful(Ok(confirmation(businessEntity, routes.SignUpAnotherClientController.submit())))
+        case _ =>
+          Future.successful(Redirect(routes.CaptureVatNumberController.show()))
+      }
     }
   }
 
