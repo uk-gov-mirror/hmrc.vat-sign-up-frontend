@@ -19,10 +19,12 @@ package uk.gov.hmrc.vatsignupfrontend.config.mocks
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 
 trait MockMessagesApi extends MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite {
   this: TestSuite =>
+
+  implicit val lang: Lang = Lang("en")
 
   //TODO: Create a mock for this if possible
   implicit lazy val mockMessagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

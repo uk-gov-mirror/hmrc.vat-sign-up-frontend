@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 
 class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /information-received" should {
-    "return an OK" in {
+    "return an OK when there's a business entity in session" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/information-received",
@@ -36,6 +36,16 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
 
       res should have(
         httpStatus(OK)
+      )
+    }
+    "redirect to Capture VAT number if there isn't a business entity in session" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/information-received")
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CaptureVatNumberController.show().url)
       )
     }
   }
