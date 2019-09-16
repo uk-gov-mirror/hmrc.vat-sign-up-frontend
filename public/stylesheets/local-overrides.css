@@ -78,9 +78,6 @@ interrupt-card .actions {
     font-weight: bold;
 }
 
-.interrupt-card .button:active, .interrupt-card .button:focus {
-    outline: 3px solid #ffbf47;
-}
 
 .interrupt-card .multiple-choice [type=radio]+label::before {
     background-color: #ffffff;
@@ -94,7 +91,6 @@ interrupt-card .actions {
 .interrupt-card .multiple-choice input[type=radio] {
     -webkit-appearance: none;
     z-index: unset;
-    opacity: unset;
     border: none;
     background-color: transparent;
 }
