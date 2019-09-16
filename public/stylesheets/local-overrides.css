@@ -89,7 +89,7 @@ interrupt-card .actions {
 }
 
 .interrupt-card .multiple-choice input[type=radio] {
-    -webkit-appearance: none;git
+    -webkit-appearance: none;
     z-index: unset;
     border: none;
     background-color: transparent;
