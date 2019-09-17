@@ -868,10 +868,9 @@ object MessageLookup {
 
   object CapturePartnershipUtr {
     val heading = "What is the partnership's Unique Taxpayer Reference?"
-
     val title = heading + ServiceName.principalSuffix
     val line1 = "This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'."
-    val accordionHeading = "I do not have this"
+    val accordionHeading = "I do not have my Unique Taxpayer Reference"
     val accordionText = "Your UTR helps us identify your partnership. I cannot find my UTR My partnership does not have a UTR"
     val cannotFind = "I cannot find my UTR"
   }
