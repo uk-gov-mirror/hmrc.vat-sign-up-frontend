@@ -154,8 +154,8 @@ object MessageLookup {
     val heading: String = "Select the last month of your latest VAT accounting period"
     val title: String = heading + ServiceName.principalSuffix
     val line: String = "You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC."
-    val subHeading: String = "Example 1"
-    val subHeading2: String = "Example 2"
+    val subHeading: String = "Latest VAT accounting period, example 1"
+    val subHeading2: String = "Latest VAT accounting period, example 2"
     val line2: String = "You submit your VAT Return quarterly (every three months). In the 'accounting period' January to March, the last month in that 'accounting period' is March. You must therefore select March."
     val line3: String = "If you submit your VAT Return monthly, the last accounting period you 'submitted for' was January. You must select January."
     val formhint1 = "Select the last month in your latest VAT accounting period."
