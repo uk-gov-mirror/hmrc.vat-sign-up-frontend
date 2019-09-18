@@ -52,6 +52,11 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
         element.getElementsByTag("p").text() should include(paragraph)
       }
 
+    def shouldHaveSummary(heading: String): Unit =
+      s"$name should have the summary (summary) '$heading'" in {
+        element.getElementsByTag("summary").text() should include(heading)
+      }
+
     def shouldHaveParaSeq(paragraphs: String*): Unit = {
       if (paragraphs.isEmpty) fail("Should provide at least 1 paragraph for this test")
       val ps = paragraphs.mkString(" ")

@@ -94,6 +94,8 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
       testPage.shouldHaveHint(messages.hint)
 
+      testPage.shouldHaveSummary(messages.accordionHeading)
+
       "have the No SAUTR accordion links" in {
         val accordion = testPage.document.getElementsByTag("details").get(0)
 
