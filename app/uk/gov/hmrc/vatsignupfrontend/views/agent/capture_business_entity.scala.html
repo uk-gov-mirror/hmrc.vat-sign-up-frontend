@@ -25,11 +25,7 @@
 
 @(businessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@scripts = {
-    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
-}
-
-@agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts), form = Some(businessEntityForm)) {
+@agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = None, form = Some(businessEntityForm)) {
 
     @summaryErrorHelper(businessEntityForm)
 
