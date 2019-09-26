@@ -27,10 +27,6 @@
   postAction: Call
 )(implicit request: Request [_], messages: Messages, appConfig: AppConfig)
 
-@scripts = {
-    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-journey-start.js")></script>
-}
-
 @entities = @{
   Seq(
     (vatGroup, Messages("core.capture_entity_type.vatGroup")),
@@ -43,7 +39,7 @@
   ).filterNot { case (entity, message) => divisionLookupEnabled && entity == "division" }
 }
 
-@principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = Some(scripts), form = Some(businessEntityForm)) {
+@principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = None, form = Some(businessEntityForm)) {
 
     @summaryErrorHelper(businessEntityForm)
 

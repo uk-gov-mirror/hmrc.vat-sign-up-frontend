@@ -21,12 +21,7 @@
 
 @(vatNumber: String, postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@scripts = {
-    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-confirm-vat.js")></script>
-    <script type="text/javascript" src=@controllers.routes.Assets.at("javascripts/ga-change-vat.js")></script>
-}
-
-@agent_main_template(title = Messages("agent.confirm_vat_number.title"), bodyClasses = None, scriptElem = Some(scripts)) {
+@agent_main_template(title = Messages("agent.confirm_vat_number.title"), bodyClasses = None, scriptElem = None) {
 
     <h1 class="heading-large">@Messages("agent.confirm_vat_number.heading")</h1>
 
