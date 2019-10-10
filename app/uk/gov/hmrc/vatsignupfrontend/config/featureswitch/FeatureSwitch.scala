@@ -39,7 +39,7 @@ object FeatureSwitch {
     DirectToCTUTROnMismatchedCTUTR,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
-    UseNewEligibilityAPI,
+    OptInJourney,
     DivisionLookupJourney
   )
 
@@ -118,7 +118,7 @@ case object DivisionLookupJourney extends FeatureSwitch {
   override val displayText: String = "Check VRN against list of known Administrative Divisions"
 }
 
-case object UseNewEligibilityAPI extends FeatureSwitch {
-  override val name: String = s"$prefix.use-new-eligibility-api"
-  override val displayText: String = "Enable the use of the new eligibility API"
+case object OptInJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.opt-in-journey"
+  override val displayText: String = "Enable the Opt In journey for users already migrated to ETMP"
 }
