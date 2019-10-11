@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
-
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.VatNumberEligibilityConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityResponse

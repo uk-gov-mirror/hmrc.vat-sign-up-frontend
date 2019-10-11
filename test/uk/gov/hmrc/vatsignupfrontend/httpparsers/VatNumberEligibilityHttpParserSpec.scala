@@ -18,69 +18,90 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import java.time.LocalDate
 
-import org.scalatest.EitherValues
 import play.api.http.Status._
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.HttpResponse
+import play.api.libs.json.{JsObject, Json}
+import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, OverseasTrader}
+import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
-class VatNumberEligibilityHttpParserSpec extends UnitSpec with EitherValues {
+
+class VatNumberEligibilityHttpParserSpec extends UnitSpec {
   val testHttpVerb = "PUT"
   val testUri = "/"
-  val testMigratableDates = MigratableDates(Some(LocalDate.now()), Some(LocalDate.now()))
 
-  "VatNumberEligibilityHttpReads" when {
+  val currentDate: LocalDate = LocalDate.now()
+  val testMigratableDates = MigratableDates(Some(currentDate), Some(currentDate))
+  val testEligibilityDetails = Eligible(isOverseas = false, isMigrated = false)
+
+  def response(mtdStatus: String, migratableDates: Option[MigratableDates] = None, eligibilityDetails: Option[Eligible] = None): Some[JsObject] = {
+    Some(Json.obj(
+      MtdStatusKey -> mtdStatus,
+      MigratableDatesKey -> Json.toJson(migratableDates),
+      EligibilityDetailsKey -> Json.toJson(eligibilityDetails)
+    ))
+  }
+
+  "MTDStatusHttpReads" when {
     "read" should {
-      "parse an OK response where the overseas flag is set to true as OverseasVatNumberEligible" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> true)))
+      s"parse an OK response when the $MtdStatusKey is $AlreadySubscribedValue as AlreadySubscribed" in {
+        val httpResponse = HttpResponse(OK, response(AlreadySubscribedValue))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberEligible(isOverseas = true)
+        res shouldBe Right(AlreadySubscribed)
       }
-
-      "parse an OK response where the overseas flag is set to false as VatNumberEligible" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(OverseasTrader.key -> false)))
+      s"parse an OK response when the $MtdStatusKey is $IneligibleValue as Ineligible" in {
+        val httpResponse = HttpResponse(OK, response(IneligibleValue))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.right.value shouldBe VatNumberEligible(isOverseas = false)
+        res shouldBe Right(Ineligible)
       }
-
-      "parse a BAD_REQUEST response with no body as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
-        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj()))
+      s"parse an OK response when the $MtdStatusKey is $DeregisteredValue as Deregistered" in {
+        val httpResponse = HttpResponse(OK, response(DeregisteredValue))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe IneligibleForMtdVatNumber(MigratableDates())
+        res shouldBe Right(Deregistered)
       }
-
-      "parse a BAD_REQUEST response with a json as a IneligibleForMtdVatNumber when the vat number is not on the control list" in {
-        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.toJson(testMigratableDates)))
+      s"parse an OK response when the $MtdStatusKey is $MigrationInProgressValue as MigrationInProgress" in {
+        val httpResponse = HttpResponse(OK, response(MigrationInProgressValue))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe IneligibleForMtdVatNumber(testMigratableDates)
+        res shouldBe Right(MigrationInProgress)
       }
-
-      "parse a NOT_FOUND response as a InvalidVatNumber when the vat number is not on the control list" in {
-        val httpResponse = HttpResponse(NOT_FOUND)
+      s"parse an OK response when the $MtdStatusKey is $InhibitedValue and has correct migratable dates as Inhibited" in {
+        val httpResponse = HttpResponse(OK, response(InhibitedValue, migratableDates = Some(testMigratableDates)))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe InvalidVatNumber
+        res shouldBe Right(Inhibited(testMigratableDates))
       }
-
-      "parse any other response as a VatNumberEligibilityFailureResponse" in {
-        val httpResponse = HttpResponse(FORBIDDEN)
+      s"parse an OK response when the $MtdStatusKey is $EligibleValue and has correct eligibility details as Eligible" in {
+        val httpResponse = HttpResponse(OK, response(EligibleValue, eligibilityDetails = Some(testEligibilityDetails)))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res.left.value shouldBe VatNumberEligibilityFailureResponse(FORBIDDEN)
+        res shouldBe Right(Eligible(isOverseas = false, isMigrated = false))
       }
+      "parse a BAD_REQUEST response as VatNumberEligibilityFailure" in {
+        val httpResponse = HttpResponse(BAD_REQUEST)
 
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(VatNumberEligibilityFailure(BAD_REQUEST))
+      }
+      s"throw an InternalServerException for an OK response when the $MtdStatusKey is invalid" in {
+        val httpResponse = HttpResponse(OK, response(""))
+
+        intercept[InternalServerException] {
+          VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+        }
+      }
     }
   }
 }
+
+

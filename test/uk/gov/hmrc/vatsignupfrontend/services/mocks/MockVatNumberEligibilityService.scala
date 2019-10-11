@@ -21,9 +21,9 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{VatNumberEligibilityResponse, _}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.{VatNumberEligibilityPreMigrationResponse, _}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
+import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityPreMigrationService
 
 import scala.concurrent.Future
 
@@ -31,14 +31,14 @@ import scala.concurrent.Future
 trait MockVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSugar {
   self: Suite =>
 
-  val mockVatNumberEligibilityService: VatNumberEligibilityService = mock[VatNumberEligibilityService]
+  val mockVatNumberEligibilityService: VatNumberEligibilityPreMigrationService = mock[VatNumberEligibilityPreMigrationService]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockVatNumberEligibilityService)
   }
 
-  private def mockVatNumberEligibility(vatNumber: String)(returnValue: Future[VatNumberEligibilityResponse]): Unit = {
+  private def mockVatNumberEligibility(vatNumber: String)(returnValue: Future[VatNumberEligibilityPreMigrationResponse]): Unit = {
     when(mockVatNumberEligibilityService.checkVatNumberEligibility(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
