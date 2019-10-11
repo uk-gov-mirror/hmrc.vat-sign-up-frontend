@@ -39,6 +39,7 @@ object FeatureSwitch {
     DirectToCTUTROnMismatchedCTUTR,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
+    OptInJourney,
     DivisionLookupJourney
   )
 
@@ -115,4 +116,9 @@ case object GeneralPartnershipNoSAUTR extends FeatureSwitch {
 case object DivisionLookupJourney extends FeatureSwitch {
   override val name: String = s"$prefix.division-lookup-journey"
   override val displayText: String = "Check VRN against list of known Administrative Divisions"
+}
+
+case object OptInJourney extends FeatureSwitch {
+  override val name: String = s"$prefix.opt-in-journey"
+  override val displayText: String = "Enable the Opt In journey for users already migrated to ETMP"
 }
