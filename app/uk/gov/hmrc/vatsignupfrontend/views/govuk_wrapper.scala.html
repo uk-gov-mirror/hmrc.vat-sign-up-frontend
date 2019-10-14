@@ -83,7 +83,7 @@
 
 @footerTop = {}
 @footerLinks = {
-    @uiLayouts.footer_links(accessibilityFooterUrl = Some(appConfig.accessibilityStatementRoute))
+    @uiLayouts.footer_links(accessibilityFooterUrl = Some(appConfig.accessibilityStatementRoute(request.uri)))
 }
 
 @serviceInfo = {

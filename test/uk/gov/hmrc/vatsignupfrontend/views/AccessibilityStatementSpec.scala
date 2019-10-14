@@ -17,15 +17,16 @@
 package uk.gov.hmrc.vatsignupfrontend.views
 
 import org.jsoup.Jsoup
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits.applicationMessages
-import play.api.i18n.{DefaultMessagesApi, Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockAppConfig
 import uk.gov.hmrc.vatsignupfrontend.views.html.help.accessibility_statement
 
-class AccessibilityStatementSpec extends ViewSpec {
+class AccessibilityStatementSpec extends ViewSpec with MockAppConfig {
 
   object Messages {
     val title = "Accessibility statement for signing up to Making Tax Digital for VAT"
@@ -47,7 +48,7 @@ class AccessibilityStatementSpec extends ViewSpec {
     val howAccessP1 = "This service is fully compliant with the Web Content Accessibility Guidelines version 2.1 AA standard."
     val howAccessP2 = "There are no known accessibility issues within this service."
     val reportProblemH2 = "Reporting accessibility problems with this service"
-    val reportProblemP1 = "We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, contact hmrc-accessibility-problems@digital.hmrc.gov.uk."
+    val reportProblemP1 = "We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, report the accessibility problem."
     val howToDoH2 = "What to do if you are not happy with how we respond to your complaint"
     val whatToDoP1 = "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the 'accessibility regulations'). If you are not happy with how we respond to your complaint, contact the Equality Advisory and Support Service (EASS), or the Equality Commission for Northern Ireland (ECNI) if you live in Northern Ireland."
     val contactUsH2 = "Contacting us by phone or getting a visit from us in person"
@@ -68,7 +69,7 @@ class AccessibilityStatementSpec extends ViewSpec {
     val abilityNetLinkText = "AbilityNet"
     val wcagLinkText = "Web Content Accessibility Guidelines version 2.1 AA standard"
     val contactUsLinkText = "contact us"
-    val reportProblemLinkText = "hmrc-accessibility-problems@digital.hmrc.gov.uk"
+    val reportProblemLinkText = "accessibility problem"
     val eassLinkText = "contact the Equality Advisory and Support Service"
     val ecniLinkText = "Equality Commission for Northern Ireland"
     val dacLinkText = "Digital Accessibility Centre"
@@ -81,8 +82,7 @@ class AccessibilityStatementSpec extends ViewSpec {
 
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
-  lazy val page: HtmlFormat.Appendable = accessibility_statement(
-  )(
+  lazy val page: HtmlFormat.Appendable = accessibility_statement("test")(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -149,46 +149,46 @@ class AccessibilityStatementSpec extends ViewSpec {
     }
 
     "have a link to the govuk accessibility statement" in {
-      pageBody.select(s"a[href=https://www.gov.uk/help/accessibility]").text shouldBe Messages.accessibilityStatementLinkText
+      pageBody.select("a[href=https://www.gov.uk/help/accessibility]").text shouldBe Messages.accessibilityStatementLinkText
     }
 
     "have a link to the service" in {
-      pageBody.select(s"a[href=https://www.tax.service.gov.uk/vat-through-software/sign-up]").text shouldBe Messages.serviceLinkText
+      pageBody.select("a[href=https://www.tax.service.gov.uk/vat-through-software/sign-up]").text shouldBe Messages.serviceLinkText
     }
 
     "have a link to ability net" in {
-      pageBody.select(s"a[href=https://mcmw.abilitynet.org.uk/]").text shouldBe Messages.abilityNetLinkText
+      pageBody.select("a[href=https://mcmw.abilitynet.org.uk/]").text shouldBe Messages.abilityNetLinkText
     }
 
     "have two links to the accessibility guidelines" in {
-      pageBody.select(s"a[href=https://www.w3.org/TR/WCAG21/]").text shouldBe Seq(
+      pageBody.select("a[href=https://www.w3.org/TR/WCAG21/]").text shouldBe Seq(
         Messages.wcagLinkText,
         Messages.wcagLinkText
       ).mkString(" ")
     }
 
     "have a link to contact us" in {
-      pageBody.select(s"a[href=https://www.gov.uk/dealing-hmrc-additional-needs]").text shouldBe Messages.contactUsLinkText
+      pageBody.select("a[href=https://www.gov.uk/dealing-hmrc-additional-needs]").text shouldBe Messages.contactUsLinkText
     }
 
-    "have a link to reporting problem contact" in {
-      pageBody.select(s"a[href=mailto:hmrc-accessibility-problems@digital.hmrc.gov.uk]").text shouldBe Messages.reportProblemLinkText
+    "have a link to reporting problem form" in {
+      pageBody.select(s"a[href=${mockAppConfig.accessibilityReportUrl("test")}]").text shouldBe Messages.reportProblemLinkText
     }
 
     "have a link to EASS" in {
-      pageBody.select(s"a[href=https://www.equalityadvisoryservice.com/]").text shouldBe Messages.eassLinkText
+      pageBody.select("a[href=https://www.equalityadvisoryservice.com/]").text shouldBe Messages.eassLinkText
     }
 
     "have a link to ECNI" in {
-      pageBody.select(s"a[href=https://www.equalityni.org/Home]").text shouldBe Messages.ecniLinkText
+      pageBody.select("a[href=https://www.equalityni.org/Home]").text shouldBe Messages.ecniLinkText
     }
 
     "have a link to DAC" in {
-      pageBody.select(s"a[href=http://www.digitalaccessibilitycentre.org/]").text shouldBe Messages.dacLinkText
+      pageBody.select("a[href=http://www.digitalaccessibilitycentre.org/]").text shouldBe Messages.dacLinkText
     }
 
     "have the correct footer link" in {
-      parsePage.select(s"a[href=/vat-through-software/sign-up/accessibility-statement]").text shouldBe Messages.accessibilityLink
+      parsePage.select("a[href*=/vat-through-software/sign-up/accessibility-statement]").text shouldBe Messages.accessibilityLink
     }
   }
 }

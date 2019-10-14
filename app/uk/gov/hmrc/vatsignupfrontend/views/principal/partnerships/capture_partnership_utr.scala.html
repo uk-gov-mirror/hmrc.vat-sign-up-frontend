@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton, accordionHelper}
 
-@(partnershipUtrForm: Form[String], postAction: Call, showGeneralPartnershipSpecific: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(partnershipUtrForm: Form[String], postAction: Call, displayGeneralPartnershipAccordion: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @accordionContent = {
     <p>@Messages("principal.capture_partnership_utr.accordion.line_1")</p>
@@ -56,7 +56,7 @@
                         parentForm = partnershipUtrForm
                     )
 
-                    @if(showGeneralPartnershipSpecific) {
+                    @if(displayGeneralPartnershipAccordion) {
                         @accordionHelper(
                             Messages("principal.capture_partnership_utr.accordion.heading"),
                             accordionContent
