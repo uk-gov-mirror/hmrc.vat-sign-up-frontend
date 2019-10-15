@@ -30,7 +30,7 @@ class AccessibilityStatementControllerSpec extends UnitSpec with MockControllerC
 
   "show" should {
     "return OK" in {
-      val result = TestAccessibilityStatementController.show(testGetRequest)
+      val result = TestAccessibilityStatementController.show("test")(testGetRequest)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")

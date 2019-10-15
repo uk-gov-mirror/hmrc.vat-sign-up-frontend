@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.data.Form
 import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
@@ -27,7 +26,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
+import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr
@@ -39,49 +38,80 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
   val testGetRequestForNoUtr = FakeRequest("GET", "/partnership-no-utr")
   val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
 
-  private def viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(featureSwitchAndGeneralPartnership: Boolean,
-                                                                     form: Form[String] = partnershipUtrForm.form): String = {
-    capture_partnership_utr(
-      form,
-      routes.CapturePartnershipUtrController.submit(),
-      featureSwitchAndGeneralPartnership)(testGetRequestForNoUtr, mockMessagesApi.preferred(testGetRequestForNoUtr), mockAppConfig).body
-  }
-
   def testPostRequest(utr: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/partnership-utr").withFormUrlEncodedBody(partnershipUtr -> utr)
+    FakeRequest("POST", "/partnership-utr").withFormUrlEncodedBody(PartnershipUtrForm.partnershipUtr -> utr)
 
   "Calling the show action of the CapturePartnershipUtrController" when {
     s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is off" in {
       mockAuthAdminRole()
       disable(GeneralPartnershipNoSAUTR)
-      val result = TestCapturePartnershipUtrController.show(testGetRequestForShow)
+
+      implicit val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
+
+      implicit val messages = mockMessagesApi.preferred(testGetRequestForShow)
+
+      lazy val view = capture_partnership_utr(
+        partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form,
+        postAction = routes.CapturePartnershipUtrController.submit(),
+        displayGeneralPartnershipAccordion = false
+      ).body
+
+      val result = TestCapturePartnershipUtrController.show()(testGetRequestForShow)
+
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(false)
+      contentAsString(result) shouldBe view
     }
+
     s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on && $GeneralPartnership" in {
       mockAuthAdminRole()
       enable(GeneralPartnershipNoSAUTR)
+
+      implicit val testGetRequestForShow = FakeRequest("GET", "/partnership-utr").withSession(
+        SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
+      )
+
+      implicit val messages = mockMessagesApi.preferred(testGetRequestForShow)
+
+      lazy val view = capture_partnership_utr(
+        partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form,
+        postAction = routes.CapturePartnershipUtrController.submit(),
+        displayGeneralPartnershipAccordion = true
+      ).body
+
       val result = TestCapturePartnershipUtrController.show(testGetRequestForShow.withSession(
         SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
       ))
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(true)
+      contentAsString(result) shouldBe view
     }
 
     s"go to the Partnership utr page with the right content because $GeneralPartnershipNoSAUTR is on && $LimitedPartnership" in {
       mockAuthAdminRole()
       enable(GeneralPartnershipNoSAUTR)
+
+      implicit val testGetRequestForShow = FakeRequest("GET", "/partnership-utr").withSession(
+        SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
+      )
+
+      implicit val messages = mockMessagesApi.preferred(testGetRequestForShow)
+
+      lazy val view = capture_partnership_utr(
+        partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form,
+        postAction = routes.CapturePartnershipUtrController.submit(),
+        displayGeneralPartnershipAccordion = false
+      ).body
+
       val result = TestCapturePartnershipUtrController.show(testGetRequestForShow.withSession(
         SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
       ))
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(false)
+      contentAsString(result) shouldBe view
     }
   }
 
@@ -102,6 +132,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       session(result) get SessionKeys.previousVatReturnKey should contain(Yes.stringValue)
       session(result) get SessionKeys.hasOptionalSautrKey should contain(false.toString)
     }
+
     "have an auth check and return exception if not authorised" in {
       mockFailedAuth()
 
@@ -146,7 +177,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         redirectLocation(result) shouldBe Some(routes.PrincipalPlacePostCodeController.show().url)
         session(result) get SessionKeys.hasOptionalSautrKey should contain(Yes.stringValue)
         session(result) get SessionKeys.businessEntityKey should contain(BusinessEntity.GeneralPartnershipKey)
-        session(result) get SessionKeys.partnershipSautrKey should  contain(testSaUtr)
+        session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
       }
 
     }
@@ -196,45 +227,71 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is off" in {
         mockAuthAdminRole()
         disable(GeneralPartnershipNoSAUTR)
-        val result = TestCapturePartnershipUtrController.submit(testPostRequest(""))
+
+        implicit val request = testPostRequest("")
+
+        implicit val messages = mockMessagesApi.preferred(request)
+
+        lazy val view = capture_partnership_utr(
+          partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr),
+          postAction = routes.CapturePartnershipUtrController.submit(),
+          displayGeneralPartnershipAccordion = false
+        ).body
+
+        val result = TestCapturePartnershipUtrController.submit(request)
 
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(
-          featureSwitchAndGeneralPartnership = false,
-          form = partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr)
-        )
+        contentAsString(result) shouldBe view
       }
+
       s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is on && $GeneralPartnership" in {
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
-        val result = TestCapturePartnershipUtrController.submit(testPostRequest("").withSession(
+
+        implicit val request = testPostRequest("")
+
+        implicit val messages = mockMessagesApi.preferred(request)
+
+        lazy val view = capture_partnership_utr(
+          partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr),
+          postAction = routes.CapturePartnershipUtrController.submit(),
+          displayGeneralPartnershipAccordion = true
+        ).body
+
+        val result = TestCapturePartnershipUtrController.submit(request.withSession(
           SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
         ))
 
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(
-          featureSwitchAndGeneralPartnership = true,
-          form = partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr)
-        )
+        contentAsString(result) shouldBe view
       }
+
       s"reload the page with errors with the right content because $GeneralPartnershipNoSAUTR is on && $LimitedPartnership" in {
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
-        val result = TestCapturePartnershipUtrController.submit(testPostRequest("").withSession(
+
+        implicit val request = testPostRequest("")
+
+        implicit val messages = mockMessagesApi.preferred(request)
+
+        lazy val view = capture_partnership_utr(
+          partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr),
+          postAction = routes.CapturePartnershipUtrController.submit(),
+          displayGeneralPartnershipAccordion = false
+        ).body
+
+        val result = TestCapturePartnershipUtrController.submit(request.withSession(
           SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
         ))
 
         status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
-        contentAsString(result) shouldBe viewWithgeneralPartnershipNoSAUTRAndGeneralPartnership(
-          featureSwitchAndGeneralPartnership = false,
-          form = partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr)
-        )
+        contentAsString(result) shouldBe view
       }
     }
   }

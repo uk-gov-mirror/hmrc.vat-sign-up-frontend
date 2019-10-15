@@ -223,5 +223,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val administrativeDivisionList: Set[String] = loadConfig("administrative-divisions").split(",").toSet
 
-  lazy val accessibilityStatementRoute: String = uk.gov.hmrc.vatsignupfrontend.controllers.routes.AccessibilityStatementController.show().url
+  def accessibilityStatementRoute(pageUri: String): String = uk.gov.hmrc.vatsignupfrontend.controllers.routes.AccessibilityStatementController.show(pageUri).url
+
+  lazy val service: String = "vat-sign-up"
+
+  def accessibilityReportUrl(userAction: String): String = s"${contactHost}/contact/accessibility-unauthenticated?service=${service}&userAction=${encodeUrl(userAction)}"
 }

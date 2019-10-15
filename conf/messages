@@ -1124,7 +1124,8 @@ accessibility.pageBody.how_accessible.h2 = How accessible this service is
 accessibility.pageBody.how_accessible.p1 = This service is fully compliant with the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1 AA standard</a>.
 accessibility.pageBody.how_accessible.p2 = There are no known accessibility issues within this service.
 accessibility.pageBody.reporting_accessibility_problems.h2 = Reporting accessibility problems with this service
-accessibility.pageBody.reporting_accessibility_problems.p1 = We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, contact <a href="mailto:hmrc-accessibility-problems@digital.hmrc.gov.uk">hmrc-accessibility-problems@digital.hmrc.gov.uk</a>.
+accessibility.pageBody.reporting_accessibility_problems.p1 = We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, report the {0}.
+accessibility.pageBody.reporting_accessibility_problems.linkText = accessibility problem
 accessibility.pageBody.what_to_do.h2 = What to do if you are not happy with how we respond to your complaint
 accessibility.pageBody.what_to_do.p1 = The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ''accessibility regulations''). If you are not happy with how we respond to your complaint, <a href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service</a> (EASS), or the <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) if you live in Northern Ireland.
 accessibility.pageBody.contact_us.h2 = Contacting us by phone or getting a visit from us in person

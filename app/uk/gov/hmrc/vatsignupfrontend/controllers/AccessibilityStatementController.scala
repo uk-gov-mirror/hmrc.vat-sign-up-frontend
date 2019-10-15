@@ -17,20 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
 import uk.gov.hmrc.vatsignupfrontend.views.html.help.accessibility_statement
 
 import scala.concurrent.Future
 
 @Singleton
-class AccessibilityStatementController @Inject()(val controllerComponents: ControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+class AccessibilityStatementController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
 
-  def show: Action[AnyContent] = Action.async {
+  override val messagesApi: MessagesApi = controllerComponents.messagesApi
+
+  implicit val appConfig: AppConfig = controllerComponents.appConfig
+
+  def show(pageUri: String): Action[AnyContent] = Action.async {
     implicit request => {
-      Future.successful(Ok(accessibility_statement()))
+      Future.successful(Ok(accessibility_statement(pageUri)))
     }
   }
+
 }
