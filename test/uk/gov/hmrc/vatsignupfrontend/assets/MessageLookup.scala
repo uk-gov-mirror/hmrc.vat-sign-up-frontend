@@ -672,6 +672,27 @@ object MessageLookup {
 
   }
 
+  object PrincipalResignupInformationReceived {
+
+    val heading: String = "You have signed up to submit your VAT Returns using software"
+    val title = heading + ServiceName.principalSuffix
+    val vatNumber = "VAT registration number"
+
+    object Section {
+      val line = "Do not submit a VAT return until you have set up your software."
+
+      val heading = "What happens next"
+      val bullet1 = "Stop using VAT online services. Do not use your old way of sending your VAT Return to HMRC."
+      val bullet2 = "Start using your compatible software to keep records of your business sales and purchases, also called income and expenditure."
+      val bullet3 = "Allow and authorise your software to connect to HMRC."
+      val bullet4 = "Use this software to submit your VAT Returns to HMRC."
+      val bullet5 = "Manage and update all your business details by signing in to HMRC services (this is also known as your Business tax account)."
+    }
+
+    val buttonText = "View your VAT account"
+
+  }
+
   object PrincipalAlreadySignedUp {
     val heading: String = "You have already signed up"
     val title = heading + ServiceName.principalSuffix
