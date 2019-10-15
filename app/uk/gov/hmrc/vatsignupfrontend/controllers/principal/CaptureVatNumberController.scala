@@ -26,11 +26,11 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, MigratableDates, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityService}
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityPreMigrationService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
@@ -40,7 +40,7 @@ import scala.concurrent.Future
 
 @Singleton
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           vatNumberEligibilityService: VatNumberEligibilityService,
+                                           vatNumberEligibilityService: VatNumberEligibilityPreMigrationService,
                                            storeVatNumberService: StoreVatNumberService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
@@ -109,7 +109,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
         Redirect(routes.MigratableDatesController.show())
           .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
           .removingFromSession(businessEntityKey)
-      case Left(VatNumberEligibilityHttpParser.InvalidVatNumber) =>
+      case Left(VatNumberEligibilityPreMigrationHttpParser.InvalidVatNumber) =>
         Redirect(routes.InvalidVatNumberController.show())
           .removingFromSession(businessEntityKey)
       case Left(VatNumberEligibilityFailureResponse(status)) =>

@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.connectors
+package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
+
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityResponse
+import uk.gov.hmrc.vatsignupfrontend.connectors.VatNumberEligibilityPreMigrationConnector
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.VatNumberEligibilityPreMigrationResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class VatNumberEligibilityConnector @Inject()(val http: HttpClient,
-                                              val applicationConfig: AppConfig) {
+class VatNumberEligibilityPreMigrationService @Inject()(val vatNumberEligibilityConnector: VatNumberEligibilityPreMigrationConnector) {
 
-  def checkVatNumberEligibility(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[VatNumberEligibilityResponse] =
-    http.GET[VatNumberEligibilityResponse](applicationConfig.vatNumberEligibilityUrl(vatNumber))
-
+  def checkVatNumberEligibility(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[VatNumberEligibilityPreMigrationResponse] =
+    vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber)
 }

@@ -92,8 +92,11 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   lazy val protectedMicroServiceUrl: String = baseUrl("vat-sign-up") + "/vat-sign-up"
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/subscription-request/vat-number"
 
-  def vatNumberEligibilityUrl(vatNumber: String): String =
+  def vatNumberEligibilityPreMigrationUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/mtdfb-eligibility"
+
+  def vatNumberEligibilityUrl(vatNumber: String): String =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/new-mtdfb-eligibility"
 
   def storeCompanyNumberUrl(vatNumber: String) = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/company-number"
 
