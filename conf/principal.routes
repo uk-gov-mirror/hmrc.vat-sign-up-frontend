@@ -175,6 +175,9 @@ POST        /terms-of-participation                             uk.gov.hmrc.vats
 #Confirmation
 GET         /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.InformationReceivedController.show
 
+# Sign Up Complete
+GET         /sign-up-complete                                   uk.gov.hmrc.vatsignupfrontend.controllers.principal.resignup.SignUpCompleteController.show
+
 #Assistant Credential Role
 GET         /not-administrator                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.AssistantCredentialErrorController.show
 
