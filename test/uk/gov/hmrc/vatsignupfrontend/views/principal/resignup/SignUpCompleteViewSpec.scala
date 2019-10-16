@@ -28,24 +28,23 @@ import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
-class InformationReceivedViewSpec extends ViewSpec {
+class SignUpCompleteViewSpec extends ViewSpec {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
-  lazy val appConfig = new AppConfig(configuration, env)
+  val appConfig = new AppConfig(configuration, env)
 
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
-  val conf = new AppConfig(configuration, env)
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.information_received(SoleTrader, testVatNumber)(
+  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.sign_up_complete(SoleTrader, testVatNumber)(
     FakeRequest(),
     applicationMessages,
-    conf
+    appConfig
   )
 
   lazy val document = Jsoup.parse(page.body)
 
-  "The information received view" should {
+  "The sign up complete view" should {
 
     s"have the title '${messages.title}'" in {
       document.title() should be(messages.title)
