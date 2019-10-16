@@ -16,33 +16,23 @@
 
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
-import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
+import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{JsObject, Json}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 
-class StoreVatNumberConnectorSpec extends UnitSpec with MockitoSugar{
+import scala.concurrent.{ExecutionContext, Future}
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+@Singleton
+class StoreMigratedVRNConnector @Inject()(val http: HttpClient,
+                                          val applicationConfig: AppConfig
+                                         )(implicit ec: ExecutionContext) {
 
+  val vatNumberKey = "vatNumber"
 
-  object TestStoreVatNumberConnector extends StoreVatNumberConnector(
-    mock[HttpClient],
-    new AppConfig(configuration, env)
-  )
-
-  "The StoreVatNumberConnector" should {
-
-    "use the correct url" when {
-
-      "storing the vat number" in {
-        TestStoreVatNumberConnector.applicationConfig.storeVatNumberUrl should endWith(s"/vat-sign-up/subscription-request/vat-number")
-      }
-
-    }
-  }
+  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
+    http.POST[JsObject, StoreVatNumberResponse](applicationConfig.storeMigratedVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
 
 }

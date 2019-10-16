@@ -61,6 +61,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def ggSignOutUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-out?continue=${encodeUrl(redirectionUrl)}"
 
   def ggSignInUrl(redirectionUrl: String = ggSignInContinueUrl): String = s"$ggUrl/gg/sign-in?continue=${encodeUrl(redirectionUrl + "/resolve-vat-number")}"
+
   def ggAgentSignInUrl(redirectionUrl: String = ggAgentSignInContinueUrl): String = s"$ggUrl/gg/sign-in?continue=${encodeUrl(redirectionUrl + "/vat-number")}"
 
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
@@ -91,6 +92,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val protectedMicroServiceUrl: String = baseUrl("vat-sign-up") + "/vat-sign-up"
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/subscription-request/vat-number"
+  lazy val storeMigratedVatNumberUrl = s"$protectedMicroServiceUrl/subscription-request/migrated-vat-number"
 
   def vatNumberEligibilityPreMigrationUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/mtdfb-eligibility"
@@ -154,7 +156,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
 
   def getCitizenDetailsUrlBySautr(sautr: String): String = s"$citizenDetailsUrl/citizen-details/sautr/$sautr/"
-  
+
   def getCitizenDetailsUrlByNino(nino: String): String = s"$citizenDetailsUrl/citizen-details/nino/$nino/"
 
   lazy val ctReferenceLookupUrl: String = s"$protectedMicroServiceUrl/subscription-request/ct-reference-check"
