@@ -1125,8 +1125,8 @@ accessibility.pageBody.how_accessible.h2 = Pa mor hygyrch yw''r gwasanaeth hwn
 accessibility.pageBody.how_accessible.p1 = Mae''r gwasanaeth hwn yn cydymffurfio''n llawn â <a href="https://www.w3.org/TR/WCAG21/">safon ''AA'' Canllawiau Hygyrchedd Cynnwys y We, fersiwn 2.1</a>.
 accessibility.pageBody.how_accessible.p2 = Nid oes unrhyw broblemau hygyrchedd hysbys yn y gwasanaeth hwn.
 accessibility.pageBody.reporting_accessibility_problems.h2 = Rhoi gwybod am broblemau hygyrchedd gyda''r gwasanaeth hwn
-accessibility.pageBody.reporting_accessibility_problems.p1 = Rydym bob amser yn ceisio gwella hygyrchedd y gwasanaeth hwn. Os byddwch yn dod o hyd i unrhyw broblemau nad ydynt wedi''u rhestru ar y dudalen hon, neu os ydych o''r farn nad ydym yn bodloni gofynion hygyrchedd, cysylltwch â hmrc-accessibility-problems@digital.hmrc.gov.uk.
-accessibility.pageBody.what_to_do.h2 = Beth i''w wneud os nad ydych yn hapus â sut rydym yn ateb eich cwyn
+accessibility.pageBody.reporting_accessibility_problems.p1 = Rydym bob amser yn ceisio gwella hygyrchedd y gwasanaeth hwn. Os byddwch yn dod o hyd i unrhyw broblem nad yw wedi''i rhestru ar y dudalen hon, neu os ydych o''r farn nad ydym yn bodloni gofynion hygyrchedd, rhowch wybod am y {0}.
+accessibility.pageBody.reporting_accessibility_problems.linkText = broblem hygyrchedd
 accessibility.pageBody.what_to_do.p1 = Mae''r Comisiwn Cydraddoldeb a Hawliau Dynol (EHRC) yn gyfrifol am orfodi Rheoliadau Hygyrchedd Cyrff Sector Cyhoeddus (Gwefannau a Chymwysiadau Symudol) (Rhif 2) 2018 (y ''rheoliadau hygyrchedd''). Os nad ydych yn hapus â sut rydym yn ateb eich cwyn,<a href="https://www.equalityadvisoryservice.com/">cysylltwch â''r Gwasanaeth Cynghori a Chymorth Cydraddoldeb</a> (EASS), neu''r <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) os ydych yn byw yng Ngogledd Iwerddon.
 accessibility.pageBody.contact_us.h2 = Cysylltu â ni dros y ffôn neu gael ymweliad personol gennym
 accessibility.pageBody.contact_us.p1 = Rydym yn cynnig gwasanaeth text relay os ydych yn fyddar, â nam ar eich clyw neu os oes gennych nam ar eich lleferydd.
