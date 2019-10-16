@@ -21,25 +21,26 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class StoreVatNumberConnectorSpec extends UnitSpec with MockitoSugar{
+class StoreMigratedVRNConnectorSpec extends UnitSpec with MockitoSugar {
 
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
 
-  object TestStoreVatNumberConnector extends StoreVatNumberConnector(
+  object TestStoreMigratedVRNConnector extends StoreMigratedVRNConnector(
     mock[HttpClient],
     new AppConfig(configuration, env)
   )
 
-  "The StoreVatNumberConnector" should {
+  "The StoreMigratedVRNConnector" should {
 
     "use the correct url" when {
 
-      "storing the vat number" in {
-        TestStoreVatNumberConnector.applicationConfig.storeVatNumberUrl should endWith(s"/vat-sign-up/subscription-request/vat-number")
+      "storing the migrated vat number" in {
+        TestStoreMigratedVRNConnector.applicationConfig.storeMigratedVatNumberUrl should endWith(s"/vat-sign-up/subscription-request/migrated-vat-number")
       }
 
     }
