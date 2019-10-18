@@ -45,7 +45,7 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
     )(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(returnValue)
 
-  private def mockStoreVatNumber(vatNumber: String, isFromBta: Boolean)(returnValue: Future[StoreVatNumberWithEnrolmentResponse]): Unit =
+  def mockStoreVatNumber(vatNumber: String, isFromBta: Boolean)(returnValue: Future[StoreVatNumberWithEnrolmentResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(isFromBta)
