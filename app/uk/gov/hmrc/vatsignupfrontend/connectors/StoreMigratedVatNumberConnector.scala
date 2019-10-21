@@ -21,18 +21,18 @@ import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreMigratedVRNConnector @Inject()(val http: HttpClient,
-                                          val applicationConfig: AppConfig
-                                         )(implicit ec: ExecutionContext) {
+class StoreMigratedVatNumberConnector @Inject()(http: HttpClient,
+                                                applicationConfig: AppConfig
+                                               )(implicit ec: ExecutionContext) {
 
-  val vatNumberKey = "vatNumber"
+  private val vatNumberKey = "vatNumber"
 
-  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatNumberResponse] =
-    http.POST[JsObject, StoreVatNumberResponse](applicationConfig.storeMigratedVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
+  def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreMigratedVatNumberResponse] =
+    http.POST[JsObject, StoreMigratedVatNumberResponse](applicationConfig.storeMigratedVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
 
 }

@@ -36,17 +36,21 @@ import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas, Yes}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityService}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberService, MockVatNumberEligibilityPreMigrationService}
 
 import scala.concurrent.Future
 
 
-class CaptureVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockVatNumberEligibilityService with MockStoreVatNumberService with FeatureSwitching {
+class CaptureVatNumberControllerSpec extends UnitSpec
+  with GuiceOneAppPerSuite
+  with MockControllerComponents
+  with MockVatNumberEligibilityPreMigrationService
+  with MockStoreVatNumberService
+  with FeatureSwitching {
 
   object TestCaptureVatNumberController extends CaptureVatNumberController(
     mockControllerComponents,
-    mockVatNumberEligibilityService,
+    mockVatNumberEligibilityPreMigrationService,
     mockStoreVatNumberService
   )
 

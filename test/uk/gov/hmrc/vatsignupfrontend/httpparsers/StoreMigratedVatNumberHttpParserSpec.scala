@@ -36,10 +36,10 @@ class StoreMigratedVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
       }
 
-      "parse FORBIDDEN response as a store migrated Vat number FailureResponse" in {
+      "parse FORBIDDEN response as a store migrated Vat number FailureResponse with the status" in {
         val httpResponse = HttpResponse(FORBIDDEN)
         val result = StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
-        result shouldBe Left(StoreMigratedVatNumberFailure)
+        result shouldBe Left(StoreMigratedVatNumberFailure(FORBIDDEN))
       }
     }
   }
