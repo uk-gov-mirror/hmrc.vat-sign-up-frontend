@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.utils
 
 import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments._
 
 object EnrolmentUtils {
@@ -56,6 +57,17 @@ object EnrolmentUtils {
         mtdVatEnrolment =>
           mtdVatEnrolment getIdentifier MtdVatReferenceKey map (_.value)
       }
+
+    def getAnyVatNumber: Option[String] = {
+      (vatNumber, mtdVatNumber) match {
+        case (Some(vrn), Some(mtdVrn)) if vrn == mtdVrn => Some(vrn)
+        case (Some(vrn), Some(mtdVrn)) => throw new InternalServerException(s"Found multiple different vat numbers in enrolments: $vrn and $mtdVrn")
+        case (None, Some(mtdVrn)) => Some(mtdVrn)
+        case (Some(vrn), None) => Some(vrn)
+        case _ => None
+      }
+    }
+
   }
 
 }
