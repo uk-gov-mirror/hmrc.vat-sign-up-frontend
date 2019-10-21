@@ -19,7 +19,7 @@ You will need [sbt](http://www.scala-sbt.org/)
 
    `sm --start VAT_SIGN_UP_ALL -f`
  
-
+ 
 3) **Clone the frontend service:**
 
   - SSH
