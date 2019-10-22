@@ -47,4 +47,5 @@ object SessionKeys {
   val jointVentureOrPropertyKey = "jointVentureOrProperty"
   val contactPreferenceKey = "contactPreference"
   val hasOptionalSautrKey = "hasOptionalSautr"
+  val isMigratedKey = "isMigrated"
 }
