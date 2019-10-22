@@ -41,17 +41,47 @@ class CaptureRegisteredSocietyCompanyNumberControllerISpec extends ComponentSpec
   }
 
   "POST /registered-society-company-number" when {
-    "the society name feature switch is enabled" should {
-      "redirect to confirm society name" in {
-        stubAuth(OK, successfulAuthResponse())
-        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
+    "the society name feature switch is enabled" when {
+      "the company number is 8 characters long" should {
+        "redirect to confirm society name" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
-        val res = post("/registered-society-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+          val res = post("/registered-society-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.ConfirmRegisteredSocietyController.show().url)
-        )
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmRegisteredSocietyController.show().url)
+          )
+        }
+      }
+      "the company number is shorter than 8 characters long" when {
+        "the CRN doesn't have a prefix" should {
+          "redirect to confirm society name" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubGetCompanyName(testShortPaddedCompanyNumber, NonPartnershipEntity)
+
+            val res = post("/registered-society-company-number")(CompanyNumberForm.companyNumber -> testShortCompanyNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.ConfirmRegisteredSocietyController.show().url)
+            )
+          }
+        }
+        "the CRN has a prefix" should {
+          "redirect to confirm society name" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubGetCompanyName(testPrefixedPaddedCompanyNumber, NonPartnershipEntity)
+
+            val res = post("/registered-society-company-number")(CompanyNumberForm.companyNumber -> testPrefixedCompanyNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.ConfirmRegisteredSocietyController.show().url)
+            )
+          }
+        }
       }
     }
   }

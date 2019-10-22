@@ -37,17 +37,45 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
     }
   }
 
-  "POST /company-number" should {
-    "return a redirect" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-      stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
+  "POST /company-number" when {
+    "the company number is 8 characters long" should {
+      "redirect to Confirm Company" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
 
-      val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+        val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
 
-      res should have(
-        httpStatus(SEE_OTHER),
-        redirectUri(routes.ConfirmCompanyController.show().url)
-      )
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmCompanyController.show().url)
+        )
+      }
+    }
+    "the company number is shorter than 8 characrters" should {
+      "redirect to Confirm Company" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testShortPaddedCompanyNumber, NonPartnershipEntity)
+
+        val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testShortCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmCompanyController.show().url)
+        )
+      }
+    }
+    "the company number has a prefix" should {
+      "redirect to Confirm Company" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testPrefixedPaddedCompanyNumber, NonPartnershipEntity)
+
+        val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testPrefixedCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ConfirmCompanyController.show().url)
+        )
+      }
     }
   }
 }
