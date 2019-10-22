@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.connectors
+package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.connectors.MigratedSubmissionConnector
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OptInSubmissionConnector @Inject()(val http: HttpClient,
-                                         val applicationConfig: AppConfig) {
-
-  private def url(vatNumber: String): String =
-    s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/migrated/vat-number/$vatNumber/submit"
+class MigratedSubmissionService @Inject()(val migratedSubmissionConnector: MigratedSubmissionConnector) {
 
   def submit(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[SubmissionResponse] =
-    http.POSTEmpty[SubmissionResponse](url(vatNumber))
+    migratedSubmissionConnector.submit(vatNumber)
 
 }

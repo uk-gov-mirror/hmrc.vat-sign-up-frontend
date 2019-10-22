@@ -350,6 +350,9 @@ POST        /do-you-have-a-utr                                  uk.gov.hmrc.vats
 GET         /are-you-ready-to-submit                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.AreYouReadySubmitSoftwareController.show
 POST        /are-you-ready-to-submit                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.AreYouReadySubmitSoftwareController.submit
 
+GET         /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.SendYourApplicationController.show
+POST        /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.SendYourApplicationController.submit
+
 #Routes for timeout
 GET         /keep-alive                                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.SessionTimeoutController.keepAlive
 GET         /timeout                                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.SessionTimeoutController.timeout
