@@ -26,8 +26,18 @@ object SubmissionStub extends WireMockMethods {
       .thenReturn(status = NO_CONTENT)
   }
 
+  def stubMigratedSubmissionSuccess(): Unit = {
+    when(method = POST, uri = s"/vat-sign-up/subscription-request/migrated/vat-number/$testVatNumber/submit")
+      .thenReturn(status = NO_CONTENT)
+  }
+
   def stubSubmissionFailure(): Unit = {
     when(method = POST, uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/submit")
+      .thenReturn(status = INTERNAL_SERVER_ERROR)
+  }
+
+  def stubMigratedSubmissionFailure(): Unit = {
+    when(method = POST, uri = s"/vat-sign-up/subscription-request/migrated/vat-number/$testVatNumber/submit")
       .thenReturn(status = INTERNAL_SERVER_ERROR)
   }
 
