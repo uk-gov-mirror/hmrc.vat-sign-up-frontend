@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.connectors.StoreMigratedVatNumberConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.{StoreMigratedVatNumberFailure, StoreMigratedVatNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityFailure
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.{IneligibleForMtdVatNumber, VatNumberEligibilityFailureResponse}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{VatNumberEligibilityHttpParser, VatNumberEligibilityPreMigrationHttpParser}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, VatNumberEligibilityHttpParser, VatNumberEligibilityPreMigrationHttpParser}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
@@ -34,7 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: StoreMigratedVatNumberConnector,
                                               migratedVatNumberEligibilityService: VatNumberEligibilityService,
                                               vatNumberEligibilityService: VatNumberEligibilityPreMigrationService,
-                                              storeVatNumberService: StoreVatNumberService
+                                              storeVatNumberService: StoreVatNumberService,
+                                              claimSubscriptionService: ClaimSubscriptionService
                                              )(implicit ec: ExecutionContext) extends FeatureSwitching {
 
   def checkVatNumberEligibility(vatNumber: String)
@@ -56,6 +57,8 @@ class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: S
           storeMigratedVatNumber(vatNumber, isFromBta)
         case Eligible(_, _) =>
           storePreMigrationVatNumber(vatNumber, isFromBta)
+        case VatNumberOrchestrationService.AlreadySubscribed =>
+          claimSubscription(vatNumber, isFromBta)
         case response =>
           Future.successful(response)
       }
@@ -119,6 +122,15 @@ class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: S
         throw new InternalServerException("Failed to store non migrated vat number")
     }
 
+  private def claimSubscription(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] =
+    claimSubscriptionService.claimSubscription(vatNumber, isFromBta).map {
+      case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
+        VatNumberOrchestrationService.ClaimedSubscription
+      case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
+        VatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
+      case Left(unexpectedError) =>
+        throw new InternalServerException(s"Unexpected error in claim subscription for user with enrolment - $unexpectedError")
+    }
 }
 
 object VatNumberOrchestrationService {
