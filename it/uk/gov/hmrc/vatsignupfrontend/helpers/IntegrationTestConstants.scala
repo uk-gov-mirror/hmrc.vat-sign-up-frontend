@@ -29,6 +29,10 @@ object IntegrationTestConstants {
   val testVatNumber: String = IntegrationTestConstantsGenerator.randomVatNumber
   val testInvalidVatNumber: String = "999999999"
   val testCompanyNumber: String = IntegrationTestConstantsGenerator.randomCompanyNumber
+  val testShortCompanyNumber = "1234567"
+  val testShortPaddedCompanyNumber = "01234567"
+  val testPrefixedCompanyNumber = "SC12"
+  val testPrefixedPaddedCompanyNumber = "SC000012"
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
   val testCompanyUtr: String = IntegrationTestConstantsGenerator.randomUtrNumeric()
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode.toUpperCase.filterNot(_.isWhitespace))

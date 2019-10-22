@@ -65,6 +65,34 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
         )
       }
     }
+    "the company number is less than 8 characters long" when {
+      "the CRN doesn't have a prefix" should {
+        "redirect to Could not Confirm limited Partnership page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubGetCompanyName(testShortPaddedCompanyNumber, NonPartnershipEntity)
+
+          val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testShortCompanyNumber)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+          )
+        }
+      }
+      "the CRN has a prefix" should {
+        "redirect to Could not Confirm limited Partnership page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubGetCompanyName(testPrefixedPaddedCompanyNumber, NonPartnershipEntity)
+
+          val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testPrefixedCompanyNumber)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+          )
+        }
+      }
+    }
   }
 
 }

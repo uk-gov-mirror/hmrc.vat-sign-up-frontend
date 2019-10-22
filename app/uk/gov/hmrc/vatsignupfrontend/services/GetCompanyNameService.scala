@@ -20,14 +20,27 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.GetCompanyNameConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameResponse
-
+import uk.gov.hmrc.vatsignupfrontend.utils.StringPaddingUtil
 import scala.concurrent.{ExecutionContext, Future}
 
-
 @Singleton
-class GetCompanyNameService @Inject()(val getCompanyNameConnector: GetCompanyNameConnector) {
+class GetCompanyNameService @Inject()(val getCompanyNameConnector: GetCompanyNameConnector) extends StringPaddingUtil {
 
-  def getCompanyName(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[GetCompanyNameResponse] =
-    getCompanyNameConnector.getCompanyName(companyNumber)
+  private val crnMaxLength = 8
+  private val crnWithoutPrefixLength = 6
+  private val zero = "0"
+  private val prefixRegex = "[0-9]{2}"
+
+  def getCompanyName(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[GetCompanyNameResponse] = {
+
+    getCompanyNameConnector.getCompanyName(padCrn(companyNumber))
+  }
+
+  private def padCrn(companyNumber: String): String = {
+    val (prefix, remainder) = companyNumber splitAt 2
+
+    if (prefix matches prefixRegex) leftPad(companyNumber, crnMaxLength, zero)
+    else prefix + leftPad(remainder, crnWithoutPrefixLength, zero)
+  }
 
 }

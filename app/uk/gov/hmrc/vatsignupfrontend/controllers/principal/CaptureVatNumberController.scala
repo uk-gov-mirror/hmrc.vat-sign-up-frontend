@@ -55,25 +55,22 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
       validateVatNumberForm.bindFromRequest.fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit()))
-          )
-        , formVatNumber =>
+        { formWithErrors =>
+          Future.successful(BadRequest(capture_vat_number(formWithErrors, routes.CaptureVatNumberController.submit())))
+        },
+        { formVatNumber =>
           if (VatNumberChecksumValidation.isValidChecksum(formVatNumber)) {
             enrolments.mtdVatNumber match {
-              case Some(mtdVatNumber) =>
-                if (mtdVatNumber == formVatNumber)
-                  Future.successful(Redirect(routes.AlreadySignedUpController.show()))
-                else
-                  Future.successful(Redirect(routes.CannotSignUpAnotherAccountController.show()))
+              case Some(mtdVatNumber) if mtdVatNumber == formVatNumber =>
+                Future.successful(Redirect(routes.AlreadySignedUpController.show()))
+              case Some(_) =>
+                Future.successful(Redirect(routes.CannotSignUpAnotherAccountController.show()))
               case None =>
                 enrolments.vatNumber match {
-                  case Some(enrolmentVatNumber) =>
-                    if (enrolmentVatNumber == formVatNumber)
-                      storeVatNumber(formVatNumber)
-                    else
-                      Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
+                  case Some(enrolmentVatNumber) if enrolmentVatNumber == formVatNumber =>
+                    storeVatNumber(formVatNumber)
+                  case Some(_) =>
+                    Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
                   case _ =>
                     checkVrnEligibility(formVatNumber) map {
                       _.removingFromSession(
@@ -84,10 +81,11 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                         box5FigureKey
                       )
                     }
-
                 }
             }
-          } else Future.successful(Redirect(routes.InvalidVatNumberController.show()))
+          }
+          else Future.successful(Redirect(routes.InvalidVatNumberController.show()))
+        }
       )
     }
   }

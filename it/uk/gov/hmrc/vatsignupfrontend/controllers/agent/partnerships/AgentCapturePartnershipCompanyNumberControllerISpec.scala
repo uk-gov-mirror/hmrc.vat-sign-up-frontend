@@ -53,6 +53,35 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
       }
     }
 
+    "the company number is shorter than 8 characters" when {
+      "the CRN doesn't have a prefix" should {
+        "redirect to the Confirm partnership page" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubGetCompanyName(testShortPaddedCompanyNumber, LimitedPartnership)
+
+          val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testShortCompanyNumber)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmPartnershipController.show().url)
+          )
+        }
+      }
+      "the CRN has a prefix" should {
+        "redirect to the Confirm partnership page" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubGetCompanyName(testPrefixedPaddedCompanyNumber, LimitedPartnership)
+
+          val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testPrefixedCompanyNumber)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmPartnershipController.show().url)
+          )
+        }
+      }
+    }
+
     "get company name returns NonPartnershipEntity" should {
       "redirect to Not a Limited Partnership page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

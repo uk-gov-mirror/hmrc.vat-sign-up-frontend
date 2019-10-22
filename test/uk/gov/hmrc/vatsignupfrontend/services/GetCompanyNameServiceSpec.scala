@@ -37,17 +37,48 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
 
   implicit val hc = HeaderCarrier()
 
-  "getCompanyName" should {
-    val result = Right(GetCompanyNameSuccess(testCompanyName, NonPartnershipEntity))
+  val testShortCompanyNumber = "1234567"
+  val testShortPaddedCompanyNumber = "01234567"
+  val testPrefixedCompanyNumber = "SC12"
+  val testPrefixedPaddedCompanyNumber = "SC000012"
+  val result = Right(GetCompanyNameSuccess(testCompanyName, NonPartnershipEntity))
 
-    "return the result of the connector" in {
-      when(mockConnector.getCompanyName(ArgumentMatchers.eq(testCompanyNumber))(ArgumentMatchers.any()))
-        .thenReturn(Future.successful(result))
+  "getCompanyName" when {
+    "the company number is 8 characters long" should {
 
-      val r = TestStoreVatNumberService.getCompanyName(testCompanyNumber)
+      "return the result of the connector" in {
+        when(mockConnector.getCompanyName(ArgumentMatchers.eq(testCompanyNumber))(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(result))
 
-      // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
-      await(r) shouldBe result
+        val r = TestStoreVatNumberService.getCompanyName(testCompanyNumber)
+
+        // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
+        await(r) shouldBe result
+      }
+    }
+    "the company number is shorter than 8 characters" when {
+      "there CRN has no prefix" should {
+        "return the result of the connector" in {
+          when(mockConnector.getCompanyName(ArgumentMatchers.eq(testShortPaddedCompanyNumber))(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(result))
+
+          val r = TestStoreVatNumberService.getCompanyName(testShortCompanyNumber)
+
+          // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
+          await(r) shouldBe result
+        }
+      }
+      "the CRN has a prefix" should {
+        "return the result of the connector" in {
+          when(mockConnector.getCompanyName(ArgumentMatchers.eq(testPrefixedPaddedCompanyNumber))(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(result))
+
+          val r = TestStoreVatNumberService.getCompanyName(testPrefixedCompanyNumber)
+
+          // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
+          await(r) shouldBe result
+        }
+      }
     }
   }
 
