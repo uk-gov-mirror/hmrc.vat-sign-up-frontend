@@ -26,7 +26,21 @@ class DirectDebitResolverControllerISpec extends ComponentSpecBase with CustomMa
 
   "GET /direct-debit-resolver" when {
 
-    "the user has a direct debit hasDirectDebitKey -> true" when {
+    "the user is a migrated user isMigratedKey -> true" should {
+      "redirect to the Send Application page" in {
+        stubAuth(OK, successfulAuthResponse())
+
+        val result = get("/direct-debit-resolver", Map(SessionKeys.isMigratedKey -> "true"))
+
+        result should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.SendYourApplicationController.show().url)
+        )
+      }
+
+    }
+
+    "the user is not a migrated user and has a direct debit hasDirectDebitKey -> true" when {
 
       "the direct debit feature is enabled" should {
 

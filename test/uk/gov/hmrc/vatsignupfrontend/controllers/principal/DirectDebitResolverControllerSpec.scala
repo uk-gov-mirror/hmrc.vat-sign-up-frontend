@@ -30,18 +30,34 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
   object TestDirectDebitResolverController extends DirectDebitResolverController(mockControllerComponents)
 
-  private def sessionValues(directDebitFlag: Option[String]): Iterable[(String, String)] = directDebitFlag map (hasDirectDebitKey -> _)
+  private def sessionValuesDD(directDebitFlag: Option[String]): Iterable[(String, String)] = directDebitFlag map (hasDirectDebitKey -> _)
 
-  def testGetRequest(directDebitFlag: Option[String] = None): FakeRequest[AnyContentAsEmpty.type] = {
+  private def sessionValuesMigrated(isMigratedFlag: Option[String]): Iterable[(String, String)] = isMigratedFlag map (isMigratedKey -> _)
+
+  def testGetRequest(directDebitFlag: Option[String] = None, isMigratedFlag: Option[String] = None): FakeRequest[AnyContentAsEmpty.type] = {
     FakeRequest("GET", "/direct-debit-resolver")
-      .withSession(sessionValues(directDebitFlag).toSeq: _*)
+      .withSession(sessionValuesDD(directDebitFlag).toSeq: _*)
+      .withSession(sessionValuesMigrated(isMigratedFlag).toSeq: _*)
   }
 
   "Calling the show action of the Direct Debit Resolver controller" when {
 
-    "all prerequisite data are in session" when {
+    "isMigratedKey value is in session" should {
+      lazy val result = TestDirectDebitResolverController.show(testGetRequest(isMigratedFlag = Some("true")))
 
-      "the feature switch has been enabled show" should {
+      "return status SEE_OTHER (303)" in {
+        mockAuthAdminRole()
+
+        status(result) shouldBe SEE_OTHER
+      }
+
+      "redirect to Send Application page" in {
+        redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
+      }
+    }
+
+    "isMigratedKey value is not in session" when {
+      "hasDirectDebitKey in session and DirectDebitTermsJourney feature switch has been enabled" should {
 
         lazy val result = TestDirectDebitResolverController.show(testGetRequest(directDebitFlag = Some("true")))
 
@@ -57,7 +73,7 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         }
       }
 
-      "the feature switch has been disabled" should {
+      "hasDirectDebitKey in session and DirectDebitTermsJourney feature switch has been disabled" should {
 
         lazy val result = TestDirectDebitResolverController.show(testGetRequest(directDebitFlag = Some("true")))
 
