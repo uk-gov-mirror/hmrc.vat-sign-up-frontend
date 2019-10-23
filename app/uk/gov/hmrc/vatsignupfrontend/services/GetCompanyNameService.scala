@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class GetCompanyNameService @Inject()(val getCompanyNameConnector: GetCompanyNameConnector) {
 
   private val crnMaxLength = 8
-  private val CrnRegex = "([a-zA-Z]*)([\\d]*)".r
+  private val CrnRegex = "([a-zA-Z]*)([0-9a-zA-Z]*)".r
 
   def getCompanyName(companyNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[GetCompanyNameResponse] =
     getCompanyNameConnector.getCompanyName(padCrn(companyNumber))
@@ -36,6 +36,8 @@ class GetCompanyNameService @Inject()(val getCompanyNameConnector: GetCompanyNam
     companyNumber match {
       case CrnRegex(prefix, remainder) =>
         prefix + Seq.fill(crnMaxLength - companyNumber.length)('0').mkString + remainder
+      case _ =>
+        throw new IllegalArgumentException(s"[GetCompanyNameService] Company number '$companyNumber' was invalid")
     }
 
 }
