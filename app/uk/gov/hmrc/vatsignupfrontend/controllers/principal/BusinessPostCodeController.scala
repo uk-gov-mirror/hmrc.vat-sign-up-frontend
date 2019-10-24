@@ -50,18 +50,21 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
             Future.successful(
               BadRequest(principal_place_of_business(formWithErrors, routes.BusinessPostCodeController.submit()))
             ),
-          businessPostCode =>
-            if (isEnabled(AdditionalKnownFacts))
-              Future.successful(
-                Redirect(routes.PreviousVatReturnController.show())
-                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
-              )
-            else {
+          businessPostCode => {
+            val isMigrated: Boolean = request.session.get(SessionKeys.isMigratedKey).contains("true")
+
+            if(isMigrated || !isEnabled(AdditionalKnownFacts)) {
               Future.successful(
                 Redirect(routes.CheckYourAnswersController.show())
                   .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
               )
+            } else {
+              Future.successful(
+                Redirect(routes.PreviousVatReturnController.show())
+                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+              )
             }
+          }
         )
       }
   }

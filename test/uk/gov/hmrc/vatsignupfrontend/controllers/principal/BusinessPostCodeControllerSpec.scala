@@ -50,6 +50,21 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   }
 
   "Calling the submit action of the Business PostCode controller" when {
+    "the session contains isMigrated: true" should {
+      "redirect to check your answers" in {
+        mockAuthAdminRole()
+        enable(AdditionalKnownFacts)
+
+        implicit val request = testPostRequest(testBusinessPostcode.postCode).withSession(SessionKeys.isMigratedKey -> "true")
+        val result = TestBusinessPostCodeController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
+
+        result.session get SessionKeys.businessPostCodeKey should contain(
+          Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
+        )
+      }
+    }
     "the feature switch is disabled" when {
       "the form is successfully submitted" should {
         "goto check your answers page" in {
