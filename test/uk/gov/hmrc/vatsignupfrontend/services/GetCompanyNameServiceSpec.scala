@@ -41,11 +41,15 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
   val testShortPaddedCompanyNumber = "01234567"
   val testPrefixedCompanyNumber = "SC12"
   val testPrefixedPaddedCompanyNumber = "SC000012"
+  val testSuffixedCompanyNumber = "1234567R"
+  val testPrefixSuffixCompanyNumber = "IP1234RS"
+  val testInvalidCompanyNumber = "123456 7"
+  val testInvalidCompanyNumber2 = "1234-567"
+
   val result = Right(GetCompanyNameSuccess(testCompanyName, NonPartnershipEntity))
 
   "getCompanyName" when {
     "the company number is 8 characters long" should {
-
       "return the result of the connector" in {
         when(mockConnector.getCompanyName(ArgumentMatchers.eq(testCompanyNumber))(ArgumentMatchers.any()))
           .thenReturn(Future.successful(result))
@@ -77,6 +81,46 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
 
           // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
           await(r) shouldBe result
+        }
+      }
+    }
+    "the company number has a suffix" should {
+      "return the result of the connector" in {
+        when(mockConnector.getCompanyName(ArgumentMatchers.eq(testSuffixedCompanyNumber))(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(result))
+
+        val r = TestStoreVatNumberService.getCompanyName(testSuffixedCompanyNumber)
+
+        // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
+        await(r) shouldBe result
+      }
+    }
+    "the company number has a prefix and a suffix" should {
+      "return the result of the connector" in {
+        when(mockConnector.getCompanyName(ArgumentMatchers.eq(testPrefixSuffixCompanyNumber))(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(result))
+
+        val r = TestStoreVatNumberService.getCompanyName(testPrefixSuffixCompanyNumber)
+
+        // null pointer exception would have been thrown if the arguments weren't converted to the expected string format
+        await(r) shouldBe result
+      }
+    }
+    "the company number is invalid" should {
+      "throw an illegal argument exception if any spaces were not stripped by the frontend" in {
+        when(mockConnector.getCompanyName(ArgumentMatchers.eq(testInvalidCompanyNumber))(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(result))
+
+        intercept[IllegalArgumentException] {
+          await(TestStoreVatNumberService.getCompanyName(testInvalidCompanyNumber))
+        }
+      }
+      "throw an illegal argument exception if the company number contains any illegal characters" in {
+        when(mockConnector.getCompanyName(ArgumentMatchers.eq(testInvalidCompanyNumber2))(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(result))
+
+        intercept[IllegalArgumentException] {
+          await(TestStoreVatNumberService.getCompanyName(testInvalidCompanyNumber2))
         }
       }
     }
