@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
@@ -32,14 +33,12 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) {
-      enrolments =>
-        val optVatNumber = enrolments.vatNumber
 
-        if (optVatNumber.isDefined) {
+      enrolments =>
+        if (isEnabled(ReSignUpJourney) && enrolments.getAnyVatNumber.isDefined || enrolments.vatNumber.isDefined)
           Future.successful(Redirect(routes.MultipleVatCheckController.show()))
-        } else {
+         else
           Future.successful(Redirect(routes.CaptureVatNumberController.show()))
-        }
     }
   }
 }
