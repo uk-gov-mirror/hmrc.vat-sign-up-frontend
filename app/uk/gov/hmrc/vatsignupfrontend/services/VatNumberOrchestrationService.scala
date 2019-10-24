@@ -21,7 +21,7 @@ import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreMigratedVatNumberConnector
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.{StoreMigratedVatNumberFailure, StoreMigratedVatNumberSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.{StoreMigratedVatNumberFailureStatus, StoreMigratedVatNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.VatNumberEligibilityFailure
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.{IneligibleForMtdVatNumber, VatNumberEligibilityFailureResponse}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, VatNumberEligibilityHttpParser, VatNumberEligibilityPreMigrationHttpParser}
@@ -113,7 +113,7 @@ class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: S
     storeMigratedVatNumberConnector.storeVatNumber(vatNumber).map {
       case Right(StoreMigratedVatNumberSuccess) =>
         VatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
-      case Left(StoreMigratedVatNumberFailure(status)) =>
+      case Left(StoreMigratedVatNumberFailureStatus(status)) =>
         throw new InternalServerException(s"Failed to store migrated vat number with status: $status")
     }
 

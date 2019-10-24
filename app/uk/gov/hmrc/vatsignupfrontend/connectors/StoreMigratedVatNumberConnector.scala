@@ -22,6 +22,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberResponse
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
+import uk.gov.hmrc.vatsignupfrontend.utils.JsonUtils._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,9 +32,22 @@ class StoreMigratedVatNumberConnector @Inject()(http: HttpClient,
                                                 applicationConfig: AppConfig
                                                )(implicit ec: ExecutionContext) {
 
-  private val vatNumberKey = "vatNumber"
+  val vatNumberKey = "vatNumber"
+  val postCodeKey = "postCode"
+  val registrationDateKey = "registrationDate"
 
   def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreMigratedVatNumberResponse] =
-    http.POST[JsObject, StoreMigratedVatNumberResponse](applicationConfig.storeMigratedVatNumberUrl, Json.obj(vatNumberKey -> vatNumber))
+    http.POST[JsObject, StoreMigratedVatNumberResponse](applicationConfig.storeMigratedVatNumberUrl, Json.obj(
+      vatNumberKey -> vatNumber
+    ))
+
+  def storeVatNumber(vatNumber: String,
+                     registrationDate: String,
+                     optPostCode: Option[PostCode])(implicit hc: HeaderCarrier): Future[StoreMigratedVatNumberResponse] =
+    http.POST[JsObject, StoreMigratedVatNumberResponse](applicationConfig.storeMigratedVatNumberUrl, Json.obj(
+      vatNumberKey -> vatNumber,
+      registrationDateKey -> registrationDate
+    ) + (postCodeKey, optPostCode.map(_.postCode))
+    )
 
 }

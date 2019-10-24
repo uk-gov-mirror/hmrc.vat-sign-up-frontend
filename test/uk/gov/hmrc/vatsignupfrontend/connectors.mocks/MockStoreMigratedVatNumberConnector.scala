@@ -23,6 +23,7 @@ import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreMigratedVatNumberConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberResponse
+import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
 import scala.concurrent.Future
 
@@ -38,6 +39,16 @@ trait MockStoreMigratedVatNumberConnector extends MockitoSugar with BeforeAndAft
 
   def mockStoreMigratedVatNumber(vatNumber: String)(response: Future[StoreMigratedVatNumberResponse]): Unit =
     when(mockStoreMigratedVatNumberConnector.storeVatNumber(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any[HeaderCarrier]))
+      .thenReturn(response)
+
+  def mockStoreMigratedVatNumber(vatNumber: String,
+                                 registrationDate: String,
+                                 optPostCode: Option[PostCode])(response: Future[StoreMigratedVatNumberResponse]): Unit =
+    when(mockStoreMigratedVatNumberConnector.storeVatNumber(
+      ArgumentMatchers.eq(vatNumber),
+      ArgumentMatchers.eq(registrationDate),
+      ArgumentMatchers.eq(optPostCode)
+    )(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(response)
 
 }
