@@ -24,6 +24,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
@@ -57,7 +58,40 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
       }
+    }
 
+      "the resignUp feature switch is set and user has a MTD-VAT enrolment" should {
+        "redirect to Multiple Vat Check page" in {
+          enable(ReSignUpJourney)
+          mockAuthRetrieveAllVatEnrolments()
+          val result = TestResolveVatNumberController.resolve(testGetRequest)
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
+        }
+    }
+
+    "the resignUp feature switch is set and user has a VAT-DEC enrolment" should {
+      "redirect to Capture VAT number page" in {
+        enable(ReSignUpJourney)
+        mockAuthRetrieveVatDecEnrolment()
+        val result = TestResolveVatNumberController.resolve(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
+      }
+    }
+
+    "the resignUp feature switch is set and the user does not have a VAT-DEC enrolment" should {
+      "redirect to Capture VAT number page" in {
+        enable(ReSignUpJourney)
+        mockAuthRetrieveEmptyEnrolment()
+
+        val result = TestResolveVatNumberController.resolve(testGetRequest)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureVatNumberController.show().url)
+      }
     }
 
     "the user has an agent enrolment" should {
