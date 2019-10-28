@@ -232,6 +232,21 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
           )
         }
       }
+
+      "redirect to business already signed up error page" when {
+        "form value is NO and the vrn is already signed up" in {
+          enable(ReSignUpJourney)
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment, mtdVatEnrolment))
+          stubMigratedVatNumberEligibilitySuccess(testVatNumber)(AlreadySubscribedValue, None, None)
+
+          val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AlreadySignedUpController.show().url)
+          )
+        }
+      }
     }
 
     "the resignup feature switch is off" should {
@@ -331,6 +346,20 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
           res should have(
             httpStatus(SEE_OTHER),
             redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+          )
+        }
+      }
+
+      "redirect to already signed up page" when {
+        "form value is NO" in {
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment, mtdVatEnrolment))
+          stubStoreVatNumberAlreadySignedUp(isFromBta = false)
+
+          val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.AlreadySignedUpController.show().url)
           )
         }
       }

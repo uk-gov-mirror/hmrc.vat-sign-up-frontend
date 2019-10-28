@@ -20,6 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
+import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService.VatNumberOrchestrationServiceSuccess
 
@@ -35,20 +36,14 @@ trait MockVatNumberOrchestrationService extends BeforeAndAfterEach with MockitoS
     reset(mockVatNumberOrchestrationService)
   }
 
-  def mockStoreVatNumber(vatNumber: String,
-                         isFromBta: Boolean
-                        )(returnValue: Future[VatNumberOrchestrationServiceSuccess]): Unit = {
-    when(mockVatNumberOrchestrationService.storeVatNumber(
-      ArgumentMatchers.eq(vatNumber),
+  def mockOrchestrate(enrolments: Enrolments,
+                      optVatNumber: Option[String],
+                      isFromBta: Boolean
+                     )(returnValue: Future[VatNumberOrchestrationServiceSuccess]): Unit = {
+    when(mockVatNumberOrchestrationService.orchestrate(
+      ArgumentMatchers.eq(enrolments),
+      ArgumentMatchers.eq(optVatNumber),
       ArgumentMatchers.eq(isFromBta)
-    )(ArgumentMatchers.any()))
-      .thenReturn(returnValue)
-  }
-
-  def mockCheckVatNumberEligibility(vatNumber: String)
-                                   (returnValue: Future[VatNumberOrchestrationServiceSuccess]): Unit = {
-    when(mockVatNumberOrchestrationService.checkVatNumberEligibility(
-      ArgumentMatchers.eq(vatNumber)
     )(ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }

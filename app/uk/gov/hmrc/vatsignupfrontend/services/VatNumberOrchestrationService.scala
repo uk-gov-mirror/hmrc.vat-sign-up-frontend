@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreMigratedVatNumberConnector
@@ -27,6 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, V
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
+import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,33 +40,44 @@ class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: S
                                               claimSubscriptionService: ClaimSubscriptionService
                                              )(implicit ec: ExecutionContext) extends FeatureSwitching {
 
-  def checkVatNumberEligibility(vatNumber: String)
-                               (implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] = {
+  def orchestrate(enrolments: Enrolments,
+                  optVatNumber: Option[String],
+                  isFromBta: Boolean
+                 )(implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] =
 
     if (isEnabled(ReSignUpJourney))
-      checkMigratedVatNumberEligibility(vatNumber)
-    else
-      checkPreMigrationVatNumberEligibility(vatNumber)
-  }
-
-  def storeVatNumber(vatNumber: String,
-                     isFromBta: Boolean
-                    )(implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] = {
-
-    if (isEnabled(ReSignUpJourney))
-      checkMigratedVatNumberEligibility(vatNumber).flatMap {
-        case Eligible(_, isMigrated) if isMigrated =>
-          storeMigratedVatNumber(vatNumber, isFromBta)
-        case Eligible(_, _) =>
-          storePreMigrationVatNumber(vatNumber, isFromBta)
-        case VatNumberOrchestrationService.AlreadySubscribed =>
-          claimSubscription(vatNumber, isFromBta)
-        case response =>
-          Future.successful(response)
+      enrolments.getAnyVatNumber match {
+        case None =>
+          checkMigratedVatNumberEligibility(optVatNumber.get)
+        case Some(vatNumber) =>
+          checkMigratedVatNumberEligibility(vatNumber).flatMap {
+            case Eligible(_, isMigrated) if isMigrated =>
+              storeMigratedVatNumber(vatNumber, isFromBta)
+            case Eligible(_, _) =>
+              storePreMigrationVatNumber(vatNumber, isFromBta)
+            case VatNumberOrchestrationService.AlreadySubscribed =>
+              enrolments.mtdVatNumber match {
+                case Some(_) =>
+                  Future.successful(VatNumberOrchestrationService.AlreadySubscribed)
+                case None =>
+                  claimSubscription(vatNumber, isFromBta)
+              }
+            case response =>
+              Future.successful(response)
+          }
       }
     else
-      storePreMigrationVatNumber(vatNumber, isFromBta)
-  }
+      enrolments.vatNumber match {
+        case None =>
+          checkPreMigrationVatNumberEligibility(optVatNumber.get)
+        case Some(vatNumber) =>
+          enrolments.mtdVatNumber match {
+            case Some(_) =>
+              Future.successful(VatNumberOrchestrationService.AlreadySubscribed)
+            case None =>
+              storePreMigrationVatNumber(vatNumber, isFromBta)
+          }
+      }
 
   private def checkMigratedVatNumberEligibility(vatNumber: String)(implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] =
     migratedVatNumberEligibilityService.checkVatNumberEligibility(vatNumber).map {
@@ -99,15 +112,15 @@ class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: S
   private def storeMigratedVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] =
     storeMigratedVatNumberConnector.storeVatNumber(vatNumber).map {
       case Right(StoreMigratedVatNumberSuccess) =>
-        VatNumberOrchestrationService.MigratedVatNumberStored
+        VatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
       case Left(StoreMigratedVatNumberFailure(status)) =>
         throw new InternalServerException(s"Failed to store migrated vat number with status: $status")
     }
 
   private def storePreMigrationVatNumber(vatNumber: String, isFromBta: Boolean)(implicit hc: HeaderCarrier): Future[VatNumberOrchestrationServiceSuccess] =
     storeVatNumberService.storeVatNumber(vatNumber, isFromBta).map {
-      case Right(VatNumberStored(isOverseas, isDirectDebit)) =>
-        VatNumberOrchestrationService.NonMigratedVatNumberStored(isOverseas, isDirectDebit)
+      case Right(StoreVatNumberService.VatNumberStored(isOverseas, isDirectDebit)) =>
+        VatNumberOrchestrationService.VatNumberStored(isOverseas, isDirectDebit, isMigrated = false)
       case Right(SubscriptionClaimed) =>
         VatNumberOrchestrationService.ClaimedSubscription
       case Left(IneligibleVatNumber(MigratableDates(None, None))) =>
@@ -137,7 +150,7 @@ object VatNumberOrchestrationService {
 
   sealed trait VatNumberOrchestrationServiceSuccess
 
-  case object MigratedVatNumberStored extends VatNumberOrchestrationServiceSuccess
+  case class VatNumberStored(isOverseas: Boolean, isDirectDebit: Boolean, isMigrated: Boolean) extends VatNumberOrchestrationServiceSuccess
 
   case object Ineligible extends VatNumberOrchestrationServiceSuccess
 
@@ -148,8 +161,6 @@ object VatNumberOrchestrationService {
   case object AlreadyEnrolledOnDifferentCredential extends VatNumberOrchestrationServiceSuccess
 
   case object InvalidVatNumber extends VatNumberOrchestrationServiceSuccess
-
-  case class NonMigratedVatNumberStored(isOverseas: Boolean, isDirectDebit: Boolean) extends VatNumberOrchestrationServiceSuccess
 
   case class Inhibited(migratableDates: MigratableDates) extends VatNumberOrchestrationServiceSuccess
 
