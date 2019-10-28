@@ -59,16 +59,16 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
             enrolments.getAnyVatNumber match {
               case None =>
                 Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
-              case Some(_) =>
+              case Some(vatNumber) =>
                 vatNumberOrchestrationService.orchestrate(enrolments, None, isFromBta = false) map {
                   case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
                     Redirect(routes.OverseasResolverController.resolve())
-                      .addingToSession(SessionKeys.vatNumberKey -> enrolments.getAnyVatNumber.get)
+                      .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                       .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                       .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
                   case VatNumberStored(_, isDirectDebit, isMigrated) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
-                      .addingToSession(SessionKeys.vatNumberKey -> enrolments.getAnyVatNumber.get)
+                      .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                       .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                       .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
                   case ClaimedSubscription =>
