@@ -22,8 +22,11 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstants}
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstants, SessionCookieCrumbler}
+import IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser.StoreAdministrativeDivisionFailureResponse
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -37,10 +40,22 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   "GET /business-type" should {
     "return See Other" when {
+      "the user is overseas" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubStoreOverseasInformation(testVatNumber)(NO_CONTENT)
+
+        val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.businessEntityKey -> Overseas.toString))
+
+        res should have (
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureAgentEmailController.show().url)
+        )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
+      }
       "the session VRN is an Administrative division and feature switch is enabled" in {
         enable(DivisionLookupJourney)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
 
         val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVRN))
 

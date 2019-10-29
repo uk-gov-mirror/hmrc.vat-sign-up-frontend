@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, MigratableDates, Overseas}
+import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityPreMigrationService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -121,6 +121,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
         Redirect(routes.OverseasResolverController.resolve())
           .addingToSession(vatNumberKey -> formVatNumber)
           .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+          .addingToSession(SessionKeys.businessEntityKey -> Overseas.toString)
       case Right(VatNumberStored(_, isDirectDebit)) =>
         Redirect(routes.CaptureBusinessEntityController.show())
           .addingToSession(SessionKeys.vatNumberKey -> formVatNumber)

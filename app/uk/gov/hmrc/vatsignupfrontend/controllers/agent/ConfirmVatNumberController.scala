@@ -17,19 +17,18 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, MigratableDates, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_vat_number
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 
 import scala.concurrent.Future
 
@@ -60,7 +59,9 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
           if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
             storeVatNumberService.storeVatNumberDelegated(vatNumber) map {
               case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
-                Redirect(routes.OverseasResolverController.resolve()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                Redirect(routes.CaptureBusinessEntityController.show())
+                  .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                  .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
               case Right(VatNumberStored(_, isDirectDebit)) =>
                 Redirect(routes.CaptureBusinessEntityController.show()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
               case Left(NoAgentClientRelationship) =>

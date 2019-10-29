@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
-import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models.{No, Overseas, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -62,10 +62,11 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
               case Some(vatNumber) =>
                 vatNumberOrchestrationService.orchestrate(enrolments, None, isFromBta = false) map {
                   case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
-                    Redirect(routes.OverseasResolverController.resolve())
+                    Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                       .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                       .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                      .addingToSession(SessionKeys.businessEntityKey -> Overseas.toString)
                   case VatNumberStored(_, isDirectDebit, isMigrated) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)

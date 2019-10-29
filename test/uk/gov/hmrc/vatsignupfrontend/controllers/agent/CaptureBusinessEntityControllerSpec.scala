@@ -27,15 +27,21 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.StoreOverseasInformationSuccess
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockAdministrativeDivisionLookupService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockStoreOverseasInformationService}
+
+import scala.concurrent.Future
 
 
-class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockAdministrativeDivisionLookupService {
+class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents with MockAdministrativeDivisionLookupService
+  with MockStoreOverseasInformationService {
 
   object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(
     mockControllerComponents,
+    mockStoreOverseasInformationService,
     mockAdministrativeDivisionLookupService
   )
 
@@ -50,7 +56,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthRetrieveAgentEnrolment()
         mockIsAdministrativeDivision(testVatNumber)(true)
 
-        val result = TestCaptureBusinessEntityController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)
         result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Division))
@@ -62,7 +68,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockIsAdministrativeDivision(testVatNumber)(false)
 
 
-      val result = TestCaptureBusinessEntityController.show(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+      val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
@@ -72,13 +78,29 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "No session credentials" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestCaptureBusinessEntityController.show(testGetRequest)
+        val result = TestCaptureBusinessEntityController.show()(testGetRequest)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
       }
     }
-  }
 
+    "redirect to capture agents email page" when {
+      "the business entity is Overseas" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
+
+        val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.businessEntityKey -> Overseas.toString
+        ))
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
+        println(result.session)
+        result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Overseas))
+      }
+    }
+  }
 
   "Calling the submit action of the Capture Business Entity controller" when {
     "form successfully submitted" should {

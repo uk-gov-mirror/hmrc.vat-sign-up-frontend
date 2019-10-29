@@ -28,8 +28,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
 
 import scala.concurrent.Future
@@ -93,18 +93,20 @@ class ConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
         session(result) get SessionKeys.hasDirectDebitKey should contain("false")
+        session(result) get SessionKeys.businessEntityKey shouldNot contain("overseas")
       }
     }
 
     "overseas vat number is in session and store vat is successful" should {
-      "go to the overseas resolver controller" in {
+      "go to the business entity type page" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatNumberDelegated(vatNumber = testVatNumber)(Future.successful(Right(VatNumberStored(isOverseas = true, isDirectDebit = true))))
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.OverseasResolverController.resolve().url)
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
         session(result) get SessionKeys.hasDirectDebitKey should contain("true")
+        session(result) get SessionKeys.businessEntityKey should contain("overseas")
       }
     }
 

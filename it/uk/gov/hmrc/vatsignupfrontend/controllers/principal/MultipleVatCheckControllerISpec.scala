@@ -138,7 +138,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
-      "return a redirect to overseas resolver" when {
+      "return a redirect to business type" when {
         "form value is NO and the VRN is not migrated and is overseas" in {
           enable(ReSignUpJourney)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
@@ -149,7 +149,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.OverseasResolverController.resolve().url)
+            redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
         }
       }
@@ -277,8 +277,8 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
-      "return a redirect to overseas resolver" when {
-        "form value is NO" in {
+      "return a redirect to business type" when {
+        "form value is NO and the VRN is overseas" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
@@ -286,7 +286,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.OverseasResolverController.resolve().url)
+            redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
         }
       }
