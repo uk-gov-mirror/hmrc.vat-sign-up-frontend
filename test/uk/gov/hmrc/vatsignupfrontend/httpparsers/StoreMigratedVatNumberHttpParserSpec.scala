@@ -20,7 +20,7 @@ import org.scalatest.EitherValues
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.{StoreMigratedVatNumberFailure, StoreMigratedVatNumberSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.{KnownFactsMismatch, StoreMigratedVatNumberFailureStatus, StoreMigratedVatNumberSuccess}
 
 class StoreMigratedVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
@@ -36,10 +36,16 @@ class StoreMigratedVatNumberHttpParserSpec extends UnitSpec with EitherValues {
 
       }
 
-      "parse FORBIDDEN response as a store migrated Vat number FailureResponse with the status" in {
+      "parse FORBIDDEN response as a KnownFactsMismatch response" in {
         val httpResponse = HttpResponse(FORBIDDEN)
         val result = StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
-        result shouldBe Left(StoreMigratedVatNumberFailure(FORBIDDEN))
+        result shouldBe Left(KnownFactsMismatch)
+      }
+
+      "parse BAD_REQUEST response as a StoreMigratedVatNumberFailureStatus with status" in {
+        val httpResponse = HttpResponse(BAD_REQUEST)
+        val result = StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
+        result shouldBe Left(StoreMigratedVatNumberFailureStatus(BAD_REQUEST))
       }
     }
   }

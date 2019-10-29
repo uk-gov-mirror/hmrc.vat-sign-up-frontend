@@ -25,15 +25,21 @@ object StoreMigratedVatNumberHttpParser {
 
   implicit object StoreMigratedVatNumberHttpReads extends HttpReads[StoreMigratedVatNumberResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreMigratedVatNumberResponse =
-      response.status match {
+
+    response.status match {
         case OK => Right(StoreMigratedVatNumberSuccess)
-        case status => Left(StoreMigratedVatNumberFailure(status))
+        case FORBIDDEN => Left(KnownFactsMismatch)
+        case status => Left(StoreMigratedVatNumberFailureStatus(status))
       }
   }
 
   case object StoreMigratedVatNumberSuccess
 
-  case class StoreMigratedVatNumberFailure(status: Int)
+  sealed trait StoreMigratedVatNumberFailure
+
+  case object KnownFactsMismatch extends StoreMigratedVatNumberFailure
+
+  case class StoreMigratedVatNumberFailureStatus(status: Int) extends StoreMigratedVatNumberFailure
 
 }
 
