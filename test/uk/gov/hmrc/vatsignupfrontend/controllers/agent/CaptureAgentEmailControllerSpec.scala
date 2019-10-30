@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -31,10 +32,51 @@ class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   object TestCaptureAgentEmailController extends CaptureAgentEmailController(mockControllerComponents)
 
-  val testGetRequest = FakeRequest("GET", "/your-email-address")
+  val uri = "/client/email-address"
+  val testGetRequest = FakeRequest("GET", uri)
 
   def testPostRequest(emailAddress: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/your-email-address").withFormUrlEncodedBody(email -> emailAddress)
+    FakeRequest("POST", uri).withFormUrlEncodedBody(email -> emailAddress)
+
+  "Calling the show action of the Capture Agent Email controller" when {
+    "the isMigrated session flag is true" should {
+      "redirect to CheckYourAnswersFinal" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        val reqWithSession = FakeRequest("POST", uri).withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.isMigratedKey -> true.toString
+        )
+        val result = TestCaptureAgentEmailController.show(reqWithSession)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
+      }
+    }
+    "the isMigrated session flag is false" should {
+      "return OK" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        val reqWithSession = FakeRequest("POST", uri).withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.isMigratedKey -> false.toString
+        )
+        val result = TestCaptureAgentEmailController.show(reqWithSession)
+
+        status(result) shouldBe Status.OK
+      }
+    }
+    "the isMigrated session flag isn't set" should {
+      "redirect to CheckYourAnswersFinal" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        val reqWithSession = FakeRequest("POST", uri).withSession(SessionKeys.vatNumberKey -> testVatNumber)
+        val result = TestCaptureAgentEmailController.show(reqWithSession)
+
+        status(result) shouldBe Status.OK
+      }
+    }
+  }
 
   "Calling the show action of the Capture Agent Email controller without a submitted Email" should {
     "go to the Capture Agent Email page" in {
