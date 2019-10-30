@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_agent_email
@@ -35,13 +36,16 @@ class CaptureAgentEmailController @Inject()(val controllerComponents: Controller
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.transactionEmailKey) match {
-        case None => Future.successful(
-          Ok(capture_agent_email(validateEmailForm.form, routes.CaptureAgentEmailController.submit()))
-        )
-        case Some(_) => Future.successful(
-          Redirect(routes.ConfirmAgentEmailController.show())
-        )
+      val optIsMigrated = request.session.get(SessionKeys.isMigratedKey) map (_.toBoolean)
+      val optTransactionEmail = request.session.get(SessionKeys.transactionEmailKey)
+
+      (optIsMigrated, optTransactionEmail) match {
+        case (Some(isMigrated), _) if isMigrated =>
+          Future.successful(Redirect(routes.CheckYourAnswersFinalController.show()))
+        case (_, None) =>
+          Future.successful(Ok(capture_agent_email(validateEmailForm.form, routes.CaptureAgentEmailController.submit())))
+        case (_, Some(_)) =>
+          Future.successful(Redirect(routes.ConfirmAgentEmailController.show()))
       }
     }
   }
