@@ -231,6 +231,24 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           session(result) get SessionKeys.hasDirectDebitKey should contain("true")
         }
       }
+      "store vat number returned VatNumberStored with direct debits and isOverseas flag set to true" should {
+        "goto business entity controller" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockStoreVatNumberDirectDebitSuccess(
+            vatNumber = testVatNumber,
+            optPostCode = Some(testBusinessPostcode),
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )
+
+          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+          session(result) get SessionKeys.hasDirectDebitKey should contain("true")
+        }
+      }
       "store vat number returned SubscriptionClaimed" when {
         "goto sign up complete controller" in {
           mockAuthRetrieveEmptyEnrolment()

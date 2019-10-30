@@ -25,15 +25,19 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
-import uk.gov.hmrc.vatsignupfrontend.services.AdministrativeDivisionLookupService
+import uk.gov.hmrc.vatsignupfrontend.services.{AdministrativeDivisionLookupService, StoreOverseasInformationService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity
 import play.api.mvc.Results._
+import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.{StoreOverseasInformationFailureResponse, StoreOverseasInformationSuccess}
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 
 import scala.concurrent.Future
 
 @Singleton
 class CaptureBusinessEntityController @Inject()(
                                                  val controllerComponents: ControllerComponents,
+                                                 storeOverseasInformationService: StoreOverseasInformationService,
                                                  administrativeDivisionLookupService: AdministrativeDivisionLookupService
                                                ) extends AuthenticatedController(AdministratorRolePredicate) {
 
@@ -47,17 +51,29 @@ class CaptureBusinessEntityController @Inject()(
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
-          Future.successful(Redirect(routes.DivisionResolverController.resolve())
-            .addingToSession(SessionKeys.businessEntityKey, Division.asInstanceOf[BusinessEntity]))
-        case Some(_) => Future.successful(Ok(
-          capture_business_entity(
-            businessEntityForm = businessEntityForm,
-            postAction = routes.CaptureBusinessEntityController.submit()
+      val entity = request.session.get(SessionKeys.businessEntityKey) flatMap (str => BusinessEntitySessionFormatter.fromString(str))
+      val vatNumber = request.session.get(SessionKeys.vatNumberKey)
+
+
+      (entity, vatNumber) match {
+        case (Some(Overseas), Some(vatNumber)) =>
+          storeOverseasInformationService.storeOverseasInformation(vatNumber) map {
+            case Right(StoreOverseasInformationSuccess) =>
+              Redirect(routes.DirectDebitResolverController.show())
+            case Left(StoreOverseasInformationFailureResponse(status)) =>
+              throw new InternalServerException("store overseas information failed: status=" + status)
+          }
+        case (_, Some(vatNumber)) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
+          Future.successful(
+            Redirect(routes.DivisionResolverController.resolve())
+              .addingToSession(SessionKeys.businessEntityKey, Division.asInstanceOf[BusinessEntity])
           )
-        ))
-        case None => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
+        case (_, Some(_)) =>
+          Future.successful(Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit())))
+        case _ =>
+          Future.successful(
+            Redirect(routes.CaptureVatNumberController.show())
+          )
       }
     }
   }

@@ -27,12 +27,19 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockAdministrativeDivisionLookupService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockStoreOverseasInformationService}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.StoreOverseasInformationSuccess
 
-class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockAdministrativeDivisionLookupService {
+import scala.concurrent.Future
 
-  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockControllerComponents, mockAdministrativeDivisionLookupService)
+class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+  with MockControllerComponents with MockAdministrativeDivisionLookupService
+  with MockStoreOverseasInformationService {
+
+  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(
+    mockControllerComponents,
+    mockStoreOverseasInformationService, mockAdministrativeDivisionLookupService)
 
   lazy val testGetRequest = FakeRequest("GET", "/business-type").withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
@@ -63,6 +70,26 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         charset(result) shouldBe Some("utf-8")
       }
     }
+
+    "the VRN is overseas" should {
+      "redirect to direct debit resolve url" in {
+        mockAuthAdminRole()
+        mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
+
+        implicit lazy val testGetRequest = FakeRequest("GET", "/business-type")
+          .withSession(SessionKeys.vatNumberKey -> testVatNumber)
+          .withSession(SessionKeys.businessEntityKey -> Overseas.toString)
+
+        val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.businessEntityKey -> Overseas.toString
+        ))
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+        result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Overseas))
+      }
+    }
   }
 
   "Calling the submit action of the Capture Business Entity controller" when {
@@ -81,17 +108,17 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
 
       "the business entity is limited company" should {
-          "go to capture company number controller" in {
-            mockAuthAdminRole()
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
+        "go to capture company number controller" in {
+          mockAuthAdminRole()
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
 
-            val result = await(TestCaptureBusinessEntityController.submit(request))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
+          val result = await(TestCaptureBusinessEntityController.submit(request))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
 
-            result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
-          }
+          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
         }
+      }
 
       "the business entity is general partnership" should {
         "go to resolve partnership utr controller" in {
