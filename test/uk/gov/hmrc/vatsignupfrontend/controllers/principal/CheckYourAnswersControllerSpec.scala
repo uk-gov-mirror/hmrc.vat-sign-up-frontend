@@ -32,15 +32,16 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberForUnenrolledService, MockStoreVatNumberService}
 
 import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
-  with MockStoreVatNumberService {
+  with MockStoreVatNumberService
+  with MockStoreVatNumberForUnenrolledService {
 
-  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents, mockStoreVatNumberService)
+  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents, mockStoreVatNumberService, mockStoreVatNumberForUnerolledService)
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -187,6 +188,16 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
           }
+        }
+        "the user is migrated so only has two known facts" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(
+            testGetRequest(optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
+              SessionKeys.isMigratedKey -> "true")
+          )
+
+          status(result) shouldBe Status.OK
         }
       }
     }
@@ -371,6 +382,36 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             await(TestCheckYourAnswersController.submit(testPostRequest()))
           }
 
+        }
+      }
+      "the user is un-enrolled " should {
+        "return a successful response" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockUnenrolledSuccessStoreVatNumber(testVatNumber, testDate.toDesDateFormat, testBusinessPostcode, isFromBta = false)
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true"))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+        }
+
+        "return a un-successful response from trying to store the vat number" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockUnenrolledFailedStoreVatNumber(testVatNumber, testDate.toDesDateFormat, testBusinessPostcode, isFromBta = false)
+
+          intercept[InternalServerException] {
+            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
+          }
+
+        }
+
+        "return a un-successful response from mismatching known facts" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockUnenrolledKnownFactsFailedStoreVatNumber(testVatNumber, testDate.toDesDateFormat, testBusinessPostcode, isFromBta = false)
+
+          intercept[InternalServerException] {
+            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
+          }
         }
       }
     }
