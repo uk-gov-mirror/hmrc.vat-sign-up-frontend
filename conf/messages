@@ -397,6 +397,22 @@ agent.confirmation.subsection_1.bullet_3                               = Use sof
 agent.confirmation.subsection_1.bullet_4                               = Submit your client''s VAT Returns before their deadlines.
 agent.confirmation.subsection_1.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or business tax account.
 
+## Resignup Confirmation page - Agent flow
+agent.resignup.signupcomplete.title                                    = We have received your request to sign up
+agent.resignup.signupcomplete.heading                                  = You have signed up your client to submit VAT Returns using software
+agent.resignup.signupcomplete.vat_registration_number                  = VAT registration number
+agent.resignup.signupcomplete.line                                     = You should advise your client that (where applicable):
+agent.resignup.signupcomplete.subsection.heading                       = What happens next
+agent.resignup.signupcomplete.subsection.bullet_1                      = you''ve signed them up to Making Tax Digital for VAT
+agent.resignup.signupcomplete.subsection.bullet_2                      = they''ll get email alerts to sign into HMRC services to access and read important secure messages
+agent.resignup.signupcomplete.subsection.bullet_3                      = they''ll get an email alert 10 days before Direct Debit payments are taken from their bank account
+agent.resignup.signupcomplete.subsection2.heading                      = What you must do next
+agent.resignup.signupcomplete.subsection2.bullet_1                     = Allow and authorise your software to send VAT Returns to HMRC.
+agent.resignup.signupcomplete.subsection2.bullet_2                     = Use your software to submit your client''s VAT Return.
+agent.resignup.signupcomplete.subsection2.bullet_3                     = If required, help your client to choose compatible software. Advise them to start keeping their income, expenditure and VAT records using this software.
+agent.resignup.signupcomplete.subsection2.bullet_4                     = Where relevant, advise your client to view their VAT Return deadlines. They can do this within their accounting software or by signing into HMRC services (this is also known as a Business tax account).
+agent.resignup.signupcomplete.sign_up_another_button                   = Sign up another client
+agent.resignup.signupcomplete.finish_and_sign_out                      = Finish and sign out
 
 # Check your client's details page
 agent.client-details.summary.title                                     = Confirm your client''s details
