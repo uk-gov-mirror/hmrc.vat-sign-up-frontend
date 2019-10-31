@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -25,29 +26,105 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers,
 
 class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
 
+  val uri = "/client/email-address"
 
+  "GET /email-address" when {
+    "the isMigrated flag is true" when {
+      "the transactionEmail is not in session" should {
+        "redirect to CheckYourAnswersFinal" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-  "GET /email-address" should {
-    "return an OK" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          val res = get(uri, Map(SessionKeys.isMigratedKey -> true.toString))
 
-      val res = get("/client/email-address")
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CheckYourAnswersFinalController.show().url)
+          )
+        }
+      }
+      "the transaction email is in session" should {
+        "redirect to CheckYourAnswersFinal" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      res should have(
-        httpStatus(OK)
-      )
+          val res = get(uri, Map(
+            SessionKeys.isMigratedKey -> true.toString,
+            SessionKeys.transactionEmailKey -> testEmail
+          ))
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CheckYourAnswersFinalController.show().url)
+          )
+        }
+      }
+    }
+    "the isMigrated flag is false" when {
+      "the transaction email is not in session" should {
+        "return an OK" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+          val res = get(uri, Map(SessionKeys.isMigratedKey -> false.toString))
+
+          res should have(
+            httpStatus(OK)
+          )
+        }
+      }
+      "the transaction email is in session" should {
+        "redirect to ConfirmAgentEmail" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+          val res = get(uri, Map(
+            SessionKeys.isMigratedKey -> false.toString,
+            SessionKeys.transactionEmailKey -> testEmail
+          ))
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmAgentEmailController.show().url)
+          )
+        }
+      }
+    }
+    "the isMigrated flag isn't specified" when {
+      "the transaction email is not in session" should {
+        "return an OK" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+          val res = get(uri)
+
+          res should have(
+            httpStatus(OK)
+          )
+        }
+      }
+      "the transaction email is in session" should {
+        "redirect to ConfirmAgentEmail" in {
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+          val res = get(uri, Map(SessionKeys.transactionEmailKey -> testEmail))
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.ConfirmAgentEmailController.show().url)
+          )
+        }
+      }
     }
   }
 
   "GET /email-address-change" should {
-    "return an OK" in {
+    "redirect to CaptureAgentEmailController" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/email-address-change")
 
       res should have(
-        httpStatus(SEE_OTHER)
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CaptureAgentEmailController.show().url)
       )
+
+      SessionCookieCrumbler.getSessionMap(res) get SessionKeys.transactionEmailKey shouldBe None
     }
   }
 
@@ -56,7 +133,7 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       "return a redirect" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = post("/client/email-address")(EmailForm.email -> testEmail)
+        val res = post(uri)(EmailForm.email -> testEmail)
 
         res should have(
           httpStatus(SEE_OTHER),
