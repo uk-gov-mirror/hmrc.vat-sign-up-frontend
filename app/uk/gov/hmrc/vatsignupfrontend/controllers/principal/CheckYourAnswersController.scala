@@ -106,9 +106,10 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
         Redirect(routes.CaptureBusinessEntityController.show())
           .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-          .addingToSession(SessionKeys.businessEntityKey, isOverseas)
+          .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
       case Right(VatNumberStored(_, isDirectDebit)) =>
-        Redirect(routes.CaptureBusinessEntityController.show()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+        Redirect(routes.CaptureBusinessEntityController.show())
+          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
       case Right(SubscriptionClaimed) =>
         Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) =>

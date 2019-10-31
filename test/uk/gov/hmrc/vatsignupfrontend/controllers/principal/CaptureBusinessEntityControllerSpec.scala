@@ -72,7 +72,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     }
 
     "the VRN is overseas" should {
-      "redirect to direct debit resolve url" in {
+      "redirect to direct debit resolver url" in {
         mockAuthAdminRole()
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
 
