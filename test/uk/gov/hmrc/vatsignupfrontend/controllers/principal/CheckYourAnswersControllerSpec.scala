@@ -31,7 +31,10 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
+
+import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
@@ -230,17 +233,23 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "store vat number returned VatNumberStored with direct debits and isOverseas flag set to true" should {
         "goto business entity controller" in {
           mockAuthRetrieveEmptyEnrolment()
-          mockStoreVatNumberOverseasSuccess(
-            vatNumber = testVatNumber,
-            isFromBta = false
-          )
 
-          val result = await(TestCheckYourAnswersController.submit(testPostRequest()
-            .withSession(SessionKeys.businessEntityKey -> Overseas.toString)))
+          mockStoreVatNumber(
+            vatNumber = testVatNumber,
+            optPostCode = None,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )(Future.successful(Right(VatNumberStored(isOverseas = true, isDirectDebit = false))))
+
+          val result = await(TestCheckYourAnswersController.submit(
+            testPostRequest(optBusinessEntity = Some(Overseas.toString))
+          ))
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
-          session(result) get SessionKeys.hasDirectDebitKey should contain("true")
+          session(result) get SessionKeys.hasDirectDebitKey should contain("false")
           session(result) get SessionKeys.businessEntityKey should contain("overseas")
         }
       }
