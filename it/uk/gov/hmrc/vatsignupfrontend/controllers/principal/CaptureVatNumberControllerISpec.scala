@@ -173,7 +173,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.OverseasResolverController.resolve().url)
+                redirectUri(routes.CaptureBusinessEntityController.show().url)
               )
             }
           }
@@ -457,7 +457,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.OverseasResolverController.resolve().url)
+                redirectUri(routes.CaptureBusinessEntityController.show().url)
               )
             }
           }

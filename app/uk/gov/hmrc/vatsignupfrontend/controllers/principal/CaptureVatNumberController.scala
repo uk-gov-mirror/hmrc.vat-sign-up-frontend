@@ -23,20 +23,14 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{MigratableDates, Overseas}
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberService, VatNumberEligibilityPreMigrationService}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm.vatNumberForm
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService
 import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -79,9 +73,10 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                           .addingToSession(isMigratedKey, isMigrated)
                           .removingFromSession(businessEntityKey)
                       case VatNumberStored(isOverseas, isDirectDebit, _) if isOverseas =>
-                        Redirect(routes.OverseasResolverController.resolve())
+                        Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(hasDirectDebitKey, isDirectDebit)
+                          .addingToSession(businessEntityKey -> Overseas.toString)
                       case VatNumberStored(_, isDirectDebit, isMigrated) =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)

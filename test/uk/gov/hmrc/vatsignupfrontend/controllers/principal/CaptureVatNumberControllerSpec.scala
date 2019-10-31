@@ -111,8 +111,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
                   status(result) shouldBe Status.SEE_OTHER
-                  redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
+                  redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
                   session(result) get vatNumberKey should contain(testVatNumber)
+                  session(result) get businessEntityKey should contain(Overseas.toString)
                 }
               }
 
