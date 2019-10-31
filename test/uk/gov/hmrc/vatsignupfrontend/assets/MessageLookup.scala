@@ -693,6 +693,29 @@ object MessageLookup {
 
   }
 
+  object AgentResignupInformationReceived {
+
+    val heading: String = "You have signed up your client to submit VAT Returns using software"
+    val title = "We have received your request to sign up" + ServiceName.agentSuffix
+    val vatNumber = "VAT registration number"
+
+    object Section {
+      val line = "You should advise your client that (where applicable):"
+
+      val heading = "What happens next"
+      val bullet1 = "you've signed them up to Making Tax Digital for VAT"
+      val bullet2 = "they'll get email alerts to sign into HMRC services to access and read important secure messages"
+      val bullet3 = "they'll get an email alert 10 days before Direct Debit payments are taken from their bank account"
+      val s2bullet1 = "Allow and authorise your software to send VAT Returns to HMRC."
+      val s2bullet2 = "Use your software to submit your client's VAT Return."
+      val s2bullet3 = "If required, help your client to choose compatible software. Advise them to start keeping their income, expenditure and VAT records using this software."
+      val s2bullet4 = "Where relevant, advise your client to view their VAT Return deadlines. They can do this within their accounting software or by signing into HMRC services (this is also known as a Business tax account)"
+    }
+
+      val buttonText = "Sign up another client"
+
+  }
+
   object PrincipalAlreadySignedUp {
     val heading: String = "You have already signed up"
     val title = heading + ServiceName.principalSuffix

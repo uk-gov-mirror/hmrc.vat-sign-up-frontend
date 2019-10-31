@@ -401,6 +401,23 @@ agent.confirmation.subsection_1.bullet_3                               = Defnydd
 agent.confirmation.subsection_1.bullet_4                               = Cyflwyno Ffurflenni TAW eich cleient cyn ei ddyddiadau cau.
 agent.confirmation.subsection_1.line_2                                 = Gall eich cleient fwrw golwg dros ddyddiadau cau ei Ffurflen TAW yn ei feddalwedd cyfrifyddu neu ei gyfrif treth busnes.
 
+## Resignup Confirmation page - Agent flow
+agent.resignup.signupcomplete.title                                    = Rydych wedi cofrestru''ch cleient i gyflwyno''ch Ffurflenni TAW gan ddefnyddio meddalwedd
+agent.resignup.signupcomplete.heading                                  = Rydych wedi cofrestru''ch cleient i gyflwyno''ch Ffurflenni TAW gan ddefnyddio meddalwedd
+agent.resignup.signupcomplete.vat_registration_number                  = Rhif cofrestru TAW
+agent.resignup.signupcomplete.line                                     = Dylech gynghori''ch cleient (lle bo hynny''n berthnasol):
+agent.resignup.signupcomplete.subsection.heading                       = Yr hyn sy''n digwydd nesaf
+agent.resignup.signupcomplete.subsection.bullet_1                      = eich bod wedi ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW
+agent.resignup.signupcomplete.subsection.bullet_2                      = y bydd yn cael e-byst hysbysu i fewngofnodi i wasanaethau CThEM er mwyn cyrchu a darllen negeseuon diogel pwysig
+agent.resignup.signupcomplete.subsection.bullet_3                      = y bydd yn cael e-byst hysbysu 10 diwrnod cyn i daliadau Debyd Uniongyrchol cael eu cymryd o''r cyfrif banc
+agent.resignup.signupcomplete.subsection2.heading                      = Yr hyn sydd yn rhaid i chi ei wneud nesaf
+agent.resignup.signupcomplete.subsection2.bullet_1                     = Ewch ati i ganiatáu i''ch meddalwedd gyflwyno Ffurflenni TAW i CThEM ac i awdurdodi hynny.
+agent.resignup.signupcomplete.subsection2.bullet_2                     = Defnyddiwch eich meddalwedd er mwyn cyflwyno Ffurflenni TAW eich cleient.
+agent.resignup.signupcomplete.subsection2.bullet_3                     = Os oes angen, helpwch eich cleient i ddewis meddalwedd sy''n cydweddu. Cynghorwch ef i ddechrau cadw ei gofnodion TAW a chofnodion o''i incwm a''i wariant drwy ddefnyddio''r feddalwedd hon.
+agent.resignup.signupcomplete.subsection2.bullet_4                     = Pan fo''n berthnasol, cynghorwch eich cleient i fwrw golwg dros ddyddiadau cau ei Ffurflenni TAW. Gall eich cleient wneud hyn o fewn ei feddalwedd cyfrifyddu neu drwy fewngofnodi i wasanaethau CThEM (hefyd gelwir hyn yn gyfrif treth busnes).
+agent.resignup.signupcomplete.sign_up_another_button                   = Cofrestru cleient arall
+agent.resignup.signupcomplete.finish_and_sign_out                      = Gorffen ac allgofnodi
+
 # Check your client's details page
 agent.client-details.summary.title                                     = Cadarnhau manylion eich cleient
 agent.client-details.summary.heading                                   = Cadarnhau manylion eich cleient
@@ -627,6 +644,19 @@ principal.confirmation.subsection.bullet_2                             = Dechreu
 principal.confirmation.subsection.bullet_3                             = Ewch ati i ganiatáu i''ch meddalwedd gysylltu â CThEM ac i awdurdodi hynny.
 principal.confirmation.subsection.bullet_4                             = Defnyddiwch y feddalwedd hon i gyflwyno''ch Ffurflenni TAW i CThEM yn unig.
 principal.confirmation.subsection.bullet_5                             = Rheolwch a diweddarwch eich holl fanylion busnes drwy fewngofnodi i Wasanaethau CThEM (yr enw arall ar hyn yw''r Cyfrif Treth Busnes).
+
+## Resignup Confirmation page
+principal.resignup.confirmation.title                                  = Rydych wedi cofrestru i gyflwyno''ch Ffurflenni TAW gan ddefnyddio meddalwedd
+principal.resignup.confirmation.heading                                = Rydych wedi cofrestru i gyflwyno''ch Ffurflenni TAW gan ddefnyddio meddalwedd
+principal.resignup.confirmation.vat_registration_number                = Rhif cofrestru TAW
+principal.resignup.confirmation.line                                   = Peidiwch â chyflwyno Ffurflen TAW hyd nes eich bod wedi gosod eich meddalwedd.
+principal.resignup.confirmation.subsection.heading                     = Yr hyn sy''n digwydd nesaf
+principal.resignup.confirmation.subsection.bullet_1                    = Rhowch y gorau i ddefnyddio gwasanaethau TAW ar-lein. Peidiwch â defnyddio''ch hen ffordd o anfon eich Ffurflen TAW i CThEM.
+principal.resignup.confirmation.subsection.bullet_2                    = Dechreuwch ddefnyddio''ch meddalwedd sy''n cydweddu er mwyn cadw cofnodion o''ch gwerthiannau a phryniannau busnes, a elwir hefyd yn incwm a gwariant.
+principal.resignup.confirmation.subsection.bullet_3                    = Ewch ati i ganiatáu i''ch meddalwedd gysylltu â CThEM ac i awdurdodi hynny.
+principal.resignup.confirmation.subsection.bullet_4                    = Defnyddiwch y feddalwedd hon i gyflwyno''ch Ffurflenni TAW i CThEM.
+principal.resignup.confirmation.subsection.bullet_5                    = Ewch ati i reoli a diweddaru''ch holl fanylion busnes drwy fewngofnodi i Wasanaethau CThEM (yr enw arall am hyn yw''ch cyfrif treth busnes).
+principal.resignup.confirmation.view_account_button                    = Bwrw golwg dros eich cyfrif TAW
 
 ## Capture Company Number page
 principal.capture_company_number.title                                 = Beth yw rhif cofrestru''ch cwmni?
