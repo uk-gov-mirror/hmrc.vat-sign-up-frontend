@@ -24,8 +24,6 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
-import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -33,6 +31,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberService
 
 import scala.concurrent.Future
@@ -229,6 +228,29 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
           session(result) get SessionKeys.hasDirectDebitKey should contain("true")
+        }
+      }
+      "store vat number returned VatNumberStored with direct debits and isOverseas flag set to true" should {
+        "goto business entity controller" in {
+          mockAuthRetrieveEmptyEnrolment()
+
+          mockStoreVatNumber(
+            vatNumber = testVatNumber,
+            optPostCode = None,
+            registrationDate = testDate,
+            optBox5Figure = Some(testBox5Figure),
+            optLastReturnMonth = Some(testLastReturnMonthPeriod),
+            isFromBta = false
+          )(Future.successful(Right(VatNumberStored(isOverseas = true, isDirectDebit = false))))
+
+          val result = await(TestCheckYourAnswersController.submit(
+            testPostRequest(optBusinessEntity = Some(Overseas.toString))
+          ))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+          session(result) get SessionKeys.hasDirectDebitKey should contain("false")
+          session(result) get SessionKeys.businessEntityKey should contain("overseas")
         }
       }
       "store vat number returned SubscriptionClaimed" when {

@@ -73,13 +73,13 @@ trait MockStoreVatNumberService extends BeforeAndAfterEach with MockitoSugar {
   def mockStoreVatNumberIneligible(vatNumber: String, isFromBta: Boolean, migratableDates: MigratableDates): Unit =
     mockStoreVatNumber(vatNumber, isFromBta)(Future.successful(Left(IneligibleVatNumber(migratableDates))))
 
-  private def mockStoreVatNumber(vatNumber: String,
-                                 optPostCode: Option[PostCode],
-                                 registrationDate: DateModel,
-                                 optBox5Figure: Option[String],
-                                 optLastReturnMonth: Option[String],
-                                 isFromBta: Boolean
-                                )(returnValue: Future[StoreVatNumberWithKnownFactsResponse]): Unit =
+  def mockStoreVatNumber(vatNumber: String,
+                         optPostCode: Option[PostCode],
+                         registrationDate: DateModel,
+                         optBox5Figure: Option[String],
+                         optLastReturnMonth: Option[String],
+                         isFromBta: Boolean
+                        )(returnValue: Future[StoreVatNumberWithKnownFactsResponse]): Unit =
     when(mockStoreVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(optPostCode),

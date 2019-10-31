@@ -24,11 +24,11 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub.stubStoreOverseasInformation
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas}
 
 class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -53,7 +53,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
   }
 
   "POST /check-your-answers" when {
-    "store vat is successful" should {
+    "store vat is successful when not overseas " should {
       "redirect to business entity" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberSuccess(
@@ -79,6 +79,39 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           httpStatus(SEE_OTHER),
           redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
+      }
+    }
+    "store vat is successful with an overseas VRN" should {
+      "redirect to business entity" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberSuccess(
+          None,
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
+        )
+        stubStoreOverseasInformation(testVatNumber)(NO_CONTENT)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
+            SessionKeys.businessEntityKey -> Overseas.toString
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
+        )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
+
       }
     }
     "the VAT subscription has been claimed" should {
@@ -109,6 +142,9 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           httpStatus(SEE_OTHER),
           redirectUri(routes.SignUpCompleteClientController.show().url)
         )
+
+        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) shouldNot contain(Overseas.toString)
+
       }
     }
     "the VAT subscription has been claimed on another cred" should {

@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreOverseasInformationService, StoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers
@@ -104,9 +104,12 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       isFromBta = isFromBta
     ) map {
       case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
-        Redirect(routes.OverseasResolverController.resolve()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+        Redirect(routes.CaptureBusinessEntityController.show())
+          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+          .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
       case Right(VatNumberStored(_, isDirectDebit)) =>
-        Redirect(routes.CaptureBusinessEntityController.show()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+        Redirect(routes.CaptureBusinessEntityController.show())
+          .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
       case Right(SubscriptionClaimed) =>
         Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) =>

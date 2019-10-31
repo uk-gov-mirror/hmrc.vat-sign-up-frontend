@@ -55,7 +55,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
-    "redirect to the overseas resolver controller" when {
+    "redirect to the capture client business entity page" when {
       "the overseas vat number is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
@@ -64,7 +64,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.OverseasResolverController.resolve().url)
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
     }

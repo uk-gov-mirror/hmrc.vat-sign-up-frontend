@@ -92,7 +92,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             session(result) get SessionKeys.isMigratedKey should contain("false")
           }
         }
-        "the migrated VAT number is stored successfully" should {
+        "the migrated VAT number is stored successfully and the Business Entity is not overseas" should {
           "go to business-type" in {
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
@@ -107,10 +107,11 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
             session(result) get SessionKeys.hasDirectDebitKey should contain("false")
             session(result) get SessionKeys.isMigratedKey should contain("true")
+            session(result) get SessionKeys.businessEntityKey shouldNot contain("overseas")
           }
         }
-        "the non migrated VAT number is stored successfully and the BE is Overseas" should {
-          "go to overseas resolver" in {
+        "the non migrated VAT number is stored successfully and the Business Entity is Overseas" should {
+          "go to business-type" in {
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
@@ -120,10 +121,11 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
+            redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
             session(result) get SessionKeys.vatNumberKey should contain(testVatNumber)
             session(result) get SessionKeys.hasDirectDebitKey should contain("false")
             session(result) get SessionKeys.isMigratedKey should contain("false")
+            session(result) get SessionKeys.businessEntityKey should contain("overseas")
           }
         }
         "the non migrated VAT number is stored successfully and the user has Direct Debits" should {

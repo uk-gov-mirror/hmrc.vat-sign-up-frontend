@@ -31,7 +31,6 @@ import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -74,9 +73,10 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                           .addingToSession(isMigratedKey, isMigrated)
                           .removingFromSession(businessEntityKey)
                       case VatNumberStored(isOverseas, isDirectDebit, _) if isOverseas =>
-                        Redirect(routes.OverseasResolverController.resolve())
+                        Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(hasDirectDebitKey, isDirectDebit)
+                          .addingToSession(businessEntityKey -> Overseas.toString)
                       case VatNumberStored(_, isDirectDebit, isMigrated) =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
@@ -114,6 +114,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                 Future.successful(Redirect(routes.InvalidVatNumberController.show()))
               }
             }
+
           )
       }
   }
