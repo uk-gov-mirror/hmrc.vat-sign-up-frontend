@@ -21,11 +21,10 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstants, SessionCookieCrumbler}
-import IntegrationTestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser.StoreAdministrativeDivisionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 
 
@@ -52,6 +51,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
+
       }
       "the session VRN is an Administrative division and feature switch is enabled" in {
         enable(DivisionLookupJourney)

@@ -23,7 +23,9 @@ import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testVatNumber
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub.stubStoreOverseasInformation
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.models.{Overseas, SoleTrader}
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
   val administrativeDivisionVatNumber1 = "000000000"
@@ -32,6 +34,21 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
   override val config: Map[String, String] = super.config + ("administrative-divisions" -> s"$administrativeDivisionVatNumber1,$administrativeDivisionVatNumber2)")
 
+  "there is an oveaseas VRN" should {
+    "return a redirect to capture vat number" in {
+      stubAuth(OK, successfulAuthResponse())
+      stubStoreOverseasInformation(testVatNumber)(NO_CONTENT)
+
+      val res = get("/business-type", Map(SessionKeys.vatNumberKey -> testVatNumber, SessionKeys.businessEntityKey -> Overseas.toString))
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.DirectDebitResolverController.show().url)
+      )
+
+      SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
+
+    }
 
     "there is no VRN in session" should {
       "return a redirect to capture vat number" in {
@@ -71,6 +88,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         )
       }
     }
+  }
 
 
   "POST /business-type" when {
