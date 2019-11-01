@@ -23,14 +23,24 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 object StoreMigratedVatNumberHttpParser {
   type StoreMigratedVatNumberResponse = Either[StoreMigratedVatNumberFailure, StoreMigratedVatNumberSuccess.type]
 
-  implicit object StoreMigratedVatNumberHttpReads extends HttpReads[StoreMigratedVatNumberResponse] {
-    override def read(method: String, url: String, response: HttpResponse): StoreMigratedVatNumberResponse =
+  val NoRelationshipCode = "RELATIONSHIP_NOT_FOUND"
 
-    response.status match {
-        case OK => Right(StoreMigratedVatNumberSuccess)
-        case FORBIDDEN => Left(KnownFactsMismatch)
-        case status => Left(StoreMigratedVatNumberFailureStatus(status))
+  implicit object StoreMigratedVatNumberHttpReads extends HttpReads[StoreMigratedVatNumberResponse] {
+    override def read(method: String, url: String, response: HttpResponse): StoreMigratedVatNumberResponse = {
+
+      def responseCode: Option[String] = (response.json \ "CODE").asOpt[String]
+
+      response.status match {
+        case OK =>
+          Right(StoreMigratedVatNumberSuccess)
+        case FORBIDDEN if responseCode contains NoRelationshipCode =>
+          Left(NoAgentClientRelationship)
+        case FORBIDDEN =>
+          Left(KnownFactsMismatch)
+        case status =>
+          Left(StoreMigratedVatNumberFailureStatus(status))
       }
+    }
   }
 
   case object StoreMigratedVatNumberSuccess
@@ -38,6 +48,8 @@ object StoreMigratedVatNumberHttpParser {
   sealed trait StoreMigratedVatNumberFailure
 
   case object KnownFactsMismatch extends StoreMigratedVatNumberFailure
+
+  case object NoAgentClientRelationship extends StoreMigratedVatNumberFailure
 
   case class StoreMigratedVatNumberFailureStatus(status: Int) extends StoreMigratedVatNumberFailure
 
