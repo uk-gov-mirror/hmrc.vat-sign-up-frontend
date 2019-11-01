@@ -47,7 +47,7 @@ class StoreMigratedVatNumberHttpParserSpec extends UnitSpec with EitherValues {
         }
       }
       "the status is FORBIDDEN and the response code is RELATIONSHIP_NOT_FOUND" should {
-        "return KnownFactsMismatch" in {
+        "return RelationShipNotFound" in {
           val httpResponse = HttpResponse(FORBIDDEN, Some(Json.obj(CodeKey -> relationshipNotFound)))
           val result = StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberHttpReads.read(testHttpVerb, testUri, httpResponse)
           result shouldBe Left(NoAgentClientRelationship)
