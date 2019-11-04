@@ -42,7 +42,6 @@ class SendYourApplicationControllerISpec extends ComponentSpecBase with CustomMa
     "Submission is successful" should {
       "Submit successfully and redirect to information received" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        enable(ReSignUpJourney)
         stubMigratedSubmissionSuccess()
 
         val res = post("/about-to-submit", cookies = Map(
@@ -58,7 +57,6 @@ class SendYourApplicationControllerISpec extends ComponentSpecBase with CustomMa
       "Submission is unsuccessful" should {
         "return INTERNAL_SERVER_ERROR" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          enable(ReSignUpJourney)
           stubMigratedSubmissionFailure()
 
           val res = post("/about-to-submit", cookies = Map(
@@ -74,7 +72,6 @@ class SendYourApplicationControllerISpec extends ComponentSpecBase with CustomMa
       "Submission is unsuccessful when no VRN" should {
         "redirect to ResolveVatNumberController" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          enable(ReSignUpJourney)
           stubMigratedSubmissionFailure()
 
           val res = post("/about-to-submit")()

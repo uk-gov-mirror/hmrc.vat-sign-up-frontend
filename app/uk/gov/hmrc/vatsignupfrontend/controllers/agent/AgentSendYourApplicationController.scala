@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.services.MigratedSubmissionService
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.send_your_application
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.send_your_application
 
 import scala.concurrent.Future
 
 @Singleton
-class SendYourApplicationController @Inject()(val controllerComponents: ControllerComponents, val migratedSubmissionService: MigratedSubmissionService)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+class AgentSendYourApplicationController @Inject()(val controllerComponents: ControllerComponents, val migratedSubmissionService: MigratedSubmissionService)
+  extends AuthenticatedController(AgentEnrolmentPredicate){
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      Future.successful(Ok(send_your_application(routes.SendYourApplicationController.submit())))
+      Future.successful(Ok(send_your_application(routes.AgentSendYourApplicationController.submit())))
     }
   }
 
@@ -46,8 +46,10 @@ class SendYourApplicationController @Inject()(val controllerComponents: Controll
           case  Right(_) => Redirect(resignup.routes.SignUpCompleteController.show())
           case  Left(SubmissionFailureResponse(status)) =>  throw new InternalServerException(s"Submission failed, backend returned: $status")
         }
-        case None => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+        case None => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
       }
+
+
     }
   }
 

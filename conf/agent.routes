@@ -111,6 +111,9 @@ POST        /terms-of-participation                             uk.gov.hmrc.vats
 #Confirmation
 GET         /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmationController.show
 
+# Sign Up Complete
+GET         /sign-up-complete                                   uk.gov.hmrc.vatsignupfrontend.controllers.agent.resignup.SignUpCompleteController.show
+
 #Sign Up Another Client
 POST        /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.SignUpAnotherClientController.submit
 
@@ -196,3 +199,7 @@ POST        /check-your-answers-final                           uk.gov.hmrc.vats
 #Routes for timeout
 GET         /keep-alive                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.SessionTimeoutController.keepAlive
 GET         /timeout                                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.SessionTimeoutController.timeout
+
+# Migrated User about to Send Application
+GET         /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentSendYourApplicationController.show
+POST        /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentSendYourApplicationController.submit
