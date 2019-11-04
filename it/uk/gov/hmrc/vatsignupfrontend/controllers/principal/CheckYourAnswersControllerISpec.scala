@@ -290,6 +290,91 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
+
+    "handle attempting to store a Unenrolled migrated vat number" should {
+      "throw an error if the known facts mismatch" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberKnownFactsMismatchMigrated(
+          Some(testBusinessPostCode),
+          testDate,
+          Some(testBox5Figure),
+          Some(testLastReturnMonth),
+          isFromBta = false
+        )
+
+
+        val res = await(post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
+            SessionKeys.isMigratedKey -> "true"
+          )
+        )())
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+
+      }
+
+      "throw an error when a failure to store the vat number occurs" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreMigratedVatnumberKF(
+          testVatNumber,
+          testDate.toOutputDateFormat,
+          testBusinessPostCode
+        )(INTERNAL_SERVER_ERROR)
+
+        val res = await(post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
+            SessionKeys.isMigratedKey -> "true"
+          )
+        )())
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+
+      }
+
+      "redirect to business entity when a vat number is successfully stored" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreMigratedVatnumberKF(
+          testVatNumber,
+          testDate.toDesDateFormat,
+          testBusinessPostCode
+        )(OK)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+            SessionKeys.box5FigureKey -> testBox5Figure,
+            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
+            SessionKeys.isMigratedKey -> "true"
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
+        )
+      }
+
+    }
   }
 
 }

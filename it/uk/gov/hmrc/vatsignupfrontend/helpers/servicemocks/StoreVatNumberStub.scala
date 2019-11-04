@@ -35,6 +35,12 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status)
   }
 
+  def stubStoreMigratedVatnumberKF(vatNumber: String, registrationDate: String, postcode: PostCode)(status: Int): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/migrated-vat-number",
+      Json.obj("vatNumber" -> vatNumber, "registrationDate" -> registrationDate, "postCode" -> postcode.sanitisedPostCode))
+      .thenReturn(status)
+  }
+
   def stubStoreVatNumberSuccess(isFromBta: Boolean, isOverseasTrader: Boolean = false, isDirectDebit: Boolean = false): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", requestJson(isFromBta))
       .thenReturn(status = OK,
@@ -127,6 +133,17 @@ object StoreVatNumberStub extends WireMockMethods {
                                            isFromBta: Boolean
                                           ): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/vat-number", body =
+      requestJson(optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta))
+      .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> KnownFactsMismatchCode))
+  }
+
+  def stubStoreVatNumberKnownFactsMismatchMigrated(optPostCode: Option[PostCode],
+                                           registrationDate: DateModel,
+                                           optBox5Figure: Option[String],
+                                           optLastReturnMonth: Option[String],
+                                           isFromBta: Boolean
+                                          ): Unit = {
+    when(method = POST, uri = "/vat-sign-up/subscription-request/migrated-vat-number", body =
       requestJson(optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta))
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> KnownFactsMismatchCode))
   }
