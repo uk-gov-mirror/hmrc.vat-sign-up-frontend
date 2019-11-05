@@ -35,7 +35,7 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
     authorised()(Retrievals.allEnrolments) {
 
       enrolments =>
-        if (isEnabled(ReSignUpJourney) && enrolments.getAnyVatNumber.isDefined || enrolments.vatNumber.isDefined)
+        if (enrolments.getAnyVatNumber.isDefined)
           Future.successful(Redirect(routes.MultipleVatCheckController.show()))
          else
           Future.successful(Redirect(routes.CaptureVatNumberController.show()))

@@ -68,7 +68,7 @@ class VatNumberOrchestrationService @Inject()(storeMigratedVatNumberConnector: S
           }
       }
     else
-      enrolments.vatNumber match {
+      enrolments.getAnyVatNumber match {
         case None =>
           checkPreMigrationVatNumberEligibility(optVatNumber.get)
         case Some(vatNumber) =>

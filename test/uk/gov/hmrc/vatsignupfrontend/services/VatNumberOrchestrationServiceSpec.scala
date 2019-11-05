@@ -335,7 +335,20 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
           }
         }
 
-        "the vat number is already signed up" should {
+        "the user has MTD VAT enrolment and the vat number is already signed up" should {
+          "return AlreadySubscribed" in {
+            enable(ReSignUpJourney)
+            mockVatNumberEligibility(testVatNumber)(Future.successful(
+              Right(AlreadySubscribed)
+            ))
+
+            val res = TestService.orchestrate(enrolments = Enrolments(Set(testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
+
+            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+          }
+        }
+
+        "the user has multiple enrolments and the vat number is already signed up" should {
           "return AlreadySubscribed" in {
             enable(ReSignUpJourney)
             mockVatNumberEligibility(testVatNumber)(Future.successful(
@@ -411,9 +424,17 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
           }
         }
 
-        "the vat number is already signed up" should {
+        "the user has multiple enrolments and the vat number is already signed up" should {
           "return AlreadySubscribed" in {
             val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
+
+            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+          }
+        }
+
+        "the user has MTD-VAT enrolment and the vat number is already signed up" should {
+          "return AlreadySubscribed" in {
+            val res = TestService.orchestrate(enrolments = Enrolments(Set(testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
 
             await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
           }
