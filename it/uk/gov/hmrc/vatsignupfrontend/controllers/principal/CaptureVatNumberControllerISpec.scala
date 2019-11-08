@@ -53,6 +53,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "the enrolment vat number matches the inserted one" should {
             "redirect to the business entity type page" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberEligibilitySuccess(testVatNumber)
               stubStoreVatNumberSuccess(isFromBta = false)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
@@ -96,6 +97,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the Cannot Use Service page" when {
             "the vat number is ineligible for mtd vat" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberIneligibleForMtd(testVatNumber)
               stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
@@ -110,7 +112,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the sign up after this date page" when {
             "the vat number is ineligible for mtd vat and one date is available" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(Some(testStartDate)))
+              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -124,7 +126,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the sign up between these dates page" when {
             "the vat number is ineligible for mtd vat and two dates are available" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
+              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -138,6 +140,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the migration in progress error page" when {
             "the vat number is already signed up and migrating" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberEligibilitySuccess(testVatNumber)
               stubStoreVatNumberMigrationInProgress(isFromBta = false)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
@@ -152,6 +155,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the business already signed up error page" when {
             "the vat number is already signed up and a user is attempting to claim subscription" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberEligibilitySuccess(testVatNumber)
               stubStoreVatNumberAlreadySignedUp(isFromBta = false)
               stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
 
@@ -167,6 +171,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           "redirect to the capture business entity controller" when {
             "the vat number is overseas" in {
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberEligibilityOverseas(testVatNumber)
               stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
@@ -568,6 +573,21 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse())
               stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+              )
+            }
+          }
+
+          "the vat number is AlreadySubscribed" should {
+            "redirect to the Vat Registration Date" in {
+              enable(ReSignUpJourney)
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 

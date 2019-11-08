@@ -31,17 +31,19 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService.KnownFactsMismatch
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreVatNumberForUnenrolledService, MockStoreVatNumberService}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreMigratedVatNumberService, MockStoreVatNumberService}
 
 import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
   with MockStoreVatNumberService
-  with MockStoreVatNumberForUnenrolledService {
+  with MockStoreMigratedVatNumberService {
 
-  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents, mockStoreVatNumberService, mockStoreVatNumberForUnerolledService)
+  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents, mockStoreVatNumberService, mockStoreMigratedVatNumberService)
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -387,7 +389,17 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "the user is un-enrolled " should {
         "return a successful response" in {
           mockAuthRetrieveEmptyEnrolment()
-          mockUnenrolledSuccessStoreVatNumber(testVatNumber, testDate.toDesDateFormat, testBusinessPostcode, isFromBta = false)
+          mockStoreMigratedVatNumber(
+            testVatNumber,
+            Some(testDate.toDesDateFormat),
+            Some(testBusinessPostcode)
+          )(Future.successful(
+            StoreVatNumberOrchestrationService.VatNumberStored(
+              isOverseas = false,
+              isDirectDebit = false,
+              isMigrated = true
+            )
+          ))
 
           val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true"))
 
@@ -395,9 +407,13 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
         }
 
-        "return a un-successful response from trying to store the vat number" in {
+        "throw an exception when store vat number failed" in {
           mockAuthRetrieveEmptyEnrolment()
-          mockUnenrolledFailedStoreVatNumber(testVatNumber, testDate.toDesDateFormat, testBusinessPostcode, isFromBta = false)
+          mockStoreMigratedVatNumber(
+            testVatNumber,
+            Some(testDate.toDesDateFormat),
+            Some(testBusinessPostcode)
+          )(Future.failed(new InternalServerException("")))
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
@@ -407,7 +423,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "return a un-successful response from mismatching known facts" in {
           mockAuthRetrieveEmptyEnrolment()
-          mockUnenrolledKnownFactsFailedStoreVatNumber(testVatNumber, testDate.toDesDateFormat, testBusinessPostcode, isFromBta = false)
+          mockStoreMigratedVatNumber(testVatNumber, Some(testDate.toDesDateFormat), Some(testBusinessPostcode))(Future.successful(KnownFactsMismatch))
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))

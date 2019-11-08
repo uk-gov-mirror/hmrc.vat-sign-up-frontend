@@ -16,10 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import java.time.LocalDate
 
 import play.api.http.Status._
-import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm
@@ -28,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
@@ -279,6 +278,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "return a redirect to business type" when {
         "form value is NO" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubVatNumberEligibilitySuccess(testVatNumber)
           stubStoreVatNumberSuccess(isFromBta = false)
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
@@ -293,6 +293,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "return a redirect to business type" when {
         "form value is NO and the VRN is overseas" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubVatNumberEligibilityOverseas(testVatNumber)
           stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
@@ -307,8 +308,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "return a redirect to migratable dates page" when {
         "form value is NO" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubStoreVatNumberIneligible(isFromBta = false,
-            migratableDates = MigratableDates(Some(LocalDate.now())))
+          stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
 
@@ -322,8 +322,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "return a redirect to cannot use service error page" when {
         "form value is NO" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubStoreVatNumberIneligible(isFromBta = false,
-            migratableDates = MigratableDates())
+          stubVatNumberIneligibleForMtd(testVatNumber)
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
 
@@ -337,6 +336,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to migration in progress error page" when {
         "form value is NO" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubVatNumberEligibilitySuccess(testVatNumber)
           stubStoreVatNumberMigrationInProgress(isFromBta = false)
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
@@ -351,6 +351,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to business already signed up error page" when {
         "form value is NO" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubVatNumberEligibilitySuccess(testVatNumber)
           stubStoreVatNumberAlreadySignedUp(isFromBta = false)
           stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
 
@@ -366,6 +367,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
       "redirect to already signed up page" when {
         "form value is NO" in {
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment, mtdVatEnrolment))
+          stubVatNumberEligibilitySuccess(testVatNumber)
           stubStoreVatNumberAlreadySignedUp(isFromBta = false)
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)

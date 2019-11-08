@@ -35,8 +35,8 @@ import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas, Yes}
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberOrchestrationService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,7 +45,7 @@ import scala.concurrent.Future
 class CaptureVatNumberControllerSpec extends UnitSpec
   with GuiceOneAppPerSuite
   with MockControllerComponents
-  with MockVatNumberOrchestrationService
+  with MockStoreVatNumberOrchestrationService
   with BeforeAndAfterEach
   with FeatureSwitching {
 
@@ -55,7 +55,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
   object TestCaptureVatNumberController extends CaptureVatNumberController(
     mockControllerComponents,
-    mockVatNumberOrchestrationService
+    mockStoreVatNumberOrchestrationService
   )
 
   lazy val testGetRequest = FakeRequest("GET", "/vat-number")
@@ -87,8 +87,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   mockAuthRetrieveVatDecEnrolment()
                   mockOrchestrate(
                     enrolments = Enrolments(Set(testVatDecEnrolment)),
-                    optVatNumber = Some(testVatNumber),
-                    isFromBta = false
+                    vatNumber = testVatNumber
                   )(Future.successful(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false)))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
@@ -104,8 +103,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   mockAuthRetrieveVatDecEnrolment()
                   mockOrchestrate(
                     enrolments = Enrolments(Set(testVatDecEnrolment)),
-                    optVatNumber = Some(testVatNumber),
-                    isFromBta = false
+                    vatNumber = testVatNumber
                   )(Future.successful(VatNumberStored(isOverseas = true, isDirectDebit = false, isMigrated = false)))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
@@ -122,8 +120,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   mockAuthRetrieveVatDecEnrolment()
                   mockOrchestrate(
                     enrolments = Enrolments(Set(testVatDecEnrolment)),
-                    optVatNumber = Some(testVatNumber),
-                    isFromBta = false
+                    vatNumber = testVatNumber
                   )(Future.successful(MigrationInProgress))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
@@ -138,9 +135,8 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   mockAuthRetrieveVatDecEnrolment()
                   mockOrchestrate(
                     enrolments = Enrolments(Set(testVatDecEnrolment)),
-                    optVatNumber = Some(testVatNumber),
-                    isFromBta = false
-                  )(Future.successful(ClaimedSubscription))
+                    vatNumber = testVatNumber
+                  )(Future.successful(SubscriptionClaimed))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
@@ -154,8 +150,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   mockAuthRetrieveVatDecEnrolment()
                   mockOrchestrate(
                     enrolments = Enrolments(Set(testVatDecEnrolment)),
-                    optVatNumber = Some(testVatNumber),
-                    isFromBta = false
+                    vatNumber = testVatNumber
                   )(Future.successful(AlreadyEnrolledOnDifferentCredential))
 
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
@@ -184,8 +179,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockAuthRetrieveVatDecEnrolment()
               mockOrchestrate(
                 enrolments = Enrolments(Set(testVatDecEnrolment)),
-                optVatNumber = Some(testVatNumber),
-                isFromBta = false
+                vatNumber = testVatNumber
               )(Future.successful(Ineligible))
 
               val request = testPostRequest(testVatNumber)
@@ -202,8 +196,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 mockAuthRetrieveVatDecEnrolment()
                 mockOrchestrate(
                   enrolments = Enrolments(Set(testVatDecEnrolment)),
-                  optVatNumber = Some(testVatNumber),
-                  isFromBta = false
+                  vatNumber = testVatNumber
                 )(Future.successful(Inhibited(testDates)))
 
                 val request = testPostRequest(testVatNumber)
@@ -223,8 +216,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 mockAuthRetrieveVatDecEnrolment()
                 mockOrchestrate(
                   enrolments = Enrolments(Set(testVatDecEnrolment)),
-                  optVatNumber = Some(testVatNumber),
-                  isFromBta = false
+                  vatNumber = testVatNumber
                 )(Future.successful(Inhibited(testDates)))
 
                 val request = testPostRequest(testVatNumber)
@@ -244,8 +236,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockAuthRetrieveMtdVatEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testMtdVatEnrolment)),
-              optVatNumber = Some(testVatNumber),
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Future.successful(AlreadySubscribed))
 
             val request = testPostRequest(testVatNumber)
@@ -274,8 +265,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockAuthRetrieveAllVatEnrolments()
               mockOrchestrate(
                 enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)),
-                optVatNumber = Some(testVatNumber),
-                isFromBta = false
+                vatNumber = testVatNumber
               )(Future.successful(AlreadySubscribed))
 
               val request = testPostRequest(testVatNumber)
@@ -307,8 +297,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockAuthRetrieveEmptyEnrolment()
               mockOrchestrate(
                 enrolments = Enrolments(Set()),
-                optVatNumber = Some(testVatNumber),
-                isFromBta = false
+                vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
               implicit val request = testPostRequest(testVatNumber)
@@ -324,8 +313,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockAuthRetrieveEmptyEnrolment()
               mockOrchestrate(
                 enrolments = Enrolments(Set()),
-                optVatNumber = Some(testVatNumber),
-                isFromBta = false
+                vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
               implicit val request = testPostRequest(testVatNumber)
@@ -353,8 +341,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockAuthRetrieveEmptyEnrolment()
               mockOrchestrate(
                 enrolments = Enrolments(Set()),
-                optVatNumber = Some(testVatNumber),
-                isFromBta = false
+                vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
               implicit val request = testPostRequest(testVatNumber)
@@ -386,8 +373,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockAuthRetrieveEmptyEnrolment()
               mockOrchestrate(
                 enrolments = Enrolments(Set()),
-                optVatNumber = Some(testVatNumber),
-                isFromBta = false
+                vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
 
               implicit val request = testPostRequest(testVatNumber)
@@ -405,8 +391,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockAuthRetrieveEmptyEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set()),
-              optVatNumber = Some(testVatNumber),
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Future.successful(Ineligible))
 
             val request = testPostRequest(testVatNumber)
@@ -420,8 +405,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockAuthRetrieveEmptyEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set()),
-              optVatNumber = Some(testVatNumber),
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Future.successful(Inhibited(MigratableDates(Some(testStartDate)))))
 
             val request = testPostRequest(testVatNumber)
@@ -436,8 +420,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockAuthRetrieveEmptyEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set()),
-              optVatNumber = Some(testVatNumber),
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Future.successful(Inhibited(testDates)))
 
             val request = testPostRequest(testVatNumber)
@@ -451,8 +434,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockAuthRetrieveEmptyEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set()),
-              optVatNumber = Some(testVatNumber),
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Future.successful(InvalidVatNumber))
 
             val request = testPostRequest(testVatNumber)
@@ -466,8 +448,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockAuthRetrieveEmptyEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set()),
-              optVatNumber = Some(testVatNumber),
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Future.successful(MigrationInProgress))
 
             val request = testPostRequest(testVatNumber)

@@ -23,6 +23,13 @@ import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments._
 object EnrolmentUtils {
 
   implicit class EnrolmentUtils(enrolments: Enrolments) {
+
+    def agent: Option[String] =
+      enrolments getEnrolment agentEnrolmentKey flatMap {
+        agentEnrolment =>
+          agentEnrolment getIdentifier agentReferenceKey map (_.value)
+      }
+
     def vatNumber: Option[String] =
       enrolments getEnrolment VatDecEnrolmentKey flatMap {
         vatDecEnrolment =>

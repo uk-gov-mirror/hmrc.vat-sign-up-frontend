@@ -42,11 +42,13 @@ object TestConstants {
   val testUri: String = "/test/uri"
   val testPartnershipType: String = "limitedPartnership"
 
+  val testAgentReference = UUID.randomUUID().toString
+
   val testBox5Figure = "99999999999.99"
   val testBox5FigureNegative = "-99999999999.99"
   val testLastReturnMonthPeriod = January.toString
 
-  val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey)
+  val testAgentEnrolment: Enrolment = Enrolment(agentEnrolmentKey) withIdentifier(agentReferenceKey, testAgentReference)
   val testVatDecEnrolment: Enrolment = Enrolment(VatDecEnrolmentKey) withIdentifier(VatReferenceKey, testVatNumber)
   val testMtdVatEnrolment: Enrolment = Enrolment(MtdVatEnrolmentKey) withIdentifier(MtdVatReferenceKey, testVatNumber)
 

@@ -24,12 +24,12 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockOptInSubmissionService, MockSubmissionService}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockMigratedSubmissionService
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class SendYourApplicationControllerSpec extends ControllerSpec with MockOptInSubmissionService {
+class SendYourApplicationControllerSpec extends ControllerSpec with MockMigratedSubmissionService {
 
-  object TestSendYourApplicationController extends SendYourApplicationController(mockControllerComponents, mockOptInSubmissionService)
+  object TestSendYourApplicationController extends SendYourApplicationController(mockControllerComponents, mockMigratedSubmissionService)
 
   lazy val testGetRequest = FakeRequest("GET", "/about-to-submit")
 

@@ -18,34 +18,32 @@ package uk.gov.hmrc.vatsignupfrontend.services.mocks
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.auth.core.Enrolments
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService.VatNumberOrchestrationServiceSuccess
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.vatsignupfrontend.services.CheckVatNumberEligibilityService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService.StoreVatNumberOrchestrationServiceResponse
 
 import scala.concurrent.Future
 
-trait MockVatNumberOrchestrationService extends BeforeAndAfterEach with MockitoSugar {
+trait MockCheckVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSugar {
   self: Suite =>
 
-  val mockVatNumberOrchestrationService: VatNumberOrchestrationService = mock[VatNumberOrchestrationService]
+  val mockCheckVatNumberEligibilityService: CheckVatNumberEligibilityService = mock[CheckVatNumberEligibilityService]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockVatNumberOrchestrationService)
+    reset(mockCheckVatNumberEligibilityService)
   }
 
-  def mockOrchestrate(enrolments: Enrolments,
-                      optVatNumber: Option[String],
-                      isFromBta: Boolean
-                     )(returnValue: Future[VatNumberOrchestrationServiceSuccess]): Unit = {
-    when(mockVatNumberOrchestrationService.orchestrate(
-      ArgumentMatchers.eq(enrolments),
-      ArgumentMatchers.eq(optVatNumber),
-      ArgumentMatchers.eq(isFromBta)
-    )(ArgumentMatchers.any()))
-      .thenReturn(returnValue)
+
+  def mockCheckVatNumberEligibility(vatNumber: String)
+                                   (response: Future[StoreVatNumberOrchestrationServiceResponse]): OngoingStubbing[Future[StoreVatNumberOrchestrationServiceResponse]] = {
+    when(mockCheckVatNumberEligibilityService.checkEligibility(
+      ArgumentMatchers.eq(vatNumber)
+    )(ArgumentMatchers.any[HeaderCarrier])
+    ) thenReturn response
   }
 
 }

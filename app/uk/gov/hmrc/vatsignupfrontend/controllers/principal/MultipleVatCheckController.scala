@@ -26,8 +26,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Overseas, Yes}
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.multiple_vat_check
@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 @Singleton
 class MultipleVatCheckController @Inject()(val controllerComponents: ControllerComponents,
-                                           vatNumberOrchestrationService: VatNumberOrchestrationService)
+                                           storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -57,10 +57,8 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
             Future.successful(Redirect(routes.CaptureVatNumberController.show()))
           case No =>
             enrolments.getAnyVatNumber match {
-              case None =>
-                Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
               case Some(vatNumber) =>
-                vatNumberOrchestrationService.orchestrate(enrolments, None, isFromBta = false) map {
+                storeVatNumberOrchestrationService.orchestrate(enrolments, vatNumber).map {
                   case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
@@ -72,7 +70,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                       .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
                       .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                       .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-                  case ClaimedSubscription =>
+                  case SubscriptionClaimed =>
                     Redirect(routes.SignUpCompleteClientController.show())
                   case Ineligible =>
                     Redirect(routes.CannotUseServiceController.show())
@@ -88,6 +86,8 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                   case _ =>
                     throw new InternalServerException("Unexpected response from vat number orchestration service")
                 }
+              case None =>
+                Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
             }
         }
       )

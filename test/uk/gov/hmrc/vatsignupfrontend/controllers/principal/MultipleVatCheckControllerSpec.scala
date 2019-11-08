@@ -27,14 +27,14 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberOrchestrationService
 
-class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerComponents with MockVatNumberOrchestrationService {
+class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerComponents with MockStoreVatNumberOrchestrationService {
 
   object TestMultipleVatCheckController extends MultipleVatCheckController(
     mockControllerComponents,
-    mockVatNumberOrchestrationService
+    mockStoreVatNumberOrchestrationService
   )
 
   val testGetRequest = FakeRequest("GET", "/more-than-one-vat-business")
@@ -80,8 +80,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -97,8 +96,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -115,8 +113,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(VatNumberStored(isOverseas = true, isDirectDebit = false, isMigrated = false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -133,8 +130,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(VatNumberStored(isOverseas = false, isDirectDebit = true, isMigrated = false))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -151,9 +147,8 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
-            )(ClaimedSubscription)
+              vatNumber = testVatNumber
+            )(SubscriptionClaimed)
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
@@ -165,8 +160,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Ineligible)
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -178,8 +172,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(Inhibited(MigratableDates(Some(testStartDate), Some(testEndDate))))
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -192,8 +185,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(MigrationInProgress)
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -206,8 +198,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
-              optVatNumber = None,
-              isFromBta = false
+              vatNumber = testVatNumber
             )(AlreadyEnrolledOnDifferentCredential)
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
@@ -221,8 +212,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
               mockAuthRetrieveAllVatEnrolments()
               mockOrchestrate(
                 enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)),
-                optVatNumber = None,
-                isFromBta = false
+                vatNumber = testVatNumber
               )(AlreadySubscribed)
 
               val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
