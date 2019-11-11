@@ -54,7 +54,10 @@ class CaptureVatRegistrationDateController @Inject()(val controllerComponents: C
         vatRegistrationDate => {
           optBusinessEntity match {
             case Some(entity) if entity == Overseas.toString =>
-              Future.successful(Redirect(routes.PreviousVatReturnController.show().url))
+              if (request.session.get(SessionKeys.isMigratedKey).contains("true"))
+                Future.successful(Redirect(routes.CheckYourAnswersController.show().url))
+              else
+                Future.successful(Redirect(routes.PreviousVatReturnController.show().url))
             case _ =>
               Future.successful(Redirect(routes.BusinessPostCodeController.show().url))
           }
