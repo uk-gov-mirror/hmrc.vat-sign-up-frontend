@@ -27,18 +27,18 @@ import uk.gov.hmrc.vatsignupfrontend.services.MigratedSubmissionService
 import scala.concurrent.Future
 
 
-trait MockOptInSubmissionService extends BeforeAndAfterEach with MockitoSugar {
+trait MockMigratedSubmissionService extends BeforeAndAfterEach with MockitoSugar {
   self: Suite =>
 
-  val mockOptInSubmissionService: MigratedSubmissionService = mock[MigratedSubmissionService]
+  val mockMigratedSubmissionService: MigratedSubmissionService = mock[MigratedSubmissionService]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockOptInSubmissionService)
+    reset(mockMigratedSubmissionService)
   }
 
   private def mockSubmit(vatNumber: String)(returnValue: Future[SubmissionResponse]): Unit = {
-    when(mockOptInSubmissionService.submit(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockMigratedSubmissionService.submit(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 

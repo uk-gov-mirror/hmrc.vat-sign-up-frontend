@@ -22,23 +22,19 @@ import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
-import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockStoreMigratedVatNumberConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{AlreadySubscribed, Eligible, Ineligible, Inhibited, MigrationInProgress, VatNumberEligibilityFailure}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.{IneligibleForMtdVatNumber, VatNumberEligible}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, VatNumberEligibilityHttpParser, VatNumberEligibilityPreMigrationHttpParser}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockClaimSubscriptionService, MockStoreVatNumberService, MockVatNumberEligibilityPreMigrationService, MockVatNumberEligibilityService}
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.{AlreadySubscribed, InvalidVatNumber, NoAgentClientRelationship, _}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockCheckVatNumberEligibilityService, MockClaimSubscriptionService, MockStoreMigratedVatNumberService, MockStoreVatNumberService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class VatNumberOrchestrationServiceSpec extends UnitSpec
-  with MockVatNumberEligibilityService
-  with MockVatNumberEligibilityPreMigrationService
-  with MockStoreMigratedVatNumberConnector
+  with MockCheckVatNumberEligibilityService
+  with MockStoreMigratedVatNumberService
   with MockStoreVatNumberService
   with MockClaimSubscriptionService
   with BeforeAndAfterEach
@@ -51,10 +47,9 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  object TestService extends VatNumberOrchestrationService(
-    mockStoreMigratedVatNumberConnector,
-    mockVatNumberEligibilityService,
-    mockVatNumberEligibilityPreMigrationService,
+  object TestService extends StoreVatNumberOrchestrationService(
+    mockCheckVatNumberEligibilityService,
+    mockStoreMigratedVatNumberService,
     mockStoreVatNumberService,
     mockClaimSubscriptionService
   )
@@ -69,149 +64,124 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         "the vat number is eligible" should {
           "return Eligible" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(Eligible(isOverseas = true, isMigrated = false))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Eligible(isOverseas = true, isMigrated = false)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Eligible(isOverseas = true, isMigrated = false)
           }
         }
 
         "the vat number is ineligible" should {
           "return Ineligible" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(Ineligible)
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Ineligible))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Ineligible
+            await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
           }
         }
 
         "the vat number is inhibited" should {
           "return Inhibited" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(Inhibited(testMigratableDates))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Inhibited(testMigratableDates)))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Inhibited(testMigratableDates)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)
           }
         }
 
         "the vat number is being migrated" should {
           "return MigrationInProgress" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(MigrationInProgress)
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(MigrationInProgress))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.MigrationInProgress
+            await(res) shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
           }
         }
 
         "the vat number is already subscribed" should {
           "return AlreadySubscribed" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(AlreadySubscribed)
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
           }
         }
 
         "check vat number eligibility fails" should {
-          "throw and internal server exception" in {
+          "throw an internal server exception" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Left(VatNumberEligibilityFailure(BAD_REQUEST))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.failed(new InternalServerException("")))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
 
-            intercept[InternalServerException](await(res))
+            intercept[InternalServerException](await(TestService.orchestrate(testNoEnrolments, testVatNumber)))
           }
         }
       }
       "the feature switch is disabled" when {
         "the vat number is eligible and overseas" should {
           "return Eligible with overseas true" in {
-            mockVatNumberEligibilityPreMigration(testVatNumber)(Future.successful(
-              Right(VatNumberEligible(isOverseas = true))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Eligible(isOverseas = true, isMigrated = false)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Eligible(isOverseas = true, isMigrated = false)
           }
         }
 
         "the vat number is eligible and not overseas" should {
           "return Eligible with overseas false" in {
-            mockVatNumberEligibilityPreMigration(testVatNumber)(Future.successful(
-              Right(VatNumberEligible())
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Eligible(isOverseas = false, isMigrated = false)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Eligible(isOverseas = false, isMigrated = false)
           }
         }
 
         "the vat number is ineligible" should {
           "return Ineligible" in {
-            mockVatNumberEligibilityPreMigration(testVatNumber)(Future.successful(
-              Left(IneligibleForMtdVatNumber(MigratableDates(None, None)))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Ineligible))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Ineligible
+            await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
           }
         }
 
         "the vat number is ineligible due to inhibition" should {
           "return inhibited with dates" in {
-            mockVatNumberEligibilityPreMigration(testVatNumber)(Future.successful(
-              Left(IneligibleForMtdVatNumber(testMigratableDates))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Inhibited(testMigratableDates)))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Inhibited(migratableDates = testMigratableDates)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Inhibited(migratableDates = testMigratableDates)
           }
         }
 
         "the vat number is invalid" should {
           "return invalid" in {
-            mockVatNumberEligibilityPreMigration(testVatNumber)(Future.successful(
-              Left(VatNumberEligibilityPreMigrationHttpParser.InvalidVatNumber)
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.InvalidVatNumber))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.InvalidVatNumber
+            await(res) shouldBe StoreVatNumberOrchestrationService.InvalidVatNumber
           }
         }
 
         "the eligibility check fails" should {
           "throw internal server exception with a status" in {
-            mockVatNumberEligibilityPreMigration(testVatNumber)(Future.successful(
-              Left(VatNumberEligibilityPreMigrationHttpParser.VatNumberEligibilityFailureResponse(BAD_REQUEST))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.failed(new InternalServerException("")))
 
-            val res = TestService.orchestrate(enrolments = testNoEnrolments, optVatNumber = Some(testVatNumber), isFromBta = false)
+            val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
             intercept[InternalServerException](await(res))
           }
@@ -222,100 +192,96 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
     "enrolments are provided" when {
       "the feature switch is enabled" when {
         "an eligible vat number has already been migrated to ETMP" should {
-          "return MigratedVatNumberStored" in {
+          "return VatNumberStored" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Eligible(isOverseas = false, isMigrated = true))))
-            mockStoreMigratedVatNumber(testVatNumber)(Future.successful(Right(StoreMigratedVatNumberSuccess)))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = true)))
+            mockStoreMigratedVatNumber(testVatNumber, None, None)(
+              Future.successful(StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true))
+            )
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
+            await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
           }
         }
 
         "the vat number has not been migrated to ETMP yet" should {
-          "return NonMigratedVatNumberStored" in {
+          "return VatNumberStored" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(Right(VatNumberEligibilityHttpParser.Eligible(isOverseas = false, isMigrated = false))))
-            mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(VatNumberStored(isDirectDebit = false))))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+            mockStoreVatNumber(testVatNumber, isFromBta = false)(Future.successful(Right(StoreVatNumberService.VatNumberStored(isDirectDebit = false))))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false)
+            await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false)
           }
         }
 
         "the vat number is ineligible" should {
           "return Ineligible" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Ineligible)))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Ineligible))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Ineligible
+            await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
           }
         }
 
         "the vat number is inhibited" should {
           "return Inhibited" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Inhibited(testMigratableDates))))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Inhibited(testMigratableDates)))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Inhibited(testMigratableDates)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)
           }
         }
 
         "the vat number is currently being migrated to ETMP" should {
           "return MigrationInProgress" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(Right(VatNumberEligibilityHttpParser.MigrationInProgress)))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(MigrationInProgress))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.MigrationInProgress
+            await(res) shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
           }
         }
 
         "the vat number is already subscribed" when {
           "subscription is claimed successfully" should {
-            "return ClaimedSubscription" in {
+            "return SubscriptionClaimed" in {
               enable(ReSignUpJourney)
-              mockVatNumberEligibility(testVatNumber)(Future.successful(
-                Right(AlreadySubscribed)
-              ))
+              mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
               mockClaimSubscription(testVatNumber, isFromBta = false)(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed))
 
-              val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+              val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-              await(res) shouldBe VatNumberOrchestrationService.ClaimedSubscription
+              await(res) shouldBe StoreVatNumberOrchestrationService.SubscriptionClaimed
             }
           }
 
           "the vat number is already enrolled on a different cred" should {
             "return AlreadyEnrolledOnDifferentCredential" in {
               enable(ReSignUpJourney)
-              mockVatNumberEligibility(testVatNumber)(Future.successful(
-                Right(AlreadySubscribed)
-              ))
+              mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
               mockClaimSubscription(testVatNumber, isFromBta = false)(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential))
 
-              val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+              val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-              await(res) shouldBe VatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
+              await(res) shouldBe StoreVatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
             }
           }
 
           "subscription claim fails" should {
             "throw and internal server exception" in {
               enable(ReSignUpJourney)
-              mockVatNumberEligibility(testVatNumber)(Future.successful(
-                Right(AlreadySubscribed)
-              ))
+              mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
               mockClaimSubscription(testVatNumber, isFromBta = false)(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(BAD_REQUEST)))
 
-              val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+              val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
               intercept[InternalServerException](await(res))
             }
@@ -325,11 +291,9 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         "the vat number eligibility check fails" should {
           "throw internal server exception" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Left(VatNumberEligibilityHttpParser.VatNumberEligibilityFailure(BAD_REQUEST))
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.failed(new InternalServerException("")))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
             intercept[InternalServerException](await(res))
           }
@@ -338,26 +302,22 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         "the user has MTD VAT enrolment and the vat number is already signed up" should {
           "return AlreadySubscribed" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(AlreadySubscribed)
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testMtdVatEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
           }
         }
 
         "the user has multiple enrolments and the vat number is already signed up" should {
           "return AlreadySubscribed" in {
             enable(ReSignUpJourney)
-            mockVatNumberEligibility(testVatNumber)(Future.successful(
-              Right(AlreadySubscribed)
-            ))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
           }
         }
       }
@@ -365,80 +325,279 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
       "the feature switch is disabled" when {
         "the vat number can be stored and is from overseas with direct debit" should {
           "return VatNumberStored with isOverseas and isDirectDebit" in {
-            mockStoreVatNumber(testVatNumber, isFromBta = false)(Right(VatNumberStored(isOverseas = true, isDirectDebit = true)))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
+            mockStoreVatNumber(testVatNumber, isFromBta = false)(Right(StoreVatNumberService.VatNumberStored(isOverseas = true, isDirectDebit = true)))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.VatNumberStored(isOverseas = true, isDirectDebit = true, isMigrated = false)
+            await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = true, isDirectDebit = true, isMigrated = false)
           }
         }
 
 
         "the vat number has a claimed subscription" should {
-          "return ClaimedSubscription" in {
-            mockStoreVatNumber(testVatNumber, isFromBta = false)(Right(SubscriptionClaimed))
+          "return SubscriptionClaimed" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+            mockClaimSubscription(testVatNumber, isFromBta = false)(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.ClaimedSubscription
+            await(res) shouldBe StoreVatNumberOrchestrationService.SubscriptionClaimed
           }
         }
 
         "the vat number is ineligible" should {
           "return Ineligible" in {
-            mockStoreVatNumber(testVatNumber, isFromBta = false)(Left(IneligibleVatNumber(MigratableDates(None, None))))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.Ineligible))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Ineligible
+            await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
           }
         }
 
         "the vat number is ineligible due to inhibition" should {
           "return Inhibited with dates" in {
-            mockStoreVatNumber(testVatNumber, isFromBta = false)(Left(IneligibleVatNumber(testMigratableDates)))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.Inhibited(migratableDates = testMigratableDates)
+            await(res) shouldBe StoreVatNumberOrchestrationService.Inhibited(migratableDates = testMigratableDates)
           }
         }
 
         "the vat number has a migration in progress" should {
           "return MigrationInProgress" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
             mockStoreVatNumber(testVatNumber, isFromBta = false)(Left(VatMigrationInProgress))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.MigrationInProgress
+            await(res) shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
           }
         }
 
         "the vat number is already enrolled" should {
           "return AlreadyEnrolled" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
             mockStoreVatNumber(testVatNumber, isFromBta = false)(Left(VatNumberAlreadyEnrolled))
 
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment)), optVatNumber = None, isFromBta = false)
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
           }
         }
 
         "the user has multiple enrolments and the vat number is already signed up" should {
           "return AlreadySubscribed" in {
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
+            val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
           }
         }
 
         "the user has MTD-VAT enrolment and the vat number is already signed up" should {
           "return AlreadySubscribed" in {
-            val res = TestService.orchestrate(enrolments = Enrolments(Set(testMtdVatEnrolment)), optVatNumber = None, isFromBta = false)
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
+            val res = TestService.orchestrate(Enrolments(Set(testMtdVatEnrolment)), testVatNumber)
 
-            await(res) shouldBe VatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
           }
         }
+      }
+    }
+  }
+  "the user has an agent enrolment" should {
+    "the ReSignUpJourney is enabled" when {
+      "an eligible vat number has already been migrated to ETMP" should {
+        "return VatNumberStored" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = true)))
+          mockStoreMigratedVatNumber(testVatNumber, None, None)(
+            Future.successful(StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true))
+          )
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
+        }
+      }
+
+      "the vat number has not been migrated to ETMP yet" should {
+        "return VatNumberStored" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+          mockStoreVatNumberDelegated(testVatNumber)(Future.successful(Right(StoreVatNumberService.VatNumberStored(isDirectDebit = false))))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false)
+        }
+      }
+
+      "the vat number is ineligible" should {
+        "return Ineligible" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Ineligible))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
+        }
+      }
+
+      "the vat number is inhibited" should {
+        "return Inhibited" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Inhibited(testMigratableDates)))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)
+        }
+      }
+
+      "the vat number is currently being migrated to ETMP" should {
+        "return MigrationInProgress" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(MigrationInProgress))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
+        }
+      }
+
+      "the vat number eligibility check fails" should {
+        "throw internal server exception" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.failed(new InternalServerException("")))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          intercept[InternalServerException](await(res))
+        }
+      }
+
+      "the vat number is already signed up" should {
+        "return AlreadySubscribed" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+        }
+      }
+
+      "the vat number has No Agent Client Relationship" should {
+        "return NoAgentClientRelationship" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.NoAgentClientRelationship))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.NoAgentClientRelationship
+        }
+      }
+
+      "the vat number is Invalid" should {
+        "return InvalidVatNumber" in {
+          enable(ReSignUpJourney)
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.InvalidVatNumber))
+
+          val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.InvalidVatNumber
+        }
+      }
+
+      "the feature switch is disabled" when {
+        "the vat number is overseas with direct debit" should {
+          "return VatNumberStored with isOverseas and isDirectDebit" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
+            mockStoreVatNumberDelegated(testVatNumber)(Right(StoreVatNumberService.VatNumberStored(isOverseas = true, isDirectDebit = true)))
+
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = true, isDirectDebit = true, isMigrated = false)
+          }
+        }
+
+        "the vat number is not overseas" should {
+          "return VatNumberStored" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+            mockStoreVatNumberDelegated(testVatNumber)(Right(StoreVatNumberService.VatNumberStored(isOverseas = false, isDirectDebit = false)))
+
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false)
+          }
+        }
+
+        "the vat number is ineligible" should {
+          "return Ineligible" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.Ineligible))
+
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
+          }
+        }
+
+        "the vat number is ineligible due to inhibition" should {
+          "return Inhibited with dates" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)))
+
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.Inhibited(migratableDates = testMigratableDates)
+          }
+        }
+
+        "the vat number has no agent client relationship" should {
+          "return no agent client relationship" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+            mockStoreVatNumberDelegated(testVatNumber)(Left(NoAgentClientRelationship))
+
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.NoAgentClientRelationship
+          }
+        }
+
+        "the vat number is already signed up" should {
+          "return AlreadySubscribed" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+            mockStoreVatNumberDelegated(testVatNumber)(Left(AlreadySubscribed))
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+          }
+        }
+
+        "the vat number is invalid" should {
+          "return InvalidvatNumber" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+            mockStoreVatNumberDelegated(testVatNumber)(Left(InvalidVatNumber))
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.InvalidVatNumber
+          }
+        }
+
+
+        "the vat number is currently migrating" should {
+          "return MigrationInProgress" in {
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
+            mockStoreVatNumberDelegated(testVatNumber)(Left(VatMigrationInProgress))
+            val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+            await(res) shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
+          }
+        }
+
       }
     }
   }

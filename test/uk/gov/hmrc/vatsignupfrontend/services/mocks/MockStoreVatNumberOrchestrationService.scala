@@ -20,26 +20,31 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberEligibilityService
+import uk.gov.hmrc.auth.core.Enrolments
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService.StoreVatNumberOrchestrationServiceResponse
 
 import scala.concurrent.Future
 
-
-trait MockVatNumberEligibilityService extends BeforeAndAfterEach with MockitoSugar {
+trait MockStoreVatNumberOrchestrationService extends BeforeAndAfterEach with MockitoSugar {
   self: Suite =>
 
-  val mockVatNumberEligibilityService: VatNumberEligibilityService = mock[VatNumberEligibilityService]
+  val mockStoreVatNumberOrchestrationService: StoreVatNumberOrchestrationService = mock[StoreVatNumberOrchestrationService]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockVatNumberEligibilityService)
+    reset(mockStoreVatNumberOrchestrationService)
   }
 
-  def mockVatNumberEligibility(vatNumber: String)(returnValue: Future[VatNumberEligibilityResponse]): Unit = {
-    when(mockVatNumberEligibilityService.checkVatNumberEligibility(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(returnValue)
+  def mockOrchestrate(enrolments: Enrolments,
+                      vatNumber: String
+                     )(returnValue: Future[StoreVatNumberOrchestrationServiceResponse]): Unit = {
+    when(mockStoreVatNumberOrchestrationService.orchestrate(
+      ArgumentMatchers.eq(enrolments),
+      ArgumentMatchers.eq(vatNumber)
+    )(ArgumentMatchers.any[HeaderCarrier])
+    ) thenReturn returnValue
   }
-
 
 }

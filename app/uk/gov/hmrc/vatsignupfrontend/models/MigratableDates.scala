@@ -21,7 +21,11 @@ import java.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
 
 case class MigratableDates(migratableDate: Option[LocalDate] = None,
-                           migratableCutoffDate: Option[LocalDate] = None)
+                           migratableCutoffDate: Option[LocalDate] = None) {
+
+  def isEmpty: Boolean = migratableDate.isEmpty && migratableCutoffDate.isEmpty
+
+}
 
 object MigratableDates {
   implicit val format: OFormat[MigratableDates] = Json.format[MigratableDates]

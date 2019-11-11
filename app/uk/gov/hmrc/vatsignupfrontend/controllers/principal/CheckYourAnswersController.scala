@@ -17,8 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.mvc.{Action, AnyContent, RequestHeader}
+import play.api.mvc.{Action, AnyContent, RequestHeader, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -27,9 +26,8 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberForUnenrolledService.{StoreVatNumberUnenrolledFailure, StoreVatNumberUnenrolledSuccess, StoreVatNumberUnenrolledKFFailure}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreVatNumberForUnenrolledService, StoreVatNumberService}
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreMigratedVatNumberService, StoreVatNumberOrchestrationService, StoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers
 
@@ -38,7 +36,7 @@ import scala.concurrent.Future
 @Singleton
 class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents,
                                            val storeVatNumberService: StoreVatNumberService,
-                                           val storeVatNumberForUnenrolledService: StoreVatNumberForUnenrolledService
+                                           val storeMigratedVatNumberService: StoreMigratedVatNumberService
                                           ) extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
@@ -50,15 +48,15 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
       val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
-      val isMigrated        = request.session.get(SessionKeys.isMigratedKey).contains("true")
+      val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optLastReturnMonth) match {
-        case (Some(optVatNumber), Some(optVatRegistrationDate), Some(optBusinessPostCode), _, _, _)  if isMigrated =>
+        case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
           Future.successful(
             Ok(check_your_answers(
-              vatNumber = optVatNumber,
-              registrationDate = optVatRegistrationDate,
-              optPostCode = Some(optBusinessPostCode),
+              vatNumber = vatNumber,
+              registrationDate = vatRegistrationDate,
+              optPostCode = Some(businessPostCode),
               optPreviousVatReturn = None,
               optBox5Figure = None,
               optLastReturnMonthPeriod = None,
@@ -109,7 +107,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
                              optBox5Figure: Option[String],
                              optLastReturnMonth: Option[String],
                              isFromBta: Boolean
-                            )(implicit hc: HeaderCarrier, request: RequestHeader) =
+                            )(implicit hc: HeaderCarrier, request: RequestHeader): Future[Result] =
     storeVatNumberService.storeVatNumber(
       vatNumber = vatNumber,
       optPostCode = optPostCode,
@@ -141,17 +139,6 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
         throw new InternalServerException("unexpected response on store vat number " + err)
     }
 
-  def storeMigratedUnenrolledVatNumber(vatNumber: String, vatRegistrationDate: DateModel, businessPostCode: PostCode)
-                                      (implicit hc: HeaderCarrier) = {
-    storeVatNumberForUnenrolledService.storeVatNumber(vatNumber, vatRegistrationDate.toDesDateFormat, businessPostCode, isFromBta = false) map {
-      case StoreVatNumberUnenrolledSuccess => Redirect(routes.CaptureBusinessEntityController.show())
-      case StoreVatNumberUnenrolledKFFailure =>
-        throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store vat number for unenrolled known facts mismatch")
-      case StoreVatNumberUnenrolledFailure(status) =>
-        throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store vat number for unenrolled users with status: $status")
-    }
-  }
-
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) { enrolments =>
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
@@ -162,15 +149,9 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
       val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
-      val isMigrated        = request.session.get(SessionKeys.isMigratedKey).contains("true")
+      val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optlastReturnMonth) match {
-        case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
-          storeMigratedUnenrolledVatNumber(
-            vatNumber,
-            vatRegistrationDate,
-            businessPostCode
-          )
         case (None, _, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
@@ -183,6 +164,13 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
+        case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
+          storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), Some(businessPostCode)).map {
+            case StoreVatNumberOrchestrationService.VatNumberStored(_, _, _) =>
+              Redirect(routes.CaptureBusinessEntityController.show())
+            case StoreVatNumberOrchestrationService.KnownFactsMismatch =>
+              throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store vat number for unenrolled known facts mismatch")
+          }
         case (_, _, _, None, _, _) if isEnabled(AdditionalKnownFacts) =>
           Future.successful(
             Redirect(routes.PreviousVatReturnController.show())

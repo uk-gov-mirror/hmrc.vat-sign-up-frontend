@@ -25,17 +25,18 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm.vatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.models.Overseas
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService
-import uk.gov.hmrc.vatsignupfrontend.services.VatNumberOrchestrationService._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           vatNumberOrchestrationService: VatNumberOrchestrationService
+                                           storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService
                                           )(implicit ec: ExecutionContext) extends AuthenticatedController(AdministratorRolePredicate) {
 
   private val validateVatNumberForm = vatNumberForm(isAgent = false)
@@ -62,7 +63,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                   case Some(vrn) if vrn != formVatNumber =>
                     Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
                   case _ =>
-                    vatNumberOrchestrationService.orchestrate(enrolments, Some(formVatNumber), isFromBta = false).map {
+                    storeVatNumberOrchestrationService.orchestrate(enrolments, formVatNumber).map {
                       case Eligible(isOverseas, _) if isOverseas =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
@@ -82,9 +83,12 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(hasDirectDebitKey, isDirectDebit)
                           .addingToSession(isMigratedKey, isMigrated)
+                      case AlreadySubscribed if enrolments.getAnyVatNumber.isEmpty =>
+                        Redirect(routes.CaptureVatRegistrationDateController.show())
+                          .addingToSession(vatNumberKey -> formVatNumber)
                       case AlreadySubscribed =>
                         Redirect(routes.AlreadySignedUpController.show())
-                      case ClaimedSubscription =>
+                      case SubscriptionClaimed =>
                         Redirect(routes.SignUpCompleteClientController.show())
                       case Ineligible =>
                         Redirect(routes.CannotUseServiceController.show())
