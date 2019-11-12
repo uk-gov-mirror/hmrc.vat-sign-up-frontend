@@ -41,7 +41,7 @@ class CaptureAgentEmailController @Inject()(val controllerComponents: Controller
 
       (optIsMigrated, optTransactionEmail) match {
         case (Some(isMigrated), _) if isMigrated =>
-          Future.successful(Redirect(routes.CheckYourAnswersFinalController.show()))
+          Future.successful(Redirect(routes.AgentSendYourApplicationController.show()))
         case (_, None) =>
           Future.successful(Ok(capture_agent_email(validateEmailForm.form, routes.CaptureAgentEmailController.submit())))
         case (_, Some(_)) =>

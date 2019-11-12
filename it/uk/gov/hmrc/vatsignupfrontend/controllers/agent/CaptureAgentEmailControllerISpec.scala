@@ -31,29 +31,14 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
   "GET /email-address" when {
     "the isMigrated flag is true" when {
       "the transactionEmail is not in session" should {
-        "redirect to CheckYourAnswersFinal" in {
+        "redirect to SendYourApplication" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
           val res = get(uri, Map(SessionKeys.isMigratedKey -> true.toString))
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CheckYourAnswersFinalController.show().url)
-          )
-        }
-      }
-      "the transaction email is in session" should {
-        "redirect to CheckYourAnswersFinal" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          val res = get(uri, Map(
-            SessionKeys.isMigratedKey -> true.toString,
-            SessionKeys.transactionEmailKey -> testEmail
-          ))
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CheckYourAnswersFinalController.show().url)
+            redirectUri(routes.AgentSendYourApplicationController.show().url)
           )
         }
       }

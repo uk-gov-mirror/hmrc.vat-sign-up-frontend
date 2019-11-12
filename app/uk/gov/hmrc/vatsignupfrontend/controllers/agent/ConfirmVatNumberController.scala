@@ -18,14 +18,15 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, MigratableDates, Overseas}
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, Overseas}
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_vat_number
@@ -34,57 +35,64 @@ import scala.concurrent.Future
 
 @Singleton
 class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           val storeVatNumberService: StoreVatNumberService)
+                                           storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
-  val show: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) if vatNumber.nonEmpty =>
-          Future.successful(
-            Ok(confirm_vat_number(vatNumber, routes.ConfirmVatNumberController.submit()))
-          )
-        case _ =>
-          Future.successful(
-            Redirect(routes.CaptureVatNumberController.show())
-          )
+  val show: Action[AnyContent] = Action.async {
+    implicit request =>
+      authorised() {
+        request.session.get(SessionKeys.vatNumberKey) match {
+          case Some(vatNumber) if vatNumber.nonEmpty =>
+            Future.successful(
+              Ok(confirm_vat_number(vatNumber, routes.ConfirmVatNumberController.submit()))
+            )
+          case _ =>
+            Future.successful(
+              Redirect(routes.CaptureVatNumberController.show())
+            )
+        }
       }
-    }
   }
 
-  val submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised() {
-      request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) if vatNumber.nonEmpty =>
-          if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
-            storeVatNumberService.storeVatNumberDelegated(vatNumber) map {
-              case Right(VatNumberStored(isOverseas, isDirectDebit)) if isOverseas =>
-                Redirect(routes.CaptureBusinessEntityController.show())
-                  .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-                  .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
-              case Right(VatNumberStored(_, isDirectDebit)) =>
-                Redirect(routes.CaptureBusinessEntityController.show()) addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-              case Left(NoAgentClientRelationship) =>
-                Redirect(routes.NoAgentClientRelationshipController.show())
-              case Left(AlreadySubscribed) =>
-                Redirect(routes.AlreadySignedUpController.show())
-              case Left(IneligibleVatNumber(MigratableDates(None, None))) =>
-                Redirect(routes.CannotUseServiceController.show())
-              case Left(IneligibleVatNumber(migratableDates)) =>
-                Redirect(routes.MigratableDatesController.show())
-                  .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
-              case Left(VatMigrationInProgress) =>
-                Redirect(routes.MigrationInProgressErrorController.show())
-              case Left(errResponse: StoreVatNumberFailureResponse) =>
-                throw new InternalServerException("storeVatNumber failed: status=" + errResponse.status)
-            }
-          else Future.successful(Redirect(routes.CouldNotConfirmVatNumberController.show())).removeSessionKey(SessionKeys.vatNumberKey)
-        case _ =>
-          Future.successful(
-            Redirect(routes.CaptureVatNumberController.show())
-          )
+  val submit: Action[AnyContent] = Action.async {
+    implicit request =>
+      authorised()(Retrievals.allEnrolments) {
+        enrolments =>
+          request.session.get(SessionKeys.vatNumberKey) match {
+            case Some(vatNumber) if vatNumber.nonEmpty =>
+              if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
+                storeVatNumberOrchestrationService.orchestrate(enrolments, vatNumber).map {
+                  case VatNumberStored(isOverseas, isDirectDebit, _) if isOverseas =>
+                    Redirect(routes.CaptureBusinessEntityController.show())
+                      .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                      .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
+                  case VatNumberStored(_, isDirectDebit, isMigrated) =>
+                    Redirect(routes.CaptureBusinessEntityController.show())
+                      .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                      .addingToSession(SessionKeys.isMigratedKey, isMigrated)
+                  case NoAgentClientRelationship =>
+                    Redirect(routes.NoAgentClientRelationshipController.show())
+                  case AlreadySubscribed =>
+                    Redirect(routes.AlreadySignedUpController.show())
+                  case Ineligible =>
+                    Redirect(routes.CannotUseServiceController.show())
+                  case Inhibited(migratableDates) =>
+                    Redirect(routes.MigratableDatesController.show())
+                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+                  case MigrationInProgress =>
+                    Redirect(routes.MigrationInProgressErrorController.show())
+                  case errorResponse =>
+                    throw new InternalServerException(s"storeVatNumberOrchestration failed due to $errorResponse")
+                }
+              else Future.successful(
+                Redirect(routes.CouldNotConfirmVatNumberController.show())
+              ).removeSessionKey(SessionKeys.vatNumberKey)
+            case _ =>
+              Future.successful(
+                Redirect(routes.CaptureVatNumberController.show())
+              )
+          }
       }
-    }
   }
 
 }
