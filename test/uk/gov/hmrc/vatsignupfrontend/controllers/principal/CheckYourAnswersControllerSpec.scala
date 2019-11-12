@@ -201,6 +201,18 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           status(result) shouldBe Status.OK
         }
+        "the user is migrated and overseas so only has reg date" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(
+            testGetRequest(postCode = None, optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
+              SessionKeys.isMigratedKey -> "true",
+              SessionKeys.businessEntityKey -> Overseas.toString
+            )
+          )
+
+          status(result) shouldBe Status.OK
+        }
       }
     }
   }
@@ -427,6 +439,56 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
+          }
+        }
+      }
+      "the user is un-enrolled and overseas" should {
+        "return a successful response" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockStoreMigratedVatNumber(
+            testVatNumber,
+            Some(testDate.toDesDateFormat),
+            None
+          )(Future.successful(
+            StoreVatNumberOrchestrationService.VatNumberStored(
+              isOverseas = true,
+              isDirectDebit = false,
+              isMigrated = true
+            )
+          ))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
+          ))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+        }
+
+        "throw an exception when store vat number failed" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockStoreMigratedVatNumber(
+            testVatNumber,
+            Some(testDate.toDesDateFormat),
+            None
+          )(Future.failed(new InternalServerException("")))
+
+          intercept[InternalServerException] {
+            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(
+              SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
+            )))
+          }
+
+        }
+
+        "return a un-successful response from mismatching known facts" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockStoreMigratedVatNumber(testVatNumber, Some(testDate.toDesDateFormat), None)(Future.successful(KnownFactsMismatch))
+
+          intercept[InternalServerException] {
+            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(
+              SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
+            )))
           }
         }
       }
