@@ -30,9 +30,8 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService.KnownFactsMismatch
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreMigratedVatNumberService, MockStoreVatNumberService}
 
@@ -43,7 +42,11 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockStoreVatNumberService
   with MockStoreMigratedVatNumberService {
 
-  object TestCheckYourAnswersController extends CheckYourAnswersController(mockControllerComponents, mockStoreVatNumberService, mockStoreMigratedVatNumberService)
+  object TestCheckYourAnswersController extends CheckYourAnswersController(
+    mockControllerComponents,
+    mockStoreVatNumberService,
+    mockStoreMigratedVatNumberService
+  )
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -406,11 +409,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             Some(testDate.toDesDateFormat),
             Some(testBusinessPostcode)
           )(Future.successful(
-            StoreVatNumberOrchestrationService.VatNumberStored(
-              isOverseas = false,
-              isDirectDebit = false,
-              isMigrated = true
-            )
+            Right(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess)
           ))
 
           val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true"))
@@ -435,7 +434,13 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "return a un-successful response from mismatching known facts" in {
           mockAuthRetrieveEmptyEnrolment()
-          mockStoreMigratedVatNumber(testVatNumber, Some(testDate.toDesDateFormat), Some(testBusinessPostcode))(Future.successful(KnownFactsMismatch))
+          mockStoreMigratedVatNumber(
+            testVatNumber,
+            Some(testDate.toDesDateFormat),
+            Some(testBusinessPostcode)
+          )(
+            Future.successful(Left(StoreMigratedVatNumberHttpParser.KnownFactsMismatch))
+          )
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
@@ -450,14 +455,10 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             Some(testDate.toDesDateFormat),
             None
           )(Future.successful(
-            StoreVatNumberOrchestrationService.VatNumberStored(
-              isOverseas = true,
-              isDirectDebit = false,
-              isMigrated = true
-            )
+            Right(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess)
           ))
 
-          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(
+          val result = TestCheckYourAnswersController.submit(testPostRequest(postCode = None).withSession(
             SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
           ))
 
@@ -483,7 +484,13 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         "return a un-successful response from mismatching known facts" in {
           mockAuthRetrieveEmptyEnrolment()
-          mockStoreMigratedVatNumber(testVatNumber, Some(testDate.toDesDateFormat), None)(Future.successful(KnownFactsMismatch))
+          mockStoreMigratedVatNumber(
+            testVatNumber,
+            Some(testDate.toDesDateFormat),
+            None
+          )(
+            Future.successful(Left(StoreMigratedVatNumberHttpParser.KnownFactsMismatch))
+          )
 
           intercept[InternalServerException] {
             await(TestCheckYourAnswersController.submit(testPostRequest().withSession(

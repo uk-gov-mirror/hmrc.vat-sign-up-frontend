@@ -22,9 +22,9 @@ import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberResponse
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 import uk.gov.hmrc.vatsignupfrontend.services.StoreMigratedVatNumberService
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService.StoreVatNumberOrchestrationServiceResponse
 
 import scala.concurrent.Future
 
@@ -42,7 +42,7 @@ trait MockStoreMigratedVatNumberService extends BeforeAndAfterEach with MockitoS
   def mockStoreMigratedVatNumber(vatNumber: String,
                                  registrationDate: Option[String],
                                  businessPostCode: Option[PostCode]
-                                )(response: Future[StoreVatNumberOrchestrationServiceResponse]): OngoingStubbing[Future[StoreVatNumberOrchestrationServiceResponse]] = {
+                                )(response: Future[StoreMigratedVatNumberResponse]): OngoingStubbing[Future[StoreMigratedVatNumberResponse]] = {
     when(mockStoreMigratedVatNumberService.storeVatNumber(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(registrationDate),

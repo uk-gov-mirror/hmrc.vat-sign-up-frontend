@@ -117,11 +117,13 @@ object StoreVatNumberService {
 
   case object SubscriptionClaimed extends StoreVatNumberSuccess
 
-  sealed trait StoreVatNumberWithKnownFactsFailure
+  sealed trait StoreVatNumberFailure
 
-  sealed trait DelegatedStoreVatNumberFailure
+  sealed trait StoreVatNumberWithKnownFactsFailure extends StoreVatNumberFailure
 
-  sealed trait StoreVatNumberWithEnrolmentFailure
+  sealed trait DelegatedStoreVatNumberFailure extends StoreVatNumberFailure
+
+  sealed trait StoreVatNumberWithEnrolmentFailure extends StoreVatNumberFailure
 
   case object NoAgentClientRelationship extends DelegatedStoreVatNumberFailure
 
