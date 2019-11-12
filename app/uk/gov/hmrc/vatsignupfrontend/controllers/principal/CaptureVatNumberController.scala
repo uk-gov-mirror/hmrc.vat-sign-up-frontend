@@ -64,20 +64,22 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                     Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
                   case _ =>
                     storeVatNumberOrchestrationService.orchestrate(enrolments, formVatNumber).map {
-                      case Eligible(isOverseas, _) if isOverseas =>
+                      case Eligible(isOverseas, isMigrated) if isOverseas =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(businessEntityKey -> Overseas.toString)
+                          .addingToSession(isMigratedKey, isMigrated)
                       case Eligible(_, isMigrated) =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(isMigratedKey, isMigrated)
                           .removingFromSession(businessEntityKey)
-                      case VatNumberStored(isOverseas, isDirectDebit, _) if isOverseas =>
+                      case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(hasDirectDebitKey, isDirectDebit)
                           .addingToSession(businessEntityKey -> Overseas.toString)
+                          .addingToSession(isMigratedKey, isMigrated)
                       case VatNumberStored(_, isDirectDebit, isMigrated) =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
