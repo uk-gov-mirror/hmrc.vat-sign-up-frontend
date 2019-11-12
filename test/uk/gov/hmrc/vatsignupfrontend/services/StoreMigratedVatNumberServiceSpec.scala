@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.vatsignupfrontend.services
 
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockStoreMigratedVatNumberConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.{KnownFactsMismatch, NoAgentClientRelationship, StoreMigratedVatNumberFailureStatus, StoreMigratedVatNumberSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -31,7 +30,7 @@ class StoreMigratedVatNumberServiceSpec extends UnitSpec
 
   object TestService extends StoreMigratedVatNumberService(mockStoreMigratedVatNumberConnector)
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val testRegistrationDate = "01-Dec-2017" // Todo: This may be in the wrong format... Check.
 
@@ -49,7 +48,7 @@ class StoreMigratedVatNumberServiceSpec extends UnitSpec
             optBusinessPostCode = Some(testBusinessPostcode))
           )
 
-          res shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
+          res shouldBe Right(StoreMigratedVatNumberSuccess)
         }
       }
       "the connector returns KnownFactsMismatch" should {
@@ -64,7 +63,7 @@ class StoreMigratedVatNumberServiceSpec extends UnitSpec
             optBusinessPostCode = Some(testBusinessPostcode))
           )
 
-          res shouldBe StoreVatNumberOrchestrationService.KnownFactsMismatch
+          res shouldBe Left(KnownFactsMismatch)
         }
       }
       "the connector returns NoAgentClientRelationship" should {
@@ -79,18 +78,7 @@ class StoreMigratedVatNumberServiceSpec extends UnitSpec
             optBusinessPostCode = None)
           )
 
-          res shouldBe StoreVatNumberOrchestrationService.NoAgentClientRelationship
-        }
-      }
-      "the connector returns StoreMigratedVatNumberFailureStatus" should {
-        "return InternalServerException" in {
-          mockStoreMigratedVatNumber(testVatNumber, testRegistrationDate, Some(testBusinessPostcode))(
-            Future.successful(Left(StoreMigratedVatNumberFailureStatus(BAD_REQUEST)))
-          )
-
-          intercept[InternalServerException] {
-            await(TestService.storeVatNumber(testVatNumber, Some(testRegistrationDate), Some(testBusinessPostcode)))
-          }
+          res shouldBe Left(NoAgentClientRelationship)
         }
       }
     }
@@ -100,7 +88,7 @@ class StoreMigratedVatNumberServiceSpec extends UnitSpec
           mockStoreMigratedVatNumber(testVatNumber)(Future.successful(Right(StoreMigratedVatNumberSuccess)))
 
           val res = await(TestService.storeVatNumber(testVatNumber, optRegistrationDate = None, optBusinessPostCode = None))
-          res shouldBe StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
+          res shouldBe Right(StoreMigratedVatNumberSuccess)
         }
       }
       "the connector returns NoAgentClientRelationship" should {
@@ -108,16 +96,7 @@ class StoreMigratedVatNumberServiceSpec extends UnitSpec
           mockStoreMigratedVatNumber(testVatNumber)(Future.successful(Left(NoAgentClientRelationship)))
 
           val res = await(TestService.storeVatNumber(testVatNumber, optRegistrationDate = None, optBusinessPostCode = None))
-          res shouldBe StoreVatNumberOrchestrationService.NoAgentClientRelationship
-        }
-      }
-      "the connector returns StoreMigratedVatNumberFailureStatus" should {
-        "return StoreMigratedVatNumberFailureStatus" in {
-          mockStoreMigratedVatNumber(testVatNumber)(Future.successful(Left(StoreMigratedVatNumberFailureStatus(BAD_REQUEST))))
-
-          intercept[InternalServerException] {
-            await(TestService.storeVatNumber(testVatNumber, optRegistrationDate = None, optBusinessPostCode = None))
-          }
+          res shouldBe Left(NoAgentClientRelationship)
         }
       }
     }

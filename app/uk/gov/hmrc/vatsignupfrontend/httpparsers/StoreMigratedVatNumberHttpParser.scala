@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HttpReads, HttpResponse, InternalServerException}
 
 
 object StoreMigratedVatNumberHttpParser {
@@ -38,7 +38,7 @@ object StoreMigratedVatNumberHttpParser {
         case FORBIDDEN =>
           Left(KnownFactsMismatch)
         case status =>
-          Left(StoreMigratedVatNumberFailureStatus(status))
+          throw new InternalServerException(s"[StoreMigratedVatNumber] connector returned an invalid response: $status ${response.body}")
       }
     }
   }
@@ -50,8 +50,6 @@ object StoreMigratedVatNumberHttpParser {
   case object KnownFactsMismatch extends StoreMigratedVatNumberFailure
 
   case object NoAgentClientRelationship extends StoreMigratedVatNumberFailure
-
-  case class StoreMigratedVatNumberFailureStatus(status: Int) extends StoreMigratedVatNumberFailure
 
 }
 

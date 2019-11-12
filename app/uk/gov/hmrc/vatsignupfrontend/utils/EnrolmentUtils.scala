@@ -24,7 +24,7 @@ object EnrolmentUtils {
 
   implicit class EnrolmentUtils(enrolments: Enrolments) {
 
-    def agent: Option[String] =
+    def agentReferenceNumber: Option[String] =
       enrolments getEnrolment agentEnrolmentKey flatMap {
         agentEnrolment =>
           agentEnrolment getIdentifier agentReferenceKey map (_.value)

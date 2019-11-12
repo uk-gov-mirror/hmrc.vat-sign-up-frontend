@@ -17,11 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreMigratedVatNumberConnector
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberResponse
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,37 +30,14 @@ class StoreMigratedVatNumberService @Inject()(storeMigratedVatNumberConnector: S
   def storeVatNumber(vatNumber: String,
                      optRegistrationDate: Option[String],
                      optBusinessPostCode: Option[PostCode]
-                    )(implicit hc: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
+                    )(implicit hc: HeaderCarrier): Future[StoreMigratedVatNumberResponse] = {
 
-    (optRegistrationDate match {
+    optRegistrationDate match {
       case Some(regDate) =>
         storeMigratedVatNumberConnector.storeVatNumber(vatNumber, regDate, optBusinessPostCode)
       case _ =>
         storeMigratedVatNumberConnector.storeVatNumber(vatNumber)
-    }) map {
-      case Right(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess) =>
-        StoreVatNumberOrchestrationService.VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)
-      case Left(StoreMigratedVatNumberHttpParser.KnownFactsMismatch) =>
-        StoreVatNumberOrchestrationService.KnownFactsMismatch
-      case Left(StoreMigratedVatNumberHttpParser.NoAgentClientRelationship) =>
-        StoreVatNumberOrchestrationService.NoAgentClientRelationship
-      case Left(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberFailureStatus(status)) =>
-        throw new InternalServerException(s"Failed to store migrated vat number with status: $status")
     }
   }
-
-}
-
-object StoreMigratedVatNumberService {
-
-  sealed trait StoreMigratedVatNumberResponse
-
-  case object StoreMigratedVatNumberSuccess extends StoreMigratedVatNumberResponse
-
-  case object KnownFactsMismatch extends StoreMigratedVatNumberResponse
-
-  case object NoAgentClientRelationship extends StoreMigratedVatNumberResponse
-
-  case class StoreMigratedVatNumberFailure(status: Int) extends StoreMigratedVatNumberResponse
 
 }
