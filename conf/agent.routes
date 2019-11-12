@@ -15,6 +15,9 @@ GET         /error/already-signed-up                            uk.gov.hmrc.vats
 GET         /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.show
 POST        /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.submit
 
+# Route in from BTA for agents (make sure it doesn't move above the /vat-number route
+GET         /vat-number/:vatNumber                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.BTAOptedOutAgentController.redirect(vatNumber: String)
+
 # Confirm VRN
 GET         /confirm-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.show
 POST        /confirm-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.submit
