@@ -95,6 +95,24 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   status(result) shouldBe Status.SEE_OTHER
                   redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
                   session(result) get vatNumberKey should contain(testVatNumber)
+                  session(result) get isMigratedKey should contain(false.toString)
+                }
+              }
+
+              "the VAT number is not overseas and is stored successfully for a migrated user" should {
+                "redirect to the business entity type page" in {
+                  mockAuthRetrieveVatDecEnrolment()
+                  mockOrchestrate(
+                    enrolments = Enrolments(Set(testVatDecEnrolment)),
+                    vatNumber = testVatNumber
+                  )(Future.successful(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)))
+
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+                  session(result) get vatNumberKey should contain(testVatNumber)
+                  session(result) get isMigratedKey should contain(true.toString)
                 }
               }
 
@@ -112,6 +130,26 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
                   session(result) get vatNumberKey should contain(testVatNumber)
                   session(result) get businessEntityKey should contain(Overseas.toString)
+                  session(result) get isMigratedKey should contain(false.toString)
+                }
+              }
+
+
+              "the VAT number is overseas and is stored successfully for a migrated user" should {
+                "redirect to the capture business entity controller" in {
+                  mockAuthRetrieveVatDecEnrolment()
+                  mockOrchestrate(
+                    enrolments = Enrolments(Set(testVatDecEnrolment)),
+                    vatNumber = testVatNumber
+                  )(Future.successful(VatNumberStored(isOverseas = true, isDirectDebit = false, isMigrated = true)))
+
+                  val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
+
+                  status(result) shouldBe Status.SEE_OTHER
+                  redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
+                  session(result) get vatNumberKey should contain(testVatNumber)
+                  session(result) get businessEntityKey should contain(Overseas.toString)
+                  session(result) get isMigratedKey should contain(true.toString)
                 }
               }
 
@@ -384,6 +422,28 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
               result.session get vatNumberKey should contain(testVatNumber)
               result.session get businessEntityKey should contain(Overseas.toString)
+              session(result) get isMigratedKey should contain(false.toString)
+            }
+          }
+
+
+          "the vat number is for an overseas business who has already been migrated" should {
+            "redirect to the Capture Vat registration date controller" in {
+              mockAuthRetrieveEmptyEnrolment()
+              mockOrchestrate(
+                enrolments = Enrolments(Set()),
+                vatNumber = testVatNumber
+              )(Future.successful(Eligible(isOverseas = true, isMigrated = true)))
+
+              implicit val request = testPostRequest(testVatNumber)
+
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+
+              result.session get vatNumberKey should contain(testVatNumber)
+              result.session get businessEntityKey should contain(Overseas.toString)
+              session(result) get isMigratedKey should contain(true.toString)
             }
           }
 
