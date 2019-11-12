@@ -53,7 +53,7 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
 
   def mockFailedAuth(authorisationException: AuthorisationException = InternalError("Uh oh")): Unit = {
     when(mockAuthConnector.authorise(ArgumentMatchers.any(), ArgumentMatchers.any()
-    )(ArgumentMatchers.any[HeaderCarrier],ArgumentMatchers.any[ExecutionContext]))
+    )(ArgumentMatchers.any[HeaderCarrier], ArgumentMatchers.any[ExecutionContext]))
       .thenReturn(Future.failed(authorisationException))
   }
 
@@ -92,6 +92,16 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
     )(
       Future.successful(
         Some(Admin) ~ Some(Organisation) ~ enrolments ~ enrolments
+      )
+    )
+  }
+
+  def mockAgentAuthSuccess(enrolments: Enrolments): Unit = {
+    mockAuthorise(
+      retrievals = Retrievals.allEnrolments and Retrievals.allEnrolments
+    )(
+      Future.successful(
+        enrolments ~ enrolments
       )
     )
   }

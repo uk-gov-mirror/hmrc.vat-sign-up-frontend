@@ -40,7 +40,7 @@ class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   "Calling the show action of the Capture Agent Email controller" when {
     "the isMigrated session flag is true" should {
-      "redirect to CheckYourAnswersFinal" in {
+      "redirect to SendYourApplication" in {
         mockAuthRetrieveAgentEnrolment()
 
         val reqWithSession = FakeRequest("POST", uri).withSession(
@@ -50,7 +50,7 @@ class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         val result = TestCaptureAgentEmailController.show(reqWithSession)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
+        redirectLocation(result) shouldBe Some(routes.AgentSendYourApplicationController.show().url)
       }
     }
     "the isMigrated session flag is false" should {
