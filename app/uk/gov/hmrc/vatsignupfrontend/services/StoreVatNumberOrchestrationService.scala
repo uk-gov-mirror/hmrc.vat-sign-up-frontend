@@ -20,98 +20,79 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreMigratedVatNumberHttpParser}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
+import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.{StoreVatNumberFailure, StoreVatNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
+//noinspection ScalaStyle
 class StoreVatNumberOrchestrationService @Inject()(checkVatNumberEligibilityService: CheckVatNumberEligibilityService,
                                                    storeMigratedVatNumberService: StoreMigratedVatNumberService,
                                                    storeVatNumberService: StoreVatNumberService,
                                                    claimSubscriptionService: ClaimSubscriptionService
                                                   )(implicit ec: ExecutionContext) extends FeatureSwitching {
 
-  def orchestrate(enrolments: Enrolments, vatNumber: String)(implicit headerCarrier: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] =
-    enrolments.getAnyVatNumber match {
-      case Some(enrolmentVrn) =>
-        checkVatNumberEligibilityService.checkEligibility(vatNumber).flatMap {
-          case Eligible(_, isMigrated) if isMigrated =>
-            storeMigratedVatNumberService.storeVatNumber(vatNumber, None, None)
-          case Eligible(_, _) if enrolments.mtdVatNumber.isEmpty =>
-            storeVatNumber(vatNumber)
-          case Eligible(_, _) =>
-            Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed)
-          case StoreVatNumberOrchestrationService.AlreadySubscribed if enrolments.mtdVatNumber.isEmpty =>
-            claimSubscription(vatNumber)
-          case eligibilityResponse =>
-            Future.successful(eligibilityResponse)
-        }
-      case None if enrolments.agent.isDefined =>
-        checkVatNumberEligibilityService.checkEligibility(vatNumber).flatMap {
-          case Eligible(_, isMigrated) if isMigrated =>
-            storeMigratedVatNumberService.storeVatNumber(vatNumber, None, None)
-          case Eligible(_, _) =>
-            storeVatNumberDelegated(vatNumber)
-          case eligibilityResponse =>
-            Future.successful(eligibilityResponse)
-        }
-      case None =>
-        checkVatNumberEligibilityService.checkEligibility(vatNumber)
-    }
+  def orchestrate(enrolments: Enrolments, vatNumber: String)(implicit headerCarrier: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
+    val isEnrolled = enrolments.getAnyVatNumber.contains(vatNumber)
+    val isAgent = enrolments.agentReferenceNumber.isDefined
 
-
-  private def storeVatNumberDelegated(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
-    storeVatNumberService.storeVatNumberDelegated(vatNumber).map {
-      case Right(StoreVatNumberService.VatNumberStored(isOverseas, isDirectDebit)) =>
-        StoreVatNumberOrchestrationService.VatNumberStored(isOverseas, isDirectDebit, isMigrated = false)
-      case Left(StoreVatNumberService.NoAgentClientRelationship) =>
-        StoreVatNumberOrchestrationService.NoAgentClientRelationship
-      case Left(VatMigrationInProgress) =>
-        MigrationInProgress
-      case Left(StoreVatNumberService.InvalidVatNumber) =>
-        StoreVatNumberOrchestrationService.InvalidVatNumber
-      case Left(StoreVatNumberService.IneligibleVatNumber(dates)) if dates.isEmpty =>
-        Ineligible
-      case Left(StoreVatNumberService.AlreadySubscribed) =>
-        StoreVatNumberOrchestrationService.AlreadySubscribed
-      case Left(StoreVatNumberService.IneligibleVatNumber(dates)) =>
-        Inhibited(dates)
-      case _ =>
-        throw new InternalServerException("Failed to store non migrated vat number for a delegated user")
+    checkVatNumberEligibilityService.checkEligibility(vatNumber).flatMap {
+      case Eligible(isOverseas, isMigrated) if isMigrated && (isEnrolled || isAgent) =>
+        storeMigratedVatNumberService.storeVatNumber(vatNumber, None, None) map {
+          case Right(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess) =>
+            VatNumberStored(isOverseas, isDirectDebit = false, isMigrated)
+          case Left(StoreMigratedVatNumberHttpParser.KnownFactsMismatch) =>
+            KnownFactsMismatch
+          case Left(StoreMigratedVatNumberHttpParser.NoAgentClientRelationship) =>
+            NoAgentClientRelationship
+        }
+      case Eligible(_, _) if enrolments.mtdVatNumber.isDefined =>
+        //If user already has MTD-VAT enrolment, do not call legacy store VRN code as it will attempt to claim enrolment and fail
+        Future.successful(AlreadySubscribed)
+      case Eligible(_, _) if isEnrolled =>
+        storeVatNumberService.storeVatNumber(vatNumber, isFromBta = false)
+          .map(handleLegacyStoreVatNumberResponse(vatNumber))
+      case Eligible(_, _) if isAgent =>
+        storeVatNumberService.storeVatNumberDelegated(vatNumber)
+          .map(handleLegacyStoreVatNumberResponse(vatNumber))
+      case StoreVatNumberOrchestrationService.AlreadySubscribed if isEnrolled && enrolments.mtdVatNumber.isEmpty =>
+        claimSubscriptionService.claimSubscription(vatNumber, isFromBta = false).map {
+          case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
+            StoreVatNumberOrchestrationService.SubscriptionClaimed
+          case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
+            StoreVatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
+          case Left(unexpectedError) =>
+            throw new InternalServerException(s"Unexpected error in claim subscription for user with enrolment - $unexpectedError")
+        }
+      case eligibilityResponse =>
+        Future.successful(eligibilityResponse)
     }
   }
 
-  private def storeVatNumber(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
-    storeVatNumberService.storeVatNumber(vatNumber, isFromBta = false).map {
+  private def handleLegacyStoreVatNumberResponse(vatNumber: String)(response: Either[StoreVatNumberFailure, StoreVatNumberSuccess]): StoreVatNumberOrchestrationServiceResponse =
+    response match {
       case Right(StoreVatNumberService.VatNumberStored(isOverseas, isDirectDebit)) =>
         StoreVatNumberOrchestrationService.VatNumberStored(isOverseas, isDirectDebit, isMigrated = false)
       case Right(StoreVatNumberService.SubscriptionClaimed) =>
         StoreVatNumberOrchestrationService.SubscriptionClaimed
-      case Left(IneligibleVatNumber(migratableDates)) if migratableDates.isEmpty =>
+      case Left(StoreVatNumberService.IneligibleVatNumber(migratableDates)) if migratableDates.isEmpty =>
         StoreVatNumberOrchestrationService.Ineligible
-      case Left(IneligibleVatNumber(migratableDates)) =>
+      case Left(StoreVatNumberService.IneligibleVatNumber(migratableDates)) =>
         StoreVatNumberOrchestrationService.Inhibited(migratableDates)
-      case Left(VatMigrationInProgress) =>
+      case Left(StoreVatNumberService.VatMigrationInProgress) =>
         StoreVatNumberOrchestrationService.MigrationInProgress
-      case Left(VatNumberAlreadyEnrolled) =>
+      case Left(StoreVatNumberService.VatNumberAlreadyEnrolled) =>
         StoreVatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
-      case _ =>
-        throw new InternalServerException("Failed to store non migrated vat number")
-    }
-  }
-
-  private def claimSubscription(vatNumber: String)(implicit hc: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] =
-    claimSubscriptionService.claimSubscription(vatNumber, isFromBta = false).map {
-      case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
-        StoreVatNumberOrchestrationService.SubscriptionClaimed
-      case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
-        StoreVatNumberOrchestrationService.AlreadyEnrolledOnDifferentCredential
-      case Left(unexpectedError) =>
-        throw new InternalServerException(s"Unexpected error in claim subscription for user with enrolment - $unexpectedError")
+      case Left(StoreVatNumberService.NoAgentClientRelationship) =>
+        StoreVatNumberOrchestrationService.NoAgentClientRelationship
+      case Left(StoreVatNumberService.InvalidVatNumber) =>
+        StoreVatNumberOrchestrationService.InvalidVatNumber
+      case Left(StoreVatNumberService.AlreadySubscribed) =>
+        StoreVatNumberOrchestrationService.AlreadySubscribed
     }
 }
 

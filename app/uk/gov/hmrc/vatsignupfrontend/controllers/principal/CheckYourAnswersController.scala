@@ -25,9 +25,10 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreMigratedVatNumberService, StoreVatNumberOrchestrationService, StoreVatNumberService}
+import uk.gov.hmrc.vatsignupfrontend.services.{StoreMigratedVatNumberService, StoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers
 
@@ -177,18 +178,11 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
-        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) if isMigrated && isOverseas =>
-          storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), None).map {
-            case StoreVatNumberOrchestrationService.VatNumberStored(_, _, _) =>
+        case (Some(vatNumber), Some(vatRegistrationDate), optBusinessPostcode, _, _, _) if isMigrated =>
+          storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), optBusinessPostcode).map {
+            case Right(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess) =>
               Redirect(routes.CaptureBusinessEntityController.show())
-            case StoreVatNumberOrchestrationService.KnownFactsMismatch =>
-              throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store overseas vat number for unenrolled known facts mismatch")
-          }
-        case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
-          storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), Some(businessPostCode)).map {
-            case StoreVatNumberOrchestrationService.VatNumberStored(_, _, _) =>
-              Redirect(routes.CaptureBusinessEntityController.show())
-            case StoreVatNumberOrchestrationService.KnownFactsMismatch =>
+            case Left(StoreMigratedVatNumberHttpParser.KnownFactsMismatch) =>
               throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store vat number for unenrolled known facts mismatch")
           }
         case (_, _, _, None, _, _) if isEnabled(AdditionalKnownFacts) =>
