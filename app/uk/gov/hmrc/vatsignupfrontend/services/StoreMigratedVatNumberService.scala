@@ -33,9 +33,9 @@ class StoreMigratedVatNumberService @Inject()(storeMigratedVatNumberConnector: S
                      optBusinessPostCode: Option[PostCode]
                     )(implicit hc: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
 
-    ((optRegistrationDate, optBusinessPostCode) match {
-      case (Some(regDate), Some(postCode)) =>
-        storeMigratedVatNumberConnector.storeVatNumber(vatNumber, regDate, Some(postCode))
+    (optRegistrationDate match {
+      case Some(regDate) =>
+        storeMigratedVatNumberConnector.storeVatNumber(vatNumber, regDate, optBusinessPostCode)
       case _ =>
         storeMigratedVatNumberConnector.storeVatNumber(vatNumber)
     }) map {

@@ -298,8 +298,8 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         stubStoreVatNumberKnownFactsMismatchMigrated(
           Some(testBusinessPostCode),
           testDate,
-          Some(testBox5Figure),
-          Some(testLastReturnMonth),
+          None,
+          None,
           isFromBta = false
         )
 
@@ -309,9 +309,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.box5FigureKey -> testBox5Figure,
-            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
-            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
             SessionKeys.isMigratedKey -> "true"
           )
         )())
@@ -335,9 +332,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.box5FigureKey -> testBox5Figure,
-            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
-            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
             SessionKeys.isMigratedKey -> "true"
           )
         )())
@@ -361,9 +355,78 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
-            SessionKeys.box5FigureKey -> testBox5Figure,
-            SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
-            SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted,
+            SessionKeys.isMigratedKey -> "true"
+          )
+        )()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
+        )
+      }
+
+    }
+    "handle attempting to store a Unenrolled migrated overseas vat number" should {
+      "throw an error if the known facts mismatch" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreVatNumberKnownFactsMismatchMigrated(
+          None,
+          testDate,
+          None,
+          None,
+          isFromBta = false
+        )
+
+
+        val res = await(post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessEntityKey -> Overseas.toString,
+            SessionKeys.isMigratedKey -> "true"
+          )
+        )())
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+
+      }
+
+      "throw an error when a failure to store the vat number occurs" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreMigratedOverseasVatnumberKF(
+          testVatNumber,
+          testDate.toOutputDateFormat
+        )(INTERNAL_SERVER_ERROR)
+
+        val res = await(post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessEntityKey -> Overseas.toString,
+            SessionKeys.isMigratedKey -> "true"
+          )
+        )())
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+
+      }
+
+      "redirect to business entity when a vat number is successfully stored" in {
+        stubAuth(OK, successfulAuthResponse())
+        stubStoreMigratedOverseasVatnumberKF(
+          testVatNumber,
+          testDate.toDesDateFormat
+        )(OK)
+
+        val res = post("/check-your-answers",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+            SessionKeys.businessEntityKey -> Overseas.toString,
             SessionKeys.isMigratedKey -> "true"
           )
         )()

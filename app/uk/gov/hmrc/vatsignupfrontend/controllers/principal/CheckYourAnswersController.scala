@@ -49,8 +49,20 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
       val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
+      val isOverseas = request.session.get(SessionKeys.businessEntityKey).contains(Overseas.toString)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optLastReturnMonth) match {
+        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) if isMigrated && isOverseas =>
+          Future.successful(
+            Ok(check_your_answers(
+              vatNumber = vatNumber,
+              registrationDate = vatRegistrationDate,
+              optPostCode = None,
+              optPreviousVatReturn = None,
+              optBox5Figure = None,
+              optLastReturnMonthPeriod = None,
+              postAction = routes.CheckYourAnswersController.submit()))
+          )
         case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
           Future.successful(
             Ok(check_your_answers(
@@ -150,6 +162,7 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
       val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
+      val isOverseas = request.session.get(SessionKeys.businessEntityKey).contains(Overseas.toString)
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optlastReturnMonth) match {
         case (None, _, _, _, _, _) =>
@@ -164,6 +177,13 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
+        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) if isMigrated && isOverseas =>
+          storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), None).map {
+            case StoreVatNumberOrchestrationService.VatNumberStored(_, _, _) =>
+              Redirect(routes.CaptureBusinessEntityController.show())
+            case StoreVatNumberOrchestrationService.KnownFactsMismatch =>
+              throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store overseas vat number for unenrolled known facts mismatch")
+          }
         case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
           storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), Some(businessPostCode)).map {
             case StoreVatNumberOrchestrationService.VatNumberStored(_, _, _) =>
