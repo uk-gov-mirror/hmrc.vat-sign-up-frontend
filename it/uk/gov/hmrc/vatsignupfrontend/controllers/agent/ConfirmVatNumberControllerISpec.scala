@@ -59,9 +59,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
         }
-      }
 
-      "redirect to the capture client business entity page" when {
         "the vat number is successfully stored and isMigrated" in {
           enable(ReSignUpJourney)
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -75,14 +73,26 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
         }
-      }
 
-      "redirect to the capture client business entity page" when {
         "the overseas vat number is successfully stored" in {
           enable(ReSignUpJourney)
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas))
+          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
           stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
+
+          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureBusinessEntityController.show().url)
+          )
+        }
+
+        "the overseas migrated vat number is successfully stored" in {
+          enable(ReSignUpJourney)
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = true)))
+          stubStoreMigratedVatNumber(testVatNumber)(status = OK)
 
           val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 

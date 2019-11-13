@@ -62,9 +62,10 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
             case Some(vatNumber) if vatNumber.nonEmpty =>
               if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
                 storeVatNumberOrchestrationService.orchestrate(enrolments, vatNumber).map {
-                  case VatNumberStored(isOverseas, isDirectDebit, _) if isOverseas =>
+                  case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
                     Redirect(routes.CaptureBusinessEntityController.show())
                       .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                      .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                       .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
                   case VatNumberStored(_, isDirectDebit, isMigrated) =>
                     Redirect(routes.CaptureBusinessEntityController.show())

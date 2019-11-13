@@ -141,7 +141,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         "form value is NO and the VRN is not migrated and is overseas" in {
           enable(ReSignUpJourney)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas))
+          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
           stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
           val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
