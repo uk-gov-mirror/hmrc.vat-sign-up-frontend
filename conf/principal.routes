@@ -44,6 +44,9 @@ GET         /resolve-partnership-utr                            uk.gov.hmrc.vats
 GET         /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.show
 POST        /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureVatNumberController.submit
 
+# Route in from BTA (make sure it doesn't move above the /vat-number route
+GET         /vat-number/:vatNumber                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.BTAOptedOutController.redirect(vatNumber: String)
+
 # Invalid Vat Number
 GET         /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.show
 POST        /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.InvalidVatNumberController.submit
