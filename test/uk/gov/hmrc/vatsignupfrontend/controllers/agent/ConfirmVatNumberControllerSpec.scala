@@ -89,7 +89,9 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
     "vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
-        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false)))
+        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(
+          Future.successful(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = false))
+        )
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -102,7 +104,9 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
     "vat number is in session and store vat is successful for a migrated vat number" should {
       "go to the business entity type page" in {
         mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
-        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true)))
+        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(
+          Future.successful(VatNumberStored(isOverseas = false, isDirectDebit = false, isMigrated = true))
+        )
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -116,13 +120,31 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
     "overseas vat number is in session and store vat is successful" should {
       "go to the business entity type page" in {
         mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
-        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(VatNumberStored(isOverseas = true, isDirectDebit = true, isMigrated = false)))
+        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(
+          Future.successful(VatNumberStored(isOverseas = true, isDirectDebit = true, isMigrated = false))
+        )
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
         session(result) get SessionKeys.hasDirectDebitKey should contain("true")
         session(result) get SessionKeys.businessEntityKey should contain("overseas")
+      }
+    }
+
+    "overseas vat number is in session and store vat is successful a migrated vat number" should {
+      "go to the business entity type page" in {
+        mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
+        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(
+          Future.successful(VatNumberStored(isOverseas = true, isDirectDebit = false, isMigrated = true))
+        )
+
+        val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
+        session(result) get SessionKeys.hasDirectDebitKey should contain("false")
+        session(result) get SessionKeys.businessEntityKey should contain("overseas")
+        session(result) get SessionKeys.isMigratedKey should contain("true")
       }
     }
 

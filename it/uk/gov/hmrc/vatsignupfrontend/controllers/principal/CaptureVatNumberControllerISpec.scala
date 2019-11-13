@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
@@ -25,8 +24,8 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator, SessionCookieCrumbler}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
@@ -455,7 +454,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             "the vat number is overseas" in {
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas))
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
               stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
@@ -572,7 +571,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             "redirect to the Vat Registration Date" in {
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas))
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
