@@ -92,7 +92,7 @@ class ReceiveEmailNotificationsController @Inject()(storeContactPreferenceServic
                         storeEmailAddressService.storeEmailAddress(vatNumber, email) map {
                           case Right(_) =>
                             if (isEnabled(FinalCheckYourAnswer)) Redirect(routes.CheckYourAnswersFinalController.show())
-                            else Redirect(routes.TermsController.show())
+                            else Redirect(routes.SendYourApplicationController.show())
                           case Left(status) =>
                             throw new InternalServerException(s"Store email address service failed with status= $status")
                         }
@@ -108,7 +108,7 @@ class ReceiveEmailNotificationsController @Inject()(storeContactPreferenceServic
                       )
                     else
                       Future.successful(
-                        Redirect(routes.TermsController.show())
+                        Redirect(routes.SendYourApplicationController.show())
                       )
                   case Left(status) => throw new InternalServerException(s"Store contact preference failed with status = $status")
                 }

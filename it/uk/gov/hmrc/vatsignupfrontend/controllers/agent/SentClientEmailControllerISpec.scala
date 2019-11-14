@@ -40,7 +40,7 @@ class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatche
   }
 
   "POST /sent-client-email" should {
-    "return a redirect to the terms controller" when {
+    "return a redirect to the AgentSendYourApplicationController" when {
       "the final check your answer feature switch is disabled" in {
         disable(FinalCheckYourAnswer)
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -49,7 +49,7 @@ class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatche
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.TermsController.show().url)
+          redirectUri(routes.AgentSendYourApplicationController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)

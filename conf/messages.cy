@@ -363,16 +363,6 @@ agent.email_verified.title                                             = Rydych 
 agent.email_verified.heading                                           = Rydych wedi dilysu''ch cyfeiriad e-bost
 agent.email_verified.line_1                                            = Mae''n rhaid i chi fwrw ymlaen i gofrestru''ch cleient. Byddwn yn anfon neges atoch i gadarnhau ar ôl i chi gofrestru''r cleient hwn.
 
-## Terms page
-agent.terms.title                                                      = Telerau cymryd rhan
-agent.terms.heading                                                    = Telerau cymryd rhan
-agent.terms.line_1                                                     = Drwy gymryd rhan yn y treial hwn, rydych yn cytuno y byddwch chi neu''ch cleient yn gwneud y canlynol:
-agent.terms.bullet_1                                                   = defnyddio meddalwedd berthnasol i gofnodi gwerthiannau a phryniannau eich cleient, ac yna gyflwyno ei Ffurflenni TAW
-agent.terms.bullet_2                                                   = cyflwyno pob Ffurflen TAW cyn pen 1 mis calendr a 7 diwrnod i ddiwedd y cyfnod cyfrifyddu
-agent.terms.bullet_3                                                   = rhoi gwybod i CThEM os bydd eich cleient yn rhoi''r gorau i fasnachu ac yna gyflwyno''r Ffurflen TAW derfynol
-agent.terms.bullet_4                                                   = rhoi gwybod i CThEM os yw''ch cleient eisiau gadael y treial hwn
-agent.terms.line_2                                                     = Nid yw''r telerau hyn yn gontractiol, a gall eich cleient roi''r gorau i gymryd rhan yn y treial hwn ar unrhyw adeg.
-
 ## Agent final confirmation page
 agent.check_your_answers_final.title                                   = Gwiriwch eich atebion cyn eu hanfon
 agent.check_your_answers_final.heading                                 = Gwiriwch eich atebion cyn eu hanfon
@@ -620,17 +610,6 @@ principal.failed_identity_verification.try_again                       = Rhowch 
 principal.identity_verification_success.title                          = Rydym wedi cadarnhau pwy ydych
 principal.identity_verification_success.heading                        = Rydym wedi cadarnhau pwy ydych
 principal.identity_verification_success.line_1                         = Gallwch nawr gofrestru ar gyfer y gwasanaeth hwn.
-
-## Terms page
-principal.terms.title                                                  = Telerau cymryd rhan
-principal.terms.heading                                                = Telerau cymryd rhan
-principal.terms.line_1                                                 = Drwy gymryd rhan yn y treial hwn, rydych yn cytuno i''r canlynol:
-principal.terms.bullet_1                                               = defnyddio meddalwedd berthnasol i gofnodi''ch gwerthiannau a''ch pryniannau, ac yna gyflwyno''ch Ffurflenni TAW
-principal.terms.bullet_2                                               = cyflwyno pob Ffurflen TAW cyn pen un mis calendr a 7 diwrnod i ddiwedd eich cyfnod cyfrifyddu
-principal.terms.bullet_3                                               = awdurdodi unrhyw drydydd parti rydych yn ei ddefnyddio (fel eich cyfrifydd) a bod yn gyfrifol am unrhyw wybodaeth y mae''n ei rhoi i CThEM ar eich rhan
-principal.terms.bullet_4                                               = rhoi gwybod i CThEM os ydych yn rhoi''r gorau i fasnachu ac yna gyflwyno''ch Ffurflen TAW derfynol
-principal.terms.bullet_5                                               = rhoi gwybod i CThEM os ydych am adael y treial hwn
-principal.terms.line_2                                                 = Nid yw''r telerau hyn yn gontractiol, a gallwch roi''r gorau i gymryd rhan yn y treial ar unrhyw adeg.
 
 ## Confirmation page
 principal.confirmation.title                                           = Mae''ch cais i gofrestru wedi dod i law

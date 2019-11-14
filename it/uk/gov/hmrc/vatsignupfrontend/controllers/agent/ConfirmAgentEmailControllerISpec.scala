@@ -62,25 +62,6 @@ class ConfirmAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
       }
     }
 
-    "redirect to terms page" when {
-      "the email is successfully stored and returned with email verified flag" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreTransactionEmailAddressSuccess(emailVerified = false)
-
-        val res = post("/client/confirm-email", Map(
-          SessionKeys.transactionEmailKey -> testEmail,
-          SessionKeys.vatNumberKey -> testVatNumber
-        ))(EmailForm.email -> testEmail)
-
-        res should have(
-          redirectUri(routes.VerifyAgentEmailController.show().url)
-        )
-
-        val session = SessionCookieCrumbler.getSessionMap(res)
-        session.keys should contain(transactionEmailKey)
-      }
-    }
-
     "redirect to contact preferences page" when {
       "the email is successfully stored and returned with email verified flag" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

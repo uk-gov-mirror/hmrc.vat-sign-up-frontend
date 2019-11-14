@@ -171,10 +171,6 @@ POST        /confirm-details                                    uk.gov.hmrc.vats
 GET         /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.show
 POST        /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.submit
 
-#Terms
-GET         /terms-of-participation                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.TermsController.show
-POST        /terms-of-participation                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.TermsController.submit
-
 #Confirmation
 GET         /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.InformationReceivedController.show
 

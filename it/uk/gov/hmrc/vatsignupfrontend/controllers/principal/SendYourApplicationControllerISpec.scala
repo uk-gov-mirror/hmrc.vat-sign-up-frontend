@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.SubmissionStub._
@@ -39,13 +39,14 @@ class SendYourApplicationControllerISpec extends ComponentSpecBase with CustomMa
   }
 
   "POST /about-to-submit" when {
-    "Submission is successful" should {
-      "Submit successfully and redirect to information received" in {
+    "Submission is successful with a Migrated VRN" should {
+      "Submit successfully and redirect to sign up complete" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubMigratedSubmissionSuccess()
 
         val res = post("/about-to-submit", cookies = Map(
-          SessionKeys.vatNumberKey -> testVatNumber
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.isMigratedKey -> "true"
         ))()
 
         res should have(
@@ -53,34 +54,83 @@ class SendYourApplicationControllerISpec extends ComponentSpecBase with CustomMa
           redirectUri(resignup.routes.SignUpCompleteController.show().url)
         )
       }
+    }
 
-      "Submission is unsuccessful" should {
-        "return INTERNAL_SERVER_ERROR" in {
-          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubMigratedSubmissionFailure()
+    "Submission is unsuccessful with Migrated VRN" should {
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubMigratedSubmissionFailure()
 
-          val res = post("/about-to-submit", cookies = Map(
-            SessionKeys.vatNumberKey -> testVatNumber
-          ))()
+        val res = post("/about-to-submit", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.isMigratedKey -> "true"
+        ))()
 
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-          )
-        }
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
       }
+    }
 
-      "Submission is unsuccessful when no VRN" should {
-        "redirect to ResolveVatNumberController" in {
-          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-          stubMigratedSubmissionFailure()
+    "Submission is successful with a Non-Migrated VRN" should {
+      "Submit successfully and redirect to information received" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubSubmissionSuccess()
 
-          val res = post("/about-to-submit")()
+        val res = post("/about-to-submit", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber
+        ))()
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.ResolveVatNumberController.resolve().url)
-          )
-        }
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.InformationReceivedController.show().url)
+        )
+      }
+    }
+
+    "A Non-Migrated VRN has Direct Debits, the DD Terms FS is enabled and the user has not accepted them" should {
+      "Submit successfully and redirect to direct debit terms page" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        enable(DirectDebitTermsJourney)
+
+        val res = post("/about-to-submit", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.hasDirectDebitKey -> "true"
+        ))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DirectDebitTermsAndConditionsController.show().url)
+        )
+      }
+    }
+
+    "Submission is unsuccessful with Non-Migrated VRN" should {
+      "return INTERNAL_SERVER_ERROR" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+        stubSubmissionFailure()
+
+        val res = post("/about-to-submit", cookies = Map(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.isMigratedKey -> "true"
+        ))()
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+    }
+
+    "Submission is unsuccessful when no VRN" should {
+      "redirect to ResolveVatNumberController" in {
+        stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+        val res = post("/about-to-submit")()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.ResolveVatNumberController.resolve().url)
+        )
       }
     }
   }

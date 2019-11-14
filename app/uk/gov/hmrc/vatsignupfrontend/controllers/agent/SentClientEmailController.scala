@@ -55,7 +55,7 @@ class SentClientEmailController @Inject()(val controllerComponents: ControllerCo
           )
         case Some(email) if email.nonEmpty =>
           Future.successful(
-            Redirect(routes.TermsController.show())
+            Redirect(routes.AgentSendYourApplicationController.show())
           )
         case _ =>
           Future.successful(

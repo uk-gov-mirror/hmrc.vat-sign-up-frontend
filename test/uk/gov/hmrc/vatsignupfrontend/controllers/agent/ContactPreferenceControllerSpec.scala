@@ -106,7 +106,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
           "user does not have a direct debit" should {
 
-            "redirect to Terms page" when {
+            "redirect to AgentSendYourApplication page" when {
               "the final check your answers feature switch is disabled" in {
                 disable(FinalCheckYourAnswer)
                 mockAuthRetrieveAgentEnrolment()
@@ -118,7 +118,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
                 val result = TestContactPreferenceController.submit()(request)
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+                redirectLocation(result) shouldBe Some(routes.AgentSendYourApplicationController.show().url)
               }
             }
 

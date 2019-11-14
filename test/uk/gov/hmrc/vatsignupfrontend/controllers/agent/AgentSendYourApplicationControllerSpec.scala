@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
-import play.api.http.Status
+
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockMigratedSubmissionService, MockSubmissionService}
 
+class AgentSendYourApplicationControllerSpec extends ControllerSpec with MockMigratedSubmissionService with MockSubmissionService {
 
-class SendYourApplicationControllerSpec extends ControllerSpec with MockMigratedSubmissionService with MockSubmissionService {
-
-  object TestSendYourApplicationController extends SendYourApplicationController(
+  object TestAgentSendYourApplicationController$ extends AgentSendYourApplicationController(
     mockControllerComponents,
     mockMigratedSubmissionService,
     mockSubmissionService
@@ -39,26 +37,26 @@ class SendYourApplicationControllerSpec extends ControllerSpec with MockMigrated
 
   lazy val testGetRequest = FakeRequest("GET", "/about-to-submit")
 
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/about-to-submit")
+  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/client/about-to-submit")
 
   "Calling the show action of the Send Your Application controller" should {
     "show the Send Your Application page" in {
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
-      val result = TestSendYourApplicationController.show(request)
+      val result = TestAgentSendYourApplicationController$.show(request)
 
-      status(result) shouldBe Status.OK
+      status(result) shouldBe OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-      titleOf(result) shouldBe MessageLookup.PrincipalSendYourApplication.title
+      titleOf(result) shouldBe MessageLookup.AgentSendYourApplication.title
     }
   }
 
   "Calling the submit action of the Send Your Application controller" when {
     "a Migrated VRN is in Session" should {
       "redirect to Sign up complete page if Submit succeeds" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val vatNumber = testVatNumber
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> vatNumber,
@@ -66,13 +64,13 @@ class SendYourApplicationControllerSpec extends ControllerSpec with MockMigrated
         )
         mockMigratedSubmitSuccess(vatNumber)
 
-        val result = TestSendYourApplicationController.submit(request)
+        val result = TestAgentSendYourApplicationController$.submit(request)
 
-        status(result) shouldBe Status.SEE_OTHER
+        status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(resignup.routes.SignUpCompleteController.show().url)
       }
       "throw an exception if Submit fails" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val vatNumber = testVatNumber
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> vatNumber,
@@ -80,62 +78,44 @@ class SendYourApplicationControllerSpec extends ControllerSpec with MockMigrated
         )
         mockMigratedSubmitFailure(vatNumber)
 
-        val result = TestSendYourApplicationController.submit(request)
+        val result = TestAgentSendYourApplicationController$.submit(request)
 
         intercept[InternalServerException](await(result))
       }
     }
     "a Non-Migrated VRN is in Session" should {
       "redirect to Confirmation page if Submit succeeds" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val vatNumber = testVatNumber
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> vatNumber)
         mockSubmitSuccess(vatNumber)
 
-        val result = TestSendYourApplicationController.submit(request)
+        val result = TestAgentSendYourApplicationController$.submit(request)
 
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.InformationReceivedController.show().url)
-      }
-      "redirect to Direct Debit Terms page is the DD Terms FS is on and user has not accepted them yet" in {
-        mockAuthAdminRole()
-        enable(DirectDebitTermsJourney)
-        val vatNumber = testVatNumber
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> vatNumber,
-          SessionKeys.hasDirectDebitKey -> "true"
-        )
-
-        val result = TestSendYourApplicationController.submit(request)
-
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.DirectDebitTermsAndConditionsController.show().url)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmationController.show().url)
       }
       "throw an exception if Submit fails" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val vatNumber = testVatNumber
         val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> vatNumber)
         mockSubmitFailure(vatNumber)
 
-        val result = TestSendYourApplicationController.submit(request)
+        val result = TestAgentSendYourApplicationController$.submit(request)
 
         intercept[InternalServerException](await(result))
       }
     }
     "there is no VRN in session" should {
       "redirect to Capture Vat Number page" in {
-        mockAuthAdminRole()
+        mockAuthRetrieveAgentEnrolment()
         val request = testPostRequest
 
-        val result = TestSendYourApplicationController.submit(request)
+        val result = TestAgentSendYourApplicationController$.submit(request)
 
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
       }
     }
   }
 }
-
-
-
-

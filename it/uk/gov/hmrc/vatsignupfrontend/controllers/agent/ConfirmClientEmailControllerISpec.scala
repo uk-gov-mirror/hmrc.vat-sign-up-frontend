@@ -58,7 +58,7 @@ class ConfirmClientEmailControllerISpec extends ComponentSpecBase with CustomMat
       }
     }
 
-    "redirect to terms page" when {
+    "redirect to AgentSendYourApplication page" when {
       "the email is successfully stored and returned with email verified flag and the final check your answers feature switch is disabled" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess(emailVerified = true)
@@ -68,7 +68,7 @@ class ConfirmClientEmailControllerISpec extends ComponentSpecBase with CustomMat
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.TermsController.show().url)
+          redirectUri(routes.AgentSendYourApplicationController.show().url)
         )
 
         val session = SessionCookieCrumbler.getSessionMap(res)

@@ -71,7 +71,7 @@ class ContactPreferenceController @Inject()(val controllerComponents: Controller
           case (Paper, false) if isEnabled(FinalCheckYourAnswer) =>
             Redirect(routes.CheckYourAnswersFinalController.show())
           case (Paper, false) =>
-            Redirect(routes.TermsController.show())
+            Redirect(routes.AgentSendYourApplicationController.show())
         }
 
       contactPreferencesForm(isAgent = true).bindFromRequest.fold(

@@ -24,14 +24,16 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
-import uk.gov.hmrc.vatsignupfrontend.services.MigratedSubmissionService
+import uk.gov.hmrc.vatsignupfrontend.services.{MigratedSubmissionService, SubmissionService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.send_your_application
 
 import scala.concurrent.Future
 
 @Singleton
-class AgentSendYourApplicationController @Inject()(val controllerComponents: ControllerComponents, val migratedSubmissionService: MigratedSubmissionService)
-  extends AuthenticatedController(AgentEnrolmentPredicate){
+class AgentSendYourApplicationController @Inject()(val controllerComponents: ControllerComponents,
+                                                   val migratedSubmissionService: MigratedSubmissionService,
+                                                   val submissionService: SubmissionService)
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -41,16 +43,21 @@ class AgentSendYourApplicationController @Inject()(val controllerComponents: Con
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      val isMigrated: Boolean = request.session.get(SessionKeys.isMigratedKey).getOrElse("false").toBoolean
       request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) => migratedSubmissionService.submit(vatNumber) map {
-          case  Right(_) => Redirect(resignup.routes.SignUpCompleteController.show())
-          case  Left(SubmissionFailureResponse(status)) =>  throw new InternalServerException(s"Submission failed, backend returned: $status")
-        }
-        case None => Future.successful(Redirect(routes.CaptureVatNumberController.show()))
+        case Some(vatNumber) if isMigrated =>
+          migratedSubmissionService.submit(vatNumber) map {
+            case Right(_) => Redirect(resignup.routes.SignUpCompleteController.show())
+            case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
+          }
+        case Some(vatNumber) =>
+          submissionService.submit(vatNumber).map {
+            case Right(_) => Redirect(routes.ConfirmationController.show())
+            case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
+          }
+        case None =>
+          Future.successful(Redirect(routes.CaptureVatNumberController.show()))
       }
-
-
     }
   }
-
 }
