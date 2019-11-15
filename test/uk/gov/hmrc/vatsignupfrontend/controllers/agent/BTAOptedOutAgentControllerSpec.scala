@@ -34,8 +34,7 @@ class BTAOptedOutAgentControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "redirect" should {
     "redirect to the Capture VAT number page" in {
-
-      mockAuthAdminRole()
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestBTAOptedOutAgentController.redirect(vrnFromBTA)(testGetRequest)
 
