@@ -16,16 +16,12 @@
 
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
-import java.time.LocalDate
-import java.util.UUID
-
 import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.helpers.ComponentSpecBase
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse, StoreNinoSuccess}
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, UserDetailsModel, UserEntered}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoVATNumberFailure, StoreNinoFailureResponse, StoreNinoSuccess}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -35,39 +31,22 @@ class StoreNinoConnectorISpec extends ComponentSpecBase {
 
   private implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  val testUserDetails = UserDetailsModel(
-    firstName = UUID.randomUUID().toString,
-    lastName = UUID.randomUUID().toString,
-    dateOfBirth = DateModel.dateConvert(LocalDate.now()),
-    nino = testNino
-  )
-
   "storeNino" when {
     "Backend returns a NO_CONTENT response" should {
       "return StoreNinoSuccess" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testNino, UserEntered)(NO_CONTENT)
+        StoreNinoStub.stubStoreNino(testVatNumber, testNino)(NO_CONTENT)
 
-        val res = connector.storeNino(testVatNumber, testNino, UserEntered)
+        val res = connector.storeNino(testVatNumber, testNino)
 
         await(res) shouldBe Right(StoreNinoSuccess)
       }
     }
 
-    "Backend returns a FORBIDDEN response" should {
-      "return the nino returned" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testNino, UserEntered)(FORBIDDEN)
-
-        val res = connector.storeNino(testVatNumber, testNino, UserEntered)
-
-        await(res) shouldBe Left(NoMatchFoundFailure)
-      }
-    }
-
     "Backend returns a NOT_FOUND response" should {
       "return the nino returned" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testNino, UserEntered)(NOT_FOUND)
+        StoreNinoStub.stubStoreNino(testVatNumber, testNino)(NOT_FOUND)
 
-        val res = connector.storeNino(testVatNumber, testNino, UserEntered)
+        val res = connector.storeNino(testVatNumber, testNino)
 
         await(res) shouldBe Left(NoVATNumberFailure)
       }
@@ -75,9 +54,9 @@ class StoreNinoConnectorISpec extends ComponentSpecBase {
 
     "Backend returns a BAD_REQUEST response" should {
       "return a UserMatchFailureResponseModel" in {
-        StoreNinoStub.stubStoreNino(testVatNumber, testNino, UserEntered)(BAD_REQUEST)
+        StoreNinoStub.stubStoreNino(testVatNumber, testNino)(BAD_REQUEST)
 
-        val res = connector.storeNino(testVatNumber, testNino, UserEntered)
+        val res = connector.storeNino(testVatNumber, testNino)
 
         await(res) shouldBe Left(StoreNinoFailureResponse(BAD_REQUEST))
       }

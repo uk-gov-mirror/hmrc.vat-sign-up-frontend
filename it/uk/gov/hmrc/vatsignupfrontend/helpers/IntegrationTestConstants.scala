@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.helpers
 import java.time.LocalDate
 import java.util.UUID
 
-import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.vatsignupfrontend.models._
 
@@ -41,14 +40,6 @@ object IntegrationTestConstants {
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
   val testArn: String = UUID.randomUUID().toString
   val testUri: String = "/test/url"
-  val testUserDetails: UserDetailsModel =
-    UserDetailsModel(
-      firstName = UUID.randomUUID().toString,
-      lastName = UUID.randomUUID().toString,
-      nino = testNino,
-      dateOfBirth = DateModel.dateConvert(LocalDate.now())
-    )
-  val testUserDetailsJson: String = Json.toJson(testUserDetails).toString()
   val testStartDate: LocalDate = LocalDate.now()
   val testEndDate: LocalDate = testStartDate.plusMonths(3)
   val testPartnershipType: String = "limitedPartnership"

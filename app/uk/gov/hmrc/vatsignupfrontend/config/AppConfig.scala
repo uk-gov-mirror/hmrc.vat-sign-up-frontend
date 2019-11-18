@@ -155,10 +155,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
 
-  def getCitizenDetailsUrlBySautr(sautr: String): String = s"$citizenDetailsUrl/citizen-details/sautr/$sautr/"
-
-  def getCitizenDetailsUrlByNino(nino: String): String = s"$citizenDetailsUrl/citizen-details/nino/$nino/"
-
   lazy val ctReferenceLookupUrl: String = s"$protectedMicroServiceUrl/subscription-request/ct-reference-check"
 
   lazy val btaUrl: String = loadConfig("bta.url")
@@ -172,10 +168,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   // TODO confirm url
   lazy val authoriseAgentUrl: String = loadConfig("agent-services.url")
   lazy val matchingStubUrl: String = baseUrl("matching-stub")
-
-  lazy val stubCitizenDetailsUserUrl: String = s"$matchingStubUrl/dynamic-cid"
-
-  lazy val citizenDetailsUrl: String = baseUrl("citizen-details")
 
   lazy val identityVerificationProxyUrl: String = baseUrl("identity-verification-proxy")
 

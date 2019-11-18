@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
@@ -45,7 +45,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     mockAdministrativeDivisionLookupService
   )
 
-  implicit val testGetRequest = FakeRequest("GET", "/business-type")
+  implicit val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-type")
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
@@ -54,7 +54,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "redirect to capture email page" when {
       "VRN is an Administrative Divisions" in {
         mockAuthRetrieveAgentEnrolment()
-        mockIsAdministrativeDivision(testVatNumber)(true)
+        mockIsAdministrativeDivision(testVatNumber)(isAdministrativeDivision = true)
 
         val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
@@ -65,7 +65,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
     "go to the Capture Entity Type page" in {
       mockAuthRetrieveAgentEnrolment()
-      mockIsAdministrativeDivision(testVatNumber)(false)
+      mockIsAdministrativeDivision(testVatNumber)(isAdministrativeDivision = false)
 
 
       val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
@@ -118,25 +118,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
 
       "go to the capture NINO page" when {
-        "the business entity is sole trader and the skip CID check feature switch is enabled" in {
-          enable(SkipCidCheck)
-          mockAuthRetrieveAgentEnrolment()
-
-          val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(soletrader.routes.CaptureNinoController.show().url)
-
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
-        }
-      }
-
-      "go to the capture client details page" when {
         "the business entity is sole trader" in {
           mockAuthRetrieveAgentEnrolment()
 
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(soleTrader))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CaptureClientDetailsController.show().url)
+          redirectLocation(result) shouldBe Some(soletrader.routes.CaptureNinoController.show().url)
 
           result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }

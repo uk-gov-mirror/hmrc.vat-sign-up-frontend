@@ -20,19 +20,16 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCidCheck}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 
 class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with FeatureSwitching {
 
   object TestCaptureNinoController extends CaptureNinoController(mockControllerComponents)
-
-  override def beforeEach (): Unit = enable(SkipCidCheck)
 
   val testGetRequest = FakeRequest("GET", "/national-insurance-number")
 
@@ -40,24 +37,12 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
     FakeRequest("POST", "/national-insurance-number").withFormUrlEncodedBody(nino -> postNino)
 
   "calling the Show method of Capture NINO controller" when {
-    "the SkipCidCheck feature switch is enabled" should {
-      "show the Capture NINO page" in {
-        mockAuthAdminRole()
-        val res = TestCaptureNinoController.show(testGetRequest)
-        status(res) shouldBe OK
-        contentType(res) shouldBe Some("text/html")
-        charset(res) shouldBe Some("utf-8")
-      }
-    }
-
-    "the SkipCidCheck feature switch is disabled" should {
-      "throw an internal server exception" in {
-        disable(SkipCidCheck)
-
-        intercept[NotFoundException] {
-          await(TestCaptureNinoController.show(testGetRequest))
-        }
-      }
+    "show the Capture NINO page" in {
+      mockAuthAdminRole()
+      val res = TestCaptureNinoController.show(testGetRequest)
+      status(res) shouldBe OK
+      contentType(res) shouldBe Some("text/html")
+      charset(res) shouldBe Some("utf-8")
     }
   }
 

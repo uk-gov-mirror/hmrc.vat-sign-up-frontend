@@ -17,8 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub.{toJson, when}
-import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
 import uk.gov.hmrc.vatsignupfrontend.Constants.StoreIdentityVerificationUrlKey
 
 

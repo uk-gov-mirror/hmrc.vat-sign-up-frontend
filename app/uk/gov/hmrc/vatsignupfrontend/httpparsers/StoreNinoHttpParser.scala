@@ -26,7 +26,6 @@ object StoreNinoHttpParser {
     override def read(method: String, url: String, response: HttpResponse): StoreNinoResponse =
       response.status match {
         case NO_CONTENT => Right(StoreNinoSuccess)
-        case FORBIDDEN => Left(NoMatchFoundFailure)
         case NOT_FOUND => Left(NoVATNumberFailure)
         case status => Left(StoreNinoFailureResponse(status))
       }

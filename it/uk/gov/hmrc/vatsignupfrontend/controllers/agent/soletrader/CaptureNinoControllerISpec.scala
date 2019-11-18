@@ -17,76 +17,52 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCidCheck}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.ConfirmNinoController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm.nino
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.ConfirmNinoController
 
 class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(SkipCidCheck)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(SkipCidCheck)
-  }
 
   val url = "/client/national-insurance-number"
 
   "GET /client/national-insurance-number" when {
-    "the SkipCidCheck feature switch is enabled" should {
-      "return OK" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return OK" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get(url)
+      val res = get(url)
 
-        res should have {
-          httpStatus(OK)
-        }
-      }
-    }
-    "the SkipCidCheck feature switch is disabled" should {
-      "return NOT FOUND" in {
-        disable(SkipCidCheck)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get(url)
-
-        res should have {
-          httpStatus(NOT_FOUND)
-        }
-      }
-    }
-    "POST /client/national-insurance-number" when {
-      "the NINO is valid" should {
-        "redirect to confirm nino" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          val res = post(url)(nino -> testNino)
-
-          res should have {
-            httpStatus(SEE_OTHER)
-            redirectUri(ConfirmNinoController.show().url)
-          }
-        }
-      }
-      "the NINO is not valid" should {
-        "return BAD REQUEST" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-          val res = post(url)(nino -> testNino.replace(testNino.substring(0, 1), "QQ"))
-
-          res should have {
-            httpStatus(BAD_REQUEST)
-          }
-        }
+      res should have {
+        httpStatus(OK)
       }
     }
   }
 
+  "POST /client/national-insurance-number" when {
+    "the NINO is valid" should {
+      "redirect to confirm nino" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post(url)(nino -> testNino)
+
+        res should have {
+          httpStatus(SEE_OTHER)
+          redirectUri(ConfirmNinoController.show().url)
+        }
+      }
+    }
+    "the NINO is not valid" should {
+      "return BAD REQUEST" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+        val res = post(url)(nino -> testNino.replace(testNino.substring(0, 1), "QQ"))
+
+        res should have {
+          httpStatus(BAD_REQUEST)
+        }
+      }
+    }
+  }
 }

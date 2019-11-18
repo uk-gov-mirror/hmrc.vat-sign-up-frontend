@@ -17,12 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import javax.inject.{Inject, Singleton}
-
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.connectors.StoreNinoConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.{NinoSource, UserDetailsModel}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +29,7 @@ class StoreNinoService @Inject()(applicationConfig: AppConfig,
                                  storeNinoConnector: StoreNinoConnector) {
 
   /* N.B. this is header update is to be used in conjunction with the test only route
-  *  StubCitizenDetailsController
+  *
   *  the True-Client-IP must match the testId in in uk.gov.hmrc.vatsubscriptionfrontend.testonly.connectors.Request sent
   *  The hc must not be edited in production
   */
@@ -39,7 +37,7 @@ class StoreNinoService @Inject()(applicationConfig: AppConfig,
     if (applicationConfig.hasEnabledTestOnlyRoutes) hc.copy(trueClientIp = Some("VATSUBSC"))
     else hc
 
-  def storeNino(vatNumber:String, nino: String, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
-    storeNinoConnector.storeNino(vatNumber, nino, ninoSource)(hc, ec)
+  def storeNino(vatNumber: String, nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+    storeNinoConnector.storeNino(vatNumber, nino)(hc, ec)
 
 }

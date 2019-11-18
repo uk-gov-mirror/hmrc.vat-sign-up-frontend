@@ -22,11 +22,10 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, ninoKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoVATNumberFailure, StoreNinoFailureResponse, StoreNinoSuccess}
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, UserEntered}
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.confirm_nino
@@ -36,7 +35,7 @@ import scala.concurrent.Future
 @Singleton
 class ConfirmNinoController @Inject()(val controllerComponents: ControllerComponents,
                                       storeNinoService: StoreNinoService)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(SkipCidCheck)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -67,7 +66,7 @@ class ConfirmNinoController @Inject()(val controllerComponents: ControllerCompon
         case (_, None) =>
           Future.successful(Redirect(routes.CaptureNinoController.show()))
         case (Some(vatNumber), Some(nino)) =>
-          storeNinoService.storeNino(vatNumber, nino, UserEntered) map {
+          storeNinoService.storeNino(vatNumber, nino) map {
             case Right(StoreNinoSuccess) =>
               Redirect(CaptureAgentEmailController.show())
             case Left(NoVATNumberFailure) =>
