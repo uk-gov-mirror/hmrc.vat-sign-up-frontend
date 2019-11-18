@@ -79,7 +79,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
     "Calling the submit action of the Receive Email Notifications controller" when {
       "vat number is in session" when {
         "User answered Digital" should {
-          "go to the 'terms' page" in {
+          "go to the 'send your application' page" in {
             mockAuthAdminRole()
 
             mockStoreContactPreferenceSuccess(
@@ -96,7 +96,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
               SessionKeys.emailKey -> testEmail
             ))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
           }
           "go to the 'check your answers final' page" in {
             mockAuthAdminRole()
@@ -119,7 +119,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
           }
         }
         "User answered Paper" should {
-          "go to terms page" in {
+          "go to send your application page" in {
             mockAuthAdminRole()
 
             mockStoreContactPreferenceSuccess(
@@ -132,7 +132,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
               SessionKeys.emailKey -> testEmail
             ))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
           }
           "go to check your answers final page" in {
             mockAuthAdminRole()
@@ -151,7 +151,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
           }
         }
         "User answered Paper with Direct Debit in session" should {
-          "go to terms page" in {
+          "go to send your application page" in {
             mockAuthAdminRole()
 
             mockStoreContactPreferenceSuccess(
@@ -169,7 +169,7 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
               SessionKeys.hasDirectDebitKey -> "true"
             ))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
           }
           "go to check your answers final page" in {
             mockAuthAdminRole()

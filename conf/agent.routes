@@ -107,10 +107,6 @@ GET         /client-email-verified                              uk.gov.hmrc.vats
 
 GET         /email-verified                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentVerifiedEmailController.show
 
-#Terms
-GET         /terms-of-participation                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.show
-POST        /terms-of-participation                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.TermsController.submit
-
 #Confirmation
 GET         /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmationController.show
 

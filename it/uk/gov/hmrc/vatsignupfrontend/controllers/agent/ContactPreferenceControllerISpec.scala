@@ -86,7 +86,7 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
           )
         }
       }
-      "return a redirect to the terms page" when {
+      "return a redirect to the AgentSendYourApplication page" when {
         "paper is selected and the final check your answer feature switch is disabled" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
           stubStoreContactPreferenceSuccess(Paper)
@@ -99,7 +99,7 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.TermsController.show().url)
+            redirectUri(routes.AgentSendYourApplicationController.show().url)
           )
         }
       }

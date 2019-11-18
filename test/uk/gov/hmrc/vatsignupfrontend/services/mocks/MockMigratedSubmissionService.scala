@@ -37,15 +37,15 @@ trait MockMigratedSubmissionService extends BeforeAndAfterEach with MockitoSugar
     reset(mockMigratedSubmissionService)
   }
 
-  private def mockSubmit(vatNumber: String)(returnValue: Future[SubmissionResponse]): Unit = {
+  private def mockMigratedSubmit(vatNumber: String)(returnValue: Future[SubmissionResponse]): Unit = {
     when(mockMigratedSubmissionService.submit(ArgumentMatchers.eq(vatNumber))(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockSubmitSuccess(vatNumber: String): Unit =
-    mockSubmit(vatNumber)(Future.successful(Right(SubmissionSuccessResponse)))
+  def mockMigratedSubmitSuccess(vatNumber: String): Unit =
+    mockMigratedSubmit(vatNumber)(Future.successful(Right(SubmissionSuccessResponse)))
 
-  def mockSubmitFailure(vatNumber: String): Unit =
-    mockSubmit(vatNumber)(Future.successful(Left(SubmissionFailureResponse(INTERNAL_SERVER_ERROR))))
+  def mockMigratedSubmitFailure(vatNumber: String): Unit =
+    mockMigratedSubmit(vatNumber)(Future.successful(Left(SubmissionFailureResponse(INTERNAL_SERVER_ERROR))))
 
 }

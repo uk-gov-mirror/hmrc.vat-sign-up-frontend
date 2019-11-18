@@ -86,7 +86,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
 
     "ContactPreferencesJourney is enabled and vat number is in session" when {
       "the choice is digital" should {
-        "redirect to the terms page" in {
+        "redirect to the send your application page" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreContactPreferenceSuccess(Digital)
           stubStoreEmailAddressSuccess(true)
@@ -99,7 +99,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.TermsController.show().url)
+            redirectUri(routes.SendYourApplicationController.show().url)
           )
         }
       }
@@ -127,7 +127,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
 
     "ContactPreferencesJourney is enabled and vat number is in session" when {
       "the choice is paper" should {
-        "redirect to the terms page" in {
+        "redirect to the send your application page" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreContactPreferenceSuccess(Paper)
 
@@ -139,7 +139,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.TermsController.show().url)
+            redirectUri(routes.SendYourApplicationController.show().url)
           )
         }
       }
@@ -187,7 +187,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
     }
     "ContactPreferencesJourney is enabled and vat number is in session" when {
       "the choice is paper and the user has Direct Debit" should {
-        "redirect to the terms page" in {
+        "redirect to the snd your application page" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreContactPreferenceSuccess(Paper)
           stubStoreEmailAddressSuccess(true)
@@ -202,7 +202,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.TermsController.show().url)
+            redirectUri(routes.SendYourApplicationController.show().url)
           )
         }
       }

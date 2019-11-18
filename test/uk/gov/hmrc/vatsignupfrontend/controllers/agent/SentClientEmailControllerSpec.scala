@@ -62,14 +62,14 @@ class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   "Calling the submit action of the Verify Email controller" when {
     "email is in session" should {
-      "redirect to Terms of participation page" when {
+      "redirect to AgentSendYourApplication of participation page" when {
         "the final check your answer feature switch is disabled" in {
           disable(FinalCheckYourAnswer)
           mockAuthRetrieveAgentEnrolment()
 
           val result = TestSentClientEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+          redirectLocation(result) shouldBe Some(routes.AgentSendYourApplicationController.show().url)
         }
       }
       "redirect to the final check your answer page" when {

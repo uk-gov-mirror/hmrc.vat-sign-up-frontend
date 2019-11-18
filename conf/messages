@@ -359,16 +359,6 @@ agent.email_verified.title                                             = You hav
 agent.email_verified.heading                                           = You have verified your email address
 agent.email_verified.line_1                                            = You need to continue to sign up your client. We will send you a confirmation message after you sign up this client.
 
-## Terms page
-agent.terms.title                                                      = Terms of participation
-agent.terms.heading                                                    = Terms of participation
-agent.terms.line_1                                                     = By taking part in this trial, you agree that either you or your client will:
-agent.terms.bullet_1                                                   = use relevant software to record your client''s sales and purchases, then to submit their VAT Returns
-agent.terms.bullet_2                                                   = submit each VAT Return within one calendar month and 7 days from the end of their accounting period
-agent.terms.bullet_3                                                   = tell HMRC if your client stops trading and then submit their final VAT Return
-agent.terms.bullet_4                                                   = tell HMRC if your client wants to leave this trial
-agent.terms.line_2                                                     = These terms are not contractual and your client can stop taking part in this trial at any time.
-
 ## Agent final confirmation page
 agent.check_your_answers_final.title                                   = Check your answers before sending
 agent.check_your_answers_final.heading                                 = Check your answers before sending
@@ -639,17 +629,6 @@ principal.failed_identity_verification.try_again                       = Try aga
 principal.identity_verification_success.title                          = We''ve confirmed your identity
 principal.identity_verification_success.heading                        = We''ve confirmed your identity
 principal.identity_verification_success.line_1                         = You can now sign up for this service.
-
-## Terms page
-principal.terms.title                                                  = Terms of participation
-principal.terms.heading                                                = Terms of participation
-principal.terms.line_1                                                 = By taking part in this trial, you agree to:
-principal.terms.bullet_1                                               = use relevant software to record your sales and purchases, then to submit your VAT Returns
-principal.terms.bullet_2                                               = submit each VAT Return within one calendar month and 7 days from the end of your accounting period
-principal.terms.bullet_3                                               = authorise any third party you use (such as your accountant) and have responsibility for any information they give to HMRC on your behalf
-principal.terms.bullet_4                                               = tell HMRC if you stop trading and then submit your final VAT Return
-principal.terms.bullet_5                                               = tell HMRC if you want to leave this trial
-principal.terms.line_2                                                 = These terms are not contractual and you can stop taking part in the trial at any time.
 
 ## Confirmation page
 principal.confirmation.title                                           = We have received your request to sign up

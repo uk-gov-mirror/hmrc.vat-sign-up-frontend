@@ -79,7 +79,7 @@ class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
       }
       "email is verified" should {
-        "redirect to Terms page" when {
+        "redirect to AgentSendYourApplication page" when {
           "the final check your answer feature switch is disabled" in {
             disable(FinalCheckYourAnswer)
             mockAuthRetrieveAgentEnrolment()
@@ -89,7 +89,7 @@ class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               SessionKeys.vatNumberKey -> testVatNumber))
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.TermsController.show().url)
+            redirectLocation(result) shouldBe Some(routes.AgentSendYourApplicationController.show().url)
           }
         }
         "redirect to the final check your answers page" when {

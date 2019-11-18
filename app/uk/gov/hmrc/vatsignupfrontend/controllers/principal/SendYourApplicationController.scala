@@ -17,20 +17,23 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
-import uk.gov.hmrc.vatsignupfrontend.services.MigratedSubmissionService
+import uk.gov.hmrc.vatsignupfrontend.services.{MigratedSubmissionService, SubmissionService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.send_your_application
 
 import scala.concurrent.Future
 
 @Singleton
-class SendYourApplicationController @Inject()(val controllerComponents: ControllerComponents, val migratedSubmissionService: MigratedSubmissionService)
+class SendYourApplicationController @Inject()(val controllerComponents: ControllerComponents,
+                                              val migratedSubmissionService: MigratedSubmissionService,
+                                              val submissionService: SubmissionService)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -41,14 +44,33 @@ class SendYourApplicationController @Inject()(val controllerComponents: Controll
 
   val submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
+      val isMigrated: Boolean = request.session.get(SessionKeys.isMigratedKey).getOrElse("false").toBoolean
       request.session.get(SessionKeys.vatNumberKey) match {
-        case Some(vatNumber) => migratedSubmissionService.submit(vatNumber) map {
-          case  Right(_) => Redirect(resignup.routes.SignUpCompleteController.show())
-          case  Left(SubmissionFailureResponse(status)) =>  throw new InternalServerException(s"Submission failed, backend returned: $status")
-        }
-        case None => Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
+        case Some(vatNumber) if isMigrated =>
+          migratedSubmissionService.submit(vatNumber) map {
+            case Right(_) => Redirect(resignup.routes.SignUpCompleteController.show())
+            case Left(SubmissionFailureResponse(status)) => throw new InternalServerException(s"Submission failed, backend returned: $status")
+          }
+        case Some(vatNumber) =>
+          val acceptedDirectDebitTerms = request.session.get(SessionKeys.acceptedDirectDebitTermsKey).getOrElse("false").toBoolean
+          val hasDirectDebit = request.session.get(SessionKeys.hasDirectDebitKey).getOrElse("false").toBoolean
+
+          def submit(vatNumber: String): Future[Result] = {
+            submissionService.submit(vatNumber).map {
+              case Right(_) =>
+                Redirect(routes.InformationReceivedController.show())
+              case Left(SubmissionFailureResponse(status)) =>
+                throw new InternalServerException(s"Submission failed, backend returned: $status")
+            }
+          }
+
+          if (isEnabled(DirectDebitTermsJourney) && !acceptedDirectDebitTerms && hasDirectDebit)
+            Future.successful(Redirect(routes.DirectDebitTermsAndConditionsController.show()))
+          else
+            submit(vatNumber)
+        case None =>
+          Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
       }
     }
   }
-
 }

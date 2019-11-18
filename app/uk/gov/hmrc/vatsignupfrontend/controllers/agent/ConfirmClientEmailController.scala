@@ -70,7 +70,7 @@ class ConfirmClientEmailController @Inject()(val controllerComponents: Controlle
             case Right(StoreEmailAddressSuccess(true)) if isEnabled(FinalCheckYourAnswer) =>
               Redirect(routes.CheckYourAnswersFinalController.show())
             case Right(StoreEmailAddressSuccess(true)) =>
-              Redirect(routes.TermsController.show().url)
+              Redirect(routes.AgentSendYourApplicationController.show().url)
             case Left(errResponse) =>
               throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
           }
