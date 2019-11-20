@@ -475,11 +475,6 @@ principal.vat_registration_date.heading                                = Pryd y 
 principal.vat_registration_date.line_1                                 = Mae hwn i''w weld ar y dystysgrif cofrestru TAW.
 principal.vat_registration_date.formhint_1                             = Er enghraifft, 6 4 2017
 
-# Sign in with another login
-principal.sign_in_with_different_details.title                         = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.sign_in_with_different_details.heading                       = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.sign_in_with_different_details.line_1                        = Mae''n rhaid i chi fewngofnodi gyda manylion y busnes rydych am ei gofrestru ar gyfer Porth y Llywodraeth.
-
 # Sign in with another login Partnership
 principal.sign_in_with_different_details_partnership.title             = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
 principal.sign_in_with_different_details_partnership.heading           = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol

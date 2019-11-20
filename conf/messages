@@ -471,11 +471,6 @@ principal.vat_registration_date.heading                                = When di
 principal.vat_registration_date.line_1                                 = You can find this date on your VAT registration certificate.
 principal.vat_registration_date.formhint_1                             = For example, 6 4 2017
 
-# Sign in with another login
-principal.sign_in_with_different_details.title                         = You need to sign in with different details
-principal.sign_in_with_different_details.heading                       = You need to sign in with different details
-principal.sign_in_with_different_details.line_1                        = You need to sign in with the Government Gateway details for the business you want to sign up.
-
 # Sign in with another login Partnership
 principal.sign_in_with_different_details_partnership.title             = You need to sign in with different details
 principal.sign_in_with_different_details_partnership.heading           = You need to sign in with different details
