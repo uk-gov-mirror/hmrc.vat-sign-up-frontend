@@ -19,24 +19,23 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, ninoKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, ninoKey, vatNumberKey}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoMatchFoundFailure, NoVATNumberFailure, StoreNinoFailureResponse, StoreNinoSuccess}
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, UserEntered}
-import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.confirm_nino
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser.{NoVATNumberFailure, StoreNinoFailureResponse, StoreNinoSuccess}
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
+import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.confirm_nino
 
 import scala.concurrent.Future
 
 @Singleton
 class ConfirmNinoController @Inject()(val controllerComponents: ControllerComponents,
                                       storeNinoService: StoreNinoService)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(SkipCidCheck)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -67,11 +66,9 @@ class ConfirmNinoController @Inject()(val controllerComponents: ControllerCompon
         case (_, None) =>
           Future.successful(Redirect(routes.CaptureNinoController.show()))
         case (Some(vatNumber), Some(nino)) => {
-          storeNinoService.storeNino(vatNumber, nino, UserEntered) map {
+          storeNinoService.storeNino(vatNumber, nino) map {
             case Right(StoreNinoSuccess) =>
               Redirect(principalRoutes.DirectDebitResolverController.show())
-            case Left(NoMatchFoundFailure) =>
-              Redirect(principalRoutes.FailedMatchingController.show())
             case Left(NoVATNumberFailure) =>
               throw new InternalServerException(s"Failure calling store nino: vat number is not found")
             case Left(StoreNinoFailureResponse(status)) =>

@@ -32,7 +32,6 @@ object FeatureSwitch {
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
     OptionalSautrJourney,
-    SkipCidCheck,
     WelshTranslation,
     SkipCtUtrOnCotaxNotFound,
     DirectToCTUTROnMismatchedCTUTR,
@@ -80,11 +79,6 @@ case object DirectDebitTermsJourney extends FeatureSwitch {
 case object OptionalSautrJourney extends FeatureSwitch {
   override val name: String = s"$prefix.optional-sautr-journey"
   override val displayText: String = "Enable the 'Do you have an SAUTR' question for general partnerships"
-}
-
-case object SkipCidCheck extends FeatureSwitch {
-  override val name: String = s"$prefix.disable-cid-check"
-  override val displayText: String = "Disable checking the user's NINO via CID"
 }
 
 case object SkipCtUtrOnCotaxNotFound extends FeatureSwitch {

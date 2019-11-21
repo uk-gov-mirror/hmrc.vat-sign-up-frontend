@@ -59,9 +59,6 @@ GET         /company-name-not-found                             uk.gov.hmrc.vats
 POST        /company-name-not-found                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.CompanyNameNotFoundController.submit
 
 # Sign in with another login
-GET         /sign-in-with-different-details                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.SignInWithDifferentDetailsController.show
-
-# Sign in with another login
 GET         /right-partnership-utr                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.SignInWithDifferentDetailsPartnershipController.show
 
 # Cannot use service yet
@@ -144,14 +141,6 @@ POST        /error/company-number-incorrect                     uk.gov.hmrc.vats
 # Incorrect Enrolment Vat Number
 GET         /error/sign-in-with-different-details               uk.gov.hmrc.vatsignupfrontend.controllers.principal.IncorrectEnrolmentVatNumberController.show
 
-# Capture your details
-GET         /your-details                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.show
-POST        /your-details                                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureYourDetailsController.submit
-
-# Confirm your Retrieved User details
-GET         /confirm-your-details                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.show
-POST        /confirm-your-details                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourRetrievedUserDetailsController.submit
-
 # Capture National Insurance Number (NINO)
 GET         /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.CaptureNinoController.show
 POST        /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.CaptureNinoController.submit
@@ -159,17 +148,6 @@ POST        /national-insurance-number                          uk.gov.hmrc.vats
 # Confirm National Insurance Number (NINO)
 GET         /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.ConfirmNinoController.show
 POST        /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.ConfirmNinoController.submit
-
-# Sign In With Different Details Sole Trader
-GET         /sign-in-with-different-details-sole-trader         uk.gov.hmrc.vatsignupfrontend.controllers.principal.SoleTraderDifferentDetailsController.show
-
-# Confirm your details
-GET         /confirm-details                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.show
-POST        /confirm-details                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmYourDetailsController.submit
-
-# Failed User Matching
-GET         /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.show
-POST        /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.FailedMatchingController.submit
 
 #Confirmation
 GET         /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.principal.InformationReceivedController.show

@@ -18,17 +18,8 @@ package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.vatsignupfrontend.models.UserDetailsModel
 
 object StoreCompanyNumberStub extends WireMockMethods {
-
-  private def toJson(userDetailsModel: UserDetailsModel) = Json.obj(
-    "firstName" -> userDetailsModel.firstName,
-    "lastName" -> userDetailsModel.lastName,
-    "nino" -> userDetailsModel.nino,
-    "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate
-  )
-
 
   def stubStoreCompanyNumber(vatNumber: String, companyNumber: String, optCompanyUtr: Option[String]
                             )(responseStatus: Int, optBody: Option[JsValue] = None): Unit = {

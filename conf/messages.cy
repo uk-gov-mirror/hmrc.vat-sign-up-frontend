@@ -264,17 +264,6 @@ agent.capture_company_number.line_1                                    = Gallwch
 agent.capture_entity_type.title                                        = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
 agent.capture_entity_type.heading                                      = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
 
-## Client Details ##
-agent.client-details.title                                             = Nodi manylion eich cleient
-agent.client-details.heading                                           = Nodi manylion eich cleient
-agent.client-details.line_1                                            = Byddwn yn ceisio paru''r manylion hyn â''r wybodaeth sydd gennym ar hyn o bryd.
-agent.client-details.field_1                                           = Enw cyntaf
-agent.client-details.field_2                                           = Enw olaf
-agent.client-details.field_3                                           = Rhif Yswiriant Gwladol
-agent.client-details.field_4                                           = Dyddiad geni
-agent.client_details.formhint.1.line_1                                 = Er enghraifft, ''QQ 12 34 56 C''.
-agent.client-details.formhint.2                                        = Er enghraifft, 10 12 1990
-
 ## Agent Confirm Company Number page
 agent.confirm_company_number.title                                     = Cadarnhau rhif cwmni eich cleient
 agent.confirm_company_number.heading                                   = Cadarnhau rhif cwmni eich cleient
@@ -408,19 +397,6 @@ agent.resignup.signupcomplete.subsection2.bullet_4                     = Pan fo'
 agent.resignup.signupcomplete.sign_up_another_button                   = Cofrestru cleient arall
 agent.resignup.signupcomplete.finish_and_sign_out                      = Gorffen ac allgofnodi
 
-# Check your client's details page
-agent.client-details.summary.title                                     = Cadarnhau manylion eich cleient
-agent.client-details.summary.heading                                   = Cadarnhau manylion eich cleient
-agent.client-details.summary.first_name                                = Enw cyntaf
-agent.client-details.summary.last_name                                 = Enw olaf
-agent.client-details.summary.nino                                      = Rhif Yswiriant Gwladol
-agent.client-details.summary.dob                                       = Dyddiad geni
-
-# Failed Client Matching
-agent.failed_client_matching.title                                     = Mae problem wedi codi
-agent.failed_client_matching.heading                                   = Mae problem wedi codi
-agent.failed_client_matching.line_1                                    = Dydy''r manylion rydych wedi''u nodi ddim ar ein system.
-
 ## Already signed up page
 agent.client_already_signed_up.title                                   = Mae''ch cleient eisoes wedi cofrestru
 agent.client_already_signed_up.heading                                 = Mae''ch cleient eisoes wedi cofrestru
@@ -499,11 +475,6 @@ principal.vat_registration_date.heading                                = Pryd y 
 principal.vat_registration_date.line_1                                 = Mae hwn i''w weld ar y dystysgrif cofrestru TAW.
 principal.vat_registration_date.formhint_1                             = Er enghraifft, 6 4 2017
 
-# Sign in with another login
-principal.sign_in_with_different_details.title                         = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.sign_in_with_different_details.heading                       = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.sign_in_with_different_details.line_1                        = Mae''n rhaid i chi fewngofnodi gyda manylion y busnes rydych am ei gofrestru ar gyfer Porth y Llywodraeth.
-
 # Sign in with another login Partnership
 principal.sign_in_with_different_details_partnership.title             = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
 principal.sign_in_with_different_details_partnership.heading           = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
@@ -571,35 +542,6 @@ principal.email_verified.title                                         = Rydych 
 principal.email_verified.heading                                       = Rydych wedi dilysu''ch cyfrif e-bost
 principal.email_verified.line_1                                        = Cewch negeseuon a hysbysiadau e-bost oddi wrth CThEM o hyn ymlaen.
 
-## Your Details ##
-principal.your-details.title                                           = Nodi''ch manylion
-principal.your-details.heading                                         = Nodi''ch manylion
-principal.your-details.line_1                                          = Byddwn yn ceisio paru''r manylion hyn â''r wybodaeth sydd gennym ar hyn o bryd.
-principal.your-details.field_1                                         = Enw cyntaf
-principal.your-details.field_2                                         = Enw olaf
-principal.your-details.field_3                                         = Rhif Yswiriant Gwladol
-principal.your-details.field_4                                         = Dyddiad geni
-principal.your.formhint.1.line_1                                       = Er enghraifft, ''QQ 12 34 56 C''.
-principal.your-details.formhint.2                                      = Er enghraifft, 10 12 1990
-
-# Check your details page
-principal.your-details.summary.title                                   = Cadarnhau''ch manylion
-principal.your-details.summary.heading                                 = Cadarnhau''ch manylion
-principal.your-details.summary.sub_heading                             = Yr hyn rydych wedi rhoi gwybod i ni amdano
-principal.your-details.summary.first_name                              = Enw cyntaf
-principal.your-details.summary.last_name                               = Enw olaf
-principal.your-details.summary.nino                                    = Rhif Yswiriant Gwladol
-principal.your-details.summary.dob                                     = Dyddiad geni
-
-## Confirm your details page
-principal.confirm-your-details.title                                   = Cadarnhau''ch manylion
-principal.confirm-your-details.heading                                 = Cadarnhau''ch manylion
-principal.confirm-your-details.first_name                              = Enw cyntaf
-principal.confirm-your-details.last_name                               = Enw olaf
-principal.confirm-your-details.dob                                     = Dyddiad geni
-principal.confirm-your-details.nino                                    = Rhif Yswiriant Gwladol
-principal.confirm-your-details.link                                    = Newid manylion
-
 ## Failed IV page
 principal.failed_identity_verification.title                           = Doedd dim modd cadarnhau''ch manylion
 principal.failed_identity_verification.heading                         = Doedd dim modd cadarnhau''ch manylion
@@ -653,12 +595,6 @@ principal.company_name_not_found.title                                 = Doedd d
 principal.company_name_not_found.heading                               = Doedd dim modd cadarnhau''ch cwmni
 principal.company_name_not_found.line_1                                = Dydy''r rhif cwmni rydych wedi''i nodi ddim ar ein system.
 
-## Sign in different details page
-principal.sign_in_different_details.title                              = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.sign_in_different_details.heading                            = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.sign_in_different_details.line_1                             = Mae''r manylion rydych wedi''u defnyddio i fewngofnodi yn fanylion ar gyfer unig fasnachwr arall. Mae''n rhaid i chi allgofnodi, ac yna fewngofnodi gyda''r manylion cywir ar gyfer Porth y Llywodraeth.
-principal.sign_in_different_details.line_2                             = Gallwch <a id="diff-details" href="{0}">newid eich ateb</a>.
-
 ## Incorrect Enrolment Vat Number page
 principal.incorrect_enrolment_vat_number.title                         = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
 principal.incorrect_enrolment_vat_number.heading                       = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
@@ -684,12 +620,6 @@ principal.confirm_registered_society.heading                           = Cadarnh
 principal.registered_society_company_name_not_found.title              = Doedd dim modd cadarnhau''ch cymdeithas gofrestredig
 principal.registered_society_company_name_not_found.heading            = Doedd dim modd cadarnhau''ch cymdeithas gofrestredig
 principal.registered_society_company_name_not_found.line_1             = Dydy''r wybodaeth rydych wedi''i nodi ddim yn cyd-fynd â''r manylion sydd gennym ni ar gyfer eich cymdeithas gofrestredig.
-
-## Principal Incorrect Details page
-principal.failed_matching.title                                        = Doedd dim modd cadarnhau''ch manylion
-principal.failed_matching.heading                                      = Doedd dim modd cadarnhau''ch manylion
-principal.failed_matching.line_1                                       = Dydy''r wybodaeth rydych wedi''i nodi ddim yn cyd-fynd â''r manylion ar ein system.
-principal.failed_matching.try_again                                    = Rhowch gynnig arall arni
 
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = Dydy''ch busnes ddim yn gymwys ar hyn o bryd

@@ -20,58 +20,41 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testNino, testVatNumber}
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.{CaptureVatNumberController, DirectDebitResolverController}
-import uk.gov.hmrc.vatsignupfrontend.models.{SoleTrader, UserEntered}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testNino, testVatNumber}
+import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
 
 class ConfirmNinoControllerSpec extends UnitSpec
-                                with GuiceOneAppPerSuite
-                                with MockControllerComponents
-                                with MockStoreNinoService {
+  with GuiceOneAppPerSuite
+  with MockControllerComponents
+  with MockStoreNinoService {
 
   object TestConfirmNinoController extends ConfirmNinoController(mockControllerComponents, mockStoreNinoService)
 
   val testGetRequest = FakeRequest("GET", "/confirm-national-insurance-number")
   val testPostRequest = FakeRequest("POST", "/confirm-national-insurance-number")
 
-  override def beforeEach(): Unit = enable(SkipCidCheck)
-
   "Calling the Show method of Confirm NINO controller" when {
-    "the SkipCidCheck feature switch is enabled" should {
-      "show the Confirm NINO view" in {
-        mockAuthAdminRole()
+    "show the Confirm NINO view" in {
+      mockAuthAdminRole()
 
-        implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
-          testGetRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.businessEntityKey -> SoleTrader.toString,
-            SessionKeys.ninoKey -> testNino
-          )
+      implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
+        testGetRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.businessEntityKey -> SoleTrader.toString,
+          SessionKeys.ninoKey -> testNino
+        )
 
-        val res = await(TestConfirmNinoController.show(request))
+      val res = await(TestConfirmNinoController.show(request))
 
-        status(res) shouldBe OK
-        contentType(res) shouldBe Some("text/html")
-        charset(res) shouldBe Some("utf-8")
-      }
-    }
-
-    "the SkipCidCheck feature switch is disabled" should {
-      "throw a NotFoundException" in {
-        disable(SkipCidCheck)
-        mockAuthAdminRole()
-
-        intercept[NotFoundException] {
-          await(TestConfirmNinoController.show(testGetRequest))
-        }
-      }
+      status(res) shouldBe OK
+      contentType(res) shouldBe Some("text/html")
+      charset(res) shouldBe Some("utf-8")
     }
   }
 
@@ -79,7 +62,7 @@ class ConfirmNinoControllerSpec extends UnitSpec
     "there is a NINO and VAT number in the user's session" should {
       "Redirect to DirectDebitResolver" in {
         mockAuthAdminRole()
-        mockStoreNinoSuccess(testVatNumber, testNino, UserEntered)
+        mockStoreNinoSuccess(testVatNumber, testNino)
 
         implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
           testPostRequest.withSession(

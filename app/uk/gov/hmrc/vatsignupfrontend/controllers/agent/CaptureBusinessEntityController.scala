@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.{StoreOverseasInformationFailureResponse, StoreOverseasInformationSuccess}
@@ -81,8 +80,7 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
         entityType => {
           entityType match {
             case LimitedCompany => Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
-            case SoleTrader if isEnabled(SkipCidCheck) => Future.successful(Redirect(soletrader.routes.CaptureNinoController.show()))
-            case SoleTrader => Future.successful(Redirect(routes.CaptureClientDetailsController.show()))
+            case SoleTrader => Future.successful(Redirect(soletrader.routes.CaptureNinoController.show()))
             case GeneralPartnership | LimitedPartnership => Future.successful(Redirect(partnerships.routes.ResolvePartnershipController.resolve()))
             case Other => Future.successful(Redirect(routes.CaptureBusinessEntityOtherController.show()))
           }

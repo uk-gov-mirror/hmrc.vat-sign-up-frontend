@@ -17,11 +17,6 @@ GET         /vat-through-software/sign-up/test-only/delete-record        uk.gov.
 # NOCSRF
 POST        /vat-through-software/sign-up/test-only/delete-record        uk.gov.hmrc.vatsignupfrontend.testonly.controllers.DeleteRecordController.submit
 
-GET         /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubCitizenDetailsUserController.show
-
-# NOCSRF
-POST        /vat-through-software/sign-up/test-only/stub-user            uk.gov.hmrc.vatsignupfrontend.testonly.controllers.StubCitizenDetailsUserController.submit
-
 
 GET         /vat-through-software/sign-up/test-only/feature-switch       uk.gov.hmrc.vatsignupfrontend.testonly.controllers.FeatureSwitchController.show
 

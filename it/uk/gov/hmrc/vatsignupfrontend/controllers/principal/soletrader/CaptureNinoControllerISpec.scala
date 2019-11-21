@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,51 +17,26 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCidCheck}
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testNino
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
 
 class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(SkipCidCheck)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(SkipCidCheck)
-  }
 
   val uri = "/national-insurance-number"
 
   "GET /national-insurance-number" when {
-    "the SkipCidCheck feature switch is enabled" should {
-      "return OK" in {
-        stubAuth(OK, successfulAuthResponse())
+    "return OK" in {
+      stubAuth(OK, successfulAuthResponse())
 
-        val res = get(uri)
+      val res = get(uri)
 
-        res should have(
-          httpStatus(OK)
-        )
-      }
-    }
-
-    "the SkipCidCheck feature switch is disabled" should {
-      "return NOT FOUND" in {
-        disable(SkipCidCheck)
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = get(uri)
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
   }
 
@@ -81,5 +56,4 @@ class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers w
       }
     }
   }
-
 }

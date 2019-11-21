@@ -43,8 +43,7 @@ class SignUpAnotherClientControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       val request = testPostRequest.withSession(
         SessionKeys.vatNumberKey -> testVatNumber,
         SessionKeys.companyNumberKey -> testCompanyNumber,
-        SessionKeys.emailKey -> testEmail,
-        SessionKeys.userDetailsKey -> UUID.randomUUID().toString
+        SessionKeys.emailKey -> testEmail
       )
 
       val result = TestSignUpAnotherClientController.submit(request)
@@ -55,7 +54,6 @@ class SignUpAnotherClientControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       session.get(SessionKeys.vatNumberKey) shouldBe None
       session.get(SessionKeys.companyNumberKey) shouldBe None
       session.get(SessionKeys.emailKey) shouldBe None
-      session.get(SessionKeys.userDetailsKey) shouldBe None
     }
   }
 

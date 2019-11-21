@@ -20,15 +20,11 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.ConfirmNinoController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm.nino
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 
 class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -37,27 +33,15 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
   val testGetRequest = FakeRequest("GET", "/client/national-insurance-number")
 
   private def testPostRequest(postNino: String = testNino): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/client/national-insurance-number").withFormUrlEncodedBody( nino -> postNino)
-
-  override def beforeEach(): Unit = enable(SkipCidCheck)
+    FakeRequest("POST", "/client/national-insurance-number").withFormUrlEncodedBody(nino -> postNino)
 
   "Calling the Show method of the Capture NINO controller for agent" when {
-    "the SkipIdCheck feature switch is enabled" should {
-      "show the Capture NINO page" in {
-        mockAuthRetrieveAgentEnrolment()
-        val res = await(TestCaptureNinoController.show(testGetRequest))
-        status(res) shouldBe OK
-        contentType(res) shouldBe Some("text/html")
-        charset(res) shouldBe Some("utf-8")
-      }
-    }
-    "the SkipIdCheck feature switch is disabled" should {
-      "throw an internal server exception" in {
-        disable(SkipCidCheck)
-        intercept[NotFoundException] {
-          await(TestCaptureNinoController.show(testGetRequest))
-        }
-      }
+    "show the Capture NINO page" in {
+      mockAuthRetrieveAgentEnrolment()
+      val res = await(TestCaptureNinoController.show(testGetRequest))
+      status(res) shouldBe OK
+      contentType(res) shouldBe Some("text/html")
+      charset(res) shouldBe Some("utf-8")
     }
   }
   "Calling the Submit method of the Capture NINO controller for agent" when {
@@ -80,5 +64,4 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
       }
     }
   }
-
 }

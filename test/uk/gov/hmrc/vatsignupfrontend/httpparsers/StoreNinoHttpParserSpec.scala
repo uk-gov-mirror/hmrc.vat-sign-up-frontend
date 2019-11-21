@@ -35,14 +35,6 @@ class StoreNinoHttpParserSpec extends UnitSpec {
         res shouldBe Right(StoreNinoSuccess)
       }
 
-      "parse a FORBIDDEN response as an NoMatchFoundFailure" in {
-        val httpResponse = HttpResponse(FORBIDDEN)
-
-        val res = StoreNinoHttpReads.read(testHttpVerb, testUri, httpResponse)
-
-        res shouldBe Left(NoMatchFoundFailure)
-      }
-
       "parse a NOT_FOUND response as an NoVATNumberFailure" in {
         val httpResponse = HttpResponse(NOT_FOUND)
 

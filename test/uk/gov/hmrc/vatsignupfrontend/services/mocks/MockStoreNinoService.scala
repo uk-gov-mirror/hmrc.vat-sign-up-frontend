@@ -22,11 +22,9 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 
 import scala.concurrent.Future
-
 
 trait MockStoreNinoService extends BeforeAndAfterEach with MockitoSugar {
   self: Suite =>
@@ -38,23 +36,20 @@ trait MockStoreNinoService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockStoreNinoService)
   }
 
-  private def mockStoreNino(vatNumber: String, nino: String, ninoSource: NinoSource)(returnValue: Future[StoreNinoResponse]): Unit = {
+  private def mockStoreNino(vatNumber: String, nino: String)(returnValue: Future[StoreNinoResponse]): Unit = {
     when(mockStoreNinoService.storeNino(
-      ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(nino), ArgumentMatchers.eq(ninoSource)
+      ArgumentMatchers.eq(vatNumber), ArgumentMatchers.eq(nino)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(returnValue)
   }
 
-  def mockStoreNinoSuccess(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, nino, ninoSource)(Future.successful(Right(StoreNinoSuccess)))
+  def mockStoreNinoSuccess(vatNumber: String, nino: String): Unit =
+    mockStoreNino(vatNumber, nino)(Future.successful(Right(StoreNinoSuccess)))
 
-  def mockStoreNinoNoMatch(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, nino, ninoSource)(Future.successful(Left(NoMatchFoundFailure)))
+  def mockStoreNinoNoVatStored(vatNumber: String, nino: String): Unit =
+    mockStoreNino(vatNumber, nino)(Future.successful(Left(NoVATNumberFailure)))
 
-  def mockStoreNinoNoVatStored(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, nino, ninoSource)(Future.successful(Left(NoVATNumberFailure)))
-
-  def mockStoreNinoFailure(vatNumber: String, nino: String, ninoSource: NinoSource): Unit =
-    mockStoreNino(vatNumber, nino, ninoSource)(Future.successful(Left(StoreNinoFailureResponse(INTERNAL_SERVER_ERROR))))
+  def mockStoreNinoFailure(vatNumber: String, nino: String): Unit =
+    mockStoreNino(vatNumber, nino)(Future.successful(Left(StoreNinoFailureResponse(INTERNAL_SERVER_ERROR))))
 
 }

@@ -66,10 +66,10 @@ trait MockAuthConnector extends BeforeAndAfterEach with MockitoSugar {
       else Enrolments(Set.empty)
 
     mockAuthorise(
-      retrievals = (Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments) and (Retrievals.allEnrolments and Retrievals.nino)
+      retrievals = (Retrievals.credentialRole and Retrievals.affinityGroup and Retrievals.allEnrolments) and Retrievals.nino
     )(
       Future.successful(
-        Some(Admin) ~ None ~ enrolments ~ (enrolments ~ optNino)
+        Some(Admin) ~ None ~ enrolments ~ optNino
       )
     )
   }

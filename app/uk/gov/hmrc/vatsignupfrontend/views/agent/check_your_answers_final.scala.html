@@ -28,7 +28,6 @@
 @(subSummary: SubscriptionRequestSummary,
   optBusinessEntity: Option[BusinessEntity],
   optCompanyName: Option[String] = None,
-  skipCidCheck: Boolean,
   postAction: Call
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -49,8 +48,7 @@
 @ninoRow = @{
   subSummary.optNino.map { nino =>
     val rowQuestion = Messages("agent.check_your_answers_final.nino")
-    val changeUrl = if (skipCidCheck) Some(soletraderRoutes.CaptureNinoController.show().url)
-      else Some(CaptureClientDetailsController.show().url)
+    val changeUrl = Some(soletraderRoutes.CaptureNinoController.show().url)
 
     summaryRowHelper(NinoId, rowQuestion, nino, changeUrl)
   }

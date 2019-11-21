@@ -25,10 +25,6 @@ POST        /confirm-vat-number                                 uk.gov.hmrc.vats
 # Cannot use service yet
 GET         /cannot-use-service-yet                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CannotUseServiceController.show
 
-# Capture Client details
-GET         /client-details                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientDetailsController.show
-POST        /client-details                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientDetailsController.submit
-
 # Capture NINO
 GET         /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.CaptureNinoController.show
 POST        /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.CaptureNinoController.submit
@@ -36,13 +32,6 @@ POST        /national-insurance-number                          uk.gov.hmrc.vats
 # Confirm National Insurance Number (NINO)
 GET         /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.ConfirmNinoController.show
 POST        /confirm-national-insurance-number                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.ConfirmNinoController.submit
-
-# Confirm Client details
-GET         /confirm-client                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.show
-POST        /confirm-client                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmClientDetailsController.submit
-
-# Failed Client Matching
-GET         /error/incorrect-details                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.FailedClientMatchingController.show
 
 # Capture Company Number
 GET         /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.show

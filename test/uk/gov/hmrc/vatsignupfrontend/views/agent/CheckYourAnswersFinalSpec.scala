@@ -17,23 +17,23 @@
 package uk.gov.hmrc.vatsignupfrontend.views.agent
 
 import org.jsoup.Jsoup
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages.Implicits.applicationMessages
+import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes._
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.{routes => soletraderRoutes}
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswersFinal => msg}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FeatureSwitching}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes._
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.{routes => soletraderRoutes}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.SummarySectionTesting
-import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_answers_final
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper.getBusinessEntityName
+import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.ContactPreferenceHelper
+import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_answers_final
 
 class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with FeatureSwitching {
 
@@ -47,7 +47,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
                                    optUtr: Option[String] = None,
                                    agentEmail: String = testAgentEmail,
                                    optClientEmail: Option[String] = Some(testEmail),
-                                    contactPreference: ContactPreference = Digital
+                                   contactPreference: ContactPreference = Digital
                                   ) =
     SubscriptionRequestSummary(
       vatNumber = vrn,
@@ -55,70 +55,43 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       optNino = optNino,
       optCompanyNumber = optCrn,
       optSautr = optUtr,
-      optSignUpEmail= optClientEmail,
+      optSignUpEmail = optClientEmail,
       transactionEmail = agentEmail,
       contactPreference = contactPreference
     )
 
   def testView(summary: SubscriptionRequestSummary,
                optBusinessEntity: Option[BusinessEntity],
-               optCompanyName: Option[String] = None,
-               skipCidCheck: Boolean = true
+               optCompanyName: Option[String] = None
               ): Html = check_your_answers_final(
     subSummary = summary,
     optBusinessEntity = optBusinessEntity,
     optCompanyName = optCompanyName,
-    skipCidCheck = skipCidCheck,
     postAction = testCall
   )(viewTestRequest, applicationMessages, new AppConfig(configuration, env))
 
   "The final check your answers page" when {
     "The business is a Sole trader" when {
-      "the SkipCidCheck feature switch is enabled" should {
-        val summary = testSubmissionRequestSummary(businessEntity = SoleTrader, optNino = Some(testNino))
-        lazy val page = testView(summary = summary, optBusinessEntity = Some(SoleTrader))
-        lazy val doc = Jsoup.parse(page.body)
+      val summary = testSubmissionRequestSummary(businessEntity = SoleTrader, optNino = Some(testNino))
+      lazy val page = testView(summary = summary, optBusinessEntity = Some(SoleTrader))
+      lazy val doc = Jsoup.parse(page.body)
 
-        val testPage = TestView(
-          name = "Final check your answers - Sole trader",
-          title = msg.title,
-          heading = msg.heading,
-          page = page
-        )
+      val testPage = TestView(
+        name = "Final check your answers - Sole trader",
+        title = msg.title,
+        heading = msg.heading,
+        page = page
+      )
 
-        testPage.shouldHaveAcceptAndSendButton()
+      testPage.shouldHaveAcceptAndSendButton()
 
-        "have rows for VRN, NINO, agent email, client email and contact preference" in {
-          doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
-          doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
-          doc.sectionTest(NinoId, msg.nino, testNino, Some(soletraderRoutes.CaptureNinoController.show().url))
-          doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-          doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-          doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
-        }
-        "the SkipCidCheck feature switch is not enabled" should {
-          val summary = testSubmissionRequestSummary(businessEntity = SoleTrader, optNino = Some(testNino))
-          lazy val page = testView(summary = summary, optBusinessEntity = Some(SoleTrader), skipCidCheck = false)
-          lazy val doc = Jsoup.parse(page.body)
-
-          val testPage = TestView(
-            name = "Final check your answers - Sole trader",
-            title = msg.title,
-            heading = msg.heading,
-            page = page
-          )
-
-          testPage.shouldHaveAcceptAndSendButton()
-
-          "have rows for VRN, NINO, agent email, client email and contact preference" in {
-            doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
-            doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
-            doc.sectionTest(NinoId, msg.nino, testNino, Some(CaptureClientDetailsController.show().url))
-            doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-            doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-            doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
-          }
-        }
+      "have rows for VRN, NINO, agent email, client email and contact preference" in {
+        doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
+        doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(SoleTrader), Some(CaptureBusinessEntityController.show().url))
+        doc.sectionTest(NinoId, msg.nino, testNino, Some(soletraderRoutes.CaptureNinoController.show().url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show().url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show().url))
       }
     }
     "The business is a Limited company or overseas trader with UK establishment" should {

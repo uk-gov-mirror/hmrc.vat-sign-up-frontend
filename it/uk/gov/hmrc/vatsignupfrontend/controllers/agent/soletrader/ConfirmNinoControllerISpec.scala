@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,55 +18,37 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCidCheck
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testNino, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreNinoStub.stubStoreNinoSuccess
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-import uk.gov.hmrc.vatsignupfrontend.models.{SoleTrader, UserEntered}
+import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 
 class ConfirmNinoControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   val uri = "/client/confirm-national-insurance-number"
 
   "GET /client/confirm-national-insurance-number" when {
-    "the SkipCidCheck feature switch is enabled" should {
-      "return OK" in {
-        enable(SkipCidCheck)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+    "return OK" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get(uri, Map(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.ninoKey -> testNino,
-          SessionKeys.businessEntityKey -> SoleTrader.toString
-        ))
+      val res = get(uri, Map(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.ninoKey -> testNino,
+        SessionKeys.businessEntityKey -> SoleTrader.toString
+      ))
 
-        res should have(
-          httpStatus(OK)
-        )
-      }
-    }
-
-    "the SkipCidCheck feature switch is disabled" should {
-      "return NOT_FOUND" in {
-        disable(SkipCidCheck)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get(uri, Map(SessionKeys.ninoKey -> testNino))
-
-        res should have (
-          httpStatus(NOT_FOUND)
-        )
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
   }
 
   "POST /client/confirm-national-insurance-number" should {
     "redirect to CaptureAgentEmailController" in {
-      enable(SkipCidCheck)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
-      stubStoreNinoSuccess(testVatNumber, testNino, UserEntered)
+      stubStoreNinoSuccess(testVatNumber, testNino)
 
       val res = post(uri, Map(
         SessionKeys.vatNumberKey -> testVatNumber,
@@ -80,5 +62,4 @@ class ConfirmNinoControllerISpec extends ComponentSpecBase with CustomMatchers {
       )
     }
   }
-
 }

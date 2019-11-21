@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FinalCheckYourAnswer, SkipCidCheck}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
@@ -65,7 +65,6 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
                   subSummary = summary,
                   optBusinessEntity = optBusinessEntity,
                   optCompanyName = optCompanyName,
-                  skipCidCheck = isEnabled(SkipCidCheck),
                   postAction = routes.CheckYourAnswersFinalController.submit()
                 ))
               }

@@ -23,8 +23,6 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.models.NinoSource._
-import uk.gov.hmrc.vatsignupfrontend.models.{NinoSource, UserDetailsModel}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,28 +30,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class StoreNinoConnector @Inject()(val http: HttpClient,
                                    val applicationConfig: AppConfig) extends FeatureSwitching {
 
-  private def storeNinoUrl(vatNumber: String) = s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/nino"
-
-  // URL for when SkipCidCheck is enabled
   private def storeNationalInsuranceNumberUrl(vatNumber: String) =
     s"${applicationConfig.protectedMicroServiceUrl}/subscription-request/vat-number/$vatNumber/national-insurance-number"
 
-  def storeNino(vatNumber: String, userDetailsModel: UserDetailsModel, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
-    http.PUT[JsObject, StoreNinoResponse](storeNinoUrl(vatNumber),
-      Json.obj(
-        "firstName" -> userDetailsModel.firstName,
-        "lastName" -> userDetailsModel.lastName,
-        "nino" -> userDetailsModel.nino,
-        "dateOfBirth" -> userDetailsModel.dateOfBirth.toLocalDate,
-        ninoSourceFrontEndKey -> ninoSource
-      )
-    )
-
-  def storeNino(vatNumber: String, nino: String, ninoSource: NinoSource)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
+  def storeNino(vatNumber: String, nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreNinoResponse] =
     http.PUT[JsObject, StoreNinoResponse](storeNationalInsuranceNumberUrl(vatNumber),
       Json.obj(
-        "nino" -> nino,
-        ninoSourceFrontEndKey -> ninoSource
+        "nino" -> nino
       )
     )
 
