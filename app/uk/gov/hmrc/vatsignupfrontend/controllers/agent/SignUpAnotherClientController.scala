@@ -38,7 +38,8 @@ class SignUpAnotherClientController @Inject()(val controllerComponents: Controll
             SessionKeys.vatNumberKey,
             SessionKeys.companyNumberKey,
             SessionKeys.emailKey,
-            SessionKeys.businessEntityKey
+            SessionKeys.businessEntityKey,
+            SessionKeys.ninoKey
           )
       )
     }

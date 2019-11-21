@@ -167,7 +167,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   // TODO confirm url
   lazy val authoriseAgentUrl: String = loadConfig("agent-services.url")
-  lazy val matchingStubUrl: String = baseUrl("matching-stub")
 
   lazy val identityVerificationProxyUrl: String = baseUrl("identity-verification-proxy")
 
