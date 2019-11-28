@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.{SessionTimeoutController => agentSessionTimeoutController}
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.{SessionTimeoutController => principalSessionTimeoutController}
+@import uk.gov.hmrc.http.SessionKeys
 
 @(title: String,
   navTitle: Option[String] = None,
@@ -68,7 +69,6 @@
     }
 }
 
-
 @govuk_wrapper(appConfig = appConfig,
                title = title,
                navigationTitle = navTitle,
@@ -80,5 +80,5 @@
                serviceInfoContent = serviceInfoContent,
                scriptElem = Some(defaultScriptElem),
                isAgent = isAgent,
-               showSignOutLink = showSignOutLink
+               showSignOutLink = showSignOutLink || request.session.get(SessionKeys.authToken).isDefined
 )
