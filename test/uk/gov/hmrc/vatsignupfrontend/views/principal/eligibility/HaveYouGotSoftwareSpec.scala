@@ -45,7 +45,8 @@ class HaveYouGotSoftwareSpec extends ViewSpec {
       name = "Have You Got Software View",
       title = messages.title,
       heading = messages.heading,
-      page = page
+      page = page,
+      haveSignOutInBanner = false
     )
     testPage.shouldHaveForm("HaveSoftware Form")(actionCall = testCall)
 
