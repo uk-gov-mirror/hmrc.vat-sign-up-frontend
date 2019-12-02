@@ -35,9 +35,8 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
   lazy val messagesApi = app.injector.instanceOf[MessagesApi]
 
 
-  def page(divisionLookupEnabled: Boolean): HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity_other(
+  def page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_business_entity_other(
     businessEntityForm,
-    divisionLookupEnabled,
     postAction = testCall
   )(
     FakeRequest(),
@@ -51,13 +50,13 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
       name = "Capture Business Entity View",
       title = messages.agentTitle,
       heading = messages.agentHeading,
-      page = page(divisionLookupEnabled = false)
+      page = page
     )
 
     testPage.shouldHaveForm("Business Entity Form")(actionCall = testCall)
 
     "have a set of radio inputs" which {
-      lazy val doc = Jsoup.parse(page(divisionLookupEnabled = false).body)
+      lazy val doc = Jsoup.parse(page.body)
 
       "for the option 'VAT group'" should {
         "have the text 'VAT group'" in {
@@ -70,33 +69,6 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
           }
           "be of type radio" in {
             optionLabel.attr("type") shouldEqual "radio"
-          }
-        }
-      }
-
-      "for the option 'Division'" when {
-        "the DivisionLookupJourney featureSwitch is enabled" should {
-          "not show the 'Administrative division' option" in {
-            lazy val doc = Jsoup.parse(page(divisionLookupEnabled = true).body)
-            val divisionRadio = doc.select("input[id=division]")
-            val divisionLabel = doc.select("label[for=division]")
-
-            divisionRadio.isEmpty shouldBe true
-            divisionLabel.isEmpty shouldBe true
-          }
-        }
-        "the DivisionLookupJourney featureSwitch is disabled" should {
-          "have the text 'Administrative division'" in {
-            doc.select("label[for=division]").text() shouldEqual messages.radioDivision
-          }
-          "have an input under the label that" should {
-            lazy val optionLabel = doc.select("#division")
-            "have the id 'division'" in {
-              optionLabel.attr("id") shouldEqual "division"
-            }
-            "be of type radio" in {
-              optionLabel.attr("type") shouldEqual "radio"
-            }
           }
         }
       }

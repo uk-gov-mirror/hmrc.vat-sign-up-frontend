@@ -27,8 +27,6 @@ object OtherBusinessEntityForm {
 
   val vatGroup: String = "vat-group"
 
-  val division: String = "division"
-
   val unincorporatedAssociation: String = "unincorporated-association"
 
   val trust: String = "trust"
@@ -48,7 +46,6 @@ object OtherBusinessEntityForm {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BusinessEntity] = {
       data.get(key) match {
         case Some(`vatGroup`) => Right(VatGroup)
-        case Some(`division`) => Right(Division)
         case Some(`unincorporatedAssociation`) => Right(UnincorporatedAssociation)
         case Some(`trust`) => Right(Trust)
         case Some(`registeredSociety`) => Right(RegisteredSociety)
@@ -62,7 +59,6 @@ object OtherBusinessEntityForm {
     override def unbind(key: String, value: BusinessEntity): Map[String, String] = {
       val stringValue = value match {
         case VatGroup => vatGroup
-        case Division => division
         case UnincorporatedAssociation => unincorporatedAssociation
         case Trust => trust
         case RegisteredSociety => registeredSociety

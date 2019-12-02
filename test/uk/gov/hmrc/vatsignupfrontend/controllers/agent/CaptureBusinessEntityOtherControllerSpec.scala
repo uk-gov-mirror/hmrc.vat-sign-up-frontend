@@ -64,17 +64,6 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         }
       }
 
-      "the business entity is division" when {
-        "redirect to Division Resolver page" in {
-          mockAuthRetrieveAgentEnrolment()
-
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(division)))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Division))
-        }
-      }
-
       "the business entity is an Unincorporated Association" when {
         "redirect to the Unincorporated Association resolver page" in {
           mockAuthRetrieveAgentEnrolment()

@@ -23,7 +23,6 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 @(businessEntityForm: Form[BusinessEntity],
-  divisionLookupEnabled: Boolean,
   postAction: Call
 )(implicit request: Request [_], messages: Messages, appConfig: AppConfig)
 
@@ -33,10 +32,9 @@
     (trust, Messages("core.capture_entity_type.trust")),
     (charity, Messages("core.capture_entity_type.charity")),
     (unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation")),
-    (division, Messages("core.capture_entity_type.division")),
     (registeredSociety, Messages("core.capture_entity_type.registeredSociety")),
     (governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))
-  ).filterNot { case (entity, message) => divisionLookupEnabled && entity == "division" }
+  )
 }
 
 @principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = None, form = Some(businessEntityForm)) {

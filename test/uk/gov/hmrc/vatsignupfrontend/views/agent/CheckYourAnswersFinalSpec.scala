@@ -22,7 +22,7 @@ import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswersFinal => msg}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FeatureSwitching}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes._
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.{routes => soletraderRoutes}
@@ -288,52 +288,26 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
         doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
       }
     }
-    "The business is a Division" when {
-      "the DivisionLookupJourney feature switch is disabled" should {
-        disable(DivisionLookupJourney)
-        val summary = testSubmissionRequestSummary(businessEntity = Division)
-        lazy val page = testView(summary = summary, optBusinessEntity = Some(Division))
-        lazy val doc = Jsoup.parse(page.body)
+    "The business is a Division" should {
+      val summary = testSubmissionRequestSummary(businessEntity = Division)
+      lazy val page = testView(summary = summary, optBusinessEntity = None)
+      lazy val doc = Jsoup.parse(page.body)
 
-        val testPage = TestView(
-          name = "Final check your answers - Division",
-          title = msg.title,
-          heading = msg.heading,
-          page = page
-        )
+      val testPage = TestView(
+        name = "Final check your answers - Division",
+        title = msg.title,
+        heading = msg.heading,
+        page = page
+      )
 
-        testPage.shouldHaveAcceptAndSendButton()
+      testPage.shouldHaveAcceptAndSendButton()
 
-        "have rows for business entity, VRN, agent email, client email and contact preference" in {
-          doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
-          doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Division), Some(CaptureBusinessEntityController.show().url))
-          doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-          doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-          doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
-        }
-      }
-      "the DivisionLookupJourney feature switch is enabled" should {
-        enable(DivisionLookupJourney)
-        val summary = testSubmissionRequestSummary(businessEntity = Division)
-        lazy val page = testView(summary = summary, optBusinessEntity = None)
-        lazy val doc = Jsoup.parse(page.body)
-
-        val testPage = TestView(
-          name = "Final check your answers - Division",
-          title = msg.title,
-          heading = msg.heading,
-          page = page
-        )
-
-        testPage.shouldHaveAcceptAndSendButton()
-
-        "have rows for VRN, agent email, client email and contact preference but NOT business entity" in {
-          doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
-          doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
-          doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-          doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
-          doc.select("#business-entity-row").isEmpty shouldBe true
-        }
+      "have rows for VRN, agent email, client email and contact preference but NOT business entity" in {
+        doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.select("#business-entity-row").isEmpty shouldBe true
       }
     }
     "The business is an Unincorporated Association" should {

@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
@@ -57,7 +57,7 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
               optCompanyNameFromOptCompanyNumber(summary.optCompanyNumber).map { optCompanyName =>
                 val optBusinessEntity = summary.businessEntity match {
                   case Overseas => None
-                  case Division if isEnabled(DivisionLookupJourney) => None
+                  case Division => None
                   case _ => Some(summary.businessEntity)
                 }
 

@@ -18,14 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub.stubStoreOverseasInformation
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
-import uk.gov.hmrc.vatsignupfrontend.models.{Overseas, SoleTrader}
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
   val administrativeDivisionVatNumber1 = "000000000"
@@ -66,7 +65,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     "there is a VRN in session and it is a division VRN" should {
       "redirect to DivisionResolverController" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        enable(DivisionLookupJourney)
         val res = get("/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVatNumber1))
 
         res should have(

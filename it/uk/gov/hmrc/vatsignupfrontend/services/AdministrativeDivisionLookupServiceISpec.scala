@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsignupfrontend.services
 
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.ComponentSpecBase
 
 class AdministrativeDivisionLookupServiceISpec extends ComponentSpecBase {
@@ -28,29 +27,14 @@ class AdministrativeDivisionLookupServiceISpec extends ComponentSpecBase {
   val administrativeDivisionLookupService: AdministrativeDivisionLookupService = app.injector.instanceOf[AdministrativeDivisionLookupService]
 
   "isAdministrativeDivision" when {
-    s"the $DivisionLookupJourney feature switch is enabled" when {
-      "the VAT number is in the administrative division config list" should {
-        "return true" in {
-          enable(DivisionLookupJourney)
-
-          administrativeDivisionLookupService.isAdministrativeDivision(administrativeDivisionVatNumber1) shouldBe true
-        }
-      }
-      "the VAT number is not in the administrative division config list" should {
-        "return false" in {
-          enable(DivisionLookupJourney)
-
-          administrativeDivisionLookupService.isAdministrativeDivision(nonAdministrativeDivisionVatNumber) shouldBe false
-        }
+    "the VAT number is in the administrative division config list" should {
+      "return true" in {
+        administrativeDivisionLookupService.isAdministrativeDivision(administrativeDivisionVatNumber1) shouldBe true
       }
     }
-    s"the $DivisionLookupJourney feature switch is disabled" when {
-        "the VAT number is not in the administrative division config list" should {
-          "return false" in {
-            disable(DivisionLookupJourney)
-
-          administrativeDivisionLookupService.isAdministrativeDivision(administrativeDivisionVatNumber1) shouldBe false
-        }
+    "the VAT number is not in the administrative division config list" should {
+      "return false" in {
+        administrativeDivisionLookupService.isAdministrativeDivision(nonAdministrativeDivisionVatNumber) shouldBe false
       }
     }
   }

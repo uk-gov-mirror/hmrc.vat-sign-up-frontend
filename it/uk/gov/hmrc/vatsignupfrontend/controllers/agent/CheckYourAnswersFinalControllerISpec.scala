@@ -1,10 +1,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
-import org.jsoup.Jsoup
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DivisionLookupJourney, FeatureSwitching, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub._
@@ -13,7 +12,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.SubscriptionRequestSum
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
-import uk.gov.hmrc.vatsignupfrontend.services.AdministrativeDivisionLookupService
 
 class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -161,65 +159,8 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
         }
       }
     }
-    "the businessEntity is division" when {
-      "the DivisionLookupJourney featureswitch is disabled" should {
-        "have a row for business entity" in {
-          val model = SubscriptionRequestSummary(
-            vatNumber = testVatNumber,
-            businessEntity = Division,
-            optNino = None,
-            optCompanyNumber = None,
-            optSautr = None,
-            optSignUpEmail = Some(testEmail),
-            transactionEmail = testEmail,
-            contactPreference = Digital
-          )
-
-          enable(FinalCheckYourAnswer)
-          disable(DivisionLookupJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
-
-          val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
-          val doc = Jsoup.parse(res.body)
-
-          res should have(
-            httpStatus(OK)
-          )
-
-          doc.select("#business-entity-row").isEmpty shouldBe false
-        }
-      }
-      "the DivisionLookupJourney featureswitch is enabled" should {
-        "not have a row for business entity" in {
-          val model = SubscriptionRequestSummary(
-            vatNumber = testVatNumber,
-            businessEntity = Division,
-            optNino = None,
-            optCompanyNumber = None,
-            optSautr = None,
-            optSignUpEmail = Some(testEmail),
-            transactionEmail = testEmail,
-            contactPreference = Digital
-          )
-
-          enable(FinalCheckYourAnswer)
-          enable(DivisionLookupJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
-
-          val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
-          val doc = Jsoup.parse(res.body)
-
-          res should have(
-            httpStatus(OK)
-          )
-
-          doc.select("#business-entity-row").isEmpty shouldBe true
-        }
-      }
-    }
   }
+
   "POST /client/check-your-answers-final" when {
     "the submission was successful" should {
       "redirect to the confirmation page" in {

@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent, Call}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -35,22 +34,20 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   private lazy val businessEntityRoute: Map[BusinessEntity, Call] = Map(
-     VatGroup -> routes.VatGroupResolverController.resolve(),
-     Division -> routes.DivisionResolverController.resolve(),
-     UnincorporatedAssociation -> routes.UnincorporatedAssociationResolverController.resolve(),
-     Trust -> routes.TrustResolverController.resolve(),
-     RegisteredSociety -> routes.CaptureRegisteredSocietyCompanyNumberController.show(),
-     Charity -> routes.CharityResolverController.resolve(),
-     GovernmentOrganisation -> routes.GovernmentOrganisationResolverController.resolve()
+    VatGroup -> routes.VatGroupResolverController.resolve(),
+    UnincorporatedAssociation -> routes.UnincorporatedAssociationResolverController.resolve(),
+    Trust -> routes.TrustResolverController.resolve(),
+    RegisteredSociety -> routes.CaptureRegisteredSocietyCompanyNumberController.show(),
+    Charity -> routes.CharityResolverController.resolve(),
+    GovernmentOrganisation -> routes.GovernmentOrganisationResolverController.resolve()
 
   )
 
-      val show: Action[AnyContent] = Action.async { implicit request =>
+  val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
         Ok(capture_business_entity_other(
           businessEntityForm(true),
-          divisionLookupEnabled = isEnabled(DivisionLookupJourney),
           postAction = routes.CaptureBusinessEntityOtherController.submit()
         ))
       )
@@ -64,12 +61,11 @@ class CaptureBusinessEntityOtherController @Inject()(val controllerComponents: C
           Future.successful(
             BadRequest(capture_business_entity_other(
               formWithErrors,
-              divisionLookupEnabled = isEnabled(DivisionLookupJourney),
               postAction = routes.CaptureBusinessEntityOtherController.submit()
             ))
           ),
         businessEntity => Future.successful(
-        Redirect(businessEntityRoute(businessEntity)).addingToSession(SessionKeys.businessEntityKey, businessEntity))
+          Redirect(businessEntityRoute(businessEntity)).addingToSession(SessionKeys.businessEntityKey, businessEntity))
       )
     }
   }
