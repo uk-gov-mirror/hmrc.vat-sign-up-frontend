@@ -24,8 +24,7 @@
 
 
 @(businessEntityForm: Form[BusinessEntity],
-    divisionLookupEnabled: Boolean,
-    postAction: Call
+        postAction: Call
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @entities = @{
@@ -34,10 +33,9 @@
         (trust, Messages("core.capture_entity_type.trust")),
         (charity, Messages("core.capture_entity_type.charity")),
         (unincorporatedAssociation, Messages("core.capture_entity_type.unincorporatedAssociation")),
-        (division, Messages("core.capture_entity_type.division")),
         (registeredSociety, Messages("core.capture_entity_type.registeredSociety")),
         (governmentOrganisation, Messages("core.capture_entity_type.governmentOrganisation"))
-    ).filterNot { case (entity, message) => divisionLookupEnabled && entity == "division" }
+    )
 }
 
 @agent_main_template(title = Messages("agent.capture_entity_type.title"), bodyClasses = None, scriptElem = None, form = Some(businessEntityForm)) {

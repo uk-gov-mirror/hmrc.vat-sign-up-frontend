@@ -33,7 +33,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   override def afterAll(): Unit = {
     super.afterAll()
     disable(OptionalSautrJourney)
-    disable(DivisionLookupJourney)
   }
 
 
@@ -53,8 +52,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
 
       }
-      "the session VRN is an Administrative division and feature switch is enabled" in {
-        enable(DivisionLookupJourney)
+      "the session VRN is an Administrative division" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVRN))
@@ -77,21 +75,10 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
     }
 
     "return an OK" when {
-      "the session VRN is not Administrative division" in {
-        enable(DivisionLookupJourney)
+      "the session VRN is not an Administrative division" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> IntegrationTestConstants.testVatNumber))
-
-        res should have(
-          httpStatus(OK)
-        )
-      }
-      "the feature switch is disabled and given an Administrative division" in {
-        disable(DivisionLookupJourney)
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-        val res = get("/client/business-type", Map(SessionKeys.vatNumberKey -> administrativeDivisionVRN))
 
         res should have(
           httpStatus(OK)

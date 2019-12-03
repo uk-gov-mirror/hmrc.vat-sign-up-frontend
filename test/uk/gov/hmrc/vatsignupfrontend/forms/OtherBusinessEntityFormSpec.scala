@@ -41,11 +41,6 @@ class OtherBusinessEntityFormSpec extends UnitSpec {
       res.value should contain(UnincorporatedAssociation)
     }
 
-    "successfully parse a division entity" in {
-      val res = principalBusinessEntityForm.bind(Map(businessEntity -> division))
-      res.value should contain(Division)
-    }
-
     "successfully parse a government organisation entity" in {
       val res = principalBusinessEntityForm.bind(Map(businessEntity -> governmentOrganisation))
       res.value should contain(GovernmentOrganisation)

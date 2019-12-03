@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import org.jsoup.Jsoup
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -26,37 +24,15 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  "GET /business-type-other" when {
-    "the DivisionLookupJourney featureswitch is disabled" should {
-      "return an OK and the page should contain the division option" in {
-        stubAuth(OK, successfulAuthResponse())
-        disable(DivisionLookupJourney)
+  "GET /business-type-other" should {
+    "return an OK" in {
+      stubAuth(OK, successfulAuthResponse())
 
-        val res = get("/business-type-other")
-        val doc = Jsoup.parse(res.body)
+      val res = get("/business-type-other")
 
-        res should have(
-          httpStatus(OK)
-        )
-
-        doc.select("input[id=division]").isEmpty shouldBe false
-        doc.select("label[for=division]").isEmpty shouldBe false
-      }
-    }
-    "the DivisionLookupJourney featureswitch is enabled" should {
-      "return an OK and the page should NOT contain the division option" in {
-        stubAuth(OK, successfulAuthResponse())
-        enable(DivisionLookupJourney)
-
-        val res = get("/business-type-other")
-        val doc = Jsoup.parse(res.body)
-
-        res should have(
-          httpStatus(OK)
-        )
-
-        doc.select("input[id=division]").isEmpty shouldBe true
-      }
+      res should have(
+        httpStatus(OK)
+      )
     }
   }
 
@@ -71,19 +47,6 @@ class CaptureBusinessEntityOtherControllerISpec extends ComponentSpecBase with C
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.VatGroupResolverController.resolve().url)
-        )
-      }
-    }
-
-    "the business type is division" should {
-      "return a SEE_OTHER status and go to division resolver" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/business-type-other")(OtherBusinessEntityForm.businessEntity -> division)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.DivisionResolverController.resolve().url)
         )
       }
     }

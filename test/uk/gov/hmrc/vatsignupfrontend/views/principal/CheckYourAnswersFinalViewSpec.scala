@@ -24,8 +24,7 @@ import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAnswersFinal => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DivisionLookupJourney
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testCompanyName, testCompanyNumber, testCompanyUtr, testEmail, testNino, testVatNumber}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
@@ -98,7 +97,7 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
     section.attr("class") shouldBe "tabular-data__data-2"
   }
 
-  def sectionExists(page:Html, sectionId: String): Boolean = {
+  def sectionExists(page: Html, sectionId: String): Boolean = {
     lazy val doc = Jsoup.parse(page.body)
     val result = Option(doc.getElementById(sectionId))
 
