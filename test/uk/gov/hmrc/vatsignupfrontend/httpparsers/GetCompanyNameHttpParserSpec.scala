@@ -20,7 +20,8 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.Constants.{GetCompanyNameCodeKey, GetCompanyTypeCodeKey}
+import uk.gov.hmrc.vatsignupfrontend.Constants.{GetCompanyNameCodeKey, GetCompanyStatusCodeKey, GetCompanyTypeCodeKey}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
@@ -32,11 +33,27 @@ class GetCompanyNameHttpParserSpec extends UnitSpec {
   "GetCompanyNameHttpReads" when {
     "read" should {
       "parse a OK response as an GetCompanyNameSuccess" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(GetCompanyNameCodeKey -> testCompanyNumber, GetCompanyTypeCodeKey -> GetCompanyNameHttpParser.LimitedPartnershipKey)))
+        val httpResponse = HttpResponse(OK, Some(Json.obj(
+          GetCompanyNameCodeKey -> testCompanyNumber,
+          GetCompanyTypeCodeKey -> GetCompanyNameHttpParser.LimitedPartnershipKey,
+          GetCompanyStatusCodeKey -> "active"
+        )))
 
         val res = GetCompanyNameHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(GetCompanyNameSuccess(testCompanyNumber, companieshouse.LimitedPartnership))
+        res shouldBe Right(CompanyDetails(testCompanyNumber, companieshouse.LimitedPartnership))
+      }
+      "parse a OK response as an GetCompanyNameIneligibleResponse and the CrnDissolved FS is enabled" in {
+        enable(CrnDissolved)
+        val httpResponse = HttpResponse(OK, Some(Json.obj(
+          GetCompanyNameCodeKey -> testCompanyNumber,
+          GetCompanyTypeCodeKey -> GetCompanyNameHttpParser.LimitedPartnershipKey,
+          GetCompanyStatusCodeKey -> GetCompanyNameHttpParser.ConvertedClosedStatusKey
+        )))
+
+        val res = GetCompanyNameHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Right(CompanyClosed)
       }
       "parse a NOT_FOUND response as an CompanyNumberNotFound" in {
         val httpResponse = HttpResponse(NOT_FOUND)
