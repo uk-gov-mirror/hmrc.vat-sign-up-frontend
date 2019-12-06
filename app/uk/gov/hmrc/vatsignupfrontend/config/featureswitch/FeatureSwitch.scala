@@ -37,7 +37,8 @@ object FeatureSwitch {
     DirectToCTUTROnMismatchedCTUTR,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
-    ReSignUpJourney
+    ReSignUpJourney,
+    CrnDissolved
   )
 
   def apply(str: String): FeatureSwitch =
@@ -103,4 +104,9 @@ case object GeneralPartnershipNoSAUTR extends FeatureSwitch {
 case object ReSignUpJourney extends FeatureSwitch {
   override val name: String = s"$prefix.re-sign-up-journey"
   override val displayText: String = "Enable the Resignup journey for users already migrated to ETMP"
+}
+
+case object CrnDissolved extends FeatureSwitch {
+  override val name: String = s"$prefix.crn-dissolved-validation"
+  override val displayText: String = "Block users with CRNs for dissolved or converted-closed companies"
 }
