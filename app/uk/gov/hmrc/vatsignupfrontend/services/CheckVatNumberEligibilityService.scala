@@ -40,6 +40,7 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityPreMigratio
         case Right(Ineligible) => StoreVatNumberOrchestrationService.Ineligible
         case Right(Inhibited(inhibitedDates)) => StoreVatNumberOrchestrationService.Inhibited(inhibitedDates)
         case Right(Eligible(isOverseas, isMigrated)) => StoreVatNumberOrchestrationService.Eligible(isOverseas, isMigrated)
+        case Left(VatNumberNotFound) => StoreVatNumberOrchestrationService.InvalidVatNumber
         case _ => throw new InternalServerException("Unexpected response from new VAT number eligibility backend")
       }
     else

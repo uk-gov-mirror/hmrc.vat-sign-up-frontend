@@ -466,11 +466,26 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             }
           }
 
+          "Redirect to the InvalidVatNumber page" when {
+            "The eligibility check returns 404" in {
+              enable(ReSignUpJourney)
+              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberEligibilityInvalid(testVatNumber)
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.InvalidVatNumberController.show().url)
+              )
+            }
+          }
+
           "throw an internal server error" when {
             "any other failure occurs" in {
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilityFailure(testVatNumber)
+              stubVatNumberEligibility(testVatNumber)(status = INTERNAL_SERVER_ERROR, optEligibilityResponse = None)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -666,6 +681,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             "any other failure occurs" in {
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse())
+              stubVatNumberEligibility(testVatNumber)(status = INTERNAL_SERVER_ERROR, optEligibilityResponse = None)
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 

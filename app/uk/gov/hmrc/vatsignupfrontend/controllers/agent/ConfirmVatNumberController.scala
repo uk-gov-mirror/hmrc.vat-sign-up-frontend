@@ -82,6 +82,8 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case MigrationInProgress =>
                     Redirect(routes.MigrationInProgressErrorController.show())
+                  case InvalidVatNumber =>
+                    Redirect(routes.CouldNotConfirmVatNumberController.show())
                   case errorResponse =>
                     throw new InternalServerException(s"storeVatNumberOrchestration failed due to $errorResponse")
                 }

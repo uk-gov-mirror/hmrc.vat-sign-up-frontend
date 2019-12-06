@@ -86,12 +86,19 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec {
 
         res shouldBe Right(Eligible(isOverseas = false, isMigrated = false))
       }
+      "parse a NOT_FOUND response as VatNumberNotFound" in {
+        val httpResponse = HttpResponse(NOT_FOUND)
+
+        val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(VatNumberNotFound)
+      }
       "parse a BAD_REQUEST response as VatNumberEligibilityFailure" in {
         val httpResponse = HttpResponse(BAD_REQUEST)
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Left(VatNumberEligibilityFailure(BAD_REQUEST))
+        res shouldBe Left(VatNumberEligibilityFailure)
       }
       s"throw an InternalServerException for an OK response when the $MtdStatusKey is invalid" in {
         val httpResponse = HttpResponse(OK, response(""))

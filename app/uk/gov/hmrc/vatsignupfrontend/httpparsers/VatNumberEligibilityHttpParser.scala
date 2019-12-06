@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, NOT_FOUND}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OFormat, Reads}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse, InternalServerException}
@@ -63,8 +63,10 @@ object VatNumberEligibilityHttpParser {
             case _ =>
               throw new InternalServerException("Backend returned 200 without a valid MTDStatus")
           }
+        case NOT_FOUND =>
+          Left(VatNumberNotFound)
         case status =>
-          Left(VatNumberEligibilityFailure(status))
+          Left(VatNumberEligibilityFailure)
       }
     }
   }
@@ -92,6 +94,10 @@ object VatNumberEligibilityHttpParser {
 
   case object MigrationInProgress extends VatNumberEligibilitySuccess
 
-  case class VatNumberEligibilityFailure(status: Int)
+  sealed trait VatNumberEligibilityFailure
+
+  case object VatNumberEligibilityFailure extends VatNumberEligibilityFailure
+
+  case object VatNumberNotFound extends VatNumberEligibilityFailure
 
 }
