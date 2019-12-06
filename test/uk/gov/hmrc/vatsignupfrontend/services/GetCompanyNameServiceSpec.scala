@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.connectors.GetCompanyNameConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyDetails
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,7 +46,7 @@ class GetCompanyNameServiceSpec extends UnitSpec with MockitoSugar {
   val testInvalidCompanyNumber = "123456 7"
   val testInvalidCompanyNumber2 = "1234-567"
 
-  val result = Right(GetCompanyNameSuccess(testCompanyName, NonPartnershipEntity))
+  val result = Right(CompanyDetails(testCompanyName, NonPartnershipEntity))
 
   "getCompanyName" when {
     "the company number is 8 characters long" should {

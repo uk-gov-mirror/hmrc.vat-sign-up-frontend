@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, CompanyDetails}
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{NonPartnershipEntity, PartnershipCompanyType}
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, companieshouse}
@@ -76,14 +76,14 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
             ),
           companyNumber =>
             getCompanyNameService.getCompanyName(companyNumber) map {
-              case Right(GetCompanyNameSuccess(companyName, companyType: PartnershipCompanyType)) =>
+              case Right(CompanyDetails(companyName, companyType: PartnershipCompanyType)) =>
                 val partnershipEntity = toPartnershipEntityType(companyType)
                 Redirect(routes.ConfirmPartnershipController.show())
                   .addingToSession(
                     SessionKeys.companyNumberKey -> companyNumber,
                     SessionKeys.companyNameKey -> companyName
                   ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
-              case Right(GetCompanyNameSuccess(_, NonPartnershipEntity)) =>
+              case Right(CompanyDetails(_, NonPartnershipEntity)) =>
                 Redirect(routes.NotALimitedPartnershipController.show())
               case Left(CompanyNumberNotFound) =>
                 Redirect(routes.CouldNotFindPartnershipController.show())

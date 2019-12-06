@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, CompanyDetails}
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_company_number
 
@@ -62,7 +62,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
               )
             } else {
               getCompanyNameService.getCompanyName(companyNumber) map {
-                case Right(GetCompanyNameSuccess(companyName, _)) =>
+                case Right(CompanyDetails(companyName, _)) =>
                   Redirect(routes.ConfirmCompanyController.show())
                     .addingToSession(
                       SessionKeys.companyNumberKey -> companyNumber,

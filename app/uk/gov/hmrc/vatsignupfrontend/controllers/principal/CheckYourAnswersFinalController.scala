@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.GetCompanyNameSuccess
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyDetails
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.SubscriptionRequestUnexpectedError
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -61,7 +61,7 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
                 case Some(companyNumber) =>
                   getCompanyNameService.getCompanyName(companyNumber) map {
                     case Left(_) => throw new InternalServerException(s"Get Company Name Service failed when retrieving data for the CYA final")
-                    case Right(GetCompanyNameSuccess(companyName, _)) =>
+                    case Right(CompanyDetails(companyName, _)) =>
                       Ok(check_your_answers_final(
                         summary.vatNumber,
                         summary.businessEntity,

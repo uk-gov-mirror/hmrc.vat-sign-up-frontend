@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, CompanyDetails}
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_number
 
@@ -70,7 +70,7 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
               )
             } else {
               getCompanyNameService.getCompanyName(companyNumber) map {
-                case Right(GetCompanyNameSuccess(societyName, _)) =>
+                case Right(CompanyDetails(societyName, _)) =>
                   Redirect(routes.ConfirmRegisteredSocietyController.show())
                     .addingToSession(
                       SessionKeys.registeredSocietyCompanyNumberKey -> companyNumber,

@@ -21,7 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyName
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameResponse, GetCompanyNameSuccess}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameResponse, CompanyDetails}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.CompanyType
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 
@@ -46,7 +46,7 @@ trait MockGetCompanyNameService extends BeforeAndAfterEach with MockitoSugar {
   }
 
   def mockGetCompanyNameSuccess(companyNumber: String, companyType: CompanyType): Unit =
-    mockGetCompanyName(companyNumber)(Future.successful(Right(GetCompanyNameSuccess(testCompanyName, companyType))))
+    mockGetCompanyName(companyNumber)(Future.successful(Right(CompanyDetails(testCompanyName, companyType))))
 
   def mockGetCompanyNameNotFound(companyNumber: String): Unit =
     mockGetCompanyName(companyNumber)(Future.successful(Left(CompanyNumberNotFound)))

@@ -20,6 +20,7 @@ object Constants {
   val StoreIdentityVerificationUrlKey = "journeyLink"
 
   val GetCompanyNameCodeKey = "company_name"
+  val GetCompanyStatusCodeKey = "company_status"
   val GetCompanyTypeCodeKey = "type"
 
   object Enrolments {
