@@ -198,6 +198,21 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
+      "redirect to the CouldNotConfirmVatNumber page" when {
+        "the eligibility check returns Not Found" in {
+          enable(ReSignUpJourney)
+          stubAuth(OK, successfulAuthResponse(agentEnrolment))
+          stubVatNumberEligibility(testVatNumber)(status = NOT_FOUND, optEligibilityResponse = None)
+
+          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CouldNotConfirmVatNumberController.show().url)
+          )
+        }
+      }
+
       "throw an internal server error" when {
         "the vat number cannot be stored" in {
           enable(ReSignUpJourney)
@@ -346,6 +361,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       "the vat number cannot be stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreVatNumberFailure(isFromBta = false)
+        stubVatNumberEligibilityFailure(testVatNumber)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 

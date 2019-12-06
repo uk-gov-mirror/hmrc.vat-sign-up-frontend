@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
@@ -106,6 +107,8 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                       case InvalidVatNumber =>
                         Redirect(routes.InvalidVatNumberController.show())
                           .removingFromSession(businessEntityKey)
+                      case errorResponse =>
+                        throw new InternalServerException(s"storeVatNumberOrchestration failed due to $errorResponse")
                     }.map {
                       _.removingFromSession(
                         vatRegistrationDateKey,
