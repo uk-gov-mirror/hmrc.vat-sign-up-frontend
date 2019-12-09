@@ -37,7 +37,7 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityPreMigratio
       vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber).map {
         case Right(MigrationInProgress) => StoreVatNumberOrchestrationService.MigrationInProgress
         case Right(AlreadySubscribed) => StoreVatNumberOrchestrationService.AlreadySubscribed
-        case Right(Ineligible) => StoreVatNumberOrchestrationService.Ineligible
+        case Right(Ineligible) | Right(Deregistered) => StoreVatNumberOrchestrationService.Ineligible //TODO create a proper flow for deregistered
         case Right(Inhibited(inhibitedDates)) => StoreVatNumberOrchestrationService.Inhibited(inhibitedDates)
         case Right(Eligible(isOverseas, isMigrated)) => StoreVatNumberOrchestrationService.Eligible(isOverseas, isMigrated)
         case Left(VatNumberNotFound) => StoreVatNumberOrchestrationService.InvalidVatNumber

@@ -14,6 +14,7 @@ object VatNumberEligibilityStub extends WireMockMethods {
       case Some(Eligible) => Json.obj("mtdStatus" -> "Eligible", "eligibilityDetails" -> Json.obj("isMigrated" -> false, "isOverseas" -> false))
       case Some(Migrated) => Json.obj("mtdStatus" -> "Eligible", "eligibilityDetails" -> Json.obj("isMigrated" -> true, "isOverseas" -> false))
       case Some(Ineligible) => Json.obj("mtdStatus" -> "Ineligible")
+      case Some(Deregistered) => Json.obj("mtdStatus" -> "Deregistered")
       case Some(Overseas(isMigrated)) => Json.obj("mtdStatus" -> "Eligible", "eligibilityDetails" -> Json.obj("isMigrated" -> isMigrated, "isOverseas" -> true))
       case Some(Inhibited(dates)) => Json.obj("mtdStatus" -> "Inhibited", "migratableDates" -> Json.obj("migratableDate" -> dates.migratableDate, "migratableCutoffDate" -> dates.migratableCutoffDate))
       case Some(MigrationInProgress) => Json.obj("mtdStatus" -> "MigrationInProgress")
@@ -31,6 +32,7 @@ object VatNumberEligibilityStub extends WireMockMethods {
   case object Eligible extends EligibilityResponse
   case object Migrated extends EligibilityResponse
   case object Ineligible extends EligibilityResponse
+  case object Deregistered extends EligibilityResponse
   case class Overseas(isMigrated: Boolean) extends EligibilityResponse
   case class Inhibited(dates: MigratableDates) extends EligibilityResponse
   case object MigrationInProgress extends EligibilityResponse

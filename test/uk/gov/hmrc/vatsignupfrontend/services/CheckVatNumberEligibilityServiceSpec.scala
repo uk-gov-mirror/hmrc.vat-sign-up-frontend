@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.{MockVatNumberEligibilityConnector, MockVatNumberEligibilityPreMigrationConnector}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testEndDate, testStartDate, testVatNumber}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{AlreadySubscribed, Eligible, Ineligible, Inhibited, MigrationInProgress, VatNumberNotFound}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{AlreadySubscribed, Deregistered, Eligible, Ineligible, Inhibited, MigrationInProgress, VatNumberNotFound}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.{IneligibleForMtdVatNumber, InvalidVatNumber, VatNumberEligible}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
@@ -85,6 +85,16 @@ class CheckVatNumberEligibilityServiceSpec extends UnitSpec
         "return Ineligible" in {
           enable(ReSignUpJourney)
           mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Ineligible)))
+
+          val result = await(TestService.checkEligibility(testVatNumber))
+          result shouldBe StoreVatNumberOrchestrationService.Ineligible
+        }
+      }
+
+      "the connector returns Deregistered" should {
+        "return Ineligible" in {
+          enable(ReSignUpJourney)
+          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Deregistered)))
 
           val result = await(TestService.checkEligibility(testVatNumber))
           result shouldBe StoreVatNumberOrchestrationService.Ineligible
