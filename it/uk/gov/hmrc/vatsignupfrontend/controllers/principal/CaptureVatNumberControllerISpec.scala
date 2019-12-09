@@ -383,6 +383,22 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             }
           }
 
+          "redirect to the Cannot Use Service page" when {
+            "the vat number is deregistered for mtd vat" in {
+              enable(ReSignUpJourney)
+              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
+              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.CannotUseServiceController.show().url)
+              )
+            }
+          }
+
           "redirect to the sign up after this date page" when {
             "the vat number is ineligible for mtd vat and one date is available" in {
               val testDates = MigratableDates(Some(testStartDate))
@@ -633,6 +649,21 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse())
               stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
+
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.CannotUseServiceController.show().url)
+              )
+            }
+          }
+
+          "redirect to the Cannot Use Service page" when {
+            "the vat number is deregistered for mtd vat" in {
+              enable(ReSignUpJourney)
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
 
               val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 

@@ -198,6 +198,21 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
+      "return a redirect to cannot use service error page" when {
+        "form value is NO and the VRN is Deregistered" in {
+          enable(ReSignUpJourney)
+          stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
+
+          val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CannotUseServiceController.show().url)
+          )
+        }
+      }
+
       "redirect to migration in progress error page" when {
         "form value is NO and the VRN is currently being migrated" in {
           enable(ReSignUpJourney)
