@@ -142,8 +142,8 @@ error.partnership_postcode.invalid.summary                             = Nodwch 
 error.partnership_postcode.invalid.field                               = Nodwch god post dilys
 error.partnership_postcode.invalid_characters.summary                  = Nodwch god post gan ddefnyddio llythrennau a rhifau yn unig
 error.partnership_postcode.invalid_characters.field                    = Nodwch god post gan ddefnyddio llythrennau a rhifau yn unig
-error.principal.partnership_postcode.not_entered.summary               = Nodwch y cod post lle mae’r bartneriaeth wedi’i chofrestru ar gyfer Hunanasesiad
-error.principal.partnership_postcode.not_entered.field                 = Nodwch y cod post lle mae’r bartneriaeth wedi’i chofrestru ar gyfer Hunanasesiad
+error.principal.partnership_postcode.not_entered.summary               = Nodwch y cod post lle mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad
+error.principal.partnership_postcode.not_entered.field                 = Nodwch y cod post lle mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad
 error.agent.partnership_postcode.not_entered.summary                   = Nodwch god post prif leoliad busnes y cleient
 error.agent.partnership_postcode.not_entered.field                     = Nodwch god post prif leoliad busnes y cleient
 error.character_limit_partnership_utr.summary                          = Nodwch Gyfeirnod Unigryw y Trethdalwr (UTR) sydd â 10 rhif
@@ -620,6 +620,13 @@ principal.confirm_registered_society.heading                           = Cadarnh
 principal.registered_society_company_name_not_found.title              = Doedd dim modd cadarnhau''ch cymdeithas gofrestredig
 principal.registered_society_company_name_not_found.heading            = Doedd dim modd cadarnhau''ch cymdeithas gofrestredig
 principal.registered_society_company_name_not_found.line_1             = Dydy''r wybodaeth rydych wedi''i nodi ddim yn cyd-fynd â''r manylion sydd gennym ni ar gyfer eich cymdeithas gofrestredig.
+
+## Dissolved Company page
+principal.dissolved_company.title                                      = Nid yw''r cwmni hwn yn gymwys i gael ei gofrestru
+principal.dissolved_company.heading                                    = Nid yw''r cwmni hwn yn gymwys i gael ei gofrestru
+principal.dissolved_company.paragraph1                                 = Rydych wedi nodi rhif ar gyfer cwmni sydd wedi''i ddiddymu neu''i gau.
+principal.dissolved_company.paragraph2                                 = Rhowch gynnig arall arni gan ddefnyddio''r rhif cwmni diweddaraf a anfonwyd gan Dŷ''r Cwmnïau.
+principal.dissolved_company.confirm                                    = Ewch yn ôl
 
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = Dydy''ch busnes ddim yn gymwys ar hyn o bryd
