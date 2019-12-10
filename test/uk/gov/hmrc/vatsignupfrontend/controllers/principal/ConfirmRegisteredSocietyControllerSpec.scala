@@ -96,7 +96,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       }
     }
     "the ct enrolment ctutr does not match the ctutr returned from DES" should {
-      "redirect to the ct enrolment details do not match page" in {
+      "redirect to the capture ct utr page" in {
         mockAuthRetrieveIRCTEnrolment()
         mockStoreRegisteredSocietyCtMismatch(
           vatNumber = testVatNumber,
@@ -111,7 +111,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
         val result = await(TestConfirmRegisteredSocietyController.submit(request))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
 
         }
       }
