@@ -37,6 +37,10 @@ POST        /confirm-national-insurance-number                  uk.gov.hmrc.vats
 GET         /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.show
 POST        /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.submit
 
+# Dissolved Company
+GET         /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.DissolvedCompanyController.show
+POST        /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.DissolvedCompanyController.submit
+
 # Confirm Company name
 GET         /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
 POST        /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.submit
