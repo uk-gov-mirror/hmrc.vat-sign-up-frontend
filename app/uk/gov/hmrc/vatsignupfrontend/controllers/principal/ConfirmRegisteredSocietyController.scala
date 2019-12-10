@@ -70,7 +70,7 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
             case Right(_) =>
               Future.successful(Redirect(routes.DirectDebitResolverController.show()))
             case Left(CtReferenceMismatch) =>
-              Future.successful(Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show()))
+              Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
             case Left(status) =>
               throw new InternalServerException("StoreRegisteredSociety failed: status = " + status)
           }

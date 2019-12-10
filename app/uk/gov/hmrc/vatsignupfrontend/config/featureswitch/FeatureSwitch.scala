@@ -34,7 +34,6 @@ object FeatureSwitch {
     OptionalSautrJourney,
     WelshTranslation,
     SkipCtUtrOnCotaxNotFound,
-    DirectToCTUTROnMismatchedCTUTR,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
     ReSignUpJourney,
@@ -84,11 +83,6 @@ case object OptionalSautrJourney extends FeatureSwitch {
 case object SkipCtUtrOnCotaxNotFound extends FeatureSwitch {
   override val name: String = s"$prefix.skip-ctutr-on-cotax-not-found"
   override val displayText: String = "Enable users to skip CT UTR if there is no match on COTAX"
-}
-
-case object DirectToCTUTROnMismatchedCTUTR extends FeatureSwitch {
-  override val name: String = s"$prefix.direct-to-ctutr-on-mismatched-ctutr"
-  override val displayText: String = "Direct users to capture CT UTR page when present credential causes a mismatch"
 }
 
 case object FinalCheckYourAnswer extends FeatureSwitch {

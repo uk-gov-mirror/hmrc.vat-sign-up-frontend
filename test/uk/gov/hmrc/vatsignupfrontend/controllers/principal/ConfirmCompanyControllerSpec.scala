@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectToCTUTROnMismatchedCTUTR, SkipCtUtrOnCotaxNotFound}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCtUtrOnCotaxNotFound
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockCtReferenceLookupService, MockStoreCompanyNumberService}
@@ -112,6 +112,25 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
       }
+      "go to the capture CT utr page when CT mismatches" in {
+        enable(SkipCtUtrOnCotaxNotFound)
+        mockAuthRetrieveIRCTEnrolment()
+        mockCtReferenceFound(testCompanyNumber)
+        mockStoreCompanyNumberCtMismatch(
+          testVatNumber,
+          testCompanyNumber,
+          testSaUtr
+        )
+
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber
+        )
+
+        val result = TestConfirmCompanyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+      }
       "skip the 'capture company UTR' page if not CT enrolled and there isn't a UTR stored in COTAX" in {
         enable(SkipCtUtrOnCotaxNotFound)
         mockAuthRetrieveVatDecEnrolment()
@@ -181,6 +200,23 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
       }
+      "go to the capture CT utr page when CT mismatches" in {
+        mockAuthRetrieveIRCTEnrolment()
+        mockStoreCompanyNumberCtMismatch(
+          testVatNumber,
+          testCompanyNumber,
+          testSaUtr
+        )
+
+        val request = testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.companyNumberKey -> testCompanyNumber
+        )
+
+        val result = TestConfirmCompanyController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+      }
       "go to the 'capture company UTR' page if not CT enrolled and there isn't a UTR stored in COTAX" in {
         mockAuthRetrieveVatDecEnrolment()
         mockCtReferenceNotFound(testCompanyNumber)
@@ -233,61 +269,6 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
     }
 
-    "go to the CT enrolment mismatch page when CT mismatches" in {
-
-      mockAuthRetrieveIRCTEnrolment()
-      mockStoreCompanyNumberCtMismatch(
-        testVatNumber,
-        testCompanyNumber,
-        testSaUtr
-      )
-
-      val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber,
-        SessionKeys.companyNumberKey -> testCompanyNumber
-      )
-
-      val result = TestConfirmCompanyController.submit(request)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
-
-    }
-
-    "if the DirectToCTUTROnMismatchedCTUTR feature switch is disabled" should {
-      "go to the 'CT Enrolment Details Do Not Match' page" in {
-        disable(DirectToCTUTROnMismatchedCTUTR)
-        mockAuthRetrieveIRCTEnrolment()
-        mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.vatNumberKey -> testVatNumber
-        )
-
-        val result = await(TestConfirmCompanyController.submit(request))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
-
-      }
-    }
-
-    "if the DirectToCTUTROnMismatchedCTUTR feature switch is enabled" should {
-      "go to the 'capture company UTR' page" in {
-        enable(DirectToCTUTROnMismatchedCTUTR)
-
-        mockAuthRetrieveIRCTEnrolment()
-        mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.vatNumberKey -> testVatNumber
-        )
-
-        val result = await(TestConfirmCompanyController.submit(request))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CaptureCompanyUtrController.show().url)
-
-      }
-    }
   }
+
 }

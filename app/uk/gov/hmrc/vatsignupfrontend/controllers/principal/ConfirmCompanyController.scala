@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectToCTUTROnMismatchedCTUTR, FeatureSwitching, SkipCtUtrOnCotaxNotFound}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCtUtrOnCotaxNotFound}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CtReferenceLookupHttpParser.{CtReferenceLookupFailureResponse, CtReferenceNotFound}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.CtReferenceMismatch
@@ -110,10 +110,8 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
     ) map {
       case Right(_) =>
         Redirect(routes.DirectDebitResolverController.show())
-      case Left(CtReferenceMismatch) if isEnabled(DirectToCTUTROnMismatchedCTUTR) =>
-        Redirect(routes.CaptureCompanyUtrController.show())
       case Left(CtReferenceMismatch) =>
-        Redirect(routes.CtEnrolmentDetailsDoNotMatchController.show())
+        Redirect(routes.CaptureCompanyUtrController.show())
       case Left(errResponse) =>
         throw new InternalServerException("storeCompanyNumber failed: status=" + errResponse.status)
     }

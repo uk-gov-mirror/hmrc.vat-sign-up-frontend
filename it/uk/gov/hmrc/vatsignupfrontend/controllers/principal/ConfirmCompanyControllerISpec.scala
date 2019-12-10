@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectToCTUTROnMismatchedCTUTR, SkipCtUtrOnCotaxNotFound}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCtUtrOnCotaxNotFound
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
@@ -84,6 +84,23 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
               redirectUri(routes.CaptureCompanyUtrController.show().url)
             )
           }
+          "redirect to the capture CTR page when store company number returns CtReferenceMismatch" in {
+            enable(SkipCtUtrOnCotaxNotFound)
+            stubAuth(OK, successfulAuthResponse(irctEnrolment))
+            stubCtReferenceFound(testCompanyNumber)
+            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
           "skip capture company UTR page when there isn't a CT reference on COTAX" in {
             enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse())
@@ -135,6 +152,21 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
               redirectUri(routes.CaptureCompanyUtrController.show().url)
             )
           }
+          "redirect to the capture CTR page when store company number returns CtReferenceMismatch" in {
+            stubAuth(OK, successfulAuthResponse(irctEnrolment))
+            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+
+            val res = post("/confirm-company",
+              Map(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.companyNumberKey -> testCompanyNumber
+              ))()
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureCompanyUtrController.show().url)
+            )
+          }
           "redirect to the capture company UTR page when there isn't a CT reference on COTAX" in {
             stubAuth(OK, successfulAuthResponse())
             stubCtReferenceNotFound(testCompanyNumber)
@@ -152,46 +184,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
           }
         }
 
-        "the DirectToCTUTROnMismatchedCTUTR is disabled" should {
-          "redirect to the mismatch page" in {
-            disable(DirectToCTUTROnMismatchedCTUTR)
-            stubAuth(OK, successfulAuthResponse(irctEnrolment))
-            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
-
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CtEnrolmentDetailsDoNotMatchController.show().url)
-            )
-
-          }
-
-        }
-
-        "the DirectToCTUTROnMismatchedCTUTR is enabled" should {
-          "redirect to the capture CTR page " in {
-            enable(DirectToCTUTROnMismatchedCTUTR)
-            stubAuth(OK, successfulAuthResponse(irctEnrolment))
-            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
-
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureCompanyUtrController.show().url)
-            )
-          }
-
-        }
       }
     }
   }
