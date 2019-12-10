@@ -25,106 +25,123 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
+
+import scala.concurrent.Future
 
 class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
 
-    object TestAgentCapturePartnershipCompanyNumberController extends AgentCapturePartnershipCompanyNumberController(
-      mockControllerComponents,
-      mockGetCompanyNameService
-    )
+  object TestAgentCapturePartnershipCompanyNumberController extends AgentCapturePartnershipCompanyNumberController(
+    mockControllerComponents,
+    mockGetCompanyNameService
+  )
 
-    lazy val testGetRequest = FakeRequest("GET", "/partnership-company-number")
+  lazy val testGetRequest = FakeRequest("GET", "/partnership-company-number")
 
-    def testPostRequest(companyNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-      FakeRequest("POST", "/partnership-company-number").withFormUrlEncodedBody(companyNumber -> companyNumberVal)
+  def testPostRequest(companyNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+    FakeRequest("POST", "/partnership-company-number").withFormUrlEncodedBody(companyNumber -> companyNumberVal)
 
-    "Calling the show action of the Capture Partnership Company Number controller" should {
-      "go to the Capture Partnership Company Number page" in {
+  "Calling the show action of the Capture Partnership Company Number controller" should {
+    "go to the Capture Partnership Company Number page" in {
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestAgentCapturePartnershipCompanyNumberController.show(testGetRequest)
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+  "Calling the submit action of the Capture Partnership Company Number controller" when {
+    "get company name returned successfully" should {
+      "Redirect to Confirm Partnership page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestAgentCapturePartnershipCompanyNumberController.show(testGetRequest)
-        status(result) shouldBe Status.OK
+        mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.LimitedPartnership)
+
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ConfirmPartnershipController.show().url)
+        session(result) get SessionKeys.partnershipTypeKey should contain(testPartnershipType)
+        session(result) get SessionKeys.companyNumberKey should contain(testCompanyNumber)
+        session(result) get SessionKeys.companyNameKey should contain(testCompanyName)
+      }
+    }
+
+    "get company name returned that the company is dissolved" should {
+      "Redirect to dissolved company page" in {
+        mockAuthRetrieveAgentEnrolment()
+        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+
+        val request = testPostRequest(testCompanyNumber)
+        val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(agentRoutes.DissolvedCompanyController.show().url)
+      }
+    }
+
+    "get company name returned a NonPartnershipEntity" should {
+      "Redirect to Not a limited Partnership page" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.NonPartnershipEntity)
+
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
+
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.NotALimitedPartnershipController.show().url)
+      }
+    }
+
+    "form unsuccessfully submitted" should {
+      "reload the page with errors" in {
+        mockAuthRetrieveAgentEnrolment()
+
+        val result = TestAgentCapturePartnershipCompanyNumberController.submit(testPostRequest("123456789"))
+        status(result) shouldBe Status.BAD_REQUEST
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
       }
     }
 
-    "Calling the submit action of the Capture Partnership Company Number controller" when {
-      "get company name returned successfully" should {
-        "Redirect to Confirm Partnership page" in {
-          mockAuthRetrieveAgentEnrolment()
+    "get company name returned not found" should {
+      "throw an InternalServerException" in {
+        mockAuthRetrieveAgentEnrolment()
 
-          mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.LimitedPartnership)
+        mockGetCompanyNameNotFound(testCompanyNumber)
 
-          val request = testPostRequest(testCompanyNumber)
+        val request = testPostRequest(testCompanyNumber)
 
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.ConfirmPartnershipController.show().url)
-          session(result) get SessionKeys.partnershipTypeKey should contain(testPartnershipType)
-          session(result) get SessionKeys.companyNumberKey should contain(testCompanyNumber)
-          session(result) get SessionKeys.companyNameKey should contain(testCompanyName)
-        }
+        val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CouldNotFindPartnershipController.show().url)
       }
+    }
 
-      "get company name returned a NonPartnershipEntity" should {
-        "Redirect to Not a limited Partnership page" in {
-          mockAuthRetrieveAgentEnrolment()
+    "get company name fails" should {
+      "throw an InternalServerException" in {
+        mockAuthRetrieveAgentEnrolment()
 
-          mockGetCompanyNameSuccess(testCompanyNumber, companieshouse.NonPartnershipEntity)
+        mockGetCompanyNameFailure(testCompanyNumber)
 
-          val request = testPostRequest(testCompanyNumber)
+        val request = testPostRequest(testCompanyNumber)
 
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
+        val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.NotALimitedPartnershipController.show().url)
-        }
-      }
-
-      "form unsuccessfully submitted" should {
-        "reload the page with errors" in {
-          mockAuthRetrieveAgentEnrolment()
-
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(testPostRequest("123456789"))
-          status(result) shouldBe Status.BAD_REQUEST
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-      }
-
-      "get company name returned not found" should {
-        "throw an InternalServerException" in {
-          mockAuthRetrieveAgentEnrolment()
-
-          mockGetCompanyNameNotFound(testCompanyNumber)
-
-          val request = testPostRequest(testCompanyNumber)
-
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
-
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CouldNotFindPartnershipController.show().url)
-        }
-      }
-
-      "get company name fails" should {
-        "throw an InternalServerException" in {
-          mockAuthRetrieveAgentEnrolment()
-
-          mockGetCompanyNameFailure(testCompanyNumber)
-
-          val request = testPostRequest(testCompanyNumber)
-
-          val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
-
-          intercept[InternalServerException](await(result))
-        }
+        intercept[InternalServerException](await(result))
       }
     }
   }
+}

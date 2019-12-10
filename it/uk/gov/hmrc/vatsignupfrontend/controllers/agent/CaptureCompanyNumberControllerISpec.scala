@@ -17,6 +17,8 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -38,6 +40,36 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
   }
 
   "POST /company-number" when {
+    "get company name returns that the company is dissolved" should {
+      "redirect to dissolved company page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity, Some("dissolved"))
+
+        val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(agentRoutes.DissolvedCompanyController.show().url)
+        )
+      }
+    }
+
+    "get company name returns that the company is converted-closed" should {
+      "redirect to dissolved company page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity, Some("converted-closed"))
+
+        val res = post("/client/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(agentRoutes.DissolvedCompanyController.show().url)
+        )
+      }
+    }
+
     "the company number is 8 characters long" should {
       "redirect to Confirm Company" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))

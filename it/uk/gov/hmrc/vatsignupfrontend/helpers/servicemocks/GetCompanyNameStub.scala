@@ -16,24 +16,31 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
-import play.api.http.Status.{NOT_FOUND, OK, INTERNAL_SERVER_ERROR}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testCompanyName
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse._
+import uk.gov.hmrc.vatsignupfrontend.utils.JsonUtils._
 
 object GetCompanyNameStub extends WireMockMethods {
-  def stubGetCompanyName(companyNumber: String, companyType: CompanyType): Unit = {
+
+  def stubGetCompanyName(companyNumber: String, companyType: CompanyType, companyStatus: Option[String] = None): Unit = {
     when(method = GET, uri = s"/incorporation-information/$companyNumber/incorporated-company-profile")
-      .thenReturn(status = OK, body = Json.obj(
-        "company_name" -> testCompanyName,
-        "type" -> {companyType match {
-          case LimitedPartnership => LimitedPartnershipKey
-          case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
-          case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
-          case NonPartnershipEntity => "ltd"
-        }}
-      ))
+      .thenReturn(
+        status = OK,
+        body = Json.obj(
+          "company_name" -> testCompanyName,
+          "type" -> {
+            companyType match {
+              case LimitedPartnership => LimitedPartnershipKey
+              case LimitedLiabilityPartnership => LimitedLiabilityPartnershipKey
+              case ScottishLimitedPartnership => ScottishLimitedPartnershipKey
+              case NonPartnershipEntity => "ltd"
+            }
+          }
+        ) + ("company_status" -> companyStatus)
+      )
   }
 
   def stubGetCompanyNameCompanyNotFound(companyNumber: String): Unit = {

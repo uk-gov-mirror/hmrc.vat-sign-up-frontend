@@ -17,6 +17,8 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -49,6 +51,36 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
         res should have(
           httpStatus(SEE_OTHER),
           redirectUri(routes.ConfirmPartnershipController.show().url)
+        )
+      }
+    }
+
+    "get company name returns a LimitedPartnership which is dissolved" should {
+      "redirect to dissolved company page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testCompanyNumber, LimitedPartnership, Some("dissolved"))
+
+        val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(agentRoutes.DissolvedCompanyController.show().url)
+        )
+      }
+    }
+
+    "get company name returns a LimitedPartnership which is converted-closed" should {
+      "redirect to dissolved company page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubGetCompanyName(testCompanyNumber, LimitedPartnership, Some("converted-closed"))
+
+        val res = post("/client/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(agentRoutes.DissolvedCompanyController.show().url)
         )
       }
     }
