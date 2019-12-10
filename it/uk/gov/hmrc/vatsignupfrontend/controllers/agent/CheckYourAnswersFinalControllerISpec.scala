@@ -3,7 +3,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{CrnDissolved, FeatureSwitching, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub._
@@ -75,6 +75,58 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
             stubAuth(OK, successfulAuthResponse(agentEnrolment))
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyNameCompanyFailure(testCompanyNumber)
+
+            val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
+
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR)
+            )
+          }
+        }
+        "the company name service returned dissolved" should {
+          "return INTERNAL_SERVER_ERROR" in {
+            val model = SubscriptionRequestSummary(
+              vatNumber = testVatNumber,
+              businessEntity = LimitedCompany,
+              optNino = None,
+              optCompanyNumber = Some(testCompanyNumber),
+              optSautr = None,
+              optSignUpEmail = Some(testEmail),
+              transactionEmail = testEmail,
+              contactPreference = Digital
+            )
+
+            enable(FinalCheckYourAnswer)
+            enable(CrnDissolved)
+            stubAuth(OK, successfulAuthResponse(agentEnrolment))
+            stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
+            stubGetCompanyName(testCompanyNumber, NonPartnershipEntity, Some("dissolved"))
+
+            val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
+
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR)
+            )
+          }
+        }
+        "the company name service returned converted closed" should {
+          "return INTERNAL_SERVER_ERROR" in {
+            val model = SubscriptionRequestSummary(
+              vatNumber = testVatNumber,
+              businessEntity = LimitedCompany,
+              optNino = None,
+              optCompanyNumber = Some(testCompanyNumber),
+              optSautr = None,
+              optSignUpEmail = Some(testEmail),
+              transactionEmail = testEmail,
+              contactPreference = Digital
+            )
+
+            enable(FinalCheckYourAnswer)
+            enable(CrnDissolved)
+            stubAuth(OK, successfulAuthResponse(agentEnrolment))
+            stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
+            stubGetCompanyName(testCompanyNumber, NonPartnershipEntity, Some("converted-closed"))
 
             val res = get("/client/check-your-answers-final", Map(SessionKeys.vatNumberKey -> testVatNumber))
 

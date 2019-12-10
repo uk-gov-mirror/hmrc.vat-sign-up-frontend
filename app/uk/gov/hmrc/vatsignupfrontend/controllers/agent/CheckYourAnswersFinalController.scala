@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyDetails
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyClosed, CompanyDetails}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.SubscriptionRequestUnexpectedError
 import uk.gov.hmrc.vatsignupfrontend.models.{Division, Overseas}
@@ -74,14 +74,18 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
   }
 
   private def optCompanyNameFromOptCompanyNumber(optCompanyNumber: Option[String])(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    optCompanyNumber.map { companyNumber =>
-      getCompanyNameService.getCompanyName(companyNumber).map {
-        case Left(_) => throw new InternalServerException(s"Get Company Name Service failed when retrieving data for the CYA final")
-        case Right(CompanyDetails(companyName, _)) => companyName
-      }
-    } match {
-      case Some(future) => future.map(Some(_))
-      case None => Future.successful(None)
+    optCompanyNumber match {
+      case Some(companyNumber) =>
+        getCompanyNameService.getCompanyName(companyNumber).map {
+          case Right(CompanyDetails(companyName, _)) =>
+            Some(companyName)
+          case Right(CompanyClosed) =>
+            throw new InternalServerException("Get Company Name Service returned that the company is converted-closed or dissolved")
+          case Left(_) =>
+            throw new InternalServerException("Get Company Name Service failed when retrieving data for the CYA final")
+        }
+      case None =>
+        Future.successful(None)
     }
   }
 

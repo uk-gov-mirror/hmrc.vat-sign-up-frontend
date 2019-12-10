@@ -23,9 +23,10 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, CompanyDetails}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.{LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{NonPartnershipEntity, PartnershipCompanyType}
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, companieshouse}
@@ -83,6 +84,8 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
                     SessionKeys.companyNumberKey -> companyNumber,
                     SessionKeys.companyNameKey -> companyName
                   ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
+              case Right(CompanyClosed) =>
+                Redirect(agentRoutes.DissolvedCompanyController.show())
               case Right(CompanyDetails(_, NonPartnershipEntity)) =>
                 Redirect(routes.NotALimitedPartnershipController.show())
               case Left(CompanyNumberNotFound) =>

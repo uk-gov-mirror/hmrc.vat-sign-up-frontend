@@ -38,7 +38,7 @@ trait MockGetCompanyNameService extends BeforeAndAfterEach with MockitoSugar {
     reset(mockGetCompanyNameService)
   }
 
-  private def mockGetCompanyName(companyNumber: String)(returnValue: Future[GetCompanyNameResponse]): Unit = {
+  def mockGetCompanyName(companyNumber: String)(returnValue: Future[GetCompanyNameResponse]): Unit = {
     when(mockGetCompanyNameService.getCompanyName(
       ArgumentMatchers.eq(companyNumber)
     )(ArgumentMatchers.any(), ArgumentMatchers.any()))
