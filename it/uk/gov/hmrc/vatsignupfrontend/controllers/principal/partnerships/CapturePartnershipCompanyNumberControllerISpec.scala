@@ -17,12 +17,14 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedPartnership, NonPartnershipEntity}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.DissolvedCompanyController
 
 class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -39,6 +41,21 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
   }
 
   "POST /partnership-company-number" when {
+    "get company name returns a company which has been dissolved" should {
+      "redirect to dissolved company page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, LimitedPartnership, Some("dissolved"))
+
+        val res = post("/partnership-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(DissolvedCompanyController.show().url)
+        )
+      }
+    }
+
     "companies house returned limited partnership" should {
       "redirect to Confirm Partnership page" in {
         stubAuth(OK, successfulAuthResponse())

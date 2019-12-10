@@ -21,7 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyName
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyNumberNotFound, GetCompanyNameFailureResponse, GetCompanyNameResponse, CompanyDetails}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.CompanyType
 import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 

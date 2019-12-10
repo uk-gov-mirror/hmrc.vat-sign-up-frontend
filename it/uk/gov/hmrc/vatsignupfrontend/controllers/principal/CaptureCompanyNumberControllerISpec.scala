@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -65,6 +66,21 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
         )
       }
     }
+    "the company has been dissolved" should {
+      "redirect to Company has been dissolved page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, LimitedLiabilityPartnership, Some("dissolved"))
+
+        val res = post("/company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DissolvedCompanyController.show().url)
+        )
+      }
+    }
+
     "the company number is less than 8 characters long" when {
       "the CRN doesn't have a prefix" should {
         "redirect to the Confirm Company Name page" in {

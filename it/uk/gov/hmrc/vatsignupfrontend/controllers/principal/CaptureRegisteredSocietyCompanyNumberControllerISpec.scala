@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -41,6 +42,21 @@ class CaptureRegisteredSocietyCompanyNumberControllerISpec extends ComponentSpec
   }
 
   "POST /registered-society-company-number" when {
+    "get company name returns that the company is dissolved" should {
+      "redirect to dissolved company page" in {
+        enable(CrnDissolved)
+        stubAuth(OK, successfulAuthResponse())
+        stubGetCompanyName(testCompanyNumber, NonPartnershipEntity, Some("dissolved"))
+
+        val res = post("/registered-society-company-number")(CompanyNumberForm.companyNumber -> testCompanyNumber)
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DissolvedCompanyController.show().url)
+        )
+      }
+    }
+
     "the society name feature switch is enabled" when {
       "the company number is 8 characters long" should {
         "redirect to confirm society name" in {

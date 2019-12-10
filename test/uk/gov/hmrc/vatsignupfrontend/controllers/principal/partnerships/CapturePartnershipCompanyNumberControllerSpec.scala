@@ -30,6 +30,10 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.DissolvedCompanyController
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
+
+import scala.concurrent.Future
 
 class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
@@ -127,6 +131,21 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         redirectLocation(result) shouldBe Some(routes.CouldNotConfirmLimitedPartnershipController.show().url)
       }
     }
+    "get company name returns company closed" should {
+      "redirect to dissolved company page" in {
+        mockAuthAdminRole()
+
+        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestCaptureCompanyNumberController.submit(request)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(DissolvedCompanyController.show().url)
+      }
+    }
+
     "get company name fails" should {
       "throw an InternalServerException" in {
         mockAuthAdminRole()

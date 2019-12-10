@@ -27,8 +27,11 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
+
+import scala.concurrent.Future
 
 class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
   with MockGetCompanyNameService {
@@ -115,6 +118,20 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         val result = TestCaptureCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+      }
+    }
+
+    "get company name returned company dissolved" should {
+      "goto company name not found page" in {
+        mockAuthAdminRole()
+
+        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+
+        val request = testPostRequest(testCompanyNumber)
+
+        val result = TestCaptureCompanyNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.DissolvedCompanyController.show().url)
       }
     }
 
