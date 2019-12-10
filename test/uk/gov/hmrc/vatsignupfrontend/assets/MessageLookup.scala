@@ -103,6 +103,14 @@ object MessageLookup {
     val confirm: String = "Go Back"
   }
 
+  object AgentDissolvedCompany {
+    val heading: String = "This company is not eligible to be signed up"
+    val title: String = heading + ServiceName.agentSuffix
+    val paragraph1: String = "The number you've entered is for a company that has been dissolved or closed."
+    val paragraph2: String = "Try again using the most recent company number sent from Companies House."
+    val confirm: String = "Go Back"
+  }
+
   object AgentUsingPrincipalJourney {
     val heading: String = "You have logged in with the wrong type of account"
     val title = heading + ServiceName.principalSuffix
