@@ -28,6 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourn
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockSubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.{SubscriptionRequestExistsButNotComplete, SubscriptionRequestUnexpectedError}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedLiabilityPartnership, NonPartnershipEntity}
@@ -126,6 +127,17 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
               mockGetCompanyNameFailure(testCompanyNumber)
               intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
 
+            }
+          }
+          "get company name service returns Company Closed" should {
+            "return Internal Server Error" in {
+              mockAuthAdminRole()
+              mockGetSubscriptionRequest(testVatNumber)(
+                Future.successful(Right(
+                  SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
+              )
+              mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+              intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
             }
           }
           "get company name service returns data" should {
