@@ -40,7 +40,7 @@ class CaptureRegisteredSocietyUtrControllerISpec extends ComponentSpecBase with 
     "redirect to No CT enrolment" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/registered-society-utr")(RegisteredSocietyUtrForm.registeredSocietyUtr -> testCompanyUtr)
+      val res = post("/registered-society-utr")(RegisteredSocietyUtrForm.registeredSocietyUtr -> testCtUtr)
 
       res should have(
         httpStatus(SEE_OTHER),

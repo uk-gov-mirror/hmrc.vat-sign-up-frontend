@@ -46,9 +46,9 @@ class StoreCompanyNumberConnectorISpec extends ComponentSpecBase {
     "CTUTR provided" when {
       "Backend returns a NO_CONTENT response" should {
         "return StoreCompanyNumberSuccess" in {
-          stubStoreCompanyNumber(testVatNumber, testCompanyNumber, Some(testCompanyUtr))(NO_CONTENT)
+          stubStoreCompanyNumber(testVatNumber, testCompanyNumber, Some(testCtUtr))(NO_CONTENT)
 
-          val res = connector.storeCompanyNumber(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+          val res = connector.storeCompanyNumber(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
           await(res) shouldBe Right(StoreCompanyNumberSuccess)
         }

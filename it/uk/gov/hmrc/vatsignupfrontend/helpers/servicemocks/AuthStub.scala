@@ -104,7 +104,7 @@ object AuthStub extends WireMockMethods {
     "identifiers" -> Json.arr(
       Json.obj(
         "key" -> IRCTReferenceKey,
-        "value" -> testSaUtr
+        "value" -> testCtUtr
       )
     )
   )

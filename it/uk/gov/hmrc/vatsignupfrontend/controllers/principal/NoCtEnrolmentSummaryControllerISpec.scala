@@ -34,7 +34,7 @@ class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomM
       val res = get("/check-your-answers-company",
         Map(
           SessionKeys.companyNumberKey -> testCompanyNumber,
-          SessionKeys.companyUtrKey -> testCompanyUtr,
+          SessionKeys.companyUtrKey -> testCtUtr,
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
         )
       )
@@ -50,13 +50,13 @@ class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomM
       "CTUTR is a match" should {
         "redirect to agree capture email" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
           val res = post("/check-your-answers-company",
             Map(
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.companyNumberKey -> testCompanyNumber,
-              SessionKeys.companyUtrKey -> testCompanyUtr,
+              SessionKeys.companyUtrKey -> testCtUtr,
               SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
             )
           )()
@@ -71,13 +71,13 @@ class NoCtEnrolmentSummaryControllerISpec extends ComponentSpecBase with CustomM
         // TODO confirm redirection location
         "redirect to could not confirm company" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCompanyUtr)
+          stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCtUtr)
 
           val res = post("/check-your-answers-company",
             Map(
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.companyNumberKey -> testCompanyNumber,
-              SessionKeys.companyUtrKey -> testCompanyUtr,
+              SessionKeys.companyUtrKey -> testCtUtr,
               SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
             )
           )()

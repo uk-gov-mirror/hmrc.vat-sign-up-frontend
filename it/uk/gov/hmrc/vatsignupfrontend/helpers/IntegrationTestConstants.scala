@@ -33,7 +33,7 @@ object IntegrationTestConstants {
   val testPrefixedCompanyNumber = "SC12"
   val testPrefixedPaddedCompanyNumber = "SC000012"
   val testCompanyName: String = Random.alphanumeric.take(10).mkString
-  val testCompanyUtr: String = IntegrationTestConstantsGenerator.randomUtrNumeric()
+  val testCtUtr: String = IntegrationTestConstantsGenerator.randomUtrNumeric()
   val testBusinessPostCode: PostCode = PostCode(IntegrationTestConstantsGenerator.randomPostCode.toUpperCase.filterNot(_.isWhitespace))
   val testNino: String = new Generator().nextNino.nino
   val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"

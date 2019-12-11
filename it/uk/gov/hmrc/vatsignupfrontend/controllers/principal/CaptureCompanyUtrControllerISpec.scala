@@ -40,7 +40,7 @@ class CaptureCompanyUtrControllerISpec extends ComponentSpecBase with CustomMatc
     "redirect to No CT enrolment" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = post("/company-utr")(CompanyUtrForm.companyUtr -> testCompanyUtr)
+      val res = post("/company-utr")(CompanyUtrForm.companyUtr -> testCtUtr)
 
       res should have(
         httpStatus(SEE_OTHER),

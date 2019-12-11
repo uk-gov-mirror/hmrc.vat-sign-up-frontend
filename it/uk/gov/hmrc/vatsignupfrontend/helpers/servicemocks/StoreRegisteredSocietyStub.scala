@@ -52,7 +52,7 @@ object StoreRegisteredSocietyStub extends WireMockMethods {
   def stubStoreRegisteredSocietySuccess(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
     stubStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(NO_CONTENT)
 
-  def stubStoreCompanyNumberCtMismatch(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
+  def stubStoreRegisteredSocietyCtMismatch(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
     stubStoreRegisteredSociety(vatNumber, companyNumber, companyUtr)(BAD_REQUEST, Some(Json.obj("CODE" -> "CtReferenceMismatch")))
 
   def stubStoreRegisteredSocietyFailure(vatNumber: String, companyNumber: String, companyUtr: Option[String]): Unit =
