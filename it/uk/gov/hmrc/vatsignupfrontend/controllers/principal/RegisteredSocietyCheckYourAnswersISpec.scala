@@ -35,7 +35,7 @@ class RegisteredSocietyCheckYourAnswersISpec extends ComponentSpecBase with Cust
       val res = get("/check-your-answers-registered-society",
         Map(
           SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber,
-          SessionKeys.registeredSocietyUtrKey -> testCompanyUtr,
+          SessionKeys.registeredSocietyUtrKey -> testCtUtr,
           SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(RegisteredSociety)
         )
       )
@@ -51,13 +51,13 @@ class RegisteredSocietyCheckYourAnswersISpec extends ComponentSpecBase with Cust
       "CTUTR is a match" should {
         "redirect to agree capture email" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+          stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
           val res = post("/check-your-answers-registered-society",
             Map(
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber,
-              SessionKeys.registeredSocietyUtrKey -> testCompanyUtr,
+              SessionKeys.registeredSocietyUtrKey -> testCtUtr,
               SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(RegisteredSociety)
             )
           )()
@@ -71,13 +71,13 @@ class RegisteredSocietyCheckYourAnswersISpec extends ComponentSpecBase with Cust
       "CTUTR is a mismatch" should {
         "redirect to could not confirm company" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+          stubStoreRegisteredSocietyCtMismatch(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
           val res = post("/check-your-answers-registered-society",
             Map(
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber,
-              SessionKeys.registeredSocietyUtrKey -> testCompanyUtr,
+              SessionKeys.registeredSocietyUtrKey -> testCtUtr,
               SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(RegisteredSociety)
             )
           )()

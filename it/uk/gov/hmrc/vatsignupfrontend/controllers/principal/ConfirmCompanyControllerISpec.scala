@@ -51,7 +51,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
       "if CT enrolled" should {
         "redirect to agree to receive email page" in {
           stubAuth(OK, successfulAuthResponse(irctEnrolment))
-          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testSaUtr))
+          stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testCtUtr))
 
           val res = post("/confirm-company",
             Map(
@@ -88,7 +88,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse(irctEnrolment))
             stubCtReferenceFound(testCompanyNumber)
-            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCtUtr)
 
             val res = post("/confirm-company",
               Map(
@@ -154,7 +154,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
           }
           "redirect to the capture CTR page when store company number returns CtReferenceMismatch" in {
             stubAuth(OK, successfulAuthResponse(irctEnrolment))
-            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testSaUtr)
+            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCtUtr)
 
             val res = post("/confirm-company",
               Map(

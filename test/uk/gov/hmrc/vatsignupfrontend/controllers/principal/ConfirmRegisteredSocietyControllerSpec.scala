@@ -111,7 +111,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
 
         val result = await(TestConfirmRegisteredSocietyController.submit(request))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyUtrController.show().url)
 
         }
       }

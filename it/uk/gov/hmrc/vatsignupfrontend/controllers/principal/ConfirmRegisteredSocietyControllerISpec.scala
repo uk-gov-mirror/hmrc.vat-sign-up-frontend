@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub.stubStoreRegisteredSocietySuccess
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -60,7 +60,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     "redirect to agree to receive email page" when {
       "the enrolment ctutr matches the retrieved ctutr from DES" in {
         stubAuth(OK, successfulAuthResponse(irctEnrolment))
-        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testSaUtr))
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
         val res = post("/confirm-registered-society",
           Map(
@@ -74,10 +74,10 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
         )
       }
     }
-    "throw internal server error" when {
+    "redirect to capture registered society utr" when {
       "the ctutr does not match the enrolment ctutr" in {
         stubAuth(OK, successfulAuthResponse(irctEnrolment))
-        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
+        stubStoreRegisteredSocietyCtMismatch(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
         val res = post("/confirm-registered-society",
           Map(
@@ -86,7 +86,8 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
           ))()
 
         res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureRegisteredSocietyUtrController.show().url)
         )
       }
     }
@@ -95,7 +96,6 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
       "there is a ctutr available" in {
         stubAuth(OK, successfulAuthResponse())
         stubCtReferenceFound(testCompanyNumber)
-
 
         val res = post("/confirm-registered-society",
           Map(
