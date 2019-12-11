@@ -79,13 +79,15 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
     "get company name returned that the company is dissolved" should {
       "Redirect to dissolved company page" in {
         mockAuthRetrieveAgentEnrolment()
-        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed(testCompanyName))))
 
         val request = testPostRequest(testCompanyNumber)
         val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.DissolvedCompanyController.show().url)
+
+        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 

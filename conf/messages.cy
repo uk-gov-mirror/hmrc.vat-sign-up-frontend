@@ -261,11 +261,11 @@ agent.capture_company_number.heading                                   = Beth yw
 agent.capture_company_number.line_1                                    = Gallwch ddod o hyd i rif cofrestru''r cwmni ar <a id="companiesHouse" href="{0}" target="_blank">wefan Tŷ''r Cwmnïau (yn agor ffenestr neu dab newydd)</a>.
 
 ## Dissolved Company page
-agent.dissolved_company.title                                          = Nid yw''r cwmni hwn yn gymwys i gael ei gofrestru
-agent.dissolved_company.heading                                        = Nid yw''r cwmni hwn yn gymwys i gael ei gofrestru
+agent.dissolved_company.title                                          = Nid yw {0} yn gymwys i gael ei gofrestru
+agent.dissolved_company.heading                                        = Nid yw {0} yn gymwys i gael ei gofrestru
 agent.dissolved_company.paragraph1                                     = Rydych wedi nodi rhif ar gyfer cwmni sydd wedi''i ddiddymu neu''i gau.
 agent.dissolved_company.paragraph2                                     = Rhowch gynnig arall arni gan ddefnyddio''r rhif cwmni diweddaraf a anfonwyd gan Dŷ''r Cwmnïau.
-agent.dissolved_company.confirm                                        = Ewch yn ôl
+agent.dissolved_company.confirm                                        = Nodwch rif gwahanol
 
 ## Agent Capture Entity Type page
 agent.capture_entity_type.title                                        = Fel pa fath o fusnes mae''ch cleient wedi''i gofrestru?
@@ -629,11 +629,11 @@ principal.registered_society_company_name_not_found.heading            = Doedd d
 principal.registered_society_company_name_not_found.line_1             = Dydy''r wybodaeth rydych wedi''i nodi ddim yn cyd-fynd â''r manylion sydd gennym ni ar gyfer eich cymdeithas gofrestredig.
 
 ## Dissolved Company page
-principal.dissolved_company.title                                      = Nid yw''r cwmni hwn yn gymwys i gael ei gofrestru
-principal.dissolved_company.heading                                    = Nid yw''r cwmni hwn yn gymwys i gael ei gofrestru
+principal.dissolved_company.title                                      = Nid yw {0} yn gymwys i gael ei gofrestru
+principal.dissolved_company.heading                                    = Nid yw {0} yn gymwys i gael ei gofrestru
 principal.dissolved_company.paragraph1                                 = Rydych wedi nodi rhif ar gyfer cwmni sydd wedi''i ddiddymu neu''i gau.
 principal.dissolved_company.paragraph2                                 = Rhowch gynnig arall arni gan ddefnyddio''r rhif cwmni diweddaraf a anfonwyd gan Dŷ''r Cwmnïau.
-principal.dissolved_company.confirm                                    = Ewch yn ôl
+principal.dissolved_company.confirm                                    = Nodwch rif gwahanol
 
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = Dydy''ch busnes ddim yn gymwys ar hyn o bryd

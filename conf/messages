@@ -272,11 +272,11 @@ agent.confirm_company_number.companyNumber.heading                     = Company
 agent.confirm_company_number.link                                      = Change company number
 
 ## Agent Dissolved Company page
-agent.dissolved_company.title                                          = This company is not eligible to be signed up
-agent.dissolved_company.heading                                        = This company is not eligible to be signed up
+agent.dissolved_company.title                                          = {0} is not eligible to be signed up
+agent.dissolved_company.heading                                        = {0} is not eligible to be signed up
 agent.dissolved_company.paragraph1                                     = The number you''ve entered is for a company that has been dissolved or closed.
 agent.dissolved_company.paragraph2                                     = Try again using the most recent company number sent from Companies House.
-agent.dissolved_company.confirm                                        = Go Back
+agent.dissolved_company.confirm                                        = Enter a different number
 
 ## Agent Capture Partnership UTR
 agent.capture_partnership_utr.title                                    = What is your client''s partnership Unique Taxpayer Reference (UTR)?
@@ -647,11 +647,11 @@ principal.registered_society_company_name_not_found.heading            = We coul
 principal.registered_society_company_name_not_found.line_1             = The information you provided does not match the details we have for your registered society.
 
 ## Dissolved Company page
-principal.dissolved_company.title                                      = This company is not eligible to be signed up
-principal.dissolved_company.heading                                    = This company is not eligible to be signed up
+principal.dissolved_company.title                                      = {0} is not eligible to be signed up
+principal.dissolved_company.heading                                    = {0} is not eligible to be signed up
 principal.dissolved_company.paragraph1                                 = The number you''ve entered is for a company that has been dissolved or closed.
 principal.dissolved_company.paragraph2                                 = Try again using the most recent company number sent from Companies House.
-principal.dissolved_company.confirm                                    = Go Back
+principal.dissolved_company.confirm                                    = Enter a different number
 
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = Your business is not eligible at this time

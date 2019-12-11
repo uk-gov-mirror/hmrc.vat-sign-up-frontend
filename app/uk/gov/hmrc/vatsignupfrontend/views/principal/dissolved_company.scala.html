@@ -17,21 +17,18 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButton
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.continueButtonLink
 
-@(postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(redirectUrl: String, companyName: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.dissolved_company.title"), bodyClasses = None) {
+@principal_main_template(title = Messages("principal.dissolved_company.title", companyName), bodyClasses = None) {
 
-    <h1 class="heading-large">@Messages("principal.dissolved_company.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.dissolved_company.heading", companyName)</h1>
 
     <p>@Messages("principal.dissolved_company.paragraph1")</p>
 
     <p>@Messages("principal.dissolved_company.paragraph2")</p>
 
-    @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("principal.dissolved_company.confirm")))
-        </div>
-    }
+    @continueButtonLink(href = redirectUrl, alternativeText = Some(Messages("principal.dissolved_company.confirm")))
+
 }

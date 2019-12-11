@@ -79,7 +79,7 @@ class CheckYourAnswersFinalController @Inject()(val controllerComponents: Contro
         getCompanyNameService.getCompanyName(companyNumber).map {
           case Right(CompanyDetails(companyName, _)) =>
             Some(companyName)
-          case Right(CompanyClosed) =>
+          case Right(CompanyClosed(_)) =>
             throw new InternalServerException("Get Company Name Service returned that the company is converted-closed or dissolved")
           case Left(_) =>
             throw new InternalServerException("Get Company Name Service failed when retrieving data for the CYA final")

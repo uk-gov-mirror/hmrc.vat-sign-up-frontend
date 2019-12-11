@@ -84,8 +84,11 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
                     SessionKeys.companyNumberKey -> companyNumber,
                     SessionKeys.companyNameKey -> companyName
                   ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
-              case Right(CompanyClosed) =>
+              case Right(CompanyClosed(companyName)) =>
                 Redirect(agentRoutes.DissolvedCompanyController.show())
+                  .addingToSession(
+                    SessionKeys.companyNameKey -> companyName
+                  )
               case Right(CompanyDetails(_, NonPartnershipEntity)) =>
                 Redirect(routes.NotALimitedPartnershipController.show())
               case Left(CompanyNumberNotFound) =>

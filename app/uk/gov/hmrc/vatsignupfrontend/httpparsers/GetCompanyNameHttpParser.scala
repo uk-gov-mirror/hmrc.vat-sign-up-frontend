@@ -37,23 +37,25 @@ object GetCompanyNameHttpParser extends FeatureSwitching {
     override def read(method: String, url: String, response: HttpResponse): GetCompanyNameResponse = {
       response.status match {
         case OK =>
-          (response.json \ GetCompanyStatusCodeKey).asOpt[String] match {
-            case Some(DissolvedStatusKey) | Some(ConvertedClosedStatusKey) if isEnabled(CrnDissolved) =>
-              Right(CompanyClosed)
+          val optCompanyStatus = (response.json \ GetCompanyStatusCodeKey).asOpt[String]
+          val optCompanyName = (response.json \ GetCompanyNameCodeKey).asOpt[String]
+          val optCompanyType = (response.json \ GetCompanyTypeCodeKey).asOpt[CompanyType](new Reads[CompanyType] {
+            override def reads(json: JsValue): JsResult[CompanyType] = json.validate[String] match {
+              case JsSuccess(LimitedPartnershipKey, _) => JsSuccess(LimitedPartnership)
+              case JsSuccess(LimitedLiabilityPartnershipKey, _) => JsSuccess(LimitedLiabilityPartnership)
+              case JsSuccess(ScottishLimitedPartnershipKey, _) => JsSuccess(ScottishLimitedPartnership)
+              case JsSuccess(_, _) => JsSuccess(NonPartnershipEntity)
+            }
+          })
+
+          (optCompanyName, optCompanyType, optCompanyStatus) match {
+            case (Some(companyName), _, Some(DissolvedStatusKey) | Some(ConvertedClosedStatusKey)) if isEnabled(CrnDissolved) =>
+              Right(CompanyClosed(companyName))
+            case (Some(companyName), Some(companyType), _) =>
+              Right(CompanyDetails(companyName, companyType))
             case _ =>
-              val optCompanyName = (response.json \ GetCompanyNameCodeKey).asOpt[String]
-              val optCompanyType = (response.json \ GetCompanyTypeCodeKey).asOpt[CompanyType](new Reads[CompanyType] {
-                override def reads(json: JsValue): JsResult[CompanyType] = json.validate[String] match {
-                  case JsSuccess(LimitedPartnershipKey, _) => JsSuccess(LimitedPartnership)
-                  case JsSuccess(LimitedLiabilityPartnershipKey, _) => JsSuccess(LimitedLiabilityPartnership)
-                  case JsSuccess(ScottishLimitedPartnershipKey, _) => JsSuccess(ScottishLimitedPartnership)
-                  case JsSuccess(_, _) => JsSuccess(NonPartnershipEntity)
-                }
-              })
-              (optCompanyName, optCompanyType) match {
-                case (Some(companyName), Some(companyType)) => Right(CompanyDetails(companyName, companyType))
-                case (_, _) => Left(GetCompanyNameFailureResponse(OK))
-              }
+              Left(GetCompanyNameFailureResponse(OK))
+
           }
         case NOT_FOUND => Left(CompanyNumberNotFound)
         case status => Left(GetCompanyNameFailureResponse(status))
@@ -63,7 +65,7 @@ object GetCompanyNameHttpParser extends FeatureSwitching {
 
   sealed trait GetCompanyNameSuccess
 
-  case object CompanyClosed extends GetCompanyNameSuccess
+  case class CompanyClosed(companyName: String) extends GetCompanyNameSuccess
 
   case class CompanyDetails(companyName: String, companyType: CompanyType) extends GetCompanyNameSuccess
 

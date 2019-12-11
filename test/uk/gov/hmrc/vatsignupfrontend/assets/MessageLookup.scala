@@ -96,19 +96,19 @@ object MessageLookup {
   }
 
   object PrincipalDissolvedCompany {
-    val heading: String = "This company is not eligible to be signed up"
-    val title: String = heading + ServiceName.principalSuffix
+    def heading(companyName: String): String = s"$companyName is not eligible to be signed up"
+    def title(companyName: String): String = heading(companyName) + ServiceName.principalSuffix
     val paragraph1: String = "The number you've entered is for a company that has been dissolved or closed."
     val paragraph2: String = "Try again using the most recent company number sent from Companies House."
-    val confirm: String = "Go Back"
+    val confirm: String = "Enter a different number"
   }
 
   object AgentDissolvedCompany {
-    val heading: String = "This company is not eligible to be signed up"
-    val title: String = heading + ServiceName.agentSuffix
+    def heading(companyName: String): String = s"$companyName is not eligible to be signed up"
+    def title(companyName: String): String = heading(companyName) + ServiceName.agentSuffix
     val paragraph1: String = "The number you've entered is for a company that has been dissolved or closed."
     val paragraph2: String = "Try again using the most recent company number sent from Companies House."
-    val confirm: String = "Go Back"
+    val confirm: String = "Enter a different number"
   }
 
   object AgentUsingPrincipalJourney {

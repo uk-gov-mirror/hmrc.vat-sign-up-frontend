@@ -23,17 +23,19 @@ import play.api.{Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentDissolvedCompany => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyName
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class DissolvedCompanyViewSpec extends ViewSpec {
 
+  val testLink: String = "test/test"
   val env: Environment = Environment.simple()
   val configuration: Configuration = Configuration.load(env)
 
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.dissolved_company(
-    postAction = testCall)(
+    testLink, testCompanyName)(
     FakeRequest(),
     applicationMessages,
     new AppConfig(configuration, env)
@@ -43,16 +45,14 @@ class DissolvedCompanyViewSpec extends ViewSpec {
 
     val testPage = TestView(
       name = "Confirm Company View",
-      title = messages.title,
-      heading = messages.heading,
+      title = messages.title(testCompanyName),
+      heading = messages.heading(testCompanyName),
       page = page
     )
 
     testPage.shouldHavePara(messages.paragraph1)
     testPage.shouldHavePara(messages.paragraph2)
 
-    testPage.shouldHaveForm("Dissolved Company Form")(actionCall = testCall)
-
-    testPage.shouldHaveSubmitButton(messages.confirm)
+    testPage.shouldHaveContinueButtonLink(testLink, messages.confirm)
   }
 }

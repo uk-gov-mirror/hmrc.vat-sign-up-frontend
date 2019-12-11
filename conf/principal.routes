@@ -85,8 +85,7 @@ GET         /confirm-company                                    uk.gov.hmrc.vats
 POST        /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmCompanyController.submit
 
 # Dissolved Company
-GET         /error/dissolved-company                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.DissolvedCompanyController.show
-POST        /error/dissolved-company                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.DissolvedCompanyController.submit
+GET         /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.DissolvedCompanyController.show
 
 # Confirm Registered Society name
 GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.show

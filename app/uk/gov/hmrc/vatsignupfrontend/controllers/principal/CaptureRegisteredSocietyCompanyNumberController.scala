@@ -76,8 +76,11 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
                       SessionKeys.registeredSocietyCompanyNumberKey -> companyNumber,
                       SessionKeys.registeredSocietyNameKey -> societyName
                     )
-                case Right(CompanyClosed) =>
+                case Right(CompanyClosed(companyName)) =>
                   Redirect(routes.DissolvedCompanyController.show())
+                    .addingToSession(
+                      SessionKeys.companyNameKey -> companyName
+                    )
                 case Left(CompanyNumberNotFound) =>
                   Redirect(routes.RegisteredSocietyCompanyNameNotFoundController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>

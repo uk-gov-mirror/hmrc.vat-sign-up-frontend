@@ -34,26 +34,26 @@ class GetCompanyNameHttpParserSpec extends UnitSpec {
     "read" should {
       "parse a OK response as an GetCompanyNameSuccess" in {
         val httpResponse = HttpResponse(OK, Some(Json.obj(
-          GetCompanyNameCodeKey -> testCompanyNumber,
+          GetCompanyNameCodeKey -> testCompanyName,
           GetCompanyTypeCodeKey -> GetCompanyNameHttpParser.LimitedPartnershipKey,
           GetCompanyStatusCodeKey -> "active"
         )))
 
         val res = GetCompanyNameHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(CompanyDetails(testCompanyNumber, companieshouse.LimitedPartnership))
+        res shouldBe Right(CompanyDetails(testCompanyName, companieshouse.LimitedPartnership))
       }
       "parse a OK response as an GetCompanyNameIneligibleResponse and the CrnDissolved FS is enabled" in {
         enable(CrnDissolved)
         val httpResponse = HttpResponse(OK, Some(Json.obj(
-          GetCompanyNameCodeKey -> testCompanyNumber,
+          GetCompanyNameCodeKey -> testCompanyName,
           GetCompanyTypeCodeKey -> GetCompanyNameHttpParser.LimitedPartnershipKey,
           GetCompanyStatusCodeKey -> GetCompanyNameHttpParser.ConvertedClosedStatusKey
         )))
 
         val res = GetCompanyNameHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(CompanyClosed)
+        res shouldBe Right(CompanyClosed(testCompanyName))
       }
       "parse a NOT_FOUND response as an CompanyNumberNotFound" in {
         val httpResponse = HttpResponse(NOT_FOUND)

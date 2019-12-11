@@ -125,13 +125,15 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "goto company name not found page" in {
         mockAuthAdminRole()
 
-        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed(testCompanyName))))
 
         val request = testPostRequest(testCompanyNumber)
 
         val result = TestCaptureCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.DissolvedCompanyController.show().url)
+
+        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 

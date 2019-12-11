@@ -22,7 +22,11 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testCompanyName
+import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, LimitedPartnership, RegisteredSociety}
 
 class DissolvedCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
 
@@ -32,14 +36,11 @@ class DissolvedCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   lazy val testGetRequest = FakeRequest("GET", "/client/error/dissolved-company")
 
-  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("POST", "/client/error/dissolved-company")
-
-  "Calling the show action of DissolvedCompanyController" should {
+  "Calling the show action of DissolvedCompanyController with a company number in session" should {
     "show the dissolved company view" in {
       mockAuthRetrieveAgentEnrolment()
 
-      val result = TestDissolvedCompanyController.show(testGetRequest)
+      val result = TestDissolvedCompanyController.show(testGetRequest.withSession(SessionKeys.companyNameKey -> testCompanyName))
 
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
@@ -47,14 +48,38 @@ class DissolvedCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     }
   }
 
-  "Calling the submit action of DissolvedCompanyController" should {
-    "redirect to CaptureCompanyNumberController" in {
+  "Calling the show action of DissolvedCompanyController without a company number in session" should {
+    "redirect to CaptureCompanyNumberController if the business entity is Limited Company" in {
       mockAuthRetrieveAgentEnrolment()
 
-      val result = TestDissolvedCompanyController.submit(testPostRequest)
+      val result = TestDissolvedCompanyController.show(testGetRequest.withSession(SessionKeys.businessEntityKey -> LimitedCompany.toString))
 
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
+    }
+    "redirect to AgentCapturePartnershipCompanyNumberController if the business entity is Partnership" in {
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestDissolvedCompanyController.show(testGetRequest.withSession(SessionKeys.businessEntityKey -> LimitedPartnership.toString))
+
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url)
+    }
+    "redirect to CaptureRegisteredSocietyCompanyNumberController if the business entity is Registered Society" in {
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestDissolvedCompanyController.show(testGetRequest.withSession(SessionKeys.businessEntityKey -> RegisteredSociety.toString))
+
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
+    }
+    "redirect to CaptureBusinessEntityController without a Business Entity" in {
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestDissolvedCompanyController.show(testGetRequest)
+
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
     }
   }
 }
