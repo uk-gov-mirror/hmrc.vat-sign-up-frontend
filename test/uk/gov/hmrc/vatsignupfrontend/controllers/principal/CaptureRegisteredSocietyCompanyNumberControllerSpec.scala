@@ -122,7 +122,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
       "redirect to dissolved company page" in {
         mockAuthAdminRole()
 
-        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+        mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed(testCompanyName))))
 
         val request = testPostRequest(testCompanyNumber)
 
@@ -130,6 +130,8 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.DissolvedCompanyController.show().url)
+
+        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 

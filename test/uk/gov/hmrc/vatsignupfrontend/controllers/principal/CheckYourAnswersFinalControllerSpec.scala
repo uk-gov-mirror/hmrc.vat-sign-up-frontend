@@ -136,7 +136,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
                 Future.successful(Right(
                   SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
               )
-              mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed)))
+              mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed(testCompanyName))))
               intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
             }
           }

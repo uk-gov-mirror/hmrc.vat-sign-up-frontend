@@ -17,10 +17,14 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Request, Result}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, LimitedCompany, LimitedPartnership, RegisteredSociety}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.dissolved_company
 
 import scala.concurrent.Future
@@ -31,14 +35,25 @@ class DissolvedCompanyController @Inject()(val controllerComponents: ControllerC
   val show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        Future.successful(Ok(dissolved_company(postAction = routes.DissolvedCompanyController.submit())))
-      }
-  }
+        val optCompanyName = request.session.get(SessionKeys.companyNameKey).filter(_.nonEmpty)
+        val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).flatMap(str => BusinessEntitySessionFormatter.fromString(str))
+        val redirectRoute = optBusinessEntity match {
+          case Some(LimitedCompany) =>
+            routes.CaptureCompanyNumberController.show()
+          case Some(LimitedPartnership) =>
+            partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show()
+          case Some(RegisteredSociety) =>
+            routes.CaptureRegisteredSocietyCompanyNumberController.show()
+          case _ =>
+            routes.CaptureBusinessEntityController.show()
+        }
 
-  val submit: Action[AnyContent] = Action.async {
-    implicit request =>
-      authorised() {
-        Future.successful(Redirect(routes.CaptureCompanyNumberController.show()))
+        optCompanyName match {
+          case Some(companyName) =>
+            Future.successful(Ok(dissolved_company(redirectUrl = redirectRoute.url, companyName = companyName)))
+          case _ =>
+            Future.successful(Redirect(redirectRoute).removingFromSession(SessionKeys.companyNameKey))
+        }
       }
   }
 }

@@ -17,34 +17,48 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status.{OK, SEE_OTHER}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{agentEnrolment, stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.LimitedCompany
+
 
 class DissolvedCompanyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /error/dissolved-company" should {
-    "return an OK" in {
+    "return an OK if there is a company name in session" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = get("/client/error/dissolved-company")
+      val res = get("/client/error/dissolved-company", Map(
+        SessionKeys.companyNameKey -> testCompanyName
+      ))
 
       res should have(
         httpStatus(OK)
       )
     }
-  }
-
-  "POST /error/dissolved-company" should {
-    "return a SEE OTHER with a redirect to capture company number" in {
+    "return a SEE OTHER with a redirect to the correct capture company number page page if company name is not in session" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/error/dissolved-company")()
+      val res = get("/client/error/dissolved-company", Map(
+        SessionKeys.businessEntityKey -> LimitedCompany.toString
+      ))
 
       res should have(
         httpStatus(SEE_OTHER),
         redirectUri(routes.CaptureCompanyNumberController.show().url)
       )
     }
-  }
+    "return a SEE OTHER with a redirect to business entity page if there is no company name and entity in session" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
+      val res = get("/client/error/dissolved-company")
+
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.CaptureBusinessEntityController.show().url)
+      )
+    }
+  }
 }

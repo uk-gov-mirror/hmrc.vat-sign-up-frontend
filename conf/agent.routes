@@ -39,7 +39,6 @@ POST        /company-number                                     uk.gov.hmrc.vats
 
 # Dissolved Company
 GET         /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.DissolvedCompanyController.show
-POST        /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.DissolvedCompanyController.submit
 
 # Confirm Company name
 GET         /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
