@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.SkipCtUtrOnCotaxNotFound
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.CtReferenceLookupStub._
@@ -27,10 +26,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(SkipCtUtrOnCotaxNotFound)
-  }
 
   "GET /confirm-company" when {
     "return an OK" in {
@@ -51,6 +46,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
       "if CT enrolled" should {
         "redirect to agree to receive email page" in {
           stubAuth(OK, successfulAuthResponse(irctEnrolment))
+          stubCtReferenceFound(testCompanyNumber)
           stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, companyUtr = Some(testCtUtr))
 
           val res = post("/confirm-company",
@@ -69,7 +65,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
       "if not CT enrolled" when {
         "the SkipCtUtrOnCotaxNotFound feature switch is enabled" should {
           "redirect to capture company UTR page when there is a CT reference on COTAX" in {
-            enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse())
             stubCtReferenceFound(testCompanyNumber)
 
@@ -85,7 +80,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             )
           }
           "redirect to the capture CTR page when store company number returns CtReferenceMismatch" in {
-            enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse(irctEnrolment))
             stubCtReferenceFound(testCompanyNumber)
             stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCtUtr)
@@ -102,7 +96,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             )
           }
           "skip capture company UTR page when there isn't a CT reference on COTAX" in {
-            enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse())
             stubCtReferenceNotFound(testCompanyNumber)
             stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, None)
@@ -119,7 +112,6 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             )
           }
           "the user has a CT enrolment and there isn't a CT reference on COTAX" in {
-            enable(SkipCtUtrOnCotaxNotFound)
             stubAuth(OK, successfulAuthResponse(irctEnrolment))
             stubCtReferenceNotFound(testCompanyNumber)
             stubStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, None)
@@ -136,53 +128,7 @@ class ConfirmCompanyControllerISpec extends ComponentSpecBase with CustomMatcher
             )
           }
         }
-        "the SkipCtUtrOnCotaxNotFound is disabled" should {
-          "redirect to the capture company UTR page if there is a CT UTR on COTAX" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubCtReferenceFound(testCompanyNumber)
 
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureCompanyUtrController.show().url)
-            )
-          }
-          "redirect to the capture CTR page when store company number returns CtReferenceMismatch" in {
-            stubAuth(OK, successfulAuthResponse(irctEnrolment))
-            stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCtUtr)
-
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureCompanyUtrController.show().url)
-            )
-          }
-          "redirect to the capture company UTR page when there isn't a CT reference on COTAX" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubCtReferenceNotFound(testCompanyNumber)
-
-            val res = post("/confirm-company",
-              Map(
-                SessionKeys.vatNumberKey -> testVatNumber,
-                SessionKeys.companyNumberKey -> testCompanyNumber
-              ))()
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureCompanyUtrController.show().url)
-            )
-          }
-        }
 
       }
     }

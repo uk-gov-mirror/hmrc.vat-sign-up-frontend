@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, SkipCtUtrOnCotaxNotFound}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CtReferenceLookupHttpParser.{CtReferenceLookupFailureResponse, CtReferenceNotFound}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.CtReferenceMismatch
@@ -70,7 +70,6 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
 
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-            if (isEnabled(SkipCtUtrOnCotaxNotFound))
               ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
                 case Right(_) => optEnrolmentCtUtr match {
                   case Some(enrolmentUtr) =>
@@ -83,12 +82,6 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
                 case Left(CtReferenceLookupFailureResponse(status)) =>
                   throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
               }
-            else optEnrolmentCtUtr match {
-              case Some(enrolmentUtr) =>
-                storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(enrolmentUtr))
-              case None =>
-                Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-            }
           case (None, _) =>
             Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
           case _ =>
