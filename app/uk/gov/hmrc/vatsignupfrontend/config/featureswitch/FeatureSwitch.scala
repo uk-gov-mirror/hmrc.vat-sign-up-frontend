@@ -33,7 +33,6 @@ object FeatureSwitch {
     DirectDebitTermsJourney,
     OptionalSautrJourney,
     WelshTranslation,
-    SkipCtUtrOnCotaxNotFound,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
     ReSignUpJourney,
@@ -78,11 +77,6 @@ case object DirectDebitTermsJourney extends FeatureSwitch {
 case object OptionalSautrJourney extends FeatureSwitch {
   override val name: String = s"$prefix.optional-sautr-journey"
   override val displayText: String = "Enable the 'Do you have an SAUTR' question for general partnerships"
-}
-
-case object SkipCtUtrOnCotaxNotFound extends FeatureSwitch {
-  override val name: String = s"$prefix.skip-ctutr-on-cotax-not-found"
-  override val displayText: String = "Enable users to skip CT UTR if there is no match on COTAX"
 }
 
 case object FinalCheckYourAnswer extends FeatureSwitch {
