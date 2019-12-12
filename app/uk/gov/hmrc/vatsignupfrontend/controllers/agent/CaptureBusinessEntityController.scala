@@ -35,7 +35,6 @@ import scala.concurrent.Future
 
 @Singleton
 class CaptureBusinessEntityController @Inject()(val controllerComponents: ControllerComponents,
-                                                storeOverseasInformationService: StoreOverseasInformationService,
                                                 administrativeDivisionLookupService: AdministrativeDivisionLookupService
                                                ) extends AuthenticatedController(AgentEnrolmentPredicate) {
 
@@ -45,13 +44,10 @@ class CaptureBusinessEntityController @Inject()(val controllerComponents: Contro
       val vatNumber = request.session.get(SessionKeys.vatNumberKey)
 
       (entity, vatNumber) match {
-        case (Some(`Overseas`), Some(vatNumber)) =>
-          storeOverseasInformationService.storeOverseasInformation(vatNumber) map {
-            case Right(StoreOverseasInformationSuccess) =>
-              Redirect(routes.CaptureAgentEmailController.show()).withSession(request.session)
-            case Left(StoreOverseasInformationFailureResponse(status)) =>
-              throw new InternalServerException("store overseas information failed: status =" + status)
-          }
+        case (Some(`Overseas`), Some(_)) =>
+          Future.successful(
+            Redirect(routes.OverseasResolverController.resolve())
+          )
         case (_, Some(vatNumber)) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
           Future.successful(
             Redirect(routes.DivisionResolverController.resolve())
