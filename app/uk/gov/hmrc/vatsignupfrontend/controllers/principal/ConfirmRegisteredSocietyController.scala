@@ -78,18 +78,18 @@ class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: Con
 
         (optCompanyNumber, optVatNumber) match {
           case (Some(companyNumber), Some(vatNumber)) =>
-            optCtReference match {
-              case Some(_) =>
-                storeRegisteredSociety(vatNumber, companyNumber, optCtReference)
-              case None =>
-                ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
-                  case Right(CtReferenceIsFound) =>
+            ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
+              case Right(CtReferenceIsFound) =>
+                optCtReference match {
+                  case Some(_) =>
+                    storeRegisteredSociety(vatNumber, companyNumber, optCtReference)
+                  case None =>
                     Future.successful(Redirect(routes.CaptureRegisteredSocietyUtrController.show()))
-                  case Left(CtReferenceNotFound) =>
-                    storeRegisteredSociety(vatNumber, companyNumber, None)
-                  case Left(CtReferenceLookupFailureResponse(status)) =>
-                    throw new InternalServerException("CtReferenceLookup failed: status = " + status)
                 }
+              case Left(CtReferenceNotFound) =>
+                storeRegisteredSociety(vatNumber, companyNumber, None)
+              case Left(CtReferenceLookupFailureResponse(status)) =>
+                throw new InternalServerException("CtReferenceLookup failed: status = " + status)
             }
           case (_, None) =>
             Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))

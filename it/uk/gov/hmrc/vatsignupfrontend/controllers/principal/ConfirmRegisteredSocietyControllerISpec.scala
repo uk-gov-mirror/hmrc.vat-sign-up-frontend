@@ -60,7 +60,26 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     "redirect to agree to receive email page" when {
       "the enrolment ctutr matches the retrieved ctutr from DES" in {
         stubAuth(OK, successfulAuthResponse(irctEnrolment))
+        stubCtReferenceFound(testCompanyNumber)
         stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCtUtr))
+
+        val res = post("/confirm-registered-society",
+          Map(
+            SessionKeys.vatNumberKey -> testVatNumber,
+            SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+          ))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.DirectDebitResolverController.show().url)
+        )
+      }
+    }
+    "redirect to agree to receive email page" when {
+      "the user has an enrolment, but none exists on the backend" in {
+        stubAuth(OK, successfulAuthResponse(irctEnrolment))
+        stubCtReferenceNotFound(testCompanyNumber)
+        stubStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, None)
 
         val res = post("/confirm-registered-society",
           Map(
@@ -77,6 +96,7 @@ class ConfirmRegisteredSocietyControllerISpec extends ComponentSpecBase with Cus
     "redirect to capture registered society utr" when {
       "the ctutr does not match the enrolment ctutr" in {
         stubAuth(OK, successfulAuthResponse(irctEnrolment))
+        stubCtReferenceFound(testCompanyNumber)
         stubStoreRegisteredSocietyCtMismatch(testVatNumber, testCompanyNumber, Some(testCtUtr))
 
         val res = post("/confirm-registered-society",

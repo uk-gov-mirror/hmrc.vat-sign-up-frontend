@@ -79,6 +79,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     "the user has a ct enrolment and the ctutr matches the ctutr returned from DES" should {
       "redirect to agree email page" in {
         mockAuthRetrieveIRCTEnrolment()
+        mockCtReferenceFound(testCompanyNumber)
         mockStoreRegisteredSocietySuccess(
           vatNumber = testVatNumber,
           companyNumber = testCompanyNumber,
@@ -98,6 +99,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
     "the ct enrolment ctutr does not match the ctutr returned from DES" should {
       "redirect to the capture ct utr page" in {
         mockAuthRetrieveIRCTEnrolment()
+        mockCtReferenceFound(testCompanyNumber)
         mockStoreRegisteredSocietyCtMismatch(
           vatNumber = testVatNumber,
           companyNumber = testCompanyNumber,
@@ -113,114 +115,129 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyUtrController.show().url)
 
-        }
       }
     }
-    "the CtReferenceLookup returns that a ctutr exists for the given crn" should {
-      "go to the 'Capture Registered Society UTR' page" in {
-        mockAuthRetrieveEmptyEnrolment()
-        mockCtReferenceFound(testCompanyNumber)
-        mockStoreRegisteredSocietySuccess(
-          vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber,
-          companyUtr = Some(testCompanyUtr)
-        )
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmRegisteredSocietyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyUtrController.show().url)
-      }
-
-      "throw internal server exception if ct reference lookup fails" in {
-        mockAuthRetrieveEmptyEnrolment()
-        mockCtReferenceFailure(testCompanyNumber)(BAD_REQUEST)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-        )
-
-        intercept[InternalServerException] {
-          await(TestConfirmRegisteredSocietyController.submit(request))
-        }
-      }
-      "go to the 'your vat number' page if vat number is missing" in {
-        mockAuthRetrieveEmptyEnrolment()
-        mockCtReferenceFound(testCompanyNumber)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmRegisteredSocietyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-
-      }
-    }
-    "the CtReferenceLookup returns that a ctutr does not exist for the given crn" should {
-      "go to the 'agree to receive emails' page" in {
-        mockAuthRetrieveEmptyEnrolment()
-        mockCtReferenceNotFound(testCompanyNumber)
-        mockStoreRegisteredSocietySuccess(
-          vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber,
-          companyUtr = None
-        )
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmRegisteredSocietyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
-      }
-
-      "throw internal server exception if store registered society fails" in {
-        mockAuthRetrieveEmptyEnrolment()
-        mockCtReferenceNotFound(testCompanyNumber)
-        mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber, None)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-        )
-
-        intercept[InternalServerException] {
-          await(TestConfirmRegisteredSocietyController.submit(request))
-        }
-      }
-      "go to the 'your vat number' page if vat number is missing" in {
-        mockAuthRetrieveEmptyEnrolment()
-        mockCtReferenceNotFound(testCompanyNumber)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmRegisteredSocietyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-
-      }
-    }
-    "go to the 'capture registered society company number' page if company number is missing" in {
-      mockAuthRetrieveEmptyEnrolment()
+  }
+  "the user has a ct enrolment but the company is not found on des" should {
+    "store the registered society with no attached ctutr and redirect to agree email page" in {
+      mockAuthRetrieveIRCTEnrolment()
+      mockCtReferenceNotFound(testCompanyNumber)
+      mockStoreRegisteredSocietySuccess(
+        vatNumber = testVatNumber,
+        companyNumber = testCompanyNumber,
+        companyUtr = None
+      )
 
       val request = testPostRequest.withSession(
-        SessionKeys.vatNumberKey -> testVatNumber
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+      )
+
+      val result = await(TestConfirmRegisteredSocietyController.submit(request))
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+    }
+  }
+  "the CtReferenceLookup returns that a ctutr exists for the given crn" should {
+    "go to the 'Capture Registered Society UTR' page" in {
+      mockAuthRetrieveEmptyEnrolment()
+      mockCtReferenceFound(testCompanyNumber)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
       )
 
       val result = TestConfirmRegisteredSocietyController.submit(request)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
+      redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyUtrController.show().url)
     }
+
+    "throw internal server exception if ct reference lookup fails" in {
+      mockAuthRetrieveEmptyEnrolment()
+      mockCtReferenceFailure(testCompanyNumber)(BAD_REQUEST)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+      )
+
+      intercept[InternalServerException] {
+        await(TestConfirmRegisteredSocietyController.submit(request))
+      }
+    }
+    "go to the 'your vat number' page if vat number is missing" in {
+      mockAuthRetrieveEmptyEnrolment()
+      mockCtReferenceFound(testCompanyNumber)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmRegisteredSocietyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+
+    }
+  }
+  "the CtReferenceLookup returns that a ctutr does not exist for the given crn" should {
+    "go to the 'agree to receive emails' page" in {
+      mockAuthRetrieveEmptyEnrolment()
+      mockCtReferenceNotFound(testCompanyNumber)
+      mockStoreRegisteredSocietySuccess(
+        vatNumber = testVatNumber,
+        companyNumber = testCompanyNumber,
+        companyUtr = None
+      )
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmRegisteredSocietyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+    }
+
+    "throw internal server exception if store registered society fails" in {
+      mockAuthRetrieveEmptyEnrolment()
+      mockCtReferenceNotFound(testCompanyNumber)
+      mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber, None)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+      )
+
+      intercept[InternalServerException] {
+        await(TestConfirmRegisteredSocietyController.submit(request))
+      }
+    }
+    "go to the 'your vat number' page if vat number is missing" in {
+      mockAuthRetrieveEmptyEnrolment()
+      mockCtReferenceNotFound(testCompanyNumber)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.registeredSocietyCompanyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmRegisteredSocietyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
+
+    }
+  }
+  "go to the 'capture registered society company number' page if company number is missing" in {
+    mockAuthRetrieveEmptyEnrolment()
+
+    val request = testPostRequest.withSession(
+      SessionKeys.vatNumberKey -> testVatNumber
+    )
+
+    val result = TestConfirmRegisteredSocietyController.submit(request)
+    status(result) shouldBe Status.SEE_OTHER
+    redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
+  }
 }
 
