@@ -51,25 +51,23 @@ class CaptureBusinessEntityController @Inject()(
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
-      val entity = request.session.get(SessionKeys.businessEntityKey) flatMap (str => BusinessEntitySessionFormatter.fromString(str))
-      val vatNumber = request.session.get(SessionKeys.vatNumberKey)
+      val entity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey)
 
-
-      (entity, vatNumber) match {
-        case (Some(Overseas), Some(vatNumber)) =>
-          storeOverseasInformationService.storeOverseasInformation(vatNumber) map {
-            case Right(StoreOverseasInformationSuccess) =>
-              Redirect(routes.DirectDebitResolverController.show())
-            case Left(StoreOverseasInformationFailureResponse(status)) =>
-              throw new InternalServerException("store overseas information failed: status=" + status)
-          }
-        case (_, Some(vatNumber)) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
+      if (entity.contains(Overseas))
+        Future.successful(
+          Redirect(routes.OverseasResolverController.resolve())
+        )
+      else optVatNumber match {
+        case Some(vatNumber) if administrativeDivisionLookupService.isAdministrativeDivision(vatNumber) =>
           Future.successful(
             Redirect(routes.DivisionResolverController.resolve())
               .addingToSession(SessionKeys.businessEntityKey, Division.asInstanceOf[BusinessEntity])
           )
-        case (_, Some(_)) =>
-          Future.successful(Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit())))
+        case Some(_) =>
+          Future.successful(
+            Ok(capture_business_entity(businessEntityForm, routes.CaptureBusinessEntityController.submit()))
+          )
         case _ =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
