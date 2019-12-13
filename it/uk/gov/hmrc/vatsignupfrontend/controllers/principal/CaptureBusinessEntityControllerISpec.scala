@@ -34,7 +34,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
   override val config: Map[String, String] = super.config + ("administrative-divisions" -> s"$administrativeDivisionVatNumber1,$administrativeDivisionVatNumber2)")
 
   "there is an oveaseas VRN" should {
-    "return a redirect to capture vat number" in {
+    "redirect to the overseas resolver" in {
       stubAuth(OK, successfulAuthResponse())
       stubStoreOverseasInformation(testVatNumber)(NO_CONTENT)
 
@@ -42,7 +42,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.DirectDebitResolverController.show().url)
+        redirectUri(routes.OverseasResolverController.resolve().url)
       )
 
       SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
