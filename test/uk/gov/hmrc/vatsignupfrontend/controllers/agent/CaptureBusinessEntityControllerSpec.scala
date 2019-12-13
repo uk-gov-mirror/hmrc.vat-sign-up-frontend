@@ -41,7 +41,6 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(
     mockControllerComponents,
-    mockStoreOverseasInformationService,
     mockAdministrativeDivisionLookupService
   )
 
@@ -84,7 +83,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
       }
     }
 
-    "redirect to capture agents email page" when {
+    "redirect to overseas resolver controller" when {
       "the business entity is Overseas" in {
         mockAuthRetrieveAgentEnrolment()
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
@@ -95,8 +94,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         ))
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureAgentEmailController.show().url)
-        result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Overseas))
+        redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
       }
     }
   }

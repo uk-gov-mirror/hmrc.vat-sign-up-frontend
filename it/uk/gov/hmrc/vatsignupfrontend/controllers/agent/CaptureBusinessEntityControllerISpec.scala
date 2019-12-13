@@ -46,7 +46,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureAgentEmailController.show().url)
+          redirectUri(routes.OverseasResolverController.resolve().url)
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
