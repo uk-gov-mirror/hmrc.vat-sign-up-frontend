@@ -91,10 +91,6 @@ GET         /error/dissolved-company                            uk.gov.hmrc.vats
 GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.show
 POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.submit
 
-#Agree Capture Email
-GET         /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.show
-POST        /receive-emails                                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.AgreeCaptureEmailController.submit
-
 # Capture Email
 GET         /email-address                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.show
 POST        /email-address                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.submit

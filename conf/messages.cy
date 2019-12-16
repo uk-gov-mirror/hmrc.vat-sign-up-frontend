@@ -292,13 +292,6 @@ agent.partnership.does_your_client_have_a_utr.title                   = Oes gan 
 agent.partnership.does_your_client_have_a_utr.heading                 = Oes gan bartneriaeth eich cleient Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
 agent.partnership.does_your_client_have_a_utr.line                    = Rhif 10 digid yw hwn. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth CThEM.
 
-## Agent Agree Receive Email page
-agent.agree_capture_email.title                                        = Cytuno i''ch cleient gael negeseuon diogel oddi wrth CThEM
-agent.agree_capture_email.heading                                      = Cytuno i''ch cleient gael negeseuon diogel oddi wrth CThEM
-agent.agree_capture_email.inset_text                                   = I ymuno â''r treial hwn, mae''n rhaid i''ch cleient gytuno i gael negeseuon diogel yn hytrach na llythyrau.
-agent.agree_capture_email.line_1                                       = Pan gaiff eich cleient neges newydd am TAW yn ei gyfrif treth busnes, byddwn yn anfon hysbysiad e-bost ato i roi gwybod iddo.
-agent.agree_capture_email.line_2                                       = Bydd yn rhaid i''ch cleient fewngofnodi i''w gyfrif treth busnes i ddarllen ei negeseuon diogel.
-
 ## Agent Capture Email page
 agent.capture_client_email.title                                       = Beth yw cyfeiriad e-bost eich cleient?
 agent.capture_client_email.heading                                     = Beth yw cyfeiriad e-bost eich cleient?
@@ -529,12 +522,6 @@ principal.confirm_email.title                                          = Gwirio'
 principal.confirm_email.heading                                        = Gwirio''ch cyfeiriad e-bost
 principal.confirm_email.email.heading                                  = Cyfeiriad e-bost
 principal.confirm_email.link                                           = Newid cyfeiriad e-bost
-
-## Principal Agree Receive Email page
-principal.agree_capture_email.title                                    = Cytuno i gael e-byst yn lle llythyrau
-principal.agree_capture_email.heading                                  = Cytuno i gael e-byst yn lle llythyrau
-principal.agree_capture_email.line_1                                   = Byddwn yn anfon e-bost atoch i roi gwybod i chi pan gewch neges newydd am TAW yn eich cyfrif CThEM.
-principal.agree_capture_email.line_2                                   = Bydd yn rhaid i chi fewngofnodi i''ch cyfrif i ddarllen y neges.
 
 ## Principal Verify Email page
 principal.verify_email.title                                           = Dilysu''ch cyfeiriad e-bost

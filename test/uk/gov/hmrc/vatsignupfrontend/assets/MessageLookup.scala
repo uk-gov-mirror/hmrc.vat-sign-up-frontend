@@ -197,14 +197,6 @@ object MessageLookup {
     val link = "Change company number"
   }
 
-  object AgreeCaptureEmail {
-    val heading: String = "Agree for your client to get secure messages from HMRC"
-    val title = heading + ServiceName.agentSuffix
-    val insetText = "To join this trial, your client must agree to get secure messages instead of letters."
-    val line1 = "When your client has a new message about VAT in their business tax account, we will send an email notification to let them know."
-    val line2 = "Your client will need to sign in to their business tax account to read their secure messages."
-  }
-
   object CaptureAgentEmail {
     val heading: String = "What is your email address?"
     val title = heading + ServiceName.agentSuffix
@@ -489,13 +481,6 @@ object MessageLookup {
     val line2 = "We'll email you a Direct Debit advance notice 10 working days before each payment is taken."
     val line3 = "If you do not want to receive Direct Debit notices by email, you will need to cancel your Direct Debit."
     val hint = "For example, yourname@example.com"
-  }
-
-  object PrincipalAgreeCaptureEmail {
-    val heading: String = "Agree to get emails instead of letters"
-    val title = heading + ServiceName.principalSuffix
-    val line1 = "When you have a new message about VAT in your HMRC account, we'll send you an email to let you know."
-    val line2 = "You'll need to sign in to your account to read the message."
   }
 
   object PrincipalConfirmEmail {
