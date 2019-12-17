@@ -895,14 +895,6 @@ principal.already_signed_up.title                                     = You have
 principal.already_signed_up.heading                                   = You have already signed up
 principal.already_signed_up.line                                      = Your sign in details are already in use.
 
-## Cannot sign up another business to same credential
-principal.cannot_sign_up_another_account.title                        = You have already signed up
-principal.cannot_sign_up_another_account.heading                      = You have already signed up
-principal.cannot_sign_up_another_account.line_1                       = Your Government Gateway user ID is already linked to Making Tax Digital for VAT.
-principal.cannot_sign_up_another_account.line_2                       = If you want to sign up another business to Making Tax Digital for VAT, you''ll need to use another Government Gateway user ID.
-principal.cannot_sign_up_another_account.line_3                       = If you do not have a Government Gateway user ID for your business, you''ll need to create a new account.
-principal.cannot_sign_up_another_account.button                       = Create a Government Gateway user ID
-
 ## Currently submitting vat returns
 principal.previous_vat_return.title                                   = Are you currently submitting VAT returns?
 principal.previous_vat_return.heading                                 = Are you currently submitting VAT returns?

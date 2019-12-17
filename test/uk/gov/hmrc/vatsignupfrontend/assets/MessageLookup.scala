@@ -1043,15 +1043,6 @@ object MessageLookup {
     val companyNumber = "Change your company number"
   }
 
-  object PrincipalCannotSignUpAnotherAccount {
-    val heading = "You have already signed up"
-    val title = heading + ServiceName.principalSuffix
-    val line1 = "Your Government Gateway user ID is already linked to Making Tax Digital for VAT."
-    val line2 = "If you want to sign up another business to Making Tax Digital for VAT, you'll need to use another Government Gateway user ID."
-    val line3 = "If you do not have a Government Gateway user ID for your business, you'll need to create a new account."
-    val buttonText = "Create a Government Gateway user ID"
-  }
-
   object CaptureBox5Figure {
     val heading = "What is your latest VAT Return total?"
     val title = heading + ServiceName.principalSuffix
