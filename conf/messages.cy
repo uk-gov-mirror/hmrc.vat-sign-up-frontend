@@ -15,7 +15,6 @@ base.confirmAndContinue                                                = Cadarnh
 base.confirm                                                           = Cadarnhau
 base.agree                                                             = Cytuno
 base.agree_and_continue                                                = Cytuno ac yn eich blaen
-base.accept_and_continue                                               = Derbyn ac yn eich blaen
 base.accept_and_send                                                   = Derbyn ac anfon
 base.continue_to_sign_up                                               = Yn eich blaen i gofrestru
 base.error_heading                                                     = Mae problem wedi codi
@@ -389,7 +388,6 @@ agent.resignup.signupcomplete.subsection2.bullet_2                     = Defnydd
 agent.resignup.signupcomplete.subsection2.bullet_3                     = Os oes angen, helpwch eich cleient i ddewis meddalwedd sy''n cydweddu. Cynghorwch ef i ddechrau cadw ei gofnodion TAW a chofnodion o''i incwm a''i wariant drwy ddefnyddio''r feddalwedd hon.
 agent.resignup.signupcomplete.subsection2.bullet_4                     = Pan fo''n berthnasol, cynghorwch eich cleient i fwrw golwg dros ddyddiadau cau ei Ffurflenni TAW. Gall eich cleient wneud hyn o fewn ei feddalwedd cyfrifyddu neu drwy fewngofnodi i wasanaethau CThEM (hefyd gelwir hyn yn gyfrif treth busnes).
 agent.resignup.signupcomplete.sign_up_another_button                   = Cofrestru cleient arall
-agent.resignup.signupcomplete.finish_and_sign_out                      = Gorffen ac allgofnodi
 
 ## Already signed up page
 agent.client_already_signed_up.title                                   = Mae''ch cleient eisoes wedi cofrestru
@@ -621,11 +619,6 @@ principal.cannot_use_service.title                                     = Dydy''c
 principal.cannot_use_service.heading                                   = Dydy''ch busnes ddim yn gymwys ar hyn o bryd
 principal.cannot_use_service.line                                      = Rhowch gynnig arall arni yn nes ymlaen.
 
-## Principal Already Signed Up page
-principal.already_signed_up.title                                      = Rydych eisoes wedi cofrestru
-principal.already_signed_up.heading                                    = Rydych eisoes wedi cofrestru
-principal.already_signed_up.line_1                                     = Mae''ch manylion mewngofnodi eisoes yn cael eu defnyddio.
-
 ## Principal Assistant credential type error page
 principal.assistant_credential.title                                   = Allwch chi ddim defnyddio''r gwasanaeth hwn
 principal.assistant_credential.heading                                 = Allwch chi ddim defnyddio''r gwasanaeth hwn
@@ -785,14 +778,6 @@ principal.check_your_answers_partnerships.post_code                    = Y cod p
 principal.check_your_answers_partnerships.has_optional_sautr           = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad?
 principal.check_your_answers_partnerships.no_sautr                     = Nid oes gennyf un
 
-unplanned_outage.title                                                 = Mae''n ddrwg gennym – mae problem gyda''r gwasanaeth
-unplanned_outage.heading                                               = Mae''n ddrwg gennym – mae problem gyda''r gwasanaeth
-unplanned_outage.line1                                                 = Rhowch gynnig arall arni yn nes ymlaen.
-unplanned_outage.line2                                                 = Yn y cyfamser:
-unplanned_outage.bullet1                                               = ewch i weld ein <a id="vatServices" href="{0}"">rhestr lawn o wasanaethau TAW</a>
-unplanned_outage.bullet2                                               = darllenwch ein <a id="help" href="{0}"">'''''help a chymorth ar gyfer TAW'''</a>
-unplanned_outage.bullet3                                               = ewch i weld <a id="mtdReady" href="{0}"">sut y gall busnesau TAW baratoi</a> ar gyfer y rhaglen Troi Treth yn Ddigidol
-
 ## Are You Ready Submit Software
 principal.are_you_ready_submit_software.title                          = Ydych chi''n barod i gyflwyno''ch Ffurflen TAW nesaf drwy ddefnyddio meddalwedd sy''n cydweddu â''r cynllun Troi Treth yn Ddigidol?
 principal.are_you_ready_submit_software.heading                        = Ydych chi''n barod i gyflwyno''ch Ffurflen TAW nesaf drwy ddefnyddio meddalwedd sy''n cydweddu â''r cynllun Troi Treth yn Ddigidol?
@@ -895,6 +880,7 @@ principal.capture_box_5_figure.title                                   = Beth yw
 principal.capture_box_5_figure.heading                                 = Beth yw cyfanswm eich Ffurflen TAW ddiweddaraf?
 principal.capture_box_5_figure.line                                    = Mae''r swm hwn i''w weld ym mlwch 5 o''r Ffurflen TAW ddiweddaraf i chi ei chyflwyno i CThEM.
 principal.capture_box_5_figure.line2                                   = Mae angen i fformat y rhif hwn fod yn ddau le degol, er enghraifft £123.00.
+
 ## Cancel Direct Debit page
 principal.cancel_direct_debit.title                                    = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol
 principal.cancel_direct_debit.heading                                  = Os nad ydych yn cytuno â''r telerau ac amodau Debyd Uniongyrchol
@@ -962,7 +948,6 @@ principal.partnership.do_you_have_a_utr.title                         = A oes ga
 principal.partnership.do_you_have_a_utr.heading                       = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
 principal.partnership.do_you_have_a_utr.line                          = Rhif 10 digid yw hwn. Mae hwn i''w weld ar lythyrau i''r bartneriaeth oddi wrth CThEM.
 
-
 #Check your answers final
 principal.check_your_answers_final.title                              = Gwiriwch eich atebion cyn eu hanfon
 principal.check_your_answers_final.heading                            = Gwiriwch eich atebion cyn eu hanfon
@@ -1001,7 +986,6 @@ principal.got_software.para                                           = Gwiriwch
 principal.got_software.bullet_1                                       = mae''ch meddalwedd yn cysylltu â CThEM
 principal.got_software.bullet_2                                       = os ydych yn defnyddio cyfrifydd, sicrhewch fod eich meddalwedd yn gweithio gyda''i feddalwedd ef
 principal.got_software.check_software                                 = Gwirio a yw''ch meddalwedd yn cydweddu (yn agor tab newydd)
-principal.got_software.sign_up                                        = Cofrestru
 
 #Use spreadsheets
 principal.use_spreadsheets.title                                      = Bydd angen meddalwedd bontio arnoch i barhau i ddefnyddio''ch taenlenni
@@ -1032,7 +1016,6 @@ footer.links.accessibility.text = Datganiad
 accessibility.pageNavBar = Cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW
 accessibility.pageTitle = Datganiad hygyrchedd ar gyfer cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW
 accessibility.pageHeading = Datganiad hygyrchedd ar gyfer cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW
-accessibility.pageBanner = gyfer cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW
 accessibility.pageBody.intro.p1 = Mae''r datganiad hygyrchedd hwn yn esbonio pa mor hygyrch yw''r gwasanaeth hwn, beth i''w wneud os ydych yn cael anhawster i''w ddefnyddio, a sut i roi gwybod am broblemau hygyrchedd gyda''r gwasanaeth.
 accessibility.pageBody.intro.p2 = Mae''r gwasanaeth hwn yn rhan o wefan ehangach GOV.UK. Mae <a href="https://www.gov.uk/help/accessibility">datganiad hygyrchedd</a> ar wahân ar gyfer prif wefan GOV.UK.
 accessibility.pageBody.intro.p3 = Mae''r dudalen hon ond yn cynnwys gwybodaeth am wasanaeth Cofrestru am y cynllun Troi Treth yn Ddigidol ar gyfer TAW, sydd ar gael yn <a href="https://www.tax.service.gov.uk/vat-through-software/sign-up">https://www.tax.service.gov.uk/vat-through-software/sign-up</a>.

@@ -15,7 +15,6 @@ base.confirmAndContinue                                                = Confirm
 base.confirm                                                           = Confirm
 base.agree                                                             = Agree
 base.agree_and_continue                                                = Agree and continue
-base.accept_and_continue                                               = Accept and continue
 base.accept_and_send                                                   = Accept and send
 base.continue_to_sign_up                                               = Continue to sign up
 base.error_heading                                                     = There''s a problem
@@ -190,6 +189,7 @@ error.principal.no_option_selected.field                               = You mus
 error.principal.no_option_selected.summary                             = You must select an option
 error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
 error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
+
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You need to sign in with an agent services account
 agent.not_enrolled_to_agent_services.heading                           = You need to sign in with an agent services account
@@ -389,7 +389,6 @@ agent.resignup.signupcomplete.subsection2.bullet_2                     = Use you
 agent.resignup.signupcomplete.subsection2.bullet_3                     = If required, help your client to choose compatible software. Advise them to start keeping their income, expenditure and VAT records using this software.
 agent.resignup.signupcomplete.subsection2.bullet_4                     = Where relevant, advise your client to view their VAT Return deadlines. They can do this within their accounting software or by signing into HMRC services (this is also known as a Business tax account).
 agent.resignup.signupcomplete.sign_up_another_button                   = Sign up another client
-agent.resignup.signupcomplete.finish_and_sign_out                      = Finish and sign out
 
 ## Already signed up page
 agent.client_already_signed_up.title                                   = Your client has already signed up
@@ -540,11 +539,6 @@ agent.capture_nino.title                                               = What is
 agent.capture_nino.heading                                             = What is your client''s National Insurance number?
 agent.capture_nino.formHint                                            = It''s on your client''s National Insurance card, benefit letter, payslip or P60. For example, ''QQ 12 34 56 C''.
 
-# Capture National Insurance number (NINO)
-principal.capture_nino.title                                           = What is your National Insurance number?
-principal.capture_nino.heading                                         = What is your National Insurance number?
-principal.capture_nino.formHint                                        = It''s on your National Insurance card, benefit letter, payslip or P60. For example ''QQ 12 34 56 C''.
-
 # Confirm National Insurance number (NINO)
 principal.confirm_nino.title                                           = Check your answers
 principal.confirm_nino.heading                                         = Check your answers
@@ -643,11 +637,6 @@ principal.cannot_use_service.title                                     = Your bu
 principal.cannot_use_service.heading                                   = Your business is not eligible at this time
 principal.cannot_use_service.line                                      = Try again later.
 
-## Principal Already Signed Up page
-principal.already_signed_up.title                                      = You''ve already signed up
-principal.already_signed_up.heading                                    = You''ve already signed up
-principal.already_signed_up.line_1                                     = Your sign in details are already in use.
-
 ## Principal Assistant credential type error page
 principal.assistant_credential.title                                   = You cannot use this service
 principal.assistant_credential.heading                                 = You cannot use this service
@@ -734,7 +723,6 @@ agent.check-your-answers.company_number                                = Partner
 agent.check-your-answers.business_post_code                            = Where your client''s partnership is registered for Self Assessment
 agent.check-your-answers.does_your_client_have_a_utr                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 agent.check-your-answers.client_has_no_sautr                           = My client does not have one
-
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
@@ -1038,7 +1026,6 @@ footer.links.accessibility.text = Accessibility
 accessibility.pageNavBar = Signing up to Making Tax Digital for VAT
 accessibility.pageTitle = Accessibility statement for signing up to Making Tax Digital for VAT
 accessibility.pageHeading = Accessibility statement for signing up to Making Tax Digital for VAT
-accessibility.pageBanner = signing up to Making Tax Digital for VAT
 accessibility.pageBody.intro.p1 = This accessibility statement explains how accessible this service is, what to do if you have difficulty using it, and how to report accessibility problems with the service.
 accessibility.pageBody.intro.p2 = This service is part of the wider GOV.UK website. There is a separate <a href="https://www.gov.uk/help/accessibility">accessibility statement</a> for the main GOV.UK website.
 accessibility.pageBody.intro.p3 = This page only contains information about signing up for the Making Tax digital for VAT service, available at <a href="https://www.tax.service.gov.uk/vat-through-software/sign-up">https://www.tax.service.gov.uk/vat-through-software/sign-up</a>.
