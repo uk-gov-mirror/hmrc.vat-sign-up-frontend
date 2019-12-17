@@ -886,14 +886,6 @@ principal.already_signed_up.title                                      = Rydych 
 principal.already_signed_up.heading                                    = Rydych eisoes wedi cofrestru
 principal.already_signed_up.line                                       = Mae''ch manylion mewngofnodi eisoes yn cael eu defnyddio.
 
-## Cannot sign up another business to same credential
-principal.cannot_sign_up_another_account.title                         = Rydych eisoes wedi cofrestru
-principal.cannot_sign_up_another_account.heading                       = Rydych eisoes wedi cofrestru
-principal.cannot_sign_up_another_account.line_1                        = Mae eich Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth eisoes wedi''i gysylltu â''r cynllun Troi Treth yn Ddigidol ar gyfer TAW.
-principal.cannot_sign_up_another_account.line_2                        = Os hoffech gofrestru busnes arall gyda''r cynllun Troi Treth yn Ddigidol ar gyfer TAW, bydd yn rhaid i chi ddefnyddio Dynodydd Defnyddiwr (ID) gwahanol ar gyfer Porth y Llywodraeth.
-principal.cannot_sign_up_another_account.line_3                        = Os nad oes gennych Ddynodydd Defnyddiwr (ID) Porth y Llywodraeth ar gyfer eich busnes, bydd yn rhaid i chi greu cyfrif.
-principal.cannot_sign_up_another_account.button                        = Creu Dynodydd Defnyddiwr (ID) Porth y Llywodraeth
-
 ## Currently submitting vat returns
 principal.previous_vat_return.title                                    = Ydych chi''n cyflwyno Ffurflenni TAW ar hyn o bryd?
 principal.previous_vat_return.heading                                  = Ydych chi''n cyflwyno Ffurflenni TAW ar hyn o bryd?
