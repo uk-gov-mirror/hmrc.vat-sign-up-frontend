@@ -127,19 +127,6 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         )
       }
     }
-    "redirect to resolve partnership when joint venture or property feature switch is enabled" when {
-      "the business entity is general partnership" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        enable(OptionalSautrJourney)
-
-        val res = post("/client/business-type")(BusinessEntityForm.businessEntity -> generalPartnership)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(partnerships.routes.ResolvePartnershipController.resolve().url)
-        )
-      }
-    }
 
     "redirect to the resolve partnership page" when {
       "the business entity is limited partnership" in {

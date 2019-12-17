@@ -22,7 +22,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreJointVentureInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -34,7 +33,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
   val limitedPartnershipType = PartnershipEntityType.LimitedPartnership
 
   "GET /check-your-answers-partnership" should {
-    "return an OK for a Joint Venture or Property Partnership" in {
+    "return an OK for a general partnership without SAUTR" in {
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(

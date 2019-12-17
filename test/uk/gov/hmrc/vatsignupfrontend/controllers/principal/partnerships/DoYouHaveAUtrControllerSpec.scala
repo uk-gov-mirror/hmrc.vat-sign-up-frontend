@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
-import uk.gov.hmrc.vatsignupfrontend.forms.JointVentureOrPropertyForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testBusinessPostcode}
 
@@ -35,7 +34,7 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
   val testGetRequest = FakeRequest("GET", "/do-you-have-a-utr")
 
   def testPostRequest(answer: String): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest("POST", "/do-you-have-a-utr").withFormUrlEncodedBody(yesNo -> answer)
+    FakeRequest("POST", "/do-you-have-a-utr").withFormUrlEncodedBody("yes_no" -> answer)
 
   "Calling the show action of the Do You Have A Utr Controller" when {
     "The feature switch is enabled" should {
