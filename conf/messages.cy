@@ -185,12 +185,6 @@ error.principal.are_you_ready_submit_software.field                    = Dewiswc
 error.principal.no_option_selected.field                               = Dewiswch opsiwn
 error.principal.no_option_selected.summary                             = Dewiswch opsiwn
 
-## unused?
-error.principal.partnership.joint_venture_or_property.field            = Dewiswch ''Iawn'' os ydych yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
-error.principal.partnership.joint_venture_or_property.summary          = Dewiswch os ydych yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
-error.agent.partnership.joint_venture_or_property.field                = Dewiswch ''Iawn'' os yw''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
-error.agent.partnership.joint_venture_or_property.summary              = Dewiswch os yw''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo
-
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = Nid ydych wedi mewngofnodi gan ddefnyddio cyfrif gwasanaethau asiant
 agent.not_enrolled_to_agent_services.heading                           = Nid ydych wedi mewngofnodi gan ddefnyddio cyfrif gwasanaethau asiant
@@ -716,7 +710,6 @@ agent.check-your-answers.business_entity                               = Math o 
 agent.check-your-answers.utr                                           = UTR Hunanasesiad y bartneriaeth
 agent.check-your-answers.company_number                                = Rhif cwmni y bartneriaeth
 agent.check-your-answers.business_post_code                            = Ble mae partneriaeth eich cleient wedi''i chofrestru ar gyfer Hunanasesiad
-agent.check-your-answers.joint_venture_or_property                     = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
 agent.check-your-answers.client_has_no_sautr                           = Does dim un gan fy nghleient
 
 ## Sign Up After This Date
@@ -789,7 +782,6 @@ principal.check_your_answers_partnerships.business_entity              = Math o 
 principal.check_your_answers_partnerships.company_number               = Rhif cofrestru''r bartneriaeth
 principal.check_your_answers_partnerships.company_utr                  = Cyfeirnod Unigryw y Trethdalwr ar gyfer y Bartneriaeth
 principal.check_your_answers_partnerships.post_code                    = Y cod post ble mae''r bartneriaeth wedi''i chofrestru ar gyfer Hunanasesiad
-principal.check_your_answers_partnerships.joint_vernture_or_property   = Ydych chi''n Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
 principal.check_your_answers_partnerships.has_optional_sautr           = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad?
 principal.check_your_answers_partnerships.no_sautr                     = Nid oes gennyf un
 
@@ -943,13 +935,6 @@ principal.send_your_application.line                                   = Drwy an
 agent.send_your_application.title                                      = Anfon eich cais
 agent.send_your_application.heading                                    = Anfon eich cais
 agent.send_your_application.line                                       = Drwy anfon yr hysbysiad hwn, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, fod y manylion rydych yn eu rhoi''n gywir.
-
-## Principle Joint Venture or Property Partnership
-principal.partnership.joint_venture_or_property.title                  = Ydych chi''n Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
-principal.partnership.joint_venture_or_property.heading                = Ydych chi''n Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
-
-agent.partnership.joint_venture_or_property.title                      = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
-agent.partnership.joint_venture_or_property.heading                    = Ydy''ch cleient yn Fenter ar y Cyd neu''n Bartneriaeth Eiddo?
 
 # Capture National Insurance number (NINO)
 agent.capture_nino.title                                               = Beth yw rhif Yswiriant Gwladol eich cleient?

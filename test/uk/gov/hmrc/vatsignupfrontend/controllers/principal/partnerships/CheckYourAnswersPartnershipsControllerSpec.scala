@@ -32,16 +32,15 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttp
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, _}
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreJointVentureInformationService, MockStorePartnershipInformationService}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
 class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
-  with MockStorePartnershipInformationService
-  with MockStoreJointVentureInformationService {
+  with MockStorePartnershipInformationService {
 
   object TestCheckYourAnswersController extends CheckYourAnswersPartnershipsController(
-    mockControllerComponents, mockStorePartnershipInformationService, mockStoreJointVentureInformationService
+    mockControllerComponents, mockStorePartnershipInformationService
   )
 
   val generalPartnershipType: String = PartnershipEntityType.GeneralPartnership.toString
@@ -95,10 +94,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               enable(OptionalSautrJourney)
               mockAuthAdminRole()
 
-                val result = TestCheckYourAnswersController.show(testGetRequest(
-                  businessEntity = Some(GeneralPartnership),
-                  hasOptionalSautr = Some(false)
-                ))
+              val result = TestCheckYourAnswersController.show(testGetRequest(
+                businessEntity = Some(GeneralPartnership),
+                hasOptionalSautr = Some(false)
+              ))
 
               status(result) shouldBe Status.OK
               contentType(result) shouldBe Some("text/html")
@@ -295,43 +294,41 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
 
   "Calling the submit action of the Check your answers controller" when {
     "Partnership Entity is General Partnership" when {
-        "the Optional Sautr feature is enabled" when {
-          "The partnership does not have an Sautr" when {
-            "All prerequisite data is in session" when {
-              "the storeJointVenturePropertyInformation is successful" should {
-                "Redirect to the Direct Debit resolver" in {
-                  enable(OptionalSautrJourney)
-                  mockAuthAdminRole()
-                  mockStorePartnershipInformation(
-                    vatNumber = testVatNumber,
-                    sautr = None,
-                    postCode = None
-                  )(Right(StorePartnershipInformationSuccess))
+      "the Optional Sautr feature is enabled" when {
+        "The partnership does not have an Sautr" when {
+          "All prerequisite data is in session" when {
+            "Redirect to the Direct Debit resolver" in {
+              enable(OptionalSautrJourney)
+              mockAuthAdminRole()
+              mockStorePartnershipInformation(
+                vatNumber = testVatNumber,
+                sautr = None,
+                postCode = None
+              )(Right(StorePartnershipInformationSuccess))
 
-                  val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                    businessEntity = Some(GeneralPartnership)
-                  )))
+              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                businessEntity = Some(GeneralPartnership)
+              )))
 
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
-              }
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
+            }
 
-              "the storePartnershipInformation fails" should {
-                "throw an internal server error exception" in {
-                  enable(OptionalSautrJourney)
-                  mockAuthAdminRole()
-                  mockStorePartnershipInformation(
-                    vatNumber = testVatNumber,
-                    sautr = None,
-                    postCode = None
-                  )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
+            "the storePartnershipInformation fails" should {
+              "throw an internal server error exception" in {
+                enable(OptionalSautrJourney)
+                mockAuthAdminRole()
+                mockStorePartnershipInformation(
+                  vatNumber = testVatNumber,
+                  sautr = None,
+                  postCode = None
+                )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
 
-                  lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
-                    businessEntity = Some(GeneralPartnership)
-                  )))
+                lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                  businessEntity = Some(GeneralPartnership)
+                )))
 
-                  intercept[InternalServerException](result)
-                }
+                intercept[InternalServerException](result)
               }
             }
 

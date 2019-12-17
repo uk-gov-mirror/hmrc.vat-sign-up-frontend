@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -29,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreJointVentureInformationService, StorePartnershipInformationService}
+import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships
 
@@ -37,9 +36,8 @@ import scala.concurrent.Future
 
 @Singleton
 class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents: ControllerComponents,
-                                                       val storePartnershipInformationService: StorePartnershipInformationService,
-                                                       val storeJointVentureInformationService: StoreJointVentureInformationService)
-  extends AuthenticatedController(retrievalPredicate = AdministratorRolePredicate){
+                                                       val storePartnershipInformationService: StorePartnershipInformationService)
+  extends AuthenticatedController(retrievalPredicate = AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
