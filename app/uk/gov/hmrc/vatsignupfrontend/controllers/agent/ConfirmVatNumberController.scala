@@ -77,6 +77,8 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                     Redirect(routes.AlreadySignedUpController.show())
                   case Ineligible =>
                     Redirect(routes.CannotUseServiceController.show())
+                  case Deregistered =>
+                    Redirect(routes.CannotUseServiceController.show())
                   case Inhibited(migratableDates) =>
                     Redirect(routes.MigratableDatesController.show())
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)

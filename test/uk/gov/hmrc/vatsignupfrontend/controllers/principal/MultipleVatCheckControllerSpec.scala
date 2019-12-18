@@ -155,6 +155,21 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
             redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
           }
         }
+
+        "the vat number is deregistered" should {
+          "redirect to the already subscribed page" in {
+            mockAuthRetrieveVatDecEnrolment()
+            mockOrchestrate(
+              enrolments = Enrolments(Set(testVatDecEnrolment)),
+              vatNumber = testVatNumber
+            )(Deregistered)
+
+            val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+          }
+        }
+
         "the vat number is ineligible" should {
           "redirect to the already subscribed page" in {
             mockAuthRetrieveVatDecEnrolment()

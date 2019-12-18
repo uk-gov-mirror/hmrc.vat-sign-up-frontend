@@ -213,6 +213,20 @@ class CaptureVatNumberControllerSpec extends UnitSpec
           }
 
           "the vat eligibility is unsuccessful" should {
+            "redirect to Cannot use service yet when the vat number is deregistered" in {
+              mockAuthRetrieveVatDecEnrolment()
+              mockOrchestrate(
+                enrolments = Enrolments(Set(testVatDecEnrolment)),
+                vatNumber = testVatNumber
+              )(Future.successful(Deregistered))
+
+              val request = testPostRequest(testVatNumber)
+
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+            }
+
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
               mockAuthRetrieveVatDecEnrolment()
               mockOrchestrate(
@@ -227,44 +241,40 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
             }
 
-            "the vat eligibility is unsuccessful" should {
-              "redirect to sign up after this date page when the vat number is ineligible and one date is available" in {
-                val testDates = MigratableDates(Some(testStartDate))
+            "redirect to sign up after this date page when the vat number is ineligible and one date is available" in {
+              val testDates = MigratableDates(Some(testStartDate))
 
-                mockAuthRetrieveVatDecEnrolment()
-                mockOrchestrate(
-                  enrolments = Enrolments(Set(testVatDecEnrolment)),
-                  vatNumber = testVatNumber
-                )(Future.successful(Inhibited(testDates)))
+              mockAuthRetrieveVatDecEnrolment()
+              mockOrchestrate(
+                enrolments = Enrolments(Set(testVatDecEnrolment)),
+                vatNumber = testVatNumber
+              )(Future.successful(Inhibited(testDates)))
 
-                val request = testPostRequest(testVatNumber)
+              val request = testPostRequest(testVatNumber)
 
-                val result = TestCaptureVatNumberController.submit(request)
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
 
-                await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
-              }
+              await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
             }
 
-            "the vat eligibility is unsuccessful" should {
-              "redirect to sign up between these dates page when the vat number is ineligible and two dates are available" in {
-                val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
+            "redirect to sign up between these dates page when the vat number is ineligible and two dates are available" in {
+              val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
-                mockAuthRetrieveVatDecEnrolment()
-                mockOrchestrate(
-                  enrolments = Enrolments(Set(testVatDecEnrolment)),
-                  vatNumber = testVatNumber
-                )(Future.successful(Inhibited(testDates)))
+              mockAuthRetrieveVatDecEnrolment()
+              mockOrchestrate(
+                enrolments = Enrolments(Set(testVatDecEnrolment)),
+                vatNumber = testVatNumber
+              )(Future.successful(Inhibited(testDates)))
 
-                val request = testPostRequest(testVatNumber)
+              val request = testPostRequest(testVatNumber)
 
-                val result = TestCaptureVatNumberController.submit(request)
-                status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+              val result = TestCaptureVatNumberController.submit(request)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
 
-                await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
-              }
+              await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
             }
           }
         }
@@ -445,6 +455,20 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               result.session get businessEntityKey should contain(Overseas.toString)
               session(result) get isMigratedKey should contain(true.toString)
             }
+          }
+
+          "redirect to Cannot use service yet when the vat number is deregistered" in {
+            mockAuthRetrieveEmptyEnrolment()
+            mockOrchestrate(
+              enrolments = Enrolments(Set()),
+              vatNumber = testVatNumber
+            )(Future.successful(Deregistered))
+
+            val request = testPostRequest(testVatNumber)
+
+            val result = TestCaptureVatNumberController.submit(request)
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
