@@ -203,6 +203,17 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
 
     }
 
+    "vat number is in session but store vat is unsuccessful as client is deregistered" when {
+      "go to the cannot use service page" in {
+        mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
+        mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(Deregistered))
+
+        val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+      }
+    }
+
     "vat number is in session but store vat is unsuccessful" should {
       "throw internal server exception" in {
         mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))

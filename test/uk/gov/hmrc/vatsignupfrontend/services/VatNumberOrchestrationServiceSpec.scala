@@ -79,6 +79,16 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         }
       }
 
+      "the vat number is deregistered" should {
+        "return Deregistered" in {
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Deregistered))
+
+          val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.Deregistered
+        }
+      }
+
       "the vat number is inhibited" should {
         "return Inhibited" in {
           mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Inhibited(testMigratableDates)))
@@ -189,6 +199,16 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
           val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
           await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
+        }
+      }
+
+      "the vat number is deregistered" should {
+        "return Deregistered" in {
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Deregistered))
+
+          val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
+
+          await(res) shouldBe StoreVatNumberOrchestrationService.Deregistered
         }
       }
 
@@ -326,6 +346,16 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
 
         await(res) shouldBe StoreVatNumberOrchestrationService.Ineligible
+      }
+    }
+
+    "the vat number is deregistered" should {
+      "return Deregistered" in {
+        mockCheckVatNumberEligibility(testVatNumber)(Future.successful(Deregistered))
+
+        val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
+
+        await(res) shouldBe StoreVatNumberOrchestrationService.Deregistered
       }
     }
 

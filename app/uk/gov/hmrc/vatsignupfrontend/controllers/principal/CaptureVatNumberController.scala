@@ -36,6 +36,7 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
+//noinspection ScalaStyle
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
                                            storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService
                                           )(implicit ec: ExecutionContext) extends AuthenticatedController(AdministratorRolePredicate) {
@@ -94,6 +95,9 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                       case SubscriptionClaimed =>
                         Redirect(routes.SignUpCompleteClientController.show())
                       case Ineligible =>
+                        Redirect(routes.CannotUseServiceController.show())
+                          .removingFromSession(businessEntityKey)
+                      case Deregistered =>
                         Redirect(routes.CannotUseServiceController.show())
                           .removingFromSession(businessEntityKey)
                       case Inhibited(migratablDates) =>

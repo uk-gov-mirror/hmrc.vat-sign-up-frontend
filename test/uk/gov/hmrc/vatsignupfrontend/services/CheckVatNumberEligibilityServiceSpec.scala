@@ -92,12 +92,12 @@ class CheckVatNumberEligibilityServiceSpec extends UnitSpec
       }
 
       "the connector returns Deregistered" should {
-        "return Ineligible" in {
+        "return Deregistered" in {
           enable(ReSignUpJourney)
           mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Deregistered)))
 
           val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Ineligible
+          result shouldBe StoreVatNumberOrchestrationService.Deregistered
         }
       }
 

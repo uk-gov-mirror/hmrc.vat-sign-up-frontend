@@ -27,6 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
+//noinspection ScalaStyle
 class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityPreMigrationConnector: VatNumberEligibilityPreMigrationConnector,
                                                  vatNumberEligibilityConnector: VatNumberEligibilityConnector
                                                 )(implicit ec: ExecutionContext) extends FeatureSwitching {
@@ -35,21 +36,35 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityPreMigratio
 
     if (isEnabled(ReSignUpJourney))
       vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber).map {
-        case Right(MigrationInProgress) => StoreVatNumberOrchestrationService.MigrationInProgress
-        case Right(AlreadySubscribed) => StoreVatNumberOrchestrationService.AlreadySubscribed
-        case Right(Ineligible) | Right(Deregistered) => StoreVatNumberOrchestrationService.Ineligible //TODO create a proper flow for deregistered
-        case Right(Inhibited(inhibitedDates)) => StoreVatNumberOrchestrationService.Inhibited(inhibitedDates)
-        case Right(Eligible(isOverseas, isMigrated)) => StoreVatNumberOrchestrationService.Eligible(isOverseas, isMigrated)
-        case Left(VatNumberNotFound) => StoreVatNumberOrchestrationService.InvalidVatNumber
-        case _ => throw new InternalServerException("Unexpected response from new VAT number eligibility backend")
+        case Right(MigrationInProgress) =>
+          StoreVatNumberOrchestrationService.MigrationInProgress
+        case Right(AlreadySubscribed) =>
+          StoreVatNumberOrchestrationService.AlreadySubscribed
+        case Right(Ineligible) =>
+          StoreVatNumberOrchestrationService.Ineligible
+        case Right(Deregistered) =>
+          StoreVatNumberOrchestrationService.Deregistered
+        case Right(Inhibited(inhibitedDates)) =>
+          StoreVatNumberOrchestrationService.Inhibited(inhibitedDates)
+        case Right(Eligible(isOverseas, isMigrated)) =>
+          StoreVatNumberOrchestrationService.Eligible(isOverseas, isMigrated)
+        case Left(VatNumberNotFound) =>
+          StoreVatNumberOrchestrationService.InvalidVatNumber
+        case _ =>
+          throw new InternalServerException("Unexpected response from new VAT number eligibility backend")
       }
     else
       vatNumberEligibilityPreMigrationConnector.checkVatNumberEligibility(vatNumber).map {
-        case Right(VatNumberEligible(isOverseas)) => StoreVatNumberOrchestrationService.Eligible(isOverseas, isMigrated = false)
-        case Left(IneligibleForMtdVatNumber(dates)) if dates.isEmpty => StoreVatNumberOrchestrationService.Ineligible
-        case Left(IneligibleForMtdVatNumber(dates)) => StoreVatNumberOrchestrationService.Inhibited(dates)
-        case Left(InvalidVatNumber) => StoreVatNumberOrchestrationService.InvalidVatNumber
-        case _ => throw new InternalServerException("Unexpected response from the old VAT number eligibility backend")
+        case Right(VatNumberEligible(isOverseas)) =>
+          StoreVatNumberOrchestrationService.Eligible(isOverseas, isMigrated = false)
+        case Left(IneligibleForMtdVatNumber(dates)) if dates.isEmpty =>
+          StoreVatNumberOrchestrationService.Ineligible
+        case Left(IneligibleForMtdVatNumber(dates)) =>
+          StoreVatNumberOrchestrationService.Inhibited(dates)
+        case Left(InvalidVatNumber) =>
+          StoreVatNumberOrchestrationService.InvalidVatNumber
+        case _ =>
+          throw new InternalServerException("Unexpected response from the old VAT number eligibility backend")
       }
   }
 

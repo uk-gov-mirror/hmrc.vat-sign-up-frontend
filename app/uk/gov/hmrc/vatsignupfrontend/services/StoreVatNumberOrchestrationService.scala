@@ -104,6 +104,8 @@ object StoreVatNumberOrchestrationService {
 
   case object Ineligible extends StoreVatNumberOrchestrationServiceResponse
 
+  case object Deregistered extends StoreVatNumberOrchestrationServiceResponse
+
   case object SubscriptionClaimed extends StoreVatNumberOrchestrationServiceResponse
 
   case object MigrationInProgress extends StoreVatNumberOrchestrationServiceResponse
