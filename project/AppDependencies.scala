@@ -18,11 +18,11 @@ object AppDependencies {
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion =  "1.8.1"
   private val mockitoVersion = "2.7.6"
-  private val wiremockVersion = "2.5.1"
+  private val wiremockVersion = "2.25.1"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "govuk-template" % "5.40.0-play-25",
-    "uk.gov.hmrc" %% "play-ui" % "8.3.0-play-25",
+    "uk.gov.hmrc" %% "play-ui" % "8.5.0-play-25",
     ws,
     "uk.gov.hmrc" %% "bootstrap-play-25" % "5.1.0",
     "uk.gov.hmrc" %% "domain" % domainVersion,
@@ -47,7 +47,7 @@ object AppDependencies {
     val scope = "it"
 
     Seq(
-      "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope
+      "com.github.tomakehurst" % "wiremock-jre8" % wiremockVersion % scope
     )
   }
 
