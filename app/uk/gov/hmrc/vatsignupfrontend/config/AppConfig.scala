@@ -223,4 +223,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def accessibilityReportUrl(userAction: String): String = s"${contactHost}/contact/accessibility-unauthenticated?service=${service}&userAction=${encodeUrl(userAction)}"
 
   lazy val yourVatAccountUrl: String = s"${loadConfig("vat-summary.url")}/vat-through-software/vat-overview"
+
+  lazy val vatRegistrationUrl: String = govUK + "/vat-registration"
+
 }
