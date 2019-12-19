@@ -614,6 +614,21 @@ principal.dissolved_company.paragraph1                                 = Rydych 
 principal.dissolved_company.paragraph2                                 = Rhowch gynnig arall arni gan ddefnyddio''r rhif cwmni diweddaraf a anfonwyd gan Dŷ''r Cwmnïau.
 principal.dissolved_company.confirm                                    = Nodwch rif gwahanol
 
+## Deregistered Enrolled page
+principal.deregistered_enrolled.title                                  = You cannot sign up with this VAT registration number
+principal.deregistered_enrolled.heading                                = You cannot sign up with this VAT registration number
+principal.deregistered_enrolled.paragraph1                             = The user ID and password you have entered is for a business which has been deregistered from paying VAT. The VAT registration number is: {0}
+principal.deregistered_enrolled.paragraph2                             = You can either:
+principal.deregistered_enrolled.bullet1                                = sign out and sign back in with a different user ID and password, if you have another VAT registration number
+principal.deregistered_enrolled.bullet2                                = register for VAT using the <a id="vatRegistration" href="{0}" target="_blank">VAT registration service</a>
+
+## Deregistered Unenrolled page
+principal.deregistered_unenrolled.title                                = You cannot sign up with this VAT registration number
+principal.deregistered_unenrolled.heading                              = You cannot sign up with this VAT registration number
+principal.deregistered_unenrolled.paragraph1                           = The VAT registration number you have entered is for a business which has deregistered from paying VAT. If you have another VAT registration number, enter that instead.
+principal.deregistered_unenrolled.paragraph2                           = Alternatively, you can register for VAT using the <a id="vatRegistration" href="{0}" target="_blank">VAT registration service</a>.
+principal.deregistered_unenrolled.another_number                       = Enter another VAT number
+
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = Dydy''ch busnes ddim yn gymwys ar hyn o bryd
 principal.cannot_use_service.heading                                   = Dydy''ch busnes ddim yn gymwys ar hyn o bryd
