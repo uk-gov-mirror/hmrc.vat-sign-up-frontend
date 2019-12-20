@@ -87,6 +87,9 @@ POST        /confirm-company                                    uk.gov.hmrc.vats
 # Dissolved Company
 GET         /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.DissolvedCompanyController.show
 
+# Deregistered VAT Number
+GET         /error/deregistered-vat-number                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.DeregisteredVatNumberController.show
+
 # Confirm Registered Society name
 GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.show
 POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmRegisteredSocietyController.submit
