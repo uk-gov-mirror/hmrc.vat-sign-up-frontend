@@ -130,6 +130,16 @@ object MessageLookup {
     val another_number: String = "Enter another VAT number"
   }
 
+
+  object AgentDeregistered {
+    val heading: String = "You cannot sign up with this VAT registration number"
+    val title: String = heading + ServiceName.agentSuffix
+    val paragraph1: String = "The VAT registration number you have entered is for a business which has deregistered from paying VAT. If you have another VAT registration number, enter that instead."
+    val link: String = "VAT registration service"
+    val paragraph2: String = s"Alternatively, you can register for VAT using the $link."
+    val another_number: String = "Enter another VAT number"
+  }
+
   object AgentUsingPrincipalJourney {
     val heading: String = "You have logged in with the wrong type of account"
     val title = heading + ServiceName.principalSuffix
