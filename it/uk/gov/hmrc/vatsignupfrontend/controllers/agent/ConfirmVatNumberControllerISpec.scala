@@ -134,7 +134,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
-      "redirect to cannot use service page" when {
+      "redirect to deregistered VAT number page" when {
         "the vat number is unsuccessfully stored as the client is Deregistered" in {
           enable(ReSignUpJourney)
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
@@ -144,7 +144,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(routes.DeregisteredVatNumberController.show().url)
           )
         }
       }
