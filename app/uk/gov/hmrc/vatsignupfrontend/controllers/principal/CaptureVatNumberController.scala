@@ -98,7 +98,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                         Redirect(routes.CannotUseServiceController.show())
                           .removingFromSession(businessEntityKey)
                       case Deregistered =>
-                        Redirect(routes.CannotUseServiceController.show())
+                        Redirect(routes.DeregisteredVatNumberController.show())
                           .removingFromSession(businessEntityKey)
                       case Inhibited(migratablDates) =>
                         Redirect(routes.MigratableDatesController.show())

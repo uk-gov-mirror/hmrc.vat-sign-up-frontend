@@ -383,7 +383,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             }
           }
 
-          "redirect to the Cannot Use Service page" when {
+          "redirect to the Deregistered Vat Number page" when {
             "the vat number is deregistered for mtd vat" in {
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
@@ -394,7 +394,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.CannotUseServiceController.show().url)
+                redirectUri(routes.DeregisteredVatNumberController.show().url)
               )
             }
           }
@@ -659,7 +659,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             }
           }
 
-          "redirect to the Cannot Use Service page" when {
+          "redirect to the Deregistered Vat Number page" when {
             "the vat number is deregistered for mtd vat" in {
               enable(ReSignUpJourney)
               stubAuth(OK, successfulAuthResponse())
@@ -669,7 +669,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.CannotUseServiceController.show().url)
+                redirectUri(routes.DeregisteredVatNumberController.show().url)
               )
             }
           }
