@@ -213,7 +213,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
           }
 
           "the vat eligibility is unsuccessful" should {
-            "redirect to Cannot use service yet when the vat number is deregistered" in {
+            "redirect to Deregistered Vat Number when the vat number is deregistered" in {
               mockAuthRetrieveVatDecEnrolment()
               mockOrchestrate(
                 enrolments = Enrolments(Set(testVatDecEnrolment)),
@@ -224,7 +224,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+              redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
             }
 
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
@@ -457,7 +457,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             }
           }
 
-          "redirect to Cannot use service yet when the vat number is deregistered" in {
+          "redirect to Deregistered Vat Number when the vat number is deregistered" in {
             mockAuthRetrieveEmptyEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set()),
@@ -468,7 +468,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+            redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
