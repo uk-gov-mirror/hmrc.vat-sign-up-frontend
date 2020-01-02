@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                   case Ineligible =>
                     Redirect(routes.CannotUseServiceController.show())
                   case Deregistered =>
-                    Redirect(routes.CannotUseServiceController.show())
+                    Redirect(routes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>
                     Redirect(routes.MigratableDatesController.show())
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
