@@ -198,7 +198,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
-      "return a redirect to cannot use service error page" when {
+      "return a redirect to deregistered VAT number error page" when {
         "form value is NO and the VRN is Deregistered" in {
           enable(ReSignUpJourney)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
@@ -208,7 +208,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(routes.DeregisteredVatNumberController.show().url)
           )
         }
       }

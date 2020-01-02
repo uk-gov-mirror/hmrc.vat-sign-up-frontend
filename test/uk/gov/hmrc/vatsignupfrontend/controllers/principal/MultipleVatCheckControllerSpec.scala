@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
         }
 
         "the vat number is deregistered" should {
-          "redirect to the already subscribed page" in {
+          "redirect to the deregistered VAT number page" in {
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
@@ -166,12 +166,12 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+            redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
           }
         }
 
         "the vat number is ineligible" should {
-          "redirect to the already subscribed page" in {
+          "redirect to the cannot use service page" in {
             mockAuthRetrieveVatDecEnrolment()
             mockOrchestrate(
               enrolments = Enrolments(Set(testVatDecEnrolment)),
