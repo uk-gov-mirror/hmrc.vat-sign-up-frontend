@@ -190,3 +190,6 @@ GET         /timeout                                            uk.gov.hmrc.vats
 # Migrated User about to Send Application
 GET         /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentSendYourApplicationController.show
 POST        /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentSendYourApplicationController.submit
+
+# Deregistered Vat Number Page
+GET         /error/deregistered-vat-number                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.DeregisteredVatNumberController.show
