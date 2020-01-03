@@ -579,12 +579,12 @@ principal.capture_company_utr.link_text                                = Rwyf we
 ## Company Name Not Found page
 principal.company_name_not_found.title                                 = Doedd dim modd cadarnhau''ch cwmni
 principal.company_name_not_found.heading                               = Doedd dim modd cadarnhau''ch cwmni
-principal.company_name_not_found.line_1                                = Dydy''r rhif cwmni rydych wedi''i nodi ddim ar ein system.
+princidpal.company_name_not_found.line_1                                = Dydy''r rhif cwmni rydych wedi''i nodi ddim ar ein system.
 
 ## Incorrect Enrolment Vat Number page
-principal.incorrect_enrolment_vat_number.title                         = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.incorrect_enrolment_vat_number.heading                       = Mae''n rhaid i chi fewngofnodi gyda manylion gwahanol
-principal.incorrect_enrolment_vat_number.line_1                        = Mae''r rhif TAW rydych wedi''i nodi yn un ar gyfer busnes gwahanol sydd â''i gyfrif ei hun ar gyfer Porth y Llywodraeth. Ar ôl allgofnodi, bydd angen i chi fewngofnodi gan ddefnyddio''r manylion cywir.
+principal.incorrect_enrolment_vat_number.title                         = Mae''n rhaid i chi fewngofnodi gyda manylion TAW gwahanol
+principal.incorrect_enrolment_vat_number.heading                       = Mae''n rhaid i chi fewngofnodi gyda manylion TAW gwahanol
+principal.incorrect_enrolment_vat_number.line_1                        = Rydych wedi nodi rhif TAW ar gyfer busnes gwahanol sydd â''i gyfrif ei hun ar gyfer Porth y Llywodraeth. Ar ôl allgofnodi, bydd angen i chi fewngofnodi gyda''r manylion cywir.
 principal.incorrect_enrolment_vat_number.line_2                        = Os ydych wedi nodi''r rhif TAW anghywir, gallwch <a id="diff-details" href="{0}">newid eich ateb</a>.
 
 ## Confirm Company Number page
@@ -615,19 +615,26 @@ principal.dissolved_company.paragraph2                                 = Rhowch 
 principal.dissolved_company.confirm                                    = Nodwch rif gwahanol
 
 ## Deregistered Enrolled page
-principal.deregistered_enrolled.title                                  = You cannot sign up with this VAT registration number
-principal.deregistered_enrolled.heading                                = You cannot sign up with this VAT registration number
-principal.deregistered_enrolled.paragraph1                             = The user ID and password you have entered is for a business which has been deregistered from paying VAT. The VAT registration number is: {0}
-principal.deregistered_enrolled.paragraph2                             = You can either:
-principal.deregistered_enrolled.bullet1                                = sign out and sign back in with a different user ID and password, if you have another VAT registration number
-principal.deregistered_enrolled.bullet2                                = register for VAT using the <a id="vatRegistration" href="{0}" target="_blank">VAT registration service</a>
+principal.deregistered_enrolled.title                                  = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
+principal.deregistered_enrolled.heading                                = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
+principal.deregistered_enrolled.paragraph1                             = Rydych wedi nodi Dynodydd Defnyddiwr (ID) a chyfrinair ar gyfer buses sydd wedi canslo''i gofrestriad TAW. Y rhif cofrestru TAW yw: {0}
+principal.deregistered_enrolled.paragraph2                             = Gallwch wneud y naill neu''r llall o''r canlynol:
+principal.deregistered_enrolled.bullet1                                = allgofnodi a mewngofnodi eto gyda Dynodydd Defnyddiwr (ID) a chyfrinair gwahanol, os oes gennych rif cofrestru TAW arall.
+principal.deregistered_enrolled.bullet2                                = cofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW</a>
 
 ## Deregistered Unenrolled page
-principal.deregistered_unenrolled.title                                = You cannot sign up with this VAT registration number
-principal.deregistered_unenrolled.heading                              = You cannot sign up with this VAT registration number
-principal.deregistered_unenrolled.paragraph1                           = The VAT registration number you have entered is for a business which has deregistered from paying VAT. If you have another VAT registration number, enter that instead.
-principal.deregistered_unenrolled.paragraph2                           = Alternatively, you can register for VAT using the <a id="vatRegistration" href="{0}" target="_blank">VAT registration service</a>.
-principal.deregistered_unenrolled.another_number                       = Enter another VAT number
+principal.deregistered_unenrolled.title                                = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
+principal.deregistered_unenrolled.heading                              = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
+principal.deregistered_unenrolled.paragraph1                           = Rydych wedi nodi rhif cofrestru TAW ar gyfer busnes sydd wedi canslo''i gofrestriad TAW. Os oes gennych rif cofrestru TAW arall, nodwch y rhif hwnnw yn ei le.
+principal.deregistered_unenrolled.paragraph2                           = Fel arall, gallwch gofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW</a>.
+principal.deregistered_unenrolled.another_number                       = Nodwch rif TAW arall
+
+## Agent - Deregistered Unenrolled page
+agent.deregistered_unenrolled.title                                    = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
+agent.deregistered_unenrolled.heading                                  = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
+agent.deregistered_unenrolled.paragraph1                               = Rydych wedi nodi rhif cofrestru TAW ar gyfer busnes sydd wedi canslo''i gofrestriad TAW. Os oes gennych rif cofrestru TAW arall, nodwch y rhif hwnnw yn ei le.
+agent.deregistered_unenrolled.paragraph2                               = Fel arall, gallwch gofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW</a>.
+agent.deregistered_unenrolled.another_number                           = Nodwch rif TAW arall
 
 ## Principal Cannot Use Service Yet page
 principal.cannot_use_service.title                                     = Dydy''ch busnes ddim yn gymwys ar hyn o bryd
