@@ -117,7 +117,7 @@ object MessageLookup {
     def paragraph1(vatNumber: String): String = s"The user ID and password you have entered is for a business which has been deregistered from paying VAT. The VAT registration number is: $vatNumber"
     val paragraph2: String = "You can either:"
     val bullet1: String = "sign out and sign back in with a different user ID and password, if you have another VAT registration number"
-    val link: String = "VAT registration service"
+    val link: String = "VAT registration service (opens in a new window or tab)"
     val bullet2: String = s"register for VAT using the $link"
   }
 
@@ -125,7 +125,7 @@ object MessageLookup {
     val heading: String = "You cannot sign up with this VAT registration number"
     val title: String = heading + ServiceName.principalSuffix
     val paragraph1: String = "The VAT registration number you have entered is for a business which has deregistered from paying VAT. If you have another VAT registration number, enter that instead."
-    val link: String = "VAT registration service"
+    val link: String = "VAT registration service (opens in a new window or tab)"
     val paragraph2: String = s"Alternatively, you can register for VAT using the $link."
     val another_number: String = "Enter another VAT number"
   }
@@ -135,7 +135,7 @@ object MessageLookup {
     val heading: String = "You cannot sign up with this VAT registration number"
     val title: String = heading + ServiceName.agentSuffix
     val paragraph1: String = "The VAT registration number you have entered is for a business which has deregistered from paying VAT. If you have another VAT registration number, enter that instead."
-    val link: String = "VAT registration service"
+    val link: String = "VAT registration service (opens in a new window or tab)"
     val paragraph2: String = s"Alternatively, you can register for VAT using the $link."
     val another_number: String = "Enter another VAT number"
   }
