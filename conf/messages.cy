@@ -620,20 +620,20 @@ principal.deregistered_enrolled.heading                                = Ni allw
 principal.deregistered_enrolled.paragraph1                             = Rydych wedi nodi Dynodydd Defnyddiwr (ID) a chyfrinair ar gyfer buses sydd wedi canslo''i gofrestriad TAW. Y rhif cofrestru TAW yw: {0}
 principal.deregistered_enrolled.paragraph2                             = Gallwch wneud y naill neu''r llall o''r canlynol:
 principal.deregistered_enrolled.bullet1                                = allgofnodi a mewngofnodi eto gyda Dynodydd Defnyddiwr (ID) a chyfrinair gwahanol, os oes gennych rif cofrestru TAW arall.
-principal.deregistered_enrolled.bullet2                                = cofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW</a>
+principal.deregistered_enrolled.bullet2                                = cofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW (yn agor ffenestr neu dab newydd)</a>
 
 ## Deregistered Unenrolled page
 principal.deregistered_unenrolled.title                                = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
 principal.deregistered_unenrolled.heading                              = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
 principal.deregistered_unenrolled.paragraph1                           = Rydych wedi nodi rhif cofrestru TAW ar gyfer busnes sydd wedi canslo''i gofrestriad TAW. Os oes gennych rif cofrestru TAW arall, nodwch y rhif hwnnw yn ei le.
-principal.deregistered_unenrolled.paragraph2                           = Fel arall, gallwch gofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW</a>.
+principal.deregistered_unenrolled.paragraph2                           = Fel arall, gallwch gofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW (yn agor ffenestr neu dab newydd)</a>.
 principal.deregistered_unenrolled.another_number                       = Nodwch rif TAW arall
 
 ## Agent - Deregistered Unenrolled page
 agent.deregistered_unenrolled.title                                    = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
 agent.deregistered_unenrolled.heading                                  = Ni allwch gofrestru gyda''r rhif cofrestru TAW hwn
 agent.deregistered_unenrolled.paragraph1                               = Rydych wedi nodi rhif cofrestru TAW ar gyfer busnes sydd wedi canslo''i gofrestriad TAW. Os oes gennych rif cofrestru TAW arall, nodwch y rhif hwnnw yn ei le.
-agent.deregistered_unenrolled.paragraph2                               = Fel arall, gallwch gofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW</a>.
+agent.deregistered_unenrolled.paragraph2                               = Fel arall, gallwch gofrestru ar gyfer TAW gan ddefnyddio''r <a id="vatRegistration" href="{0}" target="_blank">gwasanaeth cofrestru TAW (yn agor ffenestr neu dab newydd)</a>.
 agent.deregistered_unenrolled.another_number                           = Nodwch rif TAW arall
 
 ## Principal Cannot Use Service Yet page
