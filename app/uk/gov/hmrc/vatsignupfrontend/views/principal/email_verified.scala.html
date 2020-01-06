@@ -29,8 +29,6 @@
     <p>@Messages("principal.email_verified.line_1")</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.continue_to_sign_up")))
-        </div>
+        @continueButton(Some(Messages("base.continue_to_sign_up")))
     }
 }

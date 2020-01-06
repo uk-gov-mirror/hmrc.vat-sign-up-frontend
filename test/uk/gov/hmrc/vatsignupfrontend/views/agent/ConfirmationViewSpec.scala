@@ -101,10 +101,5 @@ class ConfirmationViewSpec extends ViewSpec {
       b.attr("value") shouldBe Base.signUpAnotherClient
     }
 
-    "have a signout link" in {
-      val c = document.getElementById("sign-out")
-        c.text() shouldBe Base.signOut
-    }
-
   }
 }

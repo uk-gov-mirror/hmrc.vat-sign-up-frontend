@@ -26,13 +26,10 @@
     <h1 class="heading-large">@Messages("agent.sent_client_email.heading")</h1>
 
     <p>@Messages("agent.sent_client_email.line_1", email)</p>
-
     <p>@Messages("agent.sent_client_email.line_2")</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.continue")))
-        </div>
+        @continueButton(Some(Messages("base.continue")))
     }
 
 }

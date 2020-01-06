@@ -26,22 +26,17 @@
     @summaryErrorHelper(companyNumberForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.capture_company_number.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.capture_company_number.heading")</h1>
 
         <p>@Html(Messages("principal.capture_company_number.line_1", appConfig.companiesHouse))</p>
 
-        <div class="form-group">
-            @inputHelper(
-                field = companyNumberForm(companyNumber),
-                label = Messages("principal.capture_company_number.heading"),
-                parentForm = companyNumberForm
-            )
+        @inputHelper(
+            field = companyNumberForm(companyNumber),
+            label = Messages("principal.capture_company_number.heading"),
+            parentForm = companyNumberForm
+        )
 
-            @continueButton()
-        </div>
-    </fieldset>
+        @continueButton()
     }
+
 }

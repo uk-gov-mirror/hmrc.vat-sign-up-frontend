@@ -28,24 +28,18 @@
     @summaryErrorHelper(vatNumberForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.vat_number.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.vat_number.heading")</h1>
 
         <p>@Messages("principal.vat_number.line_1")</p>
 
-        <div class="form-group">
-            @inputHelper(
-                field = vatNumberForm(vatNumber),
-                label = Messages("principal.vat_number.heading"),
-                hintText = Some(Html(Messages("principal.vat_number.hint"))),
-                parentForm = vatNumberForm
-            )
+        @inputHelper(
+            field = vatNumberForm(vatNumber),
+            label = Messages("principal.vat_number.heading"),
+            hintText = Some(Html(Messages("principal.vat_number.hint"))),
+            parentForm = vatNumberForm
+        )
 
-            @continueButton()
-
-        </div>
-    </fieldset>
+        @continueButton()
     }
+
 }

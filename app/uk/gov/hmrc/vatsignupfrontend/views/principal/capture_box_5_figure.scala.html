@@ -28,26 +28,19 @@
     @summaryErrorHelper(box5FigureForm)
 
     @form(action = postAction) {
-
-    <fieldset>
-        <legend>
-          <h1 class="heading-large">@Messages("principal.capture_box_5_figure.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.capture_box_5_figure.heading")</h1>
 
         <p>@Messages("principal.capture_box_5_figure.line")</p>
-
         <p>@Messages("principal.capture_box_5_figure.line2")</p>
 
-        <div class="form-group">
-            @inputHelper(
-                field = box5FigureForm(box5Figure),
-                label = Messages("principal.capture_box_5_figure.heading"),
-                parentForm = box5FigureForm,
-                isCurrencyField = true
-            )
+        @inputHelper(
+            field = box5FigureForm(box5Figure),
+            label = Messages("principal.capture_box_5_figure.heading"),
+            parentForm = box5FigureForm,
+            isCurrencyField = true
+        )
 
-            @continueButton()
-        </div>
-    </fieldset>
+        @continueButton()
     }
+
 }

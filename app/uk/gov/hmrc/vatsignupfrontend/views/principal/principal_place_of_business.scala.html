@@ -28,13 +28,8 @@
     @summaryErrorHelper(businessPostCodeForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
 
-
-        <div class="form-group">
         @inputHelper(
             field = businessPostCodeForm(businessPostCode),
             label = Messages("principal.principal_place_of_business.label"),
@@ -42,10 +37,8 @@
             parentForm = businessPostCodeForm,
             hideLabel = true
         )
-        </div>
 
         @continueButton()
-    </fieldset>
     }
 
 }

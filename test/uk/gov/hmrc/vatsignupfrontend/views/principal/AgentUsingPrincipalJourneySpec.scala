@@ -53,7 +53,6 @@ class AgentUsingPrincipalJourneySpec extends ViewSpec {
 
     testPage.shouldHaveSignUpClientButton()
 
-    testPage.shouldHaveSignOutLink(isAgent = false)
   }
 
 }

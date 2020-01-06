@@ -27,12 +27,8 @@
 
     <p>@Messages("agent.partnerships.company_name_not_found_lp.line_1")</p>
 
-    <div class="form-group">
-        @form(action = postAction) {
-            @continueButton(Some(Messages("base.try_again")))
-        }
-    </div>
-
-    @signOutLink(isAgent = true)
+    @form(action = postAction) {
+        @continueButton(Some(Messages("base.try_again")))
+    }
 
 }

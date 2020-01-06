@@ -29,9 +29,7 @@
     <p>@Html(Messages("principal.choose_software_error.line_2", appConfig.softwareOptionsUrl))</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("principal.choose_software_error.returnToGovUK")))
-        </div>
+        @continueButton(Some(Messages("principal.choose_software_error.returnToGovUK")))
     }
 
 }

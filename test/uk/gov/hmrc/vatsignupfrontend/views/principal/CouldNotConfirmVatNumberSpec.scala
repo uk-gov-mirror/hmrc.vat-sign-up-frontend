@@ -54,8 +54,6 @@ class CouldNotConfirmVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveTryAgainButton()
 
-    testPage.shouldHaveSignOutLink(isAgent = false)
-
   }
 
 }

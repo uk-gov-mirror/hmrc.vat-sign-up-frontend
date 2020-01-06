@@ -56,7 +56,6 @@ class CouldNotConfirmKnownFactsSpec extends ViewSpec {
 
     testPage.shouldHaveSubmitButton(base.tryAgain)
 
-    testPage.shouldHaveSignOutLink(isAgent = false)
   }
 
 }

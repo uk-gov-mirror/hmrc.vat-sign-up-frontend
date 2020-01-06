@@ -56,7 +56,6 @@ class FailedIdentityVerificationSpec extends ViewSpec {
 
     testPage.shouldHaveSubmitButton(messages.tryAgain)
 
-    testPage.shouldHaveSignOutLink(isAgent = false)
   }
 
 }

@@ -51,8 +51,6 @@ class NoAgentClientRelationshipSpec extends ViewSpec {
 
     testPage.shouldHaveSignUpAnotherClientButton()
 
-    testPage.shouldHaveSignOutLink(isAgent = true)
-
   }
 
 }

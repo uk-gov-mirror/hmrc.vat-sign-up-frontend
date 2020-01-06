@@ -23,32 +23,30 @@
 
 @principal_main_template(title = Messages("principal.resignup.confirmation.title"), scriptElem = None, showSignOutLink = false) {
 
-<div data-entity-type="@entityType.toString" class="govuk-box-highlight">
-    <section id="confirmation-heading">
-        <h1 class="heading-large">@Messages("principal.resignup.confirmation.heading")</h1>
+    <div data-entity-type="@entityType.toString" class="govuk-box-highlight">
+        <section id="confirmation-heading">
+            <h1 class="heading-large">@Messages("principal.resignup.confirmation.heading")</h1>
 
-        <dl id="vat-registration-number">
-            <dt class="font-medium">@Messages("principal.resignup.confirmation.vat_registration_number")</dt>
-            <dd class="bold-medium">@vatRegistrationNumber</dd>
-        </dl>
+            <dl id="vat-registration-number">
+                <dt class="font-medium">@Messages("principal.resignup.confirmation.vat_registration_number")</dt>
+                <dd class="bold-medium">@vatRegistrationNumber</dd>
+            </dl>
+        </section>
+    </div>
+
+    <p>@Messages("principal.resignup.confirmation.line")</p>
+
+    <section id="what-happens-next">
+        <h2 class="heading-medium">@Messages("principal.resignup.confirmation.subsection.heading")</h2>
+        <ol class="list list-number">
+            <li>@Messages("principal.resignup.confirmation.subsection.bullet_1")</li>
+            <li>@Messages("principal.resignup.confirmation.subsection.bullet_2")</li>
+            <li>@Messages("principal.resignup.confirmation.subsection.bullet_3")</li>
+            <li>@Messages("principal.resignup.confirmation.subsection.bullet_4")</li>
+            <li>@Messages("principal.resignup.confirmation.subsection.bullet_5")</li>
+        </ol>
     </section>
-</div>
 
-<p>@Messages("principal.resignup.confirmation.line")</p>
-
-<section id="what-happens-next">
-    <h2 class="heading-medium">@Messages("principal.resignup.confirmation.subsection.heading")</h2>
-    <ol class="list list-number">
-        <li>@Messages("principal.resignup.confirmation.subsection.bullet_1")</li>
-        <li>@Messages("principal.resignup.confirmation.subsection.bullet_2")</li>
-        <li>@Messages("principal.resignup.confirmation.subsection.bullet_3")</li>
-        <li>@Messages("principal.resignup.confirmation.subsection.bullet_4")</li>
-        <li>@Messages("principal.resignup.confirmation.subsection.bullet_5")</li>
-    </ol>
-</section>
-
-<div class = "form-group">
     @continueButtonLink(href = appConfig.yourVatAccountUrl, alternativeText = Some(Messages("principal.resignup.confirmation.view_account_button")))
-</div>
 
 }

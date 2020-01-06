@@ -28,10 +28,7 @@
     <p>@Messages("principal.failed_identity_verification.line_1")</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("principal.failed_identity_verification.try_again")))
-        </div>
+        @continueButton(Some(Messages("principal.failed_identity_verification.try_again")))
     }
 
-    @signOutLink(isAgent = false)
 }

@@ -28,10 +28,7 @@
     <p>@Messages("principal.partnership_company_name_not_found.line_1")</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.try_again")))
-        </div>
+        @continueButton(Some(Messages("base.try_again")))
     }
 
-    @signOutLink(isAgent = false)
 }
