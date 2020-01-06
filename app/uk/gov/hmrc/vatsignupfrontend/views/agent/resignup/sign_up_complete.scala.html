@@ -24,42 +24,39 @@
 
 @agent_main_template(title = Messages("agent.resignup.signupcomplete.title"), scriptElem = None, showSignOutLink = false) {
 
-<div data-entity-type="@entityType.toString" class="govuk-box-highlight">
-    <section id="signupcomplete-heading">
-        <h1 class="heading-large">@Messages("agent.resignup.signupcomplete.heading")</h1>
+    <div data-entity-type="@entityType.toString" class="govuk-box-highlight">
+        <section id="signupcomplete-heading">
+            <h1 class="heading-large">@Messages("agent.resignup.signupcomplete.heading")</h1>
 
-        <dl id="vat-registration-number">
-            <dt class="font-medium">@Messages("agent.resignup.signupcomplete.vat_registration_number")</dt>
-            <dd class="bold-medium">@vatRegistrationNumber</dd>
-        </dl>
+            <dl id="vat-registration-number">
+                <dt class="font-medium">@Messages("agent.resignup.signupcomplete.vat_registration_number")</dt>
+                <dd class="bold-medium">@vatRegistrationNumber</dd>
+            </dl>
+        </section>
+    </div>
+
+    <section id="what-happens-next">
+        <h2 class="heading-medium">@Messages("agent.resignup.signupcomplete.subsection.heading")</h2>
+        <p>@Messages("agent.resignup.signupcomplete.line")</p>
+        <ul class="bullets">
+            <li>@Messages("agent.resignup.signupcomplete.subsection.bullet_1")</li>
+            <li>@Messages("agent.resignup.signupcomplete.subsection.bullet_2")</li>
+            <li>@Messages("agent.resignup.signupcomplete.subsection.bullet_3")</li>
+        </ul>
     </section>
-</div>
 
-<section id="what-happens-next">
-    <h2 class="heading-medium">@Messages("agent.resignup.signupcomplete.subsection.heading")</h2>
-    <p>@Messages("agent.resignup.signupcomplete.line")</p>
-    <ul class="bullets">
-        <li>@Messages("agent.resignup.signupcomplete.subsection.bullet_1")</li>
-        <li>@Messages("agent.resignup.signupcomplete.subsection.bullet_2")</li>
-        <li>@Messages("agent.resignup.signupcomplete.subsection.bullet_3")</li>
-    </ul>
-</section>
+    <section id="what-you-must-do-next">
+        <h2 class="heading-medium">@Messages("agent.resignup.signupcomplete.subsection2.heading")</h2>
+        <ol class="list list-number">
+            <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_1")</li>
+            <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_2")</li>
+            <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_3")</li>
+            <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_4")</li>
+        </ol>
+    </section>
 
-<section id="what-you-must-do-next">
-    <h2 class="heading-medium">@Messages("agent.resignup.signupcomplete.subsection2.heading")</h2>
-    <ol class="list list-number">
-        <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_1")</li>
-        <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_2")</li>
-        <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_3")</li>
-        <li>@Messages("agent.resignup.signupcomplete.subsection2.bullet_4")</li>
-    </ol>
-</section>
-
-<div class = "form-group">
     @form(action = postAction) {
-    <input id="add-another-button" class="button" type="submit" value="@Messages("agent.resignup.signupcomplete.sign_up_another_button")">
+        <input id="add-another-button" class="button" type="submit" value="@Messages("agent.resignup.signupcomplete.sign_up_another_button")">
     }
-</div>
 
-    @signOutLink(isAgent = true)
 }

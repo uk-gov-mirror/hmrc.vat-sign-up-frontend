@@ -28,12 +28,10 @@
     <h2 class="heading-medium">@Messages("agent.confirm_email.email.heading")</h2>
 
     <p class="lede">@email</p>
+    <p><a id="changeLink" href="@uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureClientEmailController.show().url">@Messages("agent.confirm_email.link")</a></p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.confirmAndContinue")))
-        </div>
+        @continueButton(Some(Messages("base.confirmAndContinue")))
     }
 
-    <p><a id="changeLink" href="@uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureClientEmailController.show().url">@Messages("agent.confirm_email.link")</a></p>
 }

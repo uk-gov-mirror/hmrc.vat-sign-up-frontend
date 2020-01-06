@@ -26,12 +26,10 @@
     <h1 class="heading-large">@Messages("agent.confirm_registered_society_name.heading")</h1>
 
     <p class="lede">@companyName</p>
+    <p><a id="changeLink" href="@changeLink">@Messages("agent.confirm_registered_society_name.link")</a></p>
 
     @form(action = postAction) {
-        <div class="form-group">
-             @continueButton(Some(Messages("base.confirm")))
-        </div>
+         @continueButton(Some(Messages("base.confirm")))
     }
 
-    <p><a id="changeLink" href="@changeLink">@Messages("agent.confirm_registered_society_name.link")</a></p>
 }

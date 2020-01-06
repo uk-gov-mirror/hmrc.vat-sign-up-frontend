@@ -26,30 +26,31 @@
 @(readyToSubmitForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @bodyContent = {
-            <div class="panel panel-border-wide">
-                <p>@Messages("principal.are_you_ready_submit_software.line_1")</p>
-            </div>
-            <p>@Messages("principal.are_you_ready_submit_software.line_2")</p>
-            }
+    <div class="panel panel-border-wide">
+        <p>@Messages("principal.are_you_ready_submit_software.line_1")</p>
+    </div>
+
+    <p>@Messages("principal.are_you_ready_submit_software.line_2")</p>
+}
 
 @principal_main_template(title = Messages("principal.are_you_ready_submit_software.title"), bodyClasses = None, form = Some(readyToSubmitForm), showSignOutLink = false) {
-            @summaryErrorHelper(readyToSubmitForm)
+    @summaryErrorHelper(readyToSubmitForm)
 
-            @form(action = postAction) {
-                @radioHelper(
-                parentForm = readyToSubmitForm,
-                inline = true,
-                options = Seq(
-                (option_yes, Messages("base.yes")),
-                (option_no, Messages("base.no"))
-                ),
-                legend = Messages("principal.are_you_ready_submit_software.heading"),
-                field = readyToSubmitForm(yesNo),
-                hideLegend = false,
-                bodyContent = Some(bodyContent)
-                )
+    @form(action = postAction) {
+        @radioHelper(
+        parentForm = readyToSubmitForm,
+        inline = true,
+        options = Seq(
+        (option_yes, Messages("base.yes")),
+        (option_no, Messages("base.no"))
+        ),
+        legend = Messages("principal.are_you_ready_submit_software.heading"),
+        field = readyToSubmitForm(yesNo),
+        hideLegend = false,
+        bodyContent = Some(bodyContent)
+        )
 
-            @continueButton()
+    @continueButton()
 
-            }
+    }
 }

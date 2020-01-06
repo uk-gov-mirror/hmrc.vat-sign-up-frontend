@@ -30,7 +30,6 @@
     @summaryErrorHelper(businessEntityForm)
 
     @form(action = postAction) {
-
         @radioHelper(
             parentForm = businessEntityForm,
             inline = false,
@@ -46,6 +45,7 @@
             hideLegend = false,
             orInterrupt = Some(Messages("core.capture_entity_type.or"))
         )
+
         @continueButton()
     }
 }

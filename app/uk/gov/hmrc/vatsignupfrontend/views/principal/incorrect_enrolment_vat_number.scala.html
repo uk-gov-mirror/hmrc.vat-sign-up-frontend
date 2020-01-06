@@ -25,11 +25,8 @@
     <h1 class="heading-large">@Messages("principal.incorrect_enrolment_vat_number.heading")</h1>
 
     <p>@Messages("principal.incorrect_enrolment_vat_number.line_1")</p>
-
     <p>@Html(Messages("principal.incorrect_enrolment_vat_number.line_2", changeLink))</p>
 
-    <div class="form-group">
-        @signOutButton(isAgent = false)
-    </div>
+    @signOutButton(isAgent = false)
 
 }

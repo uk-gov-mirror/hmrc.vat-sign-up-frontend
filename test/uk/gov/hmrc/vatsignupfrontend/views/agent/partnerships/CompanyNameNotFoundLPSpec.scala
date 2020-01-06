@@ -54,8 +54,6 @@ class CompanyNameNotFoundLPSpec extends ViewSpec {
 
     testPage.shouldHaveTryAgainButton()
 
-    testPage.shouldHaveSignOutLink(isAgent = true)
-
   }
 
 }

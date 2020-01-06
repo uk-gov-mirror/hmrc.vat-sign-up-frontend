@@ -56,8 +56,6 @@ class CouldNotFindPartnershipSpec extends ViewSpec {
 
     testPage.shouldHaveSubmitButton(base.tryAgain)
 
-    testPage.shouldHaveSignOutLink(isAgent = true)
-
   }
 
 }

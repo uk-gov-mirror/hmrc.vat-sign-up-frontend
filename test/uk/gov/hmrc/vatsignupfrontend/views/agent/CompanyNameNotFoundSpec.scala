@@ -54,8 +54,6 @@ class CompanyNameNotFoundSpec extends ViewSpec {
 
     testPage.shouldHaveTryAgainButton()
 
-    testPage.shouldHaveSignOutLink(isAgent = true)
-
   }
 
 }

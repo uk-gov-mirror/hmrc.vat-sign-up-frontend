@@ -157,7 +157,6 @@ class CaptureBusinessEntityOtherSpec extends ViewSpec {
       }
     }
 
-
     testPage.shouldHaveContinueButton()
   }
 }

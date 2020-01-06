@@ -28,10 +28,7 @@
     <p>@Messages("principal.partnership_known_facts_incorrect.line_1")</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.try_again")))
-        </div>
+        @continueButton(Some(Messages("base.try_again")))
     }
 
-    @signOutLink(isAgent = false)
 }

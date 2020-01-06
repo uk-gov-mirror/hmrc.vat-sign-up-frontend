@@ -31,9 +31,7 @@
   <p>@Html(Messages("principal.bta.business_already_signed_up.line_2", appConfig.recoverAccountUrl))</p>
 
   @form(postAction) {
-      <div class="form-group">
-          @continueButton(Some(Messages("base.sign_in_with_another_id")))
-      </div>
+      @continueButton(Some(Messages("base.sign_in_with_another_id")))
   }
 
 }

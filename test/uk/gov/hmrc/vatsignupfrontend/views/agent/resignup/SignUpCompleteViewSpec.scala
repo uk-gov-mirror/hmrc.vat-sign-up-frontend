@@ -111,9 +111,5 @@ class SignUpCompleteViewSpec extends ViewSpec {
       val continueButton = document.getElementById("add-another-button")
       continueButton.attr("value") shouldBe messages.buttonText
     }
-      "have a signout link" in {
-        val c = document.getElementById("sign-out")
-        c.text() shouldBe Base.signOut
-      }
   }
 }

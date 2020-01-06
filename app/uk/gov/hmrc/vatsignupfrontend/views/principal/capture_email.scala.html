@@ -27,10 +27,7 @@
     @summaryErrorHelper(emailForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.capture_email.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.capture_email.heading")</h1>
 
         <p>@Messages("principal.capture_email.line_1")</p>
 
@@ -38,23 +35,19 @@
             <p>@Messages("principal.capture_email.line_2")</p>
 
             <div class="panel panel-border-wide">
-
                 <p>@Messages("principal.capture_email.line_3")</p>
-
             </div>
         }
 
-        <div class="form-group">
-            @inputHelper(
-                field = emailForm(email),
-                label = Messages("principal.capture_email.heading"),
-                hintText = Some(Html(Messages("principal.capture_email.hint"))),
-                parentForm = emailForm
-            )
+        @inputHelper(
+            field = emailForm(email),
+            label = Messages("principal.capture_email.heading"),
+            hintText = Some(Html(Messages("principal.capture_email.hint"))),
+            parentForm = emailForm
+        )
 
-            @continueButton()
-        </div>
-    </fieldset>
+        @continueButton()
+
     }
 
 }

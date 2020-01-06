@@ -21,12 +21,10 @@
 
 @principal_main_template(title = Messages("principal.return_due.title")) {
 
-<h1 class="heading-large">@Messages("principal.return_due.heading")</h1>
+    <h1 class="heading-large">@Messages("principal.return_due.heading")</h1>
 
-<div class="form-group">
     <p>@Messages("principal.return_due.line_1")</p>
     <p>@Messages("principal.return_due.line_2")</p>
- <p>@Html(Messages("principal.return_due.line_3", appConfig.checkNeedForMtdUrl))</p>
-</div>
+    <p>@Html(Messages("principal.return_due.line_3", appConfig.checkNeedForMtdUrl))</p>
 
 }

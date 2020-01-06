@@ -25,9 +25,7 @@
 
     <h1 class="heading-large">@Messages("principal.send_your_application.heading")</h1>
 
-    <div class="form-group">
-        <p>@Messages("principal.send_your_application.line")</p>
-    </div>
+    <p>@Messages("principal.send_your_application.line")</p>
 
     @form(action = postAction) {
         @continueButton(Some(Messages("base.accept_and_send")))

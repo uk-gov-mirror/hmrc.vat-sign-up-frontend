@@ -28,10 +28,9 @@
     <p>@Messages("agent.use_different_email_address.line_1")</p>
 
     @form(action = postAction) {
-        <div class="form-group">
-            @continueButton(Some(Messages("base.try_again")))
-        </div>
+        @continueButton(Some(Messages("base.try_again")))
     }
+
     @signOutLink(isAgent = true)
 
 }

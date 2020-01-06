@@ -41,30 +41,25 @@
     @summaryErrorHelper(partnershipUtrForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("agent.capture_partnership_utr.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("agent.capture_partnership_utr.heading")</h1>
 
         <p>@Messages("agent.capture_partnership_utr.line")</p>
 
-        <div class="form-group">
-            @inputHelper(
-                field = partnershipUtrForm(partnershipUtr),
-                label = Messages("agent.capture_partnership_utr.heading"),
-                parentForm = partnershipUtrForm,
-                hintText = Some(Html(Messages("agent.capture_partnership_utr.hint")))
-            )
+        @inputHelper(
+            field = partnershipUtrForm(partnershipUtr),
+            label = Messages("agent.capture_partnership_utr.heading"),
+            parentForm = partnershipUtrForm,
+            hintText = Some(Html(Messages("agent.capture_partnership_utr.hint")))
+        )
 
-            @if(displayNoSautrLink) {
-                @accordionHelper(
-                    Messages("agent.capture_partnership_utr.accordion.heading"),
-                    accordionContent
-                )
-            }
-        </div>
+        @if(displayNoSautrLink) {
+            @accordionHelper(
+                Messages("agent.capture_partnership_utr.accordion.heading"),
+                accordionContent
+            )
+        }
 
         @continueButton()
-    </fieldset>
     }
+
 }

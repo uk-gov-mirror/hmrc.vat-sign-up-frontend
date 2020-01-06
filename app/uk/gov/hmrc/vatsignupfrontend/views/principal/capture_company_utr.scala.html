@@ -26,24 +26,20 @@
     @summaryErrorHelper(companyUtrForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-            <h1 class="heading-large">@Messages("principal.capture_company_utr.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.capture_company_utr.heading")</h1>
+
         <p>@Messages("principal.capture_company_utr.line_1")</p>
 
-        <div class="form-group">
-            @inputHelper(
-                field = companyUtrForm(companyUtr),
-                label = Messages("principal.capture_company_utr.heading"),
-                parentForm = companyUtrForm
-            )
-            <div class="form-group">
-                <a id="lost-Utr" href="@{appConfig.findLostCompanyUtr}">@Messages("principal.capture_company_utr.link_text")</a>
-            </div>
-            @continueButton()
-        </div>
+        @inputHelper(
+            field = companyUtrForm(companyUtr),
+            label = Messages("principal.capture_company_utr.heading"),
+            parentForm = companyUtrForm
+        )
 
-    </fieldset>
+        <a id="lost-Utr" href="@{appConfig.findLostCompanyUtr}">@Messages("principal.capture_company_utr.link_text")</a>
+
+        @continueButton()
+
     }
+
 }

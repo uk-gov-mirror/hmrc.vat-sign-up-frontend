@@ -44,12 +44,8 @@
         <p>@Messages("agent.confirmation.subsection_1.line_2")</p>
     </section>
 
-    <div class = "form-group">
-        @form(action = postAction) {
-            <input id="add-another-button" class="button" type="submit" value="@Messages("base.sign_up_another_client")">
-        }
-    </div>
-
-    @signOutLink(isAgent = true)
+    @form(action = postAction) {
+        <input id="add-another-button" class="button" type="submit" value="@Messages("base.sign_up_another_client")">
+    }
 
 }

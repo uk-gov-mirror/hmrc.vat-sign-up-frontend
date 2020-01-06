@@ -28,22 +28,16 @@
     @summaryErrorHelper(businessPostCodeForm)
 
     @form(action = postAction) {
-    <fieldset>
-        <legend>
-          <h1 class="heading-large">@Messages("principal.partnership_postcode.heading")</h1>
-        </legend>
+        <h1 class="heading-large">@Messages("principal.partnership_postcode.heading")</h1>
 
-        <div class="form-group">
-            @inputHelper(
-                field = businessPostCodeForm(partnershipPostCode),
-                label = Messages("principal.partnership_postcode.label"),
-                parentForm = businessPostCodeForm,
-                hideLabel = false
-            )
+        @inputHelper(
+            field = businessPostCodeForm(partnershipPostCode),
+            label = Messages("principal.partnership_postcode.label"),
+            parentForm = businessPostCodeForm,
+            hideLabel = false
+        )
 
-            @continueButton()
-        </div>
-    </fieldset>
+        @continueButton()
     }
 
 }

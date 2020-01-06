@@ -32,9 +32,7 @@
     <p>@Messages("principal.agent_using_principal_journey.line_1")</p>
 
     @form(action = postAction) {
-      <div class="form-group">
         @continueButton(Some(Messages("base.sign_up_client")))
-      </div>
-      @signOutLink(isAgent = false)
     }
+
 }

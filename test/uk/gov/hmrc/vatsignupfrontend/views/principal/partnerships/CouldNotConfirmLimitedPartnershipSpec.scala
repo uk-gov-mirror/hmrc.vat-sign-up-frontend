@@ -54,7 +54,6 @@ class CouldNotConfirmLimitedPartnershipSpec extends ViewSpec {
 
     testPage.shouldHaveSubmitButton(base.tryAgain)
 
-    testPage.shouldHaveSignOutLink(isAgent = false)
   }
 
 }
