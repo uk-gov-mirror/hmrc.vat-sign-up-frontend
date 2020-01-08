@@ -17,27 +17,20 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Call, Controller}
-import uk.gov.hmrc.play.language.LanguageUtils
+import play.api.Configuration
+import play.api.i18n.{Lang, MessagesApi}
+import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
 @Singleton
-class LanguageSwitchController @Inject()(val appConfig: AppConfig,
-                                         override implicit val messagesApi: MessagesApi
-                                        ) extends Controller with I18nSupport {
-
-  def langToCall: String => Call = appConfig.routeToSwitchLanguage
-
-  protected[controllers] def fallbackURL: String = principal.routes.IndexResolverController.resolve().url
+class LanguageSwitchController @Inject()(appConfig: AppConfig,
+                                         configuration: Configuration,
+                                         val messagesApi: MessagesApi,
+                                         languageUtils: LanguageUtils
+                                        ) extends LanguageController(configuration, languageUtils) {
 
   def languageMap: Map[String, Lang] = appConfig.languageMap
 
-  def switchToLanguage(language: String): Action[AnyContent] = Action {
-    implicit request =>
-      val lang = languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
-      val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-      Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
+  protected[controllers] def fallbackURL: String = principal.routes.IndexResolverController.resolve().url
 
 }
