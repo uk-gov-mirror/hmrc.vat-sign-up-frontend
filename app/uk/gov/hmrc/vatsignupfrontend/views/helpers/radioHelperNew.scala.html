@@ -1,0 +1,91 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@(parentForm: Form[_],
+  options: Seq[(String, String)],
+  legend: String,
+  hintText: Option[String] = None,
+  field: Field,
+  inline: Boolean = false,
+  hideLegend: Boolean = true,
+  orInterrupt: Option[String] = None,
+  showErrorAfter: Boolean = false
+)(implicit messages: Messages)
+
+@hasError = @{
+    parentForm.error(field.name).isDefined
+}
+
+@showOrInterrupt(currentOption: (String, String)) = @{
+    orInterrupt collect {
+        case orContent if currentOption == options.last => {
+            <div class='multiple-choice-interrupt' aria-hidden='true'>
+                <p class='form-block'>{ orContent }</p>
+            </div>
+        }
+    }
+}
+
+@visuallyHiddenOr(option: (String, String)) = @{
+    if(orInterrupt.isDefined && options.last == option) {
+        <span class='visually-hidden'>{orInterrupt.get}</span>
+    }
+}
+
+@getCheckedFlag(option: (String, String)) = {
+    @if(parentForm.data.get(field.name).contains(option._1)) {
+        checked = "checked"
+    }
+}
+
+@errorNotification(content: String, interruptCard: Boolean = false) = {
+    <div class="@if(hasError) { form-field--error interrupt-cards }
+                @if(interruptCard) { interrupt-cards }">
+
+        <span class="error-notification" role="tooltip" id="error-message-@field.name">
+            @content
+        </span>
+    </div>
+}
+
+<div class="form-group">
+    @if(hasError & showErrorAfter == false){
+        @errorNotification(Messages(s"${parentForm.error(field.name).get.message}.field"))
+    }
+
+    @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
+
+    <fieldset id="@{field.name}" class="@if(showErrorAfter == false & hasError) { form-group form-field--error }
+                                        @if(inline) { inline }
+                                        @if(showErrorAfter) { interrupt-cards }">
+
+        <legend @if(hideLegend){class="visuallyhidden"}>@legend</legend>
+
+        <div class="form-group">
+        @for(option <- options) {
+            @showOrInterrupt(option)
+            <div class="multiple-choice">
+                <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
+                <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
+            </div>
+        }
+        </div>
+    </fieldset>
+
+    @if(hasError & showErrorAfter){
+        @errorNotification(Messages(s"${parentForm.error(field.name).get.message}.field"))
+    }
+</div>
