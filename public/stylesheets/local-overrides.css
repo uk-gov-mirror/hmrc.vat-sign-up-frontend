@@ -105,7 +105,6 @@ interrupt-card .actions {
 .interrupt-card .error-notification {
     font-size: 19px;
     color: #ffffff;
-    padding-bottom: 0;
 }
 
 @media (max-width: 830px) {

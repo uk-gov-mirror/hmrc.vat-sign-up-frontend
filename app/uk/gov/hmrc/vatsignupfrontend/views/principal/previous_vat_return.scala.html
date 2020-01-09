@@ -29,6 +29,8 @@
 
     @summaryErrorHelper(previousVatReturnForm)
 
+    <h1 class="heading-large">@Messages("principal.previous_vat_return.heading")</h1>
+
     @form(action = postAction) {
         @radioHelper(
             parentForm = previousVatReturnForm,
@@ -38,8 +40,7 @@
                 (option_no, Messages("base.no"))
             ),
             legend = Messages("principal.previous_vat_return.heading"),
-            field = previousVatReturnForm(yesNo),
-            hideLegend = false
+            field = previousVatReturnForm(yesNo)
         )
 
         @continueButton()

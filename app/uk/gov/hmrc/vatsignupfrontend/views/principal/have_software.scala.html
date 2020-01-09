@@ -28,6 +28,8 @@
 
     @summaryErrorHelper(haveSoftwareForm)
 
+    <h1 class="heading-large">@Messages("principal.have_software.heading")</h1>
+
     @form(action = postAction) {
         @radioHelper(
             parentForm = haveSoftwareForm,
@@ -37,8 +39,7 @@
                 (option_no, Messages("principal.have_software.no"))
             ),
             legend = Messages("principal.have_software.heading"),
-            field = haveSoftwareForm(yesNo),
-            hideLegend = false
+            field = haveSoftwareForm(yesNo)
         )
 
         @continueButton()

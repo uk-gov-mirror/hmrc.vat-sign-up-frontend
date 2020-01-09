@@ -25,17 +25,17 @@
 
 @(softwareReadyForm: Form[YesNo], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@bodyContent = {
+@principal_main_template(title = Messages("principal.verify_software_ready.title"), bodyClasses = None, showSignOutLink = false, form = Some(softwareReadyForm), enableTimeout = false) {
+
+    @summaryErrorHelper(softwareReadyForm)
+
+    <h1 class="heading-large">@Messages("principal.verify_software_ready.heading")</h1>
+
     <p>@Messages("principal.verify_software_ready.line_1")</p>
 
     <div class="panel panel-border-wide">
         <p>@Messages("principal.verify_software_ready.line_2")</p>
     </div>
-}
-
-@principal_main_template(title = Messages("principal.verify_software_ready.title"), bodyClasses = None, showSignOutLink = false, form = Some(softwareReadyForm), enableTimeout = false) {
-
-    @summaryErrorHelper(softwareReadyForm)
 
     @form(action = postAction) {
         @radioHelper(
@@ -46,9 +46,7 @@
                 (option_no, Messages("principal.verify_software_ready.no"))
             ),
             legend = Messages("principal.verify_software_ready.heading"),
-            field = softwareReadyForm(yesNo),
-            hideLegend = false,
-            bodyContent = Some(bodyContent)
+            field = softwareReadyForm(yesNo)
         )
 
         @continueButton()

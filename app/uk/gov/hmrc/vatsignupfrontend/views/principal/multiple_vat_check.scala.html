@@ -29,6 +29,8 @@
 
     @summaryErrorHelper(multipleVatCheckForm)
 
+    <h1 class="heading-large">@Messages("principal.multiple_vat_check.heading")</h1>
+
     @form(action = postAction) {
         @radioHelper(
             parentForm = multipleVatCheckForm,
@@ -38,8 +40,7 @@
                 (option_no, Messages("base.no"))
             ),
             legend = Messages("principal.multiple_vat_check.heading"),
-            field = multipleVatCheckForm(yesNo),
-            hideLegend = false
+            field = multipleVatCheckForm(yesNo)
         )
 
         @continueButton()

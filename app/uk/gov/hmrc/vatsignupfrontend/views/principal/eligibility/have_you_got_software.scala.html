@@ -34,6 +34,7 @@
 ) {
     <div class="grid-row interrupt-card">
         <div class="column-two-thirds">
+            <h1 class="heading-large">@Messages("principal.have_you_got_software.heading")</h1>
 
             @form(action = postAction) {
                 @radioHelper(
@@ -43,12 +44,11 @@
                         (option_accounting_software, Messages("principal.have_you_got_software.accounting_software")),
                         (option_spreadsheets, Messages("principal.have_you_got_software.spreadsheets")),
                         (option_neither, Messages("principal.have_you_got_software.neither"))
-                ),
-                legend = Messages("principal.have_you_got_software.heading"),
-                field = haveSoftwareForm(software),
-                hideLegend = false,
-                showErrorAfter = true
-            )
+                    ),
+                    legend = Messages("principal.have_you_got_software.heading"),
+                    field = haveSoftwareForm(software),
+                    interruptCard = true
+                )
 
             <div class='actions'>
                 @continueButton()

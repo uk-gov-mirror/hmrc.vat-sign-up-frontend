@@ -41,15 +41,15 @@
 
     @summaryErrorHelper(businessEntityForm)
 
-    @form(action = postAction) {
+    <h1 class="heading-large">@Messages("principal.capture_entity_type.heading")</h1>
 
+    @form(action = postAction) {
         @radioHelper(
             parentForm = businessEntityForm,
             inline = false,
             options = entities,
             legend = Messages("principal.capture_entity_type.heading"),
-            field = businessEntityForm(businessEntity),
-            hideLegend = false
+            field = businessEntityForm(businessEntity)
         )
 
         @continueButton()
