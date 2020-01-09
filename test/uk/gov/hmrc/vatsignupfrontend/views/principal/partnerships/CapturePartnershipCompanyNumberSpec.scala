@@ -53,7 +53,7 @@ class CapturePartnershipCompanyNumberSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Company Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(companyNumber, messages.heading)
+    testPage.shouldHaveTextField(companyNumber, messages.heading, hideLabel = false)
 
     testPage.shouldHavePara(messages.line1)
 

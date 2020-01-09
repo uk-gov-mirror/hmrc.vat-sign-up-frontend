@@ -59,7 +59,7 @@ class CaptureVatNumberSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Vat Number Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(vatNumber, messages.heading)
+    testPage.shouldHaveTextField(vatNumber, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
   }

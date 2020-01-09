@@ -24,16 +24,15 @@
 
 @main_template(title = "Delete record", bodyClasses = None) {
 
-    <h1 class="heading-large">Enter the VAT number of the record to delete</h1>
+    <h1 class="heading-large">@labelHelper(field = vatNumberForm(vatNumber), label = "Enter the VAT number of the record to delete")</h1>
 
     @summaryErrorHelper(vatNumberForm)
 
     @form(action = postAction) {
         <div class="form-group">
             <span class="form-hint">@Messages("agent.capture_vat_number.hint")</span>
-            @inputHelper(
+            @inputHelperNoLabel(
                 field = vatNumberForm(vatNumber),
-                label = "Enter the VAT number of the record to delete",
                 parentForm = vatNumberForm
             )
         </div>

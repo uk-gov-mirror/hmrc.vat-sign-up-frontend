@@ -55,7 +55,7 @@ class CaptureCompanyNumberSpec extends ViewSpec {
 
     testPage.shouldHaveALink("companiesHouse", messages.link, appConfig.companiesHouse)
 
-    testPage.shouldHaveTextField(companyNumber, messages.heading)
+    testPage.shouldHaveTextField(companyNumber, messages.heading, hideLabel = false)
 
     testPage.shouldHavePara(messages.line1)
 

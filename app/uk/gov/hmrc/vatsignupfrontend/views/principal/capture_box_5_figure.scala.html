@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, continueButton, summaryErrorHelper}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
 
 @(box5FigureForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -28,14 +28,13 @@
     @summaryErrorHelper(box5FigureForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@Messages("principal.capture_box_5_figure.heading")</h1>
+        <h1 class="heading-large">@labelHelper(field = box5FigureForm(box5Figure), Messages("principal.capture_box_5_figure.heading"))</h1>
 
         <p>@Messages("principal.capture_box_5_figure.line")</p>
         <p>@Messages("principal.capture_box_5_figure.line2")</p>
 
-        @inputHelper(
+        @inputHelperNoLabel(
             field = box5FigureForm(box5Figure),
-            label = Messages("principal.capture_box_5_figure.heading"),
             parentForm = box5FigureForm,
             isCurrencyField = true
         )

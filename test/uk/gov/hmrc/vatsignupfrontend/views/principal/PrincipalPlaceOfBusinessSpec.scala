@@ -52,7 +52,7 @@ class PrincipalPlaceOfBusinessSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Principal Place of Business Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(businessPostCode, messages.label, hideLabel = true)
+    testPage.shouldHaveTextField(businessPostCode, messages.heading, hideLabel = false)
 
     testPage.shouldHaveHint(messages.hint)
 

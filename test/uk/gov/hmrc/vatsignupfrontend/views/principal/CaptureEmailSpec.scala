@@ -62,7 +62,7 @@ class CaptureEmailSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(email, messages.heading)
+    testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
   }
@@ -95,7 +95,7 @@ class CaptureEmailSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(email, messages.heading)
+    testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
   }

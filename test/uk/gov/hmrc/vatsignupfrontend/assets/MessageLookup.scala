@@ -443,7 +443,6 @@ object MessageLookup {
   object PrincipalPlaceOfBusiness {
     val heading = "What is the postcode where your business is registered for VAT?"
     val title = heading + ServiceName.principalSuffix
-    val label = "UK postcode"
     val hint = "For example, AB1 2YZ"
   }
 
@@ -937,7 +936,6 @@ object MessageLookup {
   object AgentPartnershipPostcode {
     val heading = "Where is your client's partnership registered for Self Assessment?"
     val title = heading + ServiceName.agentSuffix
-    val label = "UK postcode"
   }
 
   object CapturePartnershipUtr {
@@ -952,7 +950,6 @@ object MessageLookup {
   object PartnershipPrincipalPlaceOfBusiness {
     val heading = "What is the postcode where the partnership is registered for Self Assessment?"
     val title = heading + ServiceName.principalSuffix
-    val label = "For example, AB1 2YZ"
   }
 
   object PartnershipsCYA {

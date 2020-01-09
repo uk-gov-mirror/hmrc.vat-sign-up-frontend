@@ -62,7 +62,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
     specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForTrue(testPage)
 
-    testPage.shouldHaveTextField(partnershipUtr, messages.heading)
+    testPage.shouldHaveTextField(partnershipUtr, messages.heading, hideLabel = false)
 
     testPage.shouldHavePara(messages.line1)
 
@@ -81,7 +81,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
     specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForFalse(testPage)
 
-    testPage.shouldHaveTextField(partnershipUtr, messages.heading)
+    testPage.shouldHaveTextField(partnershipUtr, messages.heading, hideLabel = false)
 
     testPage.shouldHavePara(messages.line1)
 

@@ -53,7 +53,7 @@ class VatNumberSpec extends ViewSpec {
 
     testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHaveTextField(vatNumber, messages.heading)
+    testPage.shouldHaveTextField(vatNumber, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
 

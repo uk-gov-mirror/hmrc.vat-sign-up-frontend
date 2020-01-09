@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 @import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, inputHelper, summaryErrorHelper}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 
 @(businessPostCodeForm: Form[PostCode], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -28,11 +28,10 @@
     @summaryErrorHelper(businessPostCodeForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@Messages("principal.principal_place_of_business.heading")</h1>
+        <h1 class="heading-large">@labelHelper(field = businessPostCodeForm(businessPostCode), label = Messages("principal.principal_place_of_business.heading"))</h1>
 
-        @inputHelper(
+        @inputHelperNoLabel(
             field = businessPostCodeForm(businessPostCode),
-            label = Messages("principal.principal_place_of_business.label"),
             hintText = Some(Html(Messages("principal.principal_place_of_business.hint"))),
             parentForm = businessPostCodeForm,
             hideLabel = true

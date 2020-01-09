@@ -36,10 +36,9 @@
 
     @form(action = postAction) {
 
-        <h2 class="heading-medium">Enter the VAT number</h2>
-        @inputHelper(
+        <h2 class="heading-medium">@labelHelper(field = stubIssuerRequestForm(vatNumber), label = "Enter the VAT number")</h2>
+        @inputHelperNoLabel(
             field = stubIssuerRequestForm(vatNumber),
-            label = "Enter the VAT number",
             parentForm = stubIssuerRequestForm
         )
 
@@ -57,12 +56,11 @@
 
                 <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("true")) { js-hidden }" id="succeeded">
 
-                    @inputHelper(
+                    <h3 class ="heading-small">@labelHelper(field = stubIssuerRequestForm(postCode), label = "Enter the post code", heading = false )</h3>
+                    @inputHelperNoLabel(
                         field = stubIssuerRequestForm(postCode),
-                        label = "Enter the post code",
                         parentForm = stubIssuerRequestForm,
-                        hideLabel = false,
-                        labelBold = true
+                        hideLabel = false
                     )
 
                     <h3 class ="heading-small">Enter the VAT registration date</h3>
@@ -74,12 +72,11 @@
                 </div>
 
                 <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("false")) { js-hidden }" id="failed">
-                    @inputHelper(
+                    <h3 class ="heading-small">@labelHelper(field = stubIssuerRequestForm(errorMessage), label = "Error message", labelBold = false)</h3>
+                    @inputHelperNoLabel(
                         field = stubIssuerRequestForm(errorMessage),
-                        label = "Error message",
                         parentForm = stubIssuerRequestForm,
-                        hideLabel = false,
-                        labelBold = true
+                        hideLabel = false
                     )
                 </div>
 
