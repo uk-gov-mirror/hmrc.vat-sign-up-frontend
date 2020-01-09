@@ -35,7 +35,7 @@ class CouldNotConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPe
 
   "Calling the show action of the Could not confirm VAT Number controller" should {
     "show the could not confirm VAT Number page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
       val result = TestCouldNotConfirmVatNumberController.show(request)
@@ -47,7 +47,7 @@ class CouldNotConfirmVatNumberControllerSpec extends UnitSpec with GuiceOneAppPe
 
   "Calling the submit action of the Could not confirm VAT Number controller" should {
     "redirect to capture your vat number page" in {
-      mockAuthEmptyRetrieval()
+      mockAuthRetrieveAgentEnrolment()
 
       val result = TestCouldNotConfirmVatNumberController.submit(testPostRequest)
       status(result) shouldBe Status.SEE_OTHER

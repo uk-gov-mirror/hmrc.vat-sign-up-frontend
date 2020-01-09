@@ -25,7 +25,7 @@ class CannotUseServicesControllerISpec extends ComponentSpecBase with CustomMatc
   "GET /client/cannot-use-service-yet" should {
     "return an OK" in {
 
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/cannot-use-service-yet")
 

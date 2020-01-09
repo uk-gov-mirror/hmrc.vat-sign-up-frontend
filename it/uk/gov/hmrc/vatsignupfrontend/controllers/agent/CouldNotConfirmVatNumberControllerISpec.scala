@@ -24,7 +24,7 @@ class CouldNotConfirmVatNumberControllerISpec extends ComponentSpecBase with Cus
 
   "GET /could-not-confirm-VAT-number" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/could-not-confirm-VAT-number")
 
@@ -36,7 +36,7 @@ class CouldNotConfirmVatNumberControllerISpec extends ComponentSpecBase with Cus
 
   "POST /could-not-confirm-VAT-number" should {
     "redirect to the capture vat number page" in {
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = post("/client/could-not-confirm-VAT-number")()
 
