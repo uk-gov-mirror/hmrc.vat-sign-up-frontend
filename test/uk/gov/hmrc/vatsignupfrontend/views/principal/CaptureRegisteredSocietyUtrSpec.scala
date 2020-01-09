@@ -53,7 +53,7 @@ class CaptureRegisteredSocietyUtrSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Registered Society Utr Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(registeredSocietyUtr, messages.heading)
+    testPage.shouldHaveTextField(registeredSocietyUtr, messages.heading, hideLabel = false)
 
     testPage.shouldHavePara(messages.line1)
 

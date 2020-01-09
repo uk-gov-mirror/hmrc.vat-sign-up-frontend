@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 
 @(companyNumberForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -26,13 +26,12 @@
     @summaryErrorHelper(companyNumberForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@Messages("principal.capture_partnership_company_number.heading")</h1>
+        <h1 class="heading-large">@labelHelper(field = companyNumberForm(companyNumber), label = Messages("principal.capture_partnership_company_number.heading"))</h1>
 
         <p>@Html(Messages("principal.capture_partnership_company_number.line_1", appConfig.companiesHouse))</p>
 
-        @inputHelper(
+        @inputHelperNoLabel(
             field = companyNumberForm(companyNumber),
-            label = Messages("principal.capture_partnership_company_number.heading"),
             parentForm = companyNumberForm
         )
 

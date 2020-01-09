@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton, accordionHelper}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 
 @(partnershipUtrForm: Form[String], postAction: Call, displayGeneralPartnershipAccordion: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -42,13 +42,12 @@
     @summaryErrorHelper(partnershipUtrForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@Messages("principal.capture_partnership_utr.heading")</h1>
+        <h1 class="heading-large">@labelHelper(field = partnershipUtrForm(partnershipUtr), label = Messages("principal.capture_partnership_utr.heading"))</h1>
 
         <p id="partnershipUtr-line1">@Messages("principal.capture_partnership_utr.line_1")</p>
 
-        @inputHelper(
+        @inputHelperNoLabel(
             field = partnershipUtrForm(partnershipUtr),
-            label = Messages("principal.capture_partnership_utr.heading"),
             parentForm = partnershipUtrForm
         )
 

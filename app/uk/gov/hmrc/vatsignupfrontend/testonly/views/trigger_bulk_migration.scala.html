@@ -36,9 +36,8 @@
     @form(action = postAction) {
 
         <h2 class="heading-medium">Enter the VAT number</h2>
-        @inputHelper(
+        @inputHelperNoLabel(
             field = vatNumberForm(vatNumber),
-            label = "Enter the VAT number",
             parentForm = vatNumberForm
         )
 

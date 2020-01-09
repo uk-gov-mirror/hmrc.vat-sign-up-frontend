@@ -56,7 +56,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
       testPage.shouldHaveForm("Partnership Utr Form")(actionCall = testCall)
 
-      testPage.shouldHaveTextField(partnershipUtr, messages.heading)
+      testPage.shouldHaveTextField(partnershipUtr, messages.heading, hideLabel = false)
 
       testPage.shouldHavePara(messages.line)
 
@@ -86,7 +86,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
       testPage.shouldHaveForm("Partnership Utr Form")(actionCall = testCall)
 
-      testPage.shouldHaveTextField(partnershipUtr, messages.heading)
+      testPage.shouldHaveTextField(partnershipUtr, messages.heading, hideLabel = false)
 
       testPage.shouldHavePara(messages.line)
 

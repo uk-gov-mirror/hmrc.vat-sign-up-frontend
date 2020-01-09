@@ -52,7 +52,7 @@ class PartnershipPPOBSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Partnership Postcode Form")(actionCall = testCall)
 
-    testPage.shouldHaveTextField(partnershipPostCode, messages.label, hideLabel = false)
+    testPage.shouldHaveTextField(partnershipPostCode, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
   }

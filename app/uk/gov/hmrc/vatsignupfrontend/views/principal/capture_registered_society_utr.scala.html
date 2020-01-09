@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{inputHelper, summaryErrorHelper, continueButton}
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 
 @(registeredSocietyUtrForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -26,13 +26,14 @@
 @summaryErrorHelper(registeredSocietyUtrForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@Messages("principal.capture_registered_society_utr.heading")</h1>
+        <h1 class="heading-large">@labelHelper(field = registeredSocietyUtrForm(registeredSocietyUtr) ,
+            label = Messages("principal.capture_registered_society_utr.heading"))
+        </h1>
 
         <p>@Messages("principal.capture_registered_society_utr.line_1")</p>
 
-        @inputHelper(
+        @inputHelperNoLabel(
             field = registeredSocietyUtrForm(registeredSocietyUtr),
-            label = Messages("principal.capture_registered_society_utr.heading"),
             parentForm = registeredSocietyUtrForm
         )
 

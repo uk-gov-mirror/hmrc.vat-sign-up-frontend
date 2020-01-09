@@ -24,7 +24,7 @@
   hintText: Option[Html] = None,
   isNumeric: Boolean = false,
   isCurrencyField: Boolean = false,
-hideLabel: Boolean = true
+  hideLabel: Boolean = true
 )(implicit messages: Messages)
 
 @hasErrors = @{ parentForm.errors(field.name).nonEmpty }
@@ -56,6 +56,7 @@ hideLabel: Boolean = true
 
 <div class="form-group form-field@divClass.map(cls => s" $cls") @if(hasErrors) { form-field--error }">
     @errorNotification
+    @formatedHintText
     @wrapIfCurrencyField {
     <input name="@field.name" class="form-control @if(isCurrencyField){govuk-currency-input__inner__input}" id="@field.name" type="text"
            value="@field.value.getOrElse("")" aria-describedby="@{field.name}-label"
