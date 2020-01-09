@@ -22,7 +22,7 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
@@ -33,14 +33,18 @@ class MainTemplateViewSpec extends ViewSpec {
   val testCountdown = "1234"
   val testTimeOut = "87913"
 
-  def page(enabledTimeout: Boolean = true, showSignOutLink: Boolean = true, hasAuthToken: Boolean = false) = uk.gov.hmrc.vatsignupfrontend.views.html.main_template(
+  def page(enabledTimeout: Boolean = true,
+           showSignOutLink: Boolean = true,
+           hasAuthToken: Boolean = false,
+           scriptElem: Option[Html] = None
+          ): Html = uk.gov.hmrc.vatsignupfrontend.views.html.main_template(
     navTitle = None,
     title = "testTitle",
     sidebarLinks = None,
     contentHeader = None,
     bodyClasses = None,
     mainClass = None,
-    scriptElem = None,
+    scriptElem = scriptElem,
     showSignOutLink = showSignOutLink,
     isAgent = false,
     enableTimeout = enabledTimeout)(HtmlFormat.empty)(
@@ -53,8 +57,10 @@ class MainTemplateViewSpec extends ViewSpec {
     }
   )
 
-  class Setup(enabledTimeOut: Boolean = true, showSignOutLink: Boolean = true, hasAuthToken: Boolean = false) {
-    val doc: Document = Jsoup.parse(page(enabledTimeOut, showSignOutLink, hasAuthToken).body)
+  val testScript = "<script type=\"text/javascript\" src=\"test-javascript.js\"></script>"
+
+  class Setup(enabledTimeOut: Boolean = true, showSignOutLink: Boolean = true, hasAuthToken: Boolean = false, scriptElem: Option[Html] = None) {
+    val doc: Document = Jsoup.parse(page(enabledTimeOut, showSignOutLink, hasAuthToken, scriptElem).body)
   }
 
   "main template view" should {
@@ -82,6 +88,14 @@ class MainTemplateViewSpec extends ViewSpec {
 
     "show the sign out link when the user is logged in" in new Setup(showSignOutLink = false, hasAuthToken = true) {
       doc.getElementById("logOutNavHref") shouldNot be(null)
+    }
+
+    "have the mtd vat custom javascript file in the html" in new Setup() {
+      doc.getElementById("mtd-vat-custom-js") shouldNot be(null)
+    }
+
+    "have the script element that is passed into the view" in new Setup(scriptElem = Some(Html(testScript))) {
+      doc.getElementsByTag("script").toArray.map(_.toString) should contain(testScript)
     }
   }
 

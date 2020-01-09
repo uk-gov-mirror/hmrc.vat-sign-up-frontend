@@ -125,3 +125,7 @@ interrupt-card .actions {
         padding: 20px 10px;
     }
 }
+
+.no-details details summary .arrow-closed {
+    display: none !important;
+}

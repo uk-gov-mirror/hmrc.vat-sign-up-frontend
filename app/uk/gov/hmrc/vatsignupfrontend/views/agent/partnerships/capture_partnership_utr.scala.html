@@ -52,10 +52,12 @@
         )
 
         @if(displayNoSautrLink) {
-            @accordionHelper(
-                Messages("agent.capture_partnership_utr.accordion.heading"),
-                accordionContent
-            )
+            <div class="form-group">
+                @accordionHelper(
+                    Messages("agent.capture_partnership_utr.accordion.heading"),
+                    accordionContent
+                )
+            </div>
         }
 
         @continueButton()

@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    GOVUK.details.init();
+
     // add keystroke behaviour for anchors with role="button"
     // this is mainly for JAWS screen reader
     $('body').on('keypress', '[role="button"]', function (e) {

@@ -52,10 +52,12 @@
         )
 
         @if(displayGeneralPartnershipAccordion) {
-            @accordionHelper(
-                Messages("principal.capture_partnership_utr.accordion.heading"),
-                accordionContent
-            )
+            <div class="form-group">
+                @accordionHelper(
+                    Messages("principal.capture_partnership_utr.accordion.heading"),
+                    accordionContent
+                )
+            </div>
         } else {
             <p>
                 <a id="partnershipUtr-limited-link" href="@{appConfig.findLostUtrNumberUrl}">
