@@ -28,14 +28,14 @@ class CannotUseServiceControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   object TestCannotUseServiceController extends CannotUseServiceController(mockControllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/cannot-use-service-yet ")
+  lazy val testGetRequest = FakeRequest("GET", "/cannot-use-service-yet")
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/cannot-use-service-yet")
 
   "Calling the show action of the cannot use service controller" should {
     "show the cannot use service page" in {
 
-      mockAuthEmptyRetrieval()
+      mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
 
       val result = TestCannotUseServiceController.show(request)

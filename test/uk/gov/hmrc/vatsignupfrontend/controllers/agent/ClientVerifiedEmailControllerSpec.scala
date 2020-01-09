@@ -28,7 +28,7 @@ class ClientVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuit
   object TestClientVerifiedEmailController extends ClientVerifiedEmailController(mockControllerComponents)
 
   "Calling the show action of the Email Verified controller" should {
-      lazy val testGetRequest = FakeRequest("GET", "/email-verified")
+      lazy val testGetRequest = FakeRequest("GET", "/client-email-verified")
 
       "go to the Email Verified page" in {
         val result = TestClientVerifiedEmailController.show(testGetRequest)

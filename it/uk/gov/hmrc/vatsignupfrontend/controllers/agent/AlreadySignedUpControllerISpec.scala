@@ -24,7 +24,7 @@ class AlreadySignedUpControllerISpec extends ComponentSpecBase with CustomMatche
 
   "GET /error/already-signed-up" should {
     "return an OK" in {
-      stubAuth(OK, successfulAuthResponse())
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/error/already-signed-up")
 
