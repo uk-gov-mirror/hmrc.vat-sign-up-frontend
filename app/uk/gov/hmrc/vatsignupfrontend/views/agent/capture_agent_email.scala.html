@@ -34,7 +34,7 @@
             <p>@Messages("agent.capture_agent_email.line_1")</p>
         </div>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = emailForm(email),
             parentForm = emailForm,
             hintText = Some(Html(Messages("agent.capture_agent_email.hint")))

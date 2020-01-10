@@ -29,7 +29,7 @@
     @form(action = postAction) {
         <h1 class="heading-large">@labelHelper(field = ninoForm(nino), label = Messages("agent.capture_nino.heading"))</h1>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = ninoForm(nino),
             hintText = Some(Html(Messages("agent.capture_nino.formHint"))),
             parentForm = ninoForm

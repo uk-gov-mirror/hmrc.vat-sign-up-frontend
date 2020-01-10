@@ -37,7 +37,7 @@
     @form(action = postAction) {
 
         <h2 class="heading-medium">@labelHelper(field = stubIssuerRequestForm(vatNumber), label = "Enter the VAT number")</h2>
-        @inputHelperNoLabel(
+        @inputHelper(
             field = stubIssuerRequestForm(vatNumber),
             parentForm = stubIssuerRequestForm
         )
@@ -57,7 +57,7 @@
                 <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("true")) { js-hidden }" id="succeeded">
 
                     <h3 class ="heading-small">@labelHelper(field = stubIssuerRequestForm(postCode), label = "Enter the post code", heading = false )</h3>
-                    @inputHelperNoLabel(
+                    @inputHelper(
                         field = stubIssuerRequestForm(postCode),
                         parentForm = stubIssuerRequestForm,
                         hideLabel = false
@@ -73,7 +73,7 @@
 
                 <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("false")) { js-hidden }" id="failed">
                     <h3 class ="heading-small">@labelHelper(field = stubIssuerRequestForm(errorMessage), label = "Error message", labelBold = false)</h3>
-                    @inputHelperNoLabel(
+                    @inputHelper(
                         field = stubIssuerRequestForm(errorMessage),
                         parentForm = stubIssuerRequestForm,
                         hideLabel = false

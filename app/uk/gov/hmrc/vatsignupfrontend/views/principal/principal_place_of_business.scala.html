@@ -30,7 +30,7 @@
     @form(action = postAction) {
         <h1 class="heading-large">@labelHelper(field = businessPostCodeForm(businessPostCode), label = Messages("principal.principal_place_of_business.heading"))</h1>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = businessPostCodeForm(businessPostCode),
             hintText = Some(Html(Messages("principal.principal_place_of_business.hint"))),
             parentForm = businessPostCodeForm,
