@@ -32,7 +32,12 @@
     }
 }
 
-@bodyContent = {
+@principal_main_template(title = Messages("principal.confirm_partnership_utr.title"), bodyClasses = None) {
+
+    @summaryErrorHelper(yesNoForm)
+
+    <h1 class="heading-large">@heading</h1>
+
     <p>@Messages("principal.confirm_partnership_utr.line_1")</p>
 
     <p class="lede">
@@ -40,11 +45,6 @@
         <br>
         @partnershipUtr
     </p>
-}
-
-@principal_main_template(title = Messages("principal.confirm_partnership_utr.title"), bodyClasses = None) {
-
-    @summaryErrorHelper(yesNoForm)
 
     @form(action = postAction) {
         @radioHelper(
@@ -55,9 +55,7 @@
                 (option_no, Messages("base.no"))
             ),
             legend = heading,
-            field = yesNoForm(yesNo),
-            hideLegend = false,
-            bodyContent = Some(bodyContent)
+            field = yesNoForm(yesNo)
         )
 
         @continueButton()

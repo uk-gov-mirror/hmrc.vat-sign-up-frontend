@@ -28,8 +28,9 @@
 
     @summaryErrorHelper(businessEntityForm)
 
-    @form(action = postAction) {
+    <h1 class="heading-large">@Messages("principal.capture_entity_type.heading")</h1>
 
+    @form(action = postAction) {
         @radioHelper(
             parentForm = businessEntityForm,
             inline = false,
@@ -39,10 +40,9 @@
                 (limitedPartnership, Messages("core.capture_entity_type.limitedPartnership")),
                 (generalPartnership, Messages("core.capture_entity_type.generalPartnership")),
                 (other, Messages("core.capture_entity_type.other"))
-             ),
+            ),
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity),
-            hideLegend = false,
             orInterrupt = Some(Messages("core.capture_entity_type.or"))
         )
 

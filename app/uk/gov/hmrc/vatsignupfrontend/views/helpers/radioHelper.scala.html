@@ -15,38 +15,35 @@
  *@
 
 @(parentForm: Form[_],
-  inline: Boolean,
   options: Seq[(String, String)],
   legend: String,
   hintText: Option[String] = None,
   field: Field,
+  inline: Boolean = false,
   hideLegend: Boolean = true,
-  bodyContent: Option[Html] = None,
   orInterrupt: Option[String] = None,
-  showErrorAfter: Boolean = false
+  interruptCard: Boolean = false
 )(implicit messages: Messages)
 
 @hasError = @{
     parentForm.error(field.name).isDefined
 }
 
-@wrapInHeading(content: String) = {
-  <h1 class="heading-large">
-    @content
-  </h1>
-}
-
-@showOrInterrupt(option: (String, String)) = @{
-    if(orInterrupt.isDefined && options.last == option) {
-        <div class='multiple-choice-interrupt' aria-hidden='true'>
-            <p class='form-block'>{orInterrupt.get}</p>
-        </div>
+@showOrInterrupt(currentOption: (String, String)) = @{
+    orInterrupt collect {
+        case orContent if currentOption == options.last => {
+            <div class='multiple-choice-interrupt' aria-hidden='true'>
+                <p class='form-block'>{ orContent }</p>
+            </div>
+        }
     }
 }
 
-@visuallyHiddenOr(option: (String, String)) = @{
-    if(orInterrupt.isDefined && options.last == option) {
-        <span class='visually-hidden'>{orInterrupt.get}</span>
+@visuallyHiddenOr(currentOption: (String, String)) = @{
+    orInterrupt collect {
+        case orContent if currentOption == options.last => {
+            <span class='visually-hidden'>{ orContent }</span>
+        }
     }
 }
 
@@ -56,30 +53,28 @@
     }
 }
 
-<div class="form-group@if(showErrorAfter == false & hasError){ form-field--error}">
-    <fieldset id="@{field.name}" @if(inline) { class="inline" }>
-        <legend @if(hideLegend){class="visuallyhidden"}>@if(!hideLegend){@wrapInHeading(legend)} else {@legend}</legend>
-        @bodyContent.map(content => content)
-        @if(showErrorAfter == false & hasError){
-            <span class="error-notification" role="tooltip" id="error-message-@field.name">@{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
-        }
-        @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
-        <div class="@if(showErrorAfter & hasError){form-group form-field--error interrupt-cards}">
-            @for(option <- options) {
-                @showOrInterrupt(option)
-                <div class="multiple-choice">
-                    <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
-                    <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
-                </div>
-            }
-        </div>
+<div class="form-group
+            @if(hasError) { form-field--error }
+            @if(interruptCard) { interrupt-cards }">
 
-    </fieldset>
-    @if(showErrorAfter & hasError){
-        <div class="@if(hasError){ form-field--error interrupt-cards}">
-            <span class="error-notification" role="tooltip" id="error-message-@field.name">
-                @{Messages(s"${parentForm.error(field.name).get.message}.field")}
-            </span>
+    @if(hasError){
+    <span class="error-notification" role="tooltip" id="error-message-@field.name">
+        @Messages(s"${parentForm.error(field.name).get.message}.field")
+    </span>
+    }
+
+    @hintText.map(hint => Html(s"""<span class="form-hint">$hint</span>"""))
+
+    <fieldset id="@{field.name}" class="@if(inline) { inline }">
+        <legend @if(hideLegend){class="visuallyhidden"}>@legend</legend>
+
+    @for(option <- options) {
+        @showOrInterrupt(option)
+        <div class="multiple-choice">
+            <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
+            <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
         </div>
     }
+    </fieldset>
 </div>
+
