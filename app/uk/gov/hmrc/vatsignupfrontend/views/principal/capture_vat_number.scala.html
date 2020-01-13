@@ -32,7 +32,7 @@
 
         <p>@Messages("principal.vat_number.line_1")</p>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = vatNumberForm(vatNumber),
             hintText = Some(Html(Messages("principal.vat_number.hint"))),
             parentForm = vatNumberForm,

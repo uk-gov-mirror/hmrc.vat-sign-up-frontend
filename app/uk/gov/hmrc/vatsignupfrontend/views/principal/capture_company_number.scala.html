@@ -30,7 +30,7 @@
 
         <p>@Html(Messages("principal.capture_company_number.line_1", appConfig.companiesHouse))</p>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = companyNumberForm(companyNumber),
             parentForm = companyNumberForm
         )

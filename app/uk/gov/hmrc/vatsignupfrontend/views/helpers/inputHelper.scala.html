@@ -18,15 +18,13 @@
 @import play.api.data.Field
 @(field: Field,
   parentForm: Form[_],
-  label: String,
-  hideLabel: Boolean = true,
-  labelBold: Boolean = false,
   maxLength: Option[Int] = None,
   divClass: Option[String] = None,
   labelClass: Option[String] = None,
   hintText: Option[Html] = None,
   isNumeric: Boolean = false,
-  isCurrencyField: Boolean = false
+  isCurrencyField: Boolean = false,
+  hideLabel: Boolean = true
 )(implicit messages: Messages)
 
 @hasErrors = @{ parentForm.errors(field.name).nonEmpty }
@@ -36,9 +34,6 @@
     <span class="error-notification" role="tooltip" id="error-message-@field.name">{Messages(s"${parentForm.error(field.name).get.message}.field")}</span>
 }
 
-@formatedLabelClass = @{
-    s"form-label${if(labelBold){"-bold"}else{""}}${labelClass.fold("")(x =>s" $x")}${if(hideLabel) {" visuallyhidden"}else{""}}"
-}
 @formatedHintText = {
     @hintText match {
         case Some(hint) => {
@@ -60,16 +55,11 @@
 }
 
 <div class="form-group form-field@divClass.map(cls => s" $cls") @if(hasErrors) { form-field--error }">
-    <label id="@{field.name}-label" class="@formatedLabelClass" for=@field.name>
-        @label
-        @if(!hideLabel) {@formatedHintText}
-    </label>
-    @if(hideLabel) {@formatedHintText}
     @errorNotification
+    @formatedHintText
     @wrapIfCurrencyField {
     <input name="@field.name" class="form-control @if(isCurrencyField){govuk-currency-input__inner__input}" id="@field.name" type="text"
-           value="@field.value.getOrElse("")"
-        @if(hideLabel){ aria-describedby="@{field.name}-label" }
+           value="@field.value.getOrElse("")" aria-describedby="@{field.name}-label"
         @maxLength.map(max => Html(s"maxlength=$max"))
         @if(isNumeric) {pattern="[0-9]*" inputmode="numeric"}
     >

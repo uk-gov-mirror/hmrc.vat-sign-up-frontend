@@ -29,7 +29,7 @@
     @form(action = postAction) {
         <h1 class="heading-large">@labelHelper(field = partnershipPostCodeForm(partnershipPostCode) ,label = Messages("agent.partnership_postcode.heading"))</h1>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = partnershipPostCodeForm(partnershipPostCode),
             parentForm = partnershipPostCodeForm,
             hideLabel = false

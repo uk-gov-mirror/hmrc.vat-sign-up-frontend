@@ -31,7 +31,7 @@
 
         <p>@Html(Messages("agent.capture_partnership_company_number.line_1", appConfig.companiesHouse))</p>
 
-        @inputHelperNoLabel(
+        @inputHelper(
             field = partnershipCompanyNumberForm(companyNumber),
             parentForm = partnershipCompanyNumberForm
         )
