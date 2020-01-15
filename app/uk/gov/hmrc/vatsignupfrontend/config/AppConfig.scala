@@ -158,7 +158,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   lazy val btaRedirectUrl: String = "/business-account"
 
-  lazy val btaAddVatUrl: String = s"$btaUrl/add-tax/vat/have-vrn"
+  lazy val btaAddVatUrl: String = s"$btaUrl/add-tax/vat/what-is-your-vat-number"
 
   lazy val agentServicesUrl: String = loadConfig("agent-services.url")
 
