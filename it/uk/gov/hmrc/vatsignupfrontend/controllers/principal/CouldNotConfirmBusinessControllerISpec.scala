@@ -17,14 +17,18 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
+
 
 class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /could-not-confirm-business" should {
     "return an OK" in {
-
       stubAuth(OK, successfulAuthResponse())
 
       val res = get("/could-not-confirm-business")
@@ -37,7 +41,6 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
 
   "POST /could-not-confirm-business" should {
     "redirect to the capture vat number page" in {
-
       stubAuth(OK, successfulAuthResponse())
 
       val res = post("/could-not-confirm-business")()
@@ -48,5 +51,24 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
       )
     }
   }
+  "redirect to the capture business entity page" in {
+    stubAuth(OK, successfulAuthResponse())
 
+    val res = post("/could-not-confirm-business",
+      Map(
+        vatNumberKey -> testVatNumber,
+        companyNumberKey -> testCompanyNumber,
+        companyUtrKey -> testCtUtr,
+        businessEntityKey -> BusinessEntitySessionFormatter.toString(SoleTrader)
+      ))()
+
+    res should have(
+      httpStatus(SEE_OTHER),
+      redirectUri(routes.CaptureBusinessEntityController.show().url)
+    )
+
+    val session = SessionCookieCrumbler.getSessionMap(res)
+    session.keys should contain(vatNumberKey)
+    session.keys shouldNot contain(companyNumberKey, companyUtrKey, businessEntityKey)
+  }
 }

@@ -44,7 +44,7 @@ class CaptureCompanyUtrControllerISpec extends ComponentSpecBase with CustomMatc
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.NoCtEnrolmentSummaryController.show().url)
+        redirectUri(routes.CheckYourAnswersCompanyController.show().url)
       )
     }
   }
