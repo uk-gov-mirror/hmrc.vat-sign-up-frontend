@@ -48,7 +48,7 @@ class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
   }
 
   "Calling the submit action of the Capture Company Utr controller" should {
-    "go to confirm Company number page" in {
+    "go to Check Your Answers Company page" in {
       mockAuthAdminRole()
 
       val request = testPostRequest(testCompanyUtr)
@@ -56,7 +56,7 @@ class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
       val result = TestCaptureCompanyUtrController.submit(request)
 
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.NoCtEnrolmentSummaryController.show().url)
+      redirectLocation(result) shouldBe Some(routes.CheckYourAnswersCompanyController.show().url)
 
       result.session(request).get(SessionKeys.companyUtrKey) shouldBe Some(testCompanyUtr)
     }

@@ -22,20 +22,20 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PrincipalNoCtEnrolmentSummary => messages}
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PrincipalCheckYourAnswersCompanySummary => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
-import uk.gov.hmrc.vatsignupfrontend.views.helpers.NoCtEnrolmentSummaryIdConstants._
+import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersCompanyConstants._
 
-class NoCtEnrolmentSummarySpec extends ViewSpec {
+class CheckYourAnswersCompanyViewSpec extends ViewSpec {
 
   val testEntity = SoleTrader
   val env = Environment.simple()
   val configuration = Configuration.load(env)
 
-  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.no_ct_enrolment_summary(
+  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers_company(
     companyNumber = testCompanyNumber,
     companyUtr = testCompanyUtr,
     businessEntity = testEntity,

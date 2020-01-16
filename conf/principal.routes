@@ -161,8 +161,8 @@ GET         /sign-up-complete                                   uk.gov.hmrc.vats
 GET         /not-administrator                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.AssistantCredentialErrorController.show
 
 # No CT Enrolment Summary
-GET         /check-your-answers-company                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.NoCtEnrolmentSummaryController.show
-POST        /check-your-answers-company                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.NoCtEnrolmentSummaryController.submit
+GET         /check-your-answers-company                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersCompanyController.show
+POST        /check-your-answers-company                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.CheckYourAnswersCompanyController.submit
 
 # Multiple Vat Check
 GET         /more-than-one-vat-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.MultipleVatCheckController.show

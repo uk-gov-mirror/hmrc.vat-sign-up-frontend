@@ -51,7 +51,7 @@ class CaptureCompanyUtrController @Inject()(val controllerComponents: Controller
             ),
           companyUtr =>
             Future.successful(
-              Redirect(routes.NoCtEnrolmentSummaryController.show()).addingToSession(SessionKeys.companyUtrKey -> companyUtr)
+              Redirect(routes.CheckYourAnswersCompanyController.show()).addingToSession(SessionKeys.companyUtrKey -> companyUtr)
             )
         )
       }

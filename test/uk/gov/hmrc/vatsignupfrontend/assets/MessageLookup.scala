@@ -487,7 +487,7 @@ object MessageLookup {
     val lastReturnMonth = "The last month in your latest accounting period"
   }
 
-  object PrincipalNoCtEnrolmentSummary {
+  object PrincipalCheckYourAnswersCompanySummary {
     val heading = "Check your answers"
     val title = heading + ServiceName.principalSuffix
     val subHeading = "You've told us"

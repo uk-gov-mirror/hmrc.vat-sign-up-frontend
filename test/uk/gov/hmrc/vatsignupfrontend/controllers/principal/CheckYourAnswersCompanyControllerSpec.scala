@@ -30,15 +30,15 @@ import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySession
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
 
-class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSuite
+class CheckYourAnswersCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockControllerComponents
   with MockStoreCompanyNumberService {
 
-  object TestNoCtEnrolmentSummaryController extends NoCtEnrolmentSummaryController(mockControllerComponents, mockStoreCompanyNumberService)
+  object TestCheckYourAnswersCompanyController extends CheckYourAnswersCompanyController(mockControllerComponents, mockStoreCompanyNumberService)
 
   def testGetRequest(companyUtr: Option[String] = Some(testCompanyUtr),
                      companyNumber: Option[String] = Some(testCompanyNumber),
-                     businessType: Option[BusinessEntity] = Some(SoleTrader)
+                     businessType: Option[BusinessEntity] = Some(LimitedCompany)
                     ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/check-your-answers-company").withSession(
       SessionKeys.companyUtrKey -> companyUtr.getOrElse(""),
@@ -48,7 +48,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
   def testPostRequest(companyUtr: Option[String] = Some(testCompanyUtr),
                       companyNumber: Option[String] = Some(testCompanyNumber),
-                      businessType: Option[BusinessEntity] = Some(SoleTrader),
+                      businessType: Option[BusinessEntity] = Some(LimitedCompany),
                       vatNumber: Option[String] = Some(testVatNumber)
                      ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/check-your-answers-company").withSession(
@@ -58,12 +58,12 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       SessionKeys.businessEntityKey -> businessType.map(BusinessEntitySessionFormatter.toString).getOrElse("")
     )
 
-  "Calling the show action of the No CT Enrolment controller" when {
+  "Calling the show action of the Check Your Answers Company Controller" when {
     "all prerequisite data are in session" should {
       "go to the Summary page" in {
         mockAuthAdminRole()
 
-        val result = TestNoCtEnrolmentSummaryController.show(testGetRequest())
+        val result = TestCheckYourAnswersCompanyController.show(testGetRequest())
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -73,7 +73,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "go to capture company number page" in {
         mockAuthAdminRole()
 
-        val result = TestNoCtEnrolmentSummaryController.show(testGetRequest(companyNumber = None))
+        val result = TestCheckYourAnswersCompanyController.show(testGetRequest(companyNumber = None))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
       }
@@ -82,7 +82,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "go to capture vat registration date page" in {
         mockAuthAdminRole()
 
-        val result = TestNoCtEnrolmentSummaryController.show(testGetRequest(companyUtr = None))
+        val result = TestCheckYourAnswersCompanyController.show(testGetRequest(companyUtr = None))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
       }
@@ -92,21 +92,21 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "go to business entity page" in {
         mockAuthAdminRole()
 
-        val result = TestNoCtEnrolmentSummaryController.show(testGetRequest(businessType = None))
+        val result = TestCheckYourAnswersCompanyController.show(testGetRequest(businessType = None))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityController.show().url)
       }
     }
   }
 
-  "Calling the submit action of the No Ct Enrolment Summary controller" when {
+  "Calling the submit action of the Check Your Answers Company Controller" when {
     "all prerequisite data are in" when {
       "store company number returned StoreCompanyNumberSuccess" should {
         "goto agree capture email controller" in {
           mockAuthAdminRole()
           mockStoreCompanyNumberSuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
-          val result = await(TestNoCtEnrolmentSummaryController.submit(testPostRequest()))
+          val result = await(TestCheckYourAnswersCompanyController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
         }
@@ -117,7 +117,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
           mockAuthAdminRole()
           mockStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCompanyUtr)
 
-          val result = await(TestNoCtEnrolmentSummaryController.submit(testPostRequest()))
+          val result = await(TestCheckYourAnswersCompanyController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CouldNotConfirmBusinessController.show().url)
         }
@@ -128,7 +128,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
           mockStoreCompanyNumberFailure(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
           intercept[InternalServerException] {
-            await(TestNoCtEnrolmentSummaryController.submit(testPostRequest()))
+            await(TestCheckYourAnswersCompanyController.submit(testPostRequest()))
           }
 
         }
@@ -138,7 +138,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "go to capture vat number page" in {
         mockAuthAdminRole()
 
-        val result = await(TestNoCtEnrolmentSummaryController.submit(testPostRequest(vatNumber = None)))
+        val result = await(TestCheckYourAnswersCompanyController.submit(testPostRequest(vatNumber = None)))
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
@@ -148,7 +148,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "go to capture company number date page" in {
         mockAuthAdminRole()
 
-        val result = TestNoCtEnrolmentSummaryController.submit(testPostRequest(companyNumber = None))
+        val result = TestCheckYourAnswersCompanyController.submit(testPostRequest(companyNumber = None))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
       }
@@ -157,7 +157,7 @@ class NoCtEnrolmentSummaryControllerSpec extends UnitSpec with GuiceOneAppPerSui
       "go to capture company utr page" in {
         mockAuthAdminRole()
 
-        val result = TestNoCtEnrolmentSummaryController.submit(testPostRequest(companyUtr = None))
+        val result = TestCheckYourAnswersCompanyController.submit(testPostRequest(companyUtr = None))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
       }

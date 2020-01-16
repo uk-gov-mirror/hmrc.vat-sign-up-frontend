@@ -494,12 +494,12 @@ check-your-answers.box_5_figure                                        = Cyfansw
 check-your-answers.last_return_month_period                            = Y mis diwethaf yn eich cyfnod cyfrifyddu diweddaraf
 
 # No CT Enrolment Summary page
-no_ct_enrolment_summary.title                                          = Gwirio''ch atebion
-no_ct_enrolment_summary.heading                                        = Gwirio''ch atebion
-no_ct_enrolment_summary.sub_heading                                    = Yr hyn rydych wedi rhoi gwybod i ni amdano
-no_ct_enrolment_summary.company_number                                 = Eich rhif cwmni
-no_ct_enrolment_summary.company_utr                                    = Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni
-no_ct_enrolment_summary.business_entity                                = Y math o fusnes sydd gennych
+check_your_answers_company.title                                          = Gwirio''ch atebion
+check_your_answers_company.heading                                        = Gwirio''ch atebion
+check_your_answers_company.sub_heading                                    = Yr hyn rydych wedi rhoi gwybod i ni amdano
+check_your_answers_company.company_number                                 = Eich rhif cwmni
+check_your_answers_company.company_utr                                    = Cyfeirnod Unigryw y Trethdalwr ar gyfer eich cwmni
+check_your_answers_company.business_entity                                = Y math o fusnes sydd gennych
 
 ## Principal Capture Email page
 principal.capture_email.title                                          = Beth yw cyfeiriad e-bost y busnes?

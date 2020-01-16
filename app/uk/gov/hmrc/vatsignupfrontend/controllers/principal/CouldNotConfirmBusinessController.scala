@@ -45,7 +45,13 @@ class CouldNotConfirmBusinessController @Inject()(val controllerComponents: Cont
     authorised() {
       Future.successful(
         optBusinessEntity match {
-          case Some(_: BusinessEntity) => Redirect(routes.CaptureBusinessEntityController.show().url)
+          case Some(_: BusinessEntity) => Redirect(routes.CaptureBusinessEntityController.show().url).removingFromSession(
+            businessEntityKey,
+            companyNumberKey,
+            companyUtrKey,
+            ninoKey,
+            partnershipSautrKey
+          )
           case _ => Redirect(routes.CaptureVatNumberController.show().url)
         }
       )
