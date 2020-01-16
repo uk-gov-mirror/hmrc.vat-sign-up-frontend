@@ -584,7 +584,7 @@ princidpal.company_name_not_found.line_1                                = Dydy''
 ## Incorrect Enrolment Vat Number page
 principal.incorrect_enrolment_vat_number.title                         = Mae''n rhaid i chi fewngofnodi gyda manylion TAW gwahanol
 principal.incorrect_enrolment_vat_number.heading                       = Mae''n rhaid i chi fewngofnodi gyda manylion TAW gwahanol
-principal.incorrect_enrolment_vat_number.line_1                        = Rydych wedi nodi rhif TAW ar gyfer busnes gwahanol sydd â''i gyfrif ei hun ar gyfer Porth y Llywodraeth. Ar ôl allgofnodi, bydd angen i chi fewngofnodi gyda''r manylion cywir.
+principal.incorrect_enrolment_vat_number.line_1                        = Mae''r rhif TAW rydych wedi''i nodi yn un ar gyfer busnes gwahanol sydd â''i Ddynodydd Defnyddiwr (ID) ei hun ar gyfer Porth y Llywodraeth. Ar ôl allgofnodi, bydd angen i chi fewngofnodi gyda''r manylion cywir.
 principal.incorrect_enrolment_vat_number.line_2                        = Os ydych wedi nodi''r rhif TAW anghywir, gallwch <a id="diff-details" href="{0}">newid eich ateb</a>.
 
 ## Confirm Company Number page

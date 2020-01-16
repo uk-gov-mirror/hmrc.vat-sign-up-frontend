@@ -163,7 +163,7 @@ object MessageLookup {
   object PrincipalIncorrectEnrolmentVatNumber {
     val heading: String = "You need to sign in with different details"
     val title = heading + ServiceName.principalSuffix
-    val line1 = "The VAT number you entered is for a different business that has its own Government Gateway account. Once you've signed out, you need to sign in with the correct details."
+    val line1 = "The VAT number you entered is for a different business that has its own Government Gateway user ID. Once you've signed out, you need to sign in with the correct details."
     val linkText = "change your answer"
     val line2 = s"If you've entered the wrong VAT number, you can $linkText."
   }
