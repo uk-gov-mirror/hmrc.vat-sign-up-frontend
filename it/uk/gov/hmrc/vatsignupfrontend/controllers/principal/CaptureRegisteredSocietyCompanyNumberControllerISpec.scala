@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -52,7 +53,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerISpec extends ComponentSpec
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.DissolvedCompanyController.show().url)
+          redirectUri(errorRoutes.DissolvedCompanyController.show().url)
         )
       }
     }

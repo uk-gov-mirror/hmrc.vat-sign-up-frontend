@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -65,7 +65,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(agentRoutes.DissolvedCompanyController.show().url)
+          redirectUri(errorRoutes.DissolvedCompanyController.show().url)
         )
       }
     }
@@ -80,7 +80,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(agentRoutes.DissolvedCompanyController.show().url)
+          redirectUri(errorRoutes.DissolvedCompanyController.show().url)
         )
       }
     }
@@ -123,7 +123,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.NotALimitedPartnershipController.show().url)
+          redirectUri(errorRoutes.NotALimitedPartnershipController.show().url)
         )
       }
     }
@@ -137,7 +137,7 @@ class AgentCapturePartnershipCompanyNumberControllerISpec extends ComponentSpecB
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CouldNotFindPartnershipController.show().url)
+          redirectUri(errorRoutes.CouldNotFindPartnershipController.show().url)
         )
       }
     }

@@ -19,11 +19,11 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{BTAClaimSubscription, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
-
 
 class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -55,7 +55,7 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+            redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
           )
         }
       }

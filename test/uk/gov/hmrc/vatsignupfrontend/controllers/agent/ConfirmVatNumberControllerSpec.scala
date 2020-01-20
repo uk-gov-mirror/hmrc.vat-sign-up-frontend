@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
@@ -180,7 +181,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         val result = TestConfirmVatNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
         await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
       }
@@ -196,7 +197,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         val result = TestConfirmVatNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
         await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
       }
@@ -210,7 +211,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.DeregisteredVatNumberController.show().url)
       }
     }
 
@@ -233,7 +234,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
 
           val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.AlreadySignedUpController.show().url)
         }
       }
 
@@ -244,7 +245,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
 
           val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.MigrationInProgressErrorController.show().url)
         }
       }
     }

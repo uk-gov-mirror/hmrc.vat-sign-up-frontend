@@ -21,6 +21,7 @@ import java.time.LocalDate
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
@@ -144,7 +145,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.DeregisteredVatNumberController.show().url)
+            redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
           )
         }
       }
@@ -159,7 +160,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigratableDatesController.show().url)
+            redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
 
           SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -176,7 +177,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigratableDatesController.show().url)
+            redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
 
           SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -193,7 +194,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.AlreadySignedUpController.show().url)
+            redirectUri(errorRoutes.AlreadySignedUpController.show().url)
           )
         }
       }
@@ -208,7 +209,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigrationInProgressErrorController.show().url)
+            redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
           )
         }
       }
@@ -317,7 +318,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.MigratableDatesController.show().url)
+          redirectUri(errorRoutes.MigratableDatesController.show().url)
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -335,7 +336,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.MigratableDatesController.show().url)
+          redirectUri(errorRoutes.MigratableDatesController.show().url)
         )
 
         SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -352,7 +353,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AlreadySignedUpController.show().url)
+          redirectUri(errorRoutes.AlreadySignedUpController.show().url)
         )
       }
     }
@@ -367,7 +368,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.MigrationInProgressErrorController.show().url)
+          redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
         )
       }
     }

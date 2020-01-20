@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 
 class SoftwareReadyControllerSpec extends UnitSpec with MockControllerComponents {
@@ -59,7 +60,7 @@ class SoftwareReadyControllerSpec extends UnitSpec with MockControllerComponents
 
           val result = await(TestSoftwareReadyController.submit(testPostRequest(entityTypeVal = "no")))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.VerifySoftwareErrorController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.VerifySoftwareErrorController.show().url)
         }
       }
     }

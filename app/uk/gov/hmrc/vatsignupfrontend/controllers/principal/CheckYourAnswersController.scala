@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
@@ -145,9 +146,9 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       case Left(IneligibleVatNumber(migratableDates)) =>
         Redirect(routes.CannotUseServiceController.show())
       case Left(VatNumberAlreadyEnrolled) =>
-        Redirect(bta.routes.BusinessAlreadySignedUpController.show())
+        Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
       case Left(VatMigrationInProgress) =>
-        Redirect(routes.MigrationInProgressErrorController.show())
+        Redirect(errorRoutes.MigrationInProgressErrorController.show())
       case err =>
         throw new InternalServerException("unexpected response on store vat number " + err)
     }

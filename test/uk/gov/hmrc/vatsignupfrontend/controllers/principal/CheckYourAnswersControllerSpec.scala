@@ -29,6 +29,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -363,7 +364,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.MigrationInProgressErrorController.show().url)
         }
       }
       "store vat number returned VatNumberAlreadyEnrolled" should {
@@ -380,7 +381,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.BusinessAlreadySignedUpController.show().url)
         }
       }
       "store vat number returned a failure" should {

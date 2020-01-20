@@ -1,0 +1,86 @@
+# microservice specific routes
+
+# Agent trying to use principal journey
+GET         /wrong-account-type                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.AgentUsingPrincipalJourneyController.show
+
+# Eligibility Return Due
+GET         /return-due                                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.ReturnDueController.show
+
+# Verify Software Error page
+GET         /verify-software                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.VerifySoftwareErrorController.show
+POST        /verify-software                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.VerifySoftwareErrorController.submit
+
+# Choose Software Error page
+GET         /choose-software                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.ChooseSoftwareErrorController.show
+POST        /choose-software                                    uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.ChooseSoftwareErrorController.submit
+
+# Incorrect Enrolment Vat Number
+GET         /sign-in-with-different-details                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.IncorrectEnrolmentVatNumberController.show
+
+# Invalid Vat Number
+GET         /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.InvalidVatNumberController.show
+POST        /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.InvalidVatNumberController.submit
+
+# Could not confirm business
+GET         /could-not-confirm-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmBusinessController.show
+POST        /could-not-confirm-business                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmBusinessController.submit
+
+# Could not confirm business
+GET         /vat-could-not-confirm-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.VatCouldNotConfirmBusinessController.show
+POST        /vat-could-not-confirm-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.VatCouldNotConfirmBusinessController.submit
+
+#Assistant Credential Role
+GET         /not-administrator                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.AssistantCredentialErrorController.show
+
+# Company Name not found
+GET         /company-name-not-found                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CompanyNameNotFoundController.show
+POST        /company-name-not-found                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CompanyNameNotFoundController.submit
+
+# Partnership as company error
+GET         /company-number-incorrect                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.PartnershipAsCompanyErrorController.show
+POST        /company-number-incorrect                           uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.PartnershipAsCompanyErrorController.submit
+
+# Could not confirm partnership company
+GET         /could-not-confirm-partnership-company              uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmCompanyController.show
+POST        /could-not-confirm-partnership-company              uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmCompanyController.submit
+
+# Could not confirm business
+GET         /could-not-confirm-limited-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmLimitedPartnershipController.show
+POST        /could-not-confirm-limited-partnership              uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmLimitedPartnershipController.submit
+
+# Could not confirm partnership known facts
+GET         /could-not-confirm-partnership                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmKnownFactsController.show
+POST        /could-not-confirm-partnership                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CouldNotConfirmKnownFactsController.submit
+
+# Sign in with another login
+GET         /right-partnership-utr                              uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.SignInWithDifferentDetailsPartnershipController.show
+
+# Registered Society Company Name not found
+GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.RegisteredSocietyCompanyNameNotFoundController.show
+POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.RegisteredSocietyCompanyNameNotFoundController.submit
+
+#BTA Could Not Confirm Business
+GET         /bta/could-not-confirm-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.BtaCouldNotConfirmBusinessController.show
+POST        /bta/could-not-confirm-business                     uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.BtaCouldNotConfirmBusinessController.submit
+
+# Business Already Signed Up page
+GET         /business-already-signed-up                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.BusinessAlreadySignedUpController.show
+POST        /business-already-signed-up                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.BusinessAlreadySignedUpController.submit
+
+# Migration In Progress error page
+GET         /sign-up-in-progress                                uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.MigrationInProgressErrorController.show
+
+# Principal Already Signed Up page
+GET         /already-signed-up                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.AlreadySignedUpController.show
+
+# Dissolved Company
+GET         /dissolved-company                                  uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.DissolvedCompanyController.show
+
+# Deregistered VAT Number
+GET         /deregistered-vat-number                            uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.DeregisteredVatNumberController.show
+
+# Sign up later
+GET         /sign-up-later                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.MigratableDatesController.show
+
+# Cannot use service yet
+GET         /cannot-use-service-yet                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CannotUseServiceController.show

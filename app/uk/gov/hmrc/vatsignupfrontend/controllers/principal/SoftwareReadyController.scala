@@ -21,6 +21,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.SoftwareReadyForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.software_ready
@@ -49,7 +50,7 @@ class SoftwareReadyController @Inject()(val controllerComponents: ControllerComp
         case Yes =>
           Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
         case No =>
-          Future.successful(Redirect(routes.VerifySoftwareErrorController.show()))
+          Future.successful(Redirect(errorRoutes.VerifySoftwareErrorController.show()))
       }
     )
   }

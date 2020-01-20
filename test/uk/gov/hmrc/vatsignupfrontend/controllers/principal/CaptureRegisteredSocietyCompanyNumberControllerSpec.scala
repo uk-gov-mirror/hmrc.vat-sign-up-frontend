@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
@@ -129,7 +130,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.DissolvedCompanyController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.DissolvedCompanyController.show().url)
 
         result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }

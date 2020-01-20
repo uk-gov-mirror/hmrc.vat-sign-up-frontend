@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -100,9 +101,9 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
             case Right(StorePartnershipInformationSuccess) =>
               Redirect(agentRoutes.CaptureAgentEmailController.show())
             case Left(PartnershipUtrNotFound) =>
-              Redirect(routes.CouldNotConfirmPartnershipController.show())
+              Redirect(errorRoutes.CouldNotConfirmPartnershipController.show())
             case Left(StorePartnershipKnownFactsFailure) =>
-              Redirect(routes.CouldNotConfirmPartnershipController.show())
+              Redirect(errorRoutes.CouldNotConfirmPartnershipController.show())
             case Left(StorePartnershipInformationFailureResponse(status)) =>
               throw new InternalServerException("Store Partnership failed with status code: " + status)
           }
@@ -119,9 +120,9 @@ class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: 
                 case Right(StorePartnershipInformationSuccess) =>
                   Redirect(agentRoutes.CaptureAgentEmailController.show())
                 case Left(PartnershipUtrNotFound) =>
-                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                  Redirect(errorRoutes.CouldNotConfirmPartnershipController.show())
                 case Left(StorePartnershipKnownFactsFailure) =>
-                  Redirect(routes.CouldNotConfirmPartnershipController.show())
+                  Redirect(errorRoutes.CouldNotConfirmPartnershipController.show())
                 case Left(StorePartnershipInformationFailureResponse(status)) =>
                   throw new InternalServerException("Store Partnership failed with status code: " + status)
               }

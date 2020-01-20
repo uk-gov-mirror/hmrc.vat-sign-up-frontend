@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -73,7 +74,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.IncorrectEnrolmentVatNumberController.show().url)
+                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
               )
             }
           }
@@ -117,7 +118,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
             }
           }
@@ -131,7 +132,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
             }
           }
@@ -146,7 +147,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigrationInProgressErrorController.show().url)
+                redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
               )
             }
           }
@@ -162,7 +163,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+                redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
               )
             }
           }
@@ -278,7 +279,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
               SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -294,7 +295,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
               SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -346,7 +347,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.IncorrectEnrolmentVatNumberController.show().url)
+                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
               )
             }
           }
@@ -394,7 +395,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.DeregisteredVatNumberController.show().url)
+                redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
               )
             }
           }
@@ -411,7 +412,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
             }
           }
@@ -428,7 +429,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
             }
           }
@@ -444,7 +445,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigrationInProgressErrorController.show().url)
+                redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
               )
             }
           }
@@ -461,7 +462,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+                redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
               )
             }
           }
@@ -541,7 +542,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.IncorrectEnrolmentVatNumberController.show().url)
+                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
               )
             }
           }
@@ -576,7 +577,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.IncorrectEnrolmentVatNumberController.show().url)
+                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
               )
             }
           }
@@ -669,7 +670,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.DeregisteredVatNumberController.show().url)
+                redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
               )
             }
           }
@@ -684,7 +685,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
               SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
@@ -701,7 +702,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.MigratableDatesController.show().url)
+                redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
               SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined

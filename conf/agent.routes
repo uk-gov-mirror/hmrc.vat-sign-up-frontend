@@ -8,9 +8,6 @@ GET         /there-is-a-problem                                 uk.gov.hmrc.vats
 
 GET         /not-authorised                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.NoAgentClientRelationshipController.show
 
-# Already signed up
-GET         /error/already-signed-up                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.AlreadySignedUpController.show
-
 # Capture VRN
 GET         /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.show
 POST        /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.submit
@@ -36,9 +33,6 @@ POST        /confirm-national-insurance-number                  uk.gov.hmrc.vats
 # Capture Company Number
 GET         /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.show
 POST        /company-number                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureCompanyNumberController.submit
-
-# Dissolved Company
-GET         /error/dissolved-company                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.DissolvedCompanyController.show
 
 # Confirm Company name
 GET         /confirm-company                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmCompanyController.show
@@ -104,9 +98,6 @@ GET         /sign-up-complete                                   uk.gov.hmrc.vats
 #Sign Up Another Client
 POST        /information-received                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.SignUpAnotherClientController.submit
 
-# Sign up later
-GET         /error/sign-up-later                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigratableDatesController.show
-
 # Partnership UTR
 GET         /partnership-utr                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.show
 GET         /partnership-no-utr                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CapturePartnershipUtrController.noUtrSelected
@@ -119,17 +110,6 @@ POST        /principal-place-postcode                           uk.gov.hmrc.vats
 # Confirm Partnership Name
 GET         /confirm-partnership-company                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.show
 POST        /confirm-partnership-company                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ConfirmPartnershipController.submit
-
-# Could Not Find Partnership
-GET         /error/company-number-not-found                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotFindPartnershipController.show
-POST        /error/company-number-not-found                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotFindPartnershipController.submit
-
-# Could Not Confirm Partnership
-GET         /error/could-not-confirm-partnership                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.CouldNotConfirmPartnershipController.show
-
-# Not a Limited Partnership
-GET         /error/not-a-limited-partnership                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.show
-POST        /error/not-a-limited-partnership                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.NotALimitedPartnershipController.submit
 
 # Capture Partnership Company Number
 GET         /partnership-company-number                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.AgentCapturePartnershipCompanyNumberController.show
@@ -165,9 +145,6 @@ POST        /confirm-registered-society                         uk.gov.hmrc.vats
 GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.show
 POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.submit
 
-# Migration In Progress error page
-GET         /error/sign-up-in-progress                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.MigrationInProgressErrorController.show
-
 # Client Contact Preferences
 GET         /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.show
 POST        /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.submit
@@ -190,6 +167,3 @@ GET         /timeout                                            uk.gov.hmrc.vats
 # Migrated User about to Send Application
 GET         /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentSendYourApplicationController.show
 POST        /about-to-submit                                    uk.gov.hmrc.vatsignupfrontend.controllers.agent.AgentSendYourApplicationController.submit
-
-# Deregistered Vat Number Page
-GET         /error/deregistered-vat-number                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.DeregisteredVatNumberController.show

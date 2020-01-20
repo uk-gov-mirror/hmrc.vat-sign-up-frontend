@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm.vatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
@@ -36,7 +37,6 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-//noinspection ScalaStyle
 class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
                                            storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService
                                           )(implicit ec: ExecutionContext) extends AuthenticatedController(AdministratorRolePredicate) {
@@ -63,7 +63,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
               if (VatNumberChecksumValidation.isValidChecksum(formVatNumber)) {
                 enrolments.getAnyVatNumber match {
                   case Some(vrn) if vrn != formVatNumber =>
-                    Future.successful(Redirect(routes.IncorrectEnrolmentVatNumberController.show()))
+                    Future.successful(Redirect(errorRoutes.IncorrectEnrolmentVatNumberController.show()))
                   case _ =>
                     storeVatNumberOrchestrationService.orchestrate(enrolments, formVatNumber).map {
                       case Eligible(isOverseas, isMigrated) if isOverseas =>
@@ -91,23 +91,23 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                       case AlreadySubscribed =>
-                        Redirect(routes.AlreadySignedUpController.show())
+                        Redirect(errorRoutes.AlreadySignedUpController.show())
                       case SubscriptionClaimed =>
                         Redirect(routes.SignUpCompleteClientController.show())
                       case Ineligible =>
                         Redirect(routes.CannotUseServiceController.show())
                           .removingFromSession(businessEntityKey)
                       case Deregistered =>
-                        Redirect(routes.DeregisteredVatNumberController.show())
+                        Redirect(errorRoutes.DeregisteredVatNumberController.show())
                           .removingFromSession(businessEntityKey)
                       case Inhibited(migratablDates) =>
-                        Redirect(routes.MigratableDatesController.show())
+                        Redirect(errorRoutes.MigratableDatesController.show())
                           .addingToSession(migratableDatesKey, migratablDates)
                           .removingFromSession(businessEntityKey)
                       case MigrationInProgress =>
-                        Redirect(routes.MigrationInProgressErrorController.show())
+                        Redirect(errorRoutes.MigrationInProgressErrorController.show())
                       case AlreadyEnrolledOnDifferentCredential =>
-                        Redirect(bta.routes.BusinessAlreadySignedUpController.show())
+                        Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
                       case InvalidVatNumber =>
                         Redirect(routes.InvalidVatNumberController.show())
                           .removingFromSession(businessEntityKey)

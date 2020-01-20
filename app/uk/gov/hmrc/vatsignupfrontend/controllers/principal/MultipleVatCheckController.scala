@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Overseas, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
@@ -75,16 +76,16 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                   case Ineligible =>
                     Redirect(routes.CannotUseServiceController.show())
                   case Deregistered =>
-                    Redirect(routes.DeregisteredVatNumberController.show())
+                    Redirect(errorRoutes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>
-                    Redirect(routes.MigratableDatesController.show())
+                    Redirect(errorRoutes.MigratableDatesController.show())
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case MigrationInProgress =>
-                    Redirect(routes.MigrationInProgressErrorController.show())
+                    Redirect(errorRoutes.MigrationInProgressErrorController.show())
                   case AlreadyEnrolledOnDifferentCredential =>
-                    Redirect(bta.routes.BusinessAlreadySignedUpController.show())
+                    Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
                   case AlreadySubscribed =>
-                    Redirect(routes.AlreadySignedUpController.show())
+                    Redirect(errorRoutes.AlreadySignedUpController.show())
                   case _ =>
                     throw new InternalServerException("Unexpected response from vat number orchestration service")
                 }
