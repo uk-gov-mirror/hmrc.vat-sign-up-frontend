@@ -18,12 +18,10 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.could_not_confirm_business
 
 import scala.concurrent.Future
@@ -35,7 +33,7 @@ class VatCouldNotConfirmBusinessController @Inject()(val controllerComponents: C
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_business(routes.VatCouldNotConfirmBusinessController.submit())))
+        Ok(could_not_confirm_business(errorRoutes.VatCouldNotConfirmBusinessController.submit())))
     }
   }
 

@@ -111,7 +111,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmBusinessController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmBusinessController.show().url)
       }
     }
 

@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email
@@ -68,7 +69,7 @@ class CaptureClientEmailController @Inject()(val controllerComponents: Controlle
         clientEmail =>
           request.session.get(SessionKeys.transactionEmailKey) match {
             case Some(agentEmail) if agentEmail == clientEmail =>
-              Future.successful(Redirect(routes.UseDifferentEmailAddressController.show()))
+              Future.successful(Redirect(errorRoutes.UseDifferentEmailAddressController.show()))
             case _ =>
               Future.successful(Redirect(routes.ConfirmClientEmailController.show())
                 .addingToSession(SessionKeys.emailKey -> clientEmail))

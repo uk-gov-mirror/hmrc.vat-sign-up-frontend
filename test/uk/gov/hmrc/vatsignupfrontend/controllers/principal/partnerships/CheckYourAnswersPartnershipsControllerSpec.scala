@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -478,7 +479,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 )))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+                redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
               }
             }
 
@@ -499,7 +500,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 )))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+                redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
               }
             }
 
@@ -608,7 +609,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               ))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+              redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
             }
           }
 
@@ -633,7 +634,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               )))
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) should contain(routes.CouldNotConfirmKnownFactsController.show().url)
+              redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
             }
           }
 

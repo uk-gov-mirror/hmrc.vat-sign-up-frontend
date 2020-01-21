@@ -18,8 +18,8 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -74,7 +74,7 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgentUsingPrincipalJourneyController.show().url)
+          redirectUri(errorRoutes.AgentUsingPrincipalJourneyController.show().url)
         )
       }
 

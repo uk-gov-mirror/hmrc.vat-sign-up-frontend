@@ -95,7 +95,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                       case SubscriptionClaimed =>
                         Redirect(routes.SignUpCompleteClientController.show())
                       case Ineligible =>
-                        Redirect(routes.CannotUseServiceController.show())
+                        Redirect(errorRoutes.CannotUseServiceController.show())
                           .removingFromSession(businessEntityKey)
                       case Deregistered =>
                         Redirect(errorRoutes.DeregisteredVatNumberController.show())
@@ -109,7 +109,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                       case AlreadyEnrolledOnDifferentCredential =>
                         Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
                       case InvalidVatNumber =>
-                        Redirect(routes.InvalidVatNumberController.show())
+                        Redirect(errorRoutes.InvalidVatNumberController.show())
                           .removingFromSession(businessEntityKey)
                       case errorResponse =>
                         throw new InternalServerException(s"storeVatNumberOrchestration failed due to $errorResponse")
@@ -124,7 +124,7 @@ class CaptureVatNumberController @Inject()(val controllerComponents: ControllerC
                     }
                 }
               } else {
-                Future.successful(Redirect(routes.InvalidVatNumberController.show()))
+                Future.successful(Redirect(errorRoutes.InvalidVatNumberController.show()))
               }
             }
 

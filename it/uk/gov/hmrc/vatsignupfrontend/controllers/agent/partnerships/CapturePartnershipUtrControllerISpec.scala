@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -75,7 +74,7 @@ class CapturePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
     "goto ppob" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-      val res = post("/client/partnership-utr")(PartnershipUtrForm.partnershipUtr-> testSaUtr)
+      val res = post("/client/partnership-utr")(PartnershipUtrForm.partnershipUtr -> testSaUtr)
 
       res should have(
         httpStatus(SEE_OTHER),

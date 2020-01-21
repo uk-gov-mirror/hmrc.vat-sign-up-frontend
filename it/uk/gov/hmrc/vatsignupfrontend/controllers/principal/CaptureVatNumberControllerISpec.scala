@@ -89,7 +89,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.InvalidVatNumberController.show().url)
+                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
               )
             }
           }
@@ -104,7 +104,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.CannotUseServiceController.show().url)
+                redirectUri(errorRoutes.CannotUseServiceController.show().url)
               )
             }
           }
@@ -237,7 +237,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.InvalidVatNumberController.show().url)
+                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
               )
             }
           }
@@ -251,7 +251,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.InvalidVatNumberController.show().url)
+                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
               )
             }
           }
@@ -265,7 +265,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.CannotUseServiceController.show().url)
+                redirectUri(errorRoutes.CannotUseServiceController.show().url)
               )
             }
           }
@@ -363,7 +363,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.InvalidVatNumberController.show().url)
+                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
               )
             }
           }
@@ -379,7 +379,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.CannotUseServiceController.show().url)
+                redirectUri(errorRoutes.CannotUseServiceController.show().url)
               )
             }
           }
@@ -493,7 +493,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.InvalidVatNumberController.show().url)
+                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
               )
             }
           }
@@ -640,7 +640,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.InvalidVatNumberController.show().url)
+                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
               )
             }
           }
@@ -655,7 +655,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
               res should have(
                 httpStatus(SEE_OTHER),
-                redirectUri(routes.CannotUseServiceController.show().url)
+                redirectUri(errorRoutes.CannotUseServiceController.show().url)
               )
             }
           }

@@ -181,7 +181,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.CannotUseServiceController.show().url)
           }
 
           "redirect to the migratable dates page" in {

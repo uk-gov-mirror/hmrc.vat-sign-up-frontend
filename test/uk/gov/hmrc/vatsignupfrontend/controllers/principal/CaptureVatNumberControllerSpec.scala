@@ -238,7 +238,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.CannotUseServiceController.show().url)
             }
 
             "redirect to sign up after this date page when the vat number is ineligible and one date is available" in {
@@ -482,7 +482,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.CannotUseServiceController.show().url)
           }
 
           "redirect to sign up after this date when the vat number is ineligible and one date is available" in {
@@ -525,7 +525,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.InvalidVatNumberController.show().url)
           }
 
           "redirect to the migration in progress error page when a migration is in progress for the entered vrn" in {
@@ -554,7 +554,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
         val result = TestCaptureVatNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.InvalidVatNumberController.show().url)
       }
     }
 

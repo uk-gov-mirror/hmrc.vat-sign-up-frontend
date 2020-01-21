@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_company
 
 import scala.concurrent.Future
@@ -32,7 +33,7 @@ class CouldNotConfirmCompanyController @Inject()(val controllerComponents: Contr
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_company(routes.CouldNotConfirmCompanyController.submit())))
+        Ok(could_not_confirm_company(errorRoutes.CouldNotConfirmCompanyController.submit())))
     }
   }
 

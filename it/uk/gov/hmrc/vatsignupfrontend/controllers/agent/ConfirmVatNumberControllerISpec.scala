@@ -115,7 +115,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.NoAgentClientRelationshipController.show().url)
+            redirectUri(errorRoutes.NoAgentClientRelationshipController.show().url)
           )
         }
       }
@@ -130,7 +130,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(errorRoutes.CannotUseServiceController.show().url)
           )
         }
       }
@@ -224,7 +224,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CouldNotConfirmVatNumberController.show().url)
+            redirectUri(errorRoutes.CouldNotConfirmVatNumberController.show().url)
           )
         }
       }
@@ -287,7 +287,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.NoAgentClientRelationshipController.show().url)
+          redirectUri(errorRoutes.NoAgentClientRelationshipController.show().url)
         )
       }
     }
@@ -302,7 +302,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CannotUseServiceController.show().url)
+          redirectUri(errorRoutes.CannotUseServiceController.show().url)
         )
       }
     }

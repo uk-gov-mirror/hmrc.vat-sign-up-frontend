@@ -202,7 +202,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.VatCouldNotConfirmBusinessController.show().url)
+          redirectUri(errorRoutes.VatCouldNotConfirmBusinessController.show().url)
         )
       }
     }
@@ -230,7 +230,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.InvalidVatNumberController.show().url)
+          redirectUri(errorRoutes.InvalidVatNumberController.show().url)
         )
       }
     }
@@ -259,7 +259,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CannotUseServiceController.show().url)
+          redirectUri(errorRoutes.CannotUseServiceController.show().url)
         )
       }
     }

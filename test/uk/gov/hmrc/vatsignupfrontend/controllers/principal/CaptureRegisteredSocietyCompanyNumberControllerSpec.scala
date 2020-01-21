@@ -100,7 +100,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.RegisteredSocietyCompanyNameNotFoundController.show().url)
       }
     }
 
@@ -115,7 +115,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec extends UnitSpec with 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.RegisteredSocietyCompanyNameNotFoundController.show().url)
       }
     }
 

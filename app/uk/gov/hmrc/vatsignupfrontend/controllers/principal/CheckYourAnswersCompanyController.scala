@@ -18,11 +18,12 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.{CtReferenceMismatch, StoreCompanyNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService
@@ -88,7 +89,7 @@ class CheckYourAnswersCompanyController @Inject()(val controllerComponents: Cont
           case (Some(companyNumber), Some(companyUtr), Some(vatNumber)) =>
             storeCompanyNumberService.storeCompanyNumber(vatNumber, companyNumber, Some(companyUtr)).map {
               case Right(StoreCompanyNumberSuccess) => Redirect(routes.DirectDebitResolverController.show())
-              case Left(CtReferenceMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
+              case Left(CtReferenceMismatch) => Redirect(errorRoutes.CouldNotConfirmBusinessController.show())
               case Left(failure) => throw new InternalServerException("unexpected response on store company number " + failure.status)
             }
           case (None, _, _) =>

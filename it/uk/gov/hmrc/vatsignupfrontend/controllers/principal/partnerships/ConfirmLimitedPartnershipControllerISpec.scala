@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.yesNo
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping.{option_no, option_yes}
@@ -26,7 +27,6 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StorePartnershipInformationStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.LimitedPartnership
-
 
 class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -76,7 +76,7 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.SignInWithDifferentDetailsPartnershipController.show().url)
+          redirectUri(errorRoutes.SignInWithDifferentDetailsPartnershipController.show().url)
         )
       }
     }

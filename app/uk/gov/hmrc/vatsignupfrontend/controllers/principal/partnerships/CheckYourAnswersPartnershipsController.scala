@@ -25,6 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -107,9 +108,9 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
             case Right(StorePartnershipInformationSuccess) =>
               Redirect(principalRoutes.DirectDebitResolverController.show())
             case Left(PartnershipUtrNotFound) =>
-              Redirect(routes.CouldNotConfirmKnownFactsController.show())
+              Redirect(errorRoutes.CouldNotConfirmKnownFactsController.show())
             case Left(StorePartnershipKnownFactsFailure) =>
-              Redirect(routes.CouldNotConfirmKnownFactsController.show())
+              Redirect(errorRoutes.CouldNotConfirmKnownFactsController.show())
             case Left(StorePartnershipInformationFailureResponse(status)) =>
               throw new InternalServerException("Store Partnership failed with status code: " + status)
           }
@@ -126,9 +127,9 @@ class CheckYourAnswersPartnershipsController @Inject()(val controllerComponents:
                 case Right(StorePartnershipInformationSuccess) =>
                   Redirect(principalRoutes.DirectDebitResolverController.show())
                 case Left(PartnershipUtrNotFound) =>
-                  Redirect(routes.CouldNotConfirmKnownFactsController.show())
+                  Redirect(errorRoutes.CouldNotConfirmKnownFactsController.show())
                 case Left(StorePartnershipKnownFactsFailure) =>
-                  Redirect(routes.CouldNotConfirmKnownFactsController.show())
+                  Redirect(errorRoutes.CouldNotConfirmKnownFactsController.show())
                 case Left(StorePartnershipInformationFailureResponse(status)) =>
                   throw new InternalServerException("Store Partnership failed with status code: " + status)
               }

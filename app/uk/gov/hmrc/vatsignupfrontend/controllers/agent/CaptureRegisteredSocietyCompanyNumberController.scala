@@ -59,7 +59,7 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
           companyNumber =>
             if (companyNumber.startsWith("BR")) {
               Future.successful(
-                Redirect(routes.CompanyNameNotFoundController.show())
+                Redirect(errorRoutes.CompanyNameNotFoundController.show())
               )
             } else {
               getCompanyNameService.getCompanyName(companyNumber) map {
@@ -75,7 +75,7 @@ class CaptureRegisteredSocietyCompanyNumberController @Inject()(val controllerCo
                       SessionKeys.companyNameKey -> companyName
                     )
                 case Left(CompanyNumberNotFound) =>
-                  Redirect(routes.RegisteredSocietyCompanyNameNotFoundController.show())
+                  Redirect(errorRoutes.RegisteredSocietyCompanyNameNotFoundController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>
                   throw new InternalServerException(s"getCompanyName failed: status=$status")
               }

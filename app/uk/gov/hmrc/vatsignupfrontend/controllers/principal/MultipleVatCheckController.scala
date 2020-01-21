@@ -74,7 +74,7 @@ class MultipleVatCheckController @Inject()(val controllerComponents: ControllerC
                   case SubscriptionClaimed =>
                     Redirect(routes.SignUpCompleteClientController.show())
                   case Ineligible =>
-                    Redirect(routes.CannotUseServiceController.show())
+                    Redirect(errorRoutes.CannotUseServiceController.show())
                   case Deregistered =>
                     Redirect(errorRoutes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>

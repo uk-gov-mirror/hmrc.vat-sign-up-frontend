@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
@@ -115,14 +116,13 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
         }
       }
       "store company number returned StoreCompanyNumberSuccess" should {
-        //TODO confirm route
         "goto could not confirm business controller" in {
           mockAuthAdminRole()
           mockStoreRegisteredSocietyCtMismatch(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
           val result = await(TestRegisteredSocietyController.submit(testPostRequest()))
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CouldNotConfirmBusinessController.show().url)
+          redirectLocation(result) should contain(errorRoutes.CouldNotConfirmBusinessController.show().url)
         }
       }
       "store registered society number returned a failure" should {

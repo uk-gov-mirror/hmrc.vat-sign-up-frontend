@@ -20,8 +20,8 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.could_not_confirm_vat_number
 
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ class InvalidVatNumberController @Inject()(val controllerComponents: ControllerC
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_vat_number(routes.InvalidVatNumberController.submit()))
+        Ok(could_not_confirm_vat_number(errorRoutes.InvalidVatNumberController.submit()))
       )
     }
   }

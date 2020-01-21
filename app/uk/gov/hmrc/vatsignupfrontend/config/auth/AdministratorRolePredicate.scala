@@ -23,7 +23,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals, ~}
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.agentEnrolmentKey
 import uk.gov.hmrc.vatsignupfrontend.controllers.RetrievalPredicate
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 
 import scala.concurrent.Future
 
@@ -34,13 +34,13 @@ object AdministratorRolePredicate extends RetrievalPredicate[Option[CredentialRo
 
   override def function(block: => Future[Result]): Option[CredentialRole] ~ Option[AffinityGroup] ~ Enrolments => Future[Result] = {
     case _ ~ _ ~ enrolments if enrolments.getEnrolment(agentEnrolmentKey).isDefined =>
-      Future.successful(Redirect(routes.AgentUsingPrincipalJourneyController.show()))
+      Future.successful(Redirect(errorRoutes.AgentUsingPrincipalJourneyController.show()))
     case _ ~ Some(Agent) ~ _ =>
-      Future.successful(Redirect(routes.AgentUsingPrincipalJourneyController.show()))
+      Future.successful(Redirect(errorRoutes.AgentUsingPrincipalJourneyController.show()))
     case Some(Admin | User) ~ _ ~ _ =>
       block
     case Some(Assistant) ~ _ ~ _ =>
-      Future.successful(Redirect(routes.AssistantCredentialErrorController.show()))
+      Future.successful(Redirect(errorRoutes.AssistantCredentialErrorController.show()))
     case None ~ _ ~ _ =>
       Future.failed(new IllegalArgumentException("Non GGW credential found"))
   }

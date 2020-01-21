@@ -101,7 +101,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         val result = TestCaptureCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
 
@@ -118,7 +118,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         val result = TestCaptureCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CompanyNameNotFoundController.show().url)
       }
     }
 

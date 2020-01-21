@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -44,7 +44,7 @@ class AgentUsingPrincipalJourneyControllerISpec extends ComponentSpecBase with C
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(agentRoutes.NotEnrolledToAgentServicesController.show().url)
+          redirectUri(errorRoutes.NotEnrolledToAgentServicesController.show().url)
         )
       }
     }

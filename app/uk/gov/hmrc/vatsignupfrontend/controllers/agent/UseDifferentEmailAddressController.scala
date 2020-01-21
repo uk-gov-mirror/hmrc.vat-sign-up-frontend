@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.use_different_email_address
 
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ class UseDifferentEmailAddressController @Inject()(val controllerComponents: Con
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(use_different_email_address(routes.UseDifferentEmailAddressController.submit()))
+        Ok(use_different_email_address(errorRoutes.UseDifferentEmailAddressController.submit()))
       )
     }
   }

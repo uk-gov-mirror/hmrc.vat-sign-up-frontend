@@ -140,11 +140,11 @@ class CheckYourAnswersController @Inject()(val controllerComponents: ControllerC
       case Right(SubscriptionClaimed) =>
         Redirect(routes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) =>
-        Redirect(routes.VatCouldNotConfirmBusinessController.show())
+        Redirect(errorRoutes.VatCouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) =>
-        Redirect(routes.InvalidVatNumberController.show())
+        Redirect(errorRoutes.InvalidVatNumberController.show())
       case Left(IneligibleVatNumber(migratableDates)) =>
-        Redirect(routes.CannotUseServiceController.show())
+        Redirect(errorRoutes.CannotUseServiceController.show())
       case Left(VatNumberAlreadyEnrolled) =>
         Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
       case Left(VatMigrationInProgress) =>
