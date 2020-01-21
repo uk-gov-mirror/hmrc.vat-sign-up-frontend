@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
@@ -85,7 +85,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
         val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(agentRoutes.DissolvedCompanyController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.DissolvedCompanyController.show().url)
 
         result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
@@ -102,7 +102,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
         val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.NotALimitedPartnershipController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.NotALimitedPartnershipController.show().url)
       }
     }
 
@@ -128,7 +128,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
         val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotFindPartnershipController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotFindPartnershipController.show().url)
       }
     }
 

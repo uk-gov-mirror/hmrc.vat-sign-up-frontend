@@ -29,6 +29,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -37,7 +38,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
 
 import scala.concurrent.Future
-
 
 class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockClaimSubscriptionService {
 
@@ -143,7 +143,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
 
         val result = TestBusinessPostCodeController.submit(testPostRequest())
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.BusinessAlreadySignedUpController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.BusinessAlreadySignedUpController.show().url)
       }
     }
     "claim subscription returns a failure" should {

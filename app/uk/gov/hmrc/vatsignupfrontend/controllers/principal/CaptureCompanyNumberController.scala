@@ -23,6 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
@@ -66,7 +67,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
             } else {
               getCompanyNameService.getCompanyName(companyNumber) map {
                 case Right(CompanyDetails(_, _: PartnershipCompanyType)) =>
-                  Redirect(routes.PartnershipAsCompanyErrorController.show())
+                  Redirect(errorRoutes.PartnershipAsCompanyErrorController.show())
                 case Right(CompanyDetails(companyName, _)) =>
                   Redirect(routes.ConfirmCompanyController.show())
                     .addingToSession(
@@ -74,7 +75,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                       SessionKeys.companyNameKey -> companyName
                     )
                 case Right(CompanyClosed(companyName)) =>
-                  Redirect(routes.DissolvedCompanyController.show())
+                  Redirect(errorRoutes.DissolvedCompanyController.show())
                     .addingToSession(
                       SessionKeys.companyNameKey -> companyName
                     )

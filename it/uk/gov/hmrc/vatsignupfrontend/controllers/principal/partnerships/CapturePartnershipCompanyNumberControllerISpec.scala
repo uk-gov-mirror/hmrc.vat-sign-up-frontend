@@ -18,13 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.CrnDissolved
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedPartnership, NonPartnershipEntity}
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.DissolvedCompanyController
 
 class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -51,7 +51,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(DissolvedCompanyController.show().url)
+          redirectUri(errorRoutes.DissolvedCompanyController.show().url)
         )
       }
     }
@@ -78,7 +78,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+          redirectUri(errorRoutes.CouldNotConfirmLimitedPartnershipController.show().url)
         )
       }
     }
@@ -92,7 +92,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+            redirectUri(errorRoutes.CouldNotConfirmLimitedPartnershipController.show().url)
           )
         }
       }
@@ -105,7 +105,7 @@ class CapturePartnershipCompanyNumberControllerISpec extends ComponentSpecBase w
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+            redirectUri(errorRoutes.CouldNotConfirmLimitedPartnershipController.show().url)
           )
         }
       }

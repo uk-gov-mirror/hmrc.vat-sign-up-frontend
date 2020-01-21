@@ -16,16 +16,16 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility
 
+import play.api.i18n.Messages.Implicits._
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.are_you_ready_submit_software
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.eligibility.AreYouReadySubmitSoftwareForm._
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.AnyContentAsFormUrlEncoded
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
-
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.are_you_ready_submit_software
 
 class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockControllerComponents {
 
@@ -74,7 +74,7 @@ class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockControll
         val result = await(TestAreYouReadySubmitSoftwareController.submit(testPostRequest(entityTypeVal = option_no)))
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.ReturnDueController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.ReturnDueController.show().url)
       }
     }
   }

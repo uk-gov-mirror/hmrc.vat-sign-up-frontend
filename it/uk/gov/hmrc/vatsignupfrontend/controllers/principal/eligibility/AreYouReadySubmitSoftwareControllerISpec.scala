@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility
 
 import play.api.http.Status._
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.eligibility.AreYouReadySubmitSoftwareForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
@@ -52,7 +53,7 @@ class AreYouReadySubmitSoftwareControllerISpec extends ComponentSpecBase with Cu
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.ReturnDueController.show().url)
+          redirectUri(errorRoutes.ReturnDueController.show().url)
         )
       }
     }

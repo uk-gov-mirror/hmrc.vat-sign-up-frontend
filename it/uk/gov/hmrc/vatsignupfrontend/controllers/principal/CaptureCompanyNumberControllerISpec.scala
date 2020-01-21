@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.GetCompanyNameStub.stubGetCompanyName
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedLiabilityPartnership, NonPartnershipEntity}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 
 class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -62,7 +63,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.PartnershipAsCompanyErrorController.show().url)
+          redirectUri(errorRoutes.PartnershipAsCompanyErrorController.show().url)
         )
       }
     }
@@ -76,7 +77,7 @@ class CaptureCompanyNumberControllerISpec extends ComponentSpecBase with CustomM
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.DissolvedCompanyController.show().url)
+          redirectUri(errorRoutes.DissolvedCompanyController.show().url)
         )
       }
     }

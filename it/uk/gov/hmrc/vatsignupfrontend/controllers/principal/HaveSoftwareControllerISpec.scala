@@ -20,6 +20,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 
 class HaveSoftwareControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -52,7 +53,7 @@ class HaveSoftwareControllerISpec extends ComponentSpecBase with CustomMatchers 
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.ChooseSoftwareErrorController.show().url)
+          redirectUri(errorRoutes.ChooseSoftwareErrorController.show().url)
         )
       }
     }

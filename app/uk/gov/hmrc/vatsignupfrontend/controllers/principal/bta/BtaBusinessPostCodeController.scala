@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, KnownFactsMismatch, SubscriptionClaimed}
@@ -54,7 +55,7 @@ class BtaBusinessPostCodeController @Inject()(val controllerComponents: Controll
     claimSubscriptionService.claimSubscription(vatNumber, optPostCode, vatRegistrationDate, isFromBta = true) map {
       case Right(SubscriptionClaimed) => Redirect(principalRoutes.SignUpCompleteClientController.show())
       case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
-      case Left(AlreadyEnrolledOnDifferentCredential) => Redirect(routes.BusinessAlreadySignedUpController.show())
+      case Left(AlreadyEnrolledOnDifferentCredential) => Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
       case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
     }
 

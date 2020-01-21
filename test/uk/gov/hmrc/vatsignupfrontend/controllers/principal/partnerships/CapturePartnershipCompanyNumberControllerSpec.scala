@@ -25,13 +25,13 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.DissolvedCompanyController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
 
 import scala.concurrent.Future
 
@@ -128,7 +128,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val result = TestCaptureCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmLimitedPartnershipController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmLimitedPartnershipController.show().url)
       }
     }
     "get company name returns company closed" should {
@@ -142,7 +142,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val result = TestCaptureCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(DissolvedCompanyController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.DissolvedCompanyController.show().url)
 
         result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }

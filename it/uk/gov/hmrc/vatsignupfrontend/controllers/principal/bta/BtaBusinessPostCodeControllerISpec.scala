@@ -22,6 +22,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -113,7 +114,7 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.BusinessAlreadySignedUpController.show().url)
+        redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
       )
     }
   }

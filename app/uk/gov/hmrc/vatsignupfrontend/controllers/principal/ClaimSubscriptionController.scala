@@ -26,6 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.services.ClaimSubscriptionService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -47,7 +48,7 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
               case Right(SubscriptionClaimed) =>
                 Redirect(appConfig.btaRedirectUrl)
               case Left(AlreadyEnrolledOnDifferentCredential) =>
-                Redirect(btaRoutes.BusinessAlreadySignedUpController.show())
+                Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
               case subscriptionNotClaimedReason =>
                 throw new InternalServerException(s"Claim subscription was not successful, result was $subscriptionNotClaimedReason")
             }
@@ -57,7 +58,7 @@ class ClaimSubscriptionController @Inject()(val controllerComponents: Controller
             )
           case None if btaVatNumber.length == 9 && isValidChecksum(btaVatNumber) =>
             Future.successful(
-              Redirect(btaRoutes.CaptureBtaVatRegistrationDateController.show()) addingToSession(vatNumberKey -> btaVatNumber)
+              Redirect(btaRoutes.CaptureBtaVatRegistrationDateController.show()) addingToSession (vatNumberKey -> btaVatNumber)
             )
           case None =>
             Future.failed(

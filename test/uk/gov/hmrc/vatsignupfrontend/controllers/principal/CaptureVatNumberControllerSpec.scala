@@ -31,6 +31,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
@@ -40,7 +41,6 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberOrchestrat
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 
 class CaptureVatNumberControllerSpec extends UnitSpec
   with GuiceOneAppPerSuite
@@ -164,7 +164,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
                   status(result) shouldBe Status.SEE_OTHER
-                  redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+                  redirectLocation(result) shouldBe Some(errorRoutes.MigrationInProgressErrorController.show().url)
                 }
               }
 
@@ -194,7 +194,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                   val result = TestCaptureVatNumberController.submit(testPostRequest(testVatNumber))
 
                   status(result) shouldBe Status.SEE_OTHER
-                  redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
+                  redirectLocation(result) shouldBe Some(errorRoutes.BusinessAlreadySignedUpController.show().url)
                 }
               }
             }
@@ -207,7 +207,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 val result = TestCaptureVatNumberController.submit(testPostRequest(testNonMatchingVat))
 
                 status(result) shouldBe Status.SEE_OTHER
-                redirectLocation(result) shouldBe Some(routes.IncorrectEnrolmentVatNumberController.show().url)
+                redirectLocation(result) shouldBe Some(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
               }
             }
           }
@@ -224,7 +224,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.DeregisteredVatNumberController.show().url)
             }
 
             "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
@@ -254,7 +254,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
               await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
             }
@@ -272,7 +272,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
               await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
             }
@@ -292,7 +292,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             val result = TestCaptureVatNumberController.submit(request)
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.AlreadySignedUpController.show().url)
           }
 
           "the user attempts to sign up a different vat number" in {
@@ -303,7 +303,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             val result = TestCaptureVatNumberController.submit(request)
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.IncorrectEnrolmentVatNumberController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
           }
         }
 
@@ -321,7 +321,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               val result = TestCaptureVatNumberController.submit(request)
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.AlreadySignedUpController.show().url)
             }
           }
 
@@ -334,7 +334,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               val result = TestCaptureVatNumberController.submit(request)
 
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.IncorrectEnrolmentVatNumberController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
             }
           }
         }
@@ -468,7 +468,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.DeregisteredVatNumberController.show().url)
           }
 
           "redirect to Cannot use service yet when the vat number is ineligible for Making Tax Digital" in {
@@ -496,7 +496,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
           }
 
           "redirect to sign up between these dates when the vat number is ineligible and two dates are available" in {
@@ -511,7 +511,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
 
             val result = TestCaptureVatNumberController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
           }
 
           "redirect to Invalid Vat Number page when the vat number is invalid" in {
@@ -540,7 +540,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             val result = TestCaptureVatNumberController.submit(request)
 
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.MigrationInProgressErrorController.show().url)
           }
         }
       }

@@ -24,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, Overseas}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
@@ -74,16 +75,16 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                   case NoAgentClientRelationship =>
                     Redirect(routes.NoAgentClientRelationshipController.show())
                   case AlreadySubscribed =>
-                    Redirect(routes.AlreadySignedUpController.show())
+                    Redirect(errorRoutes.AlreadySignedUpController.show())
                   case Ineligible =>
                     Redirect(routes.CannotUseServiceController.show())
                   case Deregistered =>
-                    Redirect(routes.DeregisteredVatNumberController.show())
+                    Redirect(errorRoutes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>
-                    Redirect(routes.MigratableDatesController.show())
+                    Redirect(errorRoutes.MigratableDatesController.show())
                       .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
                   case MigrationInProgress =>
-                    Redirect(routes.MigrationInProgressErrorController.show())
+                    Redirect(errorRoutes.MigrationInProgressErrorController.show())
                   case InvalidVatNumber =>
                     Redirect(routes.CouldNotConfirmVatNumberController.show())
                   case errorResponse =>

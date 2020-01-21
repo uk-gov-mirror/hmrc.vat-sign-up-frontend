@@ -1,0 +1,52 @@
+# microservice specific routes
+
+# Not enrolled
+GET         /there-is-a-problem                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.NotEnrolledToAgentServicesController.show
+
+# Not authorised
+GET         /not-authorised                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.NoAgentClientRelationshipController.show
+
+# Could not confirm VAT Number
+GET         /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CouldNotConfirmVatNumberController.show
+POST        /could-not-confirm-vat-number                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CouldNotConfirmVatNumberController.submit
+
+# Could not confirm Company name
+GET         /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CompanyNameNotFoundController.show
+POST        /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CompanyNameNotFoundController.submit
+
+# Use different email address
+GET         /use-different-email-address                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.UseDifferentEmailAddressController.show
+POST        /use-different-email-address                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.UseDifferentEmailAddressController.submit
+
+# Could Not Find Partnership
+GET         /company-number-not-found                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CouldNotFindPartnershipController.show
+POST        /company-number-not-found                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CouldNotFindPartnershipController.submit
+
+# Could Not Confirm Partnership
+GET         /could-not-confirm-partnership                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CouldNotConfirmPartnershipController.show
+
+# Not a Limited Partnership
+GET         /not-a-limited-partnership                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.NotALimitedPartnershipController.show
+POST        /not-a-limited-partnership                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.NotALimitedPartnershipController.submit
+
+# Registered Society Company Name not found
+GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.RegisteredSocietyCompanyNameNotFoundController.show
+POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.RegisteredSocietyCompanyNameNotFoundController.submit
+
+# Sign up later
+GET         /sign-up-later                                      uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.MigratableDatesController.show
+
+# Already signed up
+GET         /already-signed-up                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.AlreadySignedUpController.show
+
+# Cannot use service yet
+GET         /cannot-use-service-yet                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.CannotUseServiceController.show
+
+# Dissolved Company
+GET         /dissolved-company                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.DissolvedCompanyController.show
+
+# Migration In Progress error page
+GET         /sign-up-in-progress                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.MigrationInProgressErrorController.show
+
+# Deregistered Vat Number Page
+GET         /deregistered-vat-number                            uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.DeregisteredVatNumberController.show

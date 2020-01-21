@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
@@ -222,7 +223,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           ))
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmPartnershipController.show().url)
         }
       }
       "store partnership info returned KnownFactsMismatchFailure for a limited partnership" should {
@@ -245,7 +246,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
           ))
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmPartnershipController.show().url)
         }
       }
       "store partnership info returned StorePartnershipInformationFailureResponse" should {
@@ -281,7 +282,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
         ))
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmPartnershipController.show().url)
       }
     }
     "store partnership info returned PartnershipUtrNotFound for a limited partnership" should {
@@ -304,7 +305,7 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
         ))
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmPartnershipController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmPartnershipController.show().url)
 
       }
     }

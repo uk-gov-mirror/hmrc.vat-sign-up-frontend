@@ -22,6 +22,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
@@ -173,7 +174,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+          redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
         )
       }
     }
@@ -286,7 +287,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.MigrationInProgressErrorController.show().url)
+          redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
         )
       }
     }

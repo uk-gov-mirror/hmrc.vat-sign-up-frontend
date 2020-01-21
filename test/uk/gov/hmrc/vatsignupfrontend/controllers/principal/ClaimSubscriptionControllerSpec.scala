@@ -19,18 +19,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
-import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockClaimSubscriptionService, MockStoreVatNumberService}
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, InvalidVatNumber, SubscriptionClaimed}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
 
 import scala.concurrent.Future
 
@@ -68,7 +67,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
               status(result) shouldBe SEE_OTHER
-              redirectLocation(result) should contain(bta.routes.BusinessAlreadySignedUpController.show().url)
+              redirectLocation(result) should contain(errorRoutes.BusinessAlreadySignedUpController.show().url)
             }
           }
           "claim subscription service returns anything else" should {

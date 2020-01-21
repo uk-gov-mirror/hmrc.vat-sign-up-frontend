@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -163,7 +163,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigratableDatesController.show().url)
+            redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
         }
       }
@@ -178,7 +178,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigratableDatesController.show().url)
+            redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
         }
       }
@@ -208,7 +208,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.DeregisteredVatNumberController.show().url)
+            redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
           )
         }
       }
@@ -223,7 +223,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigrationInProgressErrorController.show().url)
+            redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
           )
         }
       }
@@ -255,7 +255,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+            redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
           )
         }
       }
@@ -270,7 +270,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.AlreadySignedUpController.show().url)
+            redirectUri(errorRoutes.AlreadySignedUpController.show().url)
           )
         }
       }
@@ -329,7 +329,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigratableDatesController.show().url)
+            redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
         }
       }
@@ -358,7 +358,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.MigrationInProgressErrorController.show().url)
+            redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
           )
         }
       }
@@ -374,7 +374,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(bta.routes.BusinessAlreadySignedUpController.show().url)
+            redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
           )
         }
       }
@@ -389,7 +389,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.AlreadySignedUpController.show().url)
+            redirectUri(errorRoutes.AlreadySignedUpController.show().url)
           )
         }
       }

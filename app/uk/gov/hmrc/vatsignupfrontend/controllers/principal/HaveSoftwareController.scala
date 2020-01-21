@@ -19,8 +19,9 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.play.bootstrap.controller.{BaseController, FrontendController}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.have_software
@@ -48,7 +49,7 @@ class HaveSoftwareController @Inject()(val controllerComponents: ControllerCompo
         case Yes =>
           Future.successful(Redirect(routes.SoftwareReadyController.show()))
         case No =>
-          Future.successful(Redirect(routes.ChooseSoftwareErrorController.show()))
+          Future.successful(Redirect(errorRoutes.ChooseSoftwareErrorController.show()))
       }
     )
   }

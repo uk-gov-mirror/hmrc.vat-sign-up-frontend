@@ -24,6 +24,7 @@ import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
@@ -166,7 +167,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.DeregisteredVatNumberController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.DeregisteredVatNumberController.show().url)
           }
         }
 
@@ -192,7 +193,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.MigratableDatesController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
           }
         }
         "the vat number has already been signed up and migration is progress" should {
@@ -205,7 +206,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.MigrationInProgressErrorController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.MigrationInProgressErrorController.show().url)
           }
         }
         "the vat number has already been enrolled to another cred" should {
@@ -218,7 +219,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
             val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
             status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(bta.routes.BusinessAlreadySignedUpController.show().url)
+            redirectLocation(result) shouldBe Some(errorRoutes.BusinessAlreadySignedUpController.show().url)
           }
         }
         "the user has an MTD-VAT and VAT-DEC enrolment" should {
@@ -232,7 +233,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockControllerCompone
 
               val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
               status(result) shouldBe Status.SEE_OTHER
-              redirectLocation(result) shouldBe Some(routes.AlreadySignedUpController.show().url)
+              redirectLocation(result) shouldBe Some(errorRoutes.AlreadySignedUpController.show().url)
             }
           }
         }

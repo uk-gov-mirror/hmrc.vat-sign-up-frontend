@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser._
@@ -85,14 +85,14 @@ class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerCom
                     SessionKeys.companyNameKey -> companyName
                   ).addingToSession(SessionKeys.partnershipTypeKey, partnershipEntity)
               case Right(CompanyClosed(companyName)) =>
-                Redirect(agentRoutes.DissolvedCompanyController.show())
+                Redirect(errorRoutes.DissolvedCompanyController.show())
                   .addingToSession(
                     SessionKeys.companyNameKey -> companyName
                   )
               case Right(CompanyDetails(_, NonPartnershipEntity)) =>
-                Redirect(routes.NotALimitedPartnershipController.show())
+                Redirect(errorRoutes.NotALimitedPartnershipController.show())
               case Left(CompanyNumberNotFound) =>
-                Redirect(routes.CouldNotFindPartnershipController.show())
+                Redirect(errorRoutes.CouldNotFindPartnershipController.show())
               case Left(GetCompanyNameFailureResponse(status)) =>
                 throw new InternalServerException(s"getCompanyName failed: status=$status")
             }

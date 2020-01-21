@@ -21,6 +21,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.eligibility.AreYouReadySubmitSoftwareForm.areYouReadySubmitSoftwareForm
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.are_you_ready_submit_software
@@ -57,7 +58,7 @@ class AreYouReadySubmitSoftwareController @Inject()(val controllerComponents: Co
           case Yes =>
             Future.successful(Redirect(routes.MakingTaxDigitalSoftwareController.show()))
           case No =>
-            Future.successful(Redirect(routes.ReturnDueController.show()))
+            Future.successful(Redirect(errorRoutes.ReturnDueController.show()))
         }
       )
   }
