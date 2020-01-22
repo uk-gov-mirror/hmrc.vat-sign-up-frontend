@@ -528,17 +528,6 @@ principal.email_verified.title                                         = Rydych 
 principal.email_verified.heading                                       = Rydych wedi dilysu''ch cyfrif e-bost
 principal.email_verified.line_1                                        = Cewch negeseuon a hysbysiadau e-bost oddi wrth CThEM o hyn ymlaen.
 
-## Failed IV page
-principal.failed_identity_verification.title                           = Doedd dim modd cadarnhau''ch manylion
-principal.failed_identity_verification.heading                         = Doedd dim modd cadarnhau''ch manylion
-principal.failed_identity_verification.line_1                          = Dydy''r wybodaeth rydych wedi''i nodi ddim yn cyd-fynd â''r manylion ar ein system.
-principal.failed_identity_verification.try_again                       = Rhowch gynnig arall arni
-
-## Success IV page
-principal.identity_verification_success.title                          = Rydym wedi cadarnhau pwy ydych
-principal.identity_verification_success.heading                        = Rydym wedi cadarnhau pwy ydych
-principal.identity_verification_success.line_1                         = Gallwch nawr gofrestru ar gyfer y gwasanaeth hwn.
-
 ## Confirmation page
 principal.confirmation.title                                           = Mae''ch cais i gofrestru wedi dod i law
 principal.confirmation.heading                                         = Mae''ch cais i gofrestru wedi dod i law

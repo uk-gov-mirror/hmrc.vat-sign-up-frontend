@@ -568,17 +568,6 @@ principal.confirm_nino.summary.sub_heading                             = You''ve
 principal.confirm_nino.summary.business_type                           = Your business type
 principal.confirm_nino.summary.nino                                    = Your National Insurance number
 
-## Failed IV page
-principal.failed_identity_verification.title                           = We couldn''t confirm your details
-principal.failed_identity_verification.heading                         = We couldn''t confirm your details
-principal.failed_identity_verification.line_1                          = The information you provided doesn''t match the details on our system.
-principal.failed_identity_verification.try_again                       = Try again
-
-## Success IV page
-principal.identity_verification_success.title                          = We''ve confirmed your identity
-principal.identity_verification_success.heading                        = We''ve confirmed your identity
-principal.identity_verification_success.line_1                         = You can now sign up for this service.
-
 ## Confirmation page
 principal.confirmation.title                                           = We have received your request to sign up
 principal.confirmation.heading                                         = We have received your request to sign up

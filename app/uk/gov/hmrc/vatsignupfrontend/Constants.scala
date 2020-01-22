@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend
 
 object Constants {
-  val StoreIdentityVerificationUrlKey = "journeyLink"
 
   val GetCompanyNameCodeKey = "company_name"
   val GetCompanyStatusCodeKey = "company_status"
@@ -42,5 +41,4 @@ object Constants {
     val serviceName = "HMRC-MTD-VAT"
   }
 
-  val skipIvJourneyValue = "skipIdentityVerification"
 }
