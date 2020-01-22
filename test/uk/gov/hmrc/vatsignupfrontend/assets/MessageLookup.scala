@@ -589,13 +589,6 @@ object MessageLookup {
     val link = "Change details"
   }
 
-  object FailedIdentityVerification {
-    val heading: String = "We couldn't confirm your details"
-    val title = heading + ServiceName.principalSuffix
-    val line1 = "The information you provided doesn't match the details on our system."
-    val tryAgain = "Try again"
-  }
-
   object CouldNotConfirmBusiness {
     val heading: String = "We could not confirm your business"
     val title = heading + ServiceName.principalSuffix
@@ -615,12 +608,6 @@ object MessageLookup {
     val title = heading + ServiceName.principalSuffix
     val line1 = "The information you provided does not match the details we have about the business."
     val tryAgain = "Try again"
-  }
-
-  object IdentityVerificationSuccess {
-    val heading: String = "We've confirmed your identity"
-    val title = heading + ServiceName.principalSuffix
-    val line1 = "You can now sign up for this service."
   }
 
   object FailedMatching {

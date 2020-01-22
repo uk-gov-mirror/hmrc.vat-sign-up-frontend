@@ -29,7 +29,6 @@ object SessionKeys {
   val emailKey = "Email"
   val transactionEmailKey = "TransactionEmail"
   val businessEntityKey = "BusinessEntity"
-  val identityVerificationContinueUrlKey = "IdentityVerification"
   val vatRegistrationDateKey = "VatRegistrationDate"
   val businessPostCodeKey = "BusinessPostCode"
   val partnershipPostCodeKey = "PartnershipPostCode"

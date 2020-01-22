@@ -107,9 +107,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
   def storeTransactionEmailAddressUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/transaction-email"
 
-  def storeIdentityVerificationUrl(vatNumber: String): String =
-    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/identity-verification"
-
   def storePartnershipInformationUrl(vatNumber: String) =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/partnership-information"
 
@@ -164,14 +161,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: 
 
   // TODO confirm url
   lazy val authoriseAgentUrl: String = loadConfig("agent-services.url")
-
-  lazy val identityVerificationProxyUrl: String = baseUrl("identity-verification-proxy")
-
-  lazy val identityVerificationStartUrl: String = identityVerificationProxyUrl + "/identity-verification-proxy/journey/start"
-
-  lazy val identityVerificationFrontendUrl: String = loadConfig("identity-verification-frontend.url")
-
-  def identityVerificationFrontendRedirectionUrl(link: String): String = s"$identityVerificationFrontendUrl$link"
 
   lazy val contactFrontendUrl: String = loadConfig("contact-frontend.host")
 
