@@ -3,11 +3,6 @@
 # Guidance page
 GET         /                                                   uk.gov.hmrc.vatsignupfrontend.controllers.agent.GuidanceController.show
 
-# Not enrolled
-GET         /there-is-a-problem                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.NotEnrolledToAgentServicesController.show
-
-GET         /not-authorised                                     uk.gov.hmrc.vatsignupfrontend.controllers.agent.NoAgentClientRelationshipController.show
-
 # Capture VRN
 GET         /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.show
 POST        /vat-number                                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureVatNumberController.submit
@@ -18,9 +13,6 @@ GET         /vat-number/:vatNumber                              uk.gov.hmrc.vats
 # Confirm VRN
 GET         /confirm-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.show
 POST        /confirm-vat-number                                 uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmVatNumberController.submit
-
-# Cannot use service yet
-GET         /cannot-use-service-yet                             uk.gov.hmrc.vatsignupfrontend.controllers.agent.CannotUseServiceController.show
 
 # Capture NINO
 GET         /national-insurance-number                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.CaptureNinoController.show
@@ -46,16 +38,8 @@ POST        /business-type                                      uk.gov.hmrc.vats
 GET         /business-type-other                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityOtherController.show
 POST        /business-type-other                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureBusinessEntityOtherController.submit
 
-# Could not confirm VAT Number
-GET         /could-not-confirm-VAT-number                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.show
-POST        /could-not-confirm-VAT-number                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.CouldNotConfirmVatNumberController.submit
-
-# Could not confirm Company name
-GET         /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.show
-POST        /could-not-confirm-company                          uk.gov.hmrc.vatsignupfrontend.controllers.agent.CompanyNameNotFoundController.submit
-
 # manage the routing of the email flow
-#GET         /email                                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
+#GET        /email                                              uk.gov.hmrc.vatsignupfrontend.controllers.agent.EmailRoutingController.route
 
 #Capture Email
 GET         /client-email-address                               uk.gov.hmrc.vatsignupfrontend.controllers.agent.CaptureClientEmailController.show
@@ -77,10 +61,6 @@ POST        /confirm-email                                      uk.gov.hmrc.vats
 #Verify Email
 GET         /sent-client-email                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.show
 POST        /sent-client-email                                  uk.gov.hmrc.vatsignupfrontend.controllers.agent.SentClientEmailController.submit
-
-# Use different email address
-GET         /use-different-email-address                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.show
-POST        /use-different-email-address                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.UseDifferentEmailAddressController.submit
 
 #Verify Agent Email
 GET         /verify-email                                       uk.gov.hmrc.vatsignupfrontend.controllers.agent.VerifyAgentEmailController.show
@@ -140,10 +120,6 @@ POST        /registered-society-company-number                  uk.gov.hmrc.vats
 # Confirm Registered Society Name
 GET         /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmRegisteredSocietyController.show
 POST        /confirm-registered-society                         uk.gov.hmrc.vatsignupfrontend.controllers.agent.ConfirmRegisteredSocietyController.submit
-
-# Registered Society Company Name not found
-GET         /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.show
-POST        /registered-society-company-name-not-found          uk.gov.hmrc.vatsignupfrontend.controllers.agent.RegisteredSocietyCompanyNameNotFoundController.submit
 
 # Client Contact Preferences
 GET         /receive-email-notifications                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.ContactPreferenceController.show
