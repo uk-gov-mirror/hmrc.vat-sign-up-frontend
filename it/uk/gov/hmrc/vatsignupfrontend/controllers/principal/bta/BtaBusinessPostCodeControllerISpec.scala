@@ -96,7 +96,7 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
 
       res should have(
         httpStatus(SEE_OTHER),
-        redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+        redirectUri(errorRoutes.CouldNotConfirmBusinessController.show().url)
       )
     }
   }

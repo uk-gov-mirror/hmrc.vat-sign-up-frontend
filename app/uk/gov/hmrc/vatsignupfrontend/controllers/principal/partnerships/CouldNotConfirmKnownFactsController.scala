@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.could_not_confirm_known_facts
 
 import scala.concurrent.Future
@@ -32,7 +33,7 @@ class CouldNotConfirmKnownFactsController @Inject()(val controllerComponents: Co
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_known_facts(routes.CouldNotConfirmKnownFactsController.submit())))
+        Ok(could_not_confirm_known_facts(errorRoutes.CouldNotConfirmKnownFactsController.submit())))
     }
   }
 

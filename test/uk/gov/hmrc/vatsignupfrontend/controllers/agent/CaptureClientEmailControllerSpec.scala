@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
@@ -89,7 +90,7 @@ class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCaptureClientEmailController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.UseDifferentEmailAddressController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.UseDifferentEmailAddressController.show().url)
         }
       }
     }

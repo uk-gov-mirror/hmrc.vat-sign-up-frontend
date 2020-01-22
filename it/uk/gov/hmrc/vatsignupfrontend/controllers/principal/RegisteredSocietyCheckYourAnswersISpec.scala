@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreRegisteredSocietyStub._
@@ -84,7 +85,7 @@ class RegisteredSocietyCheckYourAnswersISpec extends ComponentSpecBase with Cust
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+            redirectUri(errorRoutes.CouldNotConfirmBusinessController.show().url)
           )
         }
       }

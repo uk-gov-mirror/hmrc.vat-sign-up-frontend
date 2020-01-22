@@ -193,7 +193,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(errorRoutes.CannotUseServiceController.show().url)
           )
         }
       }
@@ -343,7 +343,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CannotUseServiceController.show().url)
+            redirectUri(errorRoutes.CannotUseServiceController.show().url)
           )
         }
       }

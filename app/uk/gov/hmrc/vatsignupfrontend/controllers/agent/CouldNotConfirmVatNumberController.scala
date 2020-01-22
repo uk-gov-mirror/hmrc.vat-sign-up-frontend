@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.could_not_confirm_vat_number
 
 import scala.concurrent.Future
@@ -32,7 +33,7 @@ class CouldNotConfirmVatNumberController @Inject()(val controllerComponents: Con
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(could_not_confirm_vat_number(routes.CouldNotConfirmVatNumberController.submit())))
+        Ok(could_not_confirm_vat_number(errorRoutes.CouldNotConfirmVatNumberController.submit())))
     }
   }
 

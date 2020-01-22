@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -286,7 +287,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.CouldNotConfirmKnownFactsController.show().url)
+          redirectUri(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
         )
       }
     }

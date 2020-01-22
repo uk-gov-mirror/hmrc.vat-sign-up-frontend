@@ -17,13 +17,13 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser.StorePartnershipInformationSuccess
@@ -90,7 +90,7 @@ class ConfirmGeneralPartnershipController @Inject()(val controllerComponents: Co
                     Future.failed(new BadGatewayException("Store partnership information failed"))
                 }
               case No =>
-                Future.successful(Redirect(routes.SignInWithDifferentDetailsPartnershipController.show()))
+                Future.successful(Redirect(errorRoutes.SignInWithDifferentDetailsPartnershipController.show()))
             }
           )
         case (None, _) =>

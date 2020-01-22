@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.registered_society_company_name_not_found
 
 import scala.concurrent.Future
@@ -32,7 +33,7 @@ class RegisteredSocietyCompanyNameNotFoundController @Inject()(val controllerCom
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       Future.successful(
-        Ok(registered_society_company_name_not_found(routes.RegisteredSocietyCompanyNameNotFoundController.submit()))
+        Ok(registered_society_company_name_not_found(errorRoutes.RegisteredSocietyCompanyNameNotFoundController.submit()))
       )
     }
   }

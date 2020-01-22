@@ -81,7 +81,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         val result = TestConfirmVatNumberController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.CouldNotConfirmVatNumberController.show().url)
+        redirectLocation(result) should contain(errorRoutes.CouldNotConfirmVatNumberController.show().url)
 
         await(result).session(request).get(SessionKeys.vatNumberKey) shouldBe None
       }
@@ -156,7 +156,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.NoAgentClientRelationshipController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.NoAgentClientRelationshipController.show().url)
       }
     }
 
@@ -167,7 +167,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
 
         val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CannotUseServiceController.show().url)
       }
 
       "redirect to sign up after this date page when one date is available" in {

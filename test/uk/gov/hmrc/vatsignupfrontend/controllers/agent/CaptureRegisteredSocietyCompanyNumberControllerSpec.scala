@@ -99,7 +99,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
       }
@@ -115,7 +115,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
 
         val result = TestCaptureRegisteredSocietyCompanyNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCompanyNameNotFoundController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.RegisteredSocietyCompanyNameNotFoundController.show().url)
 
         result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
       }

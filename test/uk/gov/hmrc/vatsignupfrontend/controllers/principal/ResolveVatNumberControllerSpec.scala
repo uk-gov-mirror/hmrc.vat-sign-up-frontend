@@ -24,8 +24,8 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
 import scala.concurrent.Future
@@ -60,14 +60,14 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       }
     }
 
-      "user has a MTD-VAT enrolment" should {
-        "redirect to Multiple Vat Check page" in {
-          mockAuthRetrieveAllVatEnrolments()
-          val result = TestResolveVatNumberController.resolve(testGetRequest)
+    "user has a MTD-VAT enrolment" should {
+      "redirect to Multiple Vat Check page" in {
+        mockAuthRetrieveAllVatEnrolments()
+        val result = TestResolveVatNumberController.resolve(testGetRequest)
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
-        }
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.MultipleVatCheckController.show().url)
+      }
     }
 
     "the user has an agent enrolment" should {
@@ -77,7 +77,7 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val result = TestResolveVatNumberController.resolve(testGetRequest)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.AgentUsingPrincipalJourneyController.show().url)
+        redirectLocation(result) should contain(errorRoutes.AgentUsingPrincipalJourneyController.show().url)
       }
     }
 
@@ -94,7 +94,7 @@ class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         val result = TestResolveVatNumberController.resolve(testGetRequest)
 
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) should contain(routes.AgentUsingPrincipalJourneyController.show().url)
+        redirectLocation(result) should contain(errorRoutes.AgentUsingPrincipalJourneyController.show().url)
       }
     }
   }

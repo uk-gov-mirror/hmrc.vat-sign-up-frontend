@@ -73,11 +73,11 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                       .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
                       .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                   case NoAgentClientRelationship =>
-                    Redirect(routes.NoAgentClientRelationshipController.show())
+                    Redirect(errorRoutes.NoAgentClientRelationshipController.show())
                   case AlreadySubscribed =>
                     Redirect(errorRoutes.AlreadySignedUpController.show())
                   case Ineligible =>
-                    Redirect(routes.CannotUseServiceController.show())
+                    Redirect(errorRoutes.CannotUseServiceController.show())
                   case Deregistered =>
                     Redirect(errorRoutes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>
@@ -86,12 +86,12 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                   case MigrationInProgress =>
                     Redirect(errorRoutes.MigrationInProgressErrorController.show())
                   case InvalidVatNumber =>
-                    Redirect(routes.CouldNotConfirmVatNumberController.show())
+                    Redirect(errorRoutes.CouldNotConfirmVatNumberController.show())
                   case errorResponse =>
                     throw new InternalServerException(s"storeVatNumberOrchestration failed due to $errorResponse")
                 }
               else Future.successful(
-                Redirect(routes.CouldNotConfirmVatNumberController.show())
+                Redirect(errorRoutes.CouldNotConfirmVatNumberController.show())
               ).removeSessionKey(SessionKeys.vatNumberKey)
             case _ =>
               Future.successful(

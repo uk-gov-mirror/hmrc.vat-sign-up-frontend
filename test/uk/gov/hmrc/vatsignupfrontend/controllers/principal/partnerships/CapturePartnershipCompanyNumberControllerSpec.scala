@@ -99,7 +99,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val result = TestCaptureCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmCompanyController.show().url)
       }
     }
 
@@ -114,7 +114,7 @@ class CapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceO
         val result = TestCaptureCompanyNumberController.submit(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CouldNotConfirmCompanyController.show().url)
+        redirectLocation(result) shouldBe Some(errorRoutes.CouldNotConfirmCompanyController.show().url)
       }
     }
     "get company name succeeds when non partnership entity entered" should {

@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testVatNumber}
@@ -114,7 +115,7 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
           ))
 
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.SignInWithDifferentDetailsPartnershipController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.SignInWithDifferentDetailsPartnershipController.show().url)
         }
       }
     }

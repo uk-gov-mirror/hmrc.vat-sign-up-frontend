@@ -54,7 +54,7 @@ class BtaBusinessPostCodeController @Inject()(val controllerComponents: Controll
                                 vatRegistrationDate: DateModel)(implicit hc: HeaderCarrier): Future[Result] =
     claimSubscriptionService.claimSubscription(vatNumber, optPostCode, vatRegistrationDate, isFromBta = true) map {
       case Right(SubscriptionClaimed) => Redirect(principalRoutes.SignUpCompleteClientController.show())
-      case Left(KnownFactsMismatch) => Redirect(routes.CouldNotConfirmBusinessController.show())
+      case Left(KnownFactsMismatch) => Redirect(errorRoutes.CouldNotConfirmBusinessController.show())
       case Left(AlreadyEnrolledOnDifferentCredential) => Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
       case err@_ => throw new InternalServerException("unexpected response on store vat number " + err)
     }

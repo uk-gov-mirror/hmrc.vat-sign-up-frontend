@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub._
@@ -91,7 +92,6 @@ class CheckYourAnswersCompanyControllerISpec extends ComponentSpecBase with Cust
         }
       }
       "CTUTR is a mismatch" should {
-        // TODO confirm redirection location
         "redirect to could not confirm company" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreCompanyNumberCtMismatch(testVatNumber, testCompanyNumber, testCtUtr)
@@ -107,7 +107,7 @@ class CheckYourAnswersCompanyControllerISpec extends ComponentSpecBase with Cust
 
           res should have(
             httpStatus(SEE_OTHER),
-            redirectUri(routes.CouldNotConfirmBusinessController.show().url)
+            redirectUri(errorRoutes.CouldNotConfirmBusinessController.show().url)
           )
         }
       }
@@ -133,7 +133,8 @@ class CheckYourAnswersCompanyControllerISpec extends ComponentSpecBase with Cust
           session.keys should contain(vatNumberKey)
           session.keys shouldNot contain(companyNumberKey)
           session.keys shouldNot contain(companyUtrKey)
-          session.keys shouldNot contain(businessEntityKey)        }
+          session.keys shouldNot contain(businessEntityKey)
+        }
       }
     }
   }

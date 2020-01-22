@@ -61,7 +61,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
           companyNumber =>
             if (companyNumber.startsWith("BR")) {
               Future.successful(
-                Redirect(routes.CompanyNameNotFoundController.show())
+                Redirect(errorRoutes.CompanyNameNotFoundController.show())
                 // should be removed when NonUK UK established is live
               )
             } else {
@@ -80,7 +80,7 @@ class CaptureCompanyNumberController @Inject()(val controllerComponents: Control
                       SessionKeys.companyNameKey -> companyName
                     )
                 case Left(CompanyNumberNotFound) =>
-                  Redirect(routes.CompanyNameNotFoundController.show())
+                  Redirect(errorRoutes.CompanyNameNotFoundController.show())
                 case Left(GetCompanyNameFailureResponse(status)) =>
                   throw new InternalServerException(s"getCompanyName failed: status=$status")
               }

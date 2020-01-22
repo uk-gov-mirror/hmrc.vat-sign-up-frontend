@@ -17,11 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import play.mvc.Http.Status.OK
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class ReturnDueControllerISpec extends ComponentSpecBase with CustomMatchers {
-  s"GET ${errorRoutes.ReturnDueController.show().url}" should {
+  s"GET ${routes.ReturnDueController.show().url}" should {
     s"return $OK" in {
       val res = get("/error/return-due")
 

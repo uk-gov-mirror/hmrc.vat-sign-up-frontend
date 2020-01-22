@@ -313,7 +313,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.VatCouldNotConfirmBusinessController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.VatCouldNotConfirmBusinessController.show().url)
         }
       }
       "store vat number returned InvalidVatNumber" should {
@@ -330,7 +330,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.InvalidVatNumberController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.InvalidVatNumberController.show().url)
         }
       }
       "store vat number returned IneligibleVatNumber" should {
@@ -347,7 +347,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CannotUseServiceController.show().url)
+          redirectLocation(result) shouldBe Some(errorRoutes.CannotUseServiceController.show().url)
         }
       }
       "store vat number returned VatMigrationInProgress" should {

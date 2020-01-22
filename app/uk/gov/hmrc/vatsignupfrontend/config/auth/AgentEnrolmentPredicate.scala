@@ -20,9 +20,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results._
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
-import uk.gov.hmrc.vatsignupfrontend.controllers.RetrievalPredicate
-import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.agentEnrolmentKey
+import uk.gov.hmrc.vatsignupfrontend.controllers.RetrievalPredicate
+import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 
 import scala.concurrent.Future
 
@@ -34,6 +34,6 @@ object AgentEnrolmentPredicate extends RetrievalPredicate[Enrolments] {
     enrolments =>
       if (enrolments.getEnrolment(agentEnrolmentKey).isDefined) block
       else Future.successful(
-        Redirect(routes.NotEnrolledToAgentServicesController.show())
+        Redirect(errorRoutes.NotEnrolledToAgentServicesController.show())
       )
 }
