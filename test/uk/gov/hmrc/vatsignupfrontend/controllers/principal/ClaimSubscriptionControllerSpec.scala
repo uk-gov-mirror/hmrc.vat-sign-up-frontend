@@ -17,28 +17,29 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, InvalidVatNumber, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
 class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockClaimSubscriptionService {
+  with MockVatControllerComponents with MockClaimSubscriptionService {
 
-  object TestClaimSubscriptionController extends ClaimSubscriptionController(mockControllerComponents, mockClaimSubscriptionService)
+  object TestClaimSubscriptionController extends ClaimSubscriptionController(mockClaimSubscriptionService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/claim-subscription")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/claim-subscription")
 
   "show" when {
     "the BTA claim subscription feature switch is enabled" when {
@@ -79,7 +80,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
               val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
 
-              intercept[InternalServerException](await(result))
+              intercept[InternalServerException](result)
             }
           }
         }
@@ -93,7 +94,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             val result = TestClaimSubscriptionController.show(nonMatchingVatNumber)(testGetRequest)
 
-            intercept[InternalServerException](await(result))
+            intercept[InternalServerException](result)
           }
         }
       }
@@ -109,9 +110,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             status(result) shouldBe SEE_OTHER
             redirectLocation(result) should contain(btaRoutes.CaptureBtaVatRegistrationDateController.show().url)
 
-            val session = await(result).session(testGetRequest)
-
-            session.get(vatNumberKey) should contain(testVatNumber)
+            session(result).get(vatNumberKey) should contain(testVatNumber)
           }
         }
         "the VAT number is invalid" should {
@@ -124,7 +123,7 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
             val result = TestClaimSubscriptionController.show(invalidVatNumber)(testGetRequest)
 
-            intercept[InternalServerException](await(result))
+            intercept[InternalServerException](result)
           }
         }
       }

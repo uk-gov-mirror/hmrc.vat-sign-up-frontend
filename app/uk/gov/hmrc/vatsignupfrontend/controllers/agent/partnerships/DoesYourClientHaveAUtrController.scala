@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -27,10 +27,11 @@ import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm.doYouHaveAUtrForm
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.does_your_client_have_a_utr
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DoesYourClientHaveAUtrController @Inject()(val controllerComponents: ControllerComponents)
+class DoesYourClientHaveAUtrController @Inject()(implicit ec: ExecutionContext,
+                                                   vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(OptionalSautrJourney)) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

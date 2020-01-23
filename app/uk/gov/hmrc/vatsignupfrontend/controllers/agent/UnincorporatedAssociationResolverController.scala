@@ -20,18 +20,18 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreUnincorporatedAssociationInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreUnincorporatedAssociationInformationService
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UnincorporatedAssociationResolverController @Inject()(val controllerComponents: ControllerComponents,
-                                                            storeUnincorporatedAssociationInformationService: StoreUnincorporatedAssociationInformationService
-                                                           )
+class UnincorporatedAssociationResolverController @Inject()(storeUnincorporatedAssociationInformationService: StoreUnincorporatedAssociationInformationService)
+                                                           (implicit ec: ExecutionContext,
+                                                            vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>

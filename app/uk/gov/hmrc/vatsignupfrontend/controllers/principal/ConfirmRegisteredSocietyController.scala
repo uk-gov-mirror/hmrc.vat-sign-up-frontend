@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.CtReferenceLookupHttpParser.{CtReferenceIsFound, CtReferenceLookupFailureResponse, CtReferenceNotFound}
@@ -30,13 +30,13 @@ import uk.gov.hmrc.vatsignupfrontend.services.{CtReferenceLookupService, StoreRe
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_registered_society
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmRegisteredSocietyController @Inject()(val controllerComponents: ControllerComponents,
-                                                   val storeRegisteredSocietyService: StoreRegisteredSocietyService,
-                                                   val ctReferenceLookupService: CtReferenceLookupService
-                                                  )
+class ConfirmRegisteredSocietyController @Inject()(storeRegisteredSocietyService: StoreRegisteredSocietyService,
+                                                   ctReferenceLookupService: CtReferenceLookupService)
+                                                  (implicit ec: ExecutionContext,
+                                                   vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

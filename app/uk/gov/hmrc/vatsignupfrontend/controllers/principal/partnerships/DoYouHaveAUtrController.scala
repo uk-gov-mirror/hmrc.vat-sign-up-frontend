@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -27,12 +27,12 @@ import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.do_you_have_a_utr
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DoYouHaveAUtrController @Inject()(val controllerComponents: ControllerComponents)
+class DoYouHaveAUtrController @Inject()(implicit ec: ExecutionContext,
+                                          vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(OptionalSautrJourney)) {
-  // TODO: change to OptionalSautrJourney feature switch
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

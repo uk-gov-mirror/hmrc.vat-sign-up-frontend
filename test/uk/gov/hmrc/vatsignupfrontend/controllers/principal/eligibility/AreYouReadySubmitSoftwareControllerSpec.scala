@@ -16,26 +16,27 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility
 
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.eligibility.AreYouReadySubmitSoftwareForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.are_you_ready_submit_software
 
-class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockControllerComponents {
+class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockVatControllerComponents {
 
-  object TestAreYouReadySubmitSoftwareController extends AreYouReadySubmitSoftwareController(mockControllerComponents)
+  object TestAreYouReadySubmitSoftwareController extends AreYouReadySubmitSoftwareController
 
   "The show method" should {
     "render the are_you_ready_submit_software view" in {
-      implicit val testGetRequest = FakeRequest("GET", "/are-you-ready-to-submit")
+      implicit val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/are-you-ready-to-submit")
+      implicit lazy val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequest)
 
-      val result = await(TestAreYouReadySubmitSoftwareController.show(testGetRequest))
+      val result = TestAreYouReadySubmitSoftwareController.show(testGetRequest)
 
       status(result) shouldBe OK
       contentAsString(result) shouldBe are_you_ready_submit_software(areYouReadySubmitSoftwareForm, routes.AreYouReadySubmitSoftwareController.submit()).body
@@ -48,8 +49,10 @@ class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockControll
 
     "reload the view with errors" when {
       "user does not click a radio button" in {
-        implicit val request = testPostRequest(entityTypeVal = "")
-        val result = await(TestAreYouReadySubmitSoftwareController.submit(request))
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(entityTypeVal = "")
+        implicit lazy val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
+
+        val result = TestAreYouReadySubmitSoftwareController.submit(request)
 
         status(result) shouldBe BAD_REQUEST
         contentAsString(result) shouldBe are_you_ready_submit_software(
@@ -62,7 +65,7 @@ class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockControll
 
     "redirect to Making Tax Digital Software Page" when {
       "user selects the Yes button" in {
-        val result = await(TestAreYouReadySubmitSoftwareController.submit(testPostRequest(entityTypeVal = option_yes)))
+        val result = TestAreYouReadySubmitSoftwareController.submit(testPostRequest(entityTypeVal = option_yes))
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.MakingTaxDigitalSoftwareController.show().url)
@@ -71,7 +74,7 @@ class AreYouReadySubmitSoftwareControllerSpec extends UnitSpec with MockControll
 
     "redirect to Return Due Page" when {
       "user selects No button" in {
-        val result = await(TestAreYouReadySubmitSoftwareController.submit(testPostRequest(entityTypeVal = option_no)))
+        val result = TestAreYouReadySubmitSoftwareController.submit(testPostRequest(entityTypeVal = option_no))
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.ReturnDueController.show().url)

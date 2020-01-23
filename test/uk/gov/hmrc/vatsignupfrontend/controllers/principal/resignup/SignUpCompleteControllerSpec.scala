@@ -18,46 +18,39 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.resignup
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.i18n.Messages.Implicits.applicationMessages
-import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.test.UnitSpec
+import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class SignUpCompleteControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SignUpCompleteControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestSignUpCompleteController extends SignUpCompleteController(mockControllerComponents)
+  object TestSignUpCompleteController extends SignUpCompleteController
 
   lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/sign-up-complete").withSession(
     SessionKeys.businessEntityKey -> SoleTrader.toString,
     SessionKeys.vatNumberKey -> testVatNumber
   )
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  val appConfig = new AppConfig(configuration, env)
-
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.sign_up_complete(SoleTrader, testVatNumber)(
-    FakeRequest("GET", "/sign-up-complete"),
-    applicationMessages,
-    appConfig
-  )
+  lazy val page: Html =
+    uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.sign_up_complete(SoleTrader, testVatNumber)(
+      testGetRequest,
+      mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequest),
+      mockVatControllerComponents.appConfig
+    )
 
   "Calling the show action of the sign up complete controller" should {
     "show the sign up complete page" in {
       mockAuthAdminRole()
       val request = testGetRequest
 
-      val result = await(TestSignUpCompleteController.show(request))
+      val result = TestSignUpCompleteController.show(request)
+
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")

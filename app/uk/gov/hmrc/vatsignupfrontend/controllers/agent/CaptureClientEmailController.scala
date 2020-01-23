@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
@@ -27,10 +27,11 @@ import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CaptureClientEmailController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureClientEmailController @Inject()(implicit ec: ExecutionContext,
+                                               vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateEmailForm: PrevalidationAPI[String] = emailForm(isAgent = true)

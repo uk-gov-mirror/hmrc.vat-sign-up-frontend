@@ -21,15 +21,15 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class BtaCouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class BtaCouldNotConfirmBusinessControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCouldNotConfirmBusinessController extends BtaCouldNotConfirmBusinessController(mockControllerComponents)
+  object TestCouldNotConfirmBusinessController extends BtaCouldNotConfirmBusinessController
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/bta/could-not-confirm-business")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/bta/could-not-confirm-business")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/error/bta/could-not-confirm-business")

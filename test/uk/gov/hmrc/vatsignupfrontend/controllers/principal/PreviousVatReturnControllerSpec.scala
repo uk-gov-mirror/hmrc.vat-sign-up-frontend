@@ -17,22 +17,22 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerComponents {
+class PreviousVatReturnControllerSpec extends UnitSpec with MockVatControllerComponents {
 
-  object TestPreviousVatReturnController extends PreviousVatReturnController(mockControllerComponents)
+  object TestPreviousVatReturnController extends PreviousVatReturnController
 
-  val testGetRequest = FakeRequest("GET", "/submitted-vat-return")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/submitted-vat-return")
 
   def testPostRequest(usersChoice: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/submitted-vat-return").withFormUrlEncodedBody(yesNo -> usersChoice)
@@ -69,7 +69,7 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
           val result = TestPreviousVatReturnController.submit(testRequest)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
-          result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.stringValue)
+          session(result).get(SessionKeys.previousVatReturnKey) shouldBe Some(Yes.stringValue)
         }
       }
 
@@ -83,7 +83,7 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
             val result = TestPreviousVatReturnController.submit(testRequest)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
-            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.stringValue)
+            session(result).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.stringValue)
           }
         }
         "the VAT number is stored successfully" should {
@@ -98,9 +98,9 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockControllerCompon
             val result = TestPreviousVatReturnController.submit(testRequest)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
-            result.session(testRequest).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.stringValue)
-            result.session(testRequest).get(SessionKeys.lastReturnMonthPeriodKey) shouldBe None
-            result.session(testRequest).get(SessionKeys.box5FigureKey) shouldBe None
+            session(result).get(SessionKeys.previousVatReturnKey) shouldBe Some(No.stringValue)
+            session(result).get(SessionKeys.lastReturnMonthPeriodKey) shouldBe None
+            session(result).get(SessionKeys.box5FigureKey) shouldBe None
           }
         }
       }

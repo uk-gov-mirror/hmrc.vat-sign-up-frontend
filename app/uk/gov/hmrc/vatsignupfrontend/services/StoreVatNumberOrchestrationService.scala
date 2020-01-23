@@ -29,7 +29,6 @@ import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-//noinspection ScalaStyle
 class StoreVatNumberOrchestrationService @Inject()(checkVatNumberEligibilityService: CheckVatNumberEligibilityService,
                                                    storeMigratedVatNumberService: StoreMigratedVatNumberService,
                                                    storeVatNumberService: StoreVatNumberService,

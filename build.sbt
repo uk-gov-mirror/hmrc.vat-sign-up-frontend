@@ -45,8 +45,6 @@ libraryDependencies ++= AppDependencies.appDependencies
 retrieveManaged := true
 evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
 
-routesGenerator := InjectedRoutesGenerator
-
 Keys.fork in Test := true
 javaOptions in Test += "-Dlogger.resource=logback-test.xml"
 parallelExecution in Test := true

@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -75,7 +75,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.get(isMigratedKey) shouldBe Some("true")
         }
       }
@@ -94,7 +94,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.get(hasDirectDebitKey) shouldBe Some("false")
         }
       }
@@ -113,7 +113,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.get(hasDirectDebitKey) shouldBe Some("false")
         }
       }
@@ -132,7 +132,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.get(hasDirectDebitKey) shouldBe Some("false")
         }
       }

@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreRegisteredSocietyHttpParser._
 
 class StoreRegisteredSocietyHttpParserSpec extends UnitSpec {

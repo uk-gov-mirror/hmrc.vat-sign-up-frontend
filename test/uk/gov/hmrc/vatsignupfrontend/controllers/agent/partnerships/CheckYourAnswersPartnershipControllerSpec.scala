@@ -22,9 +22,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -37,11 +37,11 @@ import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 
 import scala.concurrent.Future
 
-class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStorePartnershipInformationService {
 
   object TestCheckYourAnswersPartnershipController extends CheckYourAnswersPartnershipController(
-    mockControllerComponents, mockStorePartnershipInformationService
+    mockStorePartnershipInformationService
   )
 
   private def sessionValues(vatNumber: Option[String] = Some(testVatNumber),
@@ -258,11 +258,11 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
             Some(testBusinessPostcode)
           )(Future.successful(Left(StorePartnershipInformationFailureResponse(500))))
 
-          intercept[InternalServerException](await(TestCheckYourAnswersPartnershipController.submit(testPostRequest(
+          intercept[InternalServerException](TestCheckYourAnswersPartnershipController.submit(testPostRequest(
             entityType = Some(GeneralPartnership),
             sautr = Some(testSaUtr),
             postCode = Some(testBusinessPostcode)
-          ))))
+          )))
         }
       }
     }
@@ -313,10 +313,10 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
       "go to capture vat number page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = await(TestCheckYourAnswersPartnershipController.submit(testPostRequest(
+        val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
           vatNumber = None,
           entityType = Some(LimitedPartnership)
-        )))
+        ))
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureVatNumberController.show().url)
@@ -326,12 +326,12 @@ class CheckYourAnswersPartnershipControllerSpec extends UnitSpec with GuiceOneAp
       "go to capture business entity page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = await(TestCheckYourAnswersPartnershipController.submit(testPostRequest(
+        val result = TestCheckYourAnswersPartnershipController.submit(testPostRequest(
           vatNumber = Some(testVatNumber),
           entityType = Some(LimitedPartnership),
           companyNumber = Some(testCompanyNumber),
           sautr = None
-        )))
+        ))
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(agentRoutes.CaptureBusinessEntityController.show().url)

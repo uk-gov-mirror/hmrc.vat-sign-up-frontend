@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -30,11 +30,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.StoreContactPreferenceService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.receive_email_notifications
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ContactPreferenceController @Inject()(val controllerComponents: ControllerComponents,
-                                            val contactPreferenceService: StoreContactPreferenceService)
+class ContactPreferenceController @Inject()(contactPreferenceService: StoreContactPreferenceService)
+                                           (implicit ec: ExecutionContext,
+                                            vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

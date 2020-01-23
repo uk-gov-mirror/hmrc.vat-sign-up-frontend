@@ -18,22 +18,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreContactPreferenceService
-import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreContactPreferenceService, MockStoreEmailAddressService}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 
-class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreContactPreferenceService with MockStoreEmailAddressService {
 
   override def beforeEach(): Unit = {
@@ -42,12 +41,10 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
 
   object TestReceiveEmailController extends ReceiveEmailNotificationsController(
     mockStoreContactPreferenceService,
-    mockStoreEmailAddressService,
-    mockControllerComponents
-
+    mockStoreEmailAddressService
   )
 
-  val testGetRequest = FakeRequest("GET", "/receive-email-notifications")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/receive-email-notifications")
 
   def testPostRequest(answer: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/receive-email-notifications").withFormUrlEncodedBody(contactPreference -> answer)
@@ -230,9 +227,8 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
         SessionKeys.emailKey -> testEmail)
       )
 
-      intercept[InternalServerException](
-        await(result)
-      )
+      intercept[InternalServerException](result)
+
     }
   }
   "store email address service failed" should {
@@ -252,9 +248,8 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
         SessionKeys.emailKey -> testEmail)
       )
 
-      intercept[InternalServerException](
-        await(result)
-      )
+      intercept[InternalServerException](result)
+
     }
   }
 

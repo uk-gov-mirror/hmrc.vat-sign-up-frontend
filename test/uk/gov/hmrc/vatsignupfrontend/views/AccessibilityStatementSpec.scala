@@ -17,10 +17,9 @@
 package uk.gov.hmrc.vatsignupfrontend.views
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockAppConfig
@@ -76,16 +75,14 @@ class AccessibilityStatementSpec extends ViewSpec with MockAppConfig {
     val accessibilityLink = "Accessibility"
   }
 
-
-  val env: Environment = Environment.simple()
-  val configuration: Configuration = Configuration.load(env)
-
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   lazy val page: HtmlFormat.Appendable = accessibility_statement("test")(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
 

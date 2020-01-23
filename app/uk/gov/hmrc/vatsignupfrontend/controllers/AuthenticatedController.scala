@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.Result
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
@@ -24,13 +24,15 @@ import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitch, FeatureSwitchedController}
-import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, VatControllerComponents}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate[A] = EmptyRetrievalPredicate,
                                           override val featureSwitches: Set[FeatureSwitch] = Set.empty)
-  extends FeatureSwitchedController with FrontendController with I18nSupport {
+                                         (implicit ec: ExecutionContext,
+                                          vcc: VatControllerComponents)
+  extends FrontendController(vcc.controllerComponents) with FeatureSwitchedController with I18nSupport {
 
   def authorised(predicate: Predicate = EmptyPredicate): AuthorisedFunction =
     featureEnabled[AuthorisedFunction](new AuthorisedFunction(predicate))
@@ -49,13 +51,9 @@ abstract class AuthenticatedController[A](retrievalPredicate: RetrievalPredicate
       }
   }
 
-  def controllerComponents: ControllerComponents
+  val authConnector: AuthConnector = vcc.authConnector
 
-  override val messagesApi: MessagesApi = controllerComponents.messagesApi
-
-  val authConnector: AuthConnector = controllerComponents.authConnector
-
-  implicit val appConfig: AppConfig = controllerComponents.appConfig
+  implicit val appConfig: AppConfig = vcc.appConfig
 }
 
 trait RetrievalPredicate[A] {

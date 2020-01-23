@@ -21,15 +21,15 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.{routes => partnershipsRoutes}
 
-class CouldNotConfirmKnownFactsSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CouldNotConfirmKnownFactsSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCouldNotConfirmKnownFactsController extends CouldNotConfirmKnownFactsController(mockControllerComponents)
+  object TestCouldNotConfirmKnownFactsController extends CouldNotConfirmKnownFactsController
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/could-not-confirm-partnership")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/could-not-confirm-partnership")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/error/could-not-confirm-partnership")

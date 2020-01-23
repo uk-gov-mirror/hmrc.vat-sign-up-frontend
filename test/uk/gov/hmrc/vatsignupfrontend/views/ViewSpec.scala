@@ -19,19 +19,19 @@ package uk.gov.hmrc.vatsignupfrontend.views
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.mvc.Call
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base => common}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   val testBackUrl = "/test-back-url"
   val testCall = Call("POST", "/test-url")
-  val viewTestRequest = FakeRequest("POST", "/test-url")
+  val viewTestRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/test-url")
 
   trait ElementTest {
     val name: String
@@ -297,7 +297,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     lazy val document: Document = Jsoup.parse(page.body)
     override lazy val element: Element = document.getElementById("content")
 
-    val titleText: String = if(hasErrors) MessageLookup.Base.errPrefix + " " + title else title
+    val titleText: String = if (hasErrors) MessageLookup.Base.errPrefix + " " + title else title
 
     s"$name should have the title '$titleText'" in {
       document.title() shouldBe titleText

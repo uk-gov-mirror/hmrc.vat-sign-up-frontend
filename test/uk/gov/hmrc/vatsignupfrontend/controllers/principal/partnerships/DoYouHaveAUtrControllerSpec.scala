@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
@@ -25,13 +25,13 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testBusinessPostcode}
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testBusinessPostcode, testSaUtr}
 
 class DoYouHaveAUtrControllerSpec extends ControllerSpec {
 
-  object TestDoYouHaveAUtrController extends DoYouHaveAUtrController(mockControllerComponents)
+  object TestDoYouHaveAUtrController extends DoYouHaveAUtrController
 
-  val testGetRequest = FakeRequest("GET", "/do-you-have-a-utr")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/do-you-have-a-utr")
 
   def testPostRequest(answer: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/do-you-have-a-utr").withFormUrlEncodedBody("yes_no" -> answer)
@@ -42,7 +42,7 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
         enable(OptionalSautrJourney)
         mockAuthAdminRole()
 
-        lazy val result = await(TestDoYouHaveAUtrController.show(testGetRequest))
+        lazy val result = TestDoYouHaveAUtrController.show(testGetRequest)
 
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
@@ -55,7 +55,7 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
         disable(OptionalSautrJourney)
         mockAuthAdminRole()
 
-        intercept[NotFoundException](await(TestDoYouHaveAUtrController.show(testGetRequest)))
+        intercept[NotFoundException](TestDoYouHaveAUtrController.show(testGetRequest))
       }
     }
   }
@@ -68,9 +68,9 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestDoYouHaveAUtrController.submit(
+            val result = TestDoYouHaveAUtrController.submit(
               testPostRequest(answer = YesNoMapping.option_yes)
-            ))
+            )
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
@@ -83,12 +83,12 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestDoYouHaveAUtrController.submit(
+            val result = TestDoYouHaveAUtrController.submit(
               testPostRequest(answer = YesNoMapping.option_no).withSession(
                 SessionKeys.partnershipSautrKey -> testSaUtr,
                 SessionKeys.partnershipPostCodeKey -> testBusinessPostcode.postCode
               )
-            ))
+            )
 
             status(result) shouldBe Status.SEE_OTHER
             session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
@@ -104,7 +104,7 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
           enable(OptionalSautrJourney)
           mockAuthAdminRole()
 
-          val result = await(TestDoYouHaveAUtrController.submit(testPostRequest("")))
+          val result = TestDoYouHaveAUtrController.submit(testPostRequest(""))
 
           status(result) shouldBe Status.BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
@@ -117,9 +117,9 @@ class DoYouHaveAUtrControllerSpec extends ControllerSpec {
       "return NOT_FOUND" in {
         disable(OptionalSautrJourney)
 
-        intercept[NotFoundException](await(TestDoYouHaveAUtrController.submit(
+        intercept[NotFoundException](TestDoYouHaveAUtrController.submit(
           testPostRequest(answer = YesNoMapping.option_no)
-        )))
+        ))
       }
     }
   }

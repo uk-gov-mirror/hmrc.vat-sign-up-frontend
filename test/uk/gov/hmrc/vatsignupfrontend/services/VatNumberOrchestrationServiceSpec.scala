@@ -20,13 +20,13 @@ import org.scalatest.BeforeAndAfterEach
 import play.api.http.Status._
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreMigratedVatNumberHttpParser}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -236,7 +236,9 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         "subscription is claimed successfully" should {
           "return SubscriptionClaimed" in {
             mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
-            mockClaimSubscription(testVatNumber, isFromBta = false)(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed))
+            mockClaimSubscription(testVatNumber, isFromBta = false)(
+              Future.successful(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed))
+            )
 
             val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
@@ -247,7 +249,9 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         "the vat number is already enrolled on a different cred" should {
           "return AlreadyEnrolledOnDifferentCredential" in {
             mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
-            mockClaimSubscription(testVatNumber, isFromBta = false)(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential))
+            mockClaimSubscription(testVatNumber, isFromBta = false)(
+              Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential))
+            )
 
             val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 
@@ -258,7 +262,9 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
         "subscription claim fails" should {
           "throw and internal server exception" in {
             mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
-            mockClaimSubscription(testVatNumber, isFromBta = false)(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(BAD_REQUEST)))
+            mockClaimSubscription(testVatNumber, isFromBta = false)(
+              Future.successful(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(BAD_REQUEST)))
+            )
 
             val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment)), testVatNumber)
 

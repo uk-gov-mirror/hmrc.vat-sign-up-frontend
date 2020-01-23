@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -52,7 +52,7 @@ class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatche
           redirectUri(routes.AgentSendYourApplicationController.show().url)
         )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(emailKey)
       }
     }
@@ -68,7 +68,7 @@ class SentClientEmailControllerISpec extends ComponentSpecBase with CustomMatche
           redirectUri(routes.CheckYourAnswersFinalController.show().url)
         )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(emailKey)
       }
     }

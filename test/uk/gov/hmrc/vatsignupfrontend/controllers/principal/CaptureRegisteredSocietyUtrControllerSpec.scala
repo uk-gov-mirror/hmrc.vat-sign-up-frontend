@@ -18,20 +18,20 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.RegisteredSocietyUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class CaptureRegisteredSocietyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureRegisteredSocietyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureRegisteredSocietyUtrController extends CaptureRegisteredSocietyUtrController(mockControllerComponents)
+  object TestCaptureRegisteredSocietyUtrController extends CaptureRegisteredSocietyUtrController
 
-  lazy val testGetRequest = FakeRequest("GET", "/registered-society-utr")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/registered-society-utr")
 
   def testPostRequest(companyUtrVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/registered-society-utr").withFormUrlEncodedBody(registeredSocietyUtr -> companyUtrVal)
@@ -57,7 +57,7 @@ class CaptureRegisteredSocietyUtrControllerSpec extends UnitSpec with GuiceOneAp
 
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.RegisteredSocietyCheckYourAnswersController.show().url)
-      result.session(request).get(SessionKeys.registeredSocietyUtrKey) shouldBe Some(testCompanyUtr)
+      session(result).get(SessionKeys.registeredSocietyUtrKey) shouldBe Some(testCompanyUtr)
     }
   }
 

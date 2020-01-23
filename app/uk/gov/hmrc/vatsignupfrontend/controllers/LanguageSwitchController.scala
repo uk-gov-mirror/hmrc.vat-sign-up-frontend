@@ -18,16 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
 @Singleton
 class LanguageSwitchController @Inject()(appConfig: AppConfig,
                                          configuration: Configuration,
-                                         val messagesApi: MessagesApi,
+                                         mcc: MessagesControllerComponents,
                                          languageUtils: LanguageUtils
-                                        ) extends LanguageController(configuration, languageUtils) {
+                                        ) extends LanguageController(configuration, languageUtils, mcc) {
 
   def languageMap: Map[String, Lang] = appConfig.languageMap
 

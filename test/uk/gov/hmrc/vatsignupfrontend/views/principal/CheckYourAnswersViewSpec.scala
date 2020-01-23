@@ -20,25 +20,25 @@ import java.time.LocalDate
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import play.api.i18n.Messages.Implicits.applicationMessages
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAnswers => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode, SoleTrader, Yes}
+import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
 class CheckYourAnswersViewSpec extends ViewSpec {
 
+  val testRegistrationDate: DateModel = DateModel.dateConvert(LocalDate.now())
+  val testEntity: BusinessEntity = SoleTrader
 
-  val testRegistrationDate = DateModel.dateConvert(LocalDate.now())
-  val testEntity = SoleTrader
-
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   def page(optBox5Figure: Option[String] = None,
            optLastReturnMonthPeriod: Option[String] = None,
@@ -52,13 +52,17 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     optBox5Figure = optBox5Figure,
     optLastReturnMonthPeriod = optLastReturnMonthPeriod,
     postAction = testCall
-  )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+  )(
+    request,
+    messagesApi.preferred(request),
+    appConfig
+  )
 
-  lazy val pageDefault = page()
+  lazy val pageDefault: Html = page()
 
-  lazy val pageWithAdditionalKnownFacts = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue))
+  lazy val pageWithAdditionalKnownFacts: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue))
 
-  lazy val pageWithoutPostCode = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue), None)
+  lazy val pageWithoutPostCode: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue), None)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"

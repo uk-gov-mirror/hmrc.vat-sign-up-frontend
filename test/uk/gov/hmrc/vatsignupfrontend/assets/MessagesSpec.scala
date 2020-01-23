@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.vatsignupfrontend.assets
 
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 
 class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar {

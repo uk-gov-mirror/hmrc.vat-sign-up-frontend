@@ -21,22 +21,22 @@ import java.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, Overseas}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with FeatureSwitching {
+  with MockVatControllerComponents with FeatureSwitching {
 
-  object TestCaptureVatNumberController extends CaptureVatRegistrationDateController(mockControllerComponents)
+  object TestCaptureVatNumberController extends CaptureVatRegistrationDateController
 
-  lazy val testGetRequest = FakeRequest("GET", "/vat-registration-date")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/vat-registration-date")
 
   def testPostRequest(registrationDate: DateModel): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/vat-registration-date")
@@ -70,9 +70,9 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
 
-        Json.parse(result.session(request).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
+        Json.parse(session(result).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
       }
-     }
+    }
     "form successfully submitted with Overseas business entity and isMigrated in session" should {
       "redirect to Check Your Answers" in {
         mockAuthAdminRole()
@@ -91,9 +91,9 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
 
-        Json.parse(result.session(request).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
-        result.session(request).get(SessionKeys.businessEntityKey).get shouldBe Overseas.toString
-        result.session(request).get(SessionKeys.isMigratedKey).get shouldBe "true"
+        Json.parse(session(result).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
+        session(result).get(SessionKeys.businessEntityKey).get shouldBe Overseas.toString
+        session(result).get(SessionKeys.isMigratedKey).get shouldBe "true"
       }
     }
     "form successfully submitted with Overseas business entity in session" should {
@@ -114,8 +114,8 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
 
-        Json.parse(result.session(request).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
-        result.session(request).get(SessionKeys.businessEntityKey).get shouldBe Overseas.toString
+        Json.parse(session(result).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
+        session(result).get(SessionKeys.businessEntityKey).get shouldBe Overseas.toString
       }
     }
 

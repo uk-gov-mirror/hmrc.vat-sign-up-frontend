@@ -17,32 +17,31 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal.soletrader
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import play.api.i18n.Messages.Implicits.applicationMessages
-import play.api.i18n.MessagesApi
+import org.jsoup.nodes.{Document, Element}
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalConfirmNino => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalConfirmNino => messages}
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper
 
 class ConfirmNinoSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.confirm_nino(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.soletrader.confirm_nino(
     businessEntity = SoleTrader,
     nino = testNino,
     postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Confirm NINO view" should {
@@ -54,7 +53,7 @@ class ConfirmNinoSpec extends ViewSpec {
     )
   }
 
-  lazy val doc = Jsoup.parse(page.body)
+  lazy val doc: Document = Jsoup.parse(page.body)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -92,6 +91,7 @@ class ConfirmNinoSpec extends ViewSpec {
   }
 
   "display the correct info for business entity" in {
+    implicit val msg: Messages = messagesApi.preferred(request)
     val sectionId = "business-entity"
     val expectedQuestion = messages.businessEntity
     val expectedAnswer = BusinessEntityHelper.getBusinessEntityName(SoleTrader)

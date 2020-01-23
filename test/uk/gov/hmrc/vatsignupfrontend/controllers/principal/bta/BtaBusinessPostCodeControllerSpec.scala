@@ -21,14 +21,13 @@ import java.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
@@ -36,14 +35,15 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, InvalidVatNumber, KnownFactsMismatch, SubscriptionClaimed}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, PostCode}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockClaimSubscriptionService {
+class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents with MockClaimSubscriptionService {
 
-  object TestBusinessPostCodeController extends BtaBusinessPostCodeController(mockControllerComponents, mockClaimSubscriptionService)
+  object TestBusinessPostCodeController extends BtaBusinessPostCodeController(mockClaimSubscriptionService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/bta/business-postcode")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/bta/business-postcode")
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -130,7 +130,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         mockAuthAdminRole()
 
         intercept[InternalServerException] {
-          await(TestBusinessPostCodeController.submit(testPostRequest(vatNumber = None)))
+          TestBusinessPostCodeController.submit(testPostRequest(vatNumber = None))
         }
       }
     }
@@ -153,7 +153,7 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         mockClaimSubscription(testVatNumber, Some(testBusinessPostcode), testDate, isFromBta = true)(Future.successful(Left(InvalidVatNumber)))
 
         intercept[InternalServerException] {
-          await(TestBusinessPostCodeController.submit(testPostRequest()))
+          TestBusinessPostCodeController.submit(testPostRequest())
         }
       }
     }

@@ -23,22 +23,21 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockCtReferenceLookupService, MockStoreCompanyNumberService}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreCompanyNumberService with MockCtReferenceLookupService {
 
   object TestConfirmCompanyController extends ConfirmCompanyController(
-    mockControllerComponents,
     mockStoreCompanyNumberService,
     mockCtReferenceLookupService
   )
 
-  val testGetRequest = FakeRequest("GET", "/confirm-company")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-company")
 
   val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-company")
@@ -92,88 +91,86 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
     }
 
-      "go to the 'capture company UTR' page if not CT enrolled and there is a UTR stored in COTAX" in {
-        mockAuthRetrieveVatDecEnrolment()
-        mockCtReferenceFound(testCompanyNumber)
+    "go to the 'capture company UTR' page if not CT enrolled and there is a UTR stored in COTAX" in {
+      mockAuthRetrieveVatDecEnrolment()
+      mockCtReferenceFound(testCompanyNumber)
 
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
 
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+    }
+    "go to the capture CT utr page when CT mismatches" in {
+      mockAuthRetrieveIRCTEnrolment()
+      mockCtReferenceFound(testCompanyNumber)
+      mockStoreCompanyNumberCtMismatch(
+        testVatNumber,
+        testCompanyNumber,
+        testSaUtr
+      )
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
+    }
+    "skip the 'capture company UTR' page if not CT enrolled and there isn't a UTR stored in COTAX" in {
+      mockAuthRetrieveVatDecEnrolment()
+      mockCtReferenceNotFound(testCompanyNumber)
+      mockStoreCompanyNumberSuccess(
+        vatNumber = testVatNumber,
+        companyNumber = testCompanyNumber,
+        companyUtr = None
+      )
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+    }
+    "skip the 'capture company UTR' page if user is CT enrolled and there isn't a UTR stored in COTAX" in {
+      mockAuthRetrieveIRCTEnrolment()
+      mockCtReferenceNotFound(testCompanyNumber)
+      mockStoreCompanyNumberSuccess(
+        vatNumber = testVatNumber,
+        companyNumber = testCompanyNumber,
+        companyUtr = None
+      )
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      val result = TestConfirmCompanyController.submit(request)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
+    }
+    "throw internal server exception if get CT reference fails" in {
+      mockAuthRetrieveVatDecEnrolment()
+      mockCtReferenceFailure(testCompanyNumber)(INTERNAL_SERVER_ERROR)
+
+      val request = testPostRequest.withSession(
+        SessionKeys.vatNumberKey -> testVatNumber,
+        SessionKeys.companyNumberKey -> testCompanyNumber
+      )
+
+      intercept[InternalServerException] {
+        TestConfirmCompanyController.submit(request)
       }
-      "go to the capture CT utr page when CT mismatches" in {
-        mockAuthRetrieveIRCTEnrolment()
-        mockCtReferenceFound(testCompanyNumber)
-        mockStoreCompanyNumberCtMismatch(
-          testVatNumber,
-          testCompanyNumber,
-          testSaUtr
-        )
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureCompanyUtrController.show().url)
-      }
-      "skip the 'capture company UTR' page if not CT enrolled and there isn't a UTR stored in COTAX" in {
-        mockAuthRetrieveVatDecEnrolment()
-        mockCtReferenceNotFound(testCompanyNumber)
-        mockStoreCompanyNumberSuccess(
-          vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber,
-          companyUtr = None
-        )
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
-      }
-      "skip the 'capture company UTR' page if user is CT enrolled and there isn't a UTR stored in COTAX" in {
-        mockAuthRetrieveIRCTEnrolment()
-        mockCtReferenceNotFound(testCompanyNumber)
-        mockStoreCompanyNumberSuccess(
-          vatNumber = testVatNumber,
-          companyNumber = testCompanyNumber,
-          companyUtr = None
-        )
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmCompanyController.submit(request)
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.DirectDebitResolverController.show().url)
-      }
-      "throw internal server exception if get CT reference fails" in {
-        mockAuthRetrieveVatDecEnrolment()
-        mockCtReferenceFailure(testCompanyNumber)(INTERNAL_SERVER_ERROR)
-
-        val request = testPostRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.companyNumberKey -> testCompanyNumber
-        )
-
-        val result = TestConfirmCompanyController.submit(request)
-
-        intercept[InternalServerException] {
-          await(TestConfirmCompanyController.submit(request))
-        }
-      }
+    }
 
     "throw internal server exception if store company number fails" in {
       mockCtReferenceFound(testCompanyNumber)
@@ -186,7 +183,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       )
 
       intercept[InternalServerException] {
-        await(TestConfirmCompanyController.submit(request))
+        TestConfirmCompanyController.submit(request)
       }
     }
     "go to the 'your vat number' page if vat number is missing" in {

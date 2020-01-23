@@ -20,15 +20,15 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.ConfirmNinoController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm.nino
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
 
-class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureNinoController extends CaptureNinoController(mockControllerComponents)
+  object TestCaptureNinoController extends CaptureNinoController
 
   val testGetRequest = FakeRequest("GET", "/client/national-insurance-number")
 
@@ -38,7 +38,7 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
   "Calling the Show method of the Capture NINO controller for agent" when {
     "show the Capture NINO page" in {
       mockAuthRetrieveAgentEnrolment()
-      val res = await(TestCaptureNinoController.show(testGetRequest))
+      val res = TestCaptureNinoController.show(testGetRequest)
       status(res) shouldBe OK
       contentType(res) shouldBe Some("text/html")
       charset(res) shouldBe Some("utf-8")
@@ -48,7 +48,7 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
     "A valid Nino has been submitted" should {
       "Redirect to the confirm NINO page " in {
         mockAuthRetrieveAgentEnrolment()
-        val res = await(TestCaptureNinoController.submit(testPostRequest()))
+        val res = TestCaptureNinoController.submit(testPostRequest())
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(ConfirmNinoController.show().url)

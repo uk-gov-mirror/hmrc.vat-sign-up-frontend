@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, vatRegistrationDateKey, isMigratedKey}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, Overseas}
 
 class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -58,7 +58,7 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
           redirectUri(routes.BusinessPostCodeController.show().url)
         )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(vatRegistrationDateKey)
       }
     }
@@ -82,7 +82,7 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
             redirectUri(routes.PreviousVatReturnController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.keys should contain(vatRegistrationDateKey)
           session.keys should contain(businessEntityKey)
         }
@@ -107,7 +107,7 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
             redirectUri(routes.CheckYourAnswersController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.keys should contain(vatRegistrationDateKey)
           session.keys should contain(businessEntityKey)
           session.keys should contain(isMigratedKey)

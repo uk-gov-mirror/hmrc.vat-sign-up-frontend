@@ -22,21 +22,21 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietyService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreRegisteredSocietyService {
 
 
-  object TestRegisteredSocietyController extends RegisteredSocietyCheckYourAnswersController(mockControllerComponents, mockStoreRegisteredSocietyService)
+  object TestRegisteredSocietyController extends RegisteredSocietyCheckYourAnswersController(mockStoreRegisteredSocietyService)
 
   def testGetRequest(companyUtr: Option[String] = Some(testCompanyUtr),
                      companyNumber: Option[String] = Some(testCompanyNumber),
@@ -110,7 +110,7 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
           mockAuthAdminRole()
           mockStoreRegisteredSocietySuccess(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
-          val result = await(TestRegisteredSocietyController.submit(testPostRequest()))
+          val result = TestRegisteredSocietyController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.DirectDebitResolverController.show().url)
         }
@@ -120,7 +120,7 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
           mockAuthAdminRole()
           mockStoreRegisteredSocietyCtMismatch(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
-          val result = await(TestRegisteredSocietyController.submit(testPostRequest()))
+          val result = TestRegisteredSocietyController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(errorRoutes.CouldNotConfirmBusinessController.show().url)
         }
@@ -131,7 +131,7 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
           mockStoreRegisteredSocietyFailure(testVatNumber, testCompanyNumber, Some(testCompanyUtr))
 
           intercept[InternalServerException] {
-            await(TestRegisteredSocietyController.submit(testPostRequest()))
+            TestRegisteredSocietyController.submit(testPostRequest())
           }
 
         }
@@ -141,7 +141,7 @@ class RegisteredSocietyCheckYourAnswersControllerSpec extends UnitSpec with Guic
       "go to capture vat number page" in {
         mockAuthAdminRole()
 
-        val result = await(TestRegisteredSocietyController.submit(testPostRequest(vatNumber = None)))
+        val result = TestRegisteredSocietyController.submit(testPostRequest(vatNumber = None))
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)

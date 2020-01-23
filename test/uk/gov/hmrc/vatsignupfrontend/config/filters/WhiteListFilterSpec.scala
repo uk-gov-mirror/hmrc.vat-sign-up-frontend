@@ -24,7 +24,7 @@ import play.api.mvc.{Action, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
@@ -41,12 +41,12 @@ class WhiteListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
     case _ => Action(Ok("failure"))
   }).build()
 
-  val appConfig = app.injector.instanceOf[AppConfig]
+  val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
   "WhiteListFilter" should {
 
     "redirects none white listed ip" in {
-      app.configuration.getBoolean("feature-switch.enable-ip-whitelisting") shouldBe Some(true)
+      app.configuration.get[Boolean]("feature-switch.enable-ip-whitelisting") shouldBe true
 
       val fr = FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.2"
@@ -59,7 +59,7 @@ class WhiteListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
     }
 
     "not block white listed ip" in {
-      app.configuration.getBoolean("feature-switch.enable-ip-whitelisting") shouldBe Some(true)
+      app.configuration.get[Boolean]("feature-switch.enable-ip-whitelisting") shouldBe true
       val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.1"
       ))

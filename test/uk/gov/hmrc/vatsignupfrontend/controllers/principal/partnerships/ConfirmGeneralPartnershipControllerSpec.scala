@@ -18,13 +18,12 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{BadGatewayException, InternalServerException}
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm.confirmPartnershipForm
@@ -32,19 +31,17 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testVatNu
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StorePartnershipInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes, YesNo}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
 
-class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStorePartnershipInformationService {
 
-  object TestConfirmGeneralPartnershipController extends ConfirmGeneralPartnershipController(
-    mockControllerComponents,
-    mockStorePartnershipInformationService
-  )
+  object TestConfirmGeneralPartnershipController extends ConfirmGeneralPartnershipController(mockStorePartnershipInformationService)
 
-  val testGetRequest = FakeRequest("GET", "/confirm-partnership-utr")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-partnership-utr")
 
   def testPostRequest(answer: YesNo = Yes): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/confirm-partnership-utr").withFormUrlEncodedBody(confirmPartnershipForm.fill(answer).data.toSeq: _*)
@@ -78,9 +75,9 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
         mockAuthAdminRole()
 
         intercept[InternalServerException] {
-          await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
+          TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -130,10 +127,10 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
       intercept[BadGatewayException] {
-        await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
+        TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.partnershipSautrKey -> testSaUtr
-        )))
+        ))
       }
     }
   }
@@ -151,9 +148,9 @@ class ConfirmGeneralPartnershipControllerSpec extends UnitSpec with GuiceOneAppP
       mockAuthAdminRole()
 
       intercept[InternalServerException] {
-        await(TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
+        TestConfirmGeneralPartnershipController.submit(testPostRequest().withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
       }
     }
   }

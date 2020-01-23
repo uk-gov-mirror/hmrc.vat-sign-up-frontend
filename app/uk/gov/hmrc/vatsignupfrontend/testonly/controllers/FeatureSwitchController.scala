@@ -17,26 +17,27 @@
 package uk.gov.hmrc.vatsignupfrontend.testonly.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Request}
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitch.switches
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitch, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.testonly.connectors.BackendFeatureSwitchConnector
-import FeatureSwitch.switches
-import uk.gov.hmrc.vatsignupfrontend.testonly.models.FeatureSwitchSetting
-import uk.gov.hmrc.vatsignupfrontend.testonly.views.html
 import uk.gov.hmrc.vatsignupfrontend.testonly.controllers.routes.FeatureSwitchController
+import uk.gov.hmrc.vatsignupfrontend.testonly.models.FeatureSwitchSetting
 import uk.gov.hmrc.vatsignupfrontend.testonly.views.html.feature_switch
 
 import scala.collection.immutable.ListMap
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class FeatureSwitchController @Inject()(val messagesApi: MessagesApi,
-                                        val appConfig: AppConfig,
+class FeatureSwitchController @Inject()(val appConfig: AppConfig,
+                                        mcc: MessagesControllerComponents,
                                         featureSwitchConnector: BackendFeatureSwitchConnector)
-  extends FrontendController with FeatureSwitching with I18nSupport {
+                                       (implicit ec: ExecutionContext)
+  extends FrontendController(mcc) with FeatureSwitching with I18nSupport {
 
   implicit val config: AppConfig = appConfig
 
@@ -50,7 +51,7 @@ class FeatureSwitchController @Inject()(val messagesApi: MessagesApi,
   def show: Action[AnyContent] = Action.async { implicit req =>
     for {
       backendFeatureSwitches <- featureSwitchConnector.getBackendFeatureSwitches
-      featureSwitches =     ListMap(switches.toSeq sortBy(_.displayText) map (switch => switch -> isEnabled(switch)):_*)
+      featureSwitches = ListMap(switches.toSeq sortBy (_.displayText) map (switch => switch -> isEnabled(switch)): _*)
     } yield Ok(view(featureSwitches, backendFeatureSwitches))
   }
 

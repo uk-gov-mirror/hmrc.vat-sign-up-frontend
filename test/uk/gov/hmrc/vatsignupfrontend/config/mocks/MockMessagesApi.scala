@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.config.mocks
 
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, MessagesApi}

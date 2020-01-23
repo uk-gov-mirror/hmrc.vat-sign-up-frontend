@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.error
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
@@ -28,10 +28,12 @@ import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySession
 import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, LimitedPartnership, RegisteredSociety}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.dissolved_company
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DissolvedCompanyController @Inject()(val controllerComponents: ControllerComponents) extends AuthenticatedController(AgentEnrolmentPredicate) {
+class DissolvedCompanyController @Inject()(implicit ec: ExecutionContext,
+                                             vcc: VatControllerComponents)
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>

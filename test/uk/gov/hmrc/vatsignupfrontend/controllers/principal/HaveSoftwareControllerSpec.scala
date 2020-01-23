@@ -17,26 +17,27 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class HaveSoftwareControllerSpec extends UnitSpec with MockControllerComponents {
+class HaveSoftwareControllerSpec extends UnitSpec with MockVatControllerComponents {
 
-  object TestHaveSoftwareController extends HaveSoftwareController(mockControllerComponents)
+  object TestHaveSoftwareController extends HaveSoftwareController
 
-  val testGetRequest = FakeRequest("GET", "/have-software")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/have-software")
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/have-software").withFormUrlEncodedBody(yesNo -> entityTypeVal)
 
   "Calling the show action of the Have Software controller" should {
     "go to the Have Software page" in {
-      val result = await(TestHaveSoftwareController.show(testGetRequest))
+      val result = TestHaveSoftwareController.show(testGetRequest)
+
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")

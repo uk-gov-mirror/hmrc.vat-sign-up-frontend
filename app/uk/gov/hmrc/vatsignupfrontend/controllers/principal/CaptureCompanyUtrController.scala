@@ -19,16 +19,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_utr
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CaptureCompanyUtrController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureCompanyUtrController @Inject()(implicit ec: ExecutionContext,
+                                              vcc: VatControllerComponents)
 
   extends AuthenticatedController(AdministratorRolePredicate) {
 

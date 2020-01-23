@@ -16,34 +16,32 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
 
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CapturePartnershipUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 
 class CapturePartnershipUtrSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  val appConfig = new AppConfig(configuration, env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = (displayGeneralPartnershipAccordion: Boolean) => {
+  lazy val page: Boolean => HtmlFormat.Appendable = (displayGeneralPartnershipAccordion: Boolean) => {
     uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr(
       partnershipUtrForm = partnershipUtrForm.form,
       postAction = testCall,
       displayGeneralPartnershipAccordion = displayGeneralPartnershipAccordion
     )(
-      FakeRequest(),
-      applicationMessages,
+      request,
+      messagesApi.preferred(request),
       appConfig
     )
   }
@@ -98,6 +96,7 @@ class CapturePartnershipUtrSpec extends ViewSpec {
       testPage.document.getElementsByTag("details").size shouldBe 0
     }
   }
+
   private def specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForTrue(testPage: TestView): Unit = {
     s"hint exists, hrefs for links in summary are correct, line 1 no longer exists in view as $GeneralPartnershipNoSAUTR is on" in {
       testPage.document.getElementById("partnershipUtr-accordion-link1").attr("href") shouldBe appConfig.findLostUtrNumberUrl

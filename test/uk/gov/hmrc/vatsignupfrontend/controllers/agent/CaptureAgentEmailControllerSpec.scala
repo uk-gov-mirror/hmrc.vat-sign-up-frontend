@@ -18,22 +18,22 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureAgentEmailController extends CaptureAgentEmailController(mockControllerComponents)
+  object TestCaptureAgentEmailController extends CaptureAgentEmailController
 
   val uri = "/client/email-address"
-  val testGetRequest = FakeRequest("GET", uri)
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", uri)
 
   def testPostRequest(emailAddress: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", uri).withFormUrlEncodedBody(email -> emailAddress)
@@ -138,7 +138,7 @@ class CaptureAgentEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmAgentEmailController.show().url)
 
-        await(result).session(request).get(SessionKeys.transactionEmailKey) shouldBe Some(testEmail)
+        session(result).get(SessionKeys.transactionEmailKey) shouldBe Some(testEmail)
       }
     }
 

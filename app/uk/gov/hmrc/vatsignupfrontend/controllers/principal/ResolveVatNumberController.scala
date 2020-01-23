@@ -19,15 +19,16 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ResolveVatNumberController @Inject()(val controllerComponents: ControllerComponents)
+class ResolveVatNumberController @Inject()(implicit ec: ExecutionContext,
+                                             vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
@@ -36,7 +37,7 @@ class ResolveVatNumberController @Inject()(val controllerComponents: ControllerC
       enrolments =>
         if (enrolments.getAnyVatNumber.isDefined)
           Future.successful(Redirect(routes.MultipleVatCheckController.show()))
-         else
+        else
           Future.successful(Redirect(routes.CaptureVatNumberController.show()))
     }
   }

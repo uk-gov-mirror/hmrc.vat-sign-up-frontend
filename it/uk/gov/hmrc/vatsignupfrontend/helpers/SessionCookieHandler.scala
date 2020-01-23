@@ -16,15 +16,20 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers
 
-import play.api.libs.Crypto
-import play.api.libs.ws.{WSCookie, WSResponse}
-import uk.gov.hmrc.crypto.{CompositeSymmetricCrypto, Crypted}
+import java.net.URLEncoder
 
-object SessionCookieCrumbler {
+import play.api.libs.crypto.DefaultCookieSigner
+import play.api.libs.ws.{WSCookie, WSResponse}
+import uk.gov.hmrc.crypto.{CompositeSymmetricCrypto, Crypted, PlainText}
+
+trait SessionCookieHandler {
+
+  val cookieSigner: DefaultCookieSigner
+
   private val cookieKey = "gvBoGdgzqG1AarzF1LY0zQ=="
 
   private def crumbleCookie(cookie: WSCookie) = {
-    val crypted = Crypted(cookie.value.get)
+    val crypted = Crypted(cookie.value)
     val decrypted = CompositeSymmetricCrypto.aesGCM(cookieKey, Seq()).decrypt(crypted).value
 
     def decode(data: String): Map[String, String] = {
@@ -34,7 +39,7 @@ object SessionCookieCrumbler {
 
       val key = "yNhI04vHs9<_HWbC`]20u`37=NGLGYY5:0Tg5?y`W<NoJnXWqmjcgZBec@rOxb^G".getBytes
 
-      if (Crypto.sign(map, key) != mac) {
+      if (cookieSigner.sign(map, key) != mac) {
         throw new RuntimeException("Cookie MAC didn't match content, this should never happen")
       }
       val Regex = """(.*)=(.*)""".r
@@ -49,4 +54,18 @@ object SessionCookieCrumbler {
   def getSessionMap(wSResponse: WSResponse): Map[String, String] =
     wSResponse.cookie("mdtp").fold(Map.empty: Map[String, String])(data => crumbleCookie(data))
 
+  def cookieValue(sessionData: Map[String, String]): String = {
+    def encode(data: Map[String, String]): PlainText = {
+      val encoded = data.map {
+        case (k, v) => URLEncoder.encode(k, "UTF-8") + "=" + URLEncoder.encode(v, "UTF-8")
+      }.mkString("&")
+      val key = "yNhI04vHs9<_HWbC`]20u`37=NGLGYY5:0Tg5?y`W<NoJnXWqmjcgZBec@rOxb^G".getBytes
+      PlainText(cookieSigner.sign(encoded, key) + "-" + encoded)
+    }
+
+    val encodedCookie = encode(sessionData)
+    val encrypted = CompositeSymmetricCrypto.aesGCM(cookieKey, Seq()).encrypt(encodedCookie).value
+
+    s"""mdtp="$encrypted"; Path=/; HTTPOnly"; Path=/; HTTPOnly"""
+  }
 }

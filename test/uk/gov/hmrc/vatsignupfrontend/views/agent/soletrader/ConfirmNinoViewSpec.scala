@@ -17,11 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.views.agent.soletrader
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import play.api.i18n.Messages.Implicits.applicationMessages
+import org.jsoup.nodes.{Document, Element}
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
-import play.twirl.api.Html
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentConfirmNino => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -32,16 +32,21 @@ class ConfirmNinoViewSpec extends ViewSpec {
 
   val testNino = "AA111111A"
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.confirm_nino(
+  val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.confirm_nino(
     nino = testNino,
     businessEntity = SoleTrader,
     postAction = testCall
-  )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+  )(
+    request,
+    messagesApi.preferred(request),
+    appConfig
+  )
 
-  lazy val doc = Jsoup.parse(page.body)
+  lazy val doc: Document = Jsoup.parse(page.body)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"

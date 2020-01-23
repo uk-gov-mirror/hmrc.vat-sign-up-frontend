@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalConfirmCompany => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -27,18 +27,17 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class ConfirmCompanySpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company(
     companyName = testCompanyName,
     postAction = testCall,
     changeLink = testUri)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Confirm Company view" should {

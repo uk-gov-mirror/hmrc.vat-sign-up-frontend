@@ -18,20 +18,20 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureCompanyUtrController extends CaptureCompanyUtrController(mockControllerComponents)
+  object TestCaptureCompanyUtrController extends CaptureCompanyUtrController
 
-  lazy val testGetRequest = FakeRequest("GET", "/company-utr")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/company-utr")
 
   def testPostRequest(companyUtrVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/company-utr").withFormUrlEncodedBody(companyUtr -> companyUtrVal)
@@ -58,7 +58,7 @@ class CaptureCompanyUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.CheckYourAnswersCompanyController.show().url)
 
-      result.session(request).get(SessionKeys.companyUtrKey) shouldBe Some(testCompanyUtr)
+      session(result).get(SessionKeys.companyUtrKey) shouldBe Some(testCompanyUtr)
     }
   }
 

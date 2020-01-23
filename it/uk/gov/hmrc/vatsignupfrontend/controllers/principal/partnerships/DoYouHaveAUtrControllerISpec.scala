@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testBusinessPostCode, testSaUtr}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -53,7 +53,7 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(true.toString)
+        getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(true.toString)
       }
     }
 
@@ -71,9 +71,9 @@ class DoYouHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers
           redirectUri(routes.CheckYourAnswersPartnershipsController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipPostCodeKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
+        getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
+        getSessionMap(res).get(SessionKeys.partnershipPostCodeKey) shouldBe None
+        getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
       }
     }
   }

@@ -22,20 +22,21 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, Retrievals, ~}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class AuthenticatedControllerSpec extends UnitSpec with MockControllerComponents {
+class AuthenticatedControllerSpec extends UnitSpec with MockVatControllerComponents {
 
-  object TestAuthenticatedController extends AuthenticatedController() {
-    override def controllerComponents: ControllerComponents = mockControllerComponents
-  }
+  implicit def vatControllerComponents: VatControllerComponents = mockVatControllerComponents
 
-  implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(FakeRequest().headers)
+  object TestAuthenticatedController extends AuthenticatedController()
+
+  implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(FakeRequest().headers)
 
   "authorise" when {
     "a class level predicate has been set" when {
@@ -50,13 +51,11 @@ class AuthenticatedControllerSpec extends UnitSpec with MockControllerComponents
               override def retrieval: Retrieval[Option[String]] = Retrievals.nino
 
               override def function(block: => Future[Result]): Option[String] => Future[Result] = {
-                case Some(nino) => block
+                case Some(_) => block
                 case None => Future.successful(redirect)
               }
             }
-          ) {
-            override def controllerComponents: ControllerComponents = mockControllerComponents
-          }
+          )
 
           val res = await(TestAuthenticatedController.authorised()(Future.successful(Ok)))
           res shouldBe Ok
@@ -72,13 +71,11 @@ class AuthenticatedControllerSpec extends UnitSpec with MockControllerComponents
               override def retrieval: Retrieval[Option[String]] = Retrievals.nino
 
               override def function(block: => Future[Result]): Option[String] => Future[Result] = {
-                case Some(nino) => block
+                case Some(_) => block
                 case None => Future.successful(redirect)
               }
             }
-          ) {
-            override def controllerComponents: ControllerComponents = mockControllerComponents
-          }
+          )
 
           val res = await(TestAuthenticatedController.authorised()(Future.successful(Ok)))
           res shouldBe redirect
@@ -100,13 +97,11 @@ class AuthenticatedControllerSpec extends UnitSpec with MockControllerComponents
               override def retrieval: Retrieval[Option[String]] = Retrievals.nino
 
               override def function(block: => Future[Result]): Option[String] => Future[Result] = {
-                case Some(nino) => block
+                case Some(_) => block
                 case None => Future.successful(redirect)
               }
             }
-          ) {
-            override def controllerComponents: ControllerComponents = mockControllerComponents
-          }
+          )
 
           val res = await(TestAuthenticatedController.authorised()(Retrievals.affinityGroup) {
             case Some(AffinityGroup.Agent) => Future.successful(Ok)
@@ -121,11 +116,9 @@ class AuthenticatedControllerSpec extends UnitSpec with MockControllerComponents
         "perform the method level retrieval only" in {
           mockAuthorise(EmptyPredicate, EmptyRetrieval and Retrievals.nino)(Future.successful(new ~(Unit, Some(""))))
 
-          object TestAuthenticatedController extends AuthenticatedController() {
-            override def controllerComponents: ControllerComponents = mockControllerComponents
-          }
+          object TestAuthenticatedController extends AuthenticatedController()
 
-          val res = await(TestAuthenticatedController.authorised()(Retrievals.nino){
+          val res = await(TestAuthenticatedController.authorised()(Retrievals.nino) {
             case Some(_) => Future.successful(Ok)
             case _ => fail()
           })

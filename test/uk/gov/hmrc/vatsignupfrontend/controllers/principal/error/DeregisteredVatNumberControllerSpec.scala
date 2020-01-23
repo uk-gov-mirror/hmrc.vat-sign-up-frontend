@@ -17,27 +17,29 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.{deregistered_enrolled, deregistered_unenrolled}
 
-class DeregisteredVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class DeregisteredVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestDeregisteredVatNumberController extends DeregisteredVatNumberController(mockControllerComponents)
+  object TestDeregisteredVatNumberController extends DeregisteredVatNumberController
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/deregistered-vat-number")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/deregistered-vat-number")
 
   "Calling the show action of DeregisteredVatNumberController" when {
     "an enrolled user enters a deregistered VRN" should {
       "show the enrolled deregistered page" in {
         mockAuthRetrieveMtdVatEnrolment()
 
-        implicit val request = testGetRequest
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] = testGetRequest
+        implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
         val result = TestDeregisteredVatNumberController.show(request)
 
         status(result) shouldBe OK
@@ -51,7 +53,8 @@ class DeregisteredVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "redirect the user to the unenrolled deregistered page" in {
         mockAuthRetrieveEmptyEnrolment()
 
-        implicit val request = testGetRequest
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] = testGetRequest
+        implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
         val result = TestDeregisteredVatNumberController.show(request)
 
         status(result) shouldBe OK

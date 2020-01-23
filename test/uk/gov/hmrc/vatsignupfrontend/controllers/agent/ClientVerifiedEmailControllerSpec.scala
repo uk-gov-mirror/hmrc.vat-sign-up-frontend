@@ -20,12 +20,12 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class ClientVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class ClientVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestClientVerifiedEmailController extends ClientVerifiedEmailController(mockControllerComponents)
+  object TestClientVerifiedEmailController extends ClientVerifiedEmailController
 
   "Calling the show action of the Email Verified controller" should {
       lazy val testGetRequest = FakeRequest("GET", "/client-email-verified")

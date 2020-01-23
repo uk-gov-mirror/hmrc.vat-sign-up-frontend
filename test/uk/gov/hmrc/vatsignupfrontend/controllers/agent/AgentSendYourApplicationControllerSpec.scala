@@ -30,12 +30,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockMigratedSubmissionServi
 class AgentSendYourApplicationControllerSpec extends ControllerSpec with MockMigratedSubmissionService with MockSubmissionService {
 
   object TestAgentSendYourApplicationController$ extends AgentSendYourApplicationController(
-    mockControllerComponents,
+
     mockMigratedSubmissionService,
     mockSubmissionService
   )
 
-  lazy val testGetRequest = FakeRequest("GET", "/about-to-submit")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/about-to-submit")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/client/about-to-submit")
 
@@ -80,7 +80,7 @@ class AgentSendYourApplicationControllerSpec extends ControllerSpec with MockMig
 
         val result = TestAgentSendYourApplicationController$.submit(request)
 
-        intercept[InternalServerException](await(result))
+        intercept[InternalServerException](result)
       }
     }
     "a Non-Migrated VRN is in Session" should {
@@ -103,7 +103,7 @@ class AgentSendYourApplicationControllerSpec extends ControllerSpec with MockMig
 
         val result = TestAgentSendYourApplicationController$.submit(request)
 
-        intercept[InternalServerException](await(result))
+        intercept[InternalServerException](result)
       }
     }
     "there is no VRN in session" should {

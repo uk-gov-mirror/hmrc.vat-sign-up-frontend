@@ -18,19 +18,20 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
 
-class BusinessAlreadySignedUpControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class BusinessAlreadySignedUpControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestBusinessAlreadySignedUpController extends BusinessAlreadySignedUpController(mockControllerComponents)
+  object TestBusinessAlreadySignedUpController extends BusinessAlreadySignedUpController
 
-  lazy val testGetRequest = FakeRequest("GET", "/bta/business-already-signed-up")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/bta/business-already-signed-up")
 
-  lazy val testPostRequest = FakeRequest("POST", "/bta/business-already-signed-up")
+  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/bta/business-already-signed-up")
 
   "Calling the show action of the Business Already Signed Up controller" when {
     "go to the Business Already Signed Up page" in {

@@ -20,18 +20,19 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_agent_email
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmAgentEmailController @Inject()(val controllerComponents: ControllerComponents,
-                                            val storeEmailAddressService: StoreEmailAddressService)
+class ConfirmAgentEmailController @Inject()(storeEmailAddressService: StoreEmailAddressService)
+                                           (implicit ec: ExecutionContext,
+                                            vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

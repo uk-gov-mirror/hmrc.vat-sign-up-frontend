@@ -20,22 +20,19 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreAdministrativeDivisionHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreAdministrativeDivisionService
 
 import scala.concurrent.Future
 
-class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreAdministrativeDivisionService {
 
-  object TestDivisionResolverController extends DivisionResolverController(
-    mockControllerComponents,
-    mockStoreAdministrativeDivisionService
-  )
+  object TestDivisionResolverController extends DivisionResolverController(mockStoreAdministrativeDivisionService)
 
   lazy val testGetRequest = FakeRequest("GET", "/division-resolver")
 
@@ -45,9 +42,9 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthRetrieveAgentEnrolment()
         mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Right(StoreAdministrativeDivisionSuccess)))
 
-        val res = await(TestDivisionResolverController.resolve(testGetRequest.withSession(
+        val res = TestDivisionResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
@@ -59,9 +56,9 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Left(StoreAdministrativeDivisionFailureResponse(INTERNAL_SERVER_ERROR))))
 
         intercept[InternalServerException] {
-          await(TestDivisionResolverController.resolve(testGetRequest.withSession(
+          TestDivisionResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -70,7 +67,7 @@ class DivisionResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthRetrieveAgentEnrolment()
         mockStoreAdministrativeDivision(testVatNumber)(Future.successful(Right(StoreAdministrativeDivisionSuccess)))
 
-        val res = await(TestDivisionResolverController.resolve(testGetRequest))
+        val res = TestDivisionResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)

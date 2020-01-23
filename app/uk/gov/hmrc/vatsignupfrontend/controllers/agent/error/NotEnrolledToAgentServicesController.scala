@@ -18,14 +18,15 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.error
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.not_enrolled_to_agent_services
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NotEnrolledToAgentServicesController @Inject()(val controllerComponents: ControllerComponents)
+class NotEnrolledToAgentServicesController @Inject()(implicit ec: ExecutionContext,
+                                                       vcc: VatControllerComponents)
   extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

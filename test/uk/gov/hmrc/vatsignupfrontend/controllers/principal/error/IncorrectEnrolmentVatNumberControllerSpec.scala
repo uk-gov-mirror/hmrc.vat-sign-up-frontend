@@ -18,28 +18,29 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.incorrect_enrolment_vat_number
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.incorrect_enrolment_vat_number
 
+class IncorrectEnrolmentVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-class IncorrectEnrolmentVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+  object TestIncorrectEnrolmentVatNumberController extends IncorrectEnrolmentVatNumberController
 
-  object TestIncorrectEnrolmentVatNumberController extends IncorrectEnrolmentVatNumberController(mockControllerComponents)
-
-  lazy val testGetRequest = FakeRequest("GET", "/error/sign-in-with-different-details")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/sign-in-with-different-details")
 
   "Calling the show action of the Incorrect Enrolment Vat Number controller" should {
     "return OK" in {
       mockAuthAdminRole()
 
-      implicit val request = testGetRequest
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = testGetRequest
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
 
-      val result = await(TestIncorrectEnrolmentVatNumberController.show(request))
+      val result = TestIncorrectEnrolmentVatNumberController.show(request)
 
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe incorrect_enrolment_vat_number(principalRoutes.CaptureVatNumberController.show().url).body

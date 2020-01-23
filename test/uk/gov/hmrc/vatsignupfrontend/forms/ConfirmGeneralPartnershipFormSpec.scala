@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.forms
 
 import play.api.data.FormError
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.forms.ConfirmGeneralPartnershipForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}

@@ -17,8 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
@@ -30,7 +29,8 @@ import scala.concurrent.Future
 @Singleton
 class SessionTimeoutController @Inject()(val appConfig: AppConfig,
                                          val config: Configuration,
-                                         val env: Environment) extends FrontendController with AuthRedirects {
+                                         val env: Environment,
+                                         mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthRedirects {
 
 
   val keepAlive: Action[AnyContent] = Action.async { implicit request =>

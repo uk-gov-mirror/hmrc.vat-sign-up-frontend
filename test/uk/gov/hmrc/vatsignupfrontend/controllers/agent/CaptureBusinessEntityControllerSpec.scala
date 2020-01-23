@@ -21,28 +21,24 @@ import play.api.http.Status
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch._
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.StoreOverseasInformationSuccess
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockStoreOverseasInformationService}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
 
 class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockAdministrativeDivisionLookupService
+  with MockVatControllerComponents with MockAdministrativeDivisionLookupService
   with MockStoreOverseasInformationService {
 
-  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(
-    mockControllerComponents,
-    mockAdministrativeDivisionLookupService
-  )
+  object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(mockAdministrativeDivisionLookupService)
 
   implicit val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-type")
 
@@ -58,7 +54,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.DivisionResolverController.resolve().url)
-        result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Division))
+        session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(Division))
       }
     }
 
@@ -111,7 +107,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureCompanyNumberController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
         }
       }
 
@@ -123,7 +119,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(soletrader.routes.CaptureNinoController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }
       }
 
@@ -134,7 +130,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(partnerships.routes.ResolvePartnershipController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
         }
       }
 
@@ -146,7 +142,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(partnerships.routes.ResolvePartnershipController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
 
         }
       }
@@ -158,7 +154,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           val result = TestCaptureBusinessEntityController.submit(testPostRequest(other))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureBusinessEntityOtherController.show().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(Other))
         }
       }
     }

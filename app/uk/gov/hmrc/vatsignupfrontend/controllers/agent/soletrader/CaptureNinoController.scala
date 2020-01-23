@@ -19,18 +19,19 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.PrevalidationAPI
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.agent_capture_nino
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class CaptureNinoController @Inject()(val controllerComponents: ControllerComponents)
+class CaptureNinoController @Inject()(implicit ec: ExecutionContext,
+                                        vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateNinoForm: PrevalidationAPI[String] = ninoForm(isAgent = true)

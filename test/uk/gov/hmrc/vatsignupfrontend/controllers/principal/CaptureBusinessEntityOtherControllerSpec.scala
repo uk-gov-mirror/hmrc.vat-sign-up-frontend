@@ -18,21 +18,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 
-class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureBusinessEntityOtherController extends CaptureBusinessEntityOtherController(mockControllerComponents)
+  object TestCaptureBusinessEntityOtherController extends CaptureBusinessEntityOtherController
 
-  val testGetRequest = FakeRequest("GET", "/business-type-other")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-type-other")
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type-other").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
@@ -55,11 +55,11 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(vatGroup)
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(request))
+          val result = TestCaptureBusinessEntityOtherController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.VatGroupResolverController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(VatGroup))
         }
       }
 
@@ -68,11 +68,11 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(unincorporatedAssociation)
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(request))
+          val result = TestCaptureBusinessEntityOtherController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(
+          session(result).get(SessionKeys.businessEntityKey) should contain(
             BusinessEntitySessionFormatter.toString(UnincorporatedAssociation)
           )
         }
@@ -83,11 +83,11 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(trust)
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(request))
+          val result = TestCaptureBusinessEntityOtherController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.TrustResolverController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(
+          session(result).get(SessionKeys.businessEntityKey) should contain(
             BusinessEntitySessionFormatter.toString(Trust)
           )
         }
@@ -98,11 +98,11 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(registeredSociety)
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(request))
+          val result = TestCaptureBusinessEntityOtherController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(
+          session(result).get(SessionKeys.businessEntityKey) should contain(
             BusinessEntitySessionFormatter.toString(RegisteredSociety)
           )
         }
@@ -113,11 +113,11 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(charity)
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(request))
+          val result = TestCaptureBusinessEntityOtherController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CharityResolverController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(
+          session(result).get(SessionKeys.businessEntityKey) should contain(
             BusinessEntitySessionFormatter.toString(Charity)
           )
         }
@@ -128,11 +128,11 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(governmentOrganisation)
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(request))
+          val result = TestCaptureBusinessEntityOtherController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.GovernmentOrganisationResolverController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(
+          session(result).get(SessionKeys.businessEntityKey) should contain(
             BusinessEntitySessionFormatter.toString(GovernmentOrganisation)
           )
         }

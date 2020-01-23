@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.services.mocks
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.reset
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsignupfrontend.services.AdministrativeDivisionLookupService
 import org.mockito.Mockito._

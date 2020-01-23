@@ -17,8 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.views.agent
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits.applicationMessages
-import play.api.{Configuration, Environment}
+import play.api.i18n.{Messages, MessagesApi}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswersFinal => msg}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -37,8 +36,8 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.agent.check_your_answers_final
 
 class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with FeatureSwitching {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   def testSubmissionRequestSummary(vrn: String = testVatNumber,
                                    businessEntity: BusinessEntity,
@@ -48,7 +47,7 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
                                    agentEmail: String = testAgentEmail,
                                    optClientEmail: Option[String] = Some(testEmail),
                                    contactPreference: ContactPreference = Digital
-                                  ) =
+                                  ): SubscriptionRequestSummary =
     SubscriptionRequestSummary(
       vatNumber = vrn,
       businessEntity = businessEntity,
@@ -60,6 +59,8 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       contactPreference = contactPreference
     )
 
+  implicit val messages: Messages = messagesApi.preferred(viewTestRequest)
+
   def testView(summary: SubscriptionRequestSummary,
                optBusinessEntity: Option[BusinessEntity],
                optCompanyName: Option[String] = None
@@ -68,7 +69,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
     optBusinessEntity = optBusinessEntity,
     optCompanyName = optCompanyName,
     postAction = testCall
-  )(viewTestRequest, applicationMessages, new AppConfig(configuration, env))
+  )(
+    viewTestRequest,
+    messages,
+    appConfig
+  )
 
   "The final check your answers page" when {
     "The business is a Sole trader" when {
@@ -135,9 +140,9 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(GeneralPartnership), Some(CaptureBusinessEntityController.show().url))
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show().url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show().url))
       }
     }
     "The business is a Limited Partnership" should {
@@ -169,9 +174,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
         doc.sectionTest(CrnId, msg.partnershipCompanyNumber, testCompanyNumber, Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url))
         doc.sectionTest(CompanyNameId, msg.partnershipCompanyName, testCompanyName, None)
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is a Scottish Partnership" should {
@@ -204,9 +211,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
         doc.sectionTest(CrnId, msg.partnershipCompanyNumber, testCompanyNumber, Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url))
         doc.sectionTest(CompanyNameId, msg.partnershipCompanyName, testCompanyName, None)
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is a Limited Liability Partnership" should {
@@ -239,9 +248,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
         doc.sectionTest(CrnId, msg.partnershipCompanyNumber, testCompanyNumber, Some(partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url))
         doc.sectionTest(CompanyNameId, msg.partnershipCompanyName, testCompanyName, None)
         doc.sectionTest(PartnershipUtrId, msg.partnershipUtr, testCompanyUtr, Some(partnershipRoutes.CapturePartnershipUtrController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is a VAT group" should {
@@ -261,9 +272,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       "have rows for VRN, agent email, client email and contact preference" in {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(VatGroup), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is a Charity" should {
@@ -283,9 +296,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       "have rows for VRN, agent email, client email and contact preference" in {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Charity), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is a Division" should {
@@ -304,9 +319,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
 
       "have rows for VRN, agent email, client email and contact preference but NOT business entity" in {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
         doc.select("#business-entity-row").isEmpty shouldBe true
       }
     }
@@ -327,9 +344,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       "have rows for VRN, agent email, client email and contact preference" in {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(UnincorporatedAssociation), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is an Trust" should {
@@ -349,9 +368,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       "have rows for VRN, agent email, client email and contact preference" in {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(Trust), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is a Registered Society" should {
@@ -396,9 +417,11 @@ class CheckYourAnswersFinalSpec extends ViewSpec with SummarySectionTesting with
       "have rows for VRN, agent email, client email and contact preference" in {
         doc.sectionTest(VatNumberId, msg.vrn, testVatNumber, Some(CaptureVatNumberController.show().url))
         doc.sectionTest(BusinessEntityId, msg.businessEntity, getBusinessEntityName(GovernmentOrganisation), Some(CaptureBusinessEntityController.show().url))
-        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show.url))
+        doc.sectionTest(AgentEmailId, msg.agentEmail, testAgentEmail, Some(CaptureAgentEmailController.show()
+          .url))
         doc.sectionTest(ContactPreferenceId, msg.contactPreference, ContactPreferenceHelper.getContactPreferenceName(Digital), Some(ContactPreferenceController.show().url))
-        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show.url))
+        doc.sectionTest(ClientEmailId, msg.clientEmail, testEmail, Some(CaptureClientEmailController.show()
+          .url))
       }
     }
     "The business is overseas without a UK establishment" should {

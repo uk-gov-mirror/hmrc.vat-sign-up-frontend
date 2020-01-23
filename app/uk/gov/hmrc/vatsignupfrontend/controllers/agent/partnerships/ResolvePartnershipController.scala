@@ -20,45 +20,46 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipNoSAUTR, OptionalSautrJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, LimitedPartnershipBase}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionUtils
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ResolvePartnershipController @Inject()(val controllerComponents: ControllerComponents)
+class ResolvePartnershipController @Inject()(implicit ec: ExecutionContext,
+                                               vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
 
-      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+    val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
-      authorised() {
-        optBusinessEntity match {
-          case Some(_: LimitedPartnershipBase) =>
-            Future.successful(
-              Redirect(routes.AgentCapturePartnershipCompanyNumberController.show())
-            )
-          case Some(GeneralPartnership) if isEnabled(GeneralPartnershipNoSAUTR) =>
-            Future.successful(
-              Redirect(routes.CapturePartnershipUtrController.show())
-            )
-          case Some(GeneralPartnership) if isEnabled(OptionalSautrJourney) =>
-            Future.successful(
-              Redirect(routes.DoesYourClientHaveAUtrController.show())
-            )
-          case Some(GeneralPartnership) =>
-            Future.successful(
-              Redirect(routes.CapturePartnershipUtrController.show())
-            )
-          case _ =>
-            throw new InternalServerException("Not a partnership entity")
-        }
+    authorised() {
+      optBusinessEntity match {
+        case Some(_: LimitedPartnershipBase) =>
+          Future.successful(
+            Redirect(routes.AgentCapturePartnershipCompanyNumberController.show())
+          )
+        case Some(GeneralPartnership) if isEnabled(GeneralPartnershipNoSAUTR) =>
+          Future.successful(
+            Redirect(routes.CapturePartnershipUtrController.show())
+          )
+        case Some(GeneralPartnership) if isEnabled(OptionalSautrJourney) =>
+          Future.successful(
+            Redirect(routes.DoesYourClientHaveAUtrController.show())
+          )
+        case Some(GeneralPartnership) =>
+          Future.successful(
+            Redirect(routes.CapturePartnershipUtrController.show())
+          )
+        case _ =>
+          throw new InternalServerException("Not a partnership entity")
       }
     }
+  }
 
 }

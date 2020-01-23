@@ -17,27 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.Messages.Message
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{ReceiveEmailNotifications => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
+import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
-import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 
 
 class ReceiveEmailNotificationsSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
   val error = "error.principal.receive_email_notifications"
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "The Receive Email Notifications view" when {
 
@@ -47,9 +45,9 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
         testEmail,
         contactPreferencesForm(isAgent = false),
         postAction = testCall)(
-        FakeRequest(),
-        applicationMessages,
-        new AppConfig(configuration, env)
+        request,
+        messagesApi.preferred(request),
+        appConfig
       )
 
       val testPage = TestView(
@@ -120,9 +118,9 @@ class ReceiveEmailNotificationsSpec extends ViewSpec {
         testEmail,
         contactPreferencesForm(isAgent = false).bind(Map(ContactPreferencesForm.contactPreference -> "")),
         postAction = testCall)(
-        FakeRequest(),
-        applicationMessages,
-        new AppConfig(configuration, env)
+        request,
+        messagesApi.preferred(request),
+        appConfig
       )
 
       val testPage = TestView(

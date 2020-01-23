@@ -16,22 +16,19 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
-import java.util.UUID
-
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class SignUpAnotherClientControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SignUpAnotherClientControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestSignUpAnotherClientController extends SignUpAnotherClientController(mockControllerComponents)
+  object TestSignUpAnotherClientController extends SignUpAnotherClientController
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/information-received")
@@ -50,10 +47,9 @@ class SignUpAnotherClientControllerSpec extends UnitSpec with GuiceOneAppPerSuit
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
 
-      val session = await(result).session(request)
-      session.get(SessionKeys.vatNumberKey) shouldBe None
-      session.get(SessionKeys.companyNumberKey) shouldBe None
-      session.get(SessionKeys.emailKey) shouldBe None
+      session(result).get(SessionKeys.vatNumberKey) shouldBe None
+      session(result).get(SessionKeys.companyNumberKey) shouldBe None
+      session(result).get(SessionKeys.emailKey) shouldBe None
     }
   }
 

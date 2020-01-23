@@ -18,22 +18,22 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthorisationException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.Yes
 
-class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCapturePartnershipUtrController extends CapturePartnershipUtrController(mockControllerComponents)
+  object TestCapturePartnershipUtrController extends CapturePartnershipUtrController
 
-  lazy val testGetRequest = FakeRequest("GET", "/partnership-utr")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/partnership-utr")
 
   def testPostRequest(utr: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/partnership-utr").withFormUrlEncodedBody(partnershipUtr -> utr)
@@ -50,7 +50,8 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
   }
 
   "Calling the noUtrSelected action of the CapturePartnershipUtrController" should {
-    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey} & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
+    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey}" +
+      s" & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
       mockAuthRetrieveAgentEnrolment()
 
       val result = TestCapturePartnershipUtrController.noUtrSelected(testGetRequest.withSession(
@@ -68,7 +69,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "have an auth check and return exception if not authorised" in {
       mockFailedAuth()
 
-      intercept[AuthorisationException](await(TestCapturePartnershipUtrController.noUtrSelected(testGetRequest)))
+      intercept[AuthorisationException](TestCapturePartnershipUtrController.noUtrSelected(testGetRequest))
     }
   }
 
@@ -77,7 +78,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       "go to the partnership ppob page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        implicit val request = testPostRequest(testSaUtr)
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testSaUtr)
         val result = TestCapturePartnershipUtrController.submit(request)
 
         status(result) shouldBe Status.SEE_OTHER

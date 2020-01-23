@@ -18,13 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -34,15 +34,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 import scala.concurrent.Future
 
-class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockGetCompanyNameService {
 
-  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(
-    mockControllerComponents,
-    mockGetCompanyNameService
-  )
+  object TestCaptureCompanyNumberController extends CaptureCompanyNumberController(mockGetCompanyNameService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/company-registration-number")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/company-registration-number")
 
   def testPostRequest(companyNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/company-registration-number").withFormUrlEncodedBody(companyNumber -> companyNumberVal)
@@ -73,8 +70,8 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmCompanyController.show().url)
 
-        result.session(request).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
-        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
+        session(result).get(SessionKeys.companyNumberKey) shouldBe Some(testCompanyNumber)
+        session(result).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 
@@ -103,7 +100,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.CompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.companyNumberKey) shouldBe None
+        session(result).get(SessionKeys.companyNumberKey) shouldBe None
 
       }
     }
@@ -134,7 +131,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.DissolvedCompanyController.show().url)
 
-        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
+        session(result).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 
@@ -146,7 +143,7 @@ class CaptureCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSui
 
         val request = testPostRequest(testCompanyNumber)
 
-        intercept[InternalServerException](await(TestCaptureCompanyNumberController.submit(request)))
+        intercept[InternalServerException](TestCaptureCompanyNumberController.submit(request))
       }
     }
   }

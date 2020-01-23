@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testVatNumber
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub.stubStoreOverseasInformation
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -45,7 +45,7 @@ class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with Custom
         redirectUri(routes.OverseasResolverController.resolve().url)
       )
 
-      SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
+      getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
 
     }
 

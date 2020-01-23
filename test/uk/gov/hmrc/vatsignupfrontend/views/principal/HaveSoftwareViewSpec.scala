@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{HaveSoftware => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.HaveSoftwareForm._
@@ -29,18 +29,18 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class HaveSoftwareViewSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
   val error = "error.have_software"
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.have_software(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.have_software(
     haveSoftwareForm,
     postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Have Software view" should {

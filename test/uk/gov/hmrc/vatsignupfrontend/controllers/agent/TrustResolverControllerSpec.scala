@@ -17,27 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreTrustInformationHttpParser.{StoreTrustInformationFailureResponse, StoreTrustInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreTrustInformationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreTrustInformationService {
 
-  object TestTrustResolverController extends TrustResolverController(
-    mockControllerComponents,
-    mockStoreTrustInformationService
-  )
+  object TestTrustResolverController extends TrustResolverController(mockStoreTrustInformationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/client/trust-resolver")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/client/trust-resolver")
 
   "calling the resolve method on TrustResolverController" when {
     "store trust information returns StoreTrustInformationSuccess" should {
@@ -45,9 +43,9 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         mockAuthRetrieveAgentEnrolment()
         mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
 
-        val res = await(TestTrustResolverController.resolve(testGetRequest.withSession(
+        val res = TestTrustResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
@@ -59,9 +57,9 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         mockStoreTrustInformation(testVatNumber)(Future.successful(Left(StoreTrustInformationFailureResponse(INTERNAL_SERVER_ERROR))))
 
         intercept[InternalServerException] {
-          await(TestTrustResolverController.resolve(testGetRequest.withSession(
+          TestTrustResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -70,7 +68,7 @@ class TrustResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with
         mockAuthRetrieveAgentEnrolment()
         mockStoreTrustInformation(testVatNumber)(Future.successful(Right(StoreTrustInformationSuccess)))
 
-        val res = await(TestTrustResolverController.resolve(testGetRequest))
+        val res = TestTrustResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)

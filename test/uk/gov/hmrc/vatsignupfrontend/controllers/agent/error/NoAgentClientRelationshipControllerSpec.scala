@@ -20,12 +20,12 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class NoAgentClientRelationshipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class NoAgentClientRelationshipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestNoAgentClientRelationshipController extends NoAgentClientRelationshipController(mockControllerComponents)
+  object TestNoAgentClientRelationshipController extends NoAgentClientRelationshipController
 
   lazy val testGetRequest = FakeRequest("GET", "/client/error/not-authorised")
 

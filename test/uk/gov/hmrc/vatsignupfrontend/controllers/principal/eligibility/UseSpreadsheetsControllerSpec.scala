@@ -19,25 +19,27 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility
 
-class UseSpreadsheetsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+import scala.concurrent.Future
+
+class UseSpreadsheetsControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
   class Setup {
-    val controller = new UseSpreadsheetsController(mockControllerComponents)
+    val controller = new UseSpreadsheetsController
   }
 
   "show" should {
     "render the view successfully" in new Setup {
       implicit val req: Request[AnyContent] = FakeRequest()
-      implicit val messages: Messages = mockMessagesApi.preferred(req)
-      val res = controller.show(req)
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(req)
+      val res: Future[Result] = controller.show(req)
       contentAsString(res) shouldBe eligibility.use_spreadsheets(principalRoutes.ResolveVatNumberController.resolve()).body
       status(res) shouldBe Status.OK
     }

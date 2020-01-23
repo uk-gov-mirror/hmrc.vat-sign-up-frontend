@@ -18,9 +18,9 @@ package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import play.api.i18n.Messages.Implicits.applicationMessages
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAnswersFinal => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -31,9 +31,9 @@ import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
 class CheckYourAnswersFinalViewSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   def page(optBusinessEntity: BusinessEntity = Trust,
            optNino: Option[String] = None,
@@ -54,31 +54,35 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
     contactPreference = contactPreference,
     postAction = testCall,
     isAdministrativeDivision
-  )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+  )(
+    request,
+    messagesApi.preferred(request),
+    appConfig
+  )
 
-  lazy val pageDefault = page()
-  lazy val pageSoleTrader = page(optBusinessEntity = SoleTrader, optNino = Some(testNino))
-  lazy val pageLimitedCompany = page(
+  lazy val pageDefault: Html = page()
+  lazy val pageSoleTrader: Html = page(optBusinessEntity = SoleTrader, optNino = Some(testNino))
+  lazy val pageLimitedCompany: Html = page(
     optBusinessEntity = LimitedCompany,
     optCompanyNumber = Some(testCompanyNumber),
     optCompanyName = Some(testCompanyName)
   )
-  lazy val pageLimitedPartnership = page(
+  lazy val pageLimitedPartnership: Html = page(
     optBusinessEntity = LimitedPartnership,
     optPartnershipUtr = Some(testCompanyUtr),
     optCompanyNumber = Some(testCompanyNumber),
     optCompanyName = Some(testCompanyName)
   )
-  lazy val pageGeneralParnership = page(
+  lazy val pageGeneralParnership: Html = page(
     optBusinessEntity = GeneralPartnership,
     optPartnershipUtr = Some(testCompanyUtr)
   )
-  lazy val pageRegisteredSociety = page(
+  lazy val pageRegisteredSociety: Html = page(
     optBusinessEntity = RegisteredSociety,
     optCompanyNumber = Some(testCompanyNumber),
     optCompanyName = Some(testCompanyName)
   )
-  lazy val pageLetters = page(contactPreference = Paper)
+  lazy val pageLetters: Html = page(contactPreference = Paper)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"

@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.DoYouHaveAUtrForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testSaUtr, testBusinessPostCode}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class DoesYourClientHaveAUtrControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -56,9 +56,9 @@ class DoesYourClientHaveAUtrControllerISpec extends ComponentSpecBase with Custo
           redirectUri(routes.CheckYourAnswersPartnershipController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.partnershipPostCodeKey) shouldBe None
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
+        getSessionMap(res).get(SessionKeys.partnershipSautrKey) shouldBe None
+        getSessionMap(res).get(SessionKeys.partnershipPostCodeKey) shouldBe None
+        getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(false.toString)
       }
     }
 
@@ -73,7 +73,7 @@ class DoesYourClientHaveAUtrControllerISpec extends ComponentSpecBase with Custo
           redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(true.toString)
+        getSessionMap(res).get(SessionKeys.hasOptionalSautrKey) shouldBe Some(true.toString)
       }
     }
   }

@@ -25,26 +25,25 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreMigratedVatNumberService, MockStoreVatNumberService}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreVatNumberService
   with MockStoreMigratedVatNumberService {
 
   object TestCheckYourAnswersController extends CheckYourAnswersController(
-    mockControllerComponents,
     mockStoreVatNumberService,
     mockStoreMigratedVatNumberService
   )
@@ -235,7 +234,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             isFromBta = false
           )
 
-          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
           session(result) get SessionKeys.hasDirectDebitKey should contain("false")
@@ -253,7 +252,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             isFromBta = false
           )
 
-          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
           session(result) get SessionKeys.hasDirectDebitKey should contain("true")
@@ -272,9 +271,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             isFromBta = false
           )(Future.successful(Right(VatNumberStored(isOverseas = true, isDirectDebit = false))))
 
-          val result = await(TestCheckYourAnswersController.submit(
+          val result = TestCheckYourAnswersController.submit(
             testPostRequest(optBusinessEntity = Some(Overseas.toString))
-          ))
+          )
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityController.show().url)
@@ -294,7 +293,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             isFromBta = false
           )
 
-          val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+          val result = TestCheckYourAnswersController.submit(testPostRequest())
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.SignUpCompleteClientController.show().url)
         }
@@ -397,7 +396,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )
 
           intercept[InternalServerException] {
-            await(TestCheckYourAnswersController.submit(testPostRequest()))
+            TestCheckYourAnswersController.submit(testPostRequest())
           }
 
         }
@@ -428,7 +427,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.failed(new InternalServerException("")))
 
           intercept[InternalServerException] {
-            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
+            TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true"))
           }
 
         }
@@ -444,7 +443,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )
 
           intercept[InternalServerException] {
-            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true")))
+            TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true"))
           }
         }
       }
@@ -476,9 +475,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.failed(new InternalServerException("")))
 
           intercept[InternalServerException] {
-            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            TestCheckYourAnswersController.submit(testPostRequest().withSession(
               SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
-            )))
+            ))
           }
 
         }
@@ -494,9 +493,9 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )
 
           intercept[InternalServerException] {
-            await(TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            TestCheckYourAnswersController.submit(testPostRequest().withSession(
               SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
-            )))
+            ))
           }
         }
       }
@@ -505,7 +504,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "go to capture vat number page" in {
         mockAuthRetrieveEmptyEnrolment()
 
-        val result = await(TestCheckYourAnswersController.submit(testPostRequest(vatNumber = None)))
+        val result = TestCheckYourAnswersController.submit(testPostRequest(vatNumber = None))
 
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)

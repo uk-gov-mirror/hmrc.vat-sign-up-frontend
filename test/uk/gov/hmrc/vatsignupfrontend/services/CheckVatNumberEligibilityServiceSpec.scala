@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.services
 
 import org.scalatest.BeforeAndAfterEach
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.{MockVatNumberEligibilityConnector, MockVatNumberEligibilityPreMigrationConnector}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testEndDate, testStartDate, testVatNumber}

@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -28,12 +28,13 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.Submission
 import uk.gov.hmrc.vatsignupfrontend.services.{MigratedSubmissionService, SubmissionService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.send_your_application
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SendYourApplicationController @Inject()(val controllerComponents: ControllerComponents,
-                                              val migratedSubmissionService: MigratedSubmissionService,
+class SendYourApplicationController @Inject()(val migratedSubmissionService: MigratedSubmissionService,
                                               val submissionService: SubmissionService)
+                                             (implicit ec: ExecutionContext,
+                                              vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

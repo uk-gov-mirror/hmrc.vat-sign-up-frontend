@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
@@ -34,12 +34,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.GetCompanyNameService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.capture_partnership_company_number
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AgentCapturePartnershipCompanyNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                                               val getCompanyNameService: GetCompanyNameService
-                                                              )
+class AgentCapturePartnershipCompanyNumberController @Inject()(getCompanyNameService: GetCompanyNameService)
+                                                              (implicit ec: ExecutionContext,
+                                                               vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateCompanyNumberForm: PrevalidationAPI[String] = companyNumberForm(isAgent = true, isPartnership = true)

@@ -19,21 +19,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.PostCode
 
-class PrincipalPlacePostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class PrincipalPlacePostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestPrincipalPlacePostCodeController extends PrincipalPlacePostCodeController(mockControllerComponents)
+  object TestPrincipalPlacePostCodeController extends PrincipalPlacePostCodeController
 
-  lazy val testGetRequest = FakeRequest("GET", "/principal-place-postcode")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/principal-place-postcode")
 
   def testPostRequest(postCode: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/principal-place-postcode").withFormUrlEncodedBody(partnershipPostCode -> postCode)
@@ -54,7 +54,7 @@ class PrincipalPlacePostCodeControllerSpec extends UnitSpec with GuiceOneAppPerS
       "redirect to partnership CYA page" in {
         mockAuthAdminRole()
 
-        implicit val request = testPostRequest(testBusinessPostcode.postCode)
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testBusinessPostcode.postCode)
         val result = TestPrincipalPlacePostCodeController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CheckYourAnswersPartnershipsController.show().url)

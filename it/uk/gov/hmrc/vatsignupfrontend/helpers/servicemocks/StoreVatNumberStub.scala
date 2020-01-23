@@ -17,10 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatNumberHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, OverseasTrader, PostCode}
+import uk.gov.hmrc.vatsignupfrontend.utils.JsonUtils._
 
 object StoreVatNumberStub extends WireMockMethods {
 
@@ -92,23 +93,14 @@ object StoreVatNumberStub extends WireMockMethods {
                   optBox5Figure: Option[String],
                   optLastReturnMonth: Option[String],
                   isFromBta: Boolean
-                 ) =
+                 ): JsObject =
     Json.obj(
       "vatNumber" -> testVatNumber,
       "registrationDate" -> registrationDate.toLocalDate.toString
-    ) ++ (
-      optPostCode match {
-        case Some(postCode) => Json.obj("postCode" -> postCode.postCode)
-        case None => Json.obj()
-      }) ++ (
-      optBox5Figure match {
-        case Some(box5Figure) => Json.obj("lastNetDue" -> box5Figure)
-        case None => Json.obj()
-      }) ++ (
-      optLastReturnMonth match {
-        case Some(lastReturnMonth) => Json.obj("lastReturnMonthPeriod" -> lastReturnMonth)
-        case None => Json.obj()
-      }) ++ Json.obj("isFromBta" -> isFromBta)
+    ) + ("postCode", optPostCode.map(_.sanitisedPostCode)
+    ) + ("lastNetDue", optBox5Figure
+    ) + ("lastReturnMonthPeriod", optLastReturnMonth
+    ) ++ Json.obj("isFromBta" -> isFromBta)
 
   def stubStoreVatNumberSuccess(optPostCode: Option[PostCode],
                                 registrationDate: DateModel,
@@ -143,14 +135,13 @@ object StoreVatNumberStub extends WireMockMethods {
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> KnownFactsMismatchCode))
   }
 
-  def stubStoreVatNumberKnownFactsMismatchMigrated(optPostCode: Option[PostCode],
-                                           registrationDate: DateModel,
-                                           optBox5Figure: Option[String],
-                                           optLastReturnMonth: Option[String],
-                                           isFromBta: Boolean
-                                          ): Unit = {
+  def stubStoreVatNumberKnownFactsMismatchMigrated(vatNumber: String,
+                                                   registrationDate: DateModel,
+                                                   optPostCode: Option[PostCode]
+                                                  ): Unit = {
     when(method = POST, uri = "/vat-sign-up/subscription-request/migrated-vat-number", body =
-      requestJson(optPostCode, registrationDate, optBox5Figure, optLastReturnMonth, isFromBta))
+      Json.obj("vatNumber" -> vatNumber, "registrationDate" -> registrationDate.toDesDateFormat
+      ) + ("postCode", optPostCode.map(_.sanitisedPostCode)))
       .thenReturn(status = FORBIDDEN, body = Json.obj(CodeKey -> KnownFactsMismatchCode))
   }
 

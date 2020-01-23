@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.services.mocks
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreRegisteredSocietyHttpParser._

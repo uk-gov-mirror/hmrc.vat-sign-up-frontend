@@ -28,7 +28,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub.stubStoreOverseasInformation
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas}
 
 class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
@@ -111,7 +111,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
+        getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
 
       }
     }
@@ -144,7 +144,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.SignUpCompleteClientController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.businessEntityKey) shouldNot contain(Overseas.toString)
+        getSessionMap(res).get(SessionKeys.businessEntityKey) shouldNot contain(Overseas.toString)
 
       }
     }
@@ -297,22 +297,20 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "throw an error if the known facts mismatch" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberKnownFactsMismatchMigrated(
-          Some(testBusinessPostCode),
+          testVatNumber,
           testDate,
-          None,
-          None,
-          isFromBta = false
+          Some(testBusinessPostCode)
         )
 
 
-        val res = await(post("/check-your-answers",
+        val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.isMigratedKey -> "true"
           )
-        )())
+        )()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
@@ -324,18 +322,18 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse())
         stubStoreMigratedVatnumberKF(
           testVatNumber,
-          testDate.toOutputDateFormat,
+          testDate.toDesDateFormat,
           testBusinessPostCode
         )(INTERNAL_SERVER_ERROR)
 
-        val res = await(post("/check-your-answers",
+        val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
             SessionKeys.isMigratedKey -> "true"
           )
-        )())
+        )()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
@@ -371,22 +369,20 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       "throw an error if the known facts mismatch" in {
         stubAuth(OK, successfulAuthResponse())
         stubStoreVatNumberKnownFactsMismatchMigrated(
-          None,
+          testVatNumber,
           testDate,
-          None,
-          None,
-          isFromBta = false
+          None
         )
 
 
-        val res = await(post("/check-your-answers",
+        val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessEntityKey -> Overseas.toString,
             SessionKeys.isMigratedKey -> "true"
           )
-        )())
+        )()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
@@ -398,17 +394,17 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         stubAuth(OK, successfulAuthResponse())
         stubStoreMigratedOverseasVatnumberKF(
           testVatNumber,
-          testDate.toOutputDateFormat
+          testDate.toDesDateFormat
         )(INTERNAL_SERVER_ERROR)
 
-        val res = await(post("/check-your-answers",
+        val res = post("/check-your-answers",
           Map(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
             SessionKeys.businessEntityKey -> Overseas.toString,
             SessionKeys.isMigratedKey -> "true"
           )
-        )())
+        )()
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)

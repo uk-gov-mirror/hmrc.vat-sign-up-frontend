@@ -18,25 +18,27 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.could_not_confirm_partnership
 
 
-class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CouldNotConfirmPartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCouldNotConfirmPartnershipController extends CouldNotConfirmPartnershipController(mockControllerComponents)
+  object TestCouldNotConfirmPartnershipController extends CouldNotConfirmPartnershipController
 
-  implicit lazy val testGetRequest = FakeRequest("GET", "/client/error/could-not-confirm-partnership ")
+  implicit lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/client/error/could-not-confirm-partnership ")
 
   "Calling the show action of the Could not confirm Partnership controller" should {
     "show the could not confirm partnership  page" in {
       mockAuthRetrieveAgentEnrolment()
       val request = testGetRequest
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
 
       lazy val result = TestCouldNotConfirmPartnershipController.show(request)
       status(result) shouldBe Status.OK

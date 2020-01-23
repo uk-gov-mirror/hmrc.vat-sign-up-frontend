@@ -18,23 +18,24 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.auth.core.{Admin, Enrolments}
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class ResolveVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestResolveVatNumberController extends ResolveVatNumberController(mockControllerComponents)
+  object TestResolveVatNumberController extends ResolveVatNumberController
 
-  lazy val testGetRequest = FakeRequest("GET", "/resolve-vat-number")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/resolve-vat-number")
 
   "Calling the resolve action of the Resolve Vat Number controller" when {
     "the user has a VAT-DEC enrolment" should {

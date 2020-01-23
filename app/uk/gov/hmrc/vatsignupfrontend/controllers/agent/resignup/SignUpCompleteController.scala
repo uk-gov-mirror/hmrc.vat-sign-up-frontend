@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.resignup
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.{CaptureVatNumberController, SignUpAnotherClientController}
@@ -27,27 +27,28 @@ import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.resignup.sign_up_complete
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-  @Singleton
-  class SignUpCompleteController @Inject()(val controllerComponents: ControllerComponents)
-    extends AuthenticatedController(AgentEnrolmentPredicate) {
+@Singleton
+class SignUpCompleteController @Inject()(implicit ec: ExecutionContext,
+                                           vcc: VatControllerComponents)
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
-    val show: Action[AnyContent] = Action.async { implicit request =>
-      authorised() {
-        val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
-        val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+  val show: Action[AnyContent] = Action.async { implicit request =>
+    authorised() {
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
+      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
-        (optVatNumber, optBusinessEntity) match {
-          case (Some(vatNumber), Some(businessEntity)) =>
-            Future.successful(
-              Ok(sign_up_complete(businessEntity, vatNumber, SignUpAnotherClientController.submit()))
-            )
-          case _ =>
-            Future.successful(Redirect(CaptureVatNumberController.show()))
-        }
+      (optVatNumber, optBusinessEntity) match {
+        case (Some(vatNumber), Some(businessEntity)) =>
+          Future.successful(
+            Ok(sign_up_complete(businessEntity, vatNumber, SignUpAnotherClientController.submit()))
+          )
+        case _ =>
+          Future.successful(Redirect(CaptureVatNumberController.show()))
       }
     }
-
   }
+
+}
 

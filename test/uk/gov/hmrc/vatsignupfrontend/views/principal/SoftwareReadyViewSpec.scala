@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SoftwareReady => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.SoftwareReadyForm._
@@ -29,17 +29,18 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class SoftwareReadyViewSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
   val error = "error.software_ready"
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.software_ready(softwareReadyForm, postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
-  )
+  lazy val page: HtmlFormat.Appendable =
+    uk.gov.hmrc.vatsignupfrontend.views.html.principal.software_ready(softwareReadyForm, postAction = testCall)(
+      request,
+      messagesApi.preferred(request),
+      appConfig
+    )
 
   "The Software Ready view" should {
 
@@ -78,7 +79,7 @@ class SoftwareReadyViewSpec extends ViewSpec {
       "for the option 'No'" should {
 
         "have the text 'no'" in {
-          doc.select(s"label[for=${messages.radioNo}]").text()  shouldEqual messages.no
+          doc.select(s"label[for=${messages.radioNo}]").text() shouldEqual messages.no
         }
 
         "have an input under the label that" should {

@@ -17,10 +17,11 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal.resignup
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
+import org.jsoup.nodes.Document
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalResignupInformationReceived => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
@@ -30,19 +31,17 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class SignUpCompleteViewSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  val appConfig = new AppConfig(configuration, env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.sign_up_complete(SoleTrader, testVatNumber)(
-    FakeRequest(),
-    applicationMessages,
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.sign_up_complete(SoleTrader, testVatNumber)(
+    request,
+    messagesApi.preferred(request),
     appConfig
   )
 
-  lazy val document = Jsoup.parse(page.body)
+  lazy val document: Document = Jsoup.parse(page.body)
 
   "The sign up complete view" should {
 

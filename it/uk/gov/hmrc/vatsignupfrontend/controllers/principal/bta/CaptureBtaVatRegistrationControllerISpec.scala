@@ -23,7 +23,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatRegistrationDateKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -72,7 +72,7 @@ class CaptureBtaVatRegistrationControllerISpec extends ComponentSpecBase with Cu
         redirectUri(routes.BtaBusinessPostCodeController.show().url)
       )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
+      val session = getSessionMap(res)
       session.keys should contain(vatRegistrationDateKey)
     }
   }

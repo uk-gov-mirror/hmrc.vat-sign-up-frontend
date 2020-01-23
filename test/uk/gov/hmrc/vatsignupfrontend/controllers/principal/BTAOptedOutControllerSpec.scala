@@ -17,19 +17,20 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class BTAOptedOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockClaimSubscriptionService {
+  with MockVatControllerComponents with MockClaimSubscriptionService {
 
-  object TestBTAOptedOutController extends BTAOptedOutController(mockControllerComponents)
+  object TestBTAOptedOutController extends BTAOptedOutController
 
   val vrnFromBTA = "123456789"
-  lazy val testGetRequest = FakeRequest("GET", s"/vat-number/$vrnFromBTA")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", s"/vat-number/$vrnFromBTA")
 
   "redirect" should {
     "redirect to the Capture VAT number page" in {
@@ -39,7 +40,7 @@ class BTAOptedOutControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       val result = TestBTAOptedOutController.redirect(vrnFromBTA)(testGetRequest)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve.url)
+      redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
     }
   }
 }

@@ -19,15 +19,15 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
 
 
 class BTAOptedOutAgentControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockClaimSubscriptionService {
+  with MockVatControllerComponents with MockClaimSubscriptionService {
 
-  object TestBTAOptedOutAgentController extends BTAOptedOutAgentController(mockControllerComponents)
+  object TestBTAOptedOutAgentController extends BTAOptedOutAgentController
 
   val vrnFromBTA = "123456789"
   lazy val testGetRequest = FakeRequest("GET", s"/vat-number/$vrnFromBTA")

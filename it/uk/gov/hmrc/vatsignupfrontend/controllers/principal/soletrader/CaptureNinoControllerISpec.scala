@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.testNino
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
@@ -51,7 +51,7 @@ class CaptureNinoControllerISpec extends ComponentSpecBase with CustomMatchers w
           redirectUri(routes.ConfirmNinoController.show().url)
         )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(ninoKey)
       }
     }

@@ -22,21 +22,21 @@ import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility
 
-class MakingTaxDigitalSoftwareControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class MakingTaxDigitalSoftwareControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
   class Setup {
-    val controller = new MakingTaxDigitalSoftwareController(mockControllerComponents)
+    val controller = new MakingTaxDigitalSoftwareController
   }
 
   "show" should {
     s"render the view correctly and return ${Status.OK}" in new Setup {
       implicit val req: Request[AnyContent] = FakeRequest()
-      implicit val messages: Messages = mockMessagesApi.preferred(req)
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(req)
       val res = controller.show(req)
       contentAsString(res) shouldBe eligibility.making_tax_digital_software(
         principalRoutes.HaveYouGotSoftwareController.show()).body

@@ -17,22 +17,18 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
-
-import scala.concurrent.Future
+import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, VatControllerComponents}
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.guidance
 
+import scala.concurrent.Future
+
 @Singleton
-class GuidanceController @Inject()(val controllerComponents: ControllerComponents)
-  extends FrontendController() with I18nSupport{
+class GuidanceController @Inject()(implicit vcc: VatControllerComponents) extends FrontendController(vcc.controllerComponents) with I18nSupport {
 
-  implicit val appConfig: AppConfig = controllerComponents.appConfig
-
-  override def messagesApi = controllerComponents.messagesApi
+  implicit val appConfig: AppConfig = vcc.appConfig
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(guidance()))

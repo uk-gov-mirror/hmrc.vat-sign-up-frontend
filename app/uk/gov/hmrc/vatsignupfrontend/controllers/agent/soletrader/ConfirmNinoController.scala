@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, ninoKey, vatNumberKey}
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes._
@@ -30,11 +30,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.StoreNinoService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.soletrader.confirm_nino
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmNinoController @Inject()(val controllerComponents: ControllerComponents,
-                                      storeNinoService: StoreNinoService)
+class ConfirmNinoController @Inject()(storeNinoService: StoreNinoService)
+                                     (implicit ec: ExecutionContext,
+                                      vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>

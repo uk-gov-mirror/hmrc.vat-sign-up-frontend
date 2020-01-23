@@ -24,7 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreContactPreferenceStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.{Digital, Paper}
 
 class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -65,7 +65,7 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
             redirectUri(routes.CaptureClientEmailController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.keys should contain(contactPreferenceKey)
         }
       }

@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser._
 
 class SubmissionHttpParserSpec extends UnitSpec {

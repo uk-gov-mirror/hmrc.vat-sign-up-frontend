@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalDoYouHaveAUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -31,17 +31,16 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class DoYouHaveAUtrViewSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.do_you_have_a_utr(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.do_you_have_a_utr(
     doYouHaveAUtrForm(isAgent = false),
     postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Do You Have A Utr view" should {

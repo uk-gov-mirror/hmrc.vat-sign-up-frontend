@@ -22,10 +22,10 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockSubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.CompanyClosed
@@ -37,7 +37,7 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionL
 import scala.concurrent.Future
 
 class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockAdministrativeDivisionLookupService
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreVatNumberService
   with MockSubmissionService
   with MockSubscriptionRequestSummaryConnector
@@ -45,7 +45,6 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
   object TestCheckYourAnswersFinalController
     extends CheckYourAnswersFinalController(
-      mockControllerComponents,
       mockStoreVatNumberService,
       mockSubscriptionRequestSummaryConnector,
       mockSubmissionService,
@@ -83,7 +82,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
           mockGetSubscriptionRequest(testVatNumber)(
             Future.successful(Left(SubscriptionRequestUnexpectedError(INTERNAL_SERVER_ERROR, "Unexpected status from Backend")))
           )
-          intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
+          intercept[InternalServerException](TestCheckYourAnswersFinalController.show(testGetRequest()))
         }
       }
       "subscription request summary returns other errors regarding data" should {
@@ -109,7 +108,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
                   SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
               )
               mockGetCompanyNameNotFound(testCompanyNumber)
-              intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
+              intercept[InternalServerException](TestCheckYourAnswersFinalController.show(testGetRequest()))
 
             }
           }
@@ -121,7 +120,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
                   SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
               )
               mockGetCompanyNameFailure(testCompanyNumber)
-              intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
+              intercept[InternalServerException](TestCheckYourAnswersFinalController.show(testGetRequest()))
 
             }
           }
@@ -133,7 +132,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
                   SubscriptionRequestSummary(testVatNumber, LimitedCompany, None, Some(testCompanyNumber), None, None, testEmail, Digital)))
               )
               mockGetCompanyName(testCompanyNumber)(Future.successful(Right(CompanyClosed(testCompanyName))))
-              intercept[InternalServerException](await(TestCheckYourAnswersFinalController.show(testGetRequest())))
+              intercept[InternalServerException](TestCheckYourAnswersFinalController.show(testGetRequest()))
 
             }
           }
@@ -234,7 +233,7 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockSubmitFailure(testVatNumber)
 
         intercept[InternalServerException] {
-          await(TestCheckYourAnswersFinalController.submit(testPostRequest()))
+          TestCheckYourAnswersFinalController.submit(testPostRequest())
         }
       }
     }

@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -163,7 +163,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
 
-          SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+          getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
         }
       }
 
@@ -180,7 +180,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
             redirectUri(errorRoutes.MigratableDatesController.show().url)
           )
 
-          SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+          getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
         }
       }
 
@@ -321,7 +321,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(errorRoutes.MigratableDatesController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+        getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
       }
     }
 
@@ -339,7 +339,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(errorRoutes.MigratableDatesController.show().url)
         )
 
-        SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+        getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
       }
     }
 

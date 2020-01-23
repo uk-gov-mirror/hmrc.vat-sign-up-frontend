@@ -24,16 +24,16 @@ class LanguageSwitchControllerISpec extends ComponentSpecBase {
   "GET /language/cymraeg" should {
     "update the PLAY_LANG cookie to cy" in {
       lazy val resultCy: WSResponse = get("/language/cymraeg")
-      resultCy.allHeaders.isDefinedAt("Set-Cookie") shouldBe true
-      resultCy.allHeaders.toString.contains("PLAY_LANG=cy;") shouldBe true
+      resultCy.headers.isDefinedAt("Set-Cookie") shouldBe true
+      resultCy.headers.toString.contains("PLAY_LANG=cy;") shouldBe true
     }
   }
 
   "GET /language/english" should {
     "update the PLAY_LANG cookie to en" in {
       lazy val resultEn: WSResponse = get("/language/english")
-      resultEn.allHeaders.isDefinedAt("Set-Cookie") shouldBe true
-      resultEn.allHeaders.toString.contains("PLAY_LANG=en;") shouldBe true
+      resultEn.headers.isDefinedAt("Set-Cookie") shouldBe true
+      resultEn.headers.toString.contains("PLAY_LANG=en;") shouldBe true
     }
   }
 

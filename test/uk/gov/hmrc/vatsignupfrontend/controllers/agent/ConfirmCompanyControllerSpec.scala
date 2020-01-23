@@ -23,13 +23,13 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCompanyNumberService
 
-class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreCompanyNumberService {
 
   override def beforeEach(): Unit = {
@@ -37,11 +37,11 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
   }
 
   object TestConfirmCompanyController extends ConfirmCompanyController(
-    mockControllerComponents,
+
     mockStoreCompanyNumberService
   )
 
-  val testGetRequest = FakeRequest("GET", "/confirm-company")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-company")
 
   val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-company")
@@ -100,7 +100,7 @@ class ConfirmCompanyControllerSpec extends UnitSpec with GuiceOneAppPerSuite wit
       )
 
       intercept[InternalServerException] {
-        await(TestConfirmCompanyController.submit(request))
+        TestConfirmCompanyController.submit(request)
       }
     }
     "go to the 'capture vat number' page if vat number is missing" in {

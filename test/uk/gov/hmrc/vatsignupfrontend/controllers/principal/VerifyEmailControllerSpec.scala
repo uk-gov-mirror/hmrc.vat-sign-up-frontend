@@ -20,17 +20,14 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-import scala.concurrent.Future
+class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-class VerifyEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
-
-  object TestVerifyEmailController extends VerifyEmailController(mockControllerComponents)
+  object TestVerifyEmailController extends VerifyEmailController
 
   "Calling the show action of the Verify Email controller" when {
     "email is in session" should {

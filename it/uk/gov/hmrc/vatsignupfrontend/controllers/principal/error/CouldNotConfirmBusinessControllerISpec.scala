@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 
@@ -67,7 +67,7 @@ class CouldNotConfirmBusinessControllerISpec extends ComponentSpecBase with Cust
       redirectUri(principalRoutes.CaptureBusinessEntityController.show().url)
     )
 
-    val session = SessionCookieCrumbler.getSessionMap(res)
+    val session = getSessionMap(res)
     session.keys should contain(vatNumberKey)
     session.keys shouldNot contain(companyNumberKey)
     session.keys shouldNot contain(companyUtrKey)

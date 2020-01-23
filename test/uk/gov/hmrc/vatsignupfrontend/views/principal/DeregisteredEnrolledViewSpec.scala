@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
-import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalDeregisteredEnrolled => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -30,17 +29,15 @@ class DeregisteredEnrolledViewSpec extends ViewSpec {
 
   val testLink: String = "test/test"
 
-  val env: Environment = Environment.simple()
-  val configuration: Configuration = Configuration.load(env)
-
-  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.deregistered_enrolled(
     testVatNumber)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Dissolved Company view" should {
