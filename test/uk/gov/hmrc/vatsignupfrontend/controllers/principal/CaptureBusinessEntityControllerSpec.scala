@@ -18,30 +18,31 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.StoreOverseasInformationSuccess
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockStoreOverseasInformationService}
-import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.StoreOverseasInformationSuccess
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
 class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockAdministrativeDivisionLookupService
+  with MockVatControllerComponents with MockAdministrativeDivisionLookupService
   with MockStoreOverseasInformationService {
 
   object TestCaptureBusinessEntityController extends CaptureBusinessEntityController(
-    mockControllerComponents,
-    mockStoreOverseasInformationService, mockAdministrativeDivisionLookupService)
+    mockStoreOverseasInformationService,
+    mockAdministrativeDivisionLookupService
+  )
 
-  lazy val testGetRequest = FakeRequest("GET", "/business-type").withSession(SessionKeys.vatNumberKey -> testVatNumber)
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-type").withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
@@ -50,7 +51,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "the VRN belongs to a VAT division" should {
       "redirect the user to the DivisionResolverController" in {
         mockAuthAdminRole()
-        mockIsAdministrativeDivision(testVatNumber)(true)
+        mockIsAdministrativeDivision(testVatNumber)(isAdministrativeDivision = true)
 
         val result = TestCaptureBusinessEntityController.show(testGetRequest)
 
@@ -62,7 +63,7 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "the VRN does not belong to a VAT division" should {
       "go to the Capture Entity Type page" in {
         mockAuthAdminRole()
-        mockIsAdministrativeDivision(testVatNumber)(false)
+        mockIsAdministrativeDivision(testVatNumber)(isAdministrativeDivision = false)
 
         val result = TestCaptureBusinessEntityController.show(testGetRequest)
         status(result) shouldBe Status.OK
@@ -76,18 +77,16 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
 
-        implicit lazy val testGetRequest = FakeRequest("GET", "/business-type")
+        implicit lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-type")
           .withSession(SessionKeys.vatNumberKey -> testVatNumber)
           .withSession(SessionKeys.businessEntityKey -> Overseas.toString)
 
-        val result = TestCaptureBusinessEntityController.show()(testGetRequest.withSession(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.businessEntityKey -> Overseas.toString
-        ))
+        val futureResult = TestCaptureBusinessEntityController.show(testGetRequest)
+        val result = await(futureResult)
 
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.OverseasResolverController.resolve().url)
-        result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Overseas))
+        status(futureResult) shouldBe Status.SEE_OTHER
+        redirectLocation(futureResult) shouldBe Some(routes.OverseasResolverController.resolve().url)
+        result.session.get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(Overseas))
       }
     }
   }
@@ -99,11 +98,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(soleTrader)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
+          val result = TestCaptureBusinessEntityController.submit(request)
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(soletrader.routes.SoleTraderResolverController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(SoleTrader))
         }
       }
 
@@ -112,11 +112,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedCompany)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
+          val result = TestCaptureBusinessEntityController.submit(request)
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureCompanyNumberController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(LimitedCompany))
         }
       }
 
@@ -125,11 +126,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(generalPartnership)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
+          val result = TestCaptureBusinessEntityController.submit(request)
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(partnerships.routes.ResolvePartnershipUtrController.resolve().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(GeneralPartnership))
         }
       }
 
@@ -138,11 +140,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
           mockAuthAdminRole()
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(limitedPartnership)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
+          val result = TestCaptureBusinessEntityController.submit(request)
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(partnerships.routes.CapturePartnershipCompanyNumberController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(LimitedPartnership))
         }
       }
 
@@ -152,11 +155,12 @@ class CaptureBusinessEntityControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(other)
 
-          val result = await(TestCaptureBusinessEntityController.submit(request))
+          val result = TestCaptureBusinessEntityController.submit(request)
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CaptureBusinessEntityOtherController.show().url)
 
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Other))
+          session(result).get(SessionKeys.businessEntityKey) should contain(BusinessEntitySessionFormatter.toString(Other))
         }
       }
 

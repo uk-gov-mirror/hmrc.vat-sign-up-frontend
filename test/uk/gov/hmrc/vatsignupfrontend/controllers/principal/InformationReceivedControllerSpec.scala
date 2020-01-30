@@ -18,19 +18,20 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testVatNumber
 
-class InformationReceivedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class InformationReceivedControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestInformationReceivedController extends InformationReceivedController(mockControllerComponents)
+  object TestInformationReceivedController extends InformationReceivedController
 
-  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/information-received").withSession(
     SessionKeys.businessEntityKey -> SoleTrader.toString,
     SessionKeys.vatNumberKey -> testVatNumber
   )

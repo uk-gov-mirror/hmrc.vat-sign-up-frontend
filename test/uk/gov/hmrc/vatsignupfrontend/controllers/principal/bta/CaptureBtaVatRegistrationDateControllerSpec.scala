@@ -21,27 +21,27 @@ import java.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{BTAClaimSubscription, FeatureSwitching}
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class CaptureBtaVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with FeatureSwitching {
+  with MockVatControllerComponents with FeatureSwitching {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(BTAClaimSubscription)
   }
 
-  object TestCaptureBtaVatNumberController extends CaptureBtaVatRegistrationDateController(mockControllerComponents)
+  object TestCaptureBtaVatNumberController extends CaptureBtaVatRegistrationDateController
 
-  lazy val testGetRequest = FakeRequest("GET", "/bta/vat-registration-date")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/bta/vat-registration-date")
 
   def testPostRequest(registrationDate: DateModel): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "bta/vat-registration-date")
@@ -74,7 +74,7 @@ class CaptureBtaVatRegistrationDateControllerSpec extends UnitSpec with GuiceOne
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.BtaBusinessPostCodeController.show().url)
 
-        Json.parse(result.session(request).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
+        Json.parse(session(result).get(SessionKeys.vatRegistrationDateKey).get).validate[DateModel].get shouldBe yesterday
       }
     }
 

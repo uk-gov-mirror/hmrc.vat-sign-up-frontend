@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCaptureCompanyUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyUtrForm._
@@ -28,17 +28,15 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class CaptureCompanyUtrSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  val appConfig = new AppConfig(configuration, env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_utr(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_company_utr(
     companyUtrForm = companyUtrForm.form,
     postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
+    request,
+    messagesApi.preferred(request),
     appConfig
   )
 
@@ -57,7 +55,7 @@ class CaptureCompanyUtrSpec extends ViewSpec {
 
     testPage.shouldHavePara(messages.line1)
 
-    testPage.shouldHaveALink(id="lost-Utr", messages.linkText, appConfig.findLostCompanyUtr)
+    testPage.shouldHaveALink(id = "lost-Utr", messages.linkText, appConfig.findLostCompanyUtr)
 
     testPage.shouldHaveContinueButton()
   }

@@ -21,14 +21,14 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
 import scala.concurrent.Future
 
-class NotEnrolledToAgentServicesControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class NotEnrolledToAgentServicesControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestNotEnrolledToAgentServicesController extends NotEnrolledToAgentServicesController(mockControllerComponents)
+  object TestNotEnrolledToAgentServicesController extends NotEnrolledToAgentServicesController
 
   lazy val testGetRequest = FakeRequest("GET", "/client/error/not-enrolled-agent-services")
 

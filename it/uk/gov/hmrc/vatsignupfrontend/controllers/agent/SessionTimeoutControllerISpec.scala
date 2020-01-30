@@ -20,7 +20,7 @@ import play.api.http.Status.{OK, SEE_OTHER}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAgentAuthResponse}
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class SessionTimeoutControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /keep-alive" when {
@@ -34,7 +34,7 @@ class SessionTimeoutControllerISpec extends ComponentSpecBase with CustomMatcher
         res should have(
           httpStatus(OK)
         )
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(vatNumberKey)
       }
     }
@@ -52,7 +52,7 @@ class SessionTimeoutControllerISpec extends ComponentSpecBase with CustomMatcher
           httpStatus(SEE_OTHER),
           redirectUri("/gg/sign-in?continue=%2Fvat-through-software%2Fsign-up%2Fclient%2Fvat-number&origin=vat-sign-up-frontend")
         )
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys shouldNot contain(vatNumberKey)
       }
     }

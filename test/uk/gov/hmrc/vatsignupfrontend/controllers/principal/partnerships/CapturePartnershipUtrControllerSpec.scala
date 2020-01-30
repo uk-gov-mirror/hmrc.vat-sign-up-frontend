@@ -18,25 +18,26 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthorisationException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.capture_partnership_utr
 
-class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCapturePartnershipUtrController extends CapturePartnershipUtrController(mockControllerComponents)
+  object TestCapturePartnershipUtrController extends CapturePartnershipUtrController
 
-  val testGetRequestForNoUtr = FakeRequest("GET", "/partnership-no-utr")
-  val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
+  val testGetRequestForNoUtr: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/partnership-no-utr")
+  val testGetRequestForShow: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/partnership-utr")
 
   def testPostRequest(utr: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/partnership-utr").withFormUrlEncodedBody(PartnershipUtrForm.partnershipUtr -> utr)
@@ -46,9 +47,8 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockAuthAdminRole()
       disable(GeneralPartnershipNoSAUTR)
 
-      implicit val testGetRequestForShow = FakeRequest("GET", "/partnership-utr")
-
-      implicit val messages = mockMessagesApi.preferred(testGetRequestForShow)
+      implicit val testGetRequestForShow: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/partnership-utr")
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequestForShow)
 
       lazy val view = capture_partnership_utr(
         partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form,
@@ -68,11 +68,10 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockAuthAdminRole()
       enable(GeneralPartnershipNoSAUTR)
 
-      implicit val testGetRequestForShow = FakeRequest("GET", "/partnership-utr").withSession(
+      implicit val testGetRequestForShow: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/partnership-utr").withSession(
         SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
       )
-
-      implicit val messages = mockMessagesApi.preferred(testGetRequestForShow)
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequestForShow)
 
       lazy val view = capture_partnership_utr(
         partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form,
@@ -93,11 +92,11 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockAuthAdminRole()
       enable(GeneralPartnershipNoSAUTR)
 
-      implicit val testGetRequestForShow = FakeRequest("GET", "/partnership-utr").withSession(
+      implicit val testGetRequestForShow: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/partnership-utr").withSession(
         SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
       )
 
-      implicit val messages = mockMessagesApi.preferred(testGetRequestForShow)
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequestForShow)
 
       lazy val view = capture_partnership_utr(
         partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form,
@@ -116,7 +115,8 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
   }
 
   "Calling the noUtrSelected action of the CapturePartnershipUtrController" should {
-    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey} & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
+    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey}" +
+      s" & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
       mockAuthAdminRole()
 
       val result = TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr.withSession(
@@ -136,7 +136,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     "have an auth check and return exception if not authorised" in {
       mockFailedAuth()
 
-      intercept[AuthorisationException](await(TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr)))
+      intercept[AuthorisationException](TestCapturePartnershipUtrController.noUtrSelected(testGetRequestForNoUtr))
     }
   }
 
@@ -146,7 +146,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest(testSaUtr).withSession(
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testSaUtr).withSession(
           SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
           SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
         )
@@ -166,7 +166,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         disable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest(testSaUtr).withSession(
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testSaUtr).withSession(
           SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
           SessionKeys.businessEntityKey -> BusinessEntity.GeneralPartnershipKey
         )
@@ -187,7 +187,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest(testSaUtr).withSession(
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testSaUtr).withSession(
           SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
           SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
         )
@@ -207,7 +207,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         disable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest(testSaUtr).withSession(
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testSaUtr).withSession(
           SessionKeys.hasOptionalSautrKey -> Yes.stringValue,
           SessionKeys.businessEntityKey -> BusinessEntity.LimitedPartnershipKey
         )
@@ -228,9 +228,9 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         disable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest("")
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest("")
 
-        implicit val messages = mockMessagesApi.preferred(request)
+        implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
 
         lazy val view = capture_partnership_utr(
           partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr),
@@ -250,9 +250,9 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest("")
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest("")
 
-        implicit val messages = mockMessagesApi.preferred(request)
+        implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
 
         lazy val view = capture_partnership_utr(
           partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr),
@@ -274,9 +274,9 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         mockAuthAdminRole()
         enable(GeneralPartnershipNoSAUTR)
 
-        implicit val request = testPostRequest("")
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest("")
 
-        implicit val messages = mockMessagesApi.preferred(request)
+        implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
 
         lazy val view = capture_partnership_utr(
           partnershipUtrForm = PartnershipUtrForm.partnershipUtrForm.form.bindFromRequest()(testGetRequestForNoUtr),

@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, NOT_FOUND, NO_CONTENT}
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreNinoHttpParser._
 
 class StoreNinoHttpParserSpec extends UnitSpec {

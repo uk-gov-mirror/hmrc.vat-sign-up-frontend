@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -32,11 +32,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.ClaimSubscriptionService
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidChecksum
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ClaimSubscriptionController @Inject()(val controllerComponents: ControllerComponents,
-                                            claimSubscriptionService: ClaimSubscriptionService)
+class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubscriptionService)
+                                           (implicit ec: ExecutionContext,
+                                            vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(BTAClaimSubscription)) {
 
   def show(btaVatNumber: String): Action[AnyContent] = Action.async { implicit request =>

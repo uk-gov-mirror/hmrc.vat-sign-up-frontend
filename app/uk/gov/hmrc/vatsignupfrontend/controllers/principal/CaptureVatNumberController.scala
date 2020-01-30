@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
@@ -37,9 +37,10 @@ import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_vat_number
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CaptureVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService
-                                          )(implicit ec: ExecutionContext) extends AuthenticatedController(AdministratorRolePredicate) {
+class CaptureVatNumberController @Inject()(storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService)
+                                          (implicit ec: ExecutionContext,
+                                           vcc: VatControllerComponents)
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   private val validateVatNumberForm = vatNumberForm(isAgent = false)
 

@@ -22,19 +22,19 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
 
-class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreEmailAddressService {
 
-  object TestConfirmEmailController extends ConfirmClientEmailController(mockControllerComponents, mockStoreEmailAddressService)
+  object TestConfirmEmailController extends ConfirmClientEmailController(mockStoreEmailAddressService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/confirm-client-email")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-client-email")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-client-email")
@@ -113,10 +113,10 @@ class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
 
         intercept[InternalServerException] {
-          await(TestConfirmEmailController.submit(testPostRequest.withSession(
+          TestConfirmEmailController.submit(testPostRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber,
             SessionKeys.emailKey -> testEmail
-          )))
+          ))
         }
       }
     }

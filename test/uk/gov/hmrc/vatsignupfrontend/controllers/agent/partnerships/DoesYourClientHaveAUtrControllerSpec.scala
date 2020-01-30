@@ -30,7 +30,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testSaUtr, testBusin
 
 class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
 
-  object TestDoesYourClientHaveAUtrController extends DoesYourClientHaveAUtrController(mockControllerComponents)
+  object TestDoesYourClientHaveAUtrController extends DoesYourClientHaveAUtrController
 
   lazy val testGetRequest = FakeRequest("GET", "/client/does-your-client-have-a-utr")
 
@@ -50,7 +50,7 @@ class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
         enable(OptionalSautrJourney)
         mockAuthRetrieveAgentEnrolment()
 
-        val result = await(TestDoesYourClientHaveAUtrController.show(testGetRequest))
+        val result = TestDoesYourClientHaveAUtrController.show(testGetRequest)
         status(result) shouldBe Status.OK
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -60,7 +60,7 @@ class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
     "Optional Sautr Journey is disabled" should {
       "return NOT_FOUND" in {
         intercept[NotFoundException](
-          await(TestDoesYourClientHaveAUtrController.show(testGetRequest))
+          TestDoesYourClientHaveAUtrController.show(testGetRequest)
         )
       }
     }
@@ -73,7 +73,7 @@ class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
           enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestDoesYourClientHaveAUtrController.submit(testPostRequest(option_no)))
+          val result = TestDoesYourClientHaveAUtrController.submit(testPostRequest(option_no))
 
           session(result).get(SessionKeys.partnershipSautrKey) shouldBe None
           session(result).get(SessionKeys.partnershipPostCodeKey) shouldBe None
@@ -88,7 +88,7 @@ class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
           enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestDoesYourClientHaveAUtrController.submit(testPostRequest(option_yes)))
+          val result = TestDoesYourClientHaveAUtrController.submit(testPostRequest(option_yes))
 
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CapturePartnershipUtrController.show().url)
@@ -101,7 +101,7 @@ class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
           enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestDoesYourClientHaveAUtrController.submit(testPostRequest("")))
+          val result = TestDoesYourClientHaveAUtrController.submit(testPostRequest(""))
 
           status(result) shouldBe Status.BAD_REQUEST
           contentType(result) shouldBe Some("text/html")
@@ -113,7 +113,7 @@ class DoesYourClientHaveAUtrControllerSpec extends ControllerSpec {
     "Optional Sautr Journey is disabled" should {
       "return NOT_FOUND" in {
         intercept[NotFoundException](
-          await(TestDoesYourClientHaveAUtrController.submit(testPostRequest(option_yes)))
+          TestDoesYourClientHaveAUtrController.submit(testPostRequest(option_yes))
         )
       }
     }

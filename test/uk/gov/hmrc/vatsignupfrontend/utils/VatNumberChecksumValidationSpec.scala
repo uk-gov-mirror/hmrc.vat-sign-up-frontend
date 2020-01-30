@@ -16,15 +16,13 @@
 
 package uk.gov.hmrc.vatsignupfrontend.utils
 
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
-
+import org.scalatestplus.mockito.MockitoSugar
 
 class VatNumberChecksumValidationSpec extends UnitSpec with MockitoSugar {
 
   "VatNumberChecksumValidation.isValid" should {
     "return true if the checksum is correct for a mod 97 number" in {
-       val testValue = "011000084"
+      val testValue = "011000084"
       VatNumberChecksumValidation.isValidChecksum(testValue) shouldBe true
     }
 

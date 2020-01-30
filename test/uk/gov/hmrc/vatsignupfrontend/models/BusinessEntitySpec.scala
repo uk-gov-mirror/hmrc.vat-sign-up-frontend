@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.models
 
 import play.api.libs.json.{JsNumber, JsString, JsValue}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class BusinessEntitySpec extends UnitSpec {
 

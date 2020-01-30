@@ -17,27 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreVatGroupInformationHttpParser.{StoreVatGroupInformationFailureResponse, StoreVatGroupInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatGroupInformationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreVatGroupInformationService {
 
-  object TestVatGroupResolverController extends VatGroupResolverController(
-    mockControllerComponents,
-    mockStoreVatGroupInformationService
-  )
+  object TestVatGroupResolverController extends VatGroupResolverController(mockStoreVatGroupInformationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/vat-group-resolver")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/vat-group-resolver")
 
   "calling the resolve method on VatGroupResolverController" when {
     "store group information returns StoreVatGroupInformationSuccess" should {
@@ -45,9 +43,9 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
 
-        val res = await(TestVatGroupResolverController.resolve(testGetRequest.withSession(
+        val res = TestVatGroupResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
@@ -59,9 +57,9 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockStoreVatGroupInformation(testVatNumber)(Future.successful(Left(StoreVatGroupInformationFailureResponse(INTERNAL_SERVER_ERROR))))
 
         intercept[InternalServerException] {
-          await(TestVatGroupResolverController.resolve(testGetRequest.withSession(
+          TestVatGroupResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -70,7 +68,7 @@ class VatGroupResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthRetrieveAgentEnrolment()
         mockStoreVatGroupInformation(testVatNumber)(Future.successful(Right(StoreVatGroupInformationSuccess)))
 
-        val res = await(TestVatGroupResolverController.resolve(testGetRequest))
+        val res = TestVatGroupResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)

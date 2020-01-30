@@ -21,14 +21,14 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class PartnershipPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class PartnershipPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestPartnershipPostCodeController extends PartnershipPostCodeController(mockControllerComponents)
+  object TestPartnershipPostCodeController extends PartnershipPostCodeController
 
   lazy val testGetRequest = FakeRequest("GET", "/principal-place-postcode")
 

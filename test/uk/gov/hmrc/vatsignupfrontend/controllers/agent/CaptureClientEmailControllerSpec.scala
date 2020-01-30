@@ -18,22 +18,22 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 
-class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureClientEmailController extends CaptureClientEmailController(mockControllerComponents)
+  object TestCaptureClientEmailController extends CaptureClientEmailController
 
-  val testGetRequest = FakeRequest("GET", "/email-address")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/email-address")
 
   def testPostRequest(emailAddress: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/email-address").withFormUrlEncodedBody(email -> emailAddress)
@@ -63,7 +63,7 @@ class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ConfirmClientEmailController.show().url)
 
-          await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
+          session(result).get(SessionKeys.emailKey) shouldBe Some(testEmail)
         }
       }
       "the provided e-mail address does not match the provided agent e-mail address" should {
@@ -78,7 +78,7 @@ class CaptureClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ConfirmClientEmailController.show().url)
 
-          await(result).session(request).get(SessionKeys.emailKey) shouldBe Some(testEmail)
+          session(result).get(SessionKeys.emailKey) shouldBe Some(testEmail)
         }
       }
 

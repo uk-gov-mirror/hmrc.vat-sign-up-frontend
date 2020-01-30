@@ -18,25 +18,25 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.deregistered_unenrolled
 
-class DeregisteredVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class DeregisteredVatNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestController extends DeregisteredVatNumberController(mockControllerComponents)
+  object TestController extends DeregisteredVatNumberController
 
   implicit lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/client/error/deregistered-vat-number")
 
   "Calling the show action of the deregistered vat number controller" should {
     "show the deregistered page" in {
-
       mockAuthRetrieveAgentEnrolment()
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequest)
 
       val result = TestController.show(testGetRequest)
 

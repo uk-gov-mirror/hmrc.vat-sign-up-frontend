@@ -18,25 +18,25 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_complete_client
-import play.api.i18n.Messages.Implicits._
 
-class SignUpCompleteClientControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SignUpCompleteClientControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestInformationReceivedController extends SignUpCompleteClientController(mockControllerComponents)
+  object TestInformationReceivedController extends SignUpCompleteClientController
 
-  implicit lazy val testGetRequest = FakeRequest("GET", "/sign-up-complete-client")
+  implicit lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/sign-up-complete-client")
 
   "Calling the show action of the information received controller" should {
     "show the information received page" in {
       mockAuthAdminRole()
       val request = testGetRequest
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(request)
 
       val result = TestInformationReceivedController.show(request)
       status(result) shouldBe Status.OK

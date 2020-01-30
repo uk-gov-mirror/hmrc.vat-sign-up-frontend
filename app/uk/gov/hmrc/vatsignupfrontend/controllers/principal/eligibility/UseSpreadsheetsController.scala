@@ -17,18 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.eligibility
 
 import javax.inject.{Inject, Singleton}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, VatControllerComponents}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility
 
 @Singleton
-class UseSpreadsheetsController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController with I18nSupport {
+class UseSpreadsheetsController @Inject()(implicit vcc: VatControllerComponents) extends FrontendController(vcc.controllerComponents) with I18nSupport {
 
-  final val messagesApi: MessagesApi = controllerComponents.messagesApi
-  implicit final val appConfig: AppConfig = controllerComponents.appConfig
+  implicit final val appConfig: AppConfig = vcc.appConfig
 
   def show: Action[AnyContent] = Action { implicit request =>
     Ok(eligibility.use_spreadsheets(principalRoutes.ResolveVatNumberController.resolve()))

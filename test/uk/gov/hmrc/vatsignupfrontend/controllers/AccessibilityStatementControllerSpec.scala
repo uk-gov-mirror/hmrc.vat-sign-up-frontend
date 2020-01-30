@@ -17,16 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers
 
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class AccessibilityStatementControllerSpec extends UnitSpec with MockControllerComponents {
+class AccessibilityStatementControllerSpec extends UnitSpec with MockVatControllerComponents {
 
-  object TestAccessibilityStatementController extends AccessibilityStatementController(mockControllerComponents)
+  object TestAccessibilityStatementController extends AccessibilityStatementController
 
-  val testGetRequest = FakeRequest("GET", "/accessibility-statement")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/accessibility-statement")
 
   "show" should {
     "return OK" in {

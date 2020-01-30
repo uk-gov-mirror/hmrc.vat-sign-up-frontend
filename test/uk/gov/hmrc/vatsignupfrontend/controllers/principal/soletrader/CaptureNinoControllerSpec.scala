@@ -17,21 +17,21 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.NinoForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.testNino
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with FeatureSwitching {
+class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents with FeatureSwitching {
 
-  object TestCaptureNinoController extends CaptureNinoController(mockControllerComponents)
+  object TestCaptureNinoController extends CaptureNinoController
 
-  val testGetRequest = FakeRequest("GET", "/national-insurance-number")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/national-insurance-number")
 
   private def testPostRequest(postNino: String = testNino): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/national-insurance-number").withFormUrlEncodedBody(nino -> postNino)
@@ -50,16 +50,16 @@ class CaptureNinoControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
     "a valid NINO has been submitted" should {
       "redirect to the Confirm Your Details page" in {
         mockAuthAdminRole()
-        val res = await(TestCaptureNinoController.submit(testPostRequest()))
+        val res = TestCaptureNinoController.submit(testPostRequest())
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(routes.ConfirmNinoController.show().url)
-        res.session(testPostRequest()).get(SessionKeys.ninoKey) should contain(testNino)
+        session(res).get(SessionKeys.ninoKey) should contain(testNino)
       }
     }
     "an invalid NINO has been submitted" should {
       "display the capture NINO page, with error messages" in {
         mockAuthAdminRole()
-        val res = await(TestCaptureNinoController.submit(testPostRequest("QQ123456C")))
+        val res = TestCaptureNinoController.submit(testPostRequest("QQ123456C"))
         status(res) shouldBe BAD_REQUEST
         contentType(res) shouldBe Some("text/html")
         charset(res) shouldBe Some("utf-8")

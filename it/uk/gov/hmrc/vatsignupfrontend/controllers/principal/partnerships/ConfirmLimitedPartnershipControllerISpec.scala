@@ -49,17 +49,6 @@ class ConfirmLimitedPartnershipControllerISpec extends ComponentSpecBase with Cu
     }
   }
 
-  "if feature switch is disabled" should {
-    "return a not found" in {
-
-      val res = get("/confirm-partnership")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-    }
-  }
-
   "POST /confirm-partnership" when {
     "the user answered No" should {
       "go to 'sign in with different details partnership' page" in {

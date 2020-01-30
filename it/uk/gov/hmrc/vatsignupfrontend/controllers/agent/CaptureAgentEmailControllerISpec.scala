@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -109,12 +109,12 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
         redirectUri(routes.CaptureAgentEmailController.show().url)
       )
 
-      SessionCookieCrumbler.getSessionMap(res) get SessionKeys.transactionEmailKey shouldBe None
+      getSessionMap(res) get SessionKeys.transactionEmailKey shouldBe None
     }
   }
 
   "POST /email-address" when {
-    "client email fs is enabled" should  {
+    "client email fs is enabled" should {
       "return a redirect" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
@@ -125,7 +125,7 @@ class CaptureAgentEmailControllerISpec extends ComponentSpecBase with CustomMatc
           redirectUri(routes.ConfirmAgentEmailController.show().url)
         )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(transactionEmailKey)
       }
     }

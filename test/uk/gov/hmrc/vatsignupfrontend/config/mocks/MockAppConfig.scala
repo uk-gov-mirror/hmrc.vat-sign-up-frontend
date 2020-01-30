@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.config.mocks
 
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -25,7 +25,6 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitch, Featur
 trait MockAppConfig extends MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with FeatureSwitching {
   this: TestSuite =>
 
-  //TODO: Replace with mock config
   lazy implicit val mockAppConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
   override protected def beforeEach(): Unit = {

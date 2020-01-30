@@ -18,20 +18,29 @@ package uk.gov.hmrc.vatsignupfrontend.views
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.{Configuration, Environment}
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.play.bootstrap.config.{RunMode, ServicesConfig}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 
 class MainTemplateViewSpec extends ViewSpec {
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+
   val testCountdown = "1234"
   val testTimeOut = "87913"
+
+  val configuration: Configuration = Configuration.load(Environment.simple())
+  lazy val runMode: RunMode = app.injector.instanceOf[RunMode]
+  lazy val appConfig: AppConfig = new AppConfig(new ServicesConfig(configuration, runMode)) {
+    override lazy val timeoutLength: String = testTimeOut
+    override lazy val countdownLength: String = testCountdown
+  }
+
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   def page(enabledTimeout: Boolean = true,
            showSignOutLink: Boolean = true,
@@ -49,12 +58,9 @@ class MainTemplateViewSpec extends ViewSpec {
     isAgent = false,
     enableTimeout = enabledTimeout)(HtmlFormat.empty)(
     if (hasAuthToken) FakeRequest().withSession(SessionKeys.authToken -> "")
-    else FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env) {
-      override lazy val timeoutLength = testTimeOut
-      override lazy val countdownLength = testCountdown
-    }
+    else request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   val testScript = "<script type=\"text/javascript\" src=\"test-javascript.js\"></script>"
@@ -69,7 +75,7 @@ class MainTemplateViewSpec extends ViewSpec {
     }
 
     "show timeout" in new Setup(true) {
-      val timeoutScriptText = doc.getElementById("timeoutScript").html()
+      val timeoutScriptText: String = doc.getElementById("timeoutScript").html()
       timeoutScriptText.contains(testCountdown) shouldBe true
       timeoutScriptText.contains(testTimeOut) shouldBe true
     }

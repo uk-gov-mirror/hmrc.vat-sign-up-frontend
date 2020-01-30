@@ -22,7 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => erro
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreCompanyNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{LimitedCompany, VatGroup}
 
@@ -61,7 +61,7 @@ class CheckYourAnswersCompanyControllerISpec extends ComponentSpecBase with Cust
         redirectUri(routes.CaptureBusinessEntityController.show().url)
       )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
+      val session = getSessionMap(res)
       session.keys should contain(vatNumberKey)
       session.keys shouldNot contain(companyNumberKey)
       session.keys shouldNot contain(companyUtrKey)
@@ -129,7 +129,7 @@ class CheckYourAnswersCompanyControllerISpec extends ComponentSpecBase with Cust
             redirectUri(routes.CaptureBusinessEntityController.show().url)
           )
 
-          val session = SessionCookieCrumbler.getSessionMap(res)
+          val session = getSessionMap(res)
           session.keys should contain(vatNumberKey)
           session.keys shouldNot contain(companyNumberKey)
           session.keys shouldNot contain(companyUtrKey)

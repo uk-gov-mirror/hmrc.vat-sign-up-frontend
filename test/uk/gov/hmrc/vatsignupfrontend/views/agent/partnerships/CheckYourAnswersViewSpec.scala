@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
 
+import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, HasOptionalSautrId}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
-import play.api.i18n.Messages.Implicits.applicationMessages
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswers => messages}
@@ -30,14 +31,13 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedPartnership}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
-import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, HasOptionalSautrId}
 
 
 class CheckYourAnswersViewSpec extends ViewSpec {
 
-
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -97,7 +97,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
         )
 
         val testPageGeneralPartnershipFSDisabled = TestView(
@@ -112,7 +116,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
         )
 
         testPageGeneralPartnershipFSEnabled.shouldHaveForm("Check your answers Form")(actionCall = testCall)
@@ -121,7 +129,13 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
         "the GeneralPartnershipNoSAUTR feature switch is enabled" in {
           sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSEnabled.document)
-          sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPageGeneralPartnershipFSEnabled.document)
+          sectionTest(
+            BusinessPostCodeId,
+            messages.yourBusinessPostCode,
+            testBusinessPostcode.checkYourAnswersFormat,
+            Some(expectedUrlPostCode),
+            testPageGeneralPartnershipFSEnabled.document
+          )
 
           testPageGeneralPartnershipFSEnabled.document.getElementById(utrAnswer).text shouldBe testSaUtr
           testPageGeneralPartnershipFSEnabled.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
@@ -129,7 +143,13 @@ class CheckYourAnswersViewSpec extends ViewSpec {
         }
         "the GeneralPartnershipNoSAUTR feature switch is disabled" in {
           sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSDisabled.document)
-          sectionTest(BusinessPostCodeId, messages.yourBusinessPostCode, testBusinessPostcode.checkYourAnswersFormat, Some(expectedUrlPostCode), testPageGeneralPartnershipFSDisabled.document)
+          sectionTest(
+            BusinessPostCodeId,
+            messages.yourBusinessPostCode,
+            testBusinessPostcode.checkYourAnswersFormat,
+            Some(expectedUrlPostCode),
+            testPageGeneralPartnershipFSDisabled.document
+          )
 
           testPageGeneralPartnershipFSDisabled.document.getElementById(utrAnswer).text shouldBe testSaUtr
           testPageGeneralPartnershipFSDisabled.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
@@ -149,7 +169,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = Some(true),
             generalPartnershipNoSAUTR = false,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
 
           lazy val doc = Jsoup.parse(page.body)
 
@@ -171,7 +195,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = Some(false),
             generalPartnershipNoSAUTR = false,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
 
           lazy val doc = Jsoup.parse(page.body)
 
@@ -193,7 +221,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
 
           lazy val doc = Jsoup.parse(page.body)
 
@@ -220,7 +252,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
 
           lazy val doc = Jsoup.parse(page.body)
 
@@ -241,7 +277,11 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             hasOptionalSautr = None,
             generalPartnershipNoSAUTR = false,
             postAction = testCall
-          )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+          )(
+            request,
+            messagesApi.preferred(request),
+            appConfig
+          )
 
           lazy val doc = Jsoup.parse(page.body)
 

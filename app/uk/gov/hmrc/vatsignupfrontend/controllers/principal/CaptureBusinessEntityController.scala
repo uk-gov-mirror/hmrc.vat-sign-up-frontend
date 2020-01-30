@@ -19,27 +19,24 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-import uk.gov.hmrc.vatsignupfrontend.models._
-import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
-import uk.gov.hmrc.vatsignupfrontend.services.{AdministrativeDivisionLookupService, StoreOverseasInformationService}
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity
-import play.api.mvc.Results._
-import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser.{StoreOverseasInformationFailureResponse, StoreOverseasInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.services.{AdministrativeDivisionLookupService, StoreOverseasInformationService}
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CaptureBusinessEntityController @Inject()(
-                                                 val controllerComponents: ControllerComponents,
-                                                 storeOverseasInformationService: StoreOverseasInformationService,
-                                                 administrativeDivisionLookupService: AdministrativeDivisionLookupService
-                                               ) extends AuthenticatedController(AdministratorRolePredicate) {
+class CaptureBusinessEntityController @Inject()(storeOverseasInformationService: StoreOverseasInformationService,
+                                                administrativeDivisionLookupService: AdministrativeDivisionLookupService)
+                                               (implicit ec: ExecutionContext,
+                                                vcc: VatControllerComponents)
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   private lazy val businessEntityRoute: Map[BusinessEntity, Call] = Map(
     SoleTrader -> soletrader.routes.SoleTraderResolverController.resolve(),

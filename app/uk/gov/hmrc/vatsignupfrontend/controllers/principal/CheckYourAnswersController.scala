@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, RequestHeader, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -33,13 +33,13 @@ import uk.gov.hmrc.vatsignupfrontend.services.{StoreMigratedVatNumberService, St
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswersController @Inject()(val controllerComponents: ControllerComponents,
-                                           val storeVatNumberService: StoreVatNumberService,
-                                           val storeMigratedVatNumberService: StoreMigratedVatNumberService
-                                          ) extends AuthenticatedController(AdministratorRolePredicate) {
+class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumberService,
+                                           storeMigratedVatNumberService: StoreMigratedVatNumberService)
+                                          (implicit ec: ExecutionContext,
+                                           vcc: VatControllerComponents) extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

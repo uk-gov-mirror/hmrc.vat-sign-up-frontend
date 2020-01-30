@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
@@ -28,18 +28,17 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class CaptureBusinessEntitySpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_business_entity(
     businessEntityForm,
     postAction = testCall
   )(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Principal Business Entity view" should {
@@ -64,7 +63,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'Sole Trader'" should {
 
         "have the text 'Sole trader'" in {
-          doc.select("label[for=sole-trader]").text() shouldEqual  messages.radioSoleTrader
+          doc.select("label[for=sole-trader]").text() shouldEqual messages.radioSoleTrader
         }
 
         "have an input under the label that" should {
@@ -104,7 +103,7 @@ class CaptureBusinessEntitySpec extends ViewSpec {
       "for the option 'General partnership'" should {
 
         "have the text 'General partnership'" in {
-          doc.select("label[for=general-partnership]").text() shouldEqual  messages.radioGeneralPartnership
+          doc.select("label[for=general-partnership]").text() shouldEqual messages.radioGeneralPartnership
         }
 
         "have an input under the label that" should {

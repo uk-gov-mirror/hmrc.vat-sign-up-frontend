@@ -24,9 +24,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
@@ -37,12 +37,12 @@ import scala.concurrent.Future
 
 class ConfirmVatNumberControllerSpec extends UnitSpec
   with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreVatNumberOrchestrationService {
 
-  object TestConfirmVatNumberController extends ConfirmVatNumberController(mockControllerComponents, mockStoreVatNumberOrchestrationService)
+  object TestConfirmVatNumberController extends ConfirmVatNumberController(mockStoreVatNumberOrchestrationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/confirm-vat-number")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-vat-number")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-vat-number")
@@ -83,7 +83,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) should contain(errorRoutes.CouldNotConfirmVatNumberController.show().url)
 
-        await(result).session(request).get(SessionKeys.vatNumberKey) shouldBe None
+        session(result).get(SessionKeys.vatNumberKey) shouldBe None
       }
     }
 
@@ -183,7 +183,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
-        await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
+        session(result).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
       }
 
       "redirect to sign up between these dates page when two dates are available" in {
@@ -199,7 +199,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
-        await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
+        session(result).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
       }
 
     }
@@ -221,7 +221,7 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
         mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.failed(new InternalServerException("")))
 
         intercept[InternalServerException] {
-          await(TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)))
+          TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
         }
       }
     }

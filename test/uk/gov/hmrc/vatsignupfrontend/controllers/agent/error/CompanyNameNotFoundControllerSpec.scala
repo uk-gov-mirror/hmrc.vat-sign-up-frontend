@@ -21,13 +21,13 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 
-class CompanyNameNotFoundControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CompanyNameNotFoundControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCompanyNameNotFoundController extends CompanyNameNotFoundController(mockControllerComponents)
+  object TestCompanyNameNotFoundController extends CompanyNameNotFoundController
 
   lazy val testGetRequest = FakeRequest("GET", "/client/error/could-not-confirm-company")
 

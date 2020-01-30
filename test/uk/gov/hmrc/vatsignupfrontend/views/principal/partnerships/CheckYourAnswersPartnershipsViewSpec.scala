@@ -19,7 +19,8 @@ package uk.gov.hmrc.vatsignupfrontend.views.principal.partnerships
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
-import play.api.i18n.Messages.Implicits.applicationMessages
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
@@ -32,7 +33,9 @@ import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsI
 
 class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
-  lazy val appConfig = app.injector.instanceOf[AppConfig]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -78,7 +81,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       postAction = testCall,
       hasOptionalSautr = None,
       generalPartnershipNoSAUTRFeatureSwitch = false
-    )(FakeRequest(), applicationMessages, appConfig)
+    )(
+      request,
+      messagesApi.preferred(request),
+      appConfig
+    )
 
     lazy val limitedPartnershipCyaDoc = Jsoup.parse(limitedPartnershipCyaPage.body)
 
@@ -162,7 +169,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
           postAction = testCall,
           generalPartnershipNoSAUTRFeatureSwitch = true,
           hasOptionalSautr = hasOptionalSautr
-        )(FakeRequest(), applicationMessages, appConfig)
+        )(
+          request,
+          messagesApi.preferred(request),
+          appConfig
+        )
 
         Jsoup.parse(page.body)
       }
@@ -227,7 +238,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         postAction = testCall,
         hasOptionalSautr = Some(false),
         generalPartnershipNoSAUTRFeatureSwitch = false
-      )(FakeRequest(), applicationMessages, appConfig)
+      )(
+        request,
+        messagesApi.preferred(request),
+        appConfig
+      )
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
 
@@ -312,7 +327,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         postAction = testCall,
         hasOptionalSautr = Some(true),
         generalPartnershipNoSAUTRFeatureSwitch = false
-      )(FakeRequest(), applicationMessages, appConfig)
+      )(
+        request,
+        messagesApi.preferred(request),
+        appConfig
+      )
 
       lazy val generalPartnershipCyaDoc = Jsoup.parse(generalPartnershipCyaPage.body)
 
@@ -359,7 +378,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
     "check your answers for general partnership" should {
 
-      def generalPartnershipCyaPage(companyUtr: Option[String], hasOptionalSautr: Option[Boolean] ): Document = {
+      def generalPartnershipCyaPage(companyUtr: Option[String], hasOptionalSautr: Option[Boolean]): Document = {
         val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
           entityType = GeneralPartnership,
           companyUtr = companyUtr,
@@ -368,7 +387,11 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
           postAction = testCall,
           generalPartnershipNoSAUTRFeatureSwitch = true,
           hasOptionalSautr = hasOptionalSautr
-        )(FakeRequest(), applicationMessages, appConfig)
+        )(
+          request,
+          messagesApi.preferred(request),
+          appConfig
+        )
 
         Jsoup.parse(page.body)
       }

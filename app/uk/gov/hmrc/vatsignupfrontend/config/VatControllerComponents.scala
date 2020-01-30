@@ -17,10 +17,9 @@
 package uk.gov.hmrc.vatsignupfrontend.config
 
 import javax.inject.Inject
-
-import play.api.i18n.MessagesApi
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 
-class ControllerComponents @Inject()(val messagesApi: MessagesApi,
-                                     val appConfig: AppConfig,
-                                     val authConnector: AuthConnector)
+class VatControllerComponents @Inject()(val appConfig: AppConfig,
+                                        val authConnector: AuthConnector,
+                                        val controllerComponents: MessagesControllerComponents)

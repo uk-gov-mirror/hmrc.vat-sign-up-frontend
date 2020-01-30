@@ -17,13 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -33,13 +32,13 @@ import uk.gov.hmrc.vatsignupfrontend.services.{CtReferenceLookupService, StoreCo
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_company
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmCompanyController @Inject()(val controllerComponents: ControllerComponents,
-                                         val storeCompanyNumberService: StoreCompanyNumberService,
-                                         val ctReferenceLookupService: CtReferenceLookupService
-                                        )
+class ConfirmCompanyController @Inject()(storeCompanyNumberService: StoreCompanyNumberService,
+                                         ctReferenceLookupService: CtReferenceLookupService)
+                                        (implicit ec: ExecutionContext,
+                                         vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) with FeatureSwitching {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -70,18 +69,18 @@ class ConfirmCompanyController @Inject()(val controllerComponents: ControllerCom
 
         (optVatNumber, optCompanyNumber) match {
           case (Some(vatNumber), Some(companyNumber)) =>
-              ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
-                case Right(_) => optEnrolmentCtUtr match {
-                  case Some(enrolmentUtr) =>
-                    storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(enrolmentUtr))
-                  case None =>
-                    Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
-                }
-                case Left(CtReferenceNotFound) =>
-                  storeCompanyNumberAndRedirect(vatNumber, companyNumber, None)
-                case Left(CtReferenceLookupFailureResponse(status)) =>
-                  throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
+            ctReferenceLookupService.checkCtReferenceExists(companyNumber) flatMap {
+              case Right(_) => optEnrolmentCtUtr match {
+                case Some(enrolmentUtr) =>
+                  storeCompanyNumberAndRedirect(vatNumber, companyNumber, Some(enrolmentUtr))
+                case None =>
+                  Future.successful(Redirect(routes.CaptureCompanyUtrController.show()))
               }
+              case Left(CtReferenceNotFound) =>
+                storeCompanyNumberAndRedirect(vatNumber, companyNumber, None)
+              case Left(CtReferenceLookupFailureResponse(status)) =>
+                throw new InternalServerException("Failed to lookup CT reference on confirm company name with status=" + status)
+            }
           case (None, _) =>
             Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
           case _ =>

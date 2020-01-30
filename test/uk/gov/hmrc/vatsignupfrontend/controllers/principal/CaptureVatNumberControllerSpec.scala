@@ -22,15 +22,14 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.Enrolments
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -38,13 +37,14 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 import uk.gov.hmrc.vatsignupfrontend.models.{DateModel, MigratableDates, Overseas, Yes}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreVatNumberOrchestrationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CaptureVatNumberControllerSpec extends UnitSpec
   with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreVatNumberOrchestrationService
   with BeforeAndAfterEach
   with FeatureSwitching {
@@ -53,12 +53,9 @@ class CaptureVatNumberControllerSpec extends UnitSpec
     super.beforeEach()
   }
 
-  object TestCaptureVatNumberController extends CaptureVatNumberController(
-    mockControllerComponents,
-    mockStoreVatNumberOrchestrationService
-  )
+  object TestCaptureVatNumberController extends CaptureVatNumberController(mockStoreVatNumberOrchestrationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/vat-number")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/vat-number")
 
   def testPostRequest(vatNumber: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/vat-number").withFormUrlEncodedBody(VatNumberForm.vatNumber -> vatNumber)
@@ -256,7 +253,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
-              await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
+              session(result).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
             }
 
             "redirect to sign up between these dates page when the vat number is ineligible and two dates are available" in {
@@ -274,7 +271,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(errorRoutes.MigratableDatesController.show().url)
 
-              await(result).session(request).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
+              session(result).get(SessionKeys.migratableDatesKey) shouldBe Some(Json.toJson(testDates).toString)
             }
           }
         }
@@ -348,13 +345,13 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
-              implicit val request = testPostRequest(testVatNumber)
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testVatNumber)
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-              result.session get vatNumberKey should contain(testVatNumber)
+              session(result).get(vatNumberKey) should contain(testVatNumber)
             }
 
             "delete the known facts when they have been entered previously" in {
@@ -364,7 +361,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
-              implicit val request = testPostRequest(testVatNumber)
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testVatNumber)
                 .withSession(
                   vatRegistrationDateKey -> Json.toJson(DateModel.dateConvert(LocalDate.now())).toString,
                   businessPostCodeKey -> testBusinessPostcode.postCode,
@@ -377,12 +374,12 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-              result.session get vatNumberKey should contain(testVatNumber)
-              result.session get vatRegistrationDateKey shouldBe empty
-              result.session get businessPostCodeKey shouldBe empty
-              result.session get previousVatReturnKey shouldBe empty
-              result.session get lastReturnMonthPeriodKey shouldBe empty
-              result.session get box5FigureKey shouldBe empty
+              session(result).get(vatNumberKey) should contain(testVatNumber)
+              session(result).get(vatRegistrationDateKey) shouldBe empty
+              session(result).get(businessPostCodeKey) shouldBe empty
+              session(result).get(previousVatReturnKey) shouldBe empty
+              session(result).get(lastReturnMonthPeriodKey) shouldBe empty
+              session(result).get(box5FigureKey) shouldBe empty
             }
 
             "overseas user changes vat number to non overseas vat number" in {
@@ -392,7 +389,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = false, isMigrated = false)))
 
-              implicit val request = testPostRequest(testVatNumber)
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testVatNumber)
                 .withSession(
                   vatRegistrationDateKey -> Json.toJson(DateModel.dateConvert(LocalDate.now())).toString,
                   businessPostCodeKey -> testBusinessPostcode.postCode,
@@ -406,13 +403,14 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-              result.session get vatNumberKey should contain(testVatNumber)
-              result.session get vatRegistrationDateKey shouldBe empty
-              result.session get businessPostCodeKey shouldBe empty
-              result.session get businessEntityKey shouldBe empty
-              result.session get previousVatReturnKey shouldBe empty
-              result.session get lastReturnMonthPeriodKey shouldBe empty
-              result.session get box5FigureKey shouldBe empty
+              session(result).get(vatNumberKey) should contain(testVatNumber)
+              session(result).get(vatRegistrationDateKey) shouldBe empty
+              session(result).get(businessPostCodeKey) shouldBe empty
+              session(result).get(businessEntityKey) shouldBe empty
+              session(result).get(previousVatReturnKey) shouldBe empty
+              session(result).get(lastReturnMonthPeriodKey) shouldBe empty
+              session(result).get(box5FigureKey) shouldBe empty
+
             }
           }
 
@@ -424,15 +422,15 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = true, isMigrated = false)))
 
-              implicit val request = testPostRequest(testVatNumber)
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testVatNumber)
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-              result.session get vatNumberKey should contain(testVatNumber)
-              result.session get businessEntityKey should contain(Overseas.toString)
-              session(result) get isMigratedKey should contain(false.toString)
+              session(result).get(vatNumberKey) should contain(testVatNumber)
+              session(result).get(businessEntityKey) should contain(Overseas.toString)
+              session(result).get(isMigratedKey) should contain(false.toString)
             }
           }
 
@@ -445,15 +443,15 @@ class CaptureVatNumberControllerSpec extends UnitSpec
                 vatNumber = testVatNumber
               )(Future.successful(Eligible(isOverseas = true, isMigrated = true)))
 
-              implicit val request = testPostRequest(testVatNumber)
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testVatNumber)
 
               val result = TestCaptureVatNumberController.submit(request)
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
 
-              result.session get vatNumberKey should contain(testVatNumber)
-              result.session get businessEntityKey should contain(Overseas.toString)
-              session(result) get isMigratedKey should contain(true.toString)
+              session(result).get(vatNumberKey) should contain(testVatNumber)
+              session(result).get(businessEntityKey) should contain(Overseas.toString)
+              session(result).get(isMigratedKey) should contain(true.toString)
             }
           }
 
@@ -550,7 +548,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
       "redirect to Invalid Vat Number page" in {
         mockAuthRetrieveEmptyEnrolment()
 
-        implicit val request = testPostRequest(testInvalidVatNumber)
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testInvalidVatNumber)
 
         val result = TestCaptureVatNumberController.submit(request)
         status(result) shouldBe Status.SEE_OTHER

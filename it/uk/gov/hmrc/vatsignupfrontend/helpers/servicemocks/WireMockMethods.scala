@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.libs.json.Writes
+import play.api.libs.json.{JsObject, JsValue, Writes}
 
 trait WireMockMethods {
   def when[T](method: HTTPMethod, uri: String, body: T)(implicit writes: Writes[T]): Mapping = {
@@ -45,7 +45,7 @@ trait WireMockMethods {
       }
 
       body match {
-        case Some(extractedBody) => uriMappingWithHeaders.withRequestBody(equalTo(extractedBody))
+        case Some(extractedBody) => uriMappingWithHeaders.withRequestBody(equalToJson(extractedBody))
         case None => uriMappingWithHeaders
       }
     }

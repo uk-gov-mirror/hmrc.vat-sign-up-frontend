@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.resignup
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes._
@@ -27,10 +27,11 @@ import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.resignup.sign_up_complete
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SignUpCompleteController @Inject()(val controllerComponents: ControllerComponents)
+class SignUpCompleteController @Inject()(implicit ec: ExecutionContext,
+                                           vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
@@ -44,7 +45,7 @@ class SignUpCompleteController @Inject()(val controllerComponents: ControllerCom
             Ok(sign_up_complete(businessEntity, vatNumber))
           )
         case _ =>
-          Future.successful(Redirect(CaptureVatNumberController.show))
+          Future.successful(Redirect(CaptureVatNumberController.show()))
       }
     }
   }

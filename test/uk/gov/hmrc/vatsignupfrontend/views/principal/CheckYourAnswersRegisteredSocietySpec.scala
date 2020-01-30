@@ -17,32 +17,38 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import play.api.i18n.Messages.Implicits.applicationMessages
+import org.jsoup.nodes.{Document, Element}
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAnswersRegisteredSociety => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.RegisteredSociety
+import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, RegisteredSociety}
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
 class CheckYourAnswersRegisteredSocietySpec extends ViewSpec {
 
-  val testEntity = RegisteredSociety
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
+  val testEntity: BusinessEntity = RegisteredSociety
+
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   def page(): Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers_registered_society(
     companyNumber = testCompanyNumber,
     ctReference = testCompanyUtr,
     entityType = testEntity,
     postAction = testCall
-  )(FakeRequest(), applicationMessages, new AppConfig(configuration, env))
+  )(
+    request,
+    messagesApi.preferred(request),
+    appConfig
+  )
 
-  lazy val doc = Jsoup.parse(page.body)
+  lazy val doc: Document = Jsoup.parse(page().body)
 
   val questionId: String => String = (sectionId: String) => s"$sectionId-question"
   val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
@@ -74,7 +80,7 @@ class CheckYourAnswersRegisteredSocietySpec extends ViewSpec {
     testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
   }
 
-  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]) = {
+  def sectionTest(sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]): Unit = {
     val accountingPeriod = doc.getElementById(sectionId)
     val question = doc.getElementById(questionId(sectionId))
     val answer = doc.getElementById(answerId(sectionId))

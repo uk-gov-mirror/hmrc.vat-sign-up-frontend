@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, FinalCheckYourAnswer}
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
@@ -32,16 +32,16 @@ import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.{AdministrativeDivisionLookupService, GetCompanyNameService, StoreVatNumberService, SubmissionService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers_final
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswersFinalController @Inject()(val controllerComponents: ControllerComponents,
-                                                val storeVatNumberService: StoreVatNumberService,
-                                                val subscriptionRequestSummary: SubscriptionRequestSummaryConnector,
-                                                val submissionService: SubmissionService,
-                                                val getCompanyNameService: GetCompanyNameService,
-                                                val administrativeDivisionLookupService: AdministrativeDivisionLookupService
-                                               ) extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(FinalCheckYourAnswer)) {
+class CheckYourAnswersFinalController @Inject()(storeVatNumberService: StoreVatNumberService,
+                                                subscriptionRequestSummary: SubscriptionRequestSummaryConnector,
+                                                submissionService: SubmissionService,
+                                                getCompanyNameService: GetCompanyNameService,
+                                                administrativeDivisionLookupService: AdministrativeDivisionLookupService)
+                                               (implicit ec: ExecutionContext,
+                                                vcc: VatControllerComponents) extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(FinalCheckYourAnswer)) {
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
 

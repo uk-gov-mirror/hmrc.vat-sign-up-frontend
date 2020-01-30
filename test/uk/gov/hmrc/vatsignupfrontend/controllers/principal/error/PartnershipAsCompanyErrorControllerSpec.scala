@@ -20,13 +20,13 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 
-class PartnershipAsCompanyErrorControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class PartnershipAsCompanyErrorControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestPartnershipAsCompanyErrorController extends PartnershipAsCompanyErrorController(mockControllerComponents)
+  object TestPartnershipAsCompanyErrorController extends PartnershipAsCompanyErrorController
 
   "Calling the show action of the Partnership As Company Error controller" should {
     "show the Partnership As Controller Error page" in {

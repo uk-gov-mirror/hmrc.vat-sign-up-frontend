@@ -18,17 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.test.{LogCapturing, UnitSpec}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.{Digital, LimitedCompany, SubscriptionRequestSummary}
+import uk.gov.hmrc.vatsignupfrontend.utils.{LogCapturing, UnitSpec}
 
 class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturing {
   val testHttpVerb = "GET"
   val testUri = "/"
 
-  val validJson = Json.parse(
+  val validJson: JsValue = Json.parse(
     s"""{
        |  "vatNumber": "vatNumberFoo",
        |  "businessEntity": {
@@ -42,7 +42,7 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
        |  "contactPreference": "Digital"
        |}  """.stripMargin)
 
-  val minimalValidJson = Json.parse(
+  val minimalValidJson: JsValue = Json.parse(
     s"""{
        |  "vatNumber": "vatNumberFoo",
        |  "businessEntity": {
@@ -52,7 +52,7 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
        |  "contactPreference": "Digital"
        |}  """.stripMargin)
 
-  val invalidJsonWrongContactPreference = Json.parse(
+  val invalidJsonWrongContactPreference: JsValue = Json.parse(
     s"""{
        |  "vatNumber": "vatNumberFoo",
        |  "businessEntity": {
@@ -64,7 +64,7 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
        |  "contactPreference": "FOO this is incorrect"
        |}  """.stripMargin)
 
-  val invalidJsonWrongBusinessEntityType = Json.parse(
+  val invalidJsonWrongBusinessEntityType: JsValue = Json.parse(
     s"""{
        |  "vatNumber": "vatNumberFoo",
        |  "businessEntity": {
@@ -95,7 +95,7 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
     "transEmail",
     Digital
   )
-  val invalidJson = Json.parse(
+  val invalidJson: JsValue = Json.parse(
     """
       |{
       |   "foo": "bar"
@@ -119,8 +119,8 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
       val httpResponse = HttpResponse(OK, Some(invalidJson))
       withCaptureOfLoggingFrom(Logger) { logger =>
         val res = SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryHttpReads.read(testHttpVerb, testUri, httpResponse)
-        res.left.get shouldBe SubscriptionRequestUnexpectedError(OK,s"JSON does not meet read requirements of SubscriptionRequestSummary")
-        val log = logger.map(log => (log.getLevel,log.getMessage)).head
+        res.left.get shouldBe SubscriptionRequestUnexpectedError(OK, s"JSON does not meet read requirements of SubscriptionRequestSummary")
+        val log = logger.map(log => (log.getLevel, log.getMessage)).head
         log._1.levelStr shouldBe "ERROR"
         log._2 shouldBe "SubscriptionRequestUnexpectedError - 200 - JSON does not meet read requirements of SubscriptionRequestSummary"
       }
@@ -129,8 +129,8 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
       val httpResponse = HttpResponse(OK, Some(invalidJsonWrongBusinessEntityType))
       withCaptureOfLoggingFrom(Logger) { logger =>
         val res = SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryHttpReads.read(testHttpVerb, testUri, httpResponse)
-        res.left.get shouldBe SubscriptionRequestUnexpectedError(OK,s"JSON does not meet read requirements of SubscriptionRequestSummary")
-        val log = logger.map(log => (log.getLevel,log.getMessage)).head
+        res.left.get shouldBe SubscriptionRequestUnexpectedError(OK, s"JSON does not meet read requirements of SubscriptionRequestSummary")
+        val log = logger.map(log => (log.getLevel, log.getMessage)).head
         log._1.levelStr shouldBe "ERROR"
         log._2 shouldBe "SubscriptionRequestUnexpectedError - 200 - JSON does not meet read requirements of SubscriptionRequestSummary"
       }
@@ -150,7 +150,7 @@ class SubscriptionRequestSummaryHttpParserSpec extends UnitSpec with LogCapturin
       withCaptureOfLoggingFrom(Logger) { logger =>
         val res = SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryHttpReads.read(testHttpVerb, testUri, httpResponse)
         res.left.get shouldBe SubscriptionRequestUnexpectedError(INTERNAL_SERVER_ERROR, "Unexpected status from Backend")
-        val log = logger.map(log => (log.getLevel,log.getMessage)).head
+        val log = logger.map(log => (log.getLevel, log.getMessage)).head
         log._1.levelStr shouldBe "ERROR"
         log._2 shouldBe "SubscriptionRequestUnexpectedError - 500 - Unexpected status from Backend"
       }

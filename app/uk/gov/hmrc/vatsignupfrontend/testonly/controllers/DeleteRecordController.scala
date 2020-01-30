@@ -19,28 +19,26 @@
 package uk.gov.hmrc.vatsignupfrontend.testonly.controllers
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, ControllerComponents}
+import uk.gov.hmrc.vatsignupfrontend.config.{AppConfig, VatControllerComponents}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.testonly.connectors.DeleteRecordConnector
 import uk.gov.hmrc.vatsignupfrontend.testonly.models.DeleteRecordFailure
 import uk.gov.hmrc.vatsignupfrontend.testonly.views.html.delete_record
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteRecordController @Inject()(val controllerComponents: ControllerComponents,
-                                       deleteRecordConnector: DeleteRecordConnector
-                                      ) extends FrontendController with I18nSupport {
+class DeleteRecordController @Inject()(deleteRecordConnector: DeleteRecordConnector,
+                                       vcc: VatControllerComponents)
+                                      (implicit ec: ExecutionContext)
+  extends FrontendController(vcc.controllerComponents) with I18nSupport {
 
   private val validateVatNumberForm = vatNumberForm(isAgent = false)
 
-  override val messagesApi: MessagesApi = controllerComponents.messagesApi
-
-  implicit val appConfig: AppConfig = controllerComponents.appConfig
+  implicit val appConfig: AppConfig = vcc.appConfig
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(

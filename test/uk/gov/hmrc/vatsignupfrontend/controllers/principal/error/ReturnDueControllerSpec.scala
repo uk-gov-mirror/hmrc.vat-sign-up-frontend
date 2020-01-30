@@ -38,23 +38,21 @@ import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility
 
-class ReturnDueControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class ReturnDueControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  class Setup {
-    val controller = new ReturnDueController(mockControllerComponents)
-  }
+  object TestReturnDueController extends ReturnDueController
 
   "show" should {
-    "render the view successfully" in new Setup {
+    "render the view successfully" in {
       implicit val req: Request[AnyContent] = FakeRequest()
-      implicit val messages: Messages = mockMessagesApi.preferred(req)
+      implicit val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(req)
 
-      val result = controller.show(req)
-      contentAsString(result)  shouldBe eligibility.return_due().body
+      val result = TestReturnDueController.show(req)
+      contentAsString(result) shouldBe eligibility.return_due().body
 
       status(result) shouldBe Status.OK
     }

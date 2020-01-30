@@ -18,16 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class AgentUsingPrincipalJourneyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class AgentUsingPrincipalJourneyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestAgentUsingPrincipalJourneyController extends AgentUsingPrincipalJourneyController(mockControllerComponents)
+  object TestAgentUsingPrincipalJourneyController extends AgentUsingPrincipalJourneyController
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/wrong-account-type")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/wrong-account-type")
 
   "Calling the show action of the agent using wrong journey controller" when {
     "using an agent account" should {

@@ -18,13 +18,13 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testCompanyName, testCompanyNumber}
@@ -35,14 +35,14 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 import scala.concurrent.Future
 
 class CaptureRegisteredSocietyCompanyNumberControllerSpec
-  extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MockGetCompanyNameService {
+  extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents with MockGetCompanyNameService {
 
   object TestCaptureRegisteredSocietyCompanyNumberController extends CaptureRegisteredSocietyCompanyNumberController(
-    mockControllerComponents,
+
     mockGetCompanyNameService
   )
 
-  lazy val testGetRequest = FakeRequest("GET", "/registered-society-company-number")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/registered-society-company-number")
 
   def testPostRequest(companyNumberVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/registered-society-company-number").withFormUrlEncodedBody(companyNumber -> companyNumberVal)
@@ -71,7 +71,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ConfirmRegisteredSocietyController.show().url)
 
-        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe Some(testCompanyNumber)
+        session(result).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe Some(testCompanyNumber)
       }
     }
 
@@ -86,7 +86,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.DissolvedCompanyController.show().url)
 
-        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
+        session(result).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 
@@ -101,7 +101,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.CompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
+        session(result).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
       }
     }
 
@@ -117,7 +117,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.RegisteredSocietyCompanyNameNotFoundController.show().url)
 
-        result.session(request).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
+        session(result).get(SessionKeys.registeredSocietyCompanyNumberKey) shouldBe None
       }
     }
 
@@ -129,7 +129,7 @@ class CaptureRegisteredSocietyCompanyNumberControllerSpec
 
         val request = testPostRequest(testCompanyNumber)
 
-        intercept[InternalServerException](await(TestCaptureRegisteredSocietyCompanyNumberController.submit(request)))
+        intercept[InternalServerException](TestCaptureRegisteredSocietyCompanyNumberController.submit(request))
       }
     }
   }

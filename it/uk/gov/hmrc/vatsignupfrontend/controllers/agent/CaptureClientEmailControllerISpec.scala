@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureClientEmailControllerISpec extends ComponentSpecBase with CustomMatchers {
   "GET /client-email-address" should {
@@ -47,7 +47,7 @@ class CaptureClientEmailControllerISpec extends ComponentSpecBase with CustomMat
         redirectUri(routes.ConfirmClientEmailController.show().url)
       )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
+      val session = getSessionMap(res)
       session.keys should contain(emailKey)
     }
   }

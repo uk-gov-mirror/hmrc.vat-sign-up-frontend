@@ -18,16 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class GuidanceControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class GuidanceControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestGuidanceController extends GuidanceController(mockControllerComponents)
+  object TestGuidanceController extends GuidanceController
 
-  lazy val testGetRequest = FakeRequest("GET", "/")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
   "Calling the show action of the Guidance controller" should {
     "go to the guidance page" in {

@@ -17,10 +17,9 @@
 package uk.gov.hmrc.vatsignupfrontend.testonly.controllers
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.vatsignupfrontend.testonly.connectors.DDConfigConnector
 import uk.gov.hmrc.vatsignupfrontend.testonly.httpparsers.DDConfigHttpParser.DDConfigFailure
 
@@ -29,7 +28,8 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class DDConfigController @Inject()(ddConfigConnector: DDConfigConnector,
-                                   implicit val executionContext: ExecutionContext) extends BaseController {
+                                   mcc: MessagesControllerComponents)
+                                  (implicit ec: ExecutionContext) extends FrontendController(mcc) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     ddConfigConnector.getConfig.map {

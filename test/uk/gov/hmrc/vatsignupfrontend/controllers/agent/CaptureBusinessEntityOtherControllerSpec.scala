@@ -18,21 +18,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.OtherBusinessEntityForm._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models._
 
-class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCaptureBusinessEntityOtherController extends CaptureBusinessEntityOtherController(mockControllerComponents)
+  object TestCaptureBusinessEntityOtherController extends CaptureBusinessEntityOtherController
 
-  implicit val testGetRequest = FakeRequest("GET", "/business-type-other")
+  implicit val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-type-other")
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-type-other").withFormUrlEncodedBody(businessEntity -> entityTypeVal)
@@ -57,10 +57,10 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to Vat Group Resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(vatGroup)))
+          val result = TestCaptureBusinessEntityOtherController.submit(testPostRequest(vatGroup))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.VatGroupResolverController.resolve().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
+          session(result) get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(VatGroup))
         }
       }
 
@@ -68,10 +68,10 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to the Unincorporated Association resolver page" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(unincorporatedAssociation)))
+          val result = TestCaptureBusinessEntityOtherController.submit(testPostRequest(unincorporatedAssociation))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.UnincorporatedAssociationResolverController.resolve().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(UnincorporatedAssociation))
+          session(result) get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(UnincorporatedAssociation))
         }
       }
 
@@ -79,10 +79,10 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to the trust resolver controller" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(trust)))
+          val result = TestCaptureBusinessEntityOtherController.submit(testPostRequest(trust))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.TrustResolverController.resolve().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Trust))
+          session(result) get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Trust))
         }
       }
 
@@ -90,10 +90,10 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to the capture registered society company number controller" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(registeredSociety)))
+          val result = TestCaptureBusinessEntityOtherController.submit(testPostRequest(registeredSociety))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(RegisteredSociety))
+          session(result) get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(RegisteredSociety))
         }
       }
 
@@ -101,10 +101,10 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to the charity resolver controller" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(charity)))
+          val result = TestCaptureBusinessEntityOtherController.submit(testPostRequest(charity))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CharityResolverController.resolve().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Charity))
+          session(result) get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(Charity))
         }
       }
 
@@ -112,10 +112,10 @@ class CaptureBusinessEntityOtherControllerSpec extends UnitSpec with GuiceOneApp
         "redirect to the NOT IMPLEMENTED" in {
           mockAuthRetrieveAgentEnrolment()
 
-          val result = await(TestCaptureBusinessEntityOtherController.submit(testPostRequest(governmentOrganisation)))
+          val result = TestCaptureBusinessEntityOtherController.submit(testPostRequest(governmentOrganisation))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.GovernmentOrganisationResolverController.resolve().url)
-          result.session get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GovernmentOrganisation))
+          session(result) get SessionKeys.businessEntityKey should contain(BusinessEntitySessionFormatter.toString(GovernmentOrganisation))
         }
       }
     }

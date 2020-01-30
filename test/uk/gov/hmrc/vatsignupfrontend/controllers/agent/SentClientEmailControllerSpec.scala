@@ -21,15 +21,15 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 
-class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestSentClientEmailController extends SentClientEmailController(mockControllerComponents)
+  object TestSentClientEmailController extends SentClientEmailController
 
   lazy val testGetRequest = FakeRequest("GET", "/verify-email")
 

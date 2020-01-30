@@ -20,18 +20,19 @@ package uk.gov.hmrc.vatsignupfrontend.testonly.controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.testonly.connectors.TriggerBulkMigrationConnector
 import uk.gov.hmrc.vatsignupfrontend.testonly.views.html.trigger_bulk_migration
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBulkMigrationController @Inject()(val controllerComponents: ControllerComponents,
-                                               triggerBulkMigrationConnector: TriggerBulkMigrationConnector
-                                              ) extends AuthenticatedController() {
+class TriggerBulkMigrationController @Inject()(triggerBulkMigrationConnector: TriggerBulkMigrationConnector)
+                                              (implicit ec: ExecutionContext,
+                                               vcc: VatControllerComponents)
+  extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action { implicit request =>
     Ok(trigger_bulk_migration(

@@ -27,7 +27,7 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
 class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
@@ -282,7 +282,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
                 redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
-              SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
             }
           }
 
@@ -298,7 +298,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
                 redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
-              SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
             }
           }
 
@@ -688,7 +688,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
                 redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
-              SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
             }
           }
 
@@ -705,7 +705,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
                 redirectUri(errorRoutes.MigratableDatesController.show().url)
               )
 
-              SessionCookieCrumbler.getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
+              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
             }
           }
 

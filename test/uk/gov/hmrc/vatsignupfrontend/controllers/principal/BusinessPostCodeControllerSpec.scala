@@ -19,21 +19,21 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestBusinessPostCodeController extends BusinessPostCodeController(mockControllerComponents)
+  object TestBusinessPostCodeController extends BusinessPostCodeController
 
-  lazy val testGetRequest = FakeRequest("GET", "/business-postcode")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/business-postcode")
 
   def testPostRequest(businessPostCodeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-postcode").withFormUrlEncodedBody(businessPostCode -> businessPostCodeVal)
@@ -55,12 +55,13 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthAdminRole()
         enable(AdditionalKnownFacts)
 
-        implicit val request = testPostRequest(testBusinessPostcode.postCode).withSession(SessionKeys.isMigratedKey -> "true")
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+          testPostRequest(testBusinessPostcode.postCode).withSession(SessionKeys.isMigratedKey -> "true")
         val result = TestBusinessPostCodeController.submit(request)
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
 
-        result.session get SessionKeys.businessPostCodeKey should contain(
+        session(result).get(SessionKeys.businessPostCodeKey) should contain(
           Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
         )
       }
@@ -70,12 +71,12 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         "goto check your answers page" in {
           mockAuthAdminRole()
 
-          implicit val request = testPostRequest(testBusinessPostcode.postCode)
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testBusinessPostcode.postCode)
           val result = TestBusinessPostCodeController.submit(request)
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
 
-          result.session get SessionKeys.businessPostCodeKey should contain(
+          session(result).get(SessionKeys.businessPostCodeKey) should contain(
             Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
           )
         }
@@ -87,12 +88,12 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
             mockAuthAdminRole()
             enable(AdditionalKnownFacts)
 
-            implicit val request = testPostRequest(testBusinessPostcode.postCode)
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testBusinessPostcode.postCode)
             val result = TestBusinessPostCodeController.submit(request)
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
 
-            result.session get SessionKeys.businessPostCodeKey should contain(
+            session(result).get(SessionKeys.businessPostCodeKey) should contain(
               Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
             )
           }

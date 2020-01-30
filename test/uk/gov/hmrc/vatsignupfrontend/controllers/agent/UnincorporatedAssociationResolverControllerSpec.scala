@@ -17,31 +17,29 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreUnincorporatedAssociationInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreUnincorporatedAssociationInformationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
 class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents with MockStoreUnincorporatedAssociationInformationService {
+  with MockVatControllerComponents with MockStoreUnincorporatedAssociationInformationService {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
   }
 
-  object TestUnincorporatedAssociationResolverController extends UnincorporatedAssociationResolverController(
-    mockControllerComponents,
-    mockStoreUnincorporatedAssociationInformationService
-  )
+  object TestUnincorporatedAssociationResolverController extends UnincorporatedAssociationResolverController(mockStoreUnincorporatedAssociationInformationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/unincorporated-association-resolver")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/unincorporated-association-resolver")
 
   "calling the resolve method on UnincorporatedAssociationResolverController" when {
     "store unincorporated association information returns StoreUnincorporatedAssociationInformationSuccess" should {
@@ -51,9 +49,9 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
           Future.successful(Right(StoreUnincorporatedAssociationInformationSuccess))
         )
 
-        val res = await(TestUnincorporatedAssociationResolverController.resolve(testGetRequest.withSession(
+        val res = TestUnincorporatedAssociationResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
@@ -67,9 +65,9 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
         )
 
         intercept[InternalServerException] {
-          await(TestUnincorporatedAssociationResolverController.resolve(testGetRequest.withSession(
+          TestUnincorporatedAssociationResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -78,7 +76,7 @@ class UnincorporatedAssociationResolverControllerSpec extends UnitSpec with Guic
         mockAuthRetrieveAgentEnrolment()
         mockStoreUnincorporatedAssociationInformation(testVatNumber)(Future.successful(Right(StoreUnincorporatedAssociationInformationSuccess)))
 
-        val res = await(TestUnincorporatedAssociationResolverController.resolve(testGetRequest))
+        val res = TestUnincorporatedAssociationResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)

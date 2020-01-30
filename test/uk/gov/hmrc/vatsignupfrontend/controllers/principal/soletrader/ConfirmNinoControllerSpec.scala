@@ -20,10 +20,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.ninoKey
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.{CaptureVatNumberController, DirectDebitResolverController}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testNino, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
@@ -31,13 +31,13 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
 
 class ConfirmNinoControllerSpec extends UnitSpec
   with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreNinoService {
 
-  object TestConfirmNinoController extends ConfirmNinoController(mockControllerComponents, mockStoreNinoService)
+  object TestConfirmNinoController extends ConfirmNinoController(mockStoreNinoService)
 
-  val testGetRequest = FakeRequest("GET", "/confirm-national-insurance-number")
-  val testPostRequest = FakeRequest("POST", "/confirm-national-insurance-number")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-national-insurance-number")
+  val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/confirm-national-insurance-number")
 
   "Calling the Show method of Confirm NINO controller" when {
     "show the Confirm NINO view" in {
@@ -50,7 +50,7 @@ class ConfirmNinoControllerSpec extends UnitSpec
           SessionKeys.ninoKey -> testNino
         )
 
-      val res = await(TestConfirmNinoController.show(request))
+      val res = TestConfirmNinoController.show(request)
 
       status(res) shouldBe OK
       contentType(res) shouldBe Some("text/html")
@@ -71,14 +71,15 @@ class ConfirmNinoControllerSpec extends UnitSpec
             SessionKeys.ninoKey -> testNino
           )
 
-        val res = await(TestConfirmNinoController.submit(request))
+        val futureResult = TestConfirmNinoController.submit(request)
+        val result = await(futureResult)
 
-        status(res) shouldBe SEE_OTHER
-        redirectLocation(res) should contain(DirectDebitResolverController.show().url)
+        status(futureResult) shouldBe SEE_OTHER
+        redirectLocation(futureResult) should contain(DirectDebitResolverController.show().url)
 
-        res.session.get(ninoKey) should contain(testNino)
-        res.session.get(SessionKeys.vatNumberKey) should contain(testVatNumber)
-        res.session.get(SessionKeys.businessEntityKey) should contain(SoleTrader.toString)
+        result.session.get(SessionKeys.ninoKey) should contain(testNino)
+        result.session.get(SessionKeys.vatNumberKey) should contain(testVatNumber)
+        result.session.get(SessionKeys.businessEntityKey) should contain(SoleTrader.toString)
       }
     }
 
@@ -91,7 +92,7 @@ class ConfirmNinoControllerSpec extends UnitSpec
             SessionKeys.vatNumberKey -> testVatNumber
           )
 
-        val res = await(TestConfirmNinoController.submit(request))
+        val res = TestConfirmNinoController.submit(request)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(routes.CaptureNinoController.show().url)
@@ -107,7 +108,7 @@ class ConfirmNinoControllerSpec extends UnitSpec
             SessionKeys.ninoKey -> testNino
           )
 
-        val res = await(TestConfirmNinoController.submit(request))
+        val res = TestConfirmNinoController.submit(request)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(CaptureVatNumberController.show().url)

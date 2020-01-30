@@ -21,7 +21,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{agentEnrolment, stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreOverseasInformationStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class OverseasResolverControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -41,7 +41,7 @@ class OverseasResolverControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.CaptureAgentEmailController.show().url)
         )
 
-        val session = SessionCookieCrumbler.getSessionMap(res)
+        val session = getSessionMap(res)
         session.keys should contain(SessionKeys.businessEntityKey)
       }
     }

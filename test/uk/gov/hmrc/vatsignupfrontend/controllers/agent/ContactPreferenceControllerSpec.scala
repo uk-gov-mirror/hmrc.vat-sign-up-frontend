@@ -17,6 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
@@ -31,10 +32,10 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreContactPreferenceSe
 
 class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreContactPreferenceService {
 
-  object TestContactPreferenceController extends ContactPreferenceController(mockControllerComponents, mockStoreContactPreferenceService)
+  object TestContactPreferenceController extends ContactPreferenceController(mockStoreContactPreferenceService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/client/receive-email-notifications")
-  lazy val testPostRequest = FakeRequest("POST", "/client/receive-email-notifications")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/client/receive-email-notifications")
+  lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/client/receive-email-notifications")
 
   "Calling the show action of the Contact Preference controller" should {
 
@@ -81,7 +82,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
-            result.session(request).get(SessionKeys.contactPreferenceKey) shouldBe Some(Digital.toString)
+            session(result).get(SessionKeys.contactPreferenceKey) shouldBe Some(Digital.toString)
           }
         }
 
@@ -100,7 +101,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
-              result.session(request).get(SessionKeys.contactPreferenceKey) shouldBe Some(Paper.toString)
+              session(result).get(SessionKeys.contactPreferenceKey) shouldBe Some(Paper.toString)
             }
           }
 
@@ -149,9 +150,7 @@ class ContactPreferenceControllerSpec extends ControllerSpec with MockStoreConta
           val request = testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber)
             .withFormUrlEncodedBody(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
 
-          val result = TestContactPreferenceController.submit()(request)
-
-          intercept[InternalServerException](await(TestContactPreferenceController.submit(request)))
+          intercept[InternalServerException](TestContactPreferenceController.submit(request))
         }
       }
     }

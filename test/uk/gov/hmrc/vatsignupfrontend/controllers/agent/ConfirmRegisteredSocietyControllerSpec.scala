@@ -23,23 +23,20 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreRegisteredSocietyService
 
-class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreRegisteredSocietyService with FeatureSwitching {
 
 
-  object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(
-    mockControllerComponents,
-    mockStoreRegisteredSocietyService
-  )
+  object TestConfirmRegisteredSocietyController extends ConfirmRegisteredSocietyController(mockStoreRegisteredSocietyService)
 
-  val testGetRequest = FakeRequest("GET", "/client/confirm-registered-society")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/client/confirm-registered-society")
 
   val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/client/confirm-registered-society")
@@ -102,7 +99,7 @@ class ConfirmRegisteredSocietyControllerSpec extends UnitSpec with GuiceOneAppPe
       )
 
       intercept[InternalServerException] {
-        await(TestConfirmRegisteredSocietyController.submit(request))
+        TestConfirmRegisteredSocietyController.submit(request)
       }
     }
     "go to the 'your clients vat number' page if vat number is missing" in {

@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.utils
 
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
-
+import org.scalatestplus.mockito.MockitoSugar
 
 class CurrencyFormatSpec extends UnitSpec with MockitoSugar {
 
@@ -41,7 +39,7 @@ class CurrencyFormatSpec extends UnitSpec with MockitoSugar {
     }
 
     "return 1,234.00 for an input of 1234.00" in {
-       val testValue = "1234.00"
+      val testValue = "1234.00"
       testValue.currencyFormat() shouldBe "1,234.00"
     }
 

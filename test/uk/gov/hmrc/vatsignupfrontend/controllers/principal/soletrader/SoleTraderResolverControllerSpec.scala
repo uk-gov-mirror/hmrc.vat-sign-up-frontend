@@ -21,22 +21,19 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.{CaptureVatNumberController, DirectDebitResolverController}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreNinoService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class SoleTraderResolverControllerSpec extends UnitSpec
   with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStoreNinoService {
 
-  object TestSoleTraderResolverController extends SoleTraderResolverController(
-    mockControllerComponents,
-    mockStoreNinoService
-  )
+  object TestSoleTraderResolverController extends SoleTraderResolverController(mockStoreNinoService)
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(SessionKeys.vatNumberKey -> testVatNumber)
 
@@ -45,7 +42,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec
       "redirect to capture VAT number" in {
         mockAuthNinoRetrieval(Some(testNino))
 
-        val res = await(TestSoleTraderResolverController.resolve(FakeRequest()))
+        val res = TestSoleTraderResolverController.resolve(FakeRequest())
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(CaptureVatNumberController.show().url)
       }
@@ -54,7 +51,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec
     "user has no nino or IRSA enrolment on profile" should {
       "redirect to the CaptureNinoController" in {
         mockAuthNinoRetrieval(None)
-        val res = await(TestSoleTraderResolverController.resolve(request))
+        val res = TestSoleTraderResolverController.resolve(request)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(routes.CaptureNinoController.show().url)
@@ -66,7 +63,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec
         mockAuthNinoRetrieval(Some(testNino))
         mockStoreNinoSuccess(testVatNumber, testNino)
 
-        val res = await(TestSoleTraderResolverController.resolve(request))
+        val res = TestSoleTraderResolverController.resolve(request)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) should contain(DirectDebitResolverController.show().url)
@@ -78,7 +75,7 @@ class SoleTraderResolverControllerSpec extends UnitSpec
         mockAuthNinoRetrieval(Some(testNino))
         mockStoreNinoFailure(testVatNumber, testNino)
 
-        intercept[InternalServerException](await(TestSoleTraderResolverController.resolve(request)))
+        intercept[InternalServerException](TestSoleTraderResolverController.resolve(request))
       }
     }
   }

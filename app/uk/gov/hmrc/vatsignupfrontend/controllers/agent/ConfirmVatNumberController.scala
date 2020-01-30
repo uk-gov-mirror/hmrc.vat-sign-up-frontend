@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
@@ -32,11 +32,12 @@ import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirm_vat_number
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerComponents,
-                                           storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService)
+class ConfirmVatNumberController @Inject()(storeVatNumberOrchestrationService: StoreVatNumberOrchestrationService)
+                                          (implicit ec: ExecutionContext,
+                                           vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async {
@@ -92,7 +93,8 @@ class ConfirmVatNumberController @Inject()(val controllerComponents: ControllerC
                 }
               else Future.successful(
                 Redirect(errorRoutes.CouldNotConfirmVatNumberController.show())
-              ).removeSessionKey(SessionKeys.vatNumberKey)
+                  .removingFromSession(SessionKeys.vatNumberKey)
+              )
             case _ =>
               Future.successful(
                 Redirect(routes.CaptureVatNumberController.show())

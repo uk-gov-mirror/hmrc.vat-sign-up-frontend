@@ -17,27 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreGovernmentOrganisationInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreGovernmentOrganisationInformationService
 
 import scala.concurrent.Future
 
-class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreGovernmentOrganisationInformationService {
 
-  object TestGovernmentOrganisationResolverController extends GovernmentOrganisationResolverController(
-    mockControllerComponents,
-    mockStoreGovernmentOrganisationInformationService
-  )
+  object TestGovernmentOrganisationResolverController extends GovernmentOrganisationResolverController(mockStoreGovernmentOrganisationInformationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/government-organisation-resolver")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/government-organisation-resolver")
 
   "calling the resolve method on GovernmentOrganisationController" when {
     "store government organisation information returns StoreGovernmentOrganisationSuccess" should {
@@ -45,9 +43,9 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
         mockAuthRetrieveAgentEnrolment()
         mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
-        val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
+        val res = TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureAgentEmailController.show().url)
@@ -61,9 +59,9 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
         )
 
         intercept[InternalServerException] {
-          await(TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
+          TestGovernmentOrganisationResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -72,7 +70,7 @@ class GovernmentOrganisationResolverControllerSpec extends UnitSpec with GuiceOn
         mockAuthRetrieveAgentEnrolment()
         mockStoreGovernmentOrganisationInformation(testVatNumber)(Future.successful(Right(StoreGovernmentOrganisationInformationSuccess)))
 
-        val res = await(TestGovernmentOrganisationResolverController.resolve(testGetRequest))
+        val res = TestGovernmentOrganisationResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.CaptureVatNumberController.show().url)

@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
 
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCapturePartnershipUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes
@@ -29,19 +29,17 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class CapturePartnershipUtrSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  lazy val appConfig = new AppConfig(configuration, env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  def page(displayNoSautrLink: Boolean) = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.capture_partnership_utr(
+  def page(displayNoSautrLink: Boolean): HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.capture_partnership_utr(
     partnershipUtrForm = partnershipUtrForm.form,
     postAction = testCall,
     displayNoSautrLink = displayNoSautrLink)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Capture Partnership Utr view" when {

@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.services.mocks
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCompanyNumberHttpParser.{CtReferenceMismatch, StoreCompanyNumberFailureResponse, StoreCompanyNumberResponse, StoreCompanyNumberSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreCompanyNumberService

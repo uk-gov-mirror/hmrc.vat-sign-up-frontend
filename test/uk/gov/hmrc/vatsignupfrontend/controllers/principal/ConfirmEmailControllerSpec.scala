@@ -22,18 +22,18 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreEmailAddressService {
 
-  object TestConfirmEmailController extends ConfirmEmailController(mockControllerComponents, mockStoreEmailAddressService)
+  object TestConfirmEmailController extends ConfirmEmailController(mockStoreEmailAddressService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/confirm-email")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-email")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/confirm-email")
@@ -100,10 +100,10 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
           mockStoreTransactionEmailAddressFailure(vatNumber = testVatNumber, transactionEmail = testEmail)
 
           intercept[InternalServerException] {
-            await(TestConfirmEmailController.submit(testPostRequest.withSession(
+            TestConfirmEmailController.submit(testPostRequest.withSession(
               SessionKeys.vatNumberKey -> testVatNumber,
               SessionKeys.emailKey -> testEmail
-            )))
+            ))
           }
         }
       }

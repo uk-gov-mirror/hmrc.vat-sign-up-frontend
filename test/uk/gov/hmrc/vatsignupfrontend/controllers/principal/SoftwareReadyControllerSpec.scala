@@ -17,19 +17,19 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.MultipleVatCheckForm._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class SoftwareReadyControllerSpec extends UnitSpec with MockControllerComponents {
+class SoftwareReadyControllerSpec extends UnitSpec with MockVatControllerComponents {
 
-  object TestSoftwareReadyController extends SoftwareReadyController(mockControllerComponents)
+  object TestSoftwareReadyController extends SoftwareReadyController
 
-  val testGetRequest = FakeRequest("GET", "/software-ready")
+  val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/software-ready")
 
   def testPostRequest(entityTypeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/software-ready").withFormUrlEncodedBody(yesNo -> entityTypeVal)
@@ -49,7 +49,7 @@ class SoftwareReadyControllerSpec extends UnitSpec with MockControllerComponents
       "the choice is YES" should {
         "go to resolve vat number" in {
 
-          val result = await(TestSoftwareReadyController.submit(testPostRequest(entityTypeVal = "yes")))
+          val result = TestSoftwareReadyController.submit(testPostRequest(entityTypeVal = "yes"))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
         }
@@ -58,7 +58,7 @@ class SoftwareReadyControllerSpec extends UnitSpec with MockControllerComponents
       "the choice is NO" should {
         "go to verify software error page" in {
 
-          val result = await(TestSoftwareReadyController.submit(testPostRequest(entityTypeVal = "no")))
+          val result = TestSoftwareReadyController.submit(testPostRequest(entityTypeVal = "no"))
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) shouldBe Some(errorRoutes.VerifySoftwareErrorController.show().url)
         }
@@ -69,7 +69,7 @@ class SoftwareReadyControllerSpec extends UnitSpec with MockControllerComponents
   "form unsuccessfully submitted" should {
     "reload the page with errors" in {
 
-      val result = await(TestSoftwareReadyController.submit(testPostRequest("invalid")))
+      val result = TestSoftwareReadyController.submit(testPostRequest("invalid"))
       status(result) shouldBe Status.BAD_REQUEST
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")

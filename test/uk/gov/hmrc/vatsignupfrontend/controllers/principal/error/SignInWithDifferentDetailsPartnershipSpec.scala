@@ -18,16 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class SignInWithDifferentDetailsPartnershipSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class SignInWithDifferentDetailsPartnershipSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestSignInWithDifferentDetailsPartnershipController extends SignInWithDifferentDetailsPartnershipController(mockControllerComponents)
+  object TestSignInWithDifferentDetailsPartnershipController extends SignInWithDifferentDetailsPartnershipController
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/right-partnership-utr")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/right-partnership-utr")
 
   "Calling the show action of the Sign in with different details controller" should {
     "return OK" in {

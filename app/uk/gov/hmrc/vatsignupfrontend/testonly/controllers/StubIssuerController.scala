@@ -19,21 +19,21 @@
 package uk.gov.hmrc.vatsignupfrontend.testonly.controllers
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.testonly.forms.StubIssuerRequestForm._
 import uk.gov.hmrc.vatsignupfrontend.testonly.models.StubIssuerRequest
 import uk.gov.hmrc.vatsignupfrontend.testonly.services.StubIssuerService
 import uk.gov.hmrc.vatsignupfrontend.testonly.views.html.stub_issuer
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StubIssuerController @Inject()(val controllerComponents: ControllerComponents,
-                                     stubIssuerService: StubIssuerService
-                                    ) extends AuthenticatedController() {
+class StubIssuerController @Inject()(stubIssuerService: StubIssuerService)
+                                    (implicit ec: ExecutionContext,
+                                     vcc: VatControllerComponents)
+  extends AuthenticatedController() {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

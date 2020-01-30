@@ -18,18 +18,19 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class CancelDirectDebitControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CancelDirectDebitControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestCancelDirectDebitController extends CancelDirectDebitController(mockControllerComponents)
+  object TestCancelDirectDebitController extends CancelDirectDebitController
 
-  lazy val testGetRequest = FakeRequest("GET", "/cancel-direct-debit")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/cancel-direct-debit")
 
   "Calling the show action of the Cancel Direct Debit controller" when {
     "the feature switch is enabled" should {
@@ -50,7 +51,7 @@ class CancelDirectDebitControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         disable(DirectDebitTermsJourney)
 
         intercept[NotFoundException](
-          await(TestCancelDirectDebitController.show(testGetRequest))
+          TestCancelDirectDebitController.show(testGetRequest)
         )
 
       }

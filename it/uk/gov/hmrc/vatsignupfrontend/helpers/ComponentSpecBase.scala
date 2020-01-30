@@ -20,23 +20,23 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.http.HeaderNames
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.crypto.DefaultCookieSigner
+import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.{Application, Environment, Mode}
-import uk.gov.hmrc.play.test.UnitSpec
-import SessionCookieBaker._
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitch, FeatureSwitching}
 
-trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with WiremockHelper with BeforeAndAfterAll
- with FeatureSwitching with BeforeAndAfterEach {
-  lazy val ws = app.injector.instanceOf[WSClient]
+trait ComponentSpecBase extends IntegrationUnitSpec with GuiceOneServerPerSuite with WiremockHelper with BeforeAndAfterAll
+  with FeatureSwitching with BeforeAndAfterEach with SessionCookieHandler {
+  lazy val ws: WSClient = app.injector.instanceOf[WSClient]
+  override lazy val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure(config)
     .build
-  val mockHost = WiremockHelper.wiremockHost
-  val mockPort = WiremockHelper.wiremockPort.toString
+  val mockHost: String = WiremockHelper.wiremockHost
+  val mockPort: String = WiremockHelper.wiremockPort.toString
   val mockUrl = s"http://$mockHost:$mockPort"
   val administrativeDivisionVRN = "543234567"
 
@@ -72,7 +72,7 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
   def get(uri: String, cookies: Map[String, String] = Map.empty): WSResponse =
     await(
       buildClient(uri)
-        .withHeaders(HeaderNames.COOKIE -> cookieValue(cookies))
+        .withHttpHeaders(HeaderNames.COOKIE -> cookieValue(cookies))
         .get()
     )
 
@@ -80,14 +80,14 @@ trait ComponentSpecBase extends UnitSpec with GuiceOneServerPerSuite with Wiremo
     val formBody = (form map { case (k, v) => (k, Seq(v)) }).toMap
     await(
       buildClient(uri)
-        .withHeaders(HeaderNames.COOKIE -> cookieValue(cookies), "Csrf-Token" -> "nocheck")
+        .withHttpHeaders(HeaderNames.COOKIE -> cookieValue(cookies), "Csrf-Token" -> "nocheck")
         .post(formBody)
     )
   }
 
   val baseUrl: String = "/vat-through-software/sign-up"
 
-  def buildClient(path: String) = ws.url(s"http://localhost:$port$baseUrl$path").withFollowRedirects(false)
+  def buildClient(path: String): WSRequest = ws.url(s"http://localhost:$port$baseUrl$path").withFollowRedirects(false)
 
   protected lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 

@@ -17,27 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreOverseasInformationHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreOverseasInformationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreOverseasInformationService {
 
-  object TestOverseasResolverController extends OverseasResolverController(
-    mockControllerComponents,
-    mockStoreOverseasInformationService
-  )
+  object TestOverseasResolverController extends OverseasResolverController(mockStoreOverseasInformationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/overseas-resolver")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/overseas-resolver")
 
   "calling the resolve method on OverseasResolverController" when {
     "store overseas information returns StoreOverseasInformationSuccess" should {
@@ -45,9 +43,9 @@ class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthAdminRole()
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
 
-        val res = await(TestOverseasResolverController.resolve(testGetRequest.withSession(
+        val res = TestOverseasResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
@@ -59,9 +57,9 @@ class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Left(StoreOverseasInformationFailureResponse(INTERNAL_SERVER_ERROR))))
 
         intercept[InternalServerException] {
-          await(TestOverseasResolverController.resolve(testGetRequest.withSession(
+          TestOverseasResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -70,7 +68,7 @@ class OverseasResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         mockAuthAdminRole()
         mockStoreOverseasInformation(testVatNumber)(Future.successful(Right(StoreOverseasInformationSuccess)))
 
-        val res = await(TestOverseasResolverController.resolve(testGetRequest))
+        val res = TestOverseasResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.ResolveVatNumberController.resolve().url)

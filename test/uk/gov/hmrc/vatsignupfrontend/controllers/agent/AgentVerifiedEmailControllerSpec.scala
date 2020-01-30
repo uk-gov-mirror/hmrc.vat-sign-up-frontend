@@ -18,23 +18,25 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.agent_email_verified
 
-class AgentVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class AgentVerifiedEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestAgentVerifiedEmailController extends AgentVerifiedEmailController(mockControllerComponents)
+  object TestAgentVerifiedEmailController extends AgentVerifiedEmailController
 
   "Calling the show action of the AgentVerifiedEmailController" should {
-    implicit lazy val testGetRequest = FakeRequest("GET", "/verified-your-email")
+    implicit lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/verified-your-email")
+    implicit lazy val messages: Messages = mockVatControllerComponents.controllerComponents.messagesApi.preferred(testGetRequest)
 
     "go to the Agent email Verified page with a link to the Contact Preferences page" in {
       mockAuthRetrieveAgentEnrolment()
-      val result = await(TestAgentVerifiedEmailController.show(testGetRequest))
+      val result = TestAgentVerifiedEmailController.show(testGetRequest)
 
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe agent_email_verified(routes.ContactPreferenceController.show().url).body

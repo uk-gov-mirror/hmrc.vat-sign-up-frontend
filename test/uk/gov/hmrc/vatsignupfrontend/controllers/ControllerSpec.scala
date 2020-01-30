@@ -16,18 +16,34 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers
 
+import java.nio.charset.Charset
+
+import akka.stream.Materializer
+import akka.util.ByteString
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.Result
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
-import uk.gov.hmrc.vatsignupfrontend.utils.MaterializerSupport
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.{MaterializerSupport, UnitSpec}
 
-trait ControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents with MaterializerSupport {
+import scala.concurrent.Future
 
-  def document(result: Result): Document = Jsoup.parse(bodyOf(result))
-  def titleOf(result: Result): String = document(result).title
-  def formAction(result: Result): String = document(result).select("form").attr("action")
+trait ControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents with MaterializerSupport {
+
+  def bodyOf(result: Result)(implicit mat: Materializer): String = {
+    val bodyBytes: ByteString = await(result.body.consumeData)
+    bodyBytes.decodeString(Charset.defaultCharset().name)
+  }
+
+  def bodyOf(resultF: Future[Result])(implicit mat: Materializer): String = {
+    bodyOf(await(resultF))
+  }
+
+  def document(result: Future[Result]): Document = Jsoup.parse(bodyOf(result))
+
+  def titleOf(result: Future[Result]): String = document(result).title
+
+  def formAction(result: Future[Result]): String = document(result).select("form").attr("action")
 
 }

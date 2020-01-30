@@ -20,7 +20,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 
 class SignUpAnotherClientControllerISpec extends ComponentSpecBase with CustomMatchers {
@@ -42,7 +42,7 @@ class SignUpAnotherClientControllerISpec extends ComponentSpecBase with CustomMa
         redirectUri(routes.CaptureVatNumberController.show().url)
       )
 
-      val session = SessionCookieCrumbler.getSessionMap(res)
+      val session = getSessionMap(res)
       session.keys should not contain SessionKeys.vatNumberKey
       session.keys should not contain SessionKeys.companyNumberKey
       session.keys should not contain SessionKeys.emailKey

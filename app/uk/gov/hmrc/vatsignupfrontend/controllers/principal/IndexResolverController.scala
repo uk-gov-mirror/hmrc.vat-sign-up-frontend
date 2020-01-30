@@ -17,15 +17,14 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
 
 @Singleton
-class IndexResolverController @Inject()(val controllerComponents: ControllerComponents) extends FrontendController {
+class IndexResolverController @Inject()(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
   val resolve: Action[AnyContent] = Action { implicit request =>
-      Redirect(eligibility.routes.AreYouReadySubmitSoftwareController.show())
+    Redirect(eligibility.routes.AreYouReadySubmitSoftwareController.show())
   }
 
 }

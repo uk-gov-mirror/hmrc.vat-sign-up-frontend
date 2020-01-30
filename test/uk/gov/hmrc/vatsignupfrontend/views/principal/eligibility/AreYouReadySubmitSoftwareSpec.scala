@@ -17,10 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal.eligibility
 
 import play.api.data.Form
-import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AreYouReadySubmitSoftware => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
@@ -30,55 +30,54 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class AreYouReadySubmitSoftwareSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-  val appConfig = new AppConfig(configuration, env)
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
-
-  val page = (form: Form[YesNo]) => uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.are_you_ready_submit_software(
-    form,
-    postAction = testCall)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
-  )
+  val page: Form[YesNo] => HtmlFormat.Appendable = (form: Form[YesNo]) =>
+    uk.gov.hmrc.vatsignupfrontend.views.html.principal.eligibility.are_you_ready_submit_software(
+      form,
+      postAction = testCall)(
+      request,
+      messagesApi.preferred(request),
+      appConfig
+    )
 
   "Are you ready submit software view render correctly with a form thats empty with no errors" should {
-      val testPage = TestView(
-        name = "Are you Ready to Submit Software",
-        title = messages.title,
-        heading = messages.heading,
-        page = page(AreYouReadySubmitSoftwareForm.areYouReadySubmitSoftwareForm),
-        haveSignOutInBanner = false
+    val testPage = TestView(
+      name = "Are you Ready to Submit Software",
+      title = messages.title,
+      heading = messages.heading,
+      page = page(AreYouReadySubmitSoftwareForm.areYouReadySubmitSoftwareForm),
+      haveSignOutInBanner = false
+    )
+    testPage.shouldHavePara(messages.line1)
+    testPage.shouldHavePara(messages.line2)
+    testPage.shouldHaveForm(formName = s"$AreYouReadySubmitSoftwareForm")(actionCall = testCall)
+
+    testPage.shouldHaveContinueButton()
+  }
+
+  "Are you ready submit software view render correctly with a form that has errors" should {
+    val form = AreYouReadySubmitSoftwareForm.areYouReadySubmitSoftwareForm.bind(
+      Map(AreYouReadySubmitSoftwareForm.yesNo -> ""
       )
-      testPage.shouldHavePara(messages.line1)
-      testPage.shouldHavePara(messages.line2)
-      testPage.shouldHaveForm(formName = s"$AreYouReadySubmitSoftwareForm")(actionCall = testCall)
+    )
 
-      testPage.shouldHaveContinueButton()
-    }
+    val testPage = TestView(
+      name = "Are you Ready to Submit Software",
+      title = s"${MessageLookup.Base.errPrefix} ${messages.title}",
+      heading = messages.heading,
+      page = page(form),
+      haveSignOutInBanner = false
+    )
 
-    "Are you ready submit software view render correctly with a form that has errors" should {
-      val form = AreYouReadySubmitSoftwareForm.areYouReadySubmitSoftwareForm.bind(
-        Map(AreYouReadySubmitSoftwareForm.yesNo -> ""
-        )
-      )
+    testPage.shouldHaveErrorSummary(messages.errorMessage)
+    testPage.shouldHaveFieldError(AreYouReadySubmitSoftwareForm.yesNo, messages.errorMessage)
+    testPage.shouldHavePara(messages.line1)
+    testPage.shouldHavePara(messages.line2)
+    testPage.shouldHaveForm(formName = s"$AreYouReadySubmitSoftwareForm")(actionCall = testCall)
 
-      val testPage = TestView(
-        name = "Are you Ready to Submit Software",
-        title = s"${MessageLookup.Base.errPrefix} ${messages.title}",
-        heading = messages.heading,
-        page = page(form),
-        haveSignOutInBanner = false
-      )
-
-      testPage.shouldHaveErrorSummary(messages.errorMessage)
-      testPage.shouldHaveFieldError(AreYouReadySubmitSoftwareForm.yesNo, messages.errorMessage)
-      testPage.shouldHavePara(messages.line1)
-      testPage.shouldHavePara(messages.line2)
-      testPage.shouldHaveForm(formName = s"$AreYouReadySubmitSoftwareForm")(actionCall = testCall)
-
-      testPage.shouldHaveContinueButton()
+    testPage.shouldHaveContinueButton()
   }
 }

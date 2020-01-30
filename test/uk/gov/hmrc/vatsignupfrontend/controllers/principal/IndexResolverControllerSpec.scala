@@ -18,16 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class IndexResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class IndexResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object TestIndexResolverController extends IndexResolverController(mockControllerComponents)
+  object TestIndexResolverController extends IndexResolverController(mockVatControllerComponents.controllerComponents)
 
-  lazy val testGetRequest = FakeRequest("GET", "/index")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/index")
 
   "Calling the resolve action of the Index Resolver controller" should {
     "show the Are You Ready To Submit With Software page" in {

@@ -18,10 +18,10 @@ package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import java.time.LocalDate
 
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{SignUpAfterThisDate => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
@@ -29,19 +29,18 @@ import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 
 class SignUpAfterThisDateSpec extends ViewSpec {
 
-  val env = Environment.simple()
-  val configuration = Configuration.load(env)
-
-  lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   val testDate: LocalDate = LocalDate.now()
   val expectedFormattedDate: String = DateModel.dateConvert(testDate).toOutputDateFormat
 
-  lazy val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_after_this_date(
+  lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.sign_up_after_this_date(
     date = testDate)(
-    FakeRequest(),
-    applicationMessages,
-    new AppConfig(configuration, env)
+    request,
+    messagesApi.preferred(request),
+    appConfig
   )
 
   "The Sign Up After This Date view" should {

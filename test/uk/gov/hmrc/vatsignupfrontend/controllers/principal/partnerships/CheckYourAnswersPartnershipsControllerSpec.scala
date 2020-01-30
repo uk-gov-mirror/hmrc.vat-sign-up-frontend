@@ -22,10 +22,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -35,14 +34,15 @@ import uk.gov.hmrc.vatsignupfrontend.models.PartnershipEntityType.CompanyTypeSes
 import uk.gov.hmrc.vatsignupfrontend.models.{PartnershipEntityType, _}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+
+import scala.concurrent.Future
 
 class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockControllerComponents
+  with MockVatControllerComponents
   with MockStorePartnershipInformationService {
 
-  object TestCheckYourAnswersController extends CheckYourAnswersPartnershipsController(
-    mockControllerComponents, mockStorePartnershipInformationService
-  )
+  object TestCheckYourAnswersController extends CheckYourAnswersPartnershipsController(mockStorePartnershipInformationService)
 
   val generalPartnershipType: String = PartnershipEntityType.GeneralPartnership.toString
   val limitedPartnershipType: String = PartnershipEntityType.LimitedPartnership.toString
@@ -305,11 +305,11 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 vatNumber = testVatNumber,
                 sautr = None,
                 postCode = None
-              )(Right(StorePartnershipInformationSuccess))
+              )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+              val result = TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(GeneralPartnership)
-              )))
+              ))
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
@@ -323,11 +323,11 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   vatNumber = testVatNumber,
                   sautr = None,
                   postCode = None
-                )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
+                )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
-                lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                lazy val result = TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership)
-                )))
+                ))
 
                 intercept[InternalServerException](result)
               }
@@ -338,10 +338,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 enable(OptionalSautrJourney)
                 mockAuthAdminRole()
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                val result = TestCheckYourAnswersController.submit(testPostRequest(
                   vatNumber = None,
                   businessEntity = Some(GeneralPartnership)
-                )))
+                ))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
@@ -353,7 +353,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 enable(OptionalSautrJourney)
                 mockAuthAdminRole()
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest()))
+                val result = TestCheckYourAnswersController.submit(testPostRequest())
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -371,13 +371,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                     vatNumber = testVatNumber,
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
-                  )(Right(StorePartnershipInformationSuccess))
+                  )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
-                  val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                  val result = TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
-                  )))
+                  ))
 
                   status(result) shouldBe Status.SEE_OTHER
                   redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
@@ -392,13 +392,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                     vatNumber = testVatNumber,
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
-                  )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
+                  )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
-                  lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                  lazy val result = TestCheckYourAnswersController.submit(testPostRequest(
                     businessEntity = Some(GeneralPartnership),
                     sautr = Some(testSaUtr),
                     postCode = Some(testBusinessPostcode)
-                  )))
+                  ))
 
                   intercept[InternalServerException](result)
                 }
@@ -410,12 +410,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 enable(OptionalSautrJourney)
                 mockAuthAdminRole()
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                val result = TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
                   vatNumber = None,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )))
+                ))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
@@ -427,10 +427,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 enable(OptionalSautrJourney)
                 mockAuthAdminRole()
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                val result = TestCheckYourAnswersController.submit(testPostRequest(
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )))
+                ))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -449,13 +449,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   vatNumber = testVatNumber,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )(Right(StorePartnershipInformationSuccess))
+                )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                val result = TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )))
+                ))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(principalRoutes.DirectDebitResolverController.show().url)
@@ -470,13 +470,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   vatNumber = testVatNumber,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )(Left(StorePartnershipKnownFactsFailure))
+                )(Future.successful(Left(StorePartnershipKnownFactsFailure)))
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                val result = TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )))
+                ))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
@@ -491,13 +491,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   vatNumber = testVatNumber,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )(Left(PartnershipUtrNotFound))
+                )(Future.successful(Left(PartnershipUtrNotFound)))
 
-                val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                val result = TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )))
+                ))
 
                 status(result) shouldBe Status.SEE_OTHER
                 redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
@@ -512,13 +512,13 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                   vatNumber = testVatNumber,
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
+                )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
-                lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+                lazy val result = TestCheckYourAnswersController.submit(testPostRequest(
                   businessEntity = Some(GeneralPartnership),
                   sautr = Some(testSaUtr),
                   postCode = Some(testBusinessPostcode)
-                )))
+                ))
 
                 intercept[InternalServerException](result)
               }
@@ -531,12 +531,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               disable(OptionalSautrJourney)
               mockAuthAdminRole()
 
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+              val result = TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(GeneralPartnership),
                 vatNumber = None,
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode)
-              )))
+              ))
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
@@ -548,10 +548,10 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
               disable(OptionalSautrJourney)
               mockAuthAdminRole()
 
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+              val result = TestCheckYourAnswersController.submit(testPostRequest(
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode)
-              )))
+              ))
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -573,7 +573,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
-              )(Right(StorePartnershipInformationSuccess))
+              )(Future.successful(Right(StorePartnershipInformationSuccess)))
 
               val result = TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(LimitedPartnership),
@@ -598,7 +598,7 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
-              )(Left(StorePartnershipKnownFactsFailure))
+              )(Future.successful(Left(StorePartnershipKnownFactsFailure)))
 
               val result = TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(LimitedPartnership),
@@ -623,15 +623,15 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
-              )(Left(PartnershipUtrNotFound))
+              )(Future.successful(Left(PartnershipUtrNotFound)))
 
-              val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+              val result = TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(LimitedPartnership),
                 entityType = Some(PartnershipEntityType.LimitedPartnership),
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode),
                 crn = Some(testCompanyNumber)
-              )))
+              ))
 
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) should contain(errorRoutes.CouldNotConfirmKnownFactsController.show().url)
@@ -648,15 +648,15 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
                 companyNumber = testCompanyNumber,
                 partnershipEntity = PartnershipEntityType.LimitedPartnership,
                 postCode = Some(testBusinessPostcode)
-              )(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST)))
+              )(Future.successful(Left(StorePartnershipInformationFailureResponse(BAD_REQUEST))))
 
-              lazy val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+              lazy val result = TestCheckYourAnswersController.submit(testPostRequest(
                 businessEntity = Some(LimitedPartnership),
                 entityType = Some(PartnershipEntityType.LimitedPartnership),
                 sautr = Some(testSaUtr),
                 postCode = Some(testBusinessPostcode),
                 crn = Some(testCompanyNumber)
-              )))
+              ))
 
               intercept[InternalServerException](result)
             }
@@ -668,14 +668,14 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
               businessEntity = Some(LimitedPartnership),
               entityType = Some(PartnershipEntityType.LimitedPartnership),
               vatNumber = None,
               sautr = Some(testSaUtr),
               postCode = Some(testBusinessPostcode),
               crn = Some(testCompanyNumber)
-            )))
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.ResolveVatNumberController.resolve().url)
@@ -687,12 +687,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
               entityType = Some(PartnershipEntityType.LimitedPartnership),
               sautr = Some(testSaUtr),
               postCode = Some(testBusinessPostcode),
               crn = Some(testCompanyNumber)
-            )))
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -704,12 +704,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
               businessEntity = Some(LimitedPartnership),
               entityType = Some(PartnershipEntityType.LimitedPartnership),
               postCode = Some(testBusinessPostcode),
               crn = Some(testCompanyNumber)
-            )))
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -721,12 +721,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
               businessEntity = Some(LimitedPartnership),
               entityType = Some(PartnershipEntityType.LimitedPartnership),
               sautr = Some(testSaUtr),
               crn = Some(testCompanyNumber)
-            )))
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -738,12 +738,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
               businessEntity = Some(LimitedPartnership),
               entityType = Some(PartnershipEntityType.LimitedPartnership),
               sautr = Some(testSaUtr),
               postCode = Some(testBusinessPostcode)
-            )))
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)
@@ -755,12 +755,12 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec with GuiceOneA
             enable(OptionalSautrJourney)
             mockAuthAdminRole()
 
-            val result = await(TestCheckYourAnswersController.submit(testPostRequest(
+            val result = TestCheckYourAnswersController.submit(testPostRequest(
               businessEntity = Some(LimitedPartnership),
               sautr = Some(testSaUtr),
               postCode = Some(testBusinessPostcode),
               crn = Some(testCompanyNumber)
-            )))
+            ))
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) should contain(principalRoutes.CaptureBusinessEntityController.show().url)

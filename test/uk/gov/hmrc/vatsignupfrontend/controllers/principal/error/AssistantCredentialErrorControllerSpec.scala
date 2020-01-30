@@ -18,16 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 
-class AssistantCredentialErrorControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class AssistantCredentialErrorControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
-  object AssistantCredentialErrorController extends AssistantCredentialErrorController(mockControllerComponents)
+  object AssistantCredentialErrorController extends AssistantCredentialErrorController
 
-  lazy val testGetRequest = FakeRequest("GET", "/error/not-administrator")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/error/not-administrator")
 
   "Calling the show action of the cannot use service controller" should {
     "show the cannot use service page" in {

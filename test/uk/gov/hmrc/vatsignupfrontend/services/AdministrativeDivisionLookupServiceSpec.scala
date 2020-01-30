@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.services
 
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.mockito.MockitoSugar
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import org.mockito.Mockito._
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching

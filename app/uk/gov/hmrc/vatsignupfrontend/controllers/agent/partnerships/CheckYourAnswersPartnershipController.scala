@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -32,11 +32,12 @@ import uk.gov.hmrc.vatsignupfrontend.services.StorePartnershipInformationService
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CheckYourAnswersPartnershipController @Inject()(val controllerComponents: ControllerComponents,
-                                                      val storePartnershipInformationService: StorePartnershipInformationService)
+class CheckYourAnswersPartnershipController @Inject()(storePartnershipInformationService: StorePartnershipInformationService)
+                                                     (implicit ec: ExecutionContext,
+                                                      vcc: VatControllerComponents)
   extends AuthenticatedController(retrievalPredicate = AgentEnrolmentPredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>

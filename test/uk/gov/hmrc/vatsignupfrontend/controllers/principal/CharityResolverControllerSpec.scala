@@ -17,27 +17,25 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreCharityInformationHttpParser.{StoreCharityInformationFailureResponse, StoreCharityInformationSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreCharityInformationService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreCharityInformationService {
 
-  object TestCharityResolverController extends CharityResolverController(
-    mockControllerComponents,
-    mockStoreCharityInformationService
-  )
+  object TestCharityResolverController extends CharityResolverController(mockStoreCharityInformationService)
 
-  lazy val testGetRequest = FakeRequest("GET", "/charity-resolver")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/charity-resolver")
 
   "calling the resolve method on CharityResolverController" when {
     "store charity information returns StoreCharityInformationSuccess" should {
@@ -45,9 +43,9 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         mockAuthAdminRole()
         mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
 
-        val res = await(TestCharityResolverController.resolve(testGetRequest.withSession(
+        val res = TestCharityResolverController.resolve(testGetRequest.withSession(
           SessionKeys.vatNumberKey -> testVatNumber
-        )))
+        ))
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.DirectDebitResolverController.show().url)
@@ -61,9 +59,9 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         )
 
         intercept[InternalServerException] {
-          await(TestCharityResolverController.resolve(testGetRequest.withSession(
+          TestCharityResolverController.resolve(testGetRequest.withSession(
             SessionKeys.vatNumberKey -> testVatNumber
-          )))
+          ))
         }
       }
     }
@@ -72,7 +70,7 @@ class CharityResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
         mockAuthAdminRole()
         mockStoreCharityInformation(testVatNumber)(Future.successful(Right(StoreCharityInformationSuccess)))
 
-        val res = await(TestCharityResolverController.resolve(testGetRequest))
+        val res = TestCharityResolverController.resolve(testGetRequest)
 
         status(res) shouldBe SEE_OTHER
         redirectLocation(res) shouldBe Some(routes.ResolveVatNumberController.resolve().url)

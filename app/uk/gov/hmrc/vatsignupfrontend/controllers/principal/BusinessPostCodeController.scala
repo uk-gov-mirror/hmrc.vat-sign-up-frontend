@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -27,10 +27,11 @@ import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.principal_place_of_business
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class BusinessPostCodeController @Inject()(val controllerComponents: ControllerComponents)
+class BusinessPostCodeController @Inject()(implicit ec: ExecutionContext,
+                                             vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async {
@@ -53,7 +54,7 @@ class BusinessPostCodeController @Inject()(val controllerComponents: ControllerC
           businessPostCode => {
             val isMigrated: Boolean = request.session.get(SessionKeys.isMigratedKey).contains("true")
 
-            if(isMigrated || !isEnabled(AdditionalKnownFacts)) {
+            if (isMigrated || !isEnabled(AdditionalKnownFacts)) {
               Future.successful(
                 Redirect(routes.CheckYourAnswersController.show())
                   .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)

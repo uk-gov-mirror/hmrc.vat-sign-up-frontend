@@ -17,17 +17,20 @@
 package uk.gov.hmrc.vatsignupfrontend.config.mocks
 
 import org.scalatest.TestSuite
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.vatsignupfrontend.config.ControllerComponents
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.MessagesControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockAuthConnector
 
-trait MockControllerComponents extends MockitoSugar
-  with MockAuthConnector with MockMessagesApi with MockAppConfig {
+trait MockVatControllerComponents extends MockitoSugar
+  with MockAuthConnector with MockAppConfig {
   self: TestSuite =>
 
-  lazy val mockControllerComponents = new ControllerComponents(
-    mockMessagesApi,
+  private val mockMessagesControllerComponents: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+
+  lazy implicit val mockVatControllerComponents: VatControllerComponents = new VatControllerComponents(
     mockAppConfig,
-    mockAuthConnector
+    mockAuthConnector,
+    mockMessagesControllerComponents
   )
 }

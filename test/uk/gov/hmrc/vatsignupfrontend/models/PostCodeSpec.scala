@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.models
 
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstantsGenerator
 
 class PostCodeSpec extends UnitSpec {

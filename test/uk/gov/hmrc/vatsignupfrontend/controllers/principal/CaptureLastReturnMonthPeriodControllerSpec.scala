@@ -17,26 +17,24 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.MonthForm
 import uk.gov.hmrc.vatsignupfrontend.models.January
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 
 class CaptureLastReturnMonthPeriodControllerSpec extends UnitSpec
-  with MockControllerComponents {
+  with MockVatControllerComponents {
 
-  object TestCaptureLastReturnMonthPeriodController extends CaptureLastReturnMonthPeriodController(
-    mockControllerComponents
-  )
+  object TestCaptureLastReturnMonthPeriodController extends CaptureLastReturnMonthPeriodController
 
-  lazy val testGetRequest = FakeRequest("GET", "/last-vat-return-date")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/last-vat-return-date")
 
   lazy val testPostRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/last-vat-return-date").withFormUrlEncodedBody(MonthForm.month -> January.toString)
@@ -61,7 +59,7 @@ class CaptureLastReturnMonthPeriodControllerSpec extends UnitSpec
         disable(AdditionalKnownFacts)
 
         intercept[NotFoundException] {
-          await(TestCaptureLastReturnMonthPeriodController.show(testGetRequest))
+          TestCaptureLastReturnMonthPeriodController.show(testGetRequest)
         }
       }
     }

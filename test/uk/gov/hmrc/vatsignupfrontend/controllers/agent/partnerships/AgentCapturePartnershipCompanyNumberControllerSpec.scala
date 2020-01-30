@@ -22,9 +22,9 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.CompanyNumberForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -34,11 +34,11 @@ import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockGetCompanyNameService
 
 import scala.concurrent.Future
 
-class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents
+class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockGetCompanyNameService {
 
   object TestAgentCapturePartnershipCompanyNumberController extends AgentCapturePartnershipCompanyNumberController(
-    mockControllerComponents,
+
     mockGetCompanyNameService
   )
 
@@ -87,7 +87,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(errorRoutes.DissolvedCompanyController.show().url)
 
-        result.session(request).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
+        session(result).get(SessionKeys.companyNameKey) shouldBe Some(testCompanyName)
       }
     }
 
@@ -142,7 +142,7 @@ class AgentCapturePartnershipCompanyNumberControllerSpec extends UnitSpec with G
 
         val result = TestAgentCapturePartnershipCompanyNumberController.submit(request)
 
-        intercept[InternalServerException](await(result))
+        intercept[InternalServerException](result)
       }
     }
   }

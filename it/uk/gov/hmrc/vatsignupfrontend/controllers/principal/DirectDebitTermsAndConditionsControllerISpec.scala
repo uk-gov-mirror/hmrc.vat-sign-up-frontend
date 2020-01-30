@@ -20,7 +20,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.acceptedDirectDebitTermsKey
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, SessionCookieCrumbler}
+import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class DirectDebitTermsAndConditionsControllerISpec extends ComponentSpecBase with CustomMatchers {
 
@@ -52,7 +52,7 @@ class DirectDebitTermsAndConditionsControllerISpec extends ComponentSpecBase wit
       )
     }
     "Add the acceptDirectDebitTermsKey to the session" in {
-      val session = SessionCookieCrumbler.getSessionMap(res)
+      val session = getSessionMap(res)
       session.keys should contain(acceptedDirectDebitTermsKey)
     }
   }

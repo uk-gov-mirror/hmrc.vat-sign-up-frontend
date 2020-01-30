@@ -17,29 +17,32 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.Constants.Enrolments.VatDecEnrolmentKey
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class SessionTimeoutControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
-  object TestSessionTimeoutController extends SessionTimeoutController( app.injector.instanceOf[AppConfig],
-                                                                        app.injector.instanceOf[Configuration],
-                                                                        app.injector.instanceOf[Environment])
+  object TestSessionTimeoutController extends SessionTimeoutController(
+    app.injector.instanceOf[AppConfig],
+    app.injector.instanceOf[Configuration],
+    app.injector.instanceOf[Environment],
+    app.injector.instanceOf[MessagesControllerComponents]
+  )
 
   "timeout" should {
     "stay on current page with current session" when {
       "the keep alive method is used" in {
         val fakeRequest: Request[AnyContent] = FakeRequest().withSession(vatNumberKey -> VatDecEnrolmentKey)
-        val res = await(TestSessionTimeoutController.keepAlive(fakeRequest))
+        val res = TestSessionTimeoutController.keepAlive(fakeRequest)
 
-        res.session(fakeRequest).get(SessionKeys.vatNumberKey) shouldBe Some(VatDecEnrolmentKey)
+        session(res).get(SessionKeys.vatNumberKey) shouldBe Some(VatDecEnrolmentKey)
 
       }
     }
@@ -47,9 +50,9 @@ class SessionTimeoutControllerSpec extends UnitSpec with GuiceOneAppPerSuite {
     "redirect a agent user to login with a new session" when {
       "the timeout method is used" in {
         val fakeRequest: Request[AnyContent] = FakeRequest().withSession(vatNumberKey -> VatDecEnrolmentKey)
-        val res = await(TestSessionTimeoutController.timeout(fakeRequest))
+        val res = TestSessionTimeoutController.timeout(fakeRequest)
 
-        res.session(fakeRequest).get(SessionKeys.vatNumberKey) shouldBe None
+        session(res).get(SessionKeys.vatNumberKey) shouldBe None
         redirectLocation(res) shouldBe Some("/gg/sign-in?continue=%2Fvat-through-software%2Fsign-up%2Fclient%2Fvat-number&origin=vat-sign-up-frontend")
 
       }

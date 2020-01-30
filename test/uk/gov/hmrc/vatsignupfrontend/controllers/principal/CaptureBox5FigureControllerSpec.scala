@@ -17,27 +17,27 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
-import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockControllerComponents
+import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.models.January
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockControllerComponents {
+class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     enable(AdditionalKnownFacts)
   }
 
-  object TestCaptureBox5FigureController extends CaptureBox5FigureController(mockControllerComponents)
+  object TestCaptureBox5FigureController extends CaptureBox5FigureController
 
-  lazy val testGetRequest = FakeRequest("GET", "/box-5-figure")
+  lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/box-5-figure")
 
   private def testPostRequest(box5Value: String = testBox5Figure) = FakeRequest("POST", "/box-5-figure").withFormUrlEncodedBody(box5Figure -> box5Value)
 
@@ -57,9 +57,7 @@ class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
       "throw not found exception" in {
         disable(AdditionalKnownFacts)
 
-        intercept[NotFoundException] {
-          await(TestCaptureBox5FigureController.show(testGetRequest))
-        }
+        intercept[NotFoundException](TestCaptureBox5FigureController.show(testGetRequest))
       }
     }
   }
@@ -69,21 +67,21 @@ class CaptureBox5FigureControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
       "redirect to CaptureLastMonthReturnPeriod page" in {
         mockAuthAdminRole()
 
-        val result = await(TestCaptureBox5FigureController.submit(testPostRequest()))
+        val result = TestCaptureBox5FigureController.submit(testPostRequest())
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-        result.session(testPostRequest()).get(SessionKeys.box5FigureKey) should contain(testBox5Figure)
+        session(result).get(SessionKeys.box5FigureKey) should contain(testBox5Figure)
       }
 
       "redirect to CaptureLastMonthReturnPeriod page with negative values" in {
         mockAuthAdminRole()
 
-        val result = await(TestCaptureBox5FigureController.submit(testPostRequest(testBox5FigureNegative)))
+        val result = TestCaptureBox5FigureController.submit(testPostRequest(testBox5FigureNegative))
 
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-        result.session(testPostRequest(testBox5FigureNegative)).get(SessionKeys.box5FigureKey) should contain(testBox5FigureNegative)
+        session(result).get(SessionKeys.box5FigureKey) should contain(testBox5FigureNegative)
       }
 
       "form unsuccessfully submitted" should {
