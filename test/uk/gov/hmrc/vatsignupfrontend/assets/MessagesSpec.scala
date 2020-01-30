@@ -24,18 +24,19 @@ import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class MessagesSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar {
 
-  "the messages file should not contain illegal apostrophe symbol" should {
+  "the messages file should not contain illegal quotes" should {
     lazy val allLanguages = app.injector.instanceOf[MessagesApi].messages
+
     lazy val allValues =
       for {
         (_, oneLangage) <- allLanguages
-        values <- oneLangage.seq
+        values <- oneLangage.seq.filter { case (key, _) => !key.contains("format") }
       } yield values
 
-    allValues.filter(t => t._2.contains("\u2019")).view.foreach {
+    allValues.filter(t => t._2.contains("\u0027")).view.foreach {
       case (messageKey, messageValue) =>
-        s"$messageKey should not contain \u2019" in {
-          messageValue should not include "\u2019"
+        s"$messageKey should not contain \u0027\u0027" in {
+          messageValue should not include "\u0027\u0027"
         }
     }
   }

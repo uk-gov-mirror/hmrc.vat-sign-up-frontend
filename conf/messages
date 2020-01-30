@@ -1,12 +1,12 @@
 # override for default values which contained the invalid apostrophe symbols
-global.error.pageNotFound404.heading                                   = This page can''t be found
-global.error.InternalServerError500.heading                            = Sorry, we''re experiencing technical difficulties
-error.address.invalid.character                                        = This line contains an invalid character. Valid characters are: A-Z a-z 0-9 - '' , / & space
+global.error.pageNotFound404.heading                                   = This page can’t be found
+global.error.InternalServerError500.heading                            = Sorry, we’re experiencing technical difficulties
+error.address.invalid.character                                        = This line contains an invalid character. Valid characters are: A-Z a-z 0-9 - ’ , / & space
 app.common.back                                                        = Back
 
 ## Service Name
 service_name.principal_journey                                         = Use software to submit your VAT Returns
-service_name.agent_journey                                             = Use software to submit your client''s VAT Returns
+service_name.agent_journey                                             = Use software to submit your client’s VAT Returns
 service_name.govuk                                                     = GOV.UK
 
 ## Base
@@ -17,7 +17,7 @@ base.agree                                                             = Agree
 base.agree_and_continue                                                = Agree and continue
 base.accept_and_send                                                   = Accept and send
 base.continue_to_sign_up                                               = Continue to sign up
-base.error_heading                                                     = There''s a problem
+base.error_heading                                                     = There is a problem
 base.sign_out                                                          = Sign out
 base.sign_up                                                           = Sign up
 base.logout                                                            = Logout
@@ -61,34 +61,34 @@ error.principal.business-entity-other.field                            = Select 
 error.principal.business-entity-other.summary                          = Select the type of business you are registering.
 error.agent.business-entity-other.field                                = Select the type of business you are registering for your client
 error.agent.business-entity-other.summary                              = Select the type of business you are registering.
-error.agent.company_number_not_entered.field                           = Enter your client''s company registration number
-error.agent.company_number_not_entered.summary                         = Enter your client''s company registration number
+error.agent.company_number_not_entered.field                           = Enter your client’s company registration number
+error.agent.company_number_not_entered.summary                         = Enter your client’s company registration number
 error.principal.company_number_not_entered.field                       = Enter your company registration number
 error.principal.company_number_not_entered.summary                     = Enter your company registration number
 error.invalid_company_number_length.field                              = Enter a company number that has 8 characters or less
 error.invalid_company_number_length.summary                            = Enter a company number that has 8 characters or less
-error.agent.partnership_company_number_not_entered.field               = Enter the partnership''s company number
-error.agent.partnership_company_number_not_entered.summary             = Enter the partnership''s company number
-error.principal.partnership_company_number_not_entered.field           = Enter the partnership''s company number
-error.principal.partnership_company_number_not_entered.summary         = Enter the partnership''s company number
+error.agent.partnership_company_number_not_entered.field               = Enter the partnership’s company number
+error.agent.partnership_company_number_not_entered.summary             = Enter the partnership’s company number
+error.principal.partnership_company_number_not_entered.field           = Enter the partnership’s company number
+error.principal.partnership_company_number_not_entered.summary         = Enter the partnership’s company number
 error.invalid_company_number_characters.field                          = Company number must only include numbers 0 to 9 and letters a to z
 error.invalid_company_number_characters.summary                        = Company number must only include numbers 0 to 9 and letters a to z
-error.no_entry_company_utr.field                                       = Enter your company''s Unique Taxpayer Reference
-error.no_entry_company_utr.summary                                     = Enter your company''s Unique Taxpayer Reference
+error.no_entry_company_utr.field                                       = Enter your company’s Unique Taxpayer Reference
+error.no_entry_company_utr.summary                                     = Enter your company’s Unique Taxpayer Reference
 error.character_limit_company_utr.field                                = Company Unique Taxpayer Reference number must be 10 numbers
 error.character_limit_company_utr.summary                              = Company Unique Taxpayer Reference number must be 10 numbers
 error.invalid_company_utr.field                                        = Company Unique Taxpayer Reference number must only include numbers 0 to 9
 error.invalid_company_utr.summary                                      = Company Unique Taxpayer Reference number must only include numbers 0 to 9
 error.principal.no_vat_number_entered.field                            = Enter your VAT number
 error.principal.no_vat_number_entered.summary                          = Enter your VAT number
-error.agent.no_vat_number_entered.field                                = Enter your client''s VAT number
-error.agent.no_vat_number_entered.summary                              = Enter your client''s VAT number
+error.agent.no_vat_number_entered.field                                = Enter your client’s VAT number
+error.agent.no_vat_number_entered.summary                              = Enter your client’s VAT number
 error.invalid_vat_number_length.field                                  = VAT number must be 9 numbers
 error.invalid_vat_number_length.summary                                = VAT number must be 9 numbers
 error.invalid_vat_number.field                                         = VAT number must only include numbers 0 to 9
 error.invalid_vat_number.summary                                       = VAT number must only include numbers 0 to 9
-error.agent.email_no_entry.field                                       = Enter your client''s email address
-error.agent.email_no_entry.summary                                     = Enter your client''s email address
+error.agent.email_no_entry.field                                       = Enter your client’s email address
+error.agent.email_no_entry.summary                                     = Enter your client’s email address
 error.principal.email_no_entry.field                                   = Enter your email address
 error.principal.email_no_entry.summary                                 = Enter your email address
 error.exceeds_max_length_email.field                                   = Email address must be 132 characters or less
@@ -111,32 +111,32 @@ error.multiple_vat_check.field                                         = Select 
 error.multiple_vat_check.summary                                       = Select yes if you have more than one VAT registered business
 error.principal.no_entry_first_name.field                              = Enter your first name
 error.principal.no_entry_first_name.summary                            = Enter your first name
-error.agent.no_entry_first_name.field                                  = Enter your client''s first name
-error.agent.no_entry_first_name.summary                                = Enter your client''s first name
+error.agent.no_entry_first_name.field                                  = Enter your client’s first name
+error.agent.no_entry_first_name.summary                                = Enter your client’s first name
 error.exceeds_max_first_name.field                                     = First name must be 105 characters or less
 error.exceeds_max_first_name.summary                                   = First name must be 105 characters or less
 error.invalid_first_name.field                                         = First name must only include letters a to z, hyphens, spaces and apostrophes
 error.invalid_first_name.summary                                       = First name must only include letters a to z, hyphens, spaces and apostrophes
 error.principal.no_entry_last_name.field                               = Enter your last name
 error.principal.no_entry_last_name.summary                             = Enter your last name
-error.agent.no_entry_last_name.field                                   = Enter your client''s last name
-error.agent.no_entry_last_name.summary                                 = Enter your client''s last name
+error.agent.no_entry_last_name.field                                   = Enter your client’s last name
+error.agent.no_entry_last_name.summary                                 = Enter your client’s last name
 error.exceeds_max_last_name.field                                      = Last name must be 105 characters or less
 error.exceeds_max_last_name.summary                                    = Last name must be 105 characters or less
 error.invalid_last_name.field                                          = Last name must only include letters a to z, hyphens, spaces and apostrophes
 error.invalid_last_name.summary                                        = Last name must only include letters a to z, hyphens, spaces and apostrophes
 error.principal.no_entry_nino.field                                    = Enter your National Insurance number
 error.principal.no_entry_nino.summary                                  = Enter your National Insurance number
-error.agent.no_entry_nino.field                                        = Enter your client''s National Insurance number
-error.agent.no_entry_nino.summary                                      = Enter your client''s National Insurance number
+error.agent.no_entry_nino.field                                        = Enter your client’s National Insurance number
+error.agent.no_entry_nino.summary                                      = Enter your client’s National Insurance number
 error.invalid_nino.field                                               = National Insurance number must only include letters a to z, numbers 0 to 9 and spaces
 error.invalid_nino.summary                                             = National Insurance number must only include letters a to z, numbers 0 to 9 and spaces
 error.character_limit_nino.field                                       = National Insurance number must be 9 characters
 error.character_limit_nino.summary                                     = National Insurance number must be 9 characters
 error.principal.no_entry_dob.field                                     = Enter your date of birth
 error.principal.no_entry_dob.summary                                   = Enter your date of birth
-error.agent.no_entry_dob.field                                         = Enter your client''s date of birth
-error.agent.no_entry_dob.summary                                       = Enter your client''s date of birth
+error.agent.no_entry_dob.field                                         = Enter your client’s date of birth
+error.agent.no_entry_dob.summary                                       = Enter your client’s date of birth
 error.invalid_characters_dob.field                                     = Enter your date of birth using numbers 0 to 9
 error.invalid_characters_dob.summary                                   = Enter your date of birth using numbers 0 to 9
 error.invalid_dob.field                                                = Enter a real date of birth
@@ -149,22 +149,22 @@ error.partnership_postcode.invalid_characters.summary                  = Enter a
 error.partnership_postcode.invalid_characters.field                    = Enter a postcode using only letters and numbers
 error.principal.partnership_postcode.not_entered.summary               = Enter the postcode where the partnership is registered for Self Assessment
 error.principal.partnership_postcode.not_entered.field                 = Enter the postcode where the partnership is registered for Self Assessment
-error.agent.partnership_postcode.not_entered.summary                   = Enter the postcode of the client''s principal place of business
-error.agent.partnership_postcode.not_entered.field                     = Enter the postcode of the client''s principal place of business
+error.agent.partnership_postcode.not_entered.summary                   = Enter the postcode of the client’s principal place of business
+error.agent.partnership_postcode.not_entered.field                     = Enter the postcode of the client’s principal place of business
 error.character_limit_partnership_utr.summary                          = Enter a UTR that has 10 numbers
 error.character_limit_partnership_utr.field                            = Enter a UTR that has 10 numbers
 error.invalid_partnership_utr.summary                                  = Enter a UTR using only numbers
 error.invalid_partnership_utr.field                                    = Enter a UTR using only numbers
-error.no_entry_partnership_utr.summary                                 = Enter the partnership''s UTR
-error.no_entry_partnership_utr.field                                   = Enter the partnership''s UTR
+error.no_entry_partnership_utr.summary                                 = Enter the partnership’s UTR
+error.no_entry_partnership_utr.field                                   = Enter the partnership’s UTR
 error.have_software.field                                              = Choose yes or no, if you have accounting software or not
 error.have_software.summary                                            = Choose yes or no, if you have accounting software or not
 error.software_ready.field                                             = Choose yes or no, if your software is ready to submit your VAT Returns with Making Tax Digital for VAT
 error.software_ready.summary                                           = Choose yes or no, if your software is ready to submit with Making Tax Digital for VAT or not
 error.previous_vat_return.field                                        = Select yes if you are submitting VAT returns
 error.previous_vat_return.summary                                      = Select yes if you are submitting VAT returns
-error.no_entry_registered_society_utr.field                            = Enter your registered society''s Unique Taxpayer Reference
-error.no_entry_registered_society_utr.summary                          = Enter your registered society''s Unique Taxpayer Reference
+error.no_entry_registered_society_utr.field                            = Enter your registered society’s Unique Taxpayer Reference
+error.no_entry_registered_society_utr.summary                          = Enter your registered society’s Unique Taxpayer Reference
 error.character_limit_registered_society_utr.field                     = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.character_limit_registered_society_utr.summary                   = Registered society Unique Taxpayer Reference number must be 10 numbers
 error.invalid_registered_society_utr.field                             = Registered society Unique Taxpayer Reference number must only include numbers 0 to 9
@@ -183,12 +183,12 @@ error.agent.receive_email_notifications.field                          = Select 
 error.agent.receive_email_notifications.summary                        = Select if you want to be contacted by email or letters only
 error.principal.partnership.do_you_have_a_utr.field                    = Select yes if you have a Unique Taxpayer Reference number
 error.principal.partnership.do_you_have_a_utr.summary                  = Select yes if you have a Unique Taxpayer Reference number
-error.agent.partnership.do_you_have_a_utr.field                        = Select yes if you have your client''s Unique Taxpayer Reference number
-error.agent.partnership.do_you_have_a_utr.summary                      = Select yes if you have your client''s Unique Taxpayer Reference number
+error.agent.partnership.do_you_have_a_utr.field                        = Select yes if you have your client’s Unique Taxpayer Reference number
+error.agent.partnership.do_you_have_a_utr.summary                      = Select yes if you have your client’s Unique Taxpayer Reference number
 error.principal.no_option_selected.field                               = You must select an option
 error.principal.no_option_selected.summary                             = You must select an option
-error.principal.are_you_ready_submit_software.summary                  = Select yes if you''re ready to submit your next VAT return using compatible software
-error.principal.are_you_ready_submit_software.field                    = Select yes if you''re ready to submit your next VAT return using compatible software
+error.principal.are_you_ready_submit_software.summary                  = Select yes if you’re ready to submit your next VAT return using compatible software
+error.principal.are_you_ready_submit_software.field                    = Select yes if you’re ready to submit your next VAT return using compatible software
 
 ## Not enrolled to Agent Services page
 agent.not_enrolled_to_agent_services.title                             = You need to sign in with an agent services account
@@ -197,66 +197,66 @@ agent.not_enrolled_to_agent_services.line_1                            = <a href
 agent.not_enrolled_to_agent_services.line_2                            = If you do not have one, <a href="{0}">create an agent services account</a>.
 
 ## Agent Cannot Use Service Yet page
-agent.cannot_use_service.title                                         = Your client''s business is not eligible at this time
-agent.cannot_use_service.heading                                       = Your client''s business is not eligible at this time
+agent.cannot_use_service.title                                         = Your client’s business is not eligible at this time
+agent.cannot_use_service.heading                                       = Your client’s business is not eligible at this time
 agent.cannot_use_service.line                                          = Try again later.
 
 ## No agent client relationship page
-agent.no_agent_client_relationship.title                               = You can''t sign up this client yet
-agent.no_agent_client_relationship.heading                             = You can''t sign up this client yet
+agent.no_agent_client_relationship.title                               = You can’t sign up this client yet
+agent.no_agent_client_relationship.heading                             = You can’t sign up this client yet
 agent.no_agent_client_relationship.line_1                              = To use this service, your client needs to authorise you as their agent.
 
 ## Agent Guidance page
-agent.guidance.title                                                   = Use software to submit your client''s VAT Returns
-agent.guidance.heading                                                 = Use software to submit your client''s VAT Returns
+agent.guidance.title                                                   = Use software to submit your client’s VAT Returns
+agent.guidance.heading                                                 = Use software to submit your client’s VAT Returns
 agent.guidance.line_1                                                  = From April 2019, sole trader businesses and limited companies with a turnover above £85,000 must submit their VAT Returns using software that supports Making Tax Digital.
-agent.guidance.line_2                                                  = If your client is VAT registered they can choose to sign up for this new reporting method now. To help us test this new way of working out your tax, they''ll need to:
+agent.guidance.line_2                                                  = If your client is VAT registered they can choose to sign up for this new reporting method now. To help us test this new way of working out your tax, they’ll need to:
 agent.guidance.bullet_1                                                = use software that supports Making Tax Digital to record their purchases and sales
 agent.guidance.bullet_2                                                = submit their VAT Returns using their software
 agent.guidance.bullet_3                                                = agree to get emails instead of letters
 agent.guidance.sub_heading.before_you_start                            = Before you start
-agent.guidance.before_you_start.line_1                                 = To sign your clients up to this service you''ll need to:
+agent.guidance.before_you_start.line_1                                 = To sign your clients up to this service you’ll need to:
 agent.guidance.before_you_start.bullet_1                               = <a id="agent_services" href="https://www.tax.service.gov.uk/agent-subscription/start">set up an agent services account</a>
 agent.guidance.before_you_start.bullet_2                               = add clients to your account
 agent.guidance.sub_heading.sign_up_your_clients                        = Sign up your clients
-agent.guidance.sign_up_your_clients.line_1                             = Once you''ve set up your agent services account, you can sign up your clients for this new way of reporting their tax. This will add clients to your account.
-agent.guidance.sign_up_your_clients.line_2                             = You can sign up your clients if they''re either a sole trader or limited company. Your clients can submit their VAT Returns using software, or you can submit them on their behalf.
+agent.guidance.sign_up_your_clients.line_1                             = Once you’ve set up your agent services account, you can sign up your clients for this new way of reporting their tax. This will add clients to your account.
+agent.guidance.sign_up_your_clients.line_2                             = You can sign up your clients if they’re either a sole trader or limited company. Your clients can submit their VAT Returns using software, or you can submit them on their behalf.
 agent.guidance.sub_heading.software                                    = Software
 agent.guidance.software.line_1                                         = You need to choose software that supports Making Tax Digital. You can still use your existing software if it supports Making Tax Digital.
-agent.guidance.software.line_2                                         = If you and your client will use software, it''s important they choose a software package that can interact with yours.
+agent.guidance.software.line_2                                         = If you and your client will use software, it’s important they choose a software package that can interact with yours.
 agent.guidance.sub_heading.get_help                                    = Get help
 agent.guidance.get_help.line_1                                         = You need to contact your software supplier if you need help using your software, for example to upload sales records or sending updates to HMRC.
 agent.guidance.get_help.line_2                                         = If you have other questions about sending updates, contact <a id="hmrc" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries">HMRC</a>.
 
 ## Agent Capture Vat Number page
-agent.capture_vat_number.title                                         = What is your client''s VAT number?
-agent.capture_vat_number.heading                                       = What is your client''s VAT number?
+agent.capture_vat_number.title                                         = What is your client’s VAT number?
+agent.capture_vat_number.heading                                       = What is your client’s VAT number?
 agent.capture_vat_number.line_1                                        = This is the 9-digit number they received when they registered for VAT.
 agent.capture_vat_number.hint                                          = For example, 123456789
 
 ## Agent Confirm Company page
-agent.confirm_company.title                                            = Confirm your client''s company
-agent.confirm_company.heading                                          = Confirm your client''s company
+agent.confirm_company.title                                            = Confirm your client’s company
+agent.confirm_company.heading                                          = Confirm your client’s company
 agent.confirm_company.link                                             = Change company
 
 ## Agent Company Name Not Found page
-agent.company_name_not_found.title                                     = We could not confirm your client''s company
-agent.company_name_not_found.heading                                   = We could not confirm your client''s company
+agent.company_name_not_found.title                                     = We could not confirm your client’s company
+agent.company_name_not_found.heading                                   = We could not confirm your client’s company
 agent.company_name_not_found.line_1                                    = The company number you entered is not on our system.
 
 ## Agent Limited Partnership Company Name Not Found page
-agent.partnerships.company_name_not_found_lp.title                     = We could not confirm your client''s Limited Partnership
-agent.partnerships.company_name_not_found_lp.heading                   = We could not confirm your client''s Limited Partnership
+agent.partnerships.company_name_not_found_lp.title                     = We could not confirm your client’s Limited Partnership
+agent.partnerships.company_name_not_found_lp.heading                   = We could not confirm your client’s Limited Partnership
 agent.partnerships.company_name_not_found_lp.line_1                    = The information you provided is not for a Limited Partnership.
 
 ## Agent Confirm Vat Number page
-agent.confirm_vat_number.title                                         = Confirm your client''s VAT number
-agent.confirm_vat_number.heading                                       = Confirm your client''s VAT number
+agent.confirm_vat_number.title                                         = Confirm your client’s VAT number
+agent.confirm_vat_number.heading                                       = Confirm your client’s VAT number
 agent.confirm_vat_number.link                                          = Change VAT number
 
 ## Agent Capture Company Number page
-agent.capture_company_number.title                                     = What is your client''s company registration number?
-agent.capture_company_number.heading                                   = What is your client''s company registration number?
+agent.capture_company_number.title                                     = What is your client’s company registration number?
+agent.capture_company_number.heading                                   = What is your client’s company registration number?
 agent.capture_company_number.line_1                                    = You can find the company registration number on the <a id="companiesHouse" href="{0}" target="_blank">Companies House website (opens in a new window or tab)</a>.
 
 ## Agent Capture Entity Type page
@@ -264,15 +264,15 @@ agent.capture_entity_type.title                                        = What ty
 agent.capture_entity_type.heading                                      = What type of business or group is your client?
 
 ## Agent Confirm Company Number page
-agent.confirm_company_number.title                                     = Confirm your client''s company number
-agent.confirm_company_number.heading                                   = Confirm your client''s company number
+agent.confirm_company_number.title                                     = Confirm your client’s company number
+agent.confirm_company_number.heading                                   = Confirm your client’s company number
 agent.confirm_company_number.companyNumber.heading                     = Company number
 agent.confirm_company_number.link                                      = Change company number
 
 ## Agent Dissolved Company page
 agent.dissolved_company.title                                          = {0} is not eligible to be signed up
 agent.dissolved_company.heading                                        = {0} is not eligible to be signed up
-agent.dissolved_company.paragraph1                                     = The number you''ve entered is for a company that has been dissolved or closed.
+agent.dissolved_company.paragraph1                                     = The number you’ve entered is for a company that has been dissolved or closed.
 agent.dissolved_company.paragraph2                                     = Try again using the most recent company number sent from Companies House.
 agent.dissolved_company.confirm                                        = Enter a different number
 
@@ -299,19 +299,19 @@ agent.deregistered_unenrolled.paragraph2                               = Alterna
 agent.deregistered_unenrolled.another_number                           = Enter another VAT number
 
 ## Agent Capture Partnership UTR
-agent.capture_partnership_utr.title                                    = What is your client''s partnership Unique Taxpayer Reference (UTR)?
-agent.capture_partnership_utr.heading                                  = What is your client''s partnership Unique Taxpayer Reference (UTR)?
+agent.capture_partnership_utr.title                                    = What is your client’s partnership Unique Taxpayer Reference (UTR)?
+agent.capture_partnership_utr.heading                                  = What is your client’s partnership Unique Taxpayer Reference (UTR)?
 agent.capture_partnership_utr.line                                     = This is a 10 digit number. You can find it on letters to the partnership from HM Revenue & Customs.
 agent.capture_partnership_utr.hint                                     = For example, 0123456789
-agent.capture_partnership_utr.accordion.heading                        = I do not have my client''s Unique Taxpayer Reference
-agent.capture_partnership_utr.accordion.line_1                         = Entering your client''s UTR will help us identify the correct partnership.
+agent.capture_partnership_utr.accordion.heading                        = I do not have my client’s Unique Taxpayer Reference
+agent.capture_partnership_utr.accordion.line_1                         = Entering your client’s UTR will help us identify the correct partnership.
 agent.capture_partnership_utr.accordion.link_1                         = How your client can find their UTR
-agent.capture_partnership_utr.accordion.link_2                         = My client''s partnership does not have a UTR
+agent.capture_partnership_utr.accordion.link_2                         = My client’s partnership does not have a UTR
 
 ## Agent Capture Email page
-agent.capture_client_email.title                                       = What is your client''s email address?
-agent.capture_client_email.heading                                     = What is your client''s email address?
-agent.capture_client_email.line_1                                      = We''ll only use the email address to:
+agent.capture_client_email.title                                       = What is your client’s email address?
+agent.capture_client_email.heading                                     = What is your client’s email address?
+agent.capture_client_email.line_1                                      = We’ll only use the email address to:
 agent.capture_client_email.bullet_1                                    = send a Direct Debit advance notice 10 working days before each payment is taken
 agent.capture_client_email.bullet_2                                    = send VAT notifications
 agent.capture_client_email.line_2                                      = If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit.
@@ -320,12 +320,12 @@ agent.capture_client_email.hint                                        = For exa
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = What is your email address?
 agent.capture_agent_email.heading                                      = What is your email address?
-agent.capture_agent_email.line_1                                       = We will only send you an email to let you know when you can report your client''s VAT through compatible software. This might take up to 72 hours.
+agent.capture_agent_email.line_1                                       = We will only send you an email to let you know when you can report your client’s VAT through compatible software. This might take up to 72 hours.
 agent.capture_agent_email.hint                                         = For example, yourname@example.com
 
 ## Agent Confirm Email page
-agent.confirm_email.title                                              = Check your client''s email address
-agent.confirm_email.heading                                            = Check your client''s email address
+agent.confirm_email.title                                              = Check your client’s email address
+agent.confirm_email.heading                                            = Check your client’s email address
 agent.confirm_email.email.heading                                      = Email address
 agent.confirm_email.link                                               = Change email address
 
@@ -353,15 +353,15 @@ agent.sent_client_email.line_2                                         = They mu
 ## Agent verify agent email page
 agent.verify_agent_email.title                                         = Verify your email address
 agent.verify_agent_email.heading                                       = Verify your email address
-agent.verify_agent_email.line_1                                        = We''ve sent an email to {0}. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out.
+agent.verify_agent_email.line_1                                        = We’ve sent an email to {0}. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out.
 agent.verify_agent_email.line_2                                        = Use the same device (for example computer, tablet, smartphone) and web browser (for example Chrome, Safari, Firefox, Internet Explorer) to complete this email verification step. You will then be able to sign up your clients.
-agent.verify_agent_email.line_3                                        = You can <a id="change" href="{0}">change your email address</a> if it''s not correct.
+agent.verify_agent_email.line_3                                        = You can <a id="change" href="{0}">change your email address</a> if it’s not correct.
 agent.verify_email.accordion.heading                                   = I did not get an email
-agent.verify_email.accordion.line_1                                    = Check your spam folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+agent.verify_email.accordion.line_1                                    = Check your spam folder. If it’s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 # When client verified their email requested by an agent
-client.verified_email.title                                            = You''ve verified your email address
-client.verified_email.heading                                          = You''ve verified your email address
+client.verified_email.title                                            = You’ve verified your email address
+client.verified_email.heading                                          = You’ve verified your email address
 client.verified_email.line_1                                           = HM Revenue and Customs will contact you by email instead of sending letters.
 client.verified_email.return_to_gov_uk                                 = Return to GOV.UK
 
@@ -387,14 +387,14 @@ agent.check_your_answers_final.contact_preference                      = How to 
 agent.check_your_answers_final.client_email                            = Client email address
 
 ## Agent Confirmation page
-agent.confirmation.title                                               = We have received your client''s information
-agent.confirmation.heading                                             = We have received your client''s information
+agent.confirmation.title                                               = We have received your client’s information
+agent.confirmation.heading                                             = We have received your client’s information
 agent.confirmation.subsection_1.heading                                = What happens next
-agent.confirmation.subsection_1.line_1                                 = We will let you know when you can report your client''s VAT through compatible software. This usually takes 72 hours.
+agent.confirmation.subsection_1.line_1                                 = We will let you know when you can report your client’s VAT through compatible software. This usually takes 72 hours.
 agent.confirmation.subsection_1.bullet_1                               = <a id="softwareOptionsUrl" href="{0}" target="_blank">Choose your software (opens in a new window or tab)</a>. If your client will also use software, it is important they choose a package that can interact with yours.
 agent.confirmation.subsection_1.bullet_2                               = Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details.
-agent.confirmation.subsection_1.bullet_3                               = Use software to record your client''s sales and purchases.
-agent.confirmation.subsection_1.bullet_4                               = Submit your client''s VAT Returns before their deadlines.
+agent.confirmation.subsection_1.bullet_3                               = Use software to record your client’s sales and purchases.
+agent.confirmation.subsection_1.bullet_4                               = Submit your client’s VAT Returns before their deadlines.
 agent.confirmation.subsection_1.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or business tax account.
 
 ## Resignup Confirmation page - Agent flow
@@ -403,12 +403,12 @@ agent.resignup.signupcomplete.heading                                  = You hav
 agent.resignup.signupcomplete.vat_registration_number                  = VAT registration number
 agent.resignup.signupcomplete.line                                     = You should advise your client that (where applicable):
 agent.resignup.signupcomplete.subsection.heading                       = What happens next
-agent.resignup.signupcomplete.subsection.bullet_1                      = you''ve signed them up to Making Tax Digital for VAT
-agent.resignup.signupcomplete.subsection.bullet_2                      = they''ll get email alerts to sign into HMRC services to access and read important secure messages
-agent.resignup.signupcomplete.subsection.bullet_3                      = they''ll get an email alert 10 days before Direct Debit payments are taken from their bank account
+agent.resignup.signupcomplete.subsection.bullet_1                      = you’ve signed them up to Making Tax Digital for VAT
+agent.resignup.signupcomplete.subsection.bullet_2                      = they’ll get email alerts to sign into HMRC services to access and read important secure messages
+agent.resignup.signupcomplete.subsection.bullet_3                      = they’ll get an email alert 10 days before Direct Debit payments are taken from their bank account
 agent.resignup.signupcomplete.subsection2.heading                      = What you must do next
 agent.resignup.signupcomplete.subsection2.bullet_1                     = Allow and authorise your software to send VAT Returns to HMRC.
-agent.resignup.signupcomplete.subsection2.bullet_2                     = Use your software to submit your client''s VAT Return.
+agent.resignup.signupcomplete.subsection2.bullet_2                     = Use your software to submit your client’s VAT Return.
 agent.resignup.signupcomplete.subsection2.bullet_3                     = If required, help your client to choose compatible software. Advise them to start keeping their income, expenditure and VAT records using this software.
 agent.resignup.signupcomplete.subsection2.bullet_4                     = Where relevant, advise your client to view their VAT Return deadlines. They can do this within their accounting software or by signing into HMRC services (this is also known as a Business tax account).
 agent.resignup.signupcomplete.sign_up_another_button                   = Sign up another client
@@ -416,21 +416,21 @@ agent.resignup.signupcomplete.sign_up_another_button                   = Sign up
 ## Already signed up page
 agent.client_already_signed_up.title                                   = Your client has already signed up
 agent.client_already_signed_up.heading                                 = Your client has already signed up
-agent.client_already_signed_up.line_1                                  = This client''s details are already in use.
+agent.client_already_signed_up.line_1                                  = This client’s details are already in use.
 
 # Could not confirm vat number
-agent.could_not_confirm_vat_number.title                               = We could not confirm your client''s VAT number
-agent.could_not_confirm_vat_number.heading                             = We could not confirm your client''s VAT number
+agent.could_not_confirm_vat_number.title                               = We could not confirm your client’s VAT number
+agent.could_not_confirm_vat_number.heading                             = We could not confirm your client’s VAT number
 agent.could_not_confirm_vat_number.line_1                              = The information you provided does not match the details on our system.
 
 # Agent could not find partnership
-agent.could_not_find_partnership.title                                 = We could not confirm your client''s company number for their Limited Partnership
-agent.could_not_find_partnership.heading                               = We could not confirm your client''s company number for their Limited Partnership
+agent.could_not_find_partnership.title                                 = We could not confirm your client’s company number for their Limited Partnership
+agent.could_not_find_partnership.heading                               = We could not confirm your client’s company number for their Limited Partnership
 agent.could_not_find_partnership.line_1                                = The company number is not on our system.
 
 # Agent could not find partnership
-agent.could_not_confirm_partnership.title                              = We could not confirm your client''s Partnership
-agent.could_not_confirm_partnership.heading                            = We could not confirm your client''s Partnership
+agent.could_not_confirm_partnership.title                              = We could not confirm your client’s Partnership
+agent.could_not_confirm_partnership.heading                            = We could not confirm your client’s Partnership
 agent.could_not_confirm_partnership.line_1                             = The information you provided does not match or is incorrect.
 
 # Agent using principal journey
@@ -458,21 +458,21 @@ principal.guidance.title                                               = Use sof
 principal.guidance.heading                                             = Use software to submit your VAT Returns
 principal.guidance.line_1                                              = HM Revenue and Customs (HMRC) are changing the way you submit your VAT Returns.
 principal.guidance.line_2                                              = From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns.
-principal.guidance.line_3                                              = If you''re a sole trader or a director of a limited company you can try this new way of reporting now, instead of waiting until April 2019.
-principal.guidance.line_4                                              = You''ll need to sign up for this new service, even if you already use software to submit your VAT Returns.
+principal.guidance.line_3                                              = If you’re a sole trader or a director of a limited company you can try this new way of reporting now, instead of waiting until April 2019.
+principal.guidance.line_4                                              = You’ll need to sign up for this new service, even if you already use software to submit your VAT Returns.
 principal.guidance.subsection_1.sub_heading_1                          = How it works
-principal.guidance.subsection_1.line_1                                 = To sign up for this service, you need to use software to record your purchases and sales. If you don''t already record in this way, submit your next VAT Return on GOV.UK or by post before you sign up. This will give you more time to complete your first return using software.
+principal.guidance.subsection_1.line_1                                 = To sign up for this service, you need to use software to record your purchases and sales. If you don’t already record in this way, submit your next VAT Return on GOV.UK or by post before you sign up. This will give you more time to complete your first return using software.
 principal.guidance.subsection_1.number_1                               = You need to choose relevant third party software. If you already use software, check with your supplier to see if you can use it with this service.
 principal.guidance.subsection_1.number_2                               = Sign up for this service and agree to get emails instead of letters.
 principal.guidance.subsection_1.number_3                               = Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details.
-principal.guidance.subsection_1.number_4                               = Use your software to record your purchases and sales, then to submit your VAT Returns. We''ll email you to let you know when to send a return.
+principal.guidance.subsection_1.number_4                               = Use your software to record your purchases and sales, then to submit your VAT Returns. We’ll email you to let you know when to send a return.
 principal.guidance.subsection_1.line_2                                 = You can also choose to:
 principal.guidance.subsection_1.bullet_1                               = pay throughout the year, if it helps you manage your income
 principal.guidance.subsection_1.bullet_2                               = get your accountant to send your VAT Returns
 principal.guidance.subsection_1.bullet_3                               = view your VAT Return deadlines in your business tax account
 principal.guidance.subsection_2.sub_heading_2                          = Sign up
-principal.guidance.subsection_2.line_1                                 = To sign up you''ll need the Government Gateway details you got when you registered for VAT.
-principal.guidance.subsection_2.line_2                                 = If you haven''t submitted a VAT Return online before, then you''ll also need your VAT registration certificate.
+principal.guidance.subsection_2.line_1                                 = To sign up you’ll need the Government Gateway details you got when you registered for VAT.
+principal.guidance.subsection_2.line_2                                 = If you haven’t submitted a VAT Return online before, then you’ll also need your VAT registration certificate.
 
 ## VAT number page
 principal.vat_number.title                                             = What is your VAT number?
@@ -509,7 +509,7 @@ principal.capture_entity_type.heading                                  = What ty
 # Check your answers page
 check-your-answers.title                                               = Check your answers
 check-your-answers.heading                                             = Check your answers
-check-your-answers.sub_heading                                         = You''ve told us
+check-your-answers.sub_heading                                         = You’ve told us
 check-your-answers.your_vat_number                                     = Your VAT number
 check-your-answers.vat_registration_date                               = Your VAT registration date
 check-your-answers.business_post_code                                  = Where your business is registered for VAT
@@ -520,16 +520,16 @@ check-your-answers.last_return_month_period                            = The las
 # No CT Enrolment Summary page
 check_your_answers_company.title                                          = Check your answers
 check_your_answers_company.heading                                        = Check your answers
-check_your_answers_company.sub_heading                                    = You''ve told us
+check_your_answers_company.sub_heading                                    = You’ve told us
 check_your_answers_company.company_number                                 = Your company number
-check_your_answers_company.company_utr                                    = Your company''s Unique Taxpayer Reference
+check_your_answers_company.company_utr                                    = Your company’s Unique Taxpayer Reference
 check_your_answers_company.business_entity                                = Your business type
 
 ## Principal Capture Email page
 principal.capture_email.title                                          = What is the business email address?
 principal.capture_email.heading                                        = What is the business email address?
-principal.capture_email.line_1                                         = We will email you to confirm you''ve signed up your business to use software to submit its VAT Returns (this can take up to 72 hours).
-principal.capture_email.line_2                                         = We''ll email you a Direct Debit advance notice 10 working days before each payment is taken.
+principal.capture_email.line_1                                         = We will email you to confirm you’ve signed up your business to use software to submit its VAT Returns (this can take up to 72 hours).
+principal.capture_email.line_2                                         = We’ll email you a Direct Debit advance notice 10 working days before each payment is taken.
 principal.capture_email.line_3                                         = If you do not want to receive Direct Debit notices by email, you will need to cancel your Direct Debit.
 principal.capture_email.hint                                           = For example, yourname@example.com
 
@@ -542,31 +542,31 @@ principal.confirm_email.link                                           = Change 
 ## Principal Verify Email page
 principal.verify_email.title                                           = Verify your business email address
 principal.verify_email.heading                                         = Verify your business email address
-principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out.
+principal.verify_email.line_1                                          = We’ve sent an email to {0}. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out.
 principal.verify_email.line_2                                          = Use the same device (for example, computer, tablet, smartphone etc) and web browser (for example, Google Chrome, Safari, Internet Explorer etc) to complete this email verification step. You can then continue to sign up.
-principal.verify_email.line_3                                          = You can <a id="change" href="{0}">change your email address</a> if it''s not correct.
+principal.verify_email.line_3                                          = You can <a id="change" href="{0}">change your email address</a> if it’s not correct.
 principal.verify_email.accordion.heading                               = I did not get an email
-principal.verify_email.accordion.line_1                                = Check your spam folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+principal.verify_email.accordion.line_1                                = Check your spam folder. If it’s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 ## Principal Email verified page
-principal.email_verified.title                                         = You''ve verified your email address
-principal.email_verified.heading                                       = You''ve verified your email address
-principal.email_verified.line_1                                        = You''ll now receive messages and email notifications from HMRC.
+principal.email_verified.title                                         = You’ve verified your email address
+principal.email_verified.heading                                       = You’ve verified your email address
+principal.email_verified.line_1                                        = You’ll now receive messages and email notifications from HMRC.
 
 # Capture National Insurance number (NINO)
 principal.capture_nino.title                                           = What is your National Insurance number?
 principal.capture_nino.heading                                         = What is your National Insurance number?
-principal.capture_nino.formHint                                        = It''s on your National Insurance card, benefit letter, payslip or P60. For example ''QQ 12 34 56 C''.
+principal.capture_nino.formHint                                        = It’s on your National Insurance card, benefit letter, payslip or P60. For example ’QQ 12 34 56 C’.
 
 # Capture National Insurance number (NINO)
-agent.capture_nino.title                                               = What is your client''s National Insurance number?
-agent.capture_nino.heading                                             = What is your client''s National Insurance number?
-agent.capture_nino.formHint                                            = It''s on your client''s National Insurance card, benefit letter, payslip or P60. For example, ''QQ 12 34 56 C''.
+agent.capture_nino.title                                               = What is your client’s National Insurance number?
+agent.capture_nino.heading                                             = What is your client’s National Insurance number?
+agent.capture_nino.formHint                                            = It’s on your client’s National Insurance card, benefit letter, payslip or P60. For example, ’QQ 12 34 56 C’.
 
 # Confirm National Insurance number (NINO)
 principal.confirm_nino.title                                           = Check your answers
 principal.confirm_nino.heading                                         = Check your answers
-principal.confirm_nino.summary.sub_heading                             = You''ve told us
+principal.confirm_nino.summary.sub_heading                             = You’ve told us
 principal.confirm_nino.summary.business_type                           = Your business type
 principal.confirm_nino.summary.nino                                    = Your National Insurance number
 
@@ -574,7 +574,7 @@ principal.confirm_nino.summary.nino                                    = Your Na
 principal.confirmation.title                                           = We have received your request to sign up
 principal.confirmation.heading                                         = We have received your request to sign up
 principal.confirmation.vat_registration_number                         = VAT registration number
-principal.confirmation.line                                            = You''ll get a confirmation email within the next 3 days.
+principal.confirmation.line                                            = You’ll get a confirmation email within the next 3 days.
 principal.confirmation.line2                                           = Do not submit a VAT Return during this time.
 principal.confirmation.subsection.heading                              = Next steps
 principal.confirmation.subsection.bullet_1                             = Stop using VAT online services. Do not use your old way of sending your VAT Return to HMRC.
@@ -602,9 +602,9 @@ principal.capture_company_number.heading                               = What is
 principal.capture_company_number.line_1                                = You can <a id="companiesHouse" href="{0}" target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Capture Company Utr page
-principal.capture_company_utr.title                                    = What is your company''s Unique Taxpayer Reference?
-principal.capture_company_utr.heading                                  = What is your company''s Unique Taxpayer Reference?
-principal.capture_company_utr.line_1                                   = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called ''reference'', ''UTR'' or ''official use''.
+principal.capture_company_utr.title                                    = What is your company’s Unique Taxpayer Reference?
+principal.capture_company_utr.heading                                  = What is your company’s Unique Taxpayer Reference?
+principal.capture_company_utr.line_1                                   = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called ’reference’, ’UTR’ or ’official use’.
 principal.capture_company_utr.link_text                                = I have lost my UTR
 
 ## Company Name Not Found page
@@ -615,8 +615,8 @@ principal.company_name_not_found.line_1                                = The com
 ## Incorrect Enrolment Vat Number page
 principal.incorrect_enrolment_vat_number.title                         = You need to sign in with different details
 principal.incorrect_enrolment_vat_number.heading                       = You need to sign in with different details
-principal.incorrect_enrolment_vat_number.line_1                        = The VAT number you entered is for a different business that has its own Government Gateway user ID. Once you''ve signed out, you need to sign in with the correct details.
-principal.incorrect_enrolment_vat_number.line_2                        = If you''ve entered the wrong VAT number, you can <a id="diff-details" href="{0}">change your answer</a>.
+principal.incorrect_enrolment_vat_number.line_1                        = The VAT number you entered is for a different business that has its own Government Gateway user ID. Once you’ve signed out, you need to sign in with the correct details.
+principal.incorrect_enrolment_vat_number.line_2                        = If you’ve entered the wrong VAT number, you can <a id="diff-details" href="{0}">change your answer</a>.
 
 ## Confirm Company Number page
 principal.confirm_company_number.title                                 = Confirm your company number
@@ -641,7 +641,7 @@ principal.registered_society_company_name_not_found.line_1             = The inf
 ## Dissolved Company page
 principal.dissolved_company.title                                      = {0} is not eligible to be signed up
 principal.dissolved_company.heading                                    = {0} is not eligible to be signed up
-principal.dissolved_company.paragraph1                                 = The number you''ve entered is for a company that has been dissolved or closed.
+principal.dissolved_company.paragraph1                                 = The number you’ve entered is for a company that has been dissolved or closed.
 principal.dissolved_company.paragraph2                                 = Try again using the most recent company number sent from Companies House.
 principal.dissolved_company.confirm                                    = Enter a different number
 
@@ -664,9 +664,9 @@ principal.capture_last_return_month_period.title                       = Select 
 principal.capture_last_return_month_period.heading                     = Select the last month of your latest VAT accounting period
 principal.capture_last_return_month_period.line                        = You can find this by signing into your online VAT account. You can also find it in your latest VAT Return submitted to HMRC.
 principal.capture_last_return_month_period.sub_heading                 = Latest VAT accounting period, example 1
-principal.capture_last_return_month_period.line_2                      = You submit your VAT Return quarterly (every three months). In the ''accounting period'' January to March, the last month in that ''accounting period'' is March. You must therefore select March.
+principal.capture_last_return_month_period.line_2                      = You submit your VAT Return quarterly (every three months). In the ’accounting period’ January to March, the last month in that ’accounting period’ is March. You must therefore select March.
 principal.capture_last_return_month_period.sub_heading_2               = Latest VAT accounting period, example 2
-principal.capture_last_return_month_period.line_3                      = If you submit your VAT Return monthly, the last accounting period you ''submitted for'' was January. You must select January.
+principal.capture_last_return_month_period.line_3                      = If you submit your VAT Return monthly, the last accounting period you ’submitted for’ was January. You must select January.
 principal.capture_last_return_month_period.formhint_1                  = Select the last month in your latest VAT accounting period.
 principal.capture_last_return_month_period.january                     = January
 principal.capture_last_return_month_period.february                    = February
@@ -698,8 +698,8 @@ principal.confirm_partnership_utr.line_1                               = We hold
 principal.confirm_partnership_utr.line_2                               = Unique Taxpayer Reference (UTR)
 
 ## Capture Partnership Company Number
-principal.capture_partnership_company_number.title                     = What is the partnership''s company number?
-principal.capture_partnership_company_number.heading                   = What is the partnership''s company number?
+principal.capture_partnership_company_number.title                     = What is the partnership’s company number?
+principal.capture_partnership_company_number.heading                   = What is the partnership’s company number?
 principal.capture_partnership_company_number.line_1                    = You can <a id="companiesHouse" href={0} target="_blank">search for your company number (opens in a new window or tab)</a> on Companies House.
 
 ## Principal Partnership Postcode
@@ -718,8 +718,8 @@ principal.could_not_confirm_limited_partnership.heading                = We coul
 principal.could_not_confirm_limited_partnership.line_1                 = The information you provided is not for a Limited Partnership.
 
 ## Partnership Company Number Not Found page
-principal.partnership_company_name_not_found.title                     = We could not confirm your Limited Partnership''s company number
-principal.partnership_company_name_not_found.heading                   = We could not confirm your Limited Partnership''s company number
+principal.partnership_company_name_not_found.title                     = We could not confirm your Limited Partnership’s company number
+principal.partnership_company_name_not_found.heading                   = We could not confirm your Limited Partnership’s company number
 principal.partnership_company_name_not_found.line_1                    = The company number is not on our system.
 
 ## Partnership Known facts error page
@@ -728,73 +728,73 @@ principal.partnership_known_facts_incorrect.heading                   = We could
 principal.partnership_known_facts_incorrect.line_1                    = The information you provided does not match or is incorrect.
 
 # Check your answers page Partnership
-agent.check-your-answers.title                                         = Confirm your client''s details
-agent.check-your-answers.heading                                       = Confirm your client''s details
+agent.check-your-answers.title                                         = Confirm your client’s details
+agent.check-your-answers.heading                                       = Confirm your client’s details
 agent.check-your-answers.business_entity                               = Business type
 agent.check-your-answers.utr                                           = Partnership Self Assessment UTR
 agent.check-your-answers.company_number                                = Partnership company number
-agent.check-your-answers.business_post_code                            = Where your client''s partnership is registered for Self Assessment
-agent.check-your-answers.does_your_client_have_a_utr                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+agent.check-your-answers.business_post_code                            = Where your client’s partnership is registered for Self Assessment
+agent.check-your-answers.does_your_client_have_a_utr                   = Does your client’s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 agent.check-your-answers.client_has_no_sautr                           = My client does not have one
 
 ## Sign Up After This Date
 principal.sign_up_after_this_date.title                                = You must come back later to sign up
 principal.sign_up_after_this_date.heading                              = You must come back later to sign up
-principal.sign_up_after_this_date.line_1                               = We''re unable to sign you up for Making Tax Digital for VAT at present.
+principal.sign_up_after_this_date.line_1                               = We’re unable to sign you up for Making Tax Digital for VAT at present.
 principal.sign_up_after_this_date.line_2                               = This is either because:
 principal.sign_up_after_this_date.bullet_1                             = a Direct Debit payment is due shortly
 principal.sign_up_after_this_date.bullet_2                             = you are close to a filing period
 principal.sign_up_after_this_date.line_3                               = Submit your current return using your usual method, then sign up to use compatible software to submit your next return. We will not charge you a penalty for this.
-principal.sign_up_after_this_date.line_4                               = You''ll be able to sign up for this service after {0}.
+principal.sign_up_after_this_date.line_4                               = You’ll be able to sign up for this service after {0}.
 principal.sign_up_after_this_date.line_5                               = Find more information about <a id="mtdGuidance" href={0}>Making Tax Digital</a>
 
 ## Sign Up Between These Dates
 principal.sign_up_between_these_dates.title                            = You must come back later to sign up
 principal.sign_up_between_these_dates.heading                          = You must come back later to sign up
-principal.sign_up_between_these_dates.line_1                           = We''re unable to sign you up for Making Tax Digital for VAT at present.
+principal.sign_up_between_these_dates.line_1                           = We’re unable to sign you up for Making Tax Digital for VAT at present.
 principal.sign_up_between_these_dates.line_2                           = This is either because:
 principal.sign_up_between_these_dates.bullet_1                         = a Direct Debit payment is due shortly
 principal.sign_up_between_these_dates.bullet_2                         = you are close to a filing period
 principal.sign_up_between_these_dates.line_3                           = Submit your current return using your usual method, then sign up to use compatible software to submit your next return. We will not charge you a penalty for this.
-principal.sign_up_between_these_dates.line_4                           = You''ll be able to sign up for this service between {0} and {1}.
+principal.sign_up_between_these_dates.line_4                           = You’ll be able to sign up for this service between {0} and {1}.
 principal.sign_up_between_these_dates.line_5                           = Find more information about <a id="mtdGuidance" href={0}>Making Tax Digital guidance</a>
 
 ## Agent Sign Up After This Date
 agent.sign_up_after_this_date.title                                    = You must come back later to sign up your client
 agent.sign_up_after_this_date.heading                                  = You must come back later to sign up your client
-agent.sign_up_after_this_date.line_1                                   = You''re not able to sign up your client for Making Tax Digital for VAT at present.
+agent.sign_up_after_this_date.line_1                                   = You’re not able to sign up your client for Making Tax Digital for VAT at present.
 agent.sign_up_after_this_date.line_2                                   = This is either because:
 agent.sign_up_after_this_date.bullet_1                                 = a Direct Debit payment is due shortly
-agent.sign_up_after_this_date.bullet_2                                 = they''re close to a filing period
+agent.sign_up_after_this_date.bullet_2                                 = they’re close to a filing period
 agent.sign_up_after_this_date.line_3                                   = Submit their current return using your usual method. Then you can sign up your client to Making Tax Digital so you can use compatible software to submit their next return. We will not charge your client a penalty for this.
-agent.sign_up_after_this_date.line_4                                   = You''ll be able to sign up your client for this service after {0}.
+agent.sign_up_after_this_date.line_4                                   = You’ll be able to sign up your client for this service after {0}.
 agent.sign_up_after_this_date.line_5                                   = Find more information about <a id="mtdGuidance" href={0}>Making Tax Digital</a>.
 
 ## Agent Sign Up Between These Dates
 agent.sign_up_between_these_dates.title                                = You must come back later to sign up your client
 agent.sign_up_between_these_dates.heading                              = You must come back later to sign up your client
-agent.sign_up_between_these_dates.line_1                               = You''re not able to sign up your client for Making Tax Digital for VAT at present.
+agent.sign_up_between_these_dates.line_1                               = You’re not able to sign up your client for Making Tax Digital for VAT at present.
 agent.sign_up_between_these_dates.line_2                               = This is either because:
 agent.sign_up_between_these_dates.bullet_1                             = a Direct Debit payment is due shortly
-agent.sign_up_between_these_dates.bullet_2                             = they''re close to a filing period
+agent.sign_up_between_these_dates.bullet_2                             = they’re close to a filing period
 agent.sign_up_between_these_dates.line_3                               = Submit their current return using your usual method. Then you can sign up your client to Making Tax Digital so you can use compatible software to submit their next return. We will not charge your client a penalty for this.
-agent.sign_up_between_these_dates.line_4                               = You''ll be able to sign up your client for this service between {0} and {1}.
+agent.sign_up_between_these_dates.line_4                               = You’ll be able to sign up your client for this service between {0} and {1}.
 agent.sign_up_between_these_dates.line_5                               = Find more information about <a id="mtdGuidance" href={0}>Making Tax Digital</a>.
 
 ## Agent Partnership Company Number
-agent.capture_partnership_company_number.title                         = What is the company number of your client''s partnership?
-agent.capture_partnership_company_number.heading                       = What is the company number of your client''s partnership?
+agent.capture_partnership_company_number.title                         = What is the company number of your client’s partnership?
+agent.capture_partnership_company_number.heading                       = What is the company number of your client’s partnership?
 agent.capture_partnership_company_number.line_1                        = If you are not sure, <a id="companiesHouse" href={0} target="_blank">check the Companies House register (opens in a new window or tab)</a>.
 
 ## Agent Partnership Postcode
-agent.partnership_postcode.title                                       = Where is your client''s partnership registered for Self Assessment?
-agent.partnership_postcode.heading                                     = Where is your client''s partnership registered for Self Assessment?
+agent.partnership_postcode.title                                       = Where is your client’s partnership registered for Self Assessment?
+agent.partnership_postcode.heading                                     = Where is your client’s partnership registered for Self Assessment?
 agent.partnership_postcode.label                                       = UK postcode
 
 ## Principal Capture Partnership UTR
-principal.capture_partnership_utr.title                                = What is the partnership''s Unique Taxpayer Reference?
-principal.capture_partnership_utr.heading                              = What is the partnership''s Unique Taxpayer Reference?
-principal.capture_partnership_utr.line_1                               = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Self Assessment. It may be called ''reference'', ''UTR'' or ''official use''.
+principal.capture_partnership_utr.title                                = What is the partnership’s Unique Taxpayer Reference?
+principal.capture_partnership_utr.heading                              = What is the partnership’s Unique Taxpayer Reference?
+principal.capture_partnership_utr.line_1                               = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Self Assessment. It may be called ’reference’, ’UTR’ or ’official use’.
 principal.capture_partnership_utr.accordion.heading                    = I do not have my Unique Taxpayer Reference
 principal.capture_partnership_utr.accordion.line_1                     = Your UTR helps us identify your partnership.
 principal.capture_partnership_utr.accordion.link_1                     = I cannot find my UTR
@@ -803,10 +803,10 @@ principal.capture_partnership_utr.accordion.link_2                     = My part
 ## Principal Partnerships CYA
 principal.check_your_answers_partnerships.title                        = Check your answers
 principal.check_your_answers_partnerships.heading                      = Check your answers
-principal.check_your_answers_partnerships.sub_heading                  = You''ve told us
+principal.check_your_answers_partnerships.sub_heading                  = You’ve told us
 principal.check_your_answers_partnerships.business_entity              = Type of business or group
-principal.check_your_answers_partnerships.company_number               = Partnership''s company number
-principal.check_your_answers_partnerships.company_utr                  = The partnership''s Unique Taxpayer Reference
+principal.check_your_answers_partnerships.company_number               = Partnership’s company number
+principal.check_your_answers_partnerships.company_utr                  = The partnership’s Unique Taxpayer Reference
 principal.check_your_answers_partnerships.post_code                    = The postcode where the partnership is registered for Self Assessment
 principal.check_your_answers_partnerships.has_optional_sautr           = Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 principal.check_your_answers_partnerships.no_sautr                     = I do not have one
@@ -814,8 +814,8 @@ principal.check_your_answers_partnerships.no_sautr                     = I do no
 ## Are You Ready Submit Software
 principal.are_you_ready_submit_software.title                          = Are you ready to submit your next VAT Return using software compatible with Making Tax Digital?
 principal.are_you_ready_submit_software.heading                        = Are you ready to submit your next VAT Return using software compatible with Making Tax Digital?
-principal.are_you_ready_submit_software.line_1                         = Once you''ve signed up for Making Tax Digital, you can only send in your VAT Return using software.
-principal.are_you_ready_submit_software.line_2                         = If you''re not ready to use software yet, you should send your next VAT Return using your usual method.
+principal.are_you_ready_submit_software.line_1                         = Once you’ve signed up for Making Tax Digital, you can only send in your VAT Return using software.
+principal.are_you_ready_submit_software.line_2                         = If you’re not ready to use software yet, you should send your next VAT Return using your usual method.
 
 ## Verify Software Error Page
 principal.verify_software_error.title                                  = Making Tax Digital for VAT: verify your software
@@ -846,14 +846,14 @@ principal.choose_software_error.line_2                                 = We have
 principal.choose_software_error.returnToGovUK                          = Return to GOV.UK
 
 ## Agent Confirm Registered Society Name
-agent.confirm_registered_society_name.title                            = Confirm your client''s registered society
-agent.confirm_registered_society_name.heading                          = Confirm your client''s registered society
+agent.confirm_registered_society_name.title                            = Confirm your client’s registered society
+agent.confirm_registered_society_name.heading                          = Confirm your client’s registered society
 agent.confirm_registered_society_name.link                             = Change company
 
 ## Agent Registered Society Company Name Not Found page
-agent.registered_society_company_name_not_found.title                 = We could not confirm your client''s registered society
-agent.registered_society_company_name_not_found.heading               = We could not confirm your client''s registered society
-agent.registered_society_company_name_not_found.line_1                = The information you provided does not match the details we have for your client''s registered society.
+agent.registered_society_company_name_not_found.title                 = We could not confirm your client’s registered society
+agent.registered_society_company_name_not_found.heading               = We could not confirm your client’s registered society
+agent.registered_society_company_name_not_found.line_1                = The information you provided does not match the details we have for your client’s registered society.
 
 ## Principal Migration In Progress Error Page
 principal.migration_in_progress_error.title                           = You have already signed up
@@ -863,20 +863,20 @@ principal.migration_in_progress_error.line                            = Your Mak
 ## Agent Migration In Progress Error Page
 agent.migration_in_progress_error.title                               = Your client is already signed up
 agent.migration_in_progress_error.heading                             = Your client is already signed up
-agent.migration_in_progress_error.line                                = Your client''s Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours.
+agent.migration_in_progress_error.line                                = Your client’s Making Tax Digital for VAT account is being set up. They will receive an email within 72 hours.
 
 ## Capture Registered Society Utr page
-principal.capture_registered_society_utr.title                        = What is your registered society''s Unique Taxpayer Reference?
-principal.capture_registered_society_utr.heading                      = What is your registered society''s Unique Taxpayer Reference?
-principal.capture_registered_society_utr.line_1                       = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called ''reference'', ''UTR'' or ''official use''.
+principal.capture_registered_society_utr.title                        = What is your registered society’s Unique Taxpayer Reference?
+principal.capture_registered_society_utr.heading                      = What is your registered society’s Unique Taxpayer Reference?
+principal.capture_registered_society_utr.line_1                       = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation Tax. It may be called ’reference’, ’UTR’ or ’official use’.
 principal.capture_registered_society_utr.link                         = I have lost my UTR
 
 ## Check your answers Registered Society
 principal.check-your-answers-registered-society.title                 = Check your answers
 principal.check-your-answers-registered-society.heading               = Check your answers
-principal.check-your-answers-registered-society.sub_heading           = You''ve told us
+principal.check-your-answers-registered-society.sub_heading           = You’ve told us
 principal.check-your-answers-registered-society.company_number        = Your company number
-principal.check-your-answers-registered-society.ct_reference          = Your company''s Unique Taxpayer Reference
+principal.check-your-answers-registered-society.ct_reference          = Your company’s Unique Taxpayer Reference
 principal.check-your-answers-registered-society.business_entity       = Your business type
 principal.check-your-answers-registered-society.registered_society    = Registered Society
 
@@ -953,13 +953,13 @@ principal.partnership.do_you_have_a_utr.heading                       = Does you
 principal.partnership.do_you_have_a_utr.line                          = This is a 10-digit number. You can find it on letters to the partnership from HMRC.
 
 ## Agent - Does Your Client Have a UTR
-agent.partnership.does_your_client_have_a_utr.title                   = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
-agent.partnership.does_your_client_have_a_utr.heading                 = Does your client''s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+agent.partnership.does_your_client_have_a_utr.title                   = Does your client’s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
+agent.partnership.does_your_client_have_a_utr.heading                 = Does your client’s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?
 agent.partnership.does_your_client_have_a_utr.line                    = This is a 10-digit number. You can find it on letters to the partnership from HMRC.
 
 # Confirm National Insurance number (NINO)
-agent.confirm_nino.title                                              = Confirm your client''s details
-agent.confirm_nino.heading                                            = Confirm your client''s details
+agent.confirm_nino.title                                              = Confirm your client’s details
+agent.confirm_nino.heading                                            = Confirm your client’s details
 agent.confirm_nino.summary.business_type                              = Business type
 agent.confirm_nino.summary.nino                                       = National Insurance number
 
@@ -979,8 +979,8 @@ principal.check_your_answers_final.email_address                      = Business
 principal.check_your_answers_final.contact_preference                 = How we contact you
 
 # Return due
-principal.return_due.title                                            = As you''re not ready to use software yet, you should send your next VAT Return using your usual method
-principal.return_due.heading                                          = As you''re not ready to use software yet, you should send your next VAT Return using your usual method
+principal.return_due.title                                            = As you’re not ready to use software yet, you should send your next VAT Return using your usual method
+principal.return_due.heading                                          = As you’re not ready to use software yet, you should send your next VAT Return using your usual method
 principal.return_due.line_1                                           = From April 2019 it became mandatory to submit VAT Returns using compatible software if your annual taxable turnover is above £85,000.
 principal.return_due.line_2                                           = You can choose to sign up if your annual taxable turnover is below £85,000.
 principal.return_due.line_3                                           = <a id="mtdGuidance" href={0}>Find out if and when you (or your clients) need to follow the rules</a> for Making Tax Digital for VAT, or apply for an exemption.
@@ -1003,8 +1003,8 @@ principal.got_software.bullet_2                                       = if you u
 principal.got_software.check_software                                 = Check if your software is compatible (opens in a new tab)
 
 #Use spreadsheets
-principal.use_spreadsheets.title                                      = You''ll need bridging software to continue using your spreadsheets
-principal.use_spreadsheets.heading                                    = You''ll need bridging software to continue using your spreadsheets
+principal.use_spreadsheets.title                                      = You’ll need bridging software to continue using your spreadsheets
+principal.use_spreadsheets.heading                                    = You’ll need bridging software to continue using your spreadsheets
 principal.use_spreadsheets.line_1                                     = This software connects your spreadsheets to HMRC.
 principal.use_spreadsheets.line_2                                     = If you:
 principal.use_spreadsheets.bullet_1                                   = do not have this software, get and set it up on your computer
@@ -1051,12 +1051,12 @@ accessibility.pageBody.reporting_accessibility_problems.h2 = Reporting accessibi
 accessibility.pageBody.reporting_accessibility_problems.p1 = We are always looking to improve the accessibility of this service. If you find any problems that are not listed on this page or think we are not meeting accessibility requirements, report the {0}.
 accessibility.pageBody.reporting_accessibility_problems.linkText = accessibility problem
 accessibility.pageBody.what_to_do.h2 = What to do if you are not happy with how we respond to your complaint
-accessibility.pageBody.what_to_do.p1 = The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ''accessibility regulations''). If you are not happy with how we respond to your complaint, <a href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service</a> (EASS), or the <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) if you live in Northern Ireland.
+accessibility.pageBody.what_to_do.p1 = The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ’accessibility regulations’). If you are not happy with how we respond to your complaint, <a href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service</a> (EASS), or the <a href="https://www.equalityni.org/Home">Equality Commission for Northern Ireland</a> (ECNI) if you live in Northern Ireland.
 accessibility.pageBody.contact_us.h2 = Contacting us by phone or getting a visit from us in person
 accessibility.pageBody.contact_us.p1 = We provide a text relay service if you are deaf, hearing impaired or have a speech impediment.
 accessibility.pageBody.contact_us.p2 = We can provide a British Sign Language (BSL) interpreter, or you can arrange a visit from an HMRC advisor to help you complete the service.
 accessibility.pageBody.contact_us.p3 = Find out how to <a href="https://www.gov.uk/dealing-hmrc-additional-needs">contact us</a>.
-accessibility.pageBody.technical_info.h2 = Technical information about this service''s accessibility
+accessibility.pageBody.technical_info.h2 = Technical information about this service’s accessibility
 accessibility.pageBody.technical_info.p1 = HMRC is committed to making this service accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
 accessibility.pageBody.technical_info.p2 = This service is fully compliant with the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1 AA standard</a>.
 accessibility.pageBody.how_we_test.h2 = How we tested this service
