@@ -328,12 +328,13 @@ agent.sent_client_email.line_1                                         = Rydym w
 agent.sent_client_email.line_2                                         = Mae''n rhaid iddo ddilysu ei gyfeiriad e-bost i gael hysbysiadau a negeseuon diogel, ac i gael e-byst eraill ynghylch TAW oddi wrth CThEM.
 
 ## Agent verify agent email page
-agent.verify_agent_email.title                                         = Dilysu''ch cyfeiriad e-bost
-agent.verify_agent_email.heading                                       = Dilysu''ch cyfeiriad e-bost
-agent.verify_agent_email.line_1                                        = Rydym wedi anfon e-bost i {0}. Cliciwch ar y cysylltiad yn yr e-bost i ddilysu''ch cyfeiriad e-bost.
-agent.verify_agent_email.line_2                                        = Gallwch <a id="change" href="{0}">newid eich cyfeiriad e-bost</a> os nad yw''n gywir.
+agent.verify_agent_email.title                                         = Dilyswch eich cyfeiriad e-bost
+agent.verify_agent_email.heading                                       = Dilyswch eich cyfeiriad e-bost
+agent.verify_agent_email.line_1                                        = Rydym wedi anfon e-bost at {0}. Cliciwch ar y cysylltiad yn yr e-bost i ddilysu cyfeiriad e-bost y busnes. Mae''n rhaid i chi gadarnhau''ch cyfeiriad e-bost er mwyn mynd yn eich blaen a chofrestru. Peidiwch ag allgofnodi.
+agent.verify_agent_email.line_2                                        = Defnyddiwch yr un ddyfais (er enghraifft cyfrifiadur, llechen, ffôn clyfar) a phorwr gwe (er enghraifft Chrome, Safari, Firefox, Internet Explorer) i gwblhau''r cam dilysu e-bost hwn. Yna, gallwch gofrestru''ch cleientiaid.
+agent.verify_agent_email.line_3                                        = Gallwch <a id="change" href="{0}">newid eich cyfeiriad e-bost</a> os nad yw''n gywir.
 agent.verify_email.accordion.heading                                   = Ches i ddim e-bost
-agent.verify_email.accordion.line_1                                    = Chwiliwch yn eich ffolder sothach. Os nad yw''r neges yno, gallwn <a id="resend" href="{0}">ei hanfon eto</a>. Os byddwn yn anfon eich e-bost eto, ni fydd cysylltiadau blaenorol yn gweithio.
+agent.verify_email.accordion.line_1                                    = Chwiliwch yn eich ffolder sbam. Os nad yw''r neges yno, gallwn <a id="resend" href="{0}">ei hanfon eto</a>. Os byddwn yn anfon eich e-bost eto, ni fydd cysylltiadau blaenorol yn gweithio.
 
 # When client verified their email requested by an agent
 client.verified_email.title                                            = Rydych wedi dilysu''ch cyfrif e-bost
@@ -516,12 +517,13 @@ principal.confirm_email.email.heading                                  = Cyfeiri
 principal.confirm_email.link                                           = Newid cyfeiriad e-bost
 
 ## Principal Verify Email page
-principal.verify_email.title                                           = Dilysu''ch cyfeiriad e-bost
-principal.verify_email.heading                                         = Dilysu''ch cyfeiriad e-bost
-principal.verify_email.line_1                                          = Rydym wedi anfon e-bost i {0}. Cliciwch ar y cysylltiad yn yr e-bost i ddilysu''ch cyfeiriad e-bost.
-principal.verify_email.line_2                                          = Gallwch <a id="change" href="{0}">newid eich cyfeiriad e-bost</a> os nad yw''n gywir.
+principal.verify_email.title                                           = Dilysu''ch cyfeiriad e-bost busnes
+principal.verify_email.heading                                         = Dilysu''ch cyfeiriad e-bost busnes
+principal.verify_email.line_1                                          = Rydym wedi anfon e-bost at {0}. Cliciwch ar y cysylltiad yn yr e-bost i ddilysu cyfeiriad e-bost y busnes. Mae''n rhaid i chi gadarnhau''ch cyfeiriad e-bost er mwyn mynd yn eich blaen a chofrestru. Peidiwch ag allgofnodi.
+principal.verify_email.line_2                                          = Defnyddiwch yr un ddyfais (er enghraifft cyfrifiadur, llechen, ffôn clyfar) a phorwr gwe (er enghraifft Chrome, Safari, Firefox, Internet Explorer) i gwblhau''r cam dilysu e-bost hwn. Yna, gallwch fynd yn eich blaen a chofrestru.
+principal.verify_email.line_3                                          = Gallwch <a id="change" href="{0}">newid eich cyfeiriad e-bost</a> os nad yw''n gywir.
 principal.verify_email.accordion.heading                               = Ches i ddim e-bost
-principal.verify_email.accordion.line_1                                = Chwiliwch yn eich ffolder sothach. Os nad yw''r neges yno, gallwn <a id="resend" href="{0}">ei hanfon eto</a>. Os byddwn yn anfon eich e-bost eto, ni fydd cysylltiadau blaenorol yn gweithio.
+principal.verify_email.accordion.line_1                                = Chwiliwch yn eich ffolder sbam. Os nad yw''r neges yno, gallwn <a id="resend" href="{0}">ei hanfon eto</a>. Os byddwn yn anfon eich e-bost eto, ni fydd cysylltiadau blaenorol yn gweithio.
 
 ## Principal Email verified page
 principal.email_verified.title                                         = Rydych wedi dilysu''ch cyfrif e-bost

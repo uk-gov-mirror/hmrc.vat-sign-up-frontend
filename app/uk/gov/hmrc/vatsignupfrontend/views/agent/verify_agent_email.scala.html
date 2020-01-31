@@ -34,7 +34,12 @@
     <h1 class="heading-large">@Messages("agent.verify_agent_email.heading")</h1>
 
     <p>@Messages("agent.verify_agent_email.line_1", email)</p>
-    <p>@Html(Messages("agent.verify_agent_email.line_2", routes.CaptureAgentEmailController.show().url))</p>
+
+    <div class="panel panel-border-narrow">
+        <p>@Messages("agent.verify_agent_email.line_2")</p>
+    </div>
+
+    <p>@Html(Messages("agent.verify_agent_email.line_3", routes.CaptureAgentEmailController.show().url))</p>
 
     @accordionHelper(
        Messages("agent.verify_email.accordion.heading"),

@@ -269,13 +269,14 @@ object MessageLookup {
     val heading: String = "Verify your email address"
     val title = heading + ServiceName.agentSuffix
 
-    def line1(email: String) = s"We have sent an email to $email. Click on the link in the email to verify your email address."
+    def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out."
 
+    val line2 = "Use the same device (for example computer, tablet, smartphone) and web browser (for example Chrome, Safari, Firefox, Internet Explorer) to complete this email verification step. You will then be able to sign up your clients."
     val linkText1 = "change your email address"
-    val line2 = s"You can $linkText1 if it is not correct."
+    val line3 = s"You can $linkText1 if it's not correct."
     val accordionHeading = "I did not get an email"
     val linkText2 = "send it again"
-    val accordionText = s"Check your junk folder. If it is not there we can $linkText2. If we send your email again, any previous links will stop working."
+    val accordionText = s"Check your spam folder. If it's not there we can $linkText2. If we send your email again, any previous links will stop working."
   }
 
   object AgentEmailVerified {
@@ -519,16 +520,17 @@ object MessageLookup {
   }
 
   object PrincipalVerifyEmail {
-    val heading: String = "Verify your email address"
+    val heading: String = "Verify your business email address"
     val title = heading + ServiceName.principalSuffix
 
-    def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify your email address."
+    def line1(email: String) = s"We've sent an email to $email. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out."
 
+    val line2 = "Use the same device (for example, computer, tablet, smartphone etc) and web browser (for example, Google Chrome, Safari, Internet Explorer etc) to complete this email verification step. You can then continue to sign up."
     val linkText1 = "change your email address"
-    val line2 = s"You can $linkText1 if it is not correct."
+    val line3 = s"You can $linkText1 if it's not correct."
     val accordionHeading = "I did not get an email"
     val linkText2 = "send it again"
-    val accordionText = s"Check your junk folder. If it's not there we can $linkText2. If we send your email again, any previous links will stop working."
+    val accordionText = s"Check your spam folder. If it's not there we can $linkText2. If we send your email again, any previous links will stop working."
   }
 
   object PrincipalEmailVerified {
