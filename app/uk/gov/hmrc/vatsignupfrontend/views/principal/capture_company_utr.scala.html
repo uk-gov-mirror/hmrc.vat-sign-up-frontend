@@ -30,12 +30,14 @@
 
         <p>@Messages("principal.capture_company_utr.line_1")</p>
 
-        @inputHelper(
-            field = companyUtrForm(companyUtr),
-            parentForm = companyUtrForm
-        )
+        <div class="form-group">
+            @inputHelper(
+                field = companyUtrForm(companyUtr),
+                parentForm = companyUtrForm
+            )
 
-        <a id="lost-Utr" href="@{appConfig.findLostCompanyUtr}">@Messages("principal.capture_company_utr.link_text")</a>
+            <a id="lost-Utr" href="@{appConfig.findLostCompanyUtr}">@Messages("principal.capture_company_utr.link_text")</a>
+        </div>
 
         @continueButton()
 
