@@ -49,12 +49,9 @@ class VerifyEmailSpec extends ViewSpec {
     )
 
     testPage.shouldHaveParaSeq(
-      messages.line1(testEmail)
-    )
-
-    testPage.shouldHaveParaSeq(
       messages.line1(testEmail),
-      messages.line2
+      messages.line2,
+      messages.line3
     )
 
     testPage.shouldHaveAccordion(

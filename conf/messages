@@ -353,10 +353,11 @@ agent.sent_client_email.line_2                                         = They mu
 ## Agent verify agent email page
 agent.verify_agent_email.title                                         = Verify your email address
 agent.verify_agent_email.heading                                       = Verify your email address
-agent.verify_agent_email.line_1                                        = We have sent an email to {0}. Click on the link in the email to verify your email address.
-agent.verify_agent_email.line_2                                        = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
+agent.verify_agent_email.line_1                                        = We''ve sent an email to {0}. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out.
+agent.verify_agent_email.line_2                                        = Use the same device (for example computer, tablet, smartphone) and web browser (for example Chrome, Safari, Firefox, Internet Explorer) to complete this email verification step. You will then be able to sign up your clients.
+agent.verify_agent_email.line_3                                        = You can <a id="change" href="{0}">change your email address</a> if it''s not correct.
 agent.verify_email.accordion.heading                                   = I did not get an email
-agent.verify_email.accordion.line_1                                    = Check your junk folder. If it is not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+agent.verify_email.accordion.line_1                                    = Check your spam folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 # When client verified their email requested by an agent
 client.verified_email.title                                            = You''ve verified your email address
@@ -539,12 +540,13 @@ principal.confirm_email.email.heading                                  = Email a
 principal.confirm_email.link                                           = Change email address
 
 ## Principal Verify Email page
-principal.verify_email.title                                           = Verify your email address
-principal.verify_email.heading                                         = Verify your email address
-principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify your email address.
-principal.verify_email.line_2                                          = You can <a id="change" href="{0}">change your email address</a> if it is not correct.
+principal.verify_email.title                                           = Verify your business email address
+principal.verify_email.heading                                         = Verify your business email address
+principal.verify_email.line_1                                          = We''ve sent an email to {0}. Click on the link in the email to verify the business email address. You must confirm your email address to continue the sign-up journey. Do not sign out.
+principal.verify_email.line_2                                          = Use the same device (for example, computer, tablet, smartphone etc) and web browser (for example, Google Chrome, Safari, Internet Explorer etc) to complete this email verification step. You can then continue to sign up.
+principal.verify_email.line_3                                          = You can <a id="change" href="{0}">change your email address</a> if it''s not correct.
 principal.verify_email.accordion.heading                               = I did not get an email
-principal.verify_email.accordion.line_1                                = Check your junk folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
+principal.verify_email.accordion.line_1                                = Check your spam folder. If it''s not there we can <a id="resend" href="{0}">send it again</a>. If we send your email again, any previous links will stop working.
 
 ## Principal Email verified page
 principal.email_verified.title                                         = You''ve verified your email address
