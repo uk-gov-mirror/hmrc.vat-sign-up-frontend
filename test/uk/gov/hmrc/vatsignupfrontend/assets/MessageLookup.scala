@@ -510,6 +510,8 @@ object MessageLookup {
     val line2 = "We’ll email you a Direct Debit advance notice 10 working days before each payment is taken."
     val line3 = "If you do not want to receive Direct Debit notices by email, you will need to cancel your Direct Debit."
     val hint = "For example, yourname@example.com"
+    val link = "HMRC Privacy Notice (opens in a new window or tab)"
+    val disclaimer = s"Full details of how we use your information are in the $link."
   }
 
   object PrincipalConfirmEmail {

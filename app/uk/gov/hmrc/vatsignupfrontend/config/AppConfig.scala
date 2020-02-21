@@ -207,5 +207,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   lazy val yourVatAccountUrl: String = s"${config.getString("vat-summary.url")}/vat-through-software/vat-overview"
 
   lazy val vatRegistrationUrl: String = govUK + "/vat-registration"
+
+  lazy val disclaimer: String = s"$govUK/government/publications/data-protection-act-dpa-information-hm-revenue-and-customs-hold-about-you/data-protection-act-dpa-information-hm-revenue-and-customs-hold-about-you"
   // $COVERAGE-ON$
 }
