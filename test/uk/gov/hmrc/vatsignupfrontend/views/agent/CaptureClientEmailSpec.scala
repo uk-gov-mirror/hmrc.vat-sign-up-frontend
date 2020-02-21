@@ -34,7 +34,6 @@ class CaptureClientEmailSpec extends ViewSpec {
 
   lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email(
     hasDirectDebit = false,
-    contactPreference = Some(Digital.toString),
     emailForm = emailForm(isAgent = true).form,
     postAction = testCall)(
     request,
@@ -42,7 +41,7 @@ class CaptureClientEmailSpec extends ViewSpec {
     appConfig
   )
 
-  "The Capture Client Email view without direct debit and Digital contact preference" should {
+  "The Capture Client Email view with Digital contact preference" should {
 
     val testPage = TestView(
       name = "Capture Client Email View",
@@ -52,11 +51,7 @@ class CaptureClientEmailSpec extends ViewSpec {
     )
 
     testPage.shouldHavePara(
-      messages.line1
-    )
-
-    testPage.shouldHaveBulletSeq(
-      messages.bullet2
+      messages.noDirectDebit
     )
 
     testPage.shouldHaveHint(
@@ -66,53 +61,14 @@ class CaptureClientEmailSpec extends ViewSpec {
     testPage.shouldHaveForm("Email Form")(actionCall = testCall)
 
     testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
+
+    testPage.shouldHaveALink("disclaimer", messages.link, appConfig.disclaimer)
 
     testPage.shouldHaveContinueButton()
   }
 
   lazy val ddPageAndDigital = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email(
     hasDirectDebit = true,
-    contactPreference = Some(Digital.toString),
-    emailForm = emailForm(isAgent = true).form,
-    postAction = testCall)(
-    request,
-    messagesApi.preferred(request),
-    appConfig
-  )
-
-  "The Capture Client Email view with Direct Debit and has Digital Contact Preference" should {
-
-    val testPage = TestView(
-      name = "Capture Client Email View",
-      title = messages.title,
-      heading = messages.heading,
-      page = ddPageAndDigital
-    )
-
-    testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
-    )
-
-    testPage.shouldHaveBulletSeq(
-      messages.bullet1,
-      messages.bullet2
-    )
-
-    testPage.shouldHaveHint(
-      messages.hint
-    )
-
-    testPage.shouldHaveForm("Email Form")(actionCall = testCall)
-
-    testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
-
-    testPage.shouldHaveContinueButton()
-  }
-
-  lazy val ddPage = uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_client_email(
-    hasDirectDebit = true,
-    contactPreference = Some(Digital.toString),
     emailForm = emailForm(isAgent = true).form,
     postAction = testCall)(
     request,
@@ -126,16 +82,11 @@ class CaptureClientEmailSpec extends ViewSpec {
       name = "Capture Client Email View",
       title = messages.title,
       heading = messages.heading,
-      page = ddPage
+      page = ddPageAndDigital
     )
 
     testPage.shouldHaveParaSeq(
-      messages.line1,
-      messages.line2
-    )
-
-    testPage.shouldHaveBulletSeq(
-      messages.bullet1
+      messages.hasDirectDebit
     )
 
     testPage.shouldHaveHint(
@@ -146,7 +97,8 @@ class CaptureClientEmailSpec extends ViewSpec {
 
     testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
 
+    testPage.shouldHaveALink("disclaimer", messages.link, appConfig.disclaimer)
+
     testPage.shouldHaveContinueButton()
   }
-
 }

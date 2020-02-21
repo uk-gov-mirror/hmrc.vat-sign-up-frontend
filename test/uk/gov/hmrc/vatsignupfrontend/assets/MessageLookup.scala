@@ -236,10 +236,10 @@ object MessageLookup {
   object CaptureClientEmail {
     val heading: String = "What is your client’s email address?"
     val title = heading + ServiceName.agentSuffix
-    val line1 = "We’ll only use the email address to:"
-    val bullet1 = "send a Direct Debit advance notice 10 working days before each payment is taken"
-    val bullet2 = "send VAT notifications"
-    val line2 = "If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit."
+    val hasDirectDebit = "We will send a Direct Debit advance notice 10 working days before each payment is taken. If your client does not want to receive Direct Debit notices by email, they will need to cancel their Direct Debit."
+    val noDirectDebit = "HMRC uses your client’s email address to provide them with a range of digital services and communications."
+    val link = "HMRC Privacy Notice (opens in a new window or tab)"
+    val disclaimer = s"Full details of how we use your information are in the $link."
     val hint = "For example, yourname@example.com"
   }
 
