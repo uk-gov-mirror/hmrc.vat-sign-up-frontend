@@ -532,6 +532,7 @@ principal.capture_email.line_1                                         = We will
 principal.capture_email.line_2                                         = We’ll email you a Direct Debit advance notice 10 working days before each payment is taken.
 principal.capture_email.line_3                                         = If you do not want to receive Direct Debit notices by email, you will need to cancel your Direct Debit.
 principal.capture_email.hint                                           = For example, yourname@example.com
+principal.capture_email.disclaimer                                     = Full details of how we use your information are in the <a id="disclaimer" href="{0}">HMRC Privacy Notice (opens in a new window or tab)<a>.
 
 ## Principal Confirm Email page
 principal.confirm_email.title                                          = Check your email address

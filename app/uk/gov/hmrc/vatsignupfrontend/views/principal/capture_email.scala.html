@@ -22,28 +22,30 @@
 
 @(hasDirectDebit: Boolean, emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@principal_main_template(title = Messages("principal.capture_email.title"), bodyClasses = None, form = Some(emailForm)) {
+@principal_main_template(title = messages("principal.capture_email.title"), bodyClasses = None, form = Some(emailForm)) {
 
     @summaryErrorHelper(emailForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@labelHelper(field = emailForm(email) ,label = Messages("principal.capture_email.heading"))</h1>
+        <h1 class="heading-large">@labelHelper(field = emailForm(email) ,label = messages("principal.capture_email.heading"))</h1>
 
-        <p>@Messages("principal.capture_email.line_1")</p>
+        <p>@messages("principal.capture_email.line_1")</p>
 
         @if(hasDirectDebit) {
-            <p>@Messages("principal.capture_email.line_2")</p>
+            <p>@messages("principal.capture_email.line_2")</p>
 
             <div class="panel panel-border-wide">
-                <p>@Messages("principal.capture_email.line_3")</p>
+                <p>@messages("principal.capture_email.line_3")</p>
             </div>
         }
 
         @inputHelper(
             field = emailForm(email),
-            hintText = Some(Html(Messages("principal.capture_email.hint"))),
+            hintText = Some(Html(messages("principal.capture_email.hint"))),
             parentForm = emailForm
         )
+
+        <p>@Html(messages("principal.capture_email.disclaimer", appConfig.disclaimer))</p>
 
         @continueButton()
 

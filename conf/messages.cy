@@ -509,6 +509,7 @@ principal.capture_email.line_1                                         = Byddwn 
 principal.capture_email.line_2                                         = Byddwn yn anfon hysbysiad Debyd Uniongyrchol ymlaen llaw atoch 10 diwrnod gwaith cyn i bob taliad gael ei gymryd.
 principal.capture_email.line_3                                         = Os nad ydych am gael hysbysiadau Debyd Uniongyrchol drwy e-bost, bydd angen i chi ganslo’ch Debyd Uniongyrchol.
 principal.capture_email.hint                                           = Er enghraifft, yourname@example.com
+principal.capture_email.disclaimer                                     = Ceir manylion llawn ynghylch sut rydym yn defnyddio’ch gwybodaeth yn <a id="disclaimer" href="{0}">Hysbysiad Preifatrwydd CThEM (yn agor ffenestr neu dab newydd)<a>.
 
 ## Principal Confirm Email page
 principal.confirm_email.title                                          = Gwirio’ch cyfeiriad e-bost

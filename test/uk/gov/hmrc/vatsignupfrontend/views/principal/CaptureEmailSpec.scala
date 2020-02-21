@@ -52,7 +52,8 @@ class CaptureEmailSpec extends ViewSpec {
     testPage.shouldHaveParaSeq(
       messages.line1,
       messages.line2,
-      messages.line3
+      messages.line3,
+      messages.disclaimer
     )
 
     testPage.shouldHaveHint(
@@ -64,6 +65,8 @@ class CaptureEmailSpec extends ViewSpec {
     testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
+
+    testPage.shouldHaveALink("disclaimer", messages.link, appConfig.disclaimer)
   }
 
   lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email(
@@ -84,8 +87,9 @@ class CaptureEmailSpec extends ViewSpec {
       page = page
     )
 
-    testPage.shouldHavePara(
-      messages.line1
+    testPage.shouldHaveParaSeq(
+      messages.line1,
+      messages.disclaimer
     )
 
     testPage.shouldHaveHint(
@@ -97,6 +101,8 @@ class CaptureEmailSpec extends ViewSpec {
     testPage.shouldHaveTextField(email, messages.heading, hideLabel = false)
 
     testPage.shouldHaveContinueButton()
+
+    testPage.shouldHaveALink("disclaimer", messages.link, appConfig.disclaimer)
   }
 
 }
