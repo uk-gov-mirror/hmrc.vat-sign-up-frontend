@@ -288,11 +288,10 @@ agent.partnership.does_your_client_have_a_utr.line                    = Rhif 10 
 ## Agent Capture Email page
 agent.capture_client_email.title                                       = Beth yw cyfeiriad e-bost eich cleient?
 agent.capture_client_email.heading                                     = Beth yw cyfeiriad e-bost eich cleient?
-agent.capture_client_email.line_1                                      = Byddwn ond yn defnyddio’r cyfeiriad e-bost i wneud y canlynol:
-agent.capture_client_email.bullet_1                                    = anfon hysbysiad ymlaen llaw o’r Debyd Uniongyrchol 10 diwrnod gwaith cyn i bob taliad gael ei gymryd
-agent.capture_client_email.bullet_2                                    = anfon hysbysiadau TAW
-agent.capture_client_email.line_2                                      = Os nad yw’ch cleient eisiau cael hysbysiadau Debyd Uniongyrchol drwy e-bost, bydd yn rhaid iddo ganslo’i Ddebyd Uniongyrchol.
-agent.capture_client_email.hint                                        = Er enghraifft, yourname@example.com
+agent.capture_client_email.hasDirectDebit                              = Byddwn yn anfon hysbysiad ymlaen llaw o’r Debyd Uniongyrchol 10 diwrnod gwaith cyn i bob taliad gael ei gymryd. Os nad yw’ch cleient eisiau cael hysbysiadau Debyd Uniongyrchol drwy e-bost, bydd yn rhaid iddo ganslo’i Ddebyd Uniongyrchol.
+agent.capture_client_email.noDirectDebit                               = Mae CThEM yn defnyddio cyfeiriad e-bost eich cleient i ddarparu ystod o wasanaethau digidol a gohebiaeth ar ei gyfer.
+agent.capture_client_email.hint                                        = Er enghraifft, enw@enghraifft.com
+agent.capture_client_email.disclaimer                                  = Ceir manylion llawn ynghylch sut rydym yn defnyddio gwybodaeth bersonol yn <a id="disclaimer" href="{0}" target="_blank">Hysbysiad Preifatrwydd CThEM (yn agor ffenestr neu dab newydd)<a>.
 
 ## Agent Capture Agent Email page
 agent.capture_agent_email.title                                        = Beth yw’ch cyfeiriad e-bost?
@@ -509,7 +508,7 @@ principal.capture_email.line_1                                         = Byddwn 
 principal.capture_email.line_2                                         = Byddwn yn anfon hysbysiad Debyd Uniongyrchol ymlaen llaw atoch 10 diwrnod gwaith cyn i bob taliad gael ei gymryd.
 principal.capture_email.line_3                                         = Os nad ydych am gael hysbysiadau Debyd Uniongyrchol drwy e-bost, bydd angen i chi ganslo’ch Debyd Uniongyrchol.
 principal.capture_email.hint                                           = Er enghraifft, yourname@example.com
-principal.capture_email.disclaimer                                     = Ceir manylion llawn ynghylch sut rydym yn defnyddio’ch gwybodaeth yn <a id="disclaimer" href="{0}">Hysbysiad Preifatrwydd CThEM (yn agor ffenestr neu dab newydd)<a>.
+principal.capture_email.disclaimer                                     = Ceir manylion llawn ynghylch sut rydym yn defnyddio’ch gwybodaeth yn <a id="disclaimer" href="{0}" target="_blank">Hysbysiad Preifatrwydd CThEM (yn agor ffenestr neu dab newydd)<a>.
 
 ## Principal Confirm Email page
 principal.confirm_email.title                                          = Gwirio’ch cyfeiriad e-bost

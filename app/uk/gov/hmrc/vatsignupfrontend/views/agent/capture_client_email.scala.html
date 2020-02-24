@@ -21,37 +21,30 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.models.Digital
 
-@(hasDirectDebit: Boolean, contactPreference: Option[String], emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(hasDirectDebit: Boolean, emailForm: Form[String], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @agent_main_template(title = Messages("agent.capture_client_email.title"), bodyClasses = None, form = Some(emailForm)) {
 
     @summaryErrorHelper(emailForm)
 
     @form(action = postAction) {
-        <h1 class="heading-large">@labelHelper(field = emailForm(email), label = Messages("agent.capture_client_email.heading"))</h1>
+        <h1 class="heading-large">@labelHelper(field = emailForm(email), label = messages("agent.capture_client_email.heading"))</h1>
 
-        <p>@Messages("agent.capture_client_email.line_1")</p>
-
-        <ul class="list list-bullet">
-        @if(hasDirectDebit) {
-            <li>@Messages("agent.capture_client_email.bullet_1")</li>
-        }
-        @if(contactPreference == Some(Digital.toString)) {
-            <li>@Messages("agent.capture_client_email.bullet_2")</li>
-        }
-        </ul>
-
-        @if(hasDirectDebit) {
-        <div class="panel panel-border-wide">
-            <p>@Messages("agent.capture_client_email.line_2")</p>
-        </div>
-        }
+        <p>
+            @if(hasDirectDebit) {
+                @messages("agent.capture_client_email.hasDirectDebit")
+            } else {
+                @messages("agent.capture_client_email.noDirectDebit")
+            }
+        </p>
 
         @inputHelper(
             field = emailForm(email),
             parentForm = emailForm,
             hintText = Some(Html(Messages("agent.capture_client_email.hint")))
         )
+
+        <p>@Html(messages("agent.capture_client_email.disclaimer", appConfig.disclaimer))</p>
 
         @continueButton()
     }
