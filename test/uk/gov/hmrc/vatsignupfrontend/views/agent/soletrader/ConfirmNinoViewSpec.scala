@@ -113,7 +113,7 @@ class ConfirmNinoViewSpec extends ViewSpec {
     val sectionId = "nino"
     val expectedQuestion = messages.nino
     val expectedAnswer = testNino
-    val expectedEditLink = "" //TODO uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureNinoController.show().url
+    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.CaptureNinoController.show().url
 
     sectionTest(
       sectionId = sectionId,
