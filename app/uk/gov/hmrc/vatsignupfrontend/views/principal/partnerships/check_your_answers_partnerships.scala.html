@@ -14,24 +14,21 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
-@import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper
-@import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership, YesNo}
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.{routes => partnershipRoutes}
 @import uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes
-@import uk.gov.hmrc.vatsignupfrontend.models.GeneralPartnership
+@import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, PostCode}
+@import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 
 @(entityType: BusinessEntity,
-  companyUtr: Option[String],
-  companyNumber: Option[String],
-  postCode: Option[PostCode],
-  hasOptionalSautr: Option[Boolean],
-  generalPartnershipNoSAUTRFeatureSwitch: Boolean,
-  postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+        companyUtr: Option[String],
+        companyNumber: Option[String],
+        postCode: Option[PostCode],
+        generalPartnershipNoSAUTRFeatureSwitch: Boolean,
+        postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
 
@@ -63,6 +60,12 @@
             val rowAnswer = utr
             val rowUrl = partnershipRoutes.ResolvePartnershipUtrController.resolve().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
+        case None if generalPartnershipNoSAUTRFeatureSwitch & entityType == GeneralPartnership =>
+            val rowName = CompanyUtrId
+            val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
+            val rowAnswer = Messages("principal.check_your_answers_partnerships.no_sautr")
+            val rowUrl = partnershipRoutes.ResolvePartnershipUtrController.resolve().url
+            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
         case _ => Html("")
     }
 }
@@ -79,24 +82,6 @@
     }
 }
 
-@optionalSautr() = @{
-    hasOptionalSautr match {
-        case Some(hasSautr) if(generalPartnershipNoSAUTRFeatureSwitch & entityType == GeneralPartnership)  =>
-            val rowName = HasOptionalSautrId
-            val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
-            val rowAnswer = Messages("principal.check_your_answers_partnerships.no_sautr")
-            val rowUrl = partnershipRoutes.ResolvePartnershipUtrController.resolve().url
-            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
-        case Some(hasSautr) =>
-            val rowName = HasOptionalSautrId
-            val rowQuestion = Messages("principal.check_your_answers_partnerships.has_optional_sautr")
-            val rowAnswer = if (hasSautr) Messages("base.yes") else Messages("base.no")
-            val rowUrl = partnershipRoutes.DoYouHaveAUtrController.show().url
-            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
-        case _ => Html("")
-    }
-}
-
 @principal_main_template(title = Messages("principal.check_your_answers_partnerships.title")) {
 
     <h1 class="heading-large">@Messages("principal.check_your_answers_partnerships.heading")</h1>
@@ -104,7 +89,6 @@
 
     <div class="form-group">
         @businessEntityType()
-        @optionalSautr()
         @partnershipCompanyNumber()
         @partnershipCompanyUtr()
         @partnershipPostCode()

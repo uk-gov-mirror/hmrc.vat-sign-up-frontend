@@ -22,6 +22,4 @@ object CheckYourAnswersPartnershipsIdConstants {
   val CompanyUtrId = "company-utr"
   val PartnershipPostCodeId = "partnership-post-code"
   val BusinessEntityId = "business-entity"
-  val HasOptionalSautrId = "has-optional-sautr"
-
 }

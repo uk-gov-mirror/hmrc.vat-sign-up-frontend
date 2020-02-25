@@ -45,40 +45,36 @@ class CheckYourAnswersPartnershipsController @Inject()(storePartnershipInformati
     authorised() {
 
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optHasOptionalSautr = request.session.getModel[Boolean](SessionKeys.hasOptionalSautrKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
       val noSAUTRFeatureSwitch = isEnabled(GeneralPartnershipNoSAUTR)
 
-      (optHasOptionalSautr, optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
-        case (Some(false), Some(GeneralPartnership), _, _, _) =>
+      (optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
+        case (Some(GeneralPartnership), _, _, _) if isEnabled(GeneralPartnershipNoSAUTR) =>
           Future.successful(Ok(check_your_answers_partnerships(
             entityType = GeneralPartnership,
             companyUtr = None,
             companyNumber = None,
             postCode = None,
-            hasOptionalSautr = optHasOptionalSautr,
             generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
-        case (_, Some(GeneralPartnership), _, Some(_), Some(_)) =>
+        case (Some(GeneralPartnership), _, Some(_), Some(_)) =>
           Future.successful(Ok(check_your_answers_partnerships(
             entityType = GeneralPartnership,
             companyUtr = optPartnershipUtr,
             companyNumber = None,
             postCode = optPartnershipPostCode,
-            hasOptionalSautr = optHasOptionalSautr,
             generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
-        case (_, Some(entity: LimitedPartnershipBase), Some(_), Some(_), Some(_)) =>
+        case (Some(entity: LimitedPartnershipBase), Some(_), Some(_), Some(_)) =>
           Future.successful(Ok(check_your_answers_partnerships(
             entityType = entity,
             companyUtr = optPartnershipUtr,
             companyNumber = optPartnershipCrn,
             postCode = optPartnershipPostCode,
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
@@ -87,7 +83,6 @@ class CheckYourAnswersPartnershipsController @Inject()(storePartnershipInformati
       }
     }
   }
-
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
@@ -115,7 +110,7 @@ class CheckYourAnswersPartnershipsController @Inject()(storePartnershipInformati
             case Left(StorePartnershipInformationFailureResponse(status)) =>
               throw new InternalServerException("Store Partnership failed with status code: " + status)
           }
-        case (Some(vrn), Some(entity: LimitedPartnershipBase)) =>
+        case (Some(vrn), Some(_: LimitedPartnershipBase)) =>
           (optPartnershipUtr, optPartnershipPostCode, optPartnershipCrn, optPartnershipType) match {
             case (Some(utr), Some(_), Some(crn), Some(partnershipType)) =>
               storePartnershipInformationService.storePartnershipInformation(

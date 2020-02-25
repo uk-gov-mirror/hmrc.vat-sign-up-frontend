@@ -20,12 +20,12 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipNoSAUTR, OptionalSautrJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
@@ -74,7 +74,6 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       s"the $GeneralPartnershipNoSAUTR feature switch is enabled" should {
         "redirect to capture partnership utr page" in {
           enable(GeneralPartnershipNoSAUTR)
-          enable(OptionalSautrJourney)
           mockAuthRetrieveAgentEnrolment()
 
           val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
@@ -86,31 +85,15 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
       }
       s"the $GeneralPartnershipNoSAUTR feature switch is disabled" when {
-        s"the $OptionalSautrJourney feature switch is disabled" should {
-          "redirect to capture partnership utr page" in {
-            disable(OptionalSautrJourney)
-            mockAuthRetrieveAgentEnrolment()
+        "redirect to capture partnership utr page" in {
+          mockAuthRetrieveAgentEnrolment()
 
-            val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-            ))
+          val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+          ))
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
-          }
-        }
-        s"the $OptionalSautrJourney feature switch is enabled" should {
-          "redirect to does your client have a UTR page" in {
-            enable(OptionalSautrJourney)
-            mockAuthRetrieveAgentEnrolment()
-
-            val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.DoesYourClientHaveAUtrController.show().url)
-          }
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
         }
       }
     }

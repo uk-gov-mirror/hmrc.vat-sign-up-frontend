@@ -31,7 +31,6 @@ object FeatureSwitch {
     BTAClaimSubscription,
     AdditionalKnownFacts,
     DirectDebitTermsJourney,
-    OptionalSautrJourney,
     WelshTranslation,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
@@ -72,11 +71,6 @@ case object AdditionalKnownFacts extends FeatureSwitch {
 case object DirectDebitTermsJourney extends FeatureSwitch {
   override val name: String = s"$prefix.direct-debit-terms-journey"
   override val displayText: String = "Enable the Direct Debit T&Cs Journey"
-}
-
-case object OptionalSautrJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.optional-sautr-journey"
-  override val displayText: String = "Enable the 'Do you have an SAUTR' question for general partnerships"
 }
 
 case object FinalCheckYourAnswer extends FeatureSwitch {

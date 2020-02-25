@@ -280,11 +280,6 @@ agent.capture_partnership_utr.accordion.line_1                         = Bydd no
 agent.capture_partnership_utr.accordion.link_1                         = Sut y gall eich cleient ddod o hyd i’w UTR
 agent.capture_partnership_utr.accordion.link_2                         = Nid oes gan bartneriaeth fy nghleient UTR
 
-## Agent - Does Your Client Have a UTR
-agent.partnership.does_your_client_have_a_utr.title                   = Oes gan bartneriaeth eich cleient Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
-agent.partnership.does_your_client_have_a_utr.heading                 = Oes gan bartneriaeth eich cleient Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
-agent.partnership.does_your_client_have_a_utr.line                    = Rhif 10 digid yw hwn. Mae hwn i’w weld ar lythyrau i’r bartneriaeth oddi wrth CThEM.
-
 ## Agent Capture Email page
 agent.capture_client_email.title                                       = Beth yw cyfeiriad e-bost eich cleient?
 agent.capture_client_email.heading                                     = Beth yw cyfeiriad e-bost eich cleient?
@@ -788,7 +783,6 @@ principal.check_your_answers_partnerships.business_entity              = Math o 
 principal.check_your_answers_partnerships.company_number               = Rhif cofrestru’r bartneriaeth
 principal.check_your_answers_partnerships.company_utr                  = Cyfeirnod Unigryw y Trethdalwr ar gyfer y Bartneriaeth
 principal.check_your_answers_partnerships.post_code                    = Y cod post ble mae’r bartneriaeth wedi’i chofrestru ar gyfer Hunanasesiad
-principal.check_your_answers_partnerships.has_optional_sautr           = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr ar gyfer Hunanasesiad?
 principal.check_your_answers_partnerships.no_sautr                     = Nid oes gennyf un
 
 ## Are You Ready Submit Software
@@ -947,11 +941,6 @@ principal.confirm_nino.heading                                        = Gwirio�
 principal.confirm_nino.summary.sub_heading                            = Yr hyn rydych wedi rhoi gwybod i ni amdano
 principal.confirm_nino.summary.business_type                          = Y math o fusnes sydd gennych
 principal.confirm_nino.summary.nino                                   = Eich rhif Yswiriant Gwladol
-
-## Do you Have a UTR
-principal.partnership.do_you_have_a_utr.title                         = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
-principal.partnership.do_you_have_a_utr.heading                       = A oes gan eich partneriaeth Gyfeirnod Unigryw y Trethdalwr (UTR) ar gyfer Hunanasesiad?
-principal.partnership.do_you_have_a_utr.line                          = Rhif 10 digid yw hwn. Mae hwn i’w weld ar lythyrau i’r bartneriaeth oddi wrth CThEM.
 
 #Check your answers final
 principal.check_your_answers_final.title                              = Gwiriwch eich atebion cyn eu hanfon
