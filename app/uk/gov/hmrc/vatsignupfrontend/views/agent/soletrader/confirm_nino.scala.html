@@ -36,7 +36,7 @@
     val rowName = "nino"
     val rowQuestion = Messages("agent.confirm_nino.summary.nino")
     val rowAnswer = nino
-    val rowUrl = "" //TODO uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.CaptureNinoController.show().url
+    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.soletrader.routes.CaptureNinoController.show().url
     summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
