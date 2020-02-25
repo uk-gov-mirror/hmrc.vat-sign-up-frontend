@@ -45,7 +45,6 @@ class CheckYourAnswersPartnershipController @Inject()(storePartnershipInformatio
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optHasOptionalSautr = request.session.getModel[Boolean](SessionKeys.hasOptionalSautrKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
@@ -59,7 +58,6 @@ class CheckYourAnswersPartnershipController @Inject()(storePartnershipInformatio
             utr = optPartnershipUtr,
             companyNumber = None,
             postCode = optPartnershipPostCode,
-            hasOptionalSautr = optHasOptionalSautr,
             generalPartnershipNoSAUTR = noSAUTRFeatureSwitch && isGeneralPartnership,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
@@ -69,7 +67,6 @@ class CheckYourAnswersPartnershipController @Inject()(storePartnershipInformatio
             utr = optPartnershipUtr,
             companyNumber = optPartnershipCrn,
             postCode = optPartnershipPostCode,
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTR = noSAUTRFeatureSwitch && isGeneralPartnership,
             postAction = routes.CheckYourAnswersPartnershipController.submit()
           )))
@@ -86,7 +83,6 @@ class CheckYourAnswersPartnershipController @Inject()(storePartnershipInformatio
 
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optBusinessEntityType = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      val optHasOptionalSautr = request.session.getModel[Boolean](SessionKeys.hasOptionalSautrKey)
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)

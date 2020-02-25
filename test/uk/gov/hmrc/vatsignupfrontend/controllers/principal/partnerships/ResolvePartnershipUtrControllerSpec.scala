@@ -22,7 +22,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipNoSAUTR, OptionalSautrJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -50,6 +50,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
           session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
         }
       }
+
       s"the user is a General Partnership && $GeneralPartnershipNoSAUTR is disabled" should {
         "redirect to confirm general partnership page" in {
           disable(GeneralPartnershipNoSAUTR)
@@ -65,6 +66,7 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
 
         }
       }
+
       s"the user is a General Partnership && $GeneralPartnershipNoSAUTR is enabled" should {
         "redirect to confirm general partnership page" in {
           enable(GeneralPartnershipNoSAUTR)
@@ -81,30 +83,12 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
     }
+
     "the user does not have a IR-SA-PART-ORG enrolment" when {
-      s"the $GeneralPartnershipNoSAUTR is enabled && $OptionalSautrJourney is enabled " when {
+      s"the $GeneralPartnershipNoSAUTR is enabled" when {
         "the user is General Partnership" should {
           "go to the capture partnership UTR page" in {
             enable(GeneralPartnershipNoSAUTR)
-            enable(OptionalSautrJourney)
-            mockAuthRetrieveEmptyEnrolment()
-
-            mockAuthRetrieveEmptyEnrolment()
-
-            val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
-          }
-        }
-      }
-      s"the $GeneralPartnershipNoSAUTR is enabled && $OptionalSautrJourney is disabled" when {
-        "the user is General Partnership" should {
-          "go to the capture partnership UTR page" in {
-            enable(GeneralPartnershipNoSAUTR)
-            disable(OptionalSautrJourney)
             mockAuthRetrieveEmptyEnrolment()
 
             mockAuthRetrieveEmptyEnrolment()
@@ -119,39 +103,8 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      s"$OptionalSautrJourney is enabled && $GeneralPartnershipNoSAUTR is disabled" when {
-        "the user is a General Partnership" should {
-          "go to the Do You Have A Utr page" in {
-            enable(OptionalSautrJourney)
-            disable(GeneralPartnershipNoSAUTR)
-            mockAuthRetrieveEmptyEnrolment()
-
-            val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.DoYouHaveAUtrController.show().url)
-          }
-        }
-        "the user is a Limited Partnership" should {
-          "go to the capture partnership UTR page" in {
-            enable(OptionalSautrJourney)
-            disable(GeneralPartnershipNoSAUTR)
-            mockAuthRetrieveEmptyEnrolment()
-
-            val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
-          }
-        }
-      }
-      s"$OptionalSautrJourney is disabled && $GeneralPartnershipNoSAUTR is disabled" should {
+      s"$GeneralPartnershipNoSAUTR is disabled" should {
         "go to the capture partnership UTR page" in {
-          disable(OptionalSautrJourney)
           disable(GeneralPartnershipNoSAUTR)
 
           mockAuthRetrieveEmptyEnrolment()

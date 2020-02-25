@@ -22,7 +22,7 @@ import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{GeneralPartnershipNoSAUTR, OptionalSautrJourney}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
@@ -32,31 +32,28 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ResolvePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
-                                                  vcc: VatControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+                                                vcc: VatControllerComponents) extends AuthenticatedController(AdministratorRolePredicate) {
 
   val resolve: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
-      val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
-      (enrolments.partnershipUtr, optBusinessEntity) match {
-        case (Some(partnershipUtr), Some(LimitedPartnership)) =>
-          Future.successful(
-            Redirect(routes.ConfirmLimitedPartnershipController.show())
-              addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
-          )
-        case (Some(partnershipUtr), Some(GeneralPartnership)) =>
-          Future.successful(
-            Redirect(routes.ConfirmGeneralPartnershipController.show())
-              addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
-          )
-        case (None, Some(GeneralPartnership)) if isEnabled(GeneralPartnershipNoSAUTR) =>
-          Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
-        case (None, Some(GeneralPartnership)) if isEnabled(OptionalSautrJourney) =>
-          Future.successful(Redirect(routes.DoYouHaveAUtrController.show()))
-        case (None, _) =>
-          Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
+    authorised()(Retrievals.allEnrolments) {
+      enrolments =>
+        val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
 
-      }
+        (enrolments.partnershipUtr, optBusinessEntity) match {
+          case (Some(partnershipUtr), Some(LimitedPartnership)) =>
+            Future.successful(
+              Redirect(routes.ConfirmLimitedPartnershipController.show())
+                addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
+            )
+          case (Some(partnershipUtr), Some(GeneralPartnership)) =>
+            Future.successful(
+              Redirect(routes.ConfirmGeneralPartnershipController.show())
+                addingToSession SessionKeys.partnershipSautrKey -> partnershipUtr
+            )
+          case _ =>
+            Future.successful(Redirect(routes.CapturePartnershipUtrController.show()))
+
+        }
     }
   }
 

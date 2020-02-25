@@ -128,10 +128,6 @@ POST        /receive-email-notifications                        uk.gov.hmrc.vats
 # Resolve Partnership
 GET         /resolve-partnership                                uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.ResolvePartnershipController.resolve
 
-# Does Your Client Have a Utr
-GET         /does-your-client-have-a-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.DoesYourClientHaveAUtrController.show
-POST        /does-your-client-have-a-utr                        uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.DoesYourClientHaveAUtrController.submit
-
 # Check Your Answers Final
 GET         /check-your-answers-final                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.CheckYourAnswersFinalController.show
 POST        /check-your-answers-final                           uk.gov.hmrc.vatsignupfrontend.controllers.agent.CheckYourAnswersFinalController.submit

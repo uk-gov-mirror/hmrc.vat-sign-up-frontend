@@ -15,24 +15,21 @@
  *@
 
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.play.views.helpers._
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
-@import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.models.{PostCode, BusinessEntity, GeneralPartnership, LimitedPartnership}
+@import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, PostCode}
 @import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper
-
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 
 @(utr: Option[String],
   entityType: BusinessEntity,
   postCode: Option[PostCode],
   companyNumber: Option[String],
-  hasOptionalSautr: Option[Boolean],
   generalPartnershipNoSAUTR: Boolean,
   postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
-@import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, HasOptionalSautrId}
+@import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
 
 @businessEntityCheck() = @{
     val rowName = BusinessEntityId
@@ -81,17 +78,6 @@
         case _ => Html("")
     }
 }
-@hasOptionalSautrQuestion() = @{
-    hasOptionalSautr match {
-        case Some(hasSautrAnswer) =>
-            val rowName = HasOptionalSautrId
-            val rowQuestion = Messages("agent.check-your-answers.does_your_client_have_a_utr")
-            val rowAnswer = if (hasSautrAnswer) Messages("base.yes") else Messages("base.no")
-            val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.DoesYourClientHaveAUtrController.show().url
-            summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
-        case _ => Html("")
-    }
-}
 
 @agent_main_template(title = Messages("agent.check-your-answers.title")) {
 
@@ -99,7 +85,6 @@
 
     <div class="form-group">
         @businessEntityCheck()
-        @hasOptionalSautrQuestion()
         @partnershipCompanyNumber()
         @utrNumber()
         @placeOfBusiness()

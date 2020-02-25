@@ -56,7 +56,6 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
             SessionKeys.partnershipSautrKey,
             SessionKeys.partnershipPostCodeKey
           )
-          .addingToSession(SessionKeys.hasOptionalSautrKey -> false.toString)
       )
     }
   }
@@ -77,7 +76,6 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
             if (generalPartnershipNoSAUTRAndGeneralPartnership) {
               Redirect(routes.PrincipalPlacePostCodeController.show())
                 .addingToSession(SessionKeys.partnershipSautrKey -> utr)
-                .removingFromSession(SessionKeys.hasOptionalSautrKey)
             }
             else {
               Redirect(routes.PrincipalPlacePostCodeController.show())

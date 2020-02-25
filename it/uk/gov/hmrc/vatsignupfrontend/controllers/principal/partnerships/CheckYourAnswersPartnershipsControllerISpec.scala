@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -35,13 +36,13 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
   "GET /check-your-answers-partnership" should {
     "return an OK for a general partnership without SAUTR" in {
+      enable(GeneralPartnershipNoSAUTR)
       stubAuth(OK, successfulAuthResponse())
 
       val res = get(
         uri = "/check-your-answers-partnership",
         cookies = Map(
-          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership),
-          SessionKeys.hasOptionalSautrKey -> false.toString
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
         )
       )
 
@@ -89,7 +90,7 @@ class CheckYourAnswersPartnershipsControllerISpec extends ComponentSpecBase with
 
   "POST /check-your-answers-partnership" when {
     "the user is a general partnership" when {
-      "the user is has an optional Sautr" when {
+      "the user has an Sautr" when {
         "store partnership information is successful" should {
           "redirect to agree to Direct Debit resolver" in {
             stubAuth(OK, successfulAuthResponse())

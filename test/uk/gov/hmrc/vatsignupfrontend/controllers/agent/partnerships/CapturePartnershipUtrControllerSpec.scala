@@ -22,12 +22,12 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthorisationException
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.Yes
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
@@ -50,8 +50,7 @@ class CapturePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
   }
 
   "Calling the noUtrSelected action of the CapturePartnershipUtrController" should {
-    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey}" +
-      s" & does not drop any other keys & set ${SessionKeys.hasOptionalSautrKey} = false" in {
+    s"redirect to check your answers page & drop ${SessionKeys.partnershipSautrKey}${SessionKeys.partnershipPostCodeKey}" in {
       mockAuthRetrieveAgentEnrolment()
 
       val result = TestCapturePartnershipUtrController.noUtrSelected(testGetRequest.withSession(

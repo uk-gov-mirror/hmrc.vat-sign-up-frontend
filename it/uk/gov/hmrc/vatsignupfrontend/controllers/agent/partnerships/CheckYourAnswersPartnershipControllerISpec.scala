@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipNoSAUTR}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -33,7 +33,8 @@ import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.jsonSessionFormatter
 class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   "GET /client/check-your-answers" should {
-    "return an OK for general partnership" in {
+
+    "return an OK for general partnership with an SA UTR" in {
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/check-your-answers",
@@ -50,34 +51,14 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
       )
     }
 
-    "return an OK for general partnership with an optional SA UTR" in {
+    "return an OK for general partnership without an SA UTR" in {
+      enable(GeneralPartnershipNoSAUTR)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/check-your-answers",
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.partnershipSautrKey -> testSaUtr,
-          SessionKeys.businessEntityKey -> GeneralPartnership.toString,
-          SessionKeys.hasOptionalSautrKey -> true.toString,
-          SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
-        )
-      )
-
-      res should have(
-        httpStatus(OK)
-      )
-    }
-
-    "return an OK for general partnership without an optional SA UTR" in {
-      stubAuth(OK, successfulAuthResponse(agentEnrolment))
-
-      val res = get("/client/check-your-answers",
-        Map(
-          SessionKeys.vatNumberKey -> testVatNumber,
-          SessionKeys.partnershipSautrKey -> testSaUtr,
-          SessionKeys.businessEntityKey -> GeneralPartnership.toString,
-          SessionKeys.hasOptionalSautrKey -> false.toString,
-          SessionKeys.partnershipPostCodeKey -> jsonSessionFormatter[PostCode].toString(testBusinessPostCode)
+          SessionKeys.businessEntityKey -> GeneralPartnership.toString
         )
       )
 

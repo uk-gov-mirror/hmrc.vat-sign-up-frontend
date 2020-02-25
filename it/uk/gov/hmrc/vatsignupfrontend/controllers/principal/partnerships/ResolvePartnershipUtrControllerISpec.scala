@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.OptionalSautrJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -59,32 +58,15 @@ class ResolvePartnershipUtrControllerISpec extends ComponentSpecBase with Custom
     }
 
     "the partnership utr is not on the profile" when {
-      "the optional sautr feature switch is disabled" should {
-        "go to Capture Partnership UTR page" in {
-          stubAuth(OK, successfulAuthResponse())
+      "go to Capture Partnership UTR page" in {
+        stubAuth(OK, successfulAuthResponse())
 
-          val res = get("/resolve-partnership-utr")
+        val res = get("/resolve-partnership-utr")
 
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CapturePartnershipUtrController.show().url)
-          )
-        }
-      }
-      "the optional Sautr feature switch is enabled" should {
-        "go to the Do You Have A Utr page" in {
-          enable(OptionalSautrJourney)
-          stubAuth(OK, successfulAuthResponse())
-
-          val res = get("/resolve-partnership-utr", Map(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-          ))
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.DoYouHaveAUtrController.show().url)
-          )
-        }
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CapturePartnershipUtrController.show().url)
+        )
       }
     }
   }

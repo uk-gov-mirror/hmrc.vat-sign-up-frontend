@@ -950,7 +950,6 @@ object MessageLookup {
     val companyNumber = "Partnership’s company number"
     val companyUtr = "The partnership’s Unique Taxpayer Reference"
     val postCode = "The postcode where the partnership is registered for Self Assessment"
-    val hasOptionalSautr = "Does your partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
     val noSautr = "I do not have one"
   }
 
@@ -962,7 +961,6 @@ object MessageLookup {
     val yourBusinessPostCode = "Where your client’s partnership is registered for Self Assessment"
     val generalPartnership: String = "General partnership"
     val limitedPartnership: String = "Limited partnership (including limited liability partnerships)"
-    val hasOptionalSautr: String = "Does your client’s partnership have a Self Assessment Unique Taxpayer Reference (UTR) number?"
     val noSAUTR: String = "My client does not have one"
   }
 

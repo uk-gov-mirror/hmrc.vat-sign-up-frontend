@@ -30,12 +30,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 
 class CaptureBusinessEntityControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def afterAll(): Unit = {
-    super.afterAll()
-    disable(OptionalSautrJourney)
-  }
-
-
   "GET /business-type" should {
     "return See Other" when {
       "the user is overseas" in {

@@ -16,14 +16,13 @@
 
 package uk.gov.hmrc.vatsignupfrontend.views.agent.partnerships
 
-import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.{CompanyNumberId, HasOptionalSautrId}
+import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants.CompanyNumberId
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{AgentCheckYourAnswers => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.{routes => partnershipRoutes}
@@ -81,7 +80,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     lazy val expectedUrlUtr = partnershipRoutes.CapturePartnershipUtrController.show().url
     lazy val expectedUrlPostCode = partnershipRoutes.PartnershipPostCodeController.show().url
     lazy val expectedUrlCompanyNumber = partnershipRoutes.AgentCapturePartnershipCompanyNumberController.show().url
-    lazy val expectedSaUtrUrl = partnershipRoutes.DoesYourClientHaveAUtrController.show().url
 
     "the saUtr and the post code are given for a general partnership" should {
       "render the page correctly" when {
@@ -94,7 +92,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = GeneralPartnership,
             Some(testBusinessPostcode),
             companyNumber = None,
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
@@ -113,7 +110,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = GeneralPartnership,
             Some(testBusinessPostcode),
             companyNumber = None,
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
@@ -141,6 +137,7 @@ class CheckYourAnswersViewSpec extends ViewSpec {
           testPageGeneralPartnershipFSEnabled.document.getElementById(businessEntityAnswer).text shouldBe messages.generalPartnership
           testPageGeneralPartnershipFSEnabled.document.getElementById(pobAnswer).text shouldBe testBusinessPostcode.checkYourAnswersFormat
         }
+
         "the GeneralPartnershipNoSAUTR feature switch is disabled" in {
           sectionTest(UtrId, messages.yourUtr, testSaUtr, Some(expectedUrlUtr), testPageGeneralPartnershipFSDisabled.document)
           sectionTest(
@@ -160,13 +157,12 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
     "the General Partnership has an optional SA UTR" should {
       "render the page correctly" when {
-        "the GeneralPartnershipNoSAUTR feature switch is disabled and hasOptionalSautr is true" in {
+        "the GeneralPartnershipNoSAUTR feature switch is disabled" in {
           lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
             utr = Some(testSaUtr),
             entityType = GeneralPartnership,
             postCode = None,
             companyNumber = None,
-            hasOptionalSautr = Some(true),
             generalPartnershipNoSAUTR = false,
             postAction = testCall
           )(
@@ -179,46 +175,20 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
           Option(doc.getElementById(utrAnswer)).map(_.text) shouldBe Some(testSaUtr)
           sectionTest(
-            sectionId = HasOptionalSautrId,
-            expectedQuestion = messages.hasOptionalSautr,
-            expectedAnswer = MessageLookup.Base.yes,
-            expectedEditLink = Some(expectedSaUtrUrl),
+            sectionId = UtrId,
+            expectedQuestion = messages.yourUtr,
+            expectedAnswer = testSaUtr,
+            expectedEditLink = Some(expectedUrlUtr),
             doc = doc
           )
         }
-        "the GeneralPartnershipNoSAUTR feature switch is disabled and hasOptionalSautr is false" in {
-          lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
-            utr = None,
-            entityType = GeneralPartnership,
-            postCode = None,
-            companyNumber = None,
-            hasOptionalSautr = Some(false),
-            generalPartnershipNoSAUTR = false,
-            postAction = testCall
-          )(
-            request,
-            messagesApi.preferred(request),
-            appConfig
-          )
 
-          lazy val doc = Jsoup.parse(page.body)
-
-          Option(doc.getElementById(utrAnswer)).isDefined shouldBe false
-          sectionTest(
-            sectionId = HasOptionalSautrId,
-            expectedQuestion = messages.hasOptionalSautr,
-            expectedAnswer = MessageLookup.Base.no,
-            expectedEditLink = Some(expectedSaUtrUrl),
-            doc = doc
-          )
-        }
         "the GeneralPartnershipNoSAUTR feature switch is enabled" in {
           lazy val page: Html = uk.gov.hmrc.vatsignupfrontend.views.html.agent.partnerships.check_your_answers(
             utr = None,
             entityType = GeneralPartnership,
             postCode = None,
             companyNumber = None,
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
@@ -229,7 +199,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
 
           lazy val doc = Jsoup.parse(page.body)
 
-          Option(doc.getElementById(s"$HasOptionalSautrId-row")).isDefined shouldBe false
           sectionTest(
             sectionId = UtrId,
             expectedQuestion = messages.yourUtr,
@@ -249,7 +218,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = LimitedPartnership,
             Some(testBusinessPostcode),
             companyNumber = Some(testCompanyNumber),
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
@@ -274,7 +242,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = LimitedPartnership,
             Some(testBusinessPostcode),
             companyNumber = Some(testCompanyNumber),
-            hasOptionalSautr = None,
             generalPartnershipNoSAUTR = false,
             postAction = testCall
           )(
