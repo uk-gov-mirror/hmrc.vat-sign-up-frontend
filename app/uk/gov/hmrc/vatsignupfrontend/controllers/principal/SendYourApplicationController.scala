@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubmissionHttpParser.SubmissionFailureResponse
 import uk.gov.hmrc.vatsignupfrontend.services.{MigratedSubmissionService, SubmissionService}
@@ -65,7 +64,7 @@ class SendYourApplicationController @Inject()(val migratedSubmissionService: Mig
             }
           }
 
-          if (isEnabled(DirectDebitTermsJourney) && !acceptedDirectDebitTerms && hasDirectDebit)
+          if (!acceptedDirectDebitTerms && hasDirectDebit)
             Future.successful(Redirect(routes.DirectDebitTermsAndConditionsController.show()))
           else
             submit(vatNumber)

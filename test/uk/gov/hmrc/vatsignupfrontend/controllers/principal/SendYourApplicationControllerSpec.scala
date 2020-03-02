@@ -23,7 +23,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockMigratedSubmissionService, MockSubmissionService}
@@ -98,7 +97,6 @@ class SendYourApplicationControllerSpec extends ControllerSpec with MockMigrated
       }
       "redirect to Direct Debit Terms page is the DD Terms FS is on and user has not accepted them yet" in {
         mockAuthAdminRole()
-        enable(DirectDebitTermsJourney)
         val vatNumber = testVatNumber
         val request = testPostRequest.withSession(
           SessionKeys.vatNumberKey -> vatNumber,

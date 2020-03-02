@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
@@ -57,13 +56,12 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
     }
 
     "isMigratedKey value is not in session" when {
-      "hasDirectDebitKey in session and DirectDebitTermsJourney feature switch has been enabled" should {
+      "hasDirectDebitKey in session" should {
 
         lazy val result = TestDirectDebitResolverController.show(testGetRequest(directDebitFlag = Some("true")))
 
         "return status SEE_OTHER (303)" in {
           mockAuthAdminRole()
-          enable(DirectDebitTermsJourney)
 
           status(result) shouldBe SEE_OTHER
         }
@@ -72,14 +70,14 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
           redirectLocation(result) shouldBe Some(routes.DirectDebitTermsAndConditionsController.show().url)
         }
       }
+    }
 
-      "hasDirectDebitKey in session and DirectDebitTermsJourney feature switch has been disabled" should {
+    "prerequisite data is missing from session" should {
 
-        lazy val result = TestDirectDebitResolverController.show(testGetRequest(directDebitFlag = Some("true")))
+        lazy val result = TestDirectDebitResolverController.show(testGetRequest())
 
         "return status SEE_OTHER (303)" in {
           mockAuthAdminRole()
-          disable(DirectDebitTermsJourney)
 
           status(result) shouldBe SEE_OTHER
         }
@@ -89,40 +87,4 @@ class DirectDebitResolverControllerSpec extends UnitSpec with GuiceOneAppPerSuit
         }
       }
     }
-
-    "prerequisite data is missing from session" when {
-
-      "the direct debit feature switch has been enabled" should {
-
-        lazy val result = TestDirectDebitResolverController.show(testGetRequest())
-
-        "return status SEE_OTHER (303)" in {
-          mockAuthAdminRole()
-          enable(DirectDebitTermsJourney)
-
-          status(result) shouldBe SEE_OTHER
-        }
-
-        "redirect to the Capture Email page" in {
-          redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
-        }
-      }
-
-      "Direct Debit feature switch is disabled" should {
-
-        lazy val result = TestDirectDebitResolverController.show(testGetRequest())
-
-        "return status SEE_OTHER (303)" in {
-          mockAuthAdminRole()
-          disable(DirectDebitTermsJourney)
-
-          status(result) shouldBe SEE_OTHER
-        }
-
-        "redirect to the Capture Email page" in {
-          redirectLocation(result) shouldBe Some(routes.CaptureEmailController.show().url)
-        }
-      }
-    }
-  }
 }

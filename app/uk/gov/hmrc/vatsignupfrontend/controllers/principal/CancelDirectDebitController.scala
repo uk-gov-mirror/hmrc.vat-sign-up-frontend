@@ -20,7 +20,6 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.cancel_direct_debit
 
@@ -29,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CancelDirectDebitController @Inject()(implicit ec: ExecutionContext,
                                               vcc: VatControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(DirectDebitTermsJourney)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

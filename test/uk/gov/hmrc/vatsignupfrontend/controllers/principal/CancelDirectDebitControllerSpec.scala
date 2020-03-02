@@ -21,8 +21,6 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
@@ -32,11 +30,9 @@ class CancelDirectDebitControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
 
   lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/cancel-direct-debit")
 
-  "Calling the show action of the Cancel Direct Debit controller" when {
-    "the feature switch is enabled" should {
+  "Calling the show action of the Cancel Direct Debit controller" should {
       "show the Cancel Direct Debit page" in {
         mockAuthAdminRole()
-        enable(DirectDebitTermsJourney)
 
         val result = TestCancelDirectDebitController.show(testGetRequest)
         status(result) shouldBe Status.OK
@@ -44,18 +40,4 @@ class CancelDirectDebitControllerSpec extends UnitSpec with GuiceOneAppPerSuite 
         charset(result) shouldBe Some("utf-8")
       }
     }
-
-    "the feature switch is disabled" should {
-      "return a not found" in {
-        mockAuthAdminRole()
-        disable(DirectDebitTermsJourney)
-
-        intercept[NotFoundException](
-          TestCancelDirectDebitController.show(testGetRequest)
-        )
-
-      }
-    }
-  }
-
 }
