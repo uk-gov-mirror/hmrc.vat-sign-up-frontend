@@ -259,7 +259,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
       "redirect to direct-debit-terms-and-conditions" when {
         "acceptedDirectDebit key is missing from session" in {
           enable(FinalCheckYourAnswer)
-          enable(DirectDebitTermsJourney)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 
@@ -277,7 +276,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
       "redirect to direct-debit-terms-and-conditions" when {
         "acceptedDirectDebit key in session is false" in {
           enable(FinalCheckYourAnswer)
-          enable(DirectDebitTermsJourney)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 

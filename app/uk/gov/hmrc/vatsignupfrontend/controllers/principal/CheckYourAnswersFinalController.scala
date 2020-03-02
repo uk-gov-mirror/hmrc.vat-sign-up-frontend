@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{DirectDebitTermsJourney, FinalCheckYourAnswer}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyClosed, CompanyDetails}
@@ -119,7 +119,7 @@ class CheckYourAnswersFinalController @Inject()(storeVatNumberService: StoreVatN
       }
 
       (optVatNumber, hasDirectDebit) match {
-        case (Some(vatNumber), true) if acceptedDirectDebitTerms || !isEnabled(DirectDebitTermsJourney) =>
+        case (Some(vatNumber), true) if acceptedDirectDebitTerms =>
           submit(vatNumber)
         case (Some(vatNumber), false) =>
           submit(vatNumber)

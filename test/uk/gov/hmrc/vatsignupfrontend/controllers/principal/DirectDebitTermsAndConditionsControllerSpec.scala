@@ -20,10 +20,8 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.ControllerSpec
 
 class DirectDebitTermsAndConditionsControllerSpec extends ControllerSpec {
@@ -33,15 +31,6 @@ class DirectDebitTermsAndConditionsControllerSpec extends ControllerSpec {
   lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/direct-debit-terms-and-conditions")
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("POST", "/direct-debit-terms-and-conditions")
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(DirectDebitTermsJourney)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(DirectDebitTermsJourney)
-  }
 
   "Calling the show action of the Direct Debit Terms and Conditions controller" should {
 
@@ -62,16 +51,6 @@ class DirectDebitTermsAndConditionsControllerSpec extends ControllerSpec {
 
     "render the Direct Debit Terms and Conditions View" in {
       titleOf(result) shouldBe MessageLookup.PrincipalDirectDebitTermsAndConditions.title
-    }
-  }
-
-  "return a Not Found Exception" when {
-    "the feature switch is disabled" in {
-      disable(DirectDebitTermsJourney)
-
-      intercept[NotFoundException](
-        TestDirectDebitTermsAndConditionsController.show(testGetRequest)
-      )
     }
   }
 

@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.SubmissionStub._
@@ -91,7 +90,6 @@ class SendYourApplicationControllerISpec extends ComponentSpecBase with CustomMa
     "A Non-Migrated VRN has Direct Debits, the DD Terms FS is enabled and the user has not accepted them" should {
       "Submit successfully and redirect to direct debit terms page" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        enable(DirectDebitTermsJourney)
 
         val res = post("/about-to-submit", cookies = Map(
           SessionKeys.vatNumberKey -> testVatNumber,

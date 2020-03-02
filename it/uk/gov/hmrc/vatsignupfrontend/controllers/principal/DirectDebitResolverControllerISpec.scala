@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub.{stubAuth, successfulAuthResponse}
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -40,13 +39,12 @@ class DirectDebitResolverControllerISpec extends ComponentSpecBase with CustomMa
 
     }
 
-    "the user is not a migrated user and has a direct debit hasDirectDebitKey -> true" when {
+    "The user is not a migrated user" when {
 
-      "the direct debit feature is enabled" should {
+      "the user has a direct debit" should {
 
         "redirect to the Direct Debit T&Cs Agree page" in {
 
-          enable(DirectDebitTermsJourney)
           stubAuth(OK, successfulAuthResponse())
 
           val result = get("/direct-debit-resolver", Map(SessionKeys.hasDirectDebitKey -> "true"))
@@ -57,13 +55,14 @@ class DirectDebitResolverControllerISpec extends ComponentSpecBase with CustomMa
           )
         }
       }
-      "the direct debit feature is disabled" should {
+
+      "the user does not have a direct debit" should {
 
         "redirect to the Capture Email page" in {
 
           stubAuth(OK, successfulAuthResponse())
 
-          val result = get("/direct-debit-resolver", Map(SessionKeys.hasDirectDebitKey -> "true"))
+          val result = get("/direct-debit-resolver", Map(SessionKeys.hasDirectDebitKey -> "false"))
 
           result should have(
             httpStatus(SEE_OTHER),
@@ -72,31 +71,15 @@ class DirectDebitResolverControllerISpec extends ComponentSpecBase with CustomMa
         }
       }
     }
-    "the Direct Debit and the user is Direct Debit" should {
-
-      "redirect to the Capture Email page" in {
-
-        enable(DirectDebitTermsJourney)
-        stubAuth(OK, successfulAuthResponse())
-
-        val result = get("/direct-debit-resolver", Map(SessionKeys.hasDirectDebitKey -> "true"))
-
-        result should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.DirectDebitTermsAndConditionsController.show().url)
-        )
-      }
-    }
   }
 
-  "the Direct Debit feature is disabled and the user is Direct Debit" should {
+  "the user does not have direct debit" should {
 
     "redirect to the Capture Email page" in {
 
-      disable(DirectDebitTermsJourney)
       stubAuth(OK, successfulAuthResponse())
 
-      val result = get("/direct-debit-resolver", Map(SessionKeys.hasDirectDebitKey -> "true"))
+      val result = get("/direct-debit-resolver")
 
       result should have(
         httpStatus(SEE_OTHER),
@@ -105,38 +88,4 @@ class DirectDebitResolverControllerISpec extends ComponentSpecBase with CustomMa
     }
   }
 
-  "the user does not have direct debit" when {
-
-    "the direct debit feature is enabled" should {
-
-      "redirect to the Capture Email page" in {
-
-        enable(DirectDebitTermsJourney)
-        stubAuth(OK, successfulAuthResponse())
-
-        val result = get("/direct-debit-resolver")
-
-        result should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureEmailController.show().url)
-        )
-      }
-    }
-
-    "the direct debit feature is disabled" should {
-
-      "redirect to the Capture Email page" in {
-
-        disable(DirectDebitTermsJourney)
-        stubAuth(OK, successfulAuthResponse())
-
-        val result = get("/direct-debit-resolver")
-
-        result should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureEmailController.show().url)
-        )
-      }
-    }
-  }
 }

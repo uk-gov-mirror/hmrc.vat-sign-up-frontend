@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.DirectDebitTermsJourney
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -26,7 +25,6 @@ class CancelDirectDebitControllerISpec extends ComponentSpecBase with CustomMatc
   "GET /cancel-direct-debit" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
-      enable(DirectDebitTermsJourney)
 
       val res = get("/cancel-direct-debit")
 
