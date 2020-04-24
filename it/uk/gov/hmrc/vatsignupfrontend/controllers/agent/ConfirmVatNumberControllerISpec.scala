@@ -20,12 +20,10 @@ import java.time.LocalDate
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
@@ -45,212 +43,10 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
   }
 
   "POST /vat-number" should {
-    "the ReSignUpJourney feature switch is enabled" when {
-      "redirect to the capture client business entity page" when {
-        "the vat number is successfully stored" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Eligible))
-          stubStoreVatNumberSuccess(isFromBta = false)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureBusinessEntityController.show().url)
-          )
-        }
-
-        "the vat number is successfully stored and isMigrated" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
-          stubStoreMigratedVatNumber(testVatNumber)(status = OK)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureBusinessEntityController.show().url)
-          )
-        }
-
-        "the overseas vat number is successfully stored" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
-          stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureBusinessEntityController.show().url)
-          )
-        }
-
-        "the overseas migrated vat number is successfully stored" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = true)))
-          stubStoreMigratedVatNumber(testVatNumber)(status = OK)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CaptureBusinessEntityController.show().url)
-          )
-        }
-      }
-
-      "redirect to no agent client relationship page" when {
-        "the vat number is unsuccessfully stored as there is no client agent relationship" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Eligible))
-          stubStoreVatNumberNoRelationship(isFromBta = false)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.NoAgentClientRelationshipController.show().url)
-          )
-        }
-      }
-
-      "redirect to cannot use service page" when {
-        "the vat number is unsuccessfully stored as the client is ineligible" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.CannotUseServiceController.show().url)
-          )
-        }
-      }
-
-      "redirect to deregistered VAT number page" when {
-        "the vat number is unsuccessfully stored as the client is Deregistered" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
-          )
-        }
-      }
-
-      "redirect to the sign up after this date page" when {
-        "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and one date is available" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(LocalDate.now)))))
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.MigratableDatesController.show().url)
-          )
-
-          getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
-        }
-      }
-
-      "redirect to the sign up after this date page" when {
-        "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and two dates is available" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(LocalDate.now()), Some(LocalDate.now())))))
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.MigratableDatesController.show().url)
-          )
-
-          getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
-        }
-      }
-
-      "redirect to the already signed up page" when {
-        "the vat number has already been signed up" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.AlreadySignedUpController.show().url)
-          )
-        }
-      }
-
-      "redirect to the migration in progress error page" when {
-        "the vat number has already been signed up and migration is in progress" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(MigrationInProgress))
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
-          )
-        }
-      }
-
-      "redirect to the CouldNotConfirmVatNumber page" when {
-        "the eligibility check returns Not Found" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = NOT_FOUND, optEligibilityResponse = None)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(errorRoutes.CouldNotConfirmVatNumberController.show().url)
-          )
-        }
-      }
-
-      "throw an internal server error" when {
-        "the vat number cannot be stored" in {
-          enable(ReSignUpJourney)
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Eligible))
-          stubStoreVatNumberFailure(isFromBta = false)
-
-          val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
-
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-          )
-        }
-      }
-    }
-  }
-
-  "the ReSignUpJourney feature switch is disabled" when {
     "redirect to the capture client business entity page" when {
       "the vat number is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberEligibilitySuccess(testVatNumber)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Eligible))
         stubStoreVatNumberSuccess(isFromBta = false)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
@@ -260,13 +56,37 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
-    }
 
-    "redirect to the capture client business entity page" when {
+      "the vat number is successfully stored and isMigrated" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
+        stubStoreMigratedVatNumber(testVatNumber)(status = OK)
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
+        )
+      }
+
       "the overseas vat number is successfully stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberEligibilityOverseas(testVatNumber)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
         stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CaptureBusinessEntityController.show().url)
+        )
+      }
+
+      "the overseas migrated vat number is successfully stored" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = true)))
+        stubStoreMigratedVatNumber(testVatNumber)(status = OK)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -280,7 +100,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to no agent client relationship page" when {
       "the vat number is unsuccessfully stored as there is no client agent relationship" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberEligibilitySuccess(testVatNumber)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Eligible))
         stubStoreVatNumberNoRelationship(isFromBta = false)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
@@ -295,8 +115,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to cannot use service page" when {
       "the vat number is unsuccessfully stored as the client is ineligible" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberIneligibleForMtd(testVatNumber)
-        stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates())
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -307,12 +126,24 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "redirect to deregistered VAT number page" when {
+      "the vat number is unsuccessfully stored as the client is Deregistered" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
+        )
+      }
+    }
+
     "redirect to the sign up after this date page" when {
       "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and one date is available" in {
-        val testDate = MigratableDates(Some(LocalDate.now))
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberIneligibleForMtd(testVatNumber, testDate)
-        stubStoreVatNumberIneligible(isFromBta = false, migratableDates = testDate)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(LocalDate.now)))))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -327,10 +158,8 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
 
     "redirect to the sign up after this date page" when {
       "the vat number is unsuccessfully stored as the client is ineligible for mtd vat and two dates is available" in {
-        val testDates = MigratableDates(Some(LocalDate.now()), Some(LocalDate.now()))
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberIneligibleForMtd(testVatNumber, testDates)
-        stubStoreVatNumberIneligible(isFromBta = false, migratableDates = testDates)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(LocalDate.now()), Some(LocalDate.now())))))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -346,8 +175,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the already signed up page" when {
       "the vat number has already been signed up" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberEligibilitySuccess(testVatNumber)
-        stubStoreVatNumberAlreadySignedUp(isFromBta = false)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -361,8 +189,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the migration in progress error page" when {
       "the vat number has already been signed up and migration is in progress" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberEligibilitySuccess(testVatNumber)
-        stubStoreVatNumberMigrationInProgress(isFromBta = false)
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(MigrationInProgress))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -373,11 +200,25 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
+    "redirect to the CouldNotConfirmVatNumber page" when {
+      "the eligibility check returns Not Found" in {
+        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubVatNumberEligibility(testVatNumber)(status = NOT_FOUND, optEligibilityResponse = None)
+
+        val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(errorRoutes.CouldNotConfirmVatNumberController.show().url)
+        )
+      }
+    }
+
     "throw an internal server error" when {
       "the vat number cannot be stored" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Eligible))
         stubStoreVatNumberFailure(isFromBta = false)
-        stubVatNumberEligibilityFailure(testVatNumber)
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 
@@ -387,5 +228,4 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
   }
-
 }
