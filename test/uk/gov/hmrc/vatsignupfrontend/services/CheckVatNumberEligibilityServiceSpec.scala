@@ -18,30 +18,18 @@ package uk.gov.hmrc.vatsignupfrontend.services
 
 import org.scalatest.BeforeAndAfterEach
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
-import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.{MockVatNumberEligibilityConnector, MockVatNumberEligibilityPreMigrationConnector}
+import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockVatNumberEligibilityConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testEndDate, testStartDate, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{AlreadySubscribed, Deregistered, Eligible, Ineligible, Inhibited, MigrationInProgress, VatNumberNotFound}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityPreMigrationHttpParser.{IneligibleForMtdVatNumber, InvalidVatNumber, VatNumberEligible}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CheckVatNumberEligibilityServiceSpec extends UnitSpec
-  with MockVatNumberEligibilityPreMigrationConnector
-  with MockVatNumberEligibilityConnector
-  with FeatureSwitching
-  with BeforeAndAfterEach{
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    disable(ReSignUpJourney)
-  }
+class CheckVatNumberEligibilityServiceSpec extends UnitSpec with MockVatNumberEligibilityConnector with BeforeAndAfterEach {
 
   object TestService extends CheckVatNumberEligibilityService(
-    mockVatNumberEligibilityPreMigrationConnector,
     mockVatNumberEligibilityConnector
   )
 
@@ -50,117 +38,69 @@ class CheckVatNumberEligibilityServiceSpec extends UnitSpec
   val testMigratableDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
   "checkVatNumberEligibility" when {
-    "the ReSignUpJourney feature switch is enabled" when {
-      "the connector returns Eligible" should {
-        "return Eligible and isMigrated" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Eligible(isOverseas = false, isMigrated = true))))
+    "the connector returns Eligible" should {
+      "return Eligible and isMigrated" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Eligible(isOverseas = false, isMigrated = true))))
 
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Eligible(isOverseas = false, isMigrated = true)
-        }
-      }
-
-      "the connector returns MigrationInProgress" should {
-        "return MigrationInProgress" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(MigrationInProgress)))
-
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
-        }
-      }
-
-      "the connector returns AlreadySubscribed" should {
-        "return AlreadySubscribed" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(AlreadySubscribed)))
-
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
-        }
-      }
-
-      "the connector returns Ineligible" should {
-        "return Ineligible" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Ineligible)))
-
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Ineligible
-        }
-      }
-
-      "the connector returns Deregistered" should {
-        "return Deregistered" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Deregistered)))
-
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Deregistered
-        }
-      }
-
-      "the connector returns Inhibited with dates" should {
-        "return Inhibited" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Inhibited(testMigratableDates))))
-
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)
-        }
-      }
-
-      "the connector returns VatNumberNotFound" should {
-        "return VatNumberNotFound" in {
-          enable(ReSignUpJourney)
-          mockVatNumberEligibility(testVatNumber)(Future.successful(Left(VatNumberNotFound)))
-
-          val result = await(TestService.checkEligibility(testVatNumber))
-
-          result shouldBe StoreVatNumberOrchestrationService.InvalidVatNumber
-        }
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.Eligible(isOverseas = false, isMigrated = true)
       }
     }
 
-    "the ReSignUpJourney feature switch is disabled" when {
-      "the pre migration connector returns VatNumberEligible" should {
-        "return Eligible" in {
-          mockVatNumberPreMigrationEligibility(testVatNumber)(Future.successful(Right(VatNumberEligible(isOverseas = false))))
+    "the connector returns MigrationInProgress" should {
+      "return MigrationInProgress" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(MigrationInProgress)))
 
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Eligible(isOverseas = false, isMigrated = false)
-        }
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.MigrationInProgress
       }
+    }
 
-      "the pre migration connector returns IneligibleForMtdVatNumber with dates" should {
-        "return Inhibited with dates" in {
-          mockVatNumberPreMigrationEligibility(testVatNumber)(Future.successful(Left(IneligibleForMtdVatNumber(testMigratableDates))))
+    "the connector returns AlreadySubscribed" should {
+      "return AlreadySubscribed" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(AlreadySubscribed)))
 
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)
-        }
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
       }
+    }
 
-      "the pre migration connector returns IneligibleForMtdVatNumber without dates" should {
-        "return Ineligible" in {
-          mockVatNumberPreMigrationEligibility(testVatNumber)(Future.successful(Left(IneligibleForMtdVatNumber(MigratableDates()))))
+    "the connector returns Ineligible" should {
+      "return Ineligible" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Ineligible)))
 
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.Ineligible
-        }
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.Ineligible
       }
+    }
 
-      "the pre migration connector returns InvalidVatNumber with dates" should {
-        "return InvalidVatNumber" in {
-          mockVatNumberPreMigrationEligibility(testVatNumber)(Future.successful(Left(InvalidVatNumber)))
+    "the connector returns Deregistered" should {
+      "return Deregistered" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Deregistered)))
 
-          val result = await(TestService.checkEligibility(testVatNumber))
-          result shouldBe StoreVatNumberOrchestrationService.InvalidVatNumber
-        }
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.Deregistered
+      }
+    }
+
+    "the connector returns Inhibited with dates" should {
+      "return Inhibited" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Inhibited(testMigratableDates))))
+
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.Inhibited(testMigratableDates)
+      }
+    }
+
+    "the connector returns VatNumberNotFound" should {
+      "return VatNumberNotFound" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Left(VatNumberNotFound)))
+
+        val result = await(TestService.checkEligibility(testVatNumber))
+
+        result shouldBe StoreVatNumberOrchestrationService.InvalidVatNumber
       }
     }
   }
-
 
 }

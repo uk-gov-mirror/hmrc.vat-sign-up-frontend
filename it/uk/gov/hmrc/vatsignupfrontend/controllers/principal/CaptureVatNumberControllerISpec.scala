@@ -18,19 +18,17 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.VatNumberForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreVatNumberStub._
-import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers, IntegrationTestConstantsGenerator}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
-class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
+class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /vat-number" when {
     "the KnownFactsJourney feature switch is enabled" should {
@@ -47,549 +45,274 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
   }
 
   "POST /vat-number" when {
-    "the ReSignUpJourney feature switch is disabled" when {
-      "the user has a VAT-DEC enrolment" when {
-        "the vat eligibility is successful" when {
-          "the enrolment vat number matches the inserted one" should {
-            "redirect to the business entity type page" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilitySuccess(testVatNumber)
-              stubStoreVatNumberSuccess(isFromBta = false)
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureBusinessEntityController.show().url)
-              )
-            }
-          }
-
-          "the enrolment vat number doesn't match the inserted one" should {
-            "redirect to error page" in {
-              val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
-              )
-            }
-          }
-        }
-
-        "the vat eligibility is unsuccessful" should {
-          "redirect to the invalid vat number page" when {
-            "the vat number is fails the checksum validation" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
-              )
-            }
-          }
-
-          "redirect to the Cannot Use Service page" when {
-            "the vat number is ineligible for mtd vat" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberIneligibleForMtd(testVatNumber)
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.CannotUseServiceController.show().url)
-              )
-            }
-          }
-
-          "redirect to the sign up after this date page" when {
-            "the vat number is ineligible for mtd vat and one date is available" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-            }
-          }
-
-          "redirect to the sign up between these dates page" when {
-            "the vat number is ineligible for mtd vat and two dates are available" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-            }
-          }
-
-          "redirect to the migration in progress error page" when {
-            "the vat number is already signed up and migrating" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilitySuccess(testVatNumber)
-              stubStoreVatNumberMigrationInProgress(isFromBta = false)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
-              )
-            }
-          }
-
-          "redirect to the business already signed up error page" when {
-            "the vat number is already signed up and a user is attempting to claim subscription" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilitySuccess(testVatNumber)
-              stubStoreVatNumberAlreadySignedUp(isFromBta = false)
-              stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
-              )
-            }
-          }
-
-          "redirect to the capture business entity controller" when {
-            "the vat number is overseas" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilityOverseas(testVatNumber)
-              stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureBusinessEntityController.show().url)
-              )
-            }
-          }
-
-          "throw an internal server error" when {
-            "any other failure occurs" in {
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilityFailure(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(INTERNAL_SERVER_ERROR)
-              )
-            }
-          }
-        }
-      }
-
-      "the user doesn't have an enrolment" when {
-        "the vat eligibility is successful" should {
-          "redirect to Capture Vat Registration Date page" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberEligibilitySuccess(testVatNumber)
-
-            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureVatRegistrationDateController.show().url)
-            )
-          }
-
-          "the vat number is eligible and overseas" should {
-            "redirect to the Vat Registration Date" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibilityOverseas(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureVatRegistrationDateController.show().url)
-              )
-            }
-          }
-        }
-
-        "the vat eligibility is unsuccessful" when {
-          "redirect to the invalid vat number page" when {
-            "the vat number is fails the checksum validation" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibilitySuccess(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
-              )
-            }
-          }
-
-          "redirect to the invalid vat number page" when {
-            "the eligibility returns the vat number as invalid" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibilityInvalid(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
-              )
-            }
-          }
-
-          "redirect to the Cannot Use Service page" when {
-            "the vat number is ineligible for mtd vat" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberIneligibleForMtd(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.CannotUseServiceController.show().url)
-              )
-            }
-          }
-
-          "redirect to the sign up after this date page" when {
-            "the vat number is ineligible for mtd vat and one date is available" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate)))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-
-              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
-            }
-          }
-
-          "redirect to the sign up between these dates page" when {
-            "the vat number is ineligible for mtd vat and two dates are available" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberIneligibleForMtd(testVatNumber, migratableDates = MigratableDates(Some(testStartDate), Some(testEndDate)))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-
-              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
-            }
-          }
-
-          "throw an internal server error" when {
-            "any other failure occurs" in {
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibilityFailure(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(INTERNAL_SERVER_ERROR)
-              )
-            }
-          }
-        }
-      }
-    }
-
-    "the ReSignUpJourney feature switch is enabled" when {
-      "the user has a VAT-DEC enrolment" when {
-        "the vat eligibility is successful" when {
-          "the enrolment vat number matches the inserted one" should {
-            "redirect to the business entity type page" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
-              stubStoreMigratedVatNumber(testVatNumber)(status = OK)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureBusinessEntityController.show().url)
-              )
-            }
-          }
-
-          "the enrolment vat number doesn't match the inserted one" should {
-            "redirect to error page" in {
-              enable(ReSignUpJourney)
-              val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
-              )
-            }
-          }
-        }
-
-        "the vat eligibility is unsuccessful" should {
-          "redirect to the invalid vat number page" when {
-            "the vat number is fails the checksum validation" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
-              )
-            }
-          }
-
-          "redirect to the Cannot Use Service page" when {
-            "the vat number is ineligible for mtd vat" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.CannotUseServiceController.show().url)
-              )
-            }
-          }
-
-          "redirect to the Deregistered Vat Number page" when {
-            "the vat number is deregistered for mtd vat" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
-              )
-            }
-          }
-
-          "redirect to the sign up after this date page" when {
-            "the vat number is ineligible for mtd vat and one date is available" in {
-              val testDates = MigratableDates(Some(testStartDate))
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(testDates)))
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = testDates)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-            }
-          }
-
-          "redirect to the sign up between these dates page" when {
-            "the vat number is ineligible for mtd vat and two dates are available" in {
-              val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(testDates)))
-              stubStoreVatNumberIneligible(isFromBta = false, migratableDates = testDates)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-            }
-          }
-
-          "redirect to the migration in progress error page" when {
-            "the vat number is already signed up and migrating" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(MigrationInProgress))
-              stubStoreVatNumberMigrationInProgress(isFromBta = false)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
-              )
-            }
-          }
-
-          "redirect to the business already signed up error page" when {
-            "the vat number is already signed up and a user is attempting to claim subscription" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
-              stubStoreVatNumberAlreadySignedUp(isFromBta = false)
-              stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
-              )
-            }
-          }
-
-          "redirect to the overseas resolver controller" when {
-            "the vat number is overseas" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
-              stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureBusinessEntityController.show().url)
-              )
-            }
-          }
-
-          "Redirect to the InvalidVatNumber page" when {
-            "The eligibility check returns 404" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibilityInvalid(testVatNumber)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
-              )
-            }
-          }
-
-          "throw an internal server error" when {
-            "any other failure occurs" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = INTERNAL_SERVER_ERROR, optEligibilityResponse = None)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(INTERNAL_SERVER_ERROR)
-              )
-            }
-          }
-        }
-      }
-
-      "the user has an MTD-VAT enrolment" when {
-        "the vat eligibility is successful" when {
-          "the enrolment vat number matches the inserted one" should {
-            "redirect to the business entity type page" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
-              stubStoreMigratedVatNumber(testVatNumber)(status = OK)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureBusinessEntityController.show().url)
-              )
-            }
-          }
-
-          "the enrolment vat number doesn't match the inserted one" should {
-            "redirect to error page" in {
-              enable(ReSignUpJourney)
-              val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
-              stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
-              )
-            }
-          }
-        }
-      }
-
-      "the user has both MTD-VAT and VAT-DEC enrolments" when {
-        "the vat eligibility is successful" when {
-          "the enrolment vat number matches the inserted one" should {
-            "redirect to the business entity type page" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse(mtdVatEnrolment, vatDecEnrolment))
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
-              stubStoreMigratedVatNumber(testVatNumber)(status = OK)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureBusinessEntityController.show().url)
-              )
-            }
-          }
-
-          "the enrolment vat number doesn't match the inserted one" should {
-            "redirect to error page" in {
-              enable(ReSignUpJourney)
-              val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
-              stubAuth(OK, successfulAuthResponse(mtdVatEnrolment, vatDecEnrolment))
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
-
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
-              )
-            }
-          }
-        }
-      }
-
-      "the user doesn't have an enrolment" when {
-        "the vat eligibility is successful" should {
-          "redirect to Capture Vat Registration Date page" in {
-            enable(ReSignUpJourney)
-            stubAuth(OK, successfulAuthResponse())
+    "the user has a VAT-DEC enrolment" when {
+      "the vat eligibility is successful" when {
+        "the enrolment vat number matches the inserted one" should {
+          "redirect to the business entity type page" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
             stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
+            stubStoreMigratedVatNumber(testVatNumber)(status = OK)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureBusinessEntityController.show().url)
+            )
+          }
+        }
+
+        "the enrolment vat number doesn't match the inserted one" should {
+          "redirect to error page" in {
+            val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
+            )
+          }
+        }
+      }
+
+      "the vat eligibility is unsuccessful" should {
+        "redirect to the invalid vat number page" when {
+          "the vat number is fails the checksum validation" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.InvalidVatNumberController.show().url)
+            )
+          }
+        }
+
+        "redirect to the Cannot Use Service page" when {
+          "the vat number is ineligible for mtd vat" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.CannotUseServiceController.show().url)
+            )
+          }
+        }
+
+        "redirect to the Deregistered Vat Number page" when {
+          "the vat number is deregistered for mtd vat" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = MigratableDates(None))
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
+            )
+          }
+        }
+
+        "redirect to the sign up after this date page" when {
+          "the vat number is ineligible for mtd vat and one date is available" in {
+            val testDates = MigratableDates(Some(testStartDate))
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(testDates)))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = testDates)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.MigratableDatesController.show().url)
+            )
+          }
+        }
+
+        "redirect to the sign up between these dates page" when {
+          "the vat number is ineligible for mtd vat and two dates are available" in {
+            val testDates = MigratableDates(Some(testStartDate), Some(testEndDate))
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(testDates)))
+            stubStoreVatNumberIneligible(isFromBta = false, migratableDates = testDates)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.MigratableDatesController.show().url)
+            )
+          }
+        }
+
+        "redirect to the migration in progress error page" when {
+          "the vat number is already signed up and migrating" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(MigrationInProgress))
+            stubStoreVatNumberMigrationInProgress(isFromBta = false)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.MigrationInProgressErrorController.show().url)
+            )
+          }
+        }
+
+        "redirect to the business already signed up error page" when {
+          "the vat number is already signed up and a user is attempting to claim subscription" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+            stubStoreVatNumberAlreadySignedUp(isFromBta = false)
+            stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
+            )
+          }
+        }
+
+        "redirect to the overseas resolver controller" when {
+          "the vat number is overseas" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
+            stubStoreVatNumberSuccess(isFromBta = false, isOverseasTrader = true)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureBusinessEntityController.show().url)
+            )
+          }
+        }
+
+        "Redirect to the InvalidVatNumber page" when {
+          "The eligibility check returns 404" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = NOT_FOUND, optEligibilityResponse = None)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.InvalidVatNumberController.show().url)
+            )
+          }
+        }
+
+        "throw an internal server error" when {
+          "any other failure occurs" in {
+            stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = INTERNAL_SERVER_ERROR, optEligibilityResponse = None)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR)
+            )
+          }
+        }
+      }
+    }
+
+    "the user has an MTD-VAT enrolment" when {
+      "the vat eligibility is successful" when {
+        "the enrolment vat number matches the inserted one" should {
+          "redirect to the business entity type page" in {
+            stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
+            stubStoreMigratedVatNumber(testVatNumber)(status = OK)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureBusinessEntityController.show().url)
+            )
+          }
+        }
+
+        "the enrolment vat number doesn't match the inserted one" should {
+          "redirect to error page" in {
+            val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
+            stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
+            )
+          }
+        }
+      }
+    }
+
+    "the user has both MTD-VAT and VAT-DEC enrolments" when {
+      "the vat eligibility is successful" when {
+        "the enrolment vat number matches the inserted one" should {
+          "redirect to the business entity type page" in {
+            stubAuth(OK, successfulAuthResponse(mtdVatEnrolment, vatDecEnrolment))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
+            stubStoreMigratedVatNumber(testVatNumber)(status = OK)
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureBusinessEntityController.show().url)
+            )
+          }
+        }
+
+        "the enrolment vat number doesn't match the inserted one" should {
+          "redirect to error page" in {
+            val nonMatchingVat = IntegrationTestConstantsGenerator.randomVatNumber
+            stubAuth(OK, successfulAuthResponse(mtdVatEnrolment, vatDecEnrolment))
+
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> nonMatchingVat)
+
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.IncorrectEnrolmentVatNumberController.show().url)
+            )
+          }
+        }
+      }
+    }
+
+    "the user doesn't have an enrolment" when {
+      "the vat eligibility is successful" should {
+        "redirect to Capture Vat Registration Date page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Migrated))
+
+          val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+          )
+        }
+
+        "the vat number is eligible and overseas" should {
+          "redirect to the Vat Registration Date" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
 
             val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
@@ -598,132 +321,111 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
               redirectUri(routes.CaptureVatRegistrationDateController.show().url)
             )
           }
+        }
 
-          "the vat number is eligible and overseas" should {
-            "redirect to the Vat Registration Date" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Overseas(isMigrated = false)))
+        "the vat number is AlreadySubscribed" should {
+          "redirect to the Vat Registration Date" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureVatRegistrationDateController.show().url)
-              )
-            }
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+            )
           }
+        }
+      }
 
-          "the vat number is AlreadySubscribed" should {
-            "redirect to the Vat Registration Date" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+      "the vat eligibility is unsuccessful" when {
+        "redirect to the invalid vat number page" when {
+          "the vat number is fails the checksum validation" in {
+            stubAuth(OK, successfulAuthResponse())
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(routes.CaptureVatRegistrationDateController.show().url)
-              )
-            }
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.InvalidVatNumberController.show().url)
+            )
           }
         }
 
-        "the vat eligibility is unsuccessful" when {
-          "redirect to the invalid vat number page" when {
-            "the vat number is fails the checksum validation" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
+        "redirect to the Cannot Use Service page" when {
+          "the vat number is ineligible for mtd vat" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testInvalidVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.InvalidVatNumberController.show().url)
-              )
-            }
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.CannotUseServiceController.show().url)
+            )
           }
+        }
 
-          "redirect to the Cannot Use Service page" when {
-            "the vat number is ineligible for mtd vat" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Ineligible))
+        "redirect to the Deregistered Vat Number page" when {
+          "the vat number is deregistered for mtd vat" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.CannotUseServiceController.show().url)
-              )
-            }
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
+            )
           }
+        }
 
-          "redirect to the Deregistered Vat Number page" when {
-            "the vat number is deregistered for mtd vat" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Deregistered))
+        "redirect to the sign up after this date page" when {
+          "the vat number is ineligible for mtd vat and one date is available" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(testStartDate)))))
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.DeregisteredVatNumberController.show().url)
-              )
-            }
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.MigratableDatesController.show().url)
+            )
+
+            getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
           }
+        }
 
-          "redirect to the sign up after this date page" when {
-            "the vat number is ineligible for mtd vat and one date is available" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(testStartDate)))))
+        "redirect to the sign up between these dates page" when {
+          "the vat number is ineligible for mtd vat and two dates are available" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(testStartDate), Some(testEndDate)))))
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
+            res should have(
+              httpStatus(SEE_OTHER),
+              redirectUri(errorRoutes.MigratableDatesController.show().url)
+            )
 
-              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
-            }
+            getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
           }
+        }
 
-          "redirect to the sign up between these dates page" when {
-            "the vat number is ineligible for mtd vat and two dates are available" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(Inhibited(MigratableDates(Some(testStartDate), Some(testEndDate)))))
+        "throw an internal server error" when {
+          "any other failure occurs" in {
+            stubAuth(OK, successfulAuthResponse())
+            stubVatNumberEligibility(testVatNumber)(status = INTERNAL_SERVER_ERROR, optEligibilityResponse = None)
 
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
 
-              res should have(
-                httpStatus(SEE_OTHER),
-                redirectUri(errorRoutes.MigratableDatesController.show().url)
-              )
-
-              getSessionMap(res).get(SessionKeys.migratableDatesKey) shouldBe defined
-            }
-          }
-
-          "throw an internal server error" when {
-            "any other failure occurs" in {
-              enable(ReSignUpJourney)
-              stubAuth(OK, successfulAuthResponse())
-              stubVatNumberEligibility(testVatNumber)(status = INTERNAL_SERVER_ERROR, optEligibilityResponse = None)
-
-              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
-
-              res should have(
-                httpStatus(INTERNAL_SERVER_ERROR)
-              )
-            }
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR)
+            )
           }
         }
       }
     }
+    
   }
 }

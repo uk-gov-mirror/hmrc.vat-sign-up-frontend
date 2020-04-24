@@ -33,7 +33,6 @@ object FeatureSwitch {
     WelshTranslation,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
-    ReSignUpJourney,
     CrnDissolved
   )
 
@@ -75,11 +74,6 @@ case object FinalCheckYourAnswer extends FeatureSwitch {
 case object GeneralPartnershipNoSAUTR extends FeatureSwitch {
   override val name: String = s"$prefix.General-partnership-no-sautr"
   override val displayText: String = "Enable users to view General Partnership No SAUTR page for individual or agent "
-}
-
-case object ReSignUpJourney extends FeatureSwitch {
-  override val name: String = s"$prefix.re-sign-up-journey"
-  override val displayText: String = "Enable the Resignup journey for users already migrated to ETMP"
 }
 
 case object CrnDissolved extends FeatureSwitch {

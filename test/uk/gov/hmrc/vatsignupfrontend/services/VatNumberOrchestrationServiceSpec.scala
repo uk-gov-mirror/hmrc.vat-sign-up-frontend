@@ -20,7 +20,6 @@ import org.scalatest.BeforeAndAfterEach
 import play.api.http.Status._
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, ReSignUpJourney}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreMigratedVatNumberHttpParser}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
@@ -36,13 +35,7 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
   with MockStoreMigratedVatNumberService
   with MockStoreVatNumberService
   with MockClaimSubscriptionService
-  with BeforeAndAfterEach
-  with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    disable(ReSignUpJourney)
-  }
+  with BeforeAndAfterEach {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

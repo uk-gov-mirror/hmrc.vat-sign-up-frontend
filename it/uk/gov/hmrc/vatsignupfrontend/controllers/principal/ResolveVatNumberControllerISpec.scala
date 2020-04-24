@@ -17,7 +17,6 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ReSignUpJourney
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
@@ -37,9 +36,8 @@ class ResolveVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
-    "the resignUp feature switch is set and user has an MTD-VAT enrolment on the profile" should {
+    "the user has an MTD-VAT enrolment on the profile" should {
       "redirect to the Multiple Vat Check page" in {
-        enable(ReSignUpJourney)
         stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
 
         val res = get("/resolve-vat-number")
