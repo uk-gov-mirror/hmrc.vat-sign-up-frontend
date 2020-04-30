@@ -28,6 +28,20 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   "GET /claim-subscription/:vat-number" when {
+    "the user has an MTD VRN" should {
+      "return a redirect to already claimed error page" in {
+        enable(BTAClaimSubscription)
+
+        stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
+
+        val res = get(s"/claim-subscription/$testVatNumber")
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(errorRoutes.AlreadySignedUpController.show().url)
+        )
+      }
+    }
     "the user has a matching VATDEC enrolment" when {
       "Claim Subscription Service returns subscription claimed" should {
         "return a redirect to the confirmation page" in {
