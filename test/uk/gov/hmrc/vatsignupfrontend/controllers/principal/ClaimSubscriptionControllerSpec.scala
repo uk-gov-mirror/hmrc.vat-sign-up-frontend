@@ -43,6 +43,18 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
   "show" when {
     "the BTA claim subscription feature switch is enabled" when {
+      "the user has an MTD VRN" should {
+        "redirect to AlreadySignedUp" in {
+          enable(BTAClaimSubscription)
+
+          mockAuthRetrieveMtdVatEnrolment()
+
+          val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
+
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(result) should contain(errorRoutes.AlreadySignedUpController.show().url)
+        }
+      }
       "the user has a VATDEC enrolment" when {
         "the VAT number on the enrolment matches the one provided in the URL" when {
           "claim subscription service returns SubscriptionClaimed" should {

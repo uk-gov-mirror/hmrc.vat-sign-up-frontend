@@ -43,7 +43,8 @@ class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubsc
   def show(btaVatNumber: String): Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) {
       enrolments =>
-        enrolments.vatNumber match {
+        if (enrolments.mtdVatNumber.isDefined) Future.successful(Redirect(errorRoutes.AlreadySignedUpController.show()))
+        else enrolments.vatNumber match {
           case Some(enrolmentVatNumber) if enrolmentVatNumber == btaVatNumber =>
             claimSubscriptionService.claimSubscription(enrolmentVatNumber, isFromBta = true) map {
               case Right(SubscriptionClaimed) =>
