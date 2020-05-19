@@ -14,13 +14,12 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
-@import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
-@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.views.html._
-@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.play.views.html.helpers._
+@import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
+@import uk.gov.hmrc.vatsignupfrontend.forms.BusinessEntityForm._
+@import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity
+@import uk.gov.hmrc.vatsignupfrontend.views.html._
+@import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, radioHelper, summaryErrorHelper}
 
 
 @(businessEntityForm: Form[BusinessEntity], postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -34,7 +33,6 @@
     @form(action = postAction) {
         @radioHelper(
             parentForm = businessEntityForm,
-            inline = false,
             options = Seq(
                 (soleTrader, Messages("core.capture_entity_type.soleTrader")),
                 (limitedCompany, Messages("core.capture_entity_type.limitedCompany")),
@@ -44,7 +42,6 @@
             ),
             legend = Messages("agent.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity),
-            hideLegend = false,
             orInterrupt = Some(Messages("core.capture_entity_type.or"))
         )
 
