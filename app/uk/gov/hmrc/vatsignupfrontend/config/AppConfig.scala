@@ -22,7 +22,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubIncorporationInformation, WelshTranslation}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubIncorporationInformation}
 
 @Singleton
 class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
@@ -35,7 +35,6 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
 
   def routeToSwitchLanguage: String => Call = (lang: String) => uk.gov.hmrc.vatsignupfrontend.controllers.routes.LanguageSwitchController.switchToLanguage(lang)
 
-  def languageTranslationEnabled: Boolean = isEnabled(WelshTranslation)
 
   lazy val baseUrl: String = config.getString("base.url")
   val contextRoute = "/vat-through-software/sign-up"

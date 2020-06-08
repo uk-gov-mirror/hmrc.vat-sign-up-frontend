@@ -30,7 +30,6 @@ object FeatureSwitch {
     StubIncorporationInformation,
     BTAClaimSubscription,
     AdditionalKnownFacts,
-    WelshTranslation,
     FinalCheckYourAnswer,
     GeneralPartnershipNoSAUTR,
     CrnDissolved
@@ -54,11 +53,6 @@ case object StubIncorporationInformation extends FeatureSwitch {
 case object BTAClaimSubscription extends FeatureSwitch {
   override val name: String = s"$prefix.bta-claim-subscription"
   override val displayText: String = "Enable users from BTA to claim their subscription through VAT sign up"
-}
-
-case object WelshTranslation extends FeatureSwitch {
-  override val name: String = s"$prefix.welsh-translation"
-  override val displayText: String = "Enable welsh language"
 }
 
 case object AdditionalKnownFacts extends FeatureSwitch {

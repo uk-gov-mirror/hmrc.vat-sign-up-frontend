@@ -30,6 +30,7 @@ class AccessibilityStatementSpec extends ViewSpec with MockAppConfig {
   object Messages {
     val title = "Accessibility statement for signing up to Making Tax Digital for VAT"
     val heading = "Accessibility statement for signing up to Making Tax Digital for VAT"
+    val welshToggle = "English | Cymraeg"
     val introP1 = "This accessibility statement explains how accessible this service is, what to do if you have difficulty using it, and how to report accessibility problems with the service."
     val introP2 = "This service is part of the wider GOV.UK website. There is a separate accessibility statement for the main GOV.UK website."
     val introP3 = "This page only contains information about signing up for the Making Tax digital for VAT service, available at https://www.tax.service.gov.uk/vat-through-software/sign-up."
@@ -123,6 +124,7 @@ class AccessibilityStatementSpec extends ViewSpec with MockAppConfig {
 
     "have multiple paragraphs" in {
       pageBody.select("p").text() shouldBe Seq(
+        Messages.welshToggle,
         Messages.introP1,
         Messages.introP2,
         Messages.introP3,
