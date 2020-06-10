@@ -22,7 +22,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
@@ -45,7 +44,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
     "the BTA claim subscription feature switch is enabled" when {
       "the user has an MTD VRN" should {
         "redirect to AlreadySignedUp" in {
-          enable(BTAClaimSubscription)
 
           mockAuthRetrieveMtdVatEnrolment()
 
@@ -59,7 +57,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         "the VAT number on the enrolment matches the one provided in the URL" when {
           "claim subscription service returns SubscriptionClaimed" should {
             "redirect to SignUpCompleteClientController" in {
-              enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
               mockClaimSubscription(testVatNumber, isFromBta = true)(Future.successful(Right(SubscriptionClaimed)))
@@ -72,7 +69,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
           "claim subscription service returns VatNumberAlreadyEnrolled" should {
             "redirect to Business Already Signed Up error page" in {
-              enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
               mockClaimSubscription(testVatNumber, isFromBta = true)(Future.successful(Left(AlreadyEnrolledOnDifferentCredential)))
@@ -85,7 +81,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
           "claim subscription service returns anything else" should {
             "throw an Internal Server Exception" in {
-              enable(BTAClaimSubscription)
 
               mockAuthRetrieveVatDecEnrolment()
               mockClaimSubscription(testVatNumber, isFromBta = true)(Future.successful(Left(InvalidVatNumber)))
@@ -98,7 +93,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
         "the VAT number on the enrolment does not match the one provided in the URL" should {
           "throw an Internal Server Exception" in {
-            enable(BTAClaimSubscription)
 
             mockAuthRetrieveVatDecEnrolment()
 
@@ -113,7 +107,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       "the user does not have a VATDEC enrolment" when {
         "the VAT number is valid" should {
           "redirect to BTA Capture VAT registration date" in {
-            enable(BTAClaimSubscription)
 
             mockAuthRetrieveEmptyEnrolment()
 
@@ -127,7 +120,6 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
         "the VAT number is invalid" should {
           "throw an Internal Server Exception" in {
-            enable(BTAClaimSubscription)
 
             mockAuthRetrieveEmptyEnrolment()
 

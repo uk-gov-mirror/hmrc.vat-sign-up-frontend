@@ -21,7 +21,6 @@ import java.time.LocalDate
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm
@@ -33,10 +32,6 @@ import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(BTAClaimSubscription)
-  }
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
@@ -48,18 +43,6 @@ class BtaBusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMa
 
       res should have(
         httpStatus(OK)
-      )
-    }
-  }
-
-  "if feature switch is disabled" should {
-    "return a not found" in {
-      disable(BTAClaimSubscription)
-
-      val res = get("/bta/business-postcode")
-
-      res should have(
-        httpStatus(NOT_FOUND)
       )
     }
   }
