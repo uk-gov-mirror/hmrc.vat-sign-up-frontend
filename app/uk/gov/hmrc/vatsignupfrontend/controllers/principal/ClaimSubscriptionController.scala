@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
@@ -38,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubscriptionService)
                                            (implicit ec: ExecutionContext,
                                             vcc: VatControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(BTAClaimSubscription)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show(btaVatNumber: String): Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) {
