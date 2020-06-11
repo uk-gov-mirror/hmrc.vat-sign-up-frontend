@@ -26,7 +26,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.BTAClaimSubscription
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
@@ -57,11 +56,6 @@ class BtaBusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuit
     ).withFormUrlEncodedBody(
       businessPostCode -> postCode.postCode
     )
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(BTAClaimSubscription)
-  }
 
   "Calling the show action of the BTA Business PostCode controller" when {
     "go to the BTA Business PostCode page" in {

@@ -25,19 +25,13 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{BTAClaimSubscription, FeatureSwitching}
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.VatRegistrationDateForm._
 import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class CaptureBtaVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneAppPerSuite
-  with MockVatControllerComponents with FeatureSwitching {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(BTAClaimSubscription)
-  }
+  with MockVatControllerComponents{
 
   object TestCaptureBtaVatNumberController extends CaptureBtaVatRegistrationDateController
 
