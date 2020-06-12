@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, LimitedPartnershipBase}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.SessionUtils
@@ -43,10 +42,6 @@ class ResolvePartnershipController @Inject()(implicit ec: ExecutionContext,
         case Some(_: LimitedPartnershipBase) =>
           Future.successful(
             Redirect(routes.AgentCapturePartnershipCompanyNumberController.show())
-          )
-        case Some(GeneralPartnership) if isEnabled(GeneralPartnershipNoSAUTR) =>
-          Future.successful(
-            Redirect(routes.CapturePartnershipUtrController.show())
           )
         case Some(GeneralPartnership) =>
           Future.successful(

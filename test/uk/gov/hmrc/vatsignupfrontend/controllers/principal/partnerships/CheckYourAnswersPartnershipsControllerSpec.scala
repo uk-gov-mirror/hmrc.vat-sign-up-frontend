@@ -100,33 +100,6 @@ class CheckYourAnswersPartnershipsControllerSpec extends UnitSpec
         }
       }
 
-      "SA UTR is missing from the session" should {
-        "Redirect to Capture Business Entity" in {
-          mockAuthAdminRole()
-
-          val result = TestCheckYourAnswersController.show(testGetRequest(
-            businessEntity = Some(GeneralPartnership),
-            postCode = Some(testBusinessPostcode)
-          ))
-
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
-        }
-      }
-
-      "Business Postcode is missing from the session" should {
-        "Redirect to Capture Business Entity" in {
-          mockAuthAdminRole()
-
-          val result = TestCheckYourAnswersController.show(testGetRequest(
-            businessEntity = Some(GeneralPartnership),
-            sautr = Some(testSaUtr)
-          ))
-
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(principalRoutes.CaptureBusinessEntityController.show().url)
-        }
-      }
     }
 
     "Partnership Entity is Limited Partnership" when {

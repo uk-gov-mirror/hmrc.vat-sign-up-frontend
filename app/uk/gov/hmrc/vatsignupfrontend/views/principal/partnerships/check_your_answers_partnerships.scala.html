@@ -24,10 +24,9 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
 
 @(entityType: BusinessEntity,
-        companyUtr: Option[String],
+        partnershipUtr: Option[String],
         companyNumber: Option[String],
         postCode: Option[PostCode],
-        generalPartnershipNoSAUTRFeatureSwitch: Boolean,
         postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersPartnershipsIdConstants._
@@ -53,14 +52,14 @@
 }
 
 @partnershipCompanyUtr() = @{
-    companyUtr match {
+    partnershipUtr match {
         case Some(utr) =>
             val rowName = CompanyUtrId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
             val rowAnswer = utr
             val rowUrl = partnershipRoutes.ResolvePartnershipUtrController.resolve().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
-        case None if generalPartnershipNoSAUTRFeatureSwitch & entityType == GeneralPartnership =>
+        case None if entityType == GeneralPartnership =>
             val rowName = CompanyUtrId
             val rowQuestion = Messages("principal.check_your_answers_partnerships.company_utr")
             val rowAnswer = Messages("principal.check_your_answers_partnerships.no_sautr")

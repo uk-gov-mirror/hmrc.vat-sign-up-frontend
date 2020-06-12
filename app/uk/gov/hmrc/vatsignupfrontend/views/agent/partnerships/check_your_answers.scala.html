@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-@import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, PostCode}
+@import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership, PostCode}
 @import uk.gov.hmrc.vatsignupfrontend.views.helpers.BusinessEntityHelper
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{continueButton, summaryRowHelper}
@@ -25,7 +25,6 @@
   entityType: BusinessEntity,
   postCode: Option[PostCode],
   companyNumber: Option[String],
-  generalPartnershipNoSAUTR: Boolean,
   postAction: Call)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
@@ -36,18 +35,17 @@
     val rowQuestion = Messages("agent.check-your-answers.business_entity")
     val rowAnswer = BusinessEntityHelper.getBusinessEntityName(entityType)
     val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.routes.CaptureBusinessEntityController.show().url
-
     summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
 }
 @utrNumber() = @{
     utr match {
         case Some(sautr) =>
             val rowName = UtrId
-            val rowQuestion = messages("agent.check-your-answers.utr")
+            val rowQuestion = Messages("agent.check-your-answers.utr")
             val rowAnswer = sautr
             val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships.routes.CapturePartnershipUtrController.show().url
             summaryRowHelper(rowName, rowQuestion, rowAnswer, Some(rowUrl))
-        case _ if generalPartnershipNoSAUTR =>
+        case None if entityType == GeneralPartnership =>
             val rowName = UtrId
             val rowQuestion = Messages("agent.check-your-answers.utr")
             val rowAnswer = Messages("agent.check-your-answers.client_has_no_sautr")

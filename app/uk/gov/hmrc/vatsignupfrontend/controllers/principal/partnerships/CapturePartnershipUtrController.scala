@@ -17,11 +17,10 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, Request}
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm.partnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership}
@@ -32,17 +31,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
-                                                  vcc: VatControllerComponents)
+                                                vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>
+      val isGeneralPartnership = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).contains(GeneralPartnership)
       authorised() {
         Future.successful(
           Ok(capture_partnership_utr(
             partnershipUtrForm.form,
             routes.CapturePartnershipUtrController.submit(),
-            generalPartnershipNoSAUTRAndGeneralPartnership)
+            isGeneralPartnership)
           )
         )
       }
@@ -62,6 +62,7 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
 
   val submit: Action[AnyContent] = Action.async {
     implicit request =>
+      val isGeneralPartnership = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).contains(GeneralPartnership)
       authorised() {
         partnershipUtrForm.form.bindFromRequest.fold(
           formWithErrors =>
@@ -69,11 +70,11 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
               BadRequest(capture_partnership_utr(
                 formWithErrors,
                 routes.CapturePartnershipUtrController.submit(),
-                generalPartnershipNoSAUTRAndGeneralPartnership
+                isGeneralPartnership
               ))
             ),
           utr => Future.successful(
-            if (generalPartnershipNoSAUTRAndGeneralPartnership) {
+            if (isGeneralPartnership) {
               Redirect(routes.PrincipalPlacePostCodeController.show())
                 .addingToSession(SessionKeys.partnershipSautrKey -> utr)
             }
@@ -84,10 +85,5 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
           )
         )
       }
-  }
-
-  private def generalPartnershipNoSAUTRAndGeneralPartnership(implicit request: Request[AnyContent]): Boolean = {
-    val generalPartnership = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey).contains(GeneralPartnership)
-    generalPartnership && isEnabled(GeneralPartnershipNoSAUTR)
   }
 }

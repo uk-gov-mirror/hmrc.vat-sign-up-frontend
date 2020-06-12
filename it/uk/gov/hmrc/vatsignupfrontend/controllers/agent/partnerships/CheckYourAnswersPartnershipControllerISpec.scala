@@ -18,7 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, GeneralPartnershipNoSAUTR}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.{routes => agentRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -52,7 +52,6 @@ class CheckYourAnswersPartnershipControllerISpec extends ComponentSpecBase with 
     }
 
     "return an OK for general partnership without an SA UTR" in {
-      enable(GeneralPartnershipNoSAUTR)
       stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
       val res = get("/client/check-your-answers",

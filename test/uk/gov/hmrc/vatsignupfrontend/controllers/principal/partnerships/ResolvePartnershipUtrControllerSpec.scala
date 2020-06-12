@@ -22,7 +22,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -51,25 +50,8 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
         }
       }
 
-      s"the user is a General Partnership && $GeneralPartnershipNoSAUTR is disabled" should {
+      s"the user is a General Partnership" should {
         "redirect to confirm general partnership page" in {
-          disable(GeneralPartnershipNoSAUTR)
-          mockAuthRetrievePartnershipEnrolment()
-
-          val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-          ))
-
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.ConfirmGeneralPartnershipController.show().url)
-          session(result) get SessionKeys.partnershipSautrKey should contain(testSaUtr)
-
-        }
-      }
-
-      s"the user is a General Partnership && $GeneralPartnershipNoSAUTR is enabled" should {
-        "redirect to confirm general partnership page" in {
-          enable(GeneralPartnershipNoSAUTR)
           mockAuthRetrievePartnershipEnrolment()
 
           val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
@@ -85,31 +67,16 @@ class ResolvePartnershipUtrControllerSpec extends UnitSpec with GuiceOneAppPerSu
     }
 
     "the user does not have a IR-SA-PART-ORG enrolment" when {
-      s"the $GeneralPartnershipNoSAUTR is enabled" when {
-        "the user is General Partnership" should {
-          "go to the capture partnership UTR page" in {
-            enable(GeneralPartnershipNoSAUTR)
-            mockAuthRetrieveEmptyEnrolment()
-
-            mockAuthRetrieveEmptyEnrolment()
-
-            val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
-              SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-            ))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
-          }
-        }
-      }
-
-      s"$GeneralPartnershipNoSAUTR is disabled" should {
+      "the user is General Partnership" should {
         "go to the capture partnership UTR page" in {
-          disable(GeneralPartnershipNoSAUTR)
+          mockAuthRetrieveEmptyEnrolment()
 
           mockAuthRetrieveEmptyEnrolment()
 
-          val result = TestResolvePartnershipUtrController.resolve(testGetRequest)
+          val result = TestResolvePartnershipUtrController.resolve(testGetRequest.withSession(
+            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+          ))
+
           status(result) shouldBe Status.SEE_OTHER
           redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
         }

@@ -30,7 +30,6 @@ object FeatureSwitch {
     StubIncorporationInformation,
     AdditionalKnownFacts,
     FinalCheckYourAnswer,
-    GeneralPartnershipNoSAUTR,
     CrnDissolved
   )
 
@@ -57,11 +56,6 @@ case object AdditionalKnownFacts extends FeatureSwitch {
 case object FinalCheckYourAnswer extends FeatureSwitch {
   override val name: String = s"$prefix.final-check-your-answer"
   override val displayText: String = "Enable users to view check your answers and declaration page for individual or agent "
-}
-
-case object GeneralPartnershipNoSAUTR extends FeatureSwitch {
-  override val name: String = s"$prefix.General-partnership-no-sautr"
-  override val displayText: String = "Enable users to view General Partnership No SAUTR page for individual or agent "
 }
 
 case object CrnDissolved extends FeatureSwitch {
