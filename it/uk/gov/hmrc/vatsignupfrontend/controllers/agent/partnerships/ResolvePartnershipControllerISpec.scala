@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent.partnerships
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
@@ -27,67 +26,48 @@ import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedCompany,
 class ResolvePartnershipControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /resolve-partnership" when {
-    "the user is a general partnership" when {
-      s"$GeneralPartnershipNoSAUTR is enabled" should {
-        "redirect to the capture partnership utr page" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          enable(GeneralPartnershipNoSAUTR)
-
-          val res = get("/client/resolve-partnership", Map(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-          ))
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CapturePartnershipUtrController.show().url)
-          )
-        }
-      }
-
-      s"$GeneralPartnershipNoSAUTR is disabled" when {
-        "redirect to the capture partnership utr page" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          disable(GeneralPartnershipNoSAUTR)
-
-          val res = get("/client/resolve-partnership", Map(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-          ))
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.CapturePartnershipUtrController.show().url)
-          )
-        }
-      }
-    }
-
-    "user is a limited partnership " should {
-      "redirect to the capture partnership company number page" in {
+    "the user is a general partnership" should {
+      "redirect to the capture partnership utr page" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
         val res = get("/client/resolve-partnership", Map(
-          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
         ))
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.AgentCapturePartnershipCompanyNumberController.show().url)
+          redirectUri(routes.CapturePartnershipUtrController.show().url)
         )
       }
     }
+  }
 
-    "user is not a partnership entity" should {
-      "throw internal server exception" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
+  "user is a limited partnership " should {
+    "redirect to the capture partnership company number page" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
 
-        val res = get("/client/resolve-partnership", Map(
-          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany)
-        ))
+      val res = get("/client/resolve-partnership", Map(
+        SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedPartnership)
+      ))
 
-        res should have(
-          httpStatus(INTERNAL_SERVER_ERROR)
-        )
-      }
+      res should have(
+        httpStatus(SEE_OTHER),
+        redirectUri(routes.AgentCapturePartnershipCompanyNumberController.show().url)
+      )
+    }
+  }
+
+  "user is not a partnership entity" should {
+    "throw internal server exception" in {
+      stubAuth(OK, successfulAuthResponse(agentEnrolment))
+
+      val res = get("/client/resolve-partnership", Map(
+        SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(LimitedCompany)
+      ))
+
+      res should have(
+        httpStatus(INTERNAL_SERVER_ERROR)
+      )
     }
   }
 }

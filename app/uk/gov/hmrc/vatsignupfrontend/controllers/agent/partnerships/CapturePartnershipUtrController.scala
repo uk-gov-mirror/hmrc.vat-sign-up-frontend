@@ -22,7 +22,6 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.businessEntityKey
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm.partnershipUtrForm
 import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, GeneralPartnership}
@@ -33,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
-                                                  vcc: VatControllerComponents)
+                                                vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async {
@@ -45,7 +44,7 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
           Ok(capture_partnership_utr(
             partnershipUtrForm.form,
             routes.CapturePartnershipUtrController.submit(),
-            isGeneralPartnership && isEnabled(GeneralPartnershipNoSAUTR)
+            isGeneralPartnership
           ))
         )
       }
@@ -74,7 +73,7 @@ class CapturePartnershipUtrController @Inject()(implicit ec: ExecutionContext,
               BadRequest(capture_partnership_utr(
                 formWithErrors,
                 routes.CapturePartnershipUtrController.submit(),
-                isGeneralPartnership && isEnabled(GeneralPartnershipNoSAUTR)
+                isGeneralPartnership
               ))
             ),
           utr =>

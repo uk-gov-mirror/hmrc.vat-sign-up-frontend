@@ -92,7 +92,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = GeneralPartnership,
             Some(testBusinessPostcode),
             companyNumber = None,
-            generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
             request,
@@ -110,7 +109,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = GeneralPartnership,
             Some(testBusinessPostcode),
             companyNumber = None,
-            generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
             request,
@@ -163,7 +161,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = GeneralPartnership,
             postCode = None,
             companyNumber = None,
-            generalPartnershipNoSAUTR = false,
             postAction = testCall
           )(
             request,
@@ -189,7 +186,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = GeneralPartnership,
             postCode = None,
             companyNumber = None,
-            generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
             request,
@@ -218,7 +214,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = LimitedPartnership,
             Some(testBusinessPostcode),
             companyNumber = Some(testCompanyNumber),
-            generalPartnershipNoSAUTR = true,
             postAction = testCall
           )(
             request,
@@ -242,7 +237,6 @@ class CheckYourAnswersViewSpec extends ViewSpec {
             entityType = LimitedPartnership,
             Some(testBusinessPostcode),
             companyNumber = Some(testCompanyNumber),
-            generalPartnershipNoSAUTR = false,
             postAction = testCall
           )(
             request,

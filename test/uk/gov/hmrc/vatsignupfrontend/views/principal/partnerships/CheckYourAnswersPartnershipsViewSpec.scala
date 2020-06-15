@@ -23,7 +23,6 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CaptureBusinessEntity, PartnershipsCYA => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -75,11 +74,10 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
     lazy val limitedPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
       entityType = LimitedPartnership,
-      companyUtr = Some(testCompanyUtr),
+      partnershipUtr = Some(testCompanyUtr),
       companyNumber = Some(testCompanyNumber),
       postCode = Some(testBusinessPostcode),
-      postAction = testCall,
-      generalPartnershipNoSAUTRFeatureSwitch = false
+      postAction = testCall
     )(
       request,
       messagesApi.preferred(request),
@@ -127,7 +125,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       )
     }
 
-    "display the correct info for company utr" in {
+    "display the correct info for partnership utr" in {
       val sectionId = CompanyUtrId
       val expectedQuestion = messages.companyUtr
       val expectedAnswer = testCompanyUtr
@@ -157,16 +155,15 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
       )
     }
 
-    "check your answers for limited  partnership" should {
+    "check your answers for limited partnership" should {
 
       def limitedPartnershipCyaPage(companyUtr: Option[String]): Document = {
         val page = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
           entityType = LimitedPartnership,
-          companyUtr = companyUtr,
+          partnershipUtr = companyUtr,
           companyNumber = None,
           postCode = None,
-          postAction = testCall,
-          generalPartnershipNoSAUTRFeatureSwitch = true
+          postAction = testCall
         )(
           request,
           messagesApi.preferred(request),
@@ -176,7 +173,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         Jsoup.parse(page.body)
       }
 
-      "display the correct information with the GeneralPartnershipNoSAUTR feature switch on" when {
+      "display the correct information" when {
         "a limited partnership user has a SaUTR displaying there SaUTR" in {
           val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
           val testDoc = limitedPartnershipCyaPage(companyUtr = Some(testCompanyUtr))
@@ -199,11 +196,10 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
       lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
         entityType = GeneralPartnership,
-        companyUtr = Some(testCompanyUtr),
+        partnershipUtr = Some(testCompanyUtr),
         companyNumber = None,
         postCode = Some(testBusinessPostcode),
-        postAction = testCall,
-        generalPartnershipNoSAUTRFeatureSwitch = false
+        postAction = testCall
       )(
         request,
         messagesApi.preferred(request),
@@ -236,7 +232,7 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
         )
       }
 
-      "display the correct info for company utr" in {
+      "display the correct info for partnership utr" in {
         val sectionId = CompanyUtrId
         val expectedQuestion = messages.companyUtr
         val expectedAnswer = testCompanyUtr
@@ -271,11 +267,10 @@ class CheckYourAnswersPartnershipsViewSpec extends ViewSpec {
 
       lazy val generalPartnershipCyaPage: Html = uk.gov.hmrc.vatsignupfrontend.views.html.principal.partnerships.check_your_answers_partnerships(
         entityType = GeneralPartnership,
-        companyUtr = None,
+        partnershipUtr = None,
         companyNumber = None,
         postCode = None,
-        postAction = testCall,
-        generalPartnershipNoSAUTRFeatureSwitch = false
+        postAction = testCall
       )(
         request,
         messagesApi.preferred(request),

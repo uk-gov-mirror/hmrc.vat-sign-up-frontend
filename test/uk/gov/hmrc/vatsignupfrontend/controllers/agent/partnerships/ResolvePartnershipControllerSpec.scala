@@ -21,7 +21,6 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.models.BusinessEntity.BusinessEntitySessionFormatter
 import uk.gov.hmrc.vatsignupfrontend.models.{GeneralPartnership, LimitedLiabilityPartnership, LimitedPartnership, ScottishLimitedPartnership}
@@ -70,31 +69,16 @@ class ResolvePartnershipControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) should contain(routes.AgentCapturePartnershipCompanyNumberController.show().url)
       }
     }
-    "the user is a General Partnership" when {
-      s"the $GeneralPartnershipNoSAUTR feature switch is enabled" should {
-        "redirect to capture partnership utr page" in {
-          enable(GeneralPartnershipNoSAUTR)
-          mockAuthRetrieveAgentEnrolment()
+    "the user is a General Partnership" should {
+      "redirect to capture partnership utr page" in {
+        mockAuthRetrieveAgentEnrolment()
 
-          val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-          ))
+        val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
+          SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
+        ))
 
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
-        }
-      }
-      s"the $GeneralPartnershipNoSAUTR feature switch is disabled" when {
-        "redirect to capture partnership utr page" in {
-          mockAuthRetrieveAgentEnrolment()
-
-          val result = TestResolvePartnershipController.resolve(testGetRequest.withSession(
-            SessionKeys.businessEntityKey -> BusinessEntitySessionFormatter.toString(GeneralPartnership)
-          ))
-
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
-        }
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) should contain(routes.CapturePartnershipUtrController.show().url)
       }
     }
   }

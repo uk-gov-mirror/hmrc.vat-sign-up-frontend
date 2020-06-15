@@ -22,7 +22,6 @@ import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{CapturePartnershipUtr => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes
 import uk.gov.hmrc.vatsignupfrontend.forms.PartnershipUtrForm._
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
@@ -77,8 +76,6 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
     testPage.shouldHaveForm("Partnership Utr Form")(actionCall = testCall)
 
-    specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForFalse(testPage)
-
     testPage.shouldHaveTextField(partnershipUtr, messages.heading, hideLabel = false)
 
     testPage.shouldHavePara(messages.line1)
@@ -89,16 +86,8 @@ class CapturePartnershipUtrSpec extends ViewSpec {
 
   }
 
-  private def specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForFalse(testPage: TestView): Unit = {
-    s"certain elements should not exist as $GeneralPartnershipNoSAUTR is off" in {
-      testPage.document.getElementById("partnershipUtr-accordion-link1") shouldBe null
-      testPage.document.getElementById("partnershipUtr-accordion-link2") shouldBe null
-      testPage.document.getElementsByTag("details").size shouldBe 0
-    }
-  }
-
   private def specificGeneralPartnershipNoSAUTRDrivenElementsShouldChangeForTrue(testPage: TestView): Unit = {
-    s"hint exists, hrefs for links in summary are correct, line 1 no longer exists in view as $GeneralPartnershipNoSAUTR is on" in {
+    s"hint exists, hrefs for links in summary are correct, line 1 no longer exists in view" in {
       testPage.document.getElementById("partnershipUtr-accordion-link1").attr("href") shouldBe appConfig.findLostUtrNumberUrl
       testPage.document.getElementById("partnershipUtr-accordion-link2").attr("href") shouldBe routes.CapturePartnershipUtrController.noUtrSelected().url
     }

@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.GeneralPartnershipNoSAUTR
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
@@ -48,34 +47,22 @@ class CheckYourAnswersPartnershipsController @Inject()(storePartnershipInformati
       val optPartnershipUtr = request.session.get(SessionKeys.partnershipSautrKey).filter(_.nonEmpty)
       val optPartnershipPostCode = request.session.getModel[PostCode](SessionKeys.partnershipPostCodeKey)
       val optPartnershipCrn = request.session.get(SessionKeys.companyNumberKey).filter(_.nonEmpty)
-      val noSAUTRFeatureSwitch = isEnabled(GeneralPartnershipNoSAUTR)
 
       (optBusinessEntityType, optPartnershipCrn, optPartnershipUtr, optPartnershipPostCode) match {
-        case (Some(GeneralPartnership), _, _, _) if isEnabled(GeneralPartnershipNoSAUTR) =>
+        case (Some(GeneralPartnership), _, _, _) =>
           Future.successful(Ok(check_your_answers_partnerships(
             entityType = GeneralPartnership,
-            companyUtr = None,
-            companyNumber = None,
-            postCode = None,
-            generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
-            postAction = routes.CheckYourAnswersPartnershipsController.submit()
-          )))
-        case (Some(GeneralPartnership), _, Some(_), Some(_)) =>
-          Future.successful(Ok(check_your_answers_partnerships(
-            entityType = GeneralPartnership,
-            companyUtr = optPartnershipUtr,
+            partnershipUtr = optPartnershipUtr,
             companyNumber = None,
             postCode = optPartnershipPostCode,
-            generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
         case (Some(entity: LimitedPartnershipBase), Some(_), Some(_), Some(_)) =>
           Future.successful(Ok(check_your_answers_partnerships(
             entityType = entity,
-            companyUtr = optPartnershipUtr,
+            partnershipUtr = optPartnershipUtr,
             companyNumber = optPartnershipCrn,
             postCode = optPartnershipPostCode,
-            generalPartnershipNoSAUTRFeatureSwitch = noSAUTRFeatureSwitch,
             postAction = routes.CheckYourAnswersPartnershipsController.submit()
           )))
         case _ =>
