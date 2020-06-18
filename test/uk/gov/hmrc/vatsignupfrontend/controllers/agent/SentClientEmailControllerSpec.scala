@@ -21,11 +21,10 @@ import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
 
@@ -62,36 +61,24 @@ class SentClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite wi
 
   "Calling the submit action of the Verify Email controller" when {
     "email is in session" should {
-      "redirect to AgentSendYourApplication of participation page" when {
-        "the final check your answer feature switch is disabled" in {
-          disable(FinalCheckYourAnswer)
-          mockAuthRetrieveAgentEnrolment()
 
-          val result = TestSentClientEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.AgentSendYourApplicationController.show().url)
-        }
-      }
-      "redirect to the final check your answer page" when {
-        "the final check your answer feature switch is enabled" in {
-          enable(FinalCheckYourAnswer)
-          mockAuthRetrieveAgentEnrolment()
-
-          val result = TestSentClientEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
-        }
-      }
-    }
-
-    "email is not in session" should {
-      "redirect to Capture Email page" in {
+      "redirect to the final check your answer page" in {
         mockAuthRetrieveAgentEnrolment()
 
-        val result = TestSentClientEmailController.submit(testPostRequest)
+        val result = TestSentClientEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
       }
+    }
+  }
+
+  "email is not in session" should {
+    "redirect to Capture Email page" in {
+      mockAuthRetrieveAgentEnrolment()
+
+      val result = TestSentClientEmailController.submit(testPostRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
     }
   }
 

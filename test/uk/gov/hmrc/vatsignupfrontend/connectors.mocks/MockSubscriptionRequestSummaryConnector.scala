@@ -17,22 +17,23 @@
 package uk.gov.hmrc.vatsignupfrontend.connectors.mocks
 
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import org.scalatestplus.mockito.MockitoSugar
-import org.mockito.Mockito._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpParser.GetSubscriptionRequestSummaryResponse
 
 import scala.concurrent.Future
 
-trait MockSubscriptionRequestSummaryConnector extends MockitoSugar with BeforeAndAfterEach{
+trait MockSubscriptionRequestSummaryConnector extends MockitoSugar with BeforeAndAfterEach {
   this: Suite =>
 
-  override def beforeEach(): Unit = {
+  override protected def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockSubscriptionRequestSummaryConnector)
   }
+
   val mockSubscriptionRequestSummaryConnector: SubscriptionRequestSummaryConnector = mock[SubscriptionRequestSummaryConnector]
 
   def mockGetSubscriptionRequest(vatNumber: String)(response: Future[GetSubscriptionRequestSummaryResponse]): Unit =

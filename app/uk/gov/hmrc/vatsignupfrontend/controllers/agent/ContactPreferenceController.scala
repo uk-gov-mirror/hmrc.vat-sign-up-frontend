@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{ContactPreference, Digital, Paper}
@@ -69,10 +68,8 @@ class ContactPreferenceController @Inject()(contactPreferenceService: StoreConta
           case (Digital, false) | (_, true) =>
             Redirect(routes.CaptureClientEmailController.show())
               .addingToSession(SessionKeys.contactPreferenceKey, contactPreference)
-          case (Paper, false) if isEnabled(FinalCheckYourAnswer) =>
-            Redirect(routes.CheckYourAnswersFinalController.show())
           case (Paper, false) =>
-            Redirect(routes.AgentSendYourApplicationController.show())
+            Redirect(routes.CheckYourAnswersFinalController.show())
         }
 
       contactPreferencesForm(isAgent = true).bindFromRequest.fold(
