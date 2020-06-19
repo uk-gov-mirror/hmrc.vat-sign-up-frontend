@@ -22,12 +22,11 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
   with MockStoreEmailAddressService {
@@ -79,64 +78,48 @@ class ConfirmClientEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
       }
       "email is verified" should {
-        "redirect to AgentSendYourApplication page" when {
-          "the final check your answer feature switch is disabled" in {
-            disable(FinalCheckYourAnswer)
-            mockAuthRetrieveAgentEnrolment()
-            mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
+        "redirect to the final check your answers page" in {
+          mockAuthRetrieveAgentEnrolment()
+          mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
 
-            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-              SessionKeys.vatNumberKey -> testVatNumber))
+          val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+            SessionKeys.vatNumberKey -> testVatNumber))
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.AgentSendYourApplicationController.show().url)
-          }
-        }
-        "redirect to the final check your answers page" when {
-          "the final check your answer feature switch is enabled" in {
-            enable(FinalCheckYourAnswer)
-            mockAuthRetrieveAgentEnrolment()
-            mockStoreEmailAddressSuccess(vatNumber = testVatNumber, email = testEmail)(emailVerified = true)
-
-            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-              SessionKeys.vatNumberKey -> testVatNumber))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
-          }
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersFinalController.show().url)
         }
       }
     }
-    "email and vat number is in session but store call is unsuccessful" should {
-      "throw Internal Server Error" in {
-        mockAuthRetrieveAgentEnrolment()
-        mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
+  }
+  "email and vat number is in session but store call is unsuccessful" should {
+    "throw Internal Server Error" in {
+      mockAuthRetrieveAgentEnrolment()
+      mockStoreEmailAddressFailure(vatNumber = testVatNumber, email = testEmail)
 
-        intercept[InternalServerException] {
-          TestConfirmEmailController.submit(testPostRequest.withSession(
-            SessionKeys.vatNumberKey -> testVatNumber,
-            SessionKeys.emailKey -> testEmail
-          ))
-        }
+      intercept[InternalServerException] {
+        TestConfirmEmailController.submit(testPostRequest.withSession(
+          SessionKeys.vatNumberKey -> testVatNumber,
+          SessionKeys.emailKey -> testEmail
+        ))
       }
     }
-    "vat number is not in session" should {
-      "redirect to Capture Vat number page" in {
-        mockAuthRetrieveAgentEnrolment()
+  }
+  "vat number is not in session" should {
+    "redirect to Capture Vat number page" in {
+      mockAuthRetrieveAgentEnrolment()
 
-        val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
-      }
+      val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
     }
-    "email is not in session" should {
-      "redirect to Capture Email page" in {
-        mockAuthRetrieveAgentEnrolment()
+  }
+  "email is not in session" should {
+    "redirect to Capture Email page" in {
+      mockAuthRetrieveAgentEnrolment()
 
-        val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
-        status(result) shouldBe Status.SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
-      }
+      val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(routes.CaptureClientEmailController.show().url)
     }
   }
 

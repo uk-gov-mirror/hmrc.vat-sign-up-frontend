@@ -31,23 +31,9 @@ import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.NonPartnershipEntity
 class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
   "GET /check-your-answers-final" when {
-    "feature switch is disabled" should {
-      "return NOT_FOUND" in {
-        disable(FinalCheckYourAnswer)
-
-        val res = get("/check-your-answers-final",
-          Map(SessionKeys.vatNumberKey -> testVatNumber)
-        )
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
 
     "the subscription request summary returned INTERNAL SERVER ERROR" should {
       "return INTERNAL_SERVER_ERROR" in {
-        enable(FinalCheckYourAnswer)
         stubAuth(OK, successfulAuthResponse())
         stubGetSubscriptionRequestException(testVatNumber)(INTERNAL_SERVER_ERROR)
 
@@ -61,7 +47,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
 
     "the subscription request summary returned other error" should {
       "return SEE_OTHER and restart journey" in {
-        enable(FinalCheckYourAnswer)
         stubAuth(OK, successfulAuthResponse())
         stubGetSubscriptionRequestInvalidJson(testVatNumber)(SEE_OTHER)
 
@@ -89,7 +74,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
               contactPreference = Digital
             )
 
-            enable(FinalCheckYourAnswer)
             stubAuth(OK, successfulAuthResponse())
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyNameCompanyFailure(testCompanyNumber)
@@ -114,7 +98,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
               contactPreference = Digital
             )
 
-            enable(FinalCheckYourAnswer)
             enable(CrnDissolved)
             stubAuth(OK, successfulAuthResponse())
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
@@ -140,7 +123,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
               contactPreference = Digital
             )
 
-            enable(FinalCheckYourAnswer)
             stubAuth(OK, successfulAuthResponse())
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyNameCompanyNotFound(testCompanyNumber)
@@ -166,7 +148,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
               contactPreference = Digital
             )
 
-            enable(FinalCheckYourAnswer)
             stubAuth(OK, successfulAuthResponse())
             stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
             stubGetCompanyName(testCompanyNumber, NonPartnershipEntity)
@@ -191,7 +172,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
             contactPreference = Digital
           )
 
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse())
           stubGetSubscriptionRequest(testVatNumber)(OK, Some(model))
 
@@ -207,7 +187,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
   "POST /check-your-answers-final" when {
     "the user has the direct debit attribute on the control list" should {
       "Submit successfully and redirect to information received" in {
-        enable(FinalCheckYourAnswer)
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
         stubSubmissionSuccess()
 
@@ -225,7 +204,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
 
       "Submission is unsuccessful" should {
         "return INTERNAL_SERVER_ERROR" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 
@@ -244,7 +222,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
     "the user does not have the direct debit attribute on the control list" should {
       "redirect to resolve-vat-number" when {
         "vat number and acceptedDirectDebit keys missing from session" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 
@@ -258,7 +235,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
       }
       "redirect to direct-debit-terms-and-conditions" when {
         "acceptedDirectDebit key is missing from session" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 
@@ -275,7 +251,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
       }
       "redirect to direct-debit-terms-and-conditions" when {
         "acceptedDirectDebit key in session is false" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 
@@ -293,7 +268,6 @@ class CheckYourAnswersFinalControllerISpec extends ComponentSpecBase with Custom
       }
       "redirect to resolve-vat-number" when {
         "vat number key is missing from session" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubSubmissionFailure()
 

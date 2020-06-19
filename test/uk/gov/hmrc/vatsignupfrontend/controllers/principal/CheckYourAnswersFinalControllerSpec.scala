@@ -23,7 +23,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockSubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -49,10 +48,6 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockStoreVatNumberService, mockSubscriptionRequestSummaryConnector, mockSubmissionService,
       mockGetCompanyNameService, mockAdministrativeDivisionLookupService
     )
-
-  override def beforeEach(): Unit = {
-    enable(FinalCheckYourAnswer)
-  }
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber)
                     ): FakeRequest[AnyContentAsEmpty.type] =

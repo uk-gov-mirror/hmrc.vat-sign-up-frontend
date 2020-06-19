@@ -22,9 +22,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockSubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -33,6 +31,7 @@ import uk.gov.hmrc.vatsignupfrontend.httpparsers.SubscriptionRequestSummaryHttpP
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.models.companieshouse.{LimitedLiabilityPartnership, NonPartnershipEntity}
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockAdministrativeDivisionLookupService, MockGetCompanyNameService, MockStoreVatNumberService, MockSubmissionService}
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
@@ -50,10 +49,6 @@ class CheckYourAnswersFinalControllerSpec extends UnitSpec with GuiceOneAppPerSu
       mockSubmissionService,
       mockGetCompanyNameService
     )
-
-  override def beforeEach(): Unit = {
-    enable(FinalCheckYourAnswer)
-  }
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber)): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", "/client/check-your-answers-final").withSession(

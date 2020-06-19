@@ -18,7 +18,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -85,28 +84,7 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
     }
 
     "ContactPreferencesJourney is enabled and vat number is in session" when {
-      "the choice is digital" should {
-        "redirect to the send your application page" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreContactPreferenceSuccess(Digital)
-          stubStoreEmailAddressSuccess(true)
-
-          val res = post("/receive-email-notifications",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.SendYourApplicationController.show().url)
-          )
-        }
-      }
-    }
-
-    "ContactPreferencesJourney is enabled and vat number is in session" when {
-      "the choice is digital and No email is in session" should {
+      "the choice is digital and no email is in session" should {
         "redirect to Capture Email controller" in {
           stubAuth(OK, successfulAuthResponse())
           stubStoreContactPreferenceSuccess(Digital)
@@ -123,31 +101,8 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
           )
         }
       }
-    }
-
-    "ContactPreferencesJourney is enabled and vat number is in session" when {
-      "the choice is paper" should {
-        "redirect to the send your application page" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreContactPreferenceSuccess(Paper)
-
-          val res = post("/receive-email-notifications",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.SendYourApplicationController.show().url)
-          )
-        }
-      }
-    }
-    "FinalCheckYourAnswers is enabled" when {
       "the choice is paper and user has Direct Debit" should {
         "redirect to the check your answers final page" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse())
           stubStoreContactPreferenceSuccess(Paper)
           stubStoreEmailAddressSuccess(true)
@@ -166,9 +121,26 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
           )
         }
       }
+      "the choice is digital" should {
+        "redirect to the check your answers final page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubStoreContactPreferenceSuccess(Digital)
+          stubStoreEmailAddressSuccess(true)
+
+          val res = post("/receive-email-notifications",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.emailKey -> testEmail
+            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.digital)
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CheckYourAnswersFinalController.show().url)
+          )
+        }
+      }
       "the choice is paper" should {
         "redirect to the check your answers final page" in {
-          enable(FinalCheckYourAnswer)
           stubAuth(OK, successfulAuthResponse())
           stubStoreContactPreferenceSuccess(Paper)
 
@@ -184,30 +156,6 @@ class ReceiveEmailNotificationsISpec extends ComponentSpecBase with CustomMatche
           )
         }
       }
-    }
-    "ContactPreferencesJourney is enabled and vat number is in session" when {
-      "the choice is paper and the user has Direct Debit" should {
-        "redirect to the snd your application page" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreContactPreferenceSuccess(Paper)
-          stubStoreEmailAddressSuccess(true)
-
-
-          val res = post("/receive-email-notifications",
-            Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail,
-              SessionKeys.hasDirectDebitKey -> "true"
-            ))(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.SendYourApplicationController.show().url)
-          )
-        }
-      }
-    }
-    "ContactPreferencesJourney is enabled and vat number is in session" when {
       "the Store Email Address service returns a failure" should {
         "throw an internal server error" in {
           stubAuth(OK, successfulAuthResponse())

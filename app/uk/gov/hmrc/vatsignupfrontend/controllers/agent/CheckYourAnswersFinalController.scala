@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.connectors.SubscriptionRequestSummaryConnector
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.GetCompanyNameHttpParser.{CompanyClosed, CompanyDetails}
@@ -41,7 +40,7 @@ class CheckYourAnswersFinalController @Inject()(storeVatNumberService: StoreVatN
                                                 getCompanyNameService: GetCompanyNameService)
                                                (implicit ec: ExecutionContext,
                                                 vcc: VatControllerComponents)
-  extends AuthenticatedController(AgentEnrolmentPredicate, featureSwitches = Set(FinalCheckYourAnswer)) {
+  extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

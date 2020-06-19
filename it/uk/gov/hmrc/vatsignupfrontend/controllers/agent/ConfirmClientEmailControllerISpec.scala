@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.emailKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -58,29 +57,10 @@ class ConfirmClientEmailControllerISpec extends ComponentSpecBase with CustomMat
       }
     }
 
-    "redirect to AgentSendYourApplication page" when {
-      "the email is successfully stored and returned with email verified flag and the final check your answers feature switch is disabled" in {
-        stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubStoreEmailAddressSuccess(emailVerified = true)
-        disable(FinalCheckYourAnswer)
-
-        val res = post("/client/confirm-client-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.AgentSendYourApplicationController.show().url)
-        )
-
-        val session = getSessionMap(res)
-        session.keys should contain(emailKey)
-      }
-    }
-
     "redirect to final check your answers page page" when {
-      "the email is successfully stored and returned with email verified flag and the final check your answers feature switch is enabled" in {
+      "the email is successfully stored and returned with email verified flag" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
         stubStoreEmailAddressSuccess(emailVerified = true)
-        enable(FinalCheckYourAnswer)
 
         val res = post("/client/confirm-client-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 

@@ -23,7 +23,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -76,28 +75,8 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
     "Calling the submit action of the Receive Email Notifications controller" when {
       "vat number is in session" when {
         "User answered Digital" should {
-          "go to the 'send your application' page" in {
-            mockAuthAdminRole()
-
-            mockStoreContactPreferenceSuccess(
-              vatNumber = testVatNumber,
-              contactPreference = Digital
-            )
-            mockStoreEmailAddressSuccess(
-              vatNumber = testVatNumber,
-              email = testEmail
-            )(emailVerified = true)
-
-            val result = TestReceiveEmailController.submit(testPostRequest("digital").withSession(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
-          }
           "go to the 'check your answers final' page" in {
             mockAuthAdminRole()
-            enable(FinalCheckYourAnswer)
             mockStoreContactPreferenceSuccess(
               vatNumber = testVatNumber,
               contactPreference = Digital
@@ -116,24 +95,8 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
           }
         }
         "User answered Paper" should {
-          "go to send your application page" in {
-            mockAuthAdminRole()
-
-            mockStoreContactPreferenceSuccess(
-              vatNumber = testVatNumber,
-              contactPreference = Paper
-            )
-
-            val result = TestReceiveEmailController.submit(testPostRequest("paper").withSession(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
-          }
           "go to check your answers final page" in {
             mockAuthAdminRole()
-            enable(FinalCheckYourAnswer)
             mockStoreContactPreferenceSuccess(
               vatNumber = testVatNumber,
               contactPreference = Paper
@@ -148,29 +111,8 @@ class ReceiveEmailNotificationsControllerSpec extends UnitSpec with GuiceOneAppP
           }
         }
         "User answered Paper with Direct Debit in session" should {
-          "go to send your application page" in {
-            mockAuthAdminRole()
-
-            mockStoreContactPreferenceSuccess(
-              vatNumber = testVatNumber,
-              contactPreference = Paper
-            )
-            mockStoreEmailAddressSuccess(
-              vatNumber = testVatNumber,
-              email = testEmail
-            )(emailVerified = true)
-
-            val result = TestReceiveEmailController.submit(testPostRequest("paper").withSession(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail,
-              SessionKeys.hasDirectDebitKey -> "true"
-            ))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.SendYourApplicationController.show().url)
-          }
           "go to check your answers final page" in {
             mockAuthAdminRole()
-            enable(FinalCheckYourAnswer)
             mockStoreContactPreferenceSuccess(
               vatNumber = testVatNumber,
               contactPreference = Paper

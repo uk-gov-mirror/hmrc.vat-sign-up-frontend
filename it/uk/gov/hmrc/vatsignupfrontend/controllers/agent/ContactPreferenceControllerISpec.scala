@@ -19,7 +19,6 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.contactPreferenceKey
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FinalCheckYourAnswer
 import uk.gov.hmrc.vatsignupfrontend.forms.ContactPreferencesForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -70,10 +69,9 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
         }
       }
       "return a redirect to the final check your answer page" when {
-        "paper is selected and the final check your answer feature switch is enabled" in {
+        "paper is selected" in {
           stubAuth(OK, successfulAuthResponse(agentEnrolment))
           stubStoreContactPreferenceSuccess(Paper)
-          enable(FinalCheckYourAnswer)
 
           val res = post(
             "/client/receive-email-notifications",
@@ -83,23 +81,6 @@ class ContactPreferenceControllerISpec extends ComponentSpecBase with CustomMatc
           res should have(
             httpStatus(SEE_OTHER),
             redirectUri(routes.CheckYourAnswersFinalController.show().url)
-          )
-        }
-      }
-      "return a redirect to the AgentSendYourApplication page" when {
-        "paper is selected and the final check your answer feature switch is disabled" in {
-          stubAuth(OK, successfulAuthResponse(agentEnrolment))
-          stubStoreContactPreferenceSuccess(Paper)
-          disable(FinalCheckYourAnswer)
-
-          val res = post(
-            "/client/receive-email-notifications",
-            Map(SessionKeys.vatNumberKey -> testVatNumber)
-          )(ContactPreferencesForm.contactPreference -> ContactPreferencesForm.paper)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.AgentSendYourApplicationController.show().url)
           )
         }
       }

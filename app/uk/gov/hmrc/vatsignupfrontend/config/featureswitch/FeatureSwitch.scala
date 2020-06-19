@@ -29,7 +29,6 @@ object FeatureSwitch {
   val switches: Set[FeatureSwitch] = Set(
     StubIncorporationInformation,
     AdditionalKnownFacts,
-    FinalCheckYourAnswer,
     CrnDissolved
   )
 
@@ -51,11 +50,6 @@ case object StubIncorporationInformation extends FeatureSwitch {
 case object AdditionalKnownFacts extends FeatureSwitch {
   override val name: String = s"$prefix.additional-known-facts"
   override val displayText: String = "Enable the two additional Known Facts"
-}
-
-case object FinalCheckYourAnswer extends FeatureSwitch {
-  override val name: String = s"$prefix.final-check-your-answer"
-  override val displayText: String = "Enable users to view check your answers and declaration page for individual or agent "
 }
 
 case object CrnDissolved extends FeatureSwitch {
