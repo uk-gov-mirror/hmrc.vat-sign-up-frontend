@@ -30,7 +30,8 @@ class ConfirmationControllerISpec extends ComponentSpecBase with CustomMatchers 
 
       val res = get("/client/information-received",
         Map(
-          SessionKeys.businessEntityKey -> SoleTrader.toString
+          SessionKeys.businessEntityKey -> SoleTrader.toString,
+          SessionKeys.vatNumberKey -> SoleTrader.toString
         )
       )
 

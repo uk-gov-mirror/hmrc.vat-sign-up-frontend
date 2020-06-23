@@ -22,10 +22,12 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.AgentInformationReceived.Section3
 import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{Base, AgentInformationReceived => messages}
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.SoleTrader
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
+import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants
 
 class ConfirmationViewSpec extends ViewSpec {
 
@@ -35,6 +37,7 @@ class ConfirmationViewSpec extends ViewSpec {
 
   lazy val page: HtmlFormat.Appendable = uk.gov.hmrc.vatsignupfrontend.views.html.agent.confirmation(
     SoleTrader,
+    vatRegistrationNumber = TestConstants.testVatNumber,
     postAction = testCall)(
     request,
     messagesApi.preferred(request),
@@ -86,12 +89,28 @@ class ConfirmationViewSpec extends ViewSpec {
         document.select("#what-happens-next li").text() should include(messages.Section1.bullet3)
       }
 
-      s"has a bullet point '${messages.Section1.bullet4}'" in {
-        document.select("#what-happens-next li").text() should include(messages.Section1.bullet4)
+    }
+
+    " Have a 'what you must do next' section" which {
+
+      s"has the section heading '${messages.Section2.heading}'" in {
+        document.select("#what-you-must-do-next h2").text() shouldBe messages.Section2.heading
       }
 
-      s"has a paragraph '${messages.Section1.line2}'" in {
-        document.select("#what-happens-next p").text() should include(messages.Section1.line2)
+      s"has a bullet point '${messages.Section2.bullet1}'" in {
+        document.select("#what-you-must-do-next li").text() should include(messages.Section2.bullet1)
+      }
+
+      s"has a bullet point '${messages.Section2.bullet2}'" in {
+        document.select("#what-you-must-do-next li").text() should include(messages.Section2.bullet2)
+      }
+
+      s"has a bullet point '${messages.Section2.bullet3}'" in {
+        document.select("#what-you-must-do-next li").text() should include(messages.Section2.bullet3)
+      }
+
+      s"has a bullet point '${messages.Section2.bullet4}'" in {
+        document.select("#what-you-must-do-next li").text() should include(messages.Section2.bullet4)
       }
 
     }

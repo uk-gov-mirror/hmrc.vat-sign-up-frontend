@@ -358,15 +358,21 @@ agent.check_your_answers_final.contact_preference                      = Sut i g
 agent.check_your_answers_final.client_email                            = Cyfeiriad e-bost y cleient
 
 ## Agent Confirmation page
-agent.confirmation.title                                               = Mae gwybodaeth eich cleient wedi dod i law
-agent.confirmation.heading                                             = Mae gwybodaeth eich cleient wedi dod i law
+agent.confirmation.title                                               = Rydym wedi cael eich cais i gofrestru
+agent.confirmation.heading                                             = Rydym wedi cael eich cais i gofrestru
+agent.confirmation.vat_number                                          = Rhif cofrestru TAW
+agent.confirmation.subsection_0.subheading                             = Cewch e-bost cyn pen 72 awr i roi gwybod i chi y gallwch ddechrau roi gwybod am TAW eich cleient gan ddefnyddio meddalwedd sy’n cydweddu.
 agent.confirmation.subsection_1.heading                                = Yr hyn sy’n digwydd nesaf
-agent.confirmation.subsection_1.line_1                                 = Byddwn yn rhoi gwybod i chi pan allwch roi gwybod am TAW eich cleient drwy feddalwedd sy’n cydweddu. Bydd hyn yn cymryd 72 awr fel arfer.
-agent.confirmation.subsection_1.bullet_1                               = <a id="softwareOptionsUrl" href="{0}"" target="_blank">Dewis eich meddalwedd (yn agor ffenestr neu dab newydd)</a>. Os bydd eich cleient yn defnyddio meddalwedd hefyd, mae’n bwysig ei fod yn dewis pecyn sy’n gallu rhyngweithio â’ch un chi.
-agent.confirmation.subsection_1.bullet_2                               = Caniatáu i’ch meddalwedd gyflwyno Ffurflenni TAW i CThEM. Efallai y bydd yn rhaid i chi fewngofnodi gyda’ch manylion Porth y Llywodraeth.
-agent.confirmation.subsection_1.bullet_3                               = Defnyddio meddalwedd i gofnodi gwerthiannau a phryniannau’ch cleient.
-agent.confirmation.subsection_1.bullet_4                               = Cyflwyno Ffurflenni TAW eich cleient cyn ei ddyddiadau cau.
-agent.confirmation.subsection_1.line_2                                 = Gall eich cleient fwrw golwg dros ddyddiadau cau ei Ffurflen TAW yn ei feddalwedd cyfrifyddu neu ei gyfrif treth busnes.
+agent.confirmation.subsection_1.line_1                                 = Dylech gynghori’ch cleient (lle bo hynny’n berthnasol):
+agent.confirmation.subsection_1.bullet_1                               = eich bod wedi ei gofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW
+agent.confirmation.subsection_1.bullet_2                               = y bydd yn cael e-byst hysbysu i fewngofnodi i wasanaethau CThEM er mwyn cyrchu a darllen negeseuon diogel pwysig
+agent.confirmation.subsection_1.bullet_3                               = y bydd yn cael e-byst hysbysu deg diwrnod cyn i daliadau Debyd Uniongyrchol cael eu cymryd o’r cyfrif banc
+agent.confirmation.subsection_2.heading                                = Yr hyn sydd yn rhaid i chi ei wneud nesaf
+agent.confirmation.subsection_2.bullet_1                               = Ewch ati i ganiatáu i’ch meddalwedd gyflwyno Ffurflenni TAW i CThEM ac i awdurdodi hynny.
+agent.confirmation.subsection_2.bullet_2                               = Defnyddiwch eich meddalwedd er mwyn cyflwyno Ffurflenni TAW eich cleient.
+agent.confirmation.subsection_2.bullet_3                               = Os oes angen, helpwch eich cleient i ddewis meddalwedd sy’n cydweddu. Cynghorwch ef i ddechrau cadw eu cofnodion TAW a chofnodion o’i incwm a’i wariant drwy ddefnyddio’r feddalwedd hon.
+agent.confirmation.subsection_2.bullet_4                               = Pan fo’n berthnasol, cynghorwch eich cleient i fwrw golwg dros ddyddiadau cau ei Ffurflenni TAW. Gall eich cleient wneud hyn o fewn ei feddalwedd cyfrifyddu neu drwy fewngofnodi i wasanaethau CThEM (yr enw arall ar hyn yw’r cyfrif treth busnes).
+agent.confirmation.signout                                             = Gorffen a allgofnodi
 
 ## Resignup Confirmation page - Agent flow
 agent.resignup.signupcomplete.title                                    = Rydych wedi cofrestru’ch cleient i gyflwyno’ch Ffurflenni TAW gan ddefnyddio meddalwedd
