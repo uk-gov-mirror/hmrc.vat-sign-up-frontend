@@ -30,16 +30,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ConfirmationController @Inject()(implicit ec: ExecutionContext,
-                                         vcc: VatControllerComponents)
+                                       vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optBusinessEntity = request.session.getModel[BusinessEntity](SessionKeys.businessEntityKey)
+      val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
 
-      optBusinessEntity match {
-        case Some(businessEntity) =>
-          Future.successful(Ok(confirmation(businessEntity, routes.SignUpAnotherClientController.submit())))
+      (optVatNumber, optBusinessEntity) match {
+        case (Some(vatNumber), Some(businessEntity)) =>
+          Future.successful(Ok(confirmation(businessEntity, vatNumber, routes.SignUpAnotherClientController.submit())))
         case _ =>
           Future.successful(Redirect(routes.CaptureVatNumberController.show()))
       }

@@ -30,7 +30,10 @@ class ConfirmationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
   object TestConfirmationController extends ConfirmationController
 
-  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(SessionKeys.businessEntityKey -> SoleTrader.toString)
+  lazy val testGetRequest = FakeRequest("GET", "/information-received").withSession(
+    SessionKeys.businessEntityKey -> SoleTrader.toString,
+    SessionKeys.vatNumberKey -> SoleTrader.toString
+  )
 
   lazy val testPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("POST", "/information-received")

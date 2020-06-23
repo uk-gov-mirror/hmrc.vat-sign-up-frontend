@@ -369,17 +369,27 @@ object MessageLookup {
   }
 
   object AgentInformationReceived {
-    val heading: String = "We have received your client’s information"
+    val heading: String = "We have received your request to sign up"
     val title = heading + ServiceName.agentSuffix
 
     object Section1 {
       val heading = "What happens next"
-      val line1 = "We will let you know when you can report your client’s VAT through compatible software. This usually takes 72 hours."
-      val bullet1 = "Choose your software (opens in a new window or tab). If your client will also use software, it is important they choose a package that can interact with yours."
-      val bullet2 = "Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details."
-      val bullet3 = "Use software to record your client’s sales and purchases."
-      val bullet4 = "Submit your client’s VAT Returns before their deadlines."
+      val line1 = "You should advise your client that (where applicable):"
+      val bullet1 =  "You’ve signed them up to Making Tax Digital for VAT."
+      val bullet2 = "They’ll get email alerts to sign into HMRC services to access and read important secure messages."
+      val bullet3 = "They’ll get an email alert 10 days before Direct Debit payments are taken from their bank account."
       val line2 = "Your client can view their VAT Return deadlines in their accounting software or business tax account."
+    }
+
+    object Section2 {
+      val heading = "What you must do next"
+      val bullet1 = "Allow and authorise your software to send VAT Returns to HMRC."
+      val bullet2 = "Use your software to submit your client’s VAT Return."
+      val bullet3 = "If required, help your client to choose compatible software. Advise them to start keeping their income, expenditure and VAT Records using this software."
+      val bullet4 = "Where relevant, advise your client to view their VAT Return deadlines. They can do this within their accounting software or by signing into HMRC services (also called Business tax account)."
+    }
+    object Section3{
+      val signout = "Finish and sign out"
     }
 
   }

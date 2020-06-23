@@ -386,15 +386,21 @@ agent.check_your_answers_final.contact_preference                      = How to 
 agent.check_your_answers_final.client_email                            = Client email address
 
 ## Agent Confirmation page
-agent.confirmation.title                                               = We have received your client’s information
-agent.confirmation.heading                                             = We have received your client’s information
+agent.confirmation.title                                               = We have received your request to sign up
+agent.confirmation.heading                                             = We have received your request to sign up
+agent.confirmation.vat_number                                          = VAT registration number
+agent.confirmation.subsection_0.subheading                             = You’ll get an email within 72 hours to say you can start reporting your client’s VAT using your compatible software.
 agent.confirmation.subsection_1.heading                                = What happens next
-agent.confirmation.subsection_1.line_1                                 = We will let you know when you can report your client’s VAT through compatible software. This usually takes 72 hours.
-agent.confirmation.subsection_1.bullet_1                               = <a id="softwareOptionsUrl" href="{0}" target="_blank">Choose your software (opens in a new window or tab)</a>. If your client will also use software, it is important they choose a package that can interact with yours.
-agent.confirmation.subsection_1.bullet_2                               = Allow your software to submit VAT Returns to HMRC. You might need to sign in with your Government Gateway details.
-agent.confirmation.subsection_1.bullet_3                               = Use software to record your client’s sales and purchases.
-agent.confirmation.subsection_1.bullet_4                               = Submit your client’s VAT Returns before their deadlines.
-agent.confirmation.subsection_1.line_2                                 = Your client can view their VAT Return deadlines in their accounting software or business tax account.
+agent.confirmation.subsection_1.line_1                                 = You should advise your client that (where applicable):
+agent.confirmation.subsection_1.bullet_1                               = You’ve signed them up to Making Tax Digital for VAT.
+agent.confirmation.subsection_1.bullet_2                               = They’ll get email alerts to sign into HMRC services to access and read important secure messages.
+agent.confirmation.subsection_1.bullet_3                               = They’ll get an email alert 10 days before Direct Debit payments are taken from their bank account.
+agent.confirmation.subsection_2.heading                                = What you must do next
+agent.confirmation.subsection_2.bullet_1                               = Allow and authorise your software to send VAT Returns to HMRC.
+agent.confirmation.subsection_2.bullet_2                               = Use your software to submit your client’s VAT Return.
+agent.confirmation.subsection_2.bullet_3                               = If required, help your client to choose compatible software. Advise them to start keeping their income, expenditure and VAT Records using this software.
+agent.confirmation.subsection_2.bullet_4                               = Where relevant, advise your client to view their VAT Return deadlines. They can do this within their accounting software or by signing into HMRC services (also called Business tax account).
+agent.confirmation.signout                                             = Finish and sign out
 
 ## Resignup Confirmation page - Agent flow
 agent.resignup.signupcomplete.title                                    = We have received your request to sign up
