@@ -128,3 +128,10 @@ interrupt-card .actions {
 .no-details details summary .arrow-closed {
     display: none !important;
 }
+
+@media only screen and (min-width: 640px) {
+    .language-switch {
+        display: inline-block;
+        float: right;
+    }
+}
