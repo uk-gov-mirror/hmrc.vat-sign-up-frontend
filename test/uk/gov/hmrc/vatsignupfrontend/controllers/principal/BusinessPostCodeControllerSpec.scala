@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
@@ -27,9 +29,11 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
+import uk.gov.hmrc.vatsignupfrontend.models.DateModel
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockClaimSubscriptionService
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents {
+class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents with MockClaimSubscriptionService {
 
   object TestBusinessPostCodeController extends BusinessPostCodeController
 
@@ -37,6 +41,8 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
 
   def testPostRequest(businessPostCodeVal: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/business-postcode").withFormUrlEncodedBody(businessPostCode -> businessPostCodeVal)
+
+  val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
 
   "Calling the show action of the Business PostCode controller" when {
     "go to the Business PostCode page" in {
@@ -50,6 +56,23 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
   }
 
   "Calling the submit action of the Business PostCode controller" when {
+    "the session contains isAlreadySubscribed: true" should {
+      "redirect to check your answers" in {
+        mockAuthAdminRole()
+        enable(AdditionalKnownFacts)
+
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+          testPostRequest(testBusinessPostcode.postCode).withSession(SessionKeys.isAlreadySubscribedKey -> "true")
+        val result = TestBusinessPostCodeController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
+
+        session(result).get(SessionKeys.businessPostCodeKey) should contain(
+          Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
+        )
+      }
+    }
+
     "the session contains isMigrated: true" should {
       "redirect to check your answers" in {
         mockAuthAdminRole()
@@ -66,6 +89,7 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
         )
       }
     }
+
     "the feature switch is disabled" when {
       "the form is successfully submitted" should {
         "goto check your answers page" in {
@@ -112,5 +136,4 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       }
     }
   }
-
 }

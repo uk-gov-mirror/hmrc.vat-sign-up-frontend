@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BusinessPostCodeController @Inject()(implicit ec: ExecutionContext,
-                                             vcc: VatControllerComponents)
+                                           vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async {
@@ -53,16 +53,15 @@ class BusinessPostCodeController @Inject()(implicit ec: ExecutionContext,
             ),
           businessPostCode => {
             val isMigrated: Boolean = request.session.get(SessionKeys.isMigratedKey).contains("true")
+            val isAlreadySubscribed: Boolean = request.session.get(SessionKeys.isAlreadySubscribedKey).contains("true")
 
-            if (isMigrated || !isEnabled(AdditionalKnownFacts)) {
-              Future.successful(
-                Redirect(routes.CheckYourAnswersController.show())
-                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+            if (isMigrated || !isEnabled(AdditionalKnownFacts) || isAlreadySubscribed) {
+              Future.successful(Redirect(routes.CheckYourAnswersController.show())
+                .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
               )
             } else {
-              Future.successful(
-                Redirect(routes.PreviousVatReturnController.show())
-                  .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
+              Future.successful(Redirect(routes.PreviousVatReturnController.show())
+                .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
               )
             }
           }
