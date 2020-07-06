@@ -53,6 +53,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
       val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
       val isOverseas = request.session.get(SessionKeys.businessEntityKey).contains(Overseas.toString)
+      val isAlreadySubscribed: Boolean = request.session.get(SessionKeys.isAlreadySubscribedKey).contains("true")
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optLastReturnMonth) match {
         case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) if isMigrated && isOverseas =>
@@ -66,7 +67,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
               optLastReturnMonthPeriod = None,
               postAction = routes.CheckYourAnswersController.submit()))
           )
-        case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated =>
+        case (Some(vatNumber), Some(vatRegistrationDate), Some(businessPostCode), _, _, _) if isMigrated || isAlreadySubscribed =>
           Future.successful(
             Ok(check_your_answers(
               vatNumber = vatNumber,
