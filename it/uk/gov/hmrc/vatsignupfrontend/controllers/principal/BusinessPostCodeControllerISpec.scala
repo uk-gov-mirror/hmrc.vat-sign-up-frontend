@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import java.time.LocalDate
+
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
@@ -23,8 +25,12 @@ import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
+import uk.gov.hmrc.vatsignupfrontend.models.DateModel
 
 class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
+
   "GET /business-postcode" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
@@ -39,6 +45,20 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
 
   "POST /business-postcode" should {
     "redirect to check your answers" when {
+      "the session contains isAlreadySubscribed: true and the Additional Known Facts feature switch is enabled" in {
+        stubAuth(OK, successfulAuthResponse())
+        enable(AdditionalKnownFacts)
+
+        val res = post("/business-postcode", Map(SessionKeys.isAlreadySubscribedKey -> "true"))(
+          BusinessPostCodeForm.businessPostCode -> testBusinessPostCode.postCode
+        )
+
+        res should have(
+          httpStatus(SEE_OTHER),
+          redirectUri(routes.CheckYourAnswersController.show().url)
+        )
+      }
+
       "the session contains isMigrated: true and the Additional Known Facts feature switch is enabled" in {
         stubAuth(OK, successfulAuthResponse())
         enable(AdditionalKnownFacts)
@@ -52,6 +72,7 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.CheckYourAnswersController.show().url)
         )
       }
+
       "the session does not contain isMigrated: true in session and the Additional Known Facts feature switch is disabled" in {
         stubAuth(OK, successfulAuthResponse())
 
@@ -63,6 +84,7 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "redirect to the previous vat return page" when {
       "the session does not contain isMigrated: true and the Additional Known Facts feature switch is enabled" in {
         stubAuth(OK, successfulAuthResponse())
@@ -77,5 +99,4 @@ class BusinessPostCodeControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
   }
-
 }

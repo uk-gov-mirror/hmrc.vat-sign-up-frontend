@@ -91,6 +91,7 @@ class CaptureVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                       case AlreadySubscribed if enrolments.getAnyVatNumber.isEmpty =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
+                          .addingToSession(isAlreadySubscribedKey, true)
                       case AlreadySubscribed =>
                         Redirect(errorRoutes.AlreadySignedUpController.show())
                       case SubscriptionClaimed =>

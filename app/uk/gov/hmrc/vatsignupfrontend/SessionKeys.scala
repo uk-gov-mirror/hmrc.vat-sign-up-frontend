@@ -43,4 +43,5 @@ object SessionKeys {
   val acceptedDirectDebitTermsKey = "acceptedDirectDebitTerms"
   val contactPreferenceKey = "contactPreference"
   val isMigratedKey = "isMigrated"
+  val isAlreadySubscribedKey = "alreadySubscribed"
 }

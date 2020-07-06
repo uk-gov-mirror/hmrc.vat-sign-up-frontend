@@ -26,10 +26,10 @@ import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreMigratedVatNumberHttpParser}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService._
-import uk.gov.hmrc.vatsignupfrontend.services.{StoreMigratedVatNumberService, StoreVatNumberService}
+import uk.gov.hmrc.vatsignupfrontend.services.{ClaimSubscriptionService, StoreMigratedVatNumberService, StoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.check_your_answers
 
@@ -37,7 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumberService,
-                                           storeMigratedVatNumberService: StoreMigratedVatNumberService)
+                                           storeMigratedVatNumberService: StoreMigratedVatNumberService,
+                                           claimSubscriptionService: ClaimSubscriptionService)
                                           (implicit ec: ExecutionContext,
                                            vcc: VatControllerComponents) extends AuthenticatedController(AdministratorRolePredicate) {
 
@@ -165,6 +166,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
       val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
       val isOverseas = request.session.get(SessionKeys.businessEntityKey).contains(Overseas.toString)
+      val isAlreadySubscribed: Boolean = request.session.get(SessionKeys.isAlreadySubscribedKey).contains("true")
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optlastReturnMonth) match {
         case (None, _, _, _, _, _) =>
@@ -179,6 +181,17 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
+        case (Some(vatNumber), Some(vatRegistrationDate), optBusinessPostcode, _, _, _) if isAlreadySubscribed =>
+          claimSubscriptionService.claimSubscription(vatNumber, optBusinessPostcode, vatRegistrationDate, isFromBta = false) map {
+            case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
+              Redirect(routes.SignUpCompleteClientController.show())
+            case Left(ClaimSubscriptionHttpParser.KnownFactsMismatch) =>
+              Redirect(errorRoutes.VatCouldNotConfirmBusinessController.show())
+            case Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential) =>
+              Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
+            case err@_ =>
+              throw new InternalServerException("[CheckYourAnswersController][claimSubscription] unexpected response on claim subscription" + err)
+          }
         case (Some(vatNumber), Some(vatRegistrationDate), optBusinessPostcode, _, _, _) if isMigrated =>
           storeMigratedVatNumberService.storeVatNumber(vatNumber, Some(vatRegistrationDate.toDesDateFormat), optBusinessPostcode).map {
             case Right(StoreMigratedVatNumberHttpParser.StoreMigratedVatNumberSuccess) =>

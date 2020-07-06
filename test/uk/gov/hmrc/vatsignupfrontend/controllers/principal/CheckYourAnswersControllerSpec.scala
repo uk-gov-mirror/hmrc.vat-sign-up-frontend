@@ -30,10 +30,10 @@ import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreMigratedVatNumberHttpParser
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreMigratedVatNumberHttpParser}
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberService.VatNumberStored
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockStoreMigratedVatNumberService, MockStoreVatNumberService}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockClaimSubscriptionService, MockStoreMigratedVatNumberService, MockStoreVatNumberService}
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
@@ -41,11 +41,13 @@ import scala.concurrent.Future
 class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   with MockVatControllerComponents
   with MockStoreVatNumberService
-  with MockStoreMigratedVatNumberService {
+  with MockStoreMigratedVatNumberService
+  with MockClaimSubscriptionService {
 
   object TestCheckYourAnswersController extends CheckYourAnswersController(
     mockStoreVatNumberService,
-    mockStoreMigratedVatNumberService
+    mockStoreMigratedVatNumberService,
+    mockClaimSubscriptionService
   )
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
@@ -101,6 +103,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         charset(result) shouldBe Some("utf-8")
       }
     }
+
     "vat number is missing" should {
       "go to capture vat number page" in {
         mockAuthAdminRole()
@@ -110,6 +113,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
       }
     }
+
     "vat registration date is missing" should {
       "go to capture vat registration date page" in {
         mockAuthAdminRole()
@@ -119,6 +123,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
       }
     }
+
     "post code is missing" should {
       "go to business post code page" in {
         mockAuthAdminRole()
@@ -128,6 +133,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
       }
     }
+
     "Overseas entity is in session" should {
       "show page without postcode" in {
         mockAuthAdminRole()
@@ -138,6 +144,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         charset(result) shouldBe Some("utf-8")
       }
     }
+
     "when the AdditionalKnownFacts feature switch is enabled" when {
       "all prerequisite data is in session" when {
         "vat number is missing" should {
@@ -149,6 +156,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
           }
         }
+
         "vat registration date is missing" should {
           "go to capture vat registration date page" in {
             mockAuthAdminRole()
@@ -158,6 +166,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
           }
         }
+
         "post code is missing" should {
           "go to business post code page" in {
             mockAuthAdminRole()
@@ -167,6 +176,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
           }
         }
+
         "previous VAT return is missing" should {
           "go to Previous VAT return page" in {
             mockAuthAdminRole()
@@ -176,6 +186,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
           }
         }
+
         "the box 5 figure is missing" should {
           "go to the capture box 5 figure page" in {
             mockAuthAdminRole()
@@ -185,6 +196,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
           }
         }
+
         "the last return month is missing" should {
           "go to the capture last return month page" in {
             mockAuthAdminRole()
@@ -194,6 +206,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
           }
         }
+
         "the user is migrated so only has two known facts" in {
           mockAuthAdminRole()
 
@@ -204,6 +217,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           status(result) shouldBe Status.OK
         }
+
         "the user is migrated and overseas so only has reg date" in {
           mockAuthAdminRole()
 
@@ -240,6 +254,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           session(result) get SessionKeys.hasDirectDebitKey should contain("false")
         }
       }
+
       "store vat number returned VatNumberStored with direct debits" should {
         "goto business entity controller" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -258,6 +273,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           session(result) get SessionKeys.hasDirectDebitKey should contain("true")
         }
       }
+
       "store vat number returned VatNumberStored with direct debits and isOverseas flag set to true" should {
         "goto business entity controller" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -281,6 +297,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           session(result) get SessionKeys.businessEntityKey should contain("overseas")
         }
       }
+
       "store vat number returned SubscriptionClaimed" when {
         "goto sign up complete controller" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -298,6 +315,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) should contain(routes.SignUpCompleteClientController.show().url)
         }
       }
+
       "store vat number returned KnownFactsMismatch" should {
         "go to the could not confirm business page" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -315,6 +333,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(errorRoutes.VatCouldNotConfirmBusinessController.show().url)
         }
       }
+
       "store vat number returned InvalidVatNumber" should {
         "go to the invalid vat number page" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -332,6 +351,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(errorRoutes.InvalidVatNumberController.show().url)
         }
       }
+
       "store vat number returned IneligibleVatNumber" should {
         "go to the could not use service page" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -349,6 +369,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(errorRoutes.CannotUseServiceController.show().url)
         }
       }
+
       "store vat number returned VatMigrationInProgress" should {
         "go to the migration in progress error page" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -366,6 +387,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(errorRoutes.MigrationInProgressErrorController.show().url)
         }
       }
+
       "store vat number returned VatNumberAlreadyEnrolled" should {
         "go to the business already signed up error page" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -383,6 +405,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           redirectLocation(result) shouldBe Some(errorRoutes.BusinessAlreadySignedUpController.show().url)
         }
       }
+
       "store vat number returned a failure" should {
         "throw internal server exception" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -401,6 +424,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
         }
       }
+
       "the user is un-enrolled " should {
         "return a successful response" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -429,7 +453,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           intercept[InternalServerException] {
             TestCheckYourAnswersController.submit(testPostRequest().withSession(SessionKeys.isMigratedKey -> "true"))
           }
-
         }
 
         "return a un-successful response from mismatching known facts" in {
@@ -447,6 +470,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
         }
       }
+
       "the user is un-enrolled and overseas" should {
         "return a successful response" in {
           mockAuthRetrieveEmptyEnrolment()
@@ -479,7 +503,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
               SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
             ))
           }
-
         }
 
         "return a un-successful response from mismatching known facts" in {
@@ -499,7 +522,73 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           }
         }
       }
+
+      "the vrn is already subscribed" should {
+        "redirect to SignUpCompleteClientController if claim subscription passes" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostcode),
+            testDate, isFromBta = false
+          )(Future.successful(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed)))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            SessionKeys.isAlreadySubscribedKey -> "true"
+          ))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.SignUpCompleteClientController.show().url)
+        }
+
+        "redirect to VatCouldNotConfirmBusinessController if claim subscription fails due to known facts mismatch" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostcode),
+            testDate, isFromBta = false
+          )(Future.successful(Left(ClaimSubscriptionHttpParser.KnownFactsMismatch)))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            SessionKeys.isAlreadySubscribedKey -> "true"
+          ))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(errorRoutes.VatCouldNotConfirmBusinessController.show().url)
+        }
+
+        "redirect to BusinessAlreadySignedUpController if the subscription is already claimed" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostcode),
+            testDate, isFromBta = false
+          )(Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential)))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            SessionKeys.isAlreadySubscribedKey -> "true"
+          ))
+
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(errorRoutes.BusinessAlreadySignedUpController.show().url)
+        }
+
+        "throw an exception if claim subscription fails" in {
+          mockAuthRetrieveEmptyEnrolment()
+          mockClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostcode),
+            testDate, isFromBta = false
+          )(Future.successful(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(INTERNAL_SERVER_ERROR))))
+
+          val result = TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            SessionKeys.isAlreadySubscribedKey -> "true"
+          ))
+
+          intercept[InternalServerException](result)
+        }
+      }
     }
+
     "vat number is missing" should {
       "go to capture vat number page" in {
         mockAuthRetrieveEmptyEnrolment()
@@ -510,6 +599,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
       }
     }
+
     "vat registration date is missing" should {
       "go to capture vat registration date page" in {
         mockAuthRetrieveEmptyEnrolment()
@@ -519,6 +609,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
       }
     }
+
     "post code is missing" should {
       "go to business post code page" in {
         mockAuthRetrieveEmptyEnrolment()
@@ -528,6 +619,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
       }
     }
+
     "When the AdditionalKnownFacts feature switch is enabled" when {
       "the user has filed a vat return before" when {
         "the box 5 figure is missing" should {
@@ -539,6 +631,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
             redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
           }
         }
+
         "the last return month is missing" should {
           "go to the capture last return month page" in {
             mockAuthRetrieveEmptyEnrolment()
@@ -550,7 +643,5 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
         }
       }
     }
-
   }
-
 }

@@ -82,6 +82,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "store vat is successful with an overseas VRN" should {
       "redirect to business entity" in {
         stubAuth(OK, successfulAuthResponse())
@@ -112,9 +113,91 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
 
         getSessionMap(res).get(SessionKeys.businessEntityKey) should contain(Overseas.toString)
-
       }
     }
+
+    "isAlreadySubscribed is in session" when {
+      "the VAT subscription has been claimed" should {
+        "redirect to sign up complete client" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostCode),
+            testDate,
+            isFromBta = false
+          )(NO_CONTENT)
+
+          val res = post("/check-your-answers",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+              SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+              SessionKeys.isAlreadySubscribedKey -> "true"
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.SignUpCompleteClientController.show().url)
+          )
+
+          getSessionMap(res).get(SessionKeys.businessEntityKey) shouldNot contain(Overseas.toString)
+        }
+      }
+
+      "the VAT subscription has been claimed on another cred" should {
+        "redirect to business already signed up error page" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostCode),
+            testDate,
+            isFromBta = false
+          )(CONFLICT)
+
+          val res = post("/check-your-answers",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+              SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+              SessionKeys.isAlreadySubscribedKey -> "true"
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(errorRoutes.BusinessAlreadySignedUpController.show().url)
+          )
+        }
+      }
+
+      "store vat returned known facts mismatch" should {
+        "redirect to could not confirm business" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostCode),
+            testDate,
+            isFromBta = false
+          )(FORBIDDEN)
+
+          val res = post("/check-your-answers",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+              SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+              SessionKeys.isAlreadySubscribedKey -> "true"
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(errorRoutes.VatCouldNotConfirmBusinessController.show().url)
+          )
+        }
+      }
+    }
+
     "the VAT subscription has been claimed" should {
       "redirect to sign up complete client" in {
         stubAuth(OK, successfulAuthResponse())
@@ -145,9 +228,9 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
 
         getSessionMap(res).get(SessionKeys.businessEntityKey) shouldNot contain(Overseas.toString)
-
       }
     }
+
     "the VAT subscription has been claimed on another cred" should {
       "redirect to business already signed up error page" in {
         stubAuth(OK, successfulAuthResponse())
@@ -178,6 +261,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "store vat returned known facts mismatch" should {
       "redirect to could not confirm business" in {
         stubAuth(OK, successfulAuthResponse())
@@ -206,6 +290,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "store vat returned invalid vat number" should {
       "redirect to invalid vat number" in {
         stubAuth(OK, successfulAuthResponse())
@@ -234,6 +319,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "store vat returned ineligible vat number" should {
       "redirect to cannot use service" in {
         stubAuth(OK, successfulAuthResponse())
@@ -263,6 +349,7 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         )
       }
     }
+
     "store vat returned vat migration in progress" should {
       "redirect to migration in progress error page" in {
         stubAuth(OK, successfulAuthResponse())
@@ -292,7 +379,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
       }
     }
 
-
     "handle attempting to store a Unenrolled migrated vat number" should {
       "throw an error if the known facts mismatch" in {
         stubAuth(OK, successfulAuthResponse())
@@ -315,7 +401,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
-
       }
 
       "throw an error when a failure to store the vat number occurs" in {
@@ -338,7 +423,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
-
       }
 
       "redirect to business entity when a vat number is successfully stored" in {
@@ -363,8 +447,8 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
-
     }
+
     "handle attempting to store a Unenrolled migrated overseas vat number" should {
       "throw an error if the known facts mismatch" in {
         stubAuth(OK, successfulAuthResponse())
@@ -387,7 +471,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
-
       }
 
       "throw an error when a failure to store the vat number occurs" in {
@@ -409,7 +492,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
         )
-
       }
 
       "redirect to business entity when a vat number is successfully stored" in {
@@ -433,8 +515,6 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
           redirectUri(routes.CaptureBusinessEntityController.show().url)
         )
       }
-
     }
   }
-
 }

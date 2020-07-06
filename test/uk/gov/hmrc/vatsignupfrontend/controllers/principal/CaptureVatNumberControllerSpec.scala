@@ -336,6 +336,26 @@ class CaptureVatNumberControllerSpec extends UnitSpec
           }
         }
 
+        "the user does not have a vat enrolment" should {
+          "redirect to CaptureVatRegistrationDateController with already subscribed tag in session" when {
+            "the user attempts to sign up an unclaimed vat number" in {
+              mockAuthRetrieveEmptyEnrolment()
+              mockOrchestrate(
+                enrolments = Enrolments(Set()),
+                vatNumber = testVatNumber
+              )(Future.successful(AlreadySubscribed))
+
+              val request = testPostRequest(testVatNumber)
+
+              val result = TestCaptureVatNumberController.submit(request)
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+              session(result).get(isAlreadySubscribedKey) should contain("true")
+            }
+          }
+        }
+
         "the user does not have a VAT-DEC enrolment" when {
           "the Vat number is not for an overseas business" should {
             "redirect to the Capture Vat Registration Date page when the vat number is eligible" in {
