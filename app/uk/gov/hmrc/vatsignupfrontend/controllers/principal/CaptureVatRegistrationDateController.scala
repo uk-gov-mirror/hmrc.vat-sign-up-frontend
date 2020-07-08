@@ -18,6 +18,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
@@ -45,6 +46,8 @@ class CaptureVatRegistrationDateController @Inject()(implicit ec: ExecutionConte
   def submit: Action[AnyContent] = Action.async { implicit request =>
 
     val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
+    val alreadySubscribed = request.session.get(SessionKeys.isAlreadySubscribedKey).fold(false)(_.toBoolean)
+    val isMigrated = request.session.get(SessionKeys.isMigratedKey).fold(false)(_.toBoolean)
 
     authorised() {
       vatRegistrationDateForm.bindFromRequest.fold(
@@ -55,7 +58,7 @@ class CaptureVatRegistrationDateController @Inject()(implicit ec: ExecutionConte
         vatRegistrationDate => {
           optBusinessEntity match {
             case Some(entity) if entity == Overseas.toString =>
-              if (request.session.get(SessionKeys.isMigratedKey).contains("true"))
+              if (isMigrated || alreadySubscribed)
                 Future.successful(Redirect(routes.CheckYourAnswersController.show().url))
               else
                 Future.successful(Redirect(routes.PreviousVatReturnController.show().url))

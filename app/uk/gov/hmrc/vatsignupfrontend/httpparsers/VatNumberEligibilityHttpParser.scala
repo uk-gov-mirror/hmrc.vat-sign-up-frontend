@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.httpparsers
 
-import play.api.http.Status.{OK, NOT_FOUND}
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OFormat, Reads}
+import play.api.libs.json.{Format, JsPath, JsSuccess, Json, OFormat, Reads}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 
@@ -36,7 +36,9 @@ object VatNumberEligibilityHttpParser {
   val MtdStatusKey = "mtdStatus"
   val MigratableDatesKey = "migratableDates"
   val EligibilityDetailsKey = "eligibilityDetails"
+  val overseasKey = "isOverseas"
 
+  // scalastyle:off
   implicit object VatNumberEligibilityHttpReads extends HttpReads[VatNumberEligibilityResponse] {
     override def read(method: String, url: String, response: HttpResponse): VatNumberEligibilityResponse = {
       response.status match {
@@ -45,7 +47,10 @@ object VatNumberEligibilityHttpParser {
             case Some(MigrationInProgressValue) =>
               Right(MigrationInProgress)
             case Some(AlreadySubscribedValue) =>
-              Right(AlreadySubscribed)
+              val isOverseas = (response.json \ overseasKey).asOpt[Boolean].getOrElse(
+                throw new InternalServerException(s"Backend returned a malformed AlreadySubscribed response")
+              )
+              Right(AlreadySubscribed(isOverseas))
             case Some(IneligibleValue) =>
               Right(Ineligible)
             case Some(DeregisteredValue) =>
@@ -73,7 +78,7 @@ object VatNumberEligibilityHttpParser {
 
   sealed trait VatNumberEligibilitySuccess
 
-  case object AlreadySubscribed extends VatNumberEligibilitySuccess
+  case class AlreadySubscribed(isOverseas: Boolean) extends VatNumberEligibilitySuccess
 
   case class Eligible(isOverseas: Boolean, isMigrated: Boolean) extends VatNumberEligibilitySuccess
 

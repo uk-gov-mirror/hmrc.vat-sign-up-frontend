@@ -175,7 +175,7 @@ class ConfirmVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to the already signed up page" when {
       "the vat number has already been signed up" in {
         stubAuth(OK, successfulAuthResponse(agentEnrolment))
-        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = false)))
 
         val res = post("/client/confirm-vat-number", Map(SessionKeys.vatNumberKey -> testVatNumber))()
 

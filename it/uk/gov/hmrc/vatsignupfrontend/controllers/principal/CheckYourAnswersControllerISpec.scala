@@ -145,6 +145,34 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         }
       }
 
+      "the VAT subscription has been claimed and the user is overseas" should {
+        "redirect to sign up complete client" in {
+          stubAuth(OK, successfulAuthResponse())
+          stubClaimSubscription(
+            testVatNumber,
+            Some(testBusinessPostCode),
+            testDate,
+            isFromBta = false
+          )(NO_CONTENT)
+
+          val res = post("/check-your-answers",
+            Map(
+              SessionKeys.vatNumberKey -> testVatNumber,
+              SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
+              SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+              SessionKeys.isAlreadySubscribedKey -> "true",
+              SessionKeys.businessEntityKey -> Overseas.toString
+            )
+          )()
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.SignUpCompleteClientController.show().url)
+          )
+        }
+      }
+
+
       "the VAT subscription has been claimed on another cred" should {
         "redirect to business already signed up error page" in {
           stubAuth(OK, successfulAuthResponse())

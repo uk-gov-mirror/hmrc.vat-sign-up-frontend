@@ -42,6 +42,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
                                           (implicit ec: ExecutionContext,
                                            vcc: VatControllerComponents) extends AuthenticatedController(AdministratorRolePredicate) {
 
+  // scalastyle:off
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
@@ -56,7 +57,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
       val isAlreadySubscribed: Boolean = request.session.get(SessionKeys.isAlreadySubscribedKey).contains("true")
 
       (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optLastReturnMonth) match {
-        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) if isMigrated && isOverseas =>
+        case (Some(vatNumber), Some(vatRegistrationDate), _, _, _, _) if (isMigrated || isAlreadySubscribed) && isOverseas =>
           Future.successful(
             Ok(check_your_answers(
               vatNumber = vatNumber,

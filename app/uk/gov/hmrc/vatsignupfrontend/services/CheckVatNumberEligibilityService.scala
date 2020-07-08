@@ -33,8 +33,8 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityConnector: 
     vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber).map {
       case Right(MigrationInProgress) =>
         StoreVatNumberOrchestrationService.MigrationInProgress
-      case Right(AlreadySubscribed) =>
-        StoreVatNumberOrchestrationService.AlreadySubscribed
+      case Right(AlreadySubscribed(isOverseas)) =>
+        StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas)
       case Right(Ineligible) =>
         StoreVatNumberOrchestrationService.Ineligible
       case Right(Deregistered) =>

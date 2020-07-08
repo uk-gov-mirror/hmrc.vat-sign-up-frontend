@@ -104,11 +104,11 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
       "the vat number is already subscribed" should {
         "return AlreadySubscribed" in {
-          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
 
           val res = TestService.orchestrate(testNoEnrolments, testVatNumber)
 
-          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
         }
       }
 
@@ -158,7 +158,7 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
             val res = TestService.orchestrate(Enrolments(Set(testMtdVatEnrolment, testVatDecEnrolment)), testVatNumber)
 
-            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
           }
         }
 
@@ -169,7 +169,7 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
             val res = TestService.orchestrate(Enrolments(Set(testMtdVatEnrolment)), testVatNumber)
 
-            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+            await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
           }
         }
 
@@ -228,7 +228,7 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
       "the vat number is already subscribed" when {
         "subscription is claimed successfully" should {
           "return SubscriptionClaimed" in {
-            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
             mockClaimSubscription(testVatNumber, isFromBta = false)(
               Future.successful(Right(ClaimSubscriptionHttpParser.SubscriptionClaimed))
             )
@@ -241,7 +241,7 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
         "the vat number is already enrolled on a different cred" should {
           "return AlreadyEnrolledOnDifferentCredential" in {
-            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
             mockClaimSubscription(testVatNumber, isFromBta = false)(
               Future.successful(Left(ClaimSubscriptionHttpParser.AlreadyEnrolledOnDifferentCredential))
             )
@@ -254,7 +254,7 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
         "subscription claim fails" should {
           "throw and internal server exception" in {
-            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+            mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
             mockClaimSubscription(testVatNumber, isFromBta = false)(
               Future.successful(Left(ClaimSubscriptionHttpParser.ClaimSubscriptionFailureResponse(BAD_REQUEST)))
             )
@@ -278,21 +278,21 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
       "the user has MTD VAT enrolment and the vat number is already signed up" should {
         "return AlreadySubscribed" in {
-          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
 
           val res = TestService.orchestrate(Enrolments(Set(testMtdVatEnrolment)), testVatNumber)
 
-          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
         }
       }
 
       "the user has multiple enrolments and the vat number is already signed up" should {
         "return AlreadySubscribed" in {
-          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+          mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
 
           val res = TestService.orchestrate(Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)), testVatNumber)
 
-          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+          await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
         }
 
       }
@@ -390,11 +390,11 @@ class VatNumberOrchestrationServiceSpec extends UnitSpec
 
     "the vat number is already signed up" should {
       "return AlreadySubscribed" in {
-        mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed))
+        mockCheckVatNumberEligibility(testVatNumber)(Future.successful(StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)))
 
         val res = TestService.orchestrate(Enrolments(Set(testAgentEnrolment)), testVatNumber)
 
-        await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+        await(res) shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
       }
     }
 

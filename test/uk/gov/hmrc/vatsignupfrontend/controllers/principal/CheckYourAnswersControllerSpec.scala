@@ -230,6 +230,19 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
           status(result) shouldBe Status.OK
         }
+
+        "the user is already subscribed and overseas" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(
+            testGetRequest(postCode = None, optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
+              SessionKeys.isAlreadySubscribedKey -> "true",
+              SessionKeys.businessEntityKey -> Overseas.toString
+            )
+          )
+
+          status(result) shouldBe Status.OK
+        }
       }
     }
   }
