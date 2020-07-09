@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.views.principal
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
+import org.jsoup.nodes.Document
 import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -26,10 +26,11 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAns
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.utils.SummarySectionTesting
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
-class CheckYourAnswersFinalViewSpec extends ViewSpec {
+class CheckYourAnswersFinalViewSpec extends ViewSpec with SummarySectionTesting {
 
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -84,22 +85,6 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
   )
   lazy val pageLetters: Html = page(contactPreference = Paper)
 
-  val questionId: String => String = (sectionId: String) => s"$sectionId-question"
-  val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
-  val editLinkId: String => String = (sectionId: String) => s"$sectionId-edit"
-
-
-  def questionStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__heading tabular-data__heading--label"
-  }
-
-  def answerStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__data-1"
-  }
-
-  def editLinkStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__data-2"
-  }
 
   def sectionExists(page: Html, sectionId: String): Boolean = {
     lazy val doc = Jsoup.parse(page.body)
@@ -108,195 +93,152 @@ class CheckYourAnswersFinalViewSpec extends ViewSpec {
     result.isDefined
   }
 
-  def sectionTest(page: Html, sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]): Unit = {
-    lazy val doc = Jsoup.parse(page.body)
-    val accountingPeriod = doc.getElementById(sectionId)
-    val question = doc.getElementById(questionId(sectionId))
-    val answer = doc.getElementById(answerId(sectionId))
-    val editLink = doc.getElementById(editLinkId(sectionId))
-
-    questionStyleCorrectness(question)
-    answerStyleCorrectness(answer)
-    if (expectedEditLink.nonEmpty) editLinkStyleCorrectness(editLink)
-
-    question.text() shouldBe expectedQuestion
-    answer.text() shouldBe expectedAnswer
-    if (expectedEditLink.nonEmpty) {
-      editLink.attr("href") shouldBe expectedEditLink.get
-      editLink.select("span").text() shouldBe expectedQuestion
-      editLink.select("span").hasClass("visuallyhidden") shouldBe true
-    }
-  }
 
   "Check your answers final view" should {
-    val testPage = TestView(
-      name = "Check your answers final view",
-      title = messages.title,
-      heading = messages.heading,
-      page = pageDefault
-    )
-    testPage.shouldHaveForm("Check your answers final Form")(actionCall = testCall)
-    testPage.shouldHaveAcceptAndSendButton()
-  }
+    lazy val doc: Document = Jsoup.parse(page().body)
+    "display VAT number" in {
+      doc.sectionTest(
+        VatNumberId,
+        messages.vat_number,
+        testVatNumber,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url)
+      )
+    }
+    "display business entity" in {
+      doc.sectionTest(
+        BusinessEntityId,
+        messages.business_entity,
+        expectedAnswer = "Trust",
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url)
+      )
+    }
+    "not display business entity" when {
+      "business entity is overseas" in {
+        sectionExists(page(optBusinessEntity = Overseas), BusinessEntityId) shouldBe false
+      }
 
-  "display VAT number" in {
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
-    sectionTest(
-      page = pageDefault,
-      sectionId = VatNumberId,
-      expectedQuestion = messages.vat_number,
-      expectedAnswer = testVatNumber,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-  "display business entity" in {
-    val expectedBusinessType = "Trust"
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBusinessEntityController.show().url
-    sectionTest(
-      page = pageDefault,
-      sectionId = BusinessEntityId,
-      expectedQuestion = messages.business_entity,
-      expectedAnswer = expectedBusinessType,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-  "not display business entity" when {
-    "business entity is overseas" in {
-      sectionExists(page(optBusinessEntity = Overseas), BusinessEntityId) shouldBe false
+      "isAdministrativeDivision is true" in {
+        sectionExists(page(), BusinessEntityId) shouldBe false
+      }
     }
 
-    "isAdministrativeDivision is true" in {
-      sectionExists(page(isAdministrativeDivision = false), BusinessEntityId) shouldBe false
+    "display national insurance number" when {
+      lazy val doc: Document = Jsoup.parse(pageSoleTrader.body)
+      "business entity is Sole Trader" in {
+        doc.sectionTest(
+          NinoId,
+          messages.nino,
+          testNino,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.routes.SoleTraderResolverController.resolve().url)
+        )
+      }
     }
-  }
+    "display partnership utr" when {
+      "business entity is Limited Partnership" in {
+        lazy val doc: Document = Jsoup.parse(pageGeneralParnership.body)
+        doc.sectionTest(
+          UtrId,
+          messages.partnership_utr,
+          testCompanyUtr,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url)
+        )
+      }
+      "business entity is General Partnership" in {
+        lazy val doc: Document = Jsoup.parse(pageGeneralParnership.body)
+        doc.sectionTest(
+          UtrId,
+          messages.partnership_utr,
+          testCompanyUtr,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url)
+        )
+      }
+    }
 
-  "display national insurance number" when {
-    "business entity is Sole Trader" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.soletrader.routes.SoleTraderResolverController.resolve().url
-      sectionTest(
-        page = pageSoleTrader,
-        sectionId = NinoId,
-        expectedQuestion = messages.nino,
-        expectedAnswer = testNino,
-        expectedEditLink = Some(expectedEditLink)
-      )
+    "display company number" when {
+      "business entity is Limited Company" in {
+        lazy val doc: Document = Jsoup.parse(pageLimitedCompany.body)
+        doc.sectionTest(
+          CrnId,
+          messages.company_number,
+          testCompanyNumber,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyNumberController.show().url)
+        )
+      }
+      "business entity is Limited Partnership" in {
+        lazy val doc: Document = Jsoup.parse(pageLimitedPartnership.body)
+        doc.sectionTest(
+          CrnId,
+          messages.partnership_company_number,
+          testCompanyNumber,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipCompanyNumberController.show().url)
+        )
+      }
+      "business entity is Registered Society" in {
+        lazy val doc: Document = Jsoup.parse(pageRegisteredSociety.body)
+        doc.sectionTest(
+          CrnId,
+          messages.company_number,
+          testCompanyNumber,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureRegisteredSocietyCompanyNumberController.show().url)
+        )
+      }
     }
-  }
-  "display partnership utr" when {
-    "business entity is Limited Partnership" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
-      sectionTest(
-        page = pageLimitedPartnership,
-        sectionId = UtrId,
-        expectedQuestion = messages.partnership_utr,
-        expectedAnswer = testCompanyUtr,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
-    "business entity is General Partnership" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.ResolvePartnershipUtrController.resolve().url
-      sectionTest(
-        page = pageGeneralParnership,
-        sectionId = UtrId,
-        expectedQuestion = messages.partnership_utr,
-        expectedAnswer = testCompanyUtr,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
-  }
 
-  "display company number" when {
-    "business entity is Limited Company" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureCompanyNumberController.show().url
-      sectionTest(
-        page = pageLimitedCompany,
-        sectionId = CrnId,
-        expectedQuestion = messages.company_number,
-        expectedAnswer = testCompanyNumber,
-        expectedEditLink = Some(expectedEditLink)
+    "display company name" when {
+      "business entity is Limited Company" in {
+        lazy val doc: Document = Jsoup.parse(pageLimitedCompany.body)
+        doc.sectionTest(
+          CompanyNameId,
+          messages.company_name,
+          testCompanyName,
+          None
+        )
+      }
+      "business entity is Limited Partnership" in {
+        lazy val doc: Document = Jsoup.parse(pageLimitedPartnership.body)
+        doc.sectionTest(
+          CompanyNameId,
+          messages.partnership_name,
+          testCompanyName,
+          None
+        )
+      }
+      "business entity is Registered Society" in {
+        lazy val doc: Document = Jsoup.parse(pageRegisteredSociety.body)
+        doc.sectionTest(
+          CompanyNameId,
+          messages.registered_society_name,
+          testCompanyName,
+          None
+        )
+      }
+    }
+    "display email address" in {
+      doc.sectionTest(
+        EmailAddressId,
+        messages.email_address,
+        testEmail,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureEmailController.show().url)
       )
     }
-    "business entity is Limited Partnership" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.partnerships.routes.CapturePartnershipCompanyNumberController.show().url
-      sectionTest(
-        page = pageLimitedPartnership,
-        sectionId = CrnId,
-        expectedQuestion = messages.partnership_company_number,
-        expectedAnswer = testCompanyNumber,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
-    "business entity is Registered Society" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureRegisteredSocietyCompanyNumberController.show().url
-      sectionTest(
-        page = pageRegisteredSociety,
-        sectionId = CrnId,
-        expectedQuestion = messages.company_number,
-        expectedAnswer = testCompanyNumber,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
-  }
-
-  "display company name" when {
-    "business entity is Limited Company" in {
-      sectionTest(
-        page = pageLimitedCompany,
-        sectionId = CompanyNameId,
-        expectedQuestion = messages.company_name,
-        expectedAnswer = testCompanyName,
-        expectedEditLink = None
-      )
-    }
-    "business entity is Limited Partnership" in {
-      sectionTest(
-        page = pageLimitedPartnership,
-        sectionId = CompanyNameId,
-        expectedQuestion = messages.partnership_name,
-        expectedAnswer = testCompanyName,
-        expectedEditLink = None
-      )
-    }
-    "business entity is Registered Society" in {
-      sectionTest(
-        page = pageRegisteredSociety,
-        sectionId = CompanyNameId,
-        expectedQuestion = messages.registered_society_name,
-        expectedAnswer = testCompanyName,
-        expectedEditLink = None
-      )
-    }
-  }
-  "display email address" in {
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureEmailController.show().url
-    sectionTest(
-      page = pageDefault,
-      sectionId = EmailAddressId,
-      expectedQuestion = messages.email_address,
-      expectedAnswer = testEmail,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-  "display contact preference" when {
-    "answer is Digital" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.ReceiveEmailNotificationsController.show().url
-      sectionTest(
-        page = pageDefault,
-        sectionId = ContactPreferenceId,
-        expectedQuestion = messages.contact_preference,
-        expectedAnswer = messages.digital,
-        expectedEditLink = Some(expectedEditLink)
-      )
-    }
-    "answer is Paper" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.ReceiveEmailNotificationsController.show().url
-      sectionTest(
-        page = pageLetters,
-        sectionId = ContactPreferenceId,
-        expectedQuestion = messages.contact_preference,
-        expectedAnswer = messages.letter,
-        expectedEditLink = Some(expectedEditLink)
-      )
+    "display contact preference" when {
+      "answer is Digital" in {
+        doc.sectionTest(
+          ContactPreferenceId,
+          messages.contact_preference,
+          messages.digital,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.ReceiveEmailNotificationsController.show().url)
+        )
+      }
+      "answer is Paper" in {
+        lazy val doc: Document = Jsoup.parse(pageLetters.body)
+        doc.sectionTest(
+          ContactPreferenceId,
+          messages.contact_preference,
+          messages.letter,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.ReceiveEmailNotificationsController.show().url)
+        )
+      }
     }
   }
 }
