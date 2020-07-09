@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.views.principal
 import java.time.LocalDate
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
+import org.jsoup.nodes.Document
 import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -28,10 +28,11 @@ import uk.gov.hmrc.vatsignupfrontend.assets.MessageLookup.{PrincipalCheckYourAns
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.utils.SummarySectionTesting
 import uk.gov.hmrc.vatsignupfrontend.views.ViewSpec
 import uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
 
-class CheckYourAnswersViewSpec extends ViewSpec {
+class CheckYourAnswersViewSpec extends ViewSpec with SummarySectionTesting {
 
   val testRegistrationDate: DateModel = DateModel.dateConvert(LocalDate.now())
   val testEntity: BusinessEntity = SoleTrader
@@ -58,185 +59,112 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     appConfig
   )
 
+  lazy val doc: Document = Jsoup.parse(page().body)
+
   lazy val pageDefault: Html = page()
 
   lazy val pageWithAdditionalKnownFacts: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue))
 
   lazy val pageWithoutPostCode: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue), None)
 
-  val questionId: String => String = (sectionId: String) => s"$sectionId-question"
-  val answerId: String => String = (sectionId: String) => s"$sectionId-answer"
-  val editLinkId: String => String = (sectionId: String) => s"$sectionId-edit"
-
-  def questionStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__heading tabular-data__heading--label"
-  }
-
-  def answerStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__data-1"
-  }
-
-  def editLinkStyleCorrectness(section: Element): Unit = {
-    section.attr("class") shouldBe "tabular-data__data-2"
-  }
-
   "Check your answers view" should {
+    lazy val pageWithAdditionalKnownFacts: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue))
 
-    val testPage = TestView(
-      name = "Check your answers View",
-      title = messages.title,
-      heading = messages.heading,
-      page = pageDefault
-    )
+    lazy val doc: Document = Jsoup.parse(pageWithAdditionalKnownFacts.body)
 
-    testPage.shouldHaveH2(messages.subHeading)
-
-    testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
-  }
-
-  def sectionTest(page: Html, sectionId: String, expectedQuestion: String, expectedAnswer: String, expectedEditLink: Option[String]): Unit = {
-    lazy val doc = Jsoup.parse(page.body)
-    val accountingPeriod = doc.getElementById(sectionId)
-    val question = doc.getElementById(questionId(sectionId))
-    val answer = doc.getElementById(answerId(sectionId))
-    val editLink = doc.getElementById(editLinkId(sectionId))
-
-    questionStyleCorrectness(question)
-    answerStyleCorrectness(answer)
-    if (expectedEditLink.nonEmpty) editLinkStyleCorrectness(editLink)
-
-    question.text() shouldBe expectedQuestion
-    answer.text() shouldBe expectedAnswer
-    if (expectedEditLink.nonEmpty) {
-      editLink.attr("href") shouldBe expectedEditLink.get
-      editLink.select("span").text() shouldBe expectedQuestion
-      editLink.select("span").hasClass("visuallyhidden") shouldBe true
-    }
-  }
-
-  "display the correct info for VatNumber" in {
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
-
-    sectionTest(
-      page = pageDefault,
-      sectionId = VatNumberId,
-      expectedQuestion = messages.yourVatNumber,
-      expectedAnswer = testVatNumber,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "display the correct info for VatRegistrationDate" in {
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url
-
-    sectionTest(
-      page = pageDefault,
-      sectionId = VatRegistrationDateId,
-      expectedQuestion = messages.vatRegistrationDate,
-      expectedAnswer = testRegistrationDate.toCheckYourAnswersDateFormat,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "display the correct info for BusinessPostCode" in {
-    val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
-
-    sectionTest(
-      page = pageDefault,
-      sectionId = BusinessPostCodeId,
-      expectedQuestion = messages.businessPostCode,
-      expectedAnswer = testBusinessPostcode.checkYourAnswersFormat,
-      expectedEditLink = Some(expectedEditLink)
-    )
-  }
-
-  "Check your answers view with additional known facts" should {
-
-    val testPage = TestView(
-      name = "Check your answers View",
-      title = messages.title,
-      heading = messages.heading,
-      page = pageWithAdditionalKnownFacts
-    )
-
-    testPage.shouldHaveH2(messages.subHeading)
-
-    testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
     "display the correct info for VatNumber" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
-
-      sectionTest(
-        page = pageDefault,
-        sectionId = VatNumberId,
-        expectedQuestion = messages.yourVatNumber,
-        expectedAnswer = testVatNumber,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        VatNumberId,
+        messages.yourVatNumber,
+        testVatNumber,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url)
       )
     }
 
     "display the correct info for VatRegistrationDate" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url
-
-      sectionTest(
-        page = pageDefault,
-        sectionId = VatRegistrationDateId,
-        expectedQuestion = messages.vatRegistrationDate,
-        expectedAnswer = testRegistrationDate.toCheckYourAnswersDateFormat,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        VatRegistrationDateId,
+        messages.vatRegistrationDate,
+        testRegistrationDate.toCheckYourAnswersDateFormat,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url)
       )
     }
 
     "display the correct info for BusinessPostCode" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url
-
-      sectionTest(
-        page = pageDefault,
-        sectionId = BusinessPostCodeId,
-        expectedQuestion = messages.businessPostCode,
-        expectedAnswer = testBusinessPostcode.checkYourAnswersFormat,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        BusinessPostCodeId,
+        messages.businessPostCode,
+        testBusinessPostcode.checkYourAnswersFormat,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url)
       )
     }
 
-    "display the correct answer for Previous VAT return" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.PreviousVatReturnController.show().url
+    "Check your answers view with additional known facts" should {
+      lazy val pageWithAdditionalKnownFacts: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue))
 
-      sectionTest(
-        page = pageWithAdditionalKnownFacts,
-        sectionId = PreviousVatReturnId,
-        expectedQuestion = messages.previousVatReturn,
-        expectedAnswer = Yes.stringValue,
-        expectedEditLink = Some(expectedEditLink)
+      lazy val doc: Document = Jsoup.parse(pageWithAdditionalKnownFacts.body)
+      "display the correct info for VatNumber" in {
+        doc.sectionTest(
+          VatNumberId,
+          messages.yourVatNumber,
+          testVatNumber,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url)
+        )
+      }
+
+      "display the correct info for VatRegistrationDate" in {
+        doc.sectionTest(
+          VatRegistrationDateId,
+          messages.vatRegistrationDate,
+          testRegistrationDate.toCheckYourAnswersDateFormat,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url)
+        )
+      }
+
+      "display the correct info for BusinessPostCode" in {
+        doc.sectionTest(
+          BusinessPostCodeId,
+          messages.businessPostCode,
+          testBusinessPostcode.checkYourAnswersFormat,
+          Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.BusinessPostCodeController.show().url)
+        )
+      }
+    }
+
+    "display the correct answer for Previous VAT return" in {
+      doc.sectionTest(
+        PreviousVatReturnId,
+        messages.previousVatReturn,
+        Yes.stringValue,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.PreviousVatReturnController.show().url)
       )
     }
 
     "display the correct answer for Box5Value" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url
-
-      sectionTest(
-        page = pageWithAdditionalKnownFacts,
-        sectionId = VatBox5FigureId,
-        expectedQuestion = messages.box5Figure,
+      doc.sectionTest(
+        VatBox5FigureId,
+        messages.box5Figure,
         expectedAnswer = s"£99,999,999,999.99",
-        expectedEditLink = Some(expectedEditLink)
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url)
       )
     }
 
     "display the correct answer for LastReturnMonth" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url
-
-      sectionTest(
-        page = pageWithAdditionalKnownFacts,
-        sectionId = VatLastReturnMonthId,
-        expectedQuestion = messages.lastReturnMonth,
-        expectedAnswer = testLastReturnMonthPeriod,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        VatLastReturnMonthId,
+        messages.lastReturnMonth,
+        testLastReturnMonthPeriod,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url)
       )
     }
   }
 
   "Check your answers view without overseas postcode" should {
+    lazy val pageWithoutPostCode: Html = page(Some(testBox5Figure), Some(testLastReturnMonthPeriod), Some(Yes.stringValue), None)
+
+    lazy val doc: Document = Jsoup.parse(pageWithoutPostCode.body)
+
 
     val testPage = TestView(
       name = "Check your answers View",
@@ -250,64 +178,48 @@ class CheckYourAnswersViewSpec extends ViewSpec {
     testPage.shouldHaveForm("Check your answers Form")(actionCall = testCall)
 
     "display the correct info for VatNumber" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
-
-      sectionTest(
-        page = pageDefault,
-        sectionId = VatNumberId,
-        expectedQuestion = messages.yourVatNumber,
-        expectedAnswer = testVatNumber,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        VatNumberId,
+        messages.yourVatNumber,
+        testVatNumber,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url)
       )
     }
 
     "display the correct info for VatRegistrationDate" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url
-
-      sectionTest(
-        page = pageDefault,
-        sectionId = VatRegistrationDateId,
-        expectedQuestion = messages.vatRegistrationDate,
-        expectedAnswer = testRegistrationDate.toCheckYourAnswersDateFormat,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        VatRegistrationDateId,
+        messages.vatRegistrationDate,
+        testRegistrationDate.toCheckYourAnswersDateFormat,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatRegistrationDateController.show().url)
       )
     }
 
     "display the correct answer for Box5Value" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url
-
-      sectionTest(
-        page = pageWithAdditionalKnownFacts,
-        sectionId = VatBox5FigureId,
-        expectedQuestion = messages.box5Figure,
+      doc.sectionTest(
+        VatBox5FigureId,
+        messages.box5Figure,
         expectedAnswer = s"£99,999,999,999.99",
-        expectedEditLink = Some(expectedEditLink)
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureBox5FigureController.show().url)
       )
     }
 
     "display the correct answer for Previous VAT return" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.PreviousVatReturnController.show().url
-
-      sectionTest(
-        page = pageWithAdditionalKnownFacts,
-        sectionId = PreviousVatReturnId,
-        expectedQuestion = messages.previousVatReturn,
-        expectedAnswer = Yes.stringValue,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        PreviousVatReturnId,
+        messages.previousVatReturn,
+        Yes.stringValue,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.PreviousVatReturnController.show().url)
       )
     }
 
     "display the correct answer for LastReturnMonth" in {
-      val expectedEditLink = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url
-
-      sectionTest(
-        page = pageWithAdditionalKnownFacts,
-        sectionId = VatLastReturnMonthId,
-        expectedQuestion = messages.lastReturnMonth,
-        expectedAnswer = testLastReturnMonthPeriod,
-        expectedEditLink = Some(expectedEditLink)
+      doc.sectionTest(
+        VatLastReturnMonthId,
+        messages.lastReturnMonth,
+        testLastReturnMonthPeriod,
+        Some(uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureLastReturnMonthPeriodController.show().url)
       )
     }
   }
-
 }
