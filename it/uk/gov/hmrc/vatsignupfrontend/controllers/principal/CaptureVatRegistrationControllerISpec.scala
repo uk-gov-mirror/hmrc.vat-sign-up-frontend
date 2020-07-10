@@ -63,6 +63,33 @@ class CaptureVatRegistrationControllerISpec extends ComponentSpecBase with Custo
       }
     }
     "user is overseas" when {
+      "user is already subscribed" should {
+        "redirect to CheckYourAnswers" in {
+          stubAuth(OK, successfulAuthResponse())
+          val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
+
+          val res = post(
+            "/vat-registration-date",
+            Map(
+              SessionKeys.businessEntityKey -> Overseas.toString,
+              SessionKeys.isAlreadySubscribedKey -> "true"
+            )
+          )(
+            vatRegistrationDate + ".dateDay" -> yesterday.day,
+            vatRegistrationDate + ".dateMonth" -> yesterday.month,
+            vatRegistrationDate + ".dateYear" -> yesterday.year
+          )
+
+          res should have(
+            httpStatus(SEE_OTHER),
+            redirectUri(routes.CheckYourAnswersController.show().url)
+          )
+
+          val session = getSessionMap(res)
+          session.keys should contain(vatRegistrationDateKey)
+          session.keys should contain(businessEntityKey)
+        }
+      }
       "user is not migrated" should {
         "redirect to Previous VAT return page" in {
           stubAuth(OK, successfulAuthResponse())

@@ -63,6 +63,7 @@ class StoreVatNumberService @Inject()(storeVatNumberConnector: StoreVatNumberCon
         throw new InternalServerException(s"Unexpected error in store VAT number for user with enrolment - $unexpectedError")
     }
 
+  // scalastyle:off
   def storeVatNumber(vatNumber: String,
                      optPostCode: Option[PostCode],
                      registrationDate: DateModel,

@@ -230,7 +230,18 @@ class ConfirmVatNumberControllerSpec extends UnitSpec
       "vat number is already subscribed" should {
         "redirect to the already subscribed page" in {
           mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
-          mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(AlreadySubscribed))
+          mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(AlreadySubscribed(isOverseas = false)))
+
+          val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(errorRoutes.AlreadySignedUpController.show().url)
+        }
+      }
+
+      "vat number is already subscribed and is overseas" should {
+        "redirect to the already subscribed page" in {
+          mockAgentAuthSuccess(Enrolments(Set(testAgentEnrolment)))
+          mockOrchestrate(enrolments = Enrolments(Set(testAgentEnrolment)), vatNumber = testVatNumber)(Future.successful(AlreadySubscribed(isOverseas = true)))
 
           val result = TestConfirmVatNumberController.submit(testPostRequest.withSession(SessionKeys.vatNumberKey -> testVatNumber))
           status(result) shouldBe Status.SEE_OTHER

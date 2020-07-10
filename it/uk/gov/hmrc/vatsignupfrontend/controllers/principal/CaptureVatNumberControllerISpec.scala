@@ -172,7 +172,7 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
         "redirect to the business already signed up error page" when {
           "the vat number is already signed up and a user is attempting to claim subscription" in {
             stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = false)))
             stubStoreVatNumberAlreadySignedUp(isFromBta = false)
             stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
 
@@ -323,17 +323,31 @@ class CaptureVatNumberControllerISpec extends ComponentSpecBase with CustomMatch
           }
         }
 
-        "the vat number is AlreadySubscribed" should {
-          "redirect to the Vat Registration Date" in {
-            stubAuth(OK, successfulAuthResponse())
-            stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+        "the vat number is AlreadySubscribed" when {
+          "the company is overseas" should {
+            "redirect to the Vat Registration Date" in {
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = true)))
 
-            val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+              )
+            }
+          }
+          "the company is not overseas" should {
+            "redirect to the Vat Registration Date" in {
+              stubAuth(OK, successfulAuthResponse())
+              stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = false)))
 
-            res should have(
-              httpStatus(SEE_OTHER),
-              redirectUri(routes.CaptureVatRegistrationDateController.show().url)
-            )
+              val res = post("/vat-number")(VatNumberForm.vatNumber -> testVatNumber)
+
+              res should have(
+                httpStatus(SEE_OTHER),
+                redirectUri(routes.CaptureVatRegistrationDateController.show().url)
+              )
+            }
           }
         }
       }

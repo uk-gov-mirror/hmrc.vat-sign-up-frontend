@@ -228,7 +228,7 @@ class MultipleVatCheckControllerSpec extends UnitSpec with MockVatControllerComp
               mockOrchestrate(
                 enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)),
                 vatNumber = testVatNumber
-              )(Future.successful(AlreadySubscribed))
+              )(Future.successful(AlreadySubscribed(isOverseas = false)))
 
               val result = TestMultipleVatCheckController.submit(testPostRequest(entityTypeVal = "no"))
               status(result) shouldBe Status.SEE_OTHER

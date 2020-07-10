@@ -217,7 +217,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to business already signed up error page" when {
       "form value is NO and the vrn is already subscribed with the subscription successfully claimed" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = false)))
         stubClaimSubscription(testVatNumber, isFromBta = false)(NO_CONTENT)
 
         val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
@@ -232,7 +232,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to business already signed up error page" when {
       "form value is NO and the vrn is already enrolled on a different cred" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
-        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = false)))
         stubClaimSubscription(testVatNumber, isFromBta = false)(CONFLICT)
 
         val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
@@ -247,7 +247,7 @@ class MultipleVatCheckControllerISpec extends ComponentSpecBase with CustomMatch
     "redirect to business already signed up error page" when {
       "form value is NO and the vrn is already signed up" in {
         stubAuth(OK, successfulAuthResponse(vatDecEnrolment, mtdVatEnrolment))
-        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed))
+        stubVatNumberEligibility(testVatNumber)(status = OK, optEligibilityResponse = Some(AlreadySubscribed(isOverseas = false)))
 
         val res = post("/more-than-one-vat-business")(MultipleVatCheckForm.yesNo -> YesNoMapping.option_no)
 

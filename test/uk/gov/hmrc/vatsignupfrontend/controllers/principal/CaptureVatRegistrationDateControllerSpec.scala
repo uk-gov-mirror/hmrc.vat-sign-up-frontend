@@ -96,6 +96,28 @@ class CaptureVatRegistrationDateControllerSpec extends UnitSpec with GuiceOneApp
         session(result).get(SessionKeys.isMigratedKey).get shouldBe "true"
       }
     }
+    "form successfully submitted with Overseas business entity and isAlreadySubscribed in session" should {
+      "redirect to Check Your Answers" in {
+        mockAuthAdminRole()
+
+        def testPostRequest(registrationDate: DateModel, entity: String, isAlreadySubscribed: String): FakeRequest[AnyContentAsFormUrlEncoded] =
+          FakeRequest("POST", "/vat-registration-date")
+            .withFormUrlEncodedBody(vatRegistrationDate + ".dateDay" -> registrationDate.day,
+              vatRegistrationDate + ".dateMonth" -> registrationDate.month,
+              vatRegistrationDate + ".dateYear" -> registrationDate.year
+            ).withSession(SessionKeys.businessEntityKey -> entity, SessionKeys.isAlreadySubscribedKey -> isAlreadySubscribed)
+
+        val yesterday = DateModel.dateConvert(LocalDate.now().minusDays(1))
+        val request = testPostRequest(yesterday, Overseas.toString, isAlreadySubscribed = "true")
+
+        val result = TestCaptureVatNumberController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
+
+        session(result).get(SessionKeys.businessEntityKey).get shouldBe Overseas.toString
+        session(result).get(SessionKeys.isAlreadySubscribedKey).get shouldBe "true"
+      }
+    }
     "form successfully submitted with Overseas business entity in session" should {
       "redirect to the Previous Vat return page" in {
         mockAuthAdminRole()

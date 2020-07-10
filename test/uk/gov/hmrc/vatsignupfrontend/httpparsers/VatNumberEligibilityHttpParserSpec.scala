@@ -34,22 +34,26 @@ class VatNumberEligibilityHttpParserSpec extends UnitSpec {
   val testMigratableDates = MigratableDates(Some(currentDate), Some(currentDate))
   val testEligibilityDetails = Eligible(isOverseas = false, isMigrated = false)
 
-  def response(mtdStatus: String, migratableDates: Option[MigratableDates] = None, eligibilityDetails: Option[Eligible] = None): Some[JsObject] = {
+  def response(mtdStatus: String,
+               migratableDates: Option[MigratableDates] = None,
+               eligibilityDetails: Option[Eligible] = None,
+               isOverseas: Option[Boolean] = None): Some[JsObject] = {
     Some(Json.obj(
       MtdStatusKey -> mtdStatus,
       MigratableDatesKey -> Json.toJson(migratableDates),
-      EligibilityDetailsKey -> Json.toJson(eligibilityDetails)
+      EligibilityDetailsKey -> Json.toJson(eligibilityDetails),
+      overseasKey -> Json.toJson(isOverseas)
     ))
   }
 
   "MTDStatusHttpReads" when {
     "read" should {
       s"parse an OK response when the $MtdStatusKey is $AlreadySubscribedValue as AlreadySubscribed" in {
-        val httpResponse = HttpResponse(OK, response(AlreadySubscribedValue))
+        val httpResponse = HttpResponse(OK, response(mtdStatus = AlreadySubscribedValue, isOverseas = Some(true)))
 
         val res = VatNumberEligibilityHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Right(AlreadySubscribed)
+        res shouldBe Right(AlreadySubscribed(isOverseas = true))
       }
       s"parse an OK response when the $MtdStatusKey is $IneligibleValue as Ineligible" in {
         val httpResponse = HttpResponse(OK, response(IneligibleValue))

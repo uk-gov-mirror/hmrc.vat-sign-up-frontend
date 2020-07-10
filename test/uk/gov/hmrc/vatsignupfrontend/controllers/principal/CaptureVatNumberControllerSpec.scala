@@ -282,7 +282,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
             mockOrchestrate(
               enrolments = Enrolments(Set(testMtdVatEnrolment)),
               vatNumber = testVatNumber
-            )(Future.successful(AlreadySubscribed))
+            )(Future.successful(AlreadySubscribed(isOverseas = false)))
 
             val request = testPostRequest(testVatNumber)
 
@@ -311,7 +311,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockOrchestrate(
                 enrolments = Enrolments(Set(testVatDecEnrolment, testMtdVatEnrolment)),
                 vatNumber = testVatNumber
-              )(Future.successful(AlreadySubscribed))
+              )(Future.successful(AlreadySubscribed(isOverseas = false)))
 
               val request = testPostRequest(testVatNumber)
 
@@ -343,7 +343,7 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               mockOrchestrate(
                 enrolments = Enrolments(Set()),
                 vatNumber = testVatNumber
-              )(Future.successful(AlreadySubscribed))
+              )(Future.successful(AlreadySubscribed(isOverseas = false)))
 
               val request = testPostRequest(testVatNumber)
 
@@ -352,6 +352,27 @@ class CaptureVatNumberControllerSpec extends UnitSpec
               status(result) shouldBe Status.SEE_OTHER
               redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
               session(result).get(isAlreadySubscribedKey) should contain("true")
+            }
+          }
+        }
+
+        "the user does not have a vat enrolment and is overseas" should {
+          "redirect to CaptureVatRegistrationDateController with already subscribed tag and overseas BE in session" when {
+            "the user attempts to sign up an unclaimed vat number" in {
+              mockAuthRetrieveEmptyEnrolment()
+              mockOrchestrate(
+                enrolments = Enrolments(Set()),
+                vatNumber = testVatNumber
+              )(Future.successful(AlreadySubscribed(isOverseas = true)))
+
+              val request = testPostRequest(testVatNumber)
+
+              val result = TestCaptureVatNumberController.submit(request)
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
+              session(result).get(isAlreadySubscribedKey) should contain("true")
+              session(result).get(businessEntityKey) should contain(Overseas.toString)
             }
           }
         }

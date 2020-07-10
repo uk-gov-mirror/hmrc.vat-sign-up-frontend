@@ -51,6 +51,7 @@ class CaptureVatNumberController @Inject()(storeVatNumberOrchestrationService: S
       }
   }
 
+  // scalastyle:off
   def submit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised()(Retrievals.allEnrolments) {
@@ -88,11 +89,16 @@ class CaptureVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(hasDirectDebitKey, isDirectDebit)
                           .addingToSession(isMigratedKey, isMigrated)
-                      case AlreadySubscribed if enrolments.getAnyVatNumber.isEmpty =>
+                      case AlreadySubscribed(isOverseas) if enrolments.getAnyVatNumber.isEmpty && isOverseas =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
                           .addingToSession(isAlreadySubscribedKey, true)
-                      case AlreadySubscribed =>
+                          .addingToSession(businessEntityKey -> Overseas.toString)
+                      case AlreadySubscribed(_) if enrolments.getAnyVatNumber.isEmpty =>
+                        Redirect(routes.CaptureVatRegistrationDateController.show())
+                          .addingToSession(vatNumberKey -> formVatNumber)
+                          .addingToSession(isAlreadySubscribedKey, true)
+                      case AlreadySubscribed(_) =>
                         Redirect(errorRoutes.AlreadySignedUpController.show())
                       case SubscriptionClaimed =>
                         Redirect(routes.SignUpCompleteClientController.show())

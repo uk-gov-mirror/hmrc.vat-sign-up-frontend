@@ -35,6 +35,7 @@ class StoreVatNumberOrchestrationService @Inject()(checkVatNumberEligibilityServ
                                                    claimSubscriptionService: ClaimSubscriptionService
                                                   )(implicit ec: ExecutionContext) extends FeatureSwitching {
 
+  // scalastyle:off
   def orchestrate(enrolments: Enrolments, vatNumber: String)(implicit headerCarrier: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
     val isEnrolled = enrolments.getAnyVatNumber.contains(vatNumber)
     val isAgent = enrolments.agentReferenceNumber.isDefined
@@ -49,16 +50,16 @@ class StoreVatNumberOrchestrationService @Inject()(checkVatNumberEligibilityServ
           case Left(StoreMigratedVatNumberHttpParser.NoAgentClientRelationship) =>
             NoAgentClientRelationship
         }
-      case Eligible(_, _) if enrolments.mtdVatNumber.isDefined =>
+      case Eligible(isOverseas, _) if enrolments.mtdVatNumber.isDefined =>
         //If user already has MTD-VAT enrolment, do not call legacy store VRN code as it will attempt to claim enrolment and fail
-        Future.successful(AlreadySubscribed)
-      case Eligible(_, _) if isEnrolled =>
+        Future.successful(AlreadySubscribed(isOverseas))
+      case Eligible(isOverseas, _) if isEnrolled =>
         storeVatNumberService.storeVatNumber(vatNumber, isFromBta = false)
-          .map(handleLegacyStoreVatNumberResponse(vatNumber))
-      case Eligible(_, _) if isAgent =>
+          .map(handleLegacyStoreVatNumberResponse(vatNumber, isOverseas))
+      case Eligible(isOverseas, _) if isAgent =>
         storeVatNumberService.storeVatNumberDelegated(vatNumber)
-          .map(handleLegacyStoreVatNumberResponse(vatNumber))
-      case StoreVatNumberOrchestrationService.AlreadySubscribed if isEnrolled && enrolments.mtdVatNumber.isEmpty =>
+          .map(handleLegacyStoreVatNumberResponse(vatNumber, isOverseas))
+      case StoreVatNumberOrchestrationService.AlreadySubscribed(_) if isEnrolled && enrolments.mtdVatNumber.isEmpty =>
         claimSubscriptionService.claimSubscription(vatNumber, isFromBta = false).map {
           case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
             StoreVatNumberOrchestrationService.SubscriptionClaimed
@@ -72,7 +73,7 @@ class StoreVatNumberOrchestrationService @Inject()(checkVatNumberEligibilityServ
     }
   }
 
-  private def handleLegacyStoreVatNumberResponse(vatNumber: String)(response: Either[StoreVatNumberFailure, StoreVatNumberSuccess]): StoreVatNumberOrchestrationServiceResponse =
+  private def handleLegacyStoreVatNumberResponse(vatNumber: String, isOverseas: Boolean)(response: Either[StoreVatNumberFailure, StoreVatNumberSuccess]): StoreVatNumberOrchestrationServiceResponse =
     response match {
       case Right(StoreVatNumberService.VatNumberStored(isOverseas, isDirectDebit)) =>
         StoreVatNumberOrchestrationService.VatNumberStored(isOverseas, isDirectDebit, isMigrated = false)
@@ -91,7 +92,7 @@ class StoreVatNumberOrchestrationService @Inject()(checkVatNumberEligibilityServ
       case Left(StoreVatNumberService.InvalidVatNumber) =>
         StoreVatNumberOrchestrationService.InvalidVatNumber
       case Left(StoreVatNumberService.AlreadySubscribed) =>
-        StoreVatNumberOrchestrationService.AlreadySubscribed
+        StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas)
     }
 }
 
@@ -121,7 +122,7 @@ object StoreVatNumberOrchestrationService {
 
   case class Eligible(isOverseas: Boolean, isMigrated: Boolean) extends StoreVatNumberOrchestrationServiceResponse
 
-  case object AlreadySubscribed extends StoreVatNumberOrchestrationServiceResponse
+  case class AlreadySubscribed(isOverseas: Boolean) extends StoreVatNumberOrchestrationServiceResponse
 
 }
 

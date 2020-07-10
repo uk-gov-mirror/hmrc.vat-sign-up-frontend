@@ -75,7 +75,7 @@ class ConfirmVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                       .addingToSession(SessionKeys.isMigratedKey, isMigrated)
                   case NoAgentClientRelationship =>
                     Redirect(errorRoutes.NoAgentClientRelationshipController.show())
-                  case AlreadySubscribed =>
+                  case AlreadySubscribed(_) =>
                     Redirect(errorRoutes.AlreadySignedUpController.show())
                   case Ineligible =>
                     Redirect(errorRoutes.CannotUseServiceController.show())

@@ -20,7 +20,7 @@ import org.scalatest.BeforeAndAfterEach
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockVatNumberEligibilityConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testEndDate, testStartDate, testVatNumber}
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser.{AlreadySubscribed, Deregistered, Eligible, Ineligible, Inhibited, MigrationInProgress, VatNumberNotFound}
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
 import uk.gov.hmrc.vatsignupfrontend.models.MigratableDates
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
@@ -58,10 +58,19 @@ class CheckVatNumberEligibilityServiceSpec extends UnitSpec with MockVatNumberEl
 
     "the connector returns AlreadySubscribed" should {
       "return AlreadySubscribed" in {
-        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(AlreadySubscribed)))
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(AlreadySubscribed(isOverseas = false))))
 
         val result = await(TestService.checkEligibility(testVatNumber))
-        result shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed
+        result shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = false)
+      }
+    }
+
+    "the connector returns AlreadySubscribed (overseas)" should {
+      "return AlreadySubscribed" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(AlreadySubscribed(isOverseas = true))))
+
+        val result = await(TestService.checkEligibility(testVatNumber))
+        result shouldBe StoreVatNumberOrchestrationService.AlreadySubscribed(isOverseas = true)
       }
     }
 
