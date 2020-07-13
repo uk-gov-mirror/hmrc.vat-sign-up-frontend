@@ -9,24 +9,24 @@ object AppDependencies {
 
   lazy val appDependencies: Seq[ModuleID] = compile ++ test ++ it
 
-  private val domainVersion = "5.6.0-play-26"
-  private val playWhitelistFilterVersion = "3.1.0-play-26"
+  private val domainVersion = "5.9.0-play-26"
+  private val playWhitelistFilterVersion = "3.4.0-play-26"
 
   private val scalaTestVersion = "3.0.8"
   private val scalaTestPlusVersion = "3.1.3"
   private val pegdownVersion = "1.6.0"
-  private val jsoupVersion =  "1.8.1"
-  private val mockitoVersion = "2.7.6"
-  private val wiremockVersion = "2.25.1"
+  private val jsoupVersion =  "1.13.1"
+  private val mockitoVersion = "3.4.0"
+  private val wiremockVersion = "2.27.1"
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "govuk-template" % "5.52.0-play-26",
-    "uk.gov.hmrc" %% "play-ui" % "8.8.0-play-26",
+    "uk.gov.hmrc" %% "govuk-template" % "5.55.0-play-26",
+    "uk.gov.hmrc" %% "play-ui" % "8.11.0-play-26",
     ws,
-    "uk.gov.hmrc" %% "bootstrap-play-26" % "1.7.0",
+    "uk.gov.hmrc" %% "bootstrap-play-26" % "1.13.0",
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion,
-    "uk.gov.hmrc" %% "play-language" % "4.2.0-play-26"
+    "uk.gov.hmrc" %% "play-language" % "4.3.0-play-26"
   )
 
   def test = {
