@@ -20,25 +20,28 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys.vatNumberKey
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, isAlreadySubscribedKey, isFromBtaKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, SubscriptionClaimed}
-import uk.gov.hmrc.vatsignupfrontend.services.ClaimSubscriptionService
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
+import uk.gov.hmrc.vatsignupfrontend.services.{CheckVatNumberEligibilityService, ClaimSubscriptionService}
 import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
+import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidChecksum
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubscriptionService)
+class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubscriptionService,
+                                            checkVatNumberEligibilityService: CheckVatNumberEligibilityService)
                                            (implicit ec: ExecutionContext,
                                             vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
 
+  // scalastyle:off
   def show(btaVatNumber: String): Action[AnyContent] = Action.async { implicit request =>
     authorised()(Retrievals.allEnrolments) {
       enrolments =>
@@ -58,9 +61,19 @@ class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubsc
               new InternalServerException("Supplied VAT number did not match enrolment")
             )
           case None if btaVatNumber.length == 9 && isValidChecksum(btaVatNumber) =>
-            Future.successful(
-              Redirect(btaRoutes.CaptureBtaVatRegistrationDateController.show()) addingToSession (vatNumberKey -> btaVatNumber)
-            )
+            checkVatNumberEligibilityService.isOverseas(btaVatNumber).map { isOverseas =>
+              if (isOverseas)
+                Redirect(routes.CaptureVatRegistrationDateController.show())
+                  .addingToSession(vatNumberKey -> btaVatNumber)
+                  .addingToSession(isAlreadySubscribedKey, true)
+                  .addingToSession(isFromBtaKey, true)
+                  .addingToSession(businessEntityKey -> Overseas.toString)
+              else
+                Redirect(routes.CaptureVatRegistrationDateController.show())
+                  .addingToSession(vatNumberKey -> btaVatNumber)
+                  .addingToSession(isAlreadySubscribedKey, true)
+                  .addingToSession(isFromBtaKey, true)
+            }
           case None =>
             Future.failed(
               new InternalServerException("Supplied VAT number was invalid")

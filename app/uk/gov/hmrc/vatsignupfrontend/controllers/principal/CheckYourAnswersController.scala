@@ -146,7 +146,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
         Redirect(errorRoutes.VatCouldNotConfirmBusinessController.show())
       case Left(InvalidVatNumber) =>
         Redirect(errorRoutes.InvalidVatNumberController.show())
-      case Left(IneligibleVatNumber(migratableDates)) =>
+      case Left(IneligibleVatNumber(_)) =>
         Redirect(errorRoutes.CannotUseServiceController.show())
       case Left(VatNumberAlreadyEnrolled) =>
         Redirect(errorRoutes.BusinessAlreadySignedUpController.show())
@@ -157,20 +157,19 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
     }
 
   def submit: Action[AnyContent] = Action.async { implicit request =>
-    authorised()(Retrievals.allEnrolments) { enrolments =>
+    authorised()(Retrievals.allEnrolments) { _ =>
       val optVatNumber = request.session.get(SessionKeys.vatNumberKey).filter(_.nonEmpty)
       val optVatRegistrationDate = request.session.getModel[DateModel](SessionKeys.vatRegistrationDateKey)
       val optBusinessPostCode = request.session.getModel[PostCode](SessionKeys.businessPostCodeKey)
       val optBox5Figure = request.session.get(SessionKeys.box5FigureKey).filter(_.nonEmpty)
-      val optlastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
       val optPreviousVatReturn = request.session.get(SessionKeys.previousVatReturnKey).filter(_.nonEmpty)
       val optLastReturnMonth = request.session.get(SessionKeys.lastReturnMonthPeriodKey).filter(_.nonEmpty)
       val optBusinessEntity = request.session.get(SessionKeys.businessEntityKey).filter(_.nonEmpty)
       val isMigrated = request.session.get(SessionKeys.isMigratedKey).contains("true")
-      val isOverseas = request.session.get(SessionKeys.businessEntityKey).contains(Overseas.toString)
       val isAlreadySubscribed: Boolean = request.session.get(SessionKeys.isAlreadySubscribedKey).contains("true")
+      val isFromBta: Boolean = request.session.get(SessionKeys.isFromBtaKey).contains("true")
 
-      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optlastReturnMonth) match {
+      (optVatNumber, optVatRegistrationDate, optBusinessPostCode, optPreviousVatReturn, optBox5Figure, optLastReturnMonth) match {
         case (None, _, _, _, _, _) =>
           Future.successful(
             Redirect(routes.CaptureVatNumberController.show())
@@ -184,7 +183,7 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
             Redirect(routes.BusinessPostCodeController.show())
           )
         case (Some(vatNumber), Some(vatRegistrationDate), optBusinessPostcode, _, _, _) if isAlreadySubscribed =>
-          claimSubscriptionService.claimSubscription(vatNumber, optBusinessPostcode, vatRegistrationDate, isFromBta = false) map {
+          claimSubscriptionService.claimSubscription(vatNumber, optBusinessPostcode, vatRegistrationDate, isFromBta) map {
             case Right(ClaimSubscriptionHttpParser.SubscriptionClaimed) =>
               Redirect(routes.SignUpCompleteClientController.show())
             case Left(ClaimSubscriptionHttpParser.KnownFactsMismatch) =>

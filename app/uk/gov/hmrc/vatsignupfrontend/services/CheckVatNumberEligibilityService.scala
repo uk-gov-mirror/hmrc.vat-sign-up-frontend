@@ -29,7 +29,6 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityConnector: 
                                                 )(implicit ec: ExecutionContext) {
 
   def checkEligibility(vatNumber: String)(implicit headerCarrier: HeaderCarrier): Future[StoreVatNumberOrchestrationServiceResponse] = {
-
     vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber).map {
       case Right(MigrationInProgress) =>
         StoreVatNumberOrchestrationService.MigrationInProgress
@@ -50,6 +49,13 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityConnector: 
     }
   }
 
+  def isOverseas(vatNumber: String)(implicit headerCarrier: HeaderCarrier): Future[Boolean] = {
+    vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber).map {
+      case Right(Eligible(isOverseas, _)) => isOverseas
+      case Right(AlreadySubscribed(isOverseas)) => isOverseas
+      case _ => throw new InternalServerException("[CheckVatNumberEligibilityService][isOverseas] VRN is in a wrong state for this check")
+    }
+  }
 }
 
 

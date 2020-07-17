@@ -17,19 +17,18 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.bta.{routes => btaRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.ClaimSubscriptionStub.stubClaimSubscription
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.VatNumberEligibilityStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
-class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatchers{
+class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatchers {
 
   "GET /claim-subscription/:vat-number" when {
     "the user has an MTD VRN" should {
       "return a redirect to already claimed error page" in {
-
         stubAuth(OK, successfulAuthResponse(mtdVatEnrolment))
 
         val res = get(s"/claim-subscription/$testVatNumber")
@@ -40,10 +39,10 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
         )
       }
     }
+
     "the user has a matching VATDEC enrolment" when {
       "Claim Subscription Service returns subscription claimed" should {
         "return a redirect to the confirmation page" in {
-
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubClaimSubscription(testVatNumber, isFromBta = true)(NO_CONTENT)
 
@@ -55,9 +54,9 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
           )
         }
       }
+
       "Claim Subscription Service returns AlreadyEnrolledOnAnotherCredential" should {
         "return a redirect to the business already signed up page" in {
-
           stubAuth(OK, successfulAuthResponse(vatDecEnrolment))
           stubClaimSubscription(testVatNumber, isFromBta = true)(CONFLICT)
 
@@ -70,19 +69,19 @@ class ClaimSubscriptionControllerISpec extends ComponentSpecBase with CustomMatc
         }
       }
     }
-    "the user does not have a VATDEC enrolment" when {
-      "return a redirect to known facts page" in {
 
+    "the user does not have a VATDEC enrolment" when {
+      "return a redirect to capture vat reg date page" in {
         stubAuth(OK, successfulAuthResponse())
+        stubVatNumberEligibility(testVatNumber)(OK, Some(AlreadySubscribed(true)))
 
         val res = get(s"/claim-subscription/$testVatNumber")
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(btaRoutes.CaptureBtaVatRegistrationDateController.show().url)
+          redirectUri(routes.CaptureVatRegistrationDateController.show().url)
         )
       }
     }
   }
-
 }
