@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import org.scalatest.BeforeAndAfterEach
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockVatNumberEligibilityConnector
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants.{testEndDate, testStartDate, testVatNumber}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.VatNumberEligibilityHttpParser._
@@ -33,9 +33,9 @@ class CheckVatNumberEligibilityServiceSpec extends UnitSpec with MockVatNumberEl
     mockVatNumberEligibilityConnector
   )
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val testMigratableDates = MigratableDates(Some(testStartDate), Some(testEndDate))
+  val testMigratableDates: MigratableDates = MigratableDates(Some(testStartDate), Some(testEndDate))
 
   "checkVatNumberEligibility" when {
     "the connector returns Eligible" should {
@@ -112,4 +112,33 @@ class CheckVatNumberEligibilityServiceSpec extends UnitSpec with MockVatNumberEl
     }
   }
 
+  "isOverseas" when {
+    "the connector returns Eligible(isOverseas, _)" should {
+      "return isOverseas" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(Eligible(isOverseas = true, isMigrated = true))))
+
+        val result = await(TestService.isOverseas(testVatNumber))
+
+        result shouldBe true
+      }
+    }
+
+    "the connector returns AlreadySubscribed(isOverseas)" should {
+      "return isOverseas" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(AlreadySubscribed(isOverseas = false))))
+
+        val result = await(TestService.isOverseas(testVatNumber))
+
+        result shouldBe false
+      }
+    }
+
+    "the connector returns anything else" should {
+      "fail" in {
+        mockVatNumberEligibility(testVatNumber)(Future.successful(Right(MigrationInProgress)))
+
+        intercept[InternalServerException](await(TestService.isOverseas(testVatNumber)))
+      }
+    }
+  }
 }

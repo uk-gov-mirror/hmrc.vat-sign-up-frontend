@@ -19,8 +19,8 @@ package uk.gov.hmrc.vatsignupfrontend.services.mocks
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.services.CheckVatNumberEligibilityService
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService.StoreVatNumberOrchestrationServiceResponse
@@ -32,7 +32,7 @@ trait MockCheckVatNumberEligibilityService extends BeforeAndAfterEach with Mocki
 
   val mockCheckVatNumberEligibilityService: CheckVatNumberEligibilityService = mock[CheckVatNumberEligibilityService]
 
-  override protected def beforeEach(): Unit = {
+  override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockCheckVatNumberEligibilityService)
   }
@@ -46,4 +46,10 @@ trait MockCheckVatNumberEligibilityService extends BeforeAndAfterEach with Mocki
     ) thenReturn response
   }
 
+  def mockIsOverseas(vatNumber: String)(response: Future[Boolean]): OngoingStubbing[Future[Boolean]] = {
+    when(mockCheckVatNumberEligibilityService.isOverseas(
+      ArgumentMatchers.eq(vatNumber)
+    )(ArgumentMatchers.any[HeaderCarrier])
+    ) thenReturn response
+  }
 }
