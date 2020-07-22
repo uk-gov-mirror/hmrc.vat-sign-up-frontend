@@ -68,35 +68,23 @@ class CaptureVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                     Future.successful(Redirect(errorRoutes.IncorrectEnrolmentVatNumberController.show()))
                   case _ =>
                     storeVatNumberOrchestrationService.orchestrate(enrolments, formVatNumber).map {
-                      case Eligible(isOverseas, isMigrated) if isOverseas =>
+                      case Eligible(isOverseas, isMigrated) =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
-                          .addingToSession(businessEntityKey -> Overseas.toString)
+                          .conditionallyAddingToSession(businessEntityKey, Overseas.toString, isOverseas)
+                          .removingFromSession(isAlreadySubscribedKey)
                           .addingToSession(isMigratedKey, isMigrated)
-                      case Eligible(_, isMigrated) =>
-                        Redirect(routes.CaptureVatRegistrationDateController.show())
-                          .addingToSession(vatNumberKey -> formVatNumber)
-                          .addingToSession(isMigratedKey, isMigrated)
-                          .removingFromSession(businessEntityKey)
-                      case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
+                      case VatNumberStored(isOverseas, isDirectDebit, isMigrated) =>
                         Redirect(routes.CaptureBusinessEntityController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
+                          .conditionallyAddingToSession(businessEntityKey, Overseas.toString, isOverseas)
                           .addingToSession(hasDirectDebitKey, isDirectDebit)
-                          .addingToSession(businessEntityKey -> Overseas.toString)
+                          .removingFromSession(isAlreadySubscribedKey)
                           .addingToSession(isMigratedKey, isMigrated)
-                      case VatNumberStored(_, isDirectDebit, isMigrated) =>
-                        Redirect(routes.CaptureBusinessEntityController.show())
-                          .addingToSession(vatNumberKey -> formVatNumber)
-                          .addingToSession(hasDirectDebitKey, isDirectDebit)
-                          .addingToSession(isMigratedKey, isMigrated)
-                      case AlreadySubscribed(isOverseas) if enrolments.getAnyVatNumber.isEmpty && isOverseas =>
+                      case AlreadySubscribed(isOverseas) if enrolments.getAnyVatNumber.isEmpty =>
                         Redirect(routes.CaptureVatRegistrationDateController.show())
                           .addingToSession(vatNumberKey -> formVatNumber)
-                          .addingToSession(isAlreadySubscribedKey, true)
-                          .addingToSession(businessEntityKey -> Overseas.toString)
-                      case AlreadySubscribed(_) if enrolments.getAnyVatNumber.isEmpty =>
-                        Redirect(routes.CaptureVatRegistrationDateController.show())
-                          .addingToSession(vatNumberKey -> formVatNumber)
+                          .conditionallyAddingToSession(businessEntityKey, Overseas.toString, isOverseas)
                           .addingToSession(isAlreadySubscribedKey, true)
                       case AlreadySubscribed(_) =>
                         Redirect(errorRoutes.AlreadySignedUpController.show())
@@ -135,7 +123,6 @@ class CaptureVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                 Future.successful(Redirect(errorRoutes.InvalidVatNumberController.show()))
               }
             }
-
           )
       }
   }

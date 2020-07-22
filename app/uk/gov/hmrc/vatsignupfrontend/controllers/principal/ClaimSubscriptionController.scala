@@ -62,17 +62,11 @@ class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubsc
             )
           case None if btaVatNumber.length == 9 && isValidChecksum(btaVatNumber) =>
             checkVatNumberEligibilityService.isOverseas(btaVatNumber).map { isOverseas =>
-              if (isOverseas)
-                Redirect(routes.CaptureVatRegistrationDateController.show())
-                  .addingToSession(vatNumberKey -> btaVatNumber)
-                  .addingToSession(isAlreadySubscribedKey, true)
-                  .addingToSession(isFromBtaKey, true)
-                  .addingToSession(businessEntityKey -> Overseas.toString)
-              else
-                Redirect(routes.CaptureVatRegistrationDateController.show())
-                  .addingToSession(vatNumberKey -> btaVatNumber)
-                  .addingToSession(isAlreadySubscribedKey, true)
-                  .addingToSession(isFromBtaKey, true)
+              Redirect(routes.CaptureVatRegistrationDateController.show())
+                .addingToSession(vatNumberKey -> btaVatNumber)
+                .addingToSession(isAlreadySubscribedKey, true)
+                .addingToSession(isFromBtaKey, true)
+                .conditionallyAddingToSession(businessEntityKey, Overseas.toString, isOverseas)
             }
           case None =>
             Future.failed(
