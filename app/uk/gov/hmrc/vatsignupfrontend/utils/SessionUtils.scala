@@ -34,6 +34,13 @@ object SessionUtils {
 
       result.addingToSession(key -> value)
     }
+
+    def conditionallyAddingToSession[A <: String](key: String, value: A, condition: Boolean)
+                                                 (implicit requestHeader: RequestHeader): Result = {
+
+      if(condition) result.addingToSession(key -> value)
+      else result.removingFromSession(key)
+    }
   }
 
   trait SessionFormatter[T] {

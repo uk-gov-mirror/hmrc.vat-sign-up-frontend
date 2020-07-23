@@ -20,12 +20,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AgentEnrolmentPredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.agent.error.{routes => errorRoutes}
-import uk.gov.hmrc.vatsignupfrontend.models.{BusinessEntity, Overseas}
+import uk.gov.hmrc.vatsignupfrontend.models.Overseas
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService
 import uk.gov.hmrc.vatsignupfrontend.services.StoreVatNumberOrchestrationService._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils.ResultUtils
@@ -43,7 +43,7 @@ class ConfirmVatNumberController @Inject()(storeVatNumberOrchestrationService: S
   val show: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        request.session.get(SessionKeys.vatNumberKey) match {
+        request.session.get(vatNumberKey) match {
           case Some(vatNumber) if vatNumber.nonEmpty =>
             Future.successful(
               Ok(confirm_vat_number(vatNumber, routes.ConfirmVatNumberController.submit()))
@@ -60,19 +60,15 @@ class ConfirmVatNumberController @Inject()(storeVatNumberOrchestrationService: S
     implicit request =>
       authorised()(Retrievals.allEnrolments) {
         enrolments =>
-          request.session.get(SessionKeys.vatNumberKey) match {
+          request.session.get(vatNumberKey) match {
             case Some(vatNumber) if vatNumber.nonEmpty =>
               if (VatNumberChecksumValidation.isValidChecksum(vatNumber))
                 storeVatNumberOrchestrationService.orchestrate(enrolments, vatNumber).map {
-                  case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
+                  case VatNumberStored(isOverseas, isDirectDebit, isMigrated) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
-                      .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-                      .addingToSession(SessionKeys.isMigratedKey, isMigrated)
-                      .addingToSession(SessionKeys.businessEntityKey, Overseas.asInstanceOf[BusinessEntity])
-                  case VatNumberStored(_, isDirectDebit, isMigrated) =>
-                    Redirect(routes.CaptureBusinessEntityController.show())
-                      .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-                      .addingToSession(SessionKeys.isMigratedKey, isMigrated)
+                      .addingToSession(hasDirectDebitKey, isDirectDebit)
+                      .addingToSession(isMigratedKey, isMigrated)
+                      .conditionallyAddingToSession(businessEntityKey, Overseas.toString, isOverseas)
                   case NoAgentClientRelationship =>
                     Redirect(errorRoutes.NoAgentClientRelationshipController.show())
                   case AlreadySubscribed(_) =>
@@ -83,7 +79,7 @@ class ConfirmVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                     Redirect(errorRoutes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>
                     Redirect(errorRoutes.MigratableDatesController.show())
-                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+                      .addingToSession(migratableDatesKey, migratableDates)
                   case MigrationInProgress =>
                     Redirect(errorRoutes.MigrationInProgressErrorController.show())
                   case InvalidVatNumber =>
@@ -93,7 +89,7 @@ class ConfirmVatNumberController @Inject()(storeVatNumberOrchestrationService: S
                 }
               else Future.successful(
                 Redirect(errorRoutes.CouldNotConfirmVatNumberController.show())
-                  .removingFromSession(SessionKeys.vatNumberKey)
+                  .removingFromSession(vatNumberKey)
               )
             case _ =>
               Future.successful(

@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys._
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
@@ -61,17 +61,12 @@ class MultipleVatCheckController @Inject()(storeVatNumberOrchestrationService: S
             enrolments.getAnyVatNumber match {
               case Some(vatNumber) =>
                 storeVatNumberOrchestrationService.orchestrate(enrolments, vatNumber).map {
-                  case VatNumberStored(isOverseas, isDirectDebit, isMigrated) if isOverseas =>
+                  case VatNumberStored(isOverseas, isDirectDebit, isMigrated) =>
                     Redirect(routes.CaptureBusinessEntityController.show())
-                      .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-                      .addingToSession(SessionKeys.isMigratedKey, isMigrated)
-                      .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
-                      .addingToSession(SessionKeys.businessEntityKey -> Overseas.toString)
-                  case VatNumberStored(_, isDirectDebit, isMigrated) =>
-                    Redirect(routes.CaptureBusinessEntityController.show())
-                      .addingToSession(SessionKeys.vatNumberKey -> vatNumber)
-                      .addingToSession(SessionKeys.isMigratedKey, isMigrated)
-                      .addingToSession(SessionKeys.hasDirectDebitKey, isDirectDebit)
+                      .addingToSession(vatNumberKey -> vatNumber)
+                      .addingToSession(isMigratedKey, isMigrated)
+                      .addingToSession(hasDirectDebitKey, isDirectDebit)
+                      .conditionallyAddingToSession(businessEntityKey, Overseas.toString, isOverseas)
                   case SubscriptionClaimed =>
                     Redirect(routes.SignUpCompleteClientController.show())
                   case Ineligible =>
@@ -80,7 +75,7 @@ class MultipleVatCheckController @Inject()(storeVatNumberOrchestrationService: S
                     Redirect(errorRoutes.DeregisteredVatNumberController.show())
                   case Inhibited(migratableDates) =>
                     Redirect(errorRoutes.MigratableDatesController.show())
-                      .addingToSession(SessionKeys.migratableDatesKey, migratableDates)
+                      .addingToSession(migratableDatesKey, migratableDates)
                   case MigrationInProgress =>
                     Redirect(errorRoutes.MigrationInProgressErrorController.show())
                   case AlreadyEnrolledOnDifferentCredential =>
