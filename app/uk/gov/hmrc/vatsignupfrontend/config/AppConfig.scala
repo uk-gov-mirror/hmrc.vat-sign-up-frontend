@@ -146,9 +146,11 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
 
   lazy val btaUrl: String = config.getString("bta.url")
 
+  lazy val btaAddTaxesUrl: String = config.getString("add-taxes-frontend.url")
+
   lazy val btaRedirectUrl: String = "/business-account"
 
-  lazy val btaAddVatUrl: String = s"$btaUrl/add-tax/vat/what-is-your-vat-number"
+  lazy val btaAddVatUrl: String = s"$btaAddTaxesUrl/business-account/add-tax/vat/what-is-your-vat-number"
 
   lazy val agentServicesUrl: String = config.getString("agent-services.url")
 
