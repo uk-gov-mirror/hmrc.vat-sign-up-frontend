@@ -28,7 +28,8 @@
   optPreviousVatReturn: Option[String] = None,
   optBox5Figure: Option[String] = None,
   optLastReturnMonthPeriod: Option[String] = None,
-  postAction: Call
+  postAction: Call,
+  isFromBta: Boolean = false
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import _root_.uk.gov.hmrc.vatsignupfrontend.views.helpers.CheckYourAnswersIdConstants._
@@ -36,7 +37,8 @@
 @yourVatNumber() = @{
     val rowQuestion = Messages("check-your-answers.your_vat_number")
     val rowAnswer = vatNumber
-    val rowUrl = uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
+    val rowUrl = if(isFromBta) appConfig.btaAddVatUrl
+        else uk.gov.hmrc.vatsignupfrontend.controllers.principal.routes.CaptureVatNumberController.show().url
     summaryRowHelper(VatNumberId, rowQuestion, rowAnswer, Some(rowUrl))
 }
 
