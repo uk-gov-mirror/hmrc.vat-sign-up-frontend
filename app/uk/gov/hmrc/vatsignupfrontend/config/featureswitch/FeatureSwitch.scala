@@ -28,7 +28,6 @@ object FeatureSwitch {
 
   val switches: Set[FeatureSwitch] = Set(
     StubIncorporationInformation,
-    AdditionalKnownFacts,
     CrnDissolved
   )
 
@@ -45,11 +44,6 @@ object FeatureSwitch {
 case object StubIncorporationInformation extends FeatureSwitch {
   override val name: String = s"$prefix.stub-incorporation-information"
   override val displayText: String = "Use Stub for Incorporation Information Connection"
-}
-
-case object AdditionalKnownFacts extends FeatureSwitch {
-  override val name: String = s"$prefix.additional-known-facts"
-  override val displayText: String = "Enable the two additional Known Facts"
 }
 
 case object CrnDissolved extends FeatureSwitch {

@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.{ClaimSubscriptionHttpParser, StoreMigratedVatNumberHttpParser}
@@ -94,15 +93,15 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
           Future.successful(
             Redirect(routes.BusinessPostCodeController.show())
           )
-        case (_, _, _, None, _, _) if isEnabled(AdditionalKnownFacts) =>
+        case (_, _, _, None, _, _) =>
           Future.successful(
             Redirect(routes.PreviousVatReturnController.show())
           )
-        case (_, _, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
+        case (_, _, _, _, None, _) if (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureBox5FigureController.show())
           )
-        case (_, _, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
+        case (_, _, _, _, _, None) if (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureLastReturnMonthPeriodController.show())
           )
@@ -203,15 +202,15 @@ class CheckYourAnswersController @Inject()(storeVatNumberService: StoreVatNumber
             case Left(StoreMigratedVatNumberHttpParser.KnownFactsMismatch) =>
               throw new InternalServerException(s"[CheckYourAnswersController][storeMigratedUnenrolledVatNumber] Failed to store vat number for unenrolled known facts mismatch")
           }
-        case (_, _, _, None, _, _) if isEnabled(AdditionalKnownFacts) =>
+        case (_, _, _, None, _, _) =>
           Future.successful(
             Redirect(routes.PreviousVatReturnController.show())
           )
-        case (_, _, _, _, None, _) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
+        case (_, _, _, _, None, _) if (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureBox5FigureController.show())
           )
-        case (_, _, _, _, _, None) if isEnabled(AdditionalKnownFacts) && (optPreviousVatReturn contains Yes.stringValue) =>
+        case (_, _, _, _, _, None) if (optPreviousVatReturn contains Yes.stringValue) =>
           Future.successful(
             Redirect(routes.CaptureLastReturnMonthPeriodController.show())
           )

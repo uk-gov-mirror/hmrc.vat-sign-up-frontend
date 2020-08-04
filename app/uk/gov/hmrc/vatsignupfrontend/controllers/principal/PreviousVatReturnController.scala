@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
 import uk.gov.hmrc.vatsignupfrontend.models.{No, Yes}
@@ -33,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PreviousVatReturnController @Inject()(implicit ec: ExecutionContext,
                                               vcc: VatControllerComponents)
 
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(AdditionalKnownFacts)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async {
     implicit request =>

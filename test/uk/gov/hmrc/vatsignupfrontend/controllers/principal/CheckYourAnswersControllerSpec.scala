@@ -26,7 +26,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -51,10 +50,6 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
   )
 
   val testDate: DateModel = DateModel.dateConvert(LocalDate.now())
-
-  override def beforeEach(): Unit = {
-    enable(AdditionalKnownFacts)
-  }
 
   def testGetRequest(vatNumber: Option[String] = Some(testVatNumber),
                      registrationDate: Option[DateModel] = Some(testDate),
@@ -145,104 +140,102 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
 
-    "when the AdditionalKnownFacts feature switch is enabled" when {
-      "all prerequisite data is in session" when {
-        "vat number is missing" should {
-          "go to capture vat number page" in {
-            mockAuthAdminRole()
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(vatNumber = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
-          }
-        }
-
-        "vat registration date is missing" should {
-          "go to capture vat registration date page" in {
-            mockAuthAdminRole()
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(registrationDate = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
-          }
-        }
-
-        "post code is missing" should {
-          "go to business post code page" in {
-            mockAuthAdminRole()
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(postCode = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
-          }
-        }
-
-        "previous VAT return is missing" should {
-          "go to Previous VAT return page" in {
-            mockAuthAdminRole()
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(optPreviousVatReturn = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
-          }
-        }
-
-        "the box 5 figure is missing" should {
-          "go to the capture box 5 figure page" in {
-            mockAuthAdminRole()
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(optBox5Figure = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
-          }
-        }
-
-        "the last return month is missing" should {
-          "go to the capture last return month page" in {
-            mockAuthAdminRole()
-
-            val result = TestCheckYourAnswersController.show(testGetRequest(optLastReturnMonth = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-          }
-        }
-
-        "the user is migrated so only has two known facts" in {
+    "all prerequisite data is in session" when {
+      "vat number is missing" should {
+        "go to capture vat number page" in {
           mockAuthAdminRole()
 
-          val result = TestCheckYourAnswersController.show(
-            testGetRequest(optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
-              SessionKeys.isMigratedKey -> "true")
-          )
-
-          status(result) shouldBe Status.OK
+          val result = TestCheckYourAnswersController.show(testGetRequest(vatNumber = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureVatNumberController.show().url)
         }
+      }
 
-        "the user is migrated and overseas so only has reg date" in {
+      "vat registration date is missing" should {
+        "go to capture vat registration date page" in {
           mockAuthAdminRole()
 
-          val result = TestCheckYourAnswersController.show(
-            testGetRequest(postCode = None, optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
-              SessionKeys.isMigratedKey -> "true",
-              SessionKeys.businessEntityKey -> Overseas.toString
-            )
-          )
-
-          status(result) shouldBe Status.OK
+          val result = TestCheckYourAnswersController.show(testGetRequest(registrationDate = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureVatRegistrationDateController.show().url)
         }
+      }
 
-        "the user is already subscribed and overseas" in {
+      "post code is missing" should {
+        "go to business post code page" in {
           mockAuthAdminRole()
 
-          val result = TestCheckYourAnswersController.show(
-            testGetRequest(postCode = None, optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
-              SessionKeys.isAlreadySubscribedKey -> "true",
-              SessionKeys.businessEntityKey -> Overseas.toString
-            )
-          )
-
-          status(result) shouldBe Status.OK
+          val result = TestCheckYourAnswersController.show(testGetRequest(postCode = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.BusinessPostCodeController.show().url)
         }
+      }
+
+      "previous VAT return is missing" should {
+        "go to Previous VAT return page" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(testGetRequest(optPreviousVatReturn = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
+        }
+      }
+
+      "the box 5 figure is missing" should {
+        "go to the capture box 5 figure page" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(testGetRequest(optBox5Figure = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
+        }
+      }
+
+      "the last return month is missing" should {
+        "go to the capture last return month page" in {
+          mockAuthAdminRole()
+
+          val result = TestCheckYourAnswersController.show(testGetRequest(optLastReturnMonth = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
+        }
+      }
+
+      "the user is migrated so only has two known facts" in {
+        mockAuthAdminRole()
+
+        val result = TestCheckYourAnswersController.show(
+          testGetRequest(optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
+            SessionKeys.isMigratedKey -> "true")
+        )
+
+        status(result) shouldBe Status.OK
+      }
+
+      "the user is migrated and overseas so only has reg date" in {
+        mockAuthAdminRole()
+
+        val result = TestCheckYourAnswersController.show(
+          testGetRequest(postCode = None, optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
+            SessionKeys.isMigratedKey -> "true",
+            SessionKeys.businessEntityKey -> Overseas.toString
+          )
+        )
+
+        status(result) shouldBe Status.OK
+      }
+
+      "the user is already subscribed and overseas" in {
+        mockAuthAdminRole()
+
+        val result = TestCheckYourAnswersController.show(
+          testGetRequest(postCode = None, optBox5Figure = None, optLastReturnMonth = None, optPreviousVatReturn = None).withSession(
+            SessionKeys.isAlreadySubscribedKey -> "true",
+            SessionKeys.businessEntityKey -> Overseas.toString
+          )
+        )
+
+        status(result) shouldBe Status.OK
       }
     }
   }
@@ -512,7 +505,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )(Future.failed(new InternalServerException("")))
 
           intercept[InternalServerException] {
-            TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            TestCheckYourAnswersController.submit(testPostRequest(postCode = None).withSession(
               SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
             ))
           }
@@ -529,7 +522,7 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
           )
 
           intercept[InternalServerException] {
-            TestCheckYourAnswersController.submit(testPostRequest().withSession(
+            TestCheckYourAnswersController.submit(testPostRequest(postCode = None).withSession(
               SessionKeys.isMigratedKey -> "true", SessionKeys.businessEntityKey -> Overseas.toString
             ))
           }
@@ -633,26 +626,24 @@ class CheckYourAnswersControllerSpec extends UnitSpec with GuiceOneAppPerSuite
       }
     }
 
-    "When the AdditionalKnownFacts feature switch is enabled" when {
-      "the user has filed a vat return before" when {
-        "the box 5 figure is missing" should {
-          "go to the capture box 5 figure page" in {
-            mockAuthRetrieveEmptyEnrolment()
+    "the user has filed a vat return before" when {
+      "the box 5 figure is missing" should {
+        "go to the capture box 5 figure page" in {
+          mockAuthRetrieveEmptyEnrolment()
 
-            val result = TestCheckYourAnswersController.submit(testPostRequest(optBox5Figure = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
-          }
+          val result = TestCheckYourAnswersController.submit(testPostRequest(optBox5Figure = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureBox5FigureController.show().url)
         }
+      }
 
-        "the last return month is missing" should {
-          "go to the capture last return month page" in {
-            mockAuthRetrieveEmptyEnrolment()
+      "the last return month is missing" should {
+        "go to the capture last return month page" in {
+          mockAuthRetrieveEmptyEnrolment()
 
-            val result = TestCheckYourAnswersController.submit(testPostRequest(optLastReturnMonth = None))
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
-          }
+          val result = TestCheckYourAnswersController.submit(testPostRequest(optLastReturnMonth = None))
+          status(result) shouldBe Status.SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.CaptureLastReturnMonthPeriodController.show().url)
         }
       }
     }

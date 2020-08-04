@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
@@ -55,7 +54,7 @@ class BusinessPostCodeController @Inject()(implicit ec: ExecutionContext,
             val isMigrated: Boolean = request.session.get(SessionKeys.isMigratedKey).contains("true")
             val isAlreadySubscribed: Boolean = request.session.get(SessionKeys.isAlreadySubscribedKey).contains("true")
 
-            if (isMigrated || !isEnabled(AdditionalKnownFacts) || isAlreadySubscribed) {
+            if (isMigrated || isAlreadySubscribed) {
               Future.successful(Redirect(routes.CheckYourAnswersController.show())
                 .addingToSession(SessionKeys.businessPostCodeKey, businessPostCode)
               )

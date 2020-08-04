@@ -22,7 +22,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.MonthForm
 import uk.gov.hmrc.vatsignupfrontend.models.January
@@ -39,11 +38,6 @@ class CaptureLastReturnMonthPeriodControllerSpec extends UnitSpec
   lazy val testPostRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/last-vat-return-date").withFormUrlEncodedBody(MonthForm.month -> January.toString)
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(AdditionalKnownFacts)
-  }
-
   "Calling the show action of the Capture Last Return Month Period controller" should {
     "go to the Capture Last Return Month Period page" in {
       mockAuthAdminRole()
@@ -52,16 +46,6 @@ class CaptureLastReturnMonthPeriodControllerSpec extends UnitSpec
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
-    }
-
-    "the AdditionalKnownFacts switch is off" should {
-      "throw not found exception" in {
-        disable(AdditionalKnownFacts)
-
-        intercept[NotFoundException] {
-          TestCaptureLastReturnMonthPeriodController.show(testGetRequest)
-        }
-      }
     }
   }
 

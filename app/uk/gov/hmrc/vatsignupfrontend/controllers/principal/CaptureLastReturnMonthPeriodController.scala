@@ -21,7 +21,6 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.MonthForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_last_return_month_period
@@ -31,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CaptureLastReturnMonthPeriodController @Inject()(implicit ec: ExecutionContext,
                                                          vcc: VatControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate, featureSwitches = Set(AdditionalKnownFacts)) {
+  extends AuthenticatedController(AdministratorRolePredicate) {
 
   def show: Action[AnyContent] = Action.async { implicit request =>
     authorised() {

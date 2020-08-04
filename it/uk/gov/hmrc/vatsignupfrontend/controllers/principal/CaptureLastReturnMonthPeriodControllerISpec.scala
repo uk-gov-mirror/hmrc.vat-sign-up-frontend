@@ -17,18 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.forms.MonthForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 import uk.gov.hmrc.vatsignupfrontend.models.February
 
 class CaptureLastReturnMonthPeriodControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(AdditionalKnownFacts)
-  }
 
   "GET /last-vat-return-date" when {
     "return an OK" in {
@@ -54,18 +48,4 @@ class CaptureLastReturnMonthPeriodControllerISpec extends ComponentSpecBase with
       )
     }
   }
-
-  "the AdditionalKNownFacts feature switch is disabled" should {
-    "return a Not Found" in {
-      disable(AdditionalKnownFacts)
-      stubAuth(OK, successfulAuthResponse())
-
-      val res = get("/last-vat-return-date")
-
-      res should have(
-        httpStatus(NOT_FOUND)
-      )
-    }
-  }
-
 }

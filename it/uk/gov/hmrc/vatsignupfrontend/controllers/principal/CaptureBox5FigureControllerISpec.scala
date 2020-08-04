@@ -17,7 +17,7 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{AdditionalKnownFacts, FeatureSwitching}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.FeatureSwitching
 import uk.gov.hmrc.vatsignupfrontend.forms.Box5FigureForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -25,18 +25,8 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureBox5FigureControllerISpec extends ComponentSpecBase with CustomMatchers with FeatureSwitching {
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(AdditionalKnownFacts)
-  }
 
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(AdditionalKnownFacts)
-  }
-
-  "GET /box-5-figure" when {
-    "the AdditionalKnownFacts feature switch is enabled" should {
+  "GET /box-5-figure" should {
       "return an OK" in {
         stubAuth(OK, successfulAuthResponse())
 
@@ -46,24 +36,9 @@ class CaptureBox5FigureControllerISpec extends ComponentSpecBase with CustomMatc
           httpStatus(OK)
         )
       }
-    }
-    "the AdditionalKNownFacts feature switch is disabled" should {
-      "return a Not Found" in {
-        disable(AdditionalKnownFacts)
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = get("/box-5-figure")
-
-        res should have(
-          httpStatus(NOT_FOUND)
-        )
-      }
-    }
-
   }
 
-  "POST /box-5-figure" when {
-    "the AdditionalKnownFacts feature switch is enabled" should {
+  "POST /box-5-figure" should {
       "redirect to CaptureLastMonthReturnPeriod Page" in {
         stubAuth(OK, successfulAuthResponse())
 
@@ -73,17 +48,6 @@ class CaptureBox5FigureControllerISpec extends ComponentSpecBase with CustomMatc
           httpStatus(SEE_OTHER),
           redirectUri(routes.CaptureLastReturnMonthPeriodController.show().url)
         )
-      }
-      "redirect to CaptureLastMonthReturnPeriod Page with negative values" in {
-        stubAuth(OK, successfulAuthResponse())
-
-        val res = post("/box-5-figure")(Box5FigureForm.box5Figure -> testBox5FigureNegative)
-
-        res should have(
-          httpStatus(SEE_OTHER),
-          redirectUri(routes.CaptureLastReturnMonthPeriodController.show().url)
-        )
-      }
     }
   }
 }
