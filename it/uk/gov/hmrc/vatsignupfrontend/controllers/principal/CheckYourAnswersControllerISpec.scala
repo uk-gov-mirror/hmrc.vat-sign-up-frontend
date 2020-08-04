@@ -43,7 +43,10 @@ class CheckYourAnswersControllerISpec extends ComponentSpecBase with CustomMatch
         Map(
           SessionKeys.vatNumberKey -> testVatNumber,
           SessionKeys.vatRegistrationDateKey -> Json.toJson(testDate).toString(),
-          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString()
+          SessionKeys.businessPostCodeKey -> Json.toJson(testBusinessPostCode).toString(),
+          SessionKeys.box5FigureKey -> testBox5Figure,
+          SessionKeys.lastReturnMonthPeriodKey -> testLastReturnMonth,
+          SessionKeys.previousVatReturnKey -> testPreviousVatSubmitted
         )
       )
 

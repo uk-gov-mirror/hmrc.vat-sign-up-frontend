@@ -25,7 +25,6 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.BusinessPostCodeForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -59,7 +58,6 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "the session contains isAlreadySubscribed: true" should {
       "redirect to check your answers" in {
         mockAuthAdminRole()
-        enable(AdditionalKnownFacts)
 
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
           testPostRequest(testBusinessPostcode.postCode).withSession(SessionKeys.isAlreadySubscribedKey -> "true")
@@ -76,7 +74,6 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
     "the session contains isMigrated: true" should {
       "redirect to check your answers" in {
         mockAuthAdminRole()
-        enable(AdditionalKnownFacts)
 
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
           testPostRequest(testBusinessPostcode.postCode).withSession(SessionKeys.isMigratedKey -> "true")
@@ -90,50 +87,31 @@ class BusinessPostCodeControllerSpec extends UnitSpec with GuiceOneAppPerSuite w
       }
     }
 
-    "the feature switch is disabled" when {
-      "the form is successfully submitted" should {
-        "goto check your answers page" in {
-          mockAuthAdminRole()
-
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testBusinessPostcode.postCode)
-          val result = TestBusinessPostCodeController.submit(request)
-          status(result) shouldBe Status.SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CheckYourAnswersController.show().url)
-
-          session(result).get(SessionKeys.businessPostCodeKey) should contain(
-            Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
-          )
-        }
-      }
-
-      "the feature switch is enabled" when {
-        "the form is successfully submitted" should {
-          "redirect to the previous vat return page" in {
-            mockAuthAdminRole()
-            enable(AdditionalKnownFacts)
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testBusinessPostcode.postCode)
-            val result = TestBusinessPostCodeController.submit(request)
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
-
-            session(result).get(SessionKeys.businessPostCodeKey) should contain(
-              Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
-            )
-          }
-        }
-      }
-    }
-
-    "form unsuccessfully submitted" should {
-      "reload the page with errors" in {
+    "the form is successfully submitted" should {
+      "redirect to the previous vat return page" in {
         mockAuthAdminRole()
 
-        val result = TestBusinessPostCodeController.submit(testPostRequest(""))
-        status(result) shouldBe Status.BAD_REQUEST
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = testPostRequest(testBusinessPostcode.postCode)
+        val result = TestBusinessPostCodeController.submit(request)
+        status(result) shouldBe Status.SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.PreviousVatReturnController.show().url)
+
+        session(result).get(SessionKeys.businessPostCodeKey) should contain(
+          Json.toJson(testBusinessPostcode.copy(testBusinessPostcode.postCode.toUpperCase.replaceAll(" ", ""))).toString
+        )
       }
+    }
+  }
+
+
+  "form unsuccessfully submitted" should {
+    "reload the page with errors" in {
+      mockAuthAdminRole()
+
+      val result = TestBusinessPostCodeController.submit(testPostRequest(""))
+      status(result) shouldBe Status.BAD_REQUEST
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
     }
   }
 }

@@ -17,18 +17,12 @@
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.http.Status._
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm
 import uk.gov.hmrc.vatsignupfrontend.forms.submapping.YesNoMapping
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class PreviousVatReturnControllerISpec extends ComponentSpecBase with CustomMatchers {
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(AdditionalKnownFacts)
-  }
 
   "GET /submitted-vat-return" when {
     "the feature switch is enabled" should {
@@ -40,18 +34,6 @@ class PreviousVatReturnControllerISpec extends ComponentSpecBase with CustomMatc
         res should have(
           httpStatus(OK)
         )
-      }
-
-      "the feature switch is disabled" should {
-        "return a not found" in {
-          disable(AdditionalKnownFacts)
-
-          val res = get("/submitted-vat-return")
-
-          res should have(
-            httpStatus(NOT_FOUND)
-          )
-        }
       }
     }
   }
@@ -84,5 +66,4 @@ class PreviousVatReturnControllerISpec extends ComponentSpecBase with CustomMatc
       }
     }
   }
-
 }

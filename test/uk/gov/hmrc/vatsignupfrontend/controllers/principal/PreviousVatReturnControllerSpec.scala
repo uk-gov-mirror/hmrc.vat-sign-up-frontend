@@ -21,7 +21,6 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.AdditionalKnownFacts
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.forms.PreviousVatReturnForm._
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -36,16 +35,6 @@ class PreviousVatReturnControllerSpec extends UnitSpec with MockVatControllerCom
 
   def testPostRequest(usersChoice: String): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest("POST", "/submitted-vat-return").withFormUrlEncodedBody(yesNo -> usersChoice)
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    enable(AdditionalKnownFacts)
-  }
-
-  override def afterEach(): Unit = {
-    super.afterEach()
-    disable(AdditionalKnownFacts)
-  }
 
   "Calling the show action of the Previous Vat Return controller" when {
     "go to the Previous Vat Return page" in {
