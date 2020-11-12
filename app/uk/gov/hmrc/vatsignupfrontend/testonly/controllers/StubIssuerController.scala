@@ -41,8 +41,6 @@ class StubIssuerController @Inject()(stubIssuerService: StubIssuerService)
         Ok(stub_issuer(stubIssuerForm.fill(StubIssuerRequest(
           vatNumber = "",
           isSuccessful = true,
-          postCode = None,
-          registrationDate = None,
           errorMessage = None
         )), routes.StubIssuerController.submit()))
       )
