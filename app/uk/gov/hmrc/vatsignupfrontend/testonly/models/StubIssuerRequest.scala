@@ -16,13 +16,8 @@
 
 package uk.gov.hmrc.vatsignupfrontend.testonly.models
 
-import uk.gov.hmrc.vatsignupfrontend.models.DateModel
-
 
 case class StubIssuerRequest(vatNumber: String,
                              isSuccessful: Boolean,
-                             postCode: Option[String],
-                             registrationDate: Option[DateModel],
-                             errorMessage: Option[String]
-                            )
+                             errorMessage: Option[String])
 

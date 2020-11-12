@@ -33,9 +33,7 @@ class StubIssuerService @Inject()(issuerConnector: IssuerConnector) {
   def callIssuer(stubIssuerRequest: StubIssuerRequest)(implicit hc: HeaderCarrier): Future[IssuerResponse] = {
     if (stubIssuerRequest.isSuccessful)
       issuerConnector.issuerSuccess(
-        vatNumber = stubIssuerRequest.vatNumber.replaceAll(" ", "").toUpperCase,
-        postCode = stubIssuerRequest.postCode.get.replaceAll(" ", "").toUpperCase,
-        registrationDate = stubIssuerRequest.registrationDate.get.toLocalDate.format(DateTimeFormatter.ofPattern("dd/MM/yy"))
+        vatNumber = stubIssuerRequest.vatNumber.replaceAll(" ", "").toUpperCase
       )
     else
       issuerConnector.issuerFail(

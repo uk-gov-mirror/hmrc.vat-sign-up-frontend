@@ -32,8 +32,6 @@ object StubIssuerRequestForm {
 
   val isSuccessful = "isSuccessful"
   val vatNumber = "vatNumber"
-  val postCode = "postCode"
-  val vatRegistrationDate = "vatRegistrationDate"
   val errorMessage = "errorMessage"
 
   val vatRegistrationDateInvalid: Constraint[DateModel] = constraint[DateModel](
@@ -68,8 +66,6 @@ object StubIssuerRequestForm {
     mapping(
       vatNumber -> text.verifying("error.invalid_vat_number", _ matches vatNumberRegex),
       isSuccessful -> boolean,
-      postCode -> dependsOn(isSuccessful = true)(text.verifying("error.invalid_postcode", _ matches postcodeRegex)),
-      vatRegistrationDate -> dependsOn(isSuccessful = true)(dateMapping.verifying(vatRegistrationDateInvalid)),
       errorMessage -> dependsOn(isSuccessful = false)(text.verifying("Please enter a valid error message", x=> x.nonEmpty && (x matches iso8859_1Regex)))
     )(StubIssuerRequest.apply)(StubIssuerRequest.unapply)
   )

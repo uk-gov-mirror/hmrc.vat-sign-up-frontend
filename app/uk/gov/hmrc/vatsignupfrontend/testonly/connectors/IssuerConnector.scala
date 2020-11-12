@@ -35,7 +35,7 @@ class IssuerConnector @Inject()(val http: HttpClient,
 
   private def issuerUrl(safeId: String) = s"${applicationConfig.taxEnrolmentsUrl}/tax-enrolments/subscriptions/$safeId/issuer"
 
-  def issuerSuccess(vatNumber: String, postCode: String, registrationDate: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[IssuerResponse] =
+  def issuerSuccess(vatNumber: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[IssuerResponse] =
     http.PUT[JsObject, IssuerResponse](issuerUrl(vatNumber),
       Json.obj(
         "serviceName" -> serviceName,
@@ -43,16 +43,6 @@ class IssuerConnector @Inject()(val http: HttpClient,
           Json.obj(
             "key" -> "VRN",
             "value" -> vatNumber
-          )
-        ),
-        "verifiers" -> Json.arr(
-          Json.obj(
-            "key" -> "Postcode",
-            "value" -> postCode
-          ),
-          Json.obj(
-            "key" -> "VATRegistrationDate",
-            "value" -> registrationDate
           )
         ),
         "subscriptionState" -> "SUCCEEDED"

@@ -54,23 +54,6 @@
                     <label for="failure-radio">Failure</label>
                 </div>
 
-                <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("true")) { js-hidden }" id="succeeded">
-
-                    <h3 class ="heading-small">@labelHelper(field = stubIssuerRequestForm(postCode), label = "Enter the post code", heading = false )</h3>
-                    @inputHelper(
-                        field = stubIssuerRequestForm(postCode),
-                        parentForm = stubIssuerRequestForm,
-                        hideLabel = false
-                    )
-
-                    <h3 class ="heading-small">Enter the VAT registration date</h3>
-                    @dateHelper(
-                        field = stubIssuerRequestForm(vatRegistrationDate),
-                        parentForm = stubIssuerRequestForm,
-                        hintText = Some(Messages("principal.vat_registration_date.formhint_1"))
-                    )
-                </div>
-
                 <div class="panel panel-border-narrow @if(!stubIssuerRequestForm(isSuccessful).value.contains("false")) { js-hidden }" id="failed">
                     <h3 class ="heading-small">@labelHelper(field = stubIssuerRequestForm(errorMessage), label = "Error message", labelBold = false)</h3>
                     @inputHelper(
