@@ -198,12 +198,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
 
   lazy val administrativeDivisionList: Set[String] = config.getString("administrative-divisions").split(",").toSet
 
-  def accessibilityStatementRoute(pageUri: String): String = uk.gov.hmrc.vatsignupfrontend.controllers.routes.AccessibilityStatementController.show(pageUri).url
-
   lazy val service: String = "vat-sign-up"
-
-  def accessibilityReportUrl(userAction: String): String =
-    s"$contactHost/contact/accessibility-unauthenticated?service=$service&userAction=${encodeUrl(userAction)}"
 
   lazy val yourVatAccountUrl: String = s"${config.getString("vat-summary.url")}/vat-through-software/vat-overview"
 
