@@ -21,9 +21,9 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc" %% "govuk-template" % "5.55.0-play-26",
-    "uk.gov.hmrc" %% "play-ui" % "8.13.0-play-26",
+    "uk.gov.hmrc" %% "play-ui" % "8.19.0-play-26",
     ws,
-    "uk.gov.hmrc" %% "bootstrap-play-26" % "1.14.0",
+    "uk.gov.hmrc" %% "bootstrap-play-26" % "2.2.0",
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "play-whitelist-filter" % playWhitelistFilterVersion,
     "uk.gov.hmrc" %% "play-language" % "4.3.0-play-26"
