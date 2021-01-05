@@ -53,7 +53,8 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityConnector: 
     vatNumberEligibilityConnector.checkVatNumberEligibility(vatNumber).map {
       case Right(Eligible(isOverseas, _)) => isOverseas
       case Right(AlreadySubscribed(isOverseas)) => isOverseas
-      case _ => throw new InternalServerException("[CheckVatNumberEligibilityService][isOverseas] VRN is in a wrong state for this check")
+      case eligibilityStatus =>
+        throw new InternalServerException(s"$vatNumber is ineligible to claim a subscription due to the following eligibility status: $eligibilityStatus.")
     }
   }
 }
