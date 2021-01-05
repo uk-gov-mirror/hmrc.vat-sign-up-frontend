@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,9 @@ class CheckVatNumberEligibilityService @Inject()(vatNumberEligibilityConnector: 
       case Right(Eligible(isOverseas, _)) => isOverseas
       case Right(AlreadySubscribed(isOverseas)) => isOverseas
       case eligibilityStatus =>
-        throw new InternalServerException(s"$vatNumber is ineligible to claim a subscription due to the following eligibility status: $eligibilityStatus.")
+        throw new InternalServerException(
+          s"$vatNumber is ineligible to claim a subscription due to the following eligibility status: $eligibilityStatus."
+        )
     }
   }
 }
