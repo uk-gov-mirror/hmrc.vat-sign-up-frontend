@@ -62,8 +62,6 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   private val contactFormServiceIdentifier = "MTDVAT"
 
   lazy val assetsPrefix: String = config.getString(s"assets.url") + config.getString(s"assets.version")
-  lazy val analyticsToken: String = config.getString(s"google-analytics.token")
-  lazy val analyticsHost: String = config.getString(s"google-analytics.host")
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
