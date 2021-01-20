@@ -50,6 +50,8 @@ trait ComponentSpecBase extends IntegrationUnitSpec with GuiceOneServerPerSuite 
     "microservice.services.citizen-details.host" -> mockHost,
     "microservice.services.citizen-details.port" -> mockPort,
     "microservice.services.incorporation-information.url" -> mockUrl,
+    "microservice.services.email-verification.url" -> mockUrl,
+    "microservice.services.email-verification.stub-url" -> mockUrl,
     "administrative-divisions" -> administrativeDivisionVRN
   )
 
