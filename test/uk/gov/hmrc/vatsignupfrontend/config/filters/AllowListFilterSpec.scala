@@ -24,18 +24,18 @@ import play.api.mvc.{Action, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration}
+import uk.gov.hmrc.allowlist.AkamaiAllowlistFilter
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
-class WhiteListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
+class AllowListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
 
   val testString = "success"
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
-    .bindings(bind(classOf[AkamaiWhitelistFilter]).to(classOf[WhiteListFilter]))
-    .configure(Configuration("feature-switch.enable-ip-whitelisting" -> true,
-      "ip-whitelist.urls" -> "127.0.0.1"
+    .bindings(bind(classOf[AkamaiAllowlistFilter]).to(classOf[AllowListFilter]))
+    .configure(Configuration("feature-switch.enable-ip-allowlisting" -> true,
+      "ip-allowlist.urls" -> "127.0.0.1"
     )).routes({
     case ("GET", "/index") => Action(Ok("success"))
     case _ => Action(Ok("failure"))
@@ -43,10 +43,10 @@ class WhiteListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
 
   val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-  "WhiteListFilter" should {
+  "AllowListFilter" should {
 
-    "redirects none white listed ip" in {
-      app.configuration.get[Boolean]("feature-switch.enable-ip-whitelisting") shouldBe true
+    "redirects none allow listed ip" in {
+      app.configuration.get[Boolean]("feature-switch.enable-ip-allowlisting") shouldBe true
 
       val fr = FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.2"
@@ -58,8 +58,8 @@ class WhiteListFilterSpec extends UnitSpec with GuiceOneServerPerSuite {
       redirectLocation(result) shouldBe Some(appConfig.shutterPage)
     }
 
-    "not block white listed ip" in {
-      app.configuration.get[Boolean]("feature-switch.enable-ip-whitelisting") shouldBe true
+    "not block allow listed ip" in {
+      app.configuration.get[Boolean]("feature-switch.enable-ip-allowlisting") shouldBe true
       val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.1"
       ))

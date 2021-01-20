@@ -17,18 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.config.filters
 
 import javax.inject.{Inject, Singleton}
-
 import akka.stream.Materializer
 import play.api.mvc.Call
+import uk.gov.hmrc.allowlist.AkamaiAllowlistFilter
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
 @Singleton
-class WhiteListFilter @Inject()(appConfig: AppConfig,
+class AllowListFilter @Inject()(appConfig: AppConfig,
                                 val mat: Materializer
-                               ) extends AkamaiWhitelistFilter {
+                               ) extends AkamaiAllowlistFilter {
 
-  override lazy val whitelist: Seq[String] = appConfig.whitelistIps
+  override lazy val allowlist: Seq[String] = appConfig.allowlistIps
 
   override lazy val destination: Call = Call("GET", appConfig.shutterPage)
 
