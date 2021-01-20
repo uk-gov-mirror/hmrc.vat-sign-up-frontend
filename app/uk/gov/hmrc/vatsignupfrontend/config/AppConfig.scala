@@ -75,11 +75,11 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
 
   lazy val checkNeedForMtdUrl: String = s"$govUK/guidance/check-when-a-business-must-follow-the-rules-for-making-tax-digital-for-vat"
 
-  private def whitelistConfig(key: String): Seq[String] =
+  private def allowListConfig(key: String): Seq[String] =
     config.getString(key).split(",").toSeq
 
-  lazy val whitelistIps: Seq[String] = whitelistConfig("ip-whitelist.urls")
-  lazy val ipExclusionList: Seq[Call] = whitelistConfig("ip-whitelist.excludeCalls").map(ip => Call("GET", ip))
+  lazy val allowlistIps: Seq[String] = allowListConfig("ip-allowlist.urls")
+  lazy val ipExclusionList: Seq[Call] = allowListConfig("ip-allowlist.excludeCalls").map(ip => Call("GET", ip))
 
   lazy val protectedMicroServiceUrl: String = config.baseUrl("vat-sign-up") + "/vat-sign-up"
   lazy val storeVatNumberUrl = s"$protectedMicroServiceUrl/subscription-request/vat-number"
