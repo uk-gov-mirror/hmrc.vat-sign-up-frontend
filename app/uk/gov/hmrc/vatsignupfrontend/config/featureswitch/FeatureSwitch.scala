@@ -28,7 +28,8 @@ object FeatureSwitch {
 
   val switches: Set[FeatureSwitch] = Set(
     StubIncorporationInformation,
-    CrnDissolved
+    CrnDissolved,
+    StubEmailVerification
   )
 
   def apply(str: String): FeatureSwitch =
@@ -49,4 +50,9 @@ case object StubIncorporationInformation extends FeatureSwitch {
 case object CrnDissolved extends FeatureSwitch {
   override val name: String = s"$prefix.crn-dissolved-validation"
   override val displayText: String = "Block users with CRNs for dissolved or converted-closed companies"
+}
+
+case object StubEmailVerification extends FeatureSwitch {
+  override val name: String = s"$prefix.stub-email-verification"
+  override val displayText: String = "Stub email verification flow"
 }
