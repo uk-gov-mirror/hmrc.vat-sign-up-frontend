@@ -1023,8 +1023,15 @@ principal.not_got_software.line_3                                     = Check yo
 principal.not_got_software.line_4                                     = Get more information about software products and companies
 
 # Passcode Not Found
-principal.passcodeNotFound.heading                                    = You need to start again
+principal.passcodeNotFound.heading                                    = There is a problem with the passcode
 principal.passcodeNotFound.par1                                       = The code we sent you cannot be found or has expired.
 principal.passcodeNotFound.par2.p1                                    = You will need to
-principal.passcodeNotFound.par2.linkText                             = get a new code
+principal.passcodeNotFound.par2.linkText                              = get a new code
 principal.passcodeNotFound.par2.p2                                    = to continue with the registration.
+
+# Max email passcode attempts
+principal.max_email_passcode_attempts_exceeded.title                  = You need to start again
+principal.max_email_passcode_attempts_exceeded.heading                = You need to start again
+principal.max_email_passcode_attempts_exceeded.line_1                 = This is because you have entered the wrong code too many times.
+principal.max_email_passcode_attempts_exceeded.line_2                 = To start again, you need to
+principal.max_email_passcode_attempts_exceeded.link_text              = sign out
