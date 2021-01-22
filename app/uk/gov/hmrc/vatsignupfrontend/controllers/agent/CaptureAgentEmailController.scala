@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.agent
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
@@ -25,11 +24,12 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm._
 import uk.gov.hmrc.vatsignupfrontend.views.html.agent.capture_agent_email
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CaptureAgentEmailController @Inject()(implicit ec: ExecutionContext,
-                                              vcc: VatControllerComponents)
+                                            vcc: VatControllerComponents)
   extends AuthenticatedController(AgentEnrolmentPredicate) {
 
   val validateEmailForm = emailForm(isAgent = false)
@@ -65,6 +65,14 @@ class CaptureAgentEmailController @Inject()(implicit ec: ExecutionContext,
             BadRequest(capture_agent_email(formWithErrors, routes.CaptureAgentEmailController.submit()))
           ),
         email =>
+          // UPDATE WHEN NEW ENTER PASSCODE PAGE IS UPDATED
+          //          if (isEnabled(EmailVerification)) {
+          //            val lang: String = request.lang.code
+          //            emailVerificationService.requestEmailVerificationPasscode(email, lang).map {
+          //              case RequestEmailPasscodeSuccessful => Redirect(enterPasscodePage)
+          //              case AlreadyVerifiedEmailAddress => Redirect(routes.AgentVerifiedEmailController.show())
+          //            }
+          //          }
           Future.successful(Redirect(
             routes.ConfirmAgentEmailController.show()
           ).addingToSession(SessionKeys.transactionEmailKey -> email))
