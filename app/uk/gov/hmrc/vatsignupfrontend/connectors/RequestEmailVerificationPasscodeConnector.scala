@@ -18,10 +18,11 @@ package uk.gov.hmrc.vatsignupfrontend.connectors
 
 import play.api.http.Status.{CONFLICT, CREATED}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, InternalServerException}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
 import uk.gov.hmrc.vatsignupfrontend.models.{AlreadyVerifiedEmailAddress, RequestEmailPasscodeResult, RequestEmailPasscodeSuccessful}
+import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,16 +32,18 @@ class RequestEmailVerificationPasscodeConnector @Inject()(val http: HttpClient,
                                                           val applicationConfig: AppConfig
                                                          )(implicit ec: ExecutionContext) {
 
-  def requestEmailVerificationPasscode(email: String)(implicit hc: HeaderCarrier): Future[RequestEmailPasscodeResult] = {
+  def requestEmailVerificationPasscode(email: String, language: String)(implicit hc: HeaderCarrier): Future[RequestEmailPasscodeResult] = {
 
     val url = applicationConfig.requestEmailVerificationPasscodeUrl()
 
-    val jsonBody = Json.obj("email" -> email, "serviceName" -> "VAT Sign Up", "lang" -> "en")
+    val jsonBody = Json.obj("email" -> email, "serviceName" -> "VAT Signup", "lang" -> language)
 
     http.POST(url, jsonBody).map {
-      case HttpResponse(CREATED, _, _) => RequestEmailPasscodeSuccessful
-    }.recover {
-      case Upstream4xxResponse(_, CONFLICT, _, _) => AlreadyVerifiedEmailAddress
+      _.status match {
+        case CREATED => RequestEmailPasscodeSuccessful
+        case CONFLICT => AlreadyVerifiedEmailAddress
+        case status => throw new InternalServerException(s"requestEmailVerificationPasscode failed: email-verification returned $status")
+      }
     }
   }
 

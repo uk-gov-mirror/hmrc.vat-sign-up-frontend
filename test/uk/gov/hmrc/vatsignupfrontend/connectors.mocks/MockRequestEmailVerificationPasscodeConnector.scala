@@ -37,7 +37,7 @@ trait MockRequestEmailVerificationPasscodeConnector extends MockitoSugar with Be
   val mockRequestEmailVerificationPasscodeConnector: RequestEmailVerificationPasscodeConnector = mock[RequestEmailVerificationPasscodeConnector]
 
   def mockRequestEmailVerificationPasscode(email: String)(response: Future[RequestEmailPasscodeResult]): Unit =
-    when(mockRequestEmailVerificationPasscodeConnector.requestEmailVerificationPasscode(ArgumentMatchers.eq(email))(ArgumentMatchers.any[HeaderCarrier]))
+    when(mockRequestEmailVerificationPasscodeConnector.requestEmailVerificationPasscode(ArgumentMatchers.eq(email), ArgumentMatchers.eq("en"))(ArgumentMatchers.any[HeaderCarrier]))
       .thenReturn(response)
 
 }

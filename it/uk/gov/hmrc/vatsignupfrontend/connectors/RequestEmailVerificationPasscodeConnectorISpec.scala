@@ -36,9 +36,9 @@ class RequestEmailVerificationPasscodeConnectorISpec extends ComponentSpecBase w
       "the feature switch is enabled and successfully calls the stub" in {
         enable(StubEmailVerification)
 
-        stubPost("/email-verification/request-passcode", CREATED, "")
+        stubPost("/vat-through-software/sign-up/test-only/email-verification/request-passcode", CREATED, "")
 
-        val res = await(connector.requestEmailVerificationPasscode(testEmail))
+        val res = await(connector.requestEmailVerificationPasscode(testEmail, "en"))
 
         res shouldBe RequestEmailPasscodeSuccessful
       }
@@ -48,9 +48,9 @@ class RequestEmailVerificationPasscodeConnectorISpec extends ComponentSpecBase w
       "the feature switch is enabled and the stub returns Conflict" in {
         enable(StubEmailVerification)
 
-        stubPost("/email-verification/request-passcode", CONFLICT, "")
+        stubPost("/vat-through-software/sign-up/test-only/email-verification/request-passcode", CONFLICT, "")
 
-        val res = await(connector.requestEmailVerificationPasscode(testEmail))
+        val res = await(connector.requestEmailVerificationPasscode(testEmail, "en"))
 
         res shouldBe AlreadyVerifiedEmailAddress
       }
@@ -62,7 +62,7 @@ class RequestEmailVerificationPasscodeConnectorISpec extends ComponentSpecBase w
 
         stubPost("/email-verification/request-passcode", CREATED, "")
 
-        val res = await(connector.requestEmailVerificationPasscode(testEmail))
+        val res = await(connector.requestEmailVerificationPasscode(testEmail, "en"))
 
         res shouldBe RequestEmailPasscodeSuccessful
       }
@@ -74,7 +74,7 @@ class RequestEmailVerificationPasscodeConnectorISpec extends ComponentSpecBase w
 
         stubPost("/email-verification/request-passcode", CONFLICT, "")
 
-        val res = await(connector.requestEmailVerificationPasscode(testEmail))
+        val res = await(connector.requestEmailVerificationPasscode(testEmail, "en"))
 
         res shouldBe AlreadyVerifiedEmailAddress
       }

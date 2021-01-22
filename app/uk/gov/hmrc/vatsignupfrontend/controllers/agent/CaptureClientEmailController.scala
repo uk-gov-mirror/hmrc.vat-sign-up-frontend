@@ -68,6 +68,14 @@ class CaptureClientEmailController @Inject()(implicit ec: ExecutionContext,
             case Some(agentEmail) if agentEmail == clientEmail =>
               Future.successful(Redirect(errorRoutes.UseDifferentEmailAddressController.show()))
             case _ =>
+              // UPDATE WHEN NEW ENTER PASSCODE PAGE IS UPDATED
+              //          if (isEnabled(EmailVerification)) {
+              //            val lang: String = request.lang.code
+              //            emailVerificationService.requestEmailVerificationPasscode(email, lang).map {
+              //              case RequestEmailPasscodeSuccessful => Redirect(enterPasscodePage)
+              //              case AlreadyVerifiedEmailAddress => Redirect(routes.AgentVerifiedEmailController.show())
+              //            }
+              //          }
               Future.successful(Redirect(routes.ConfirmClientEmailController.show())
                 .addingToSession(SessionKeys.emailKey -> clientEmail))
           }

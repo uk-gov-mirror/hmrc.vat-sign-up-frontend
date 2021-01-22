@@ -143,7 +143,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
 
   def requestEmailVerificationPasscodeUrl(): String =
-    if (isEnabled(StubEmailVerification)) s"$stubEmailVerificationBaseUrl/email-verification/request-passcode"
+    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/request-passcode"
     else s"$emailVerificationBaseUrl/email-verification/request-passcode"
 
   lazy val ctReferenceLookupUrl: String = s"$protectedMicroServiceUrl/subscription-request/ct-reference-check"

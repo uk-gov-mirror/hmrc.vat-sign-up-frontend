@@ -26,7 +26,7 @@ import scala.concurrent.Future
 @Singleton
 class EmailVerificationService @Inject()(requestPasscodeConnector: RequestEmailVerificationPasscodeConnector) {
 
-  def requestEmailVerificationPasscode(email: String)(implicit hc: HeaderCarrier): Future[RequestEmailPasscodeResult] =
-    requestPasscodeConnector.requestEmailVerificationPasscode(email)
+  def requestEmailVerificationPasscode(email: String, language: String)(implicit hc: HeaderCarrier): Future[RequestEmailPasscodeResult] =
+    requestPasscodeConnector.requestEmailVerificationPasscode(email, language)
 
 }

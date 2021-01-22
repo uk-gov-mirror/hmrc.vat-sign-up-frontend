@@ -36,14 +36,14 @@ class EmailVerificationServiceSpec extends UnitSpec with MockitoSugar with MockR
     "return RequestEmailPasscodeSuccessful" in {
       mockRequestEmailVerificationPasscode(testEmail)(Future.successful(RequestEmailPasscodeSuccessful))
 
-      val res = await(testEmailVerificationService.requestEmailVerificationPasscode(testEmail))
+      val res = await(testEmailVerificationService.requestEmailVerificationPasscode(testEmail, "en"))
 
       res shouldBe RequestEmailPasscodeSuccessful
     }
     "return AlreadyVerifiedEmailAddress" in {
       mockRequestEmailVerificationPasscode(testEmail)(Future.successful(AlreadyVerifiedEmailAddress))
 
-      val res = await(testEmailVerificationService.requestEmailVerificationPasscode(testEmail))
+      val res = await(testEmailVerificationService.requestEmailVerificationPasscode(testEmail, "en"))
 
       res shouldBe AlreadyVerifiedEmailAddress
     }
