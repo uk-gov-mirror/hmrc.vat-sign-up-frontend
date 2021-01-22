@@ -16,17 +16,18 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.EmailVerification
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_email
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -66,9 +67,11 @@ class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddre
         case (Some(vatNumber), Some(email)) => {
           storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email)
         } map {
-          case Right(StoreEmailAddressSuccess(false)) =>
+          case Right(StoreEmailAddressSuccess(_)) if isEnabled(EmailVerification) =>
+            Redirect(routes.CaptureEmailPasscodeController.show().url)
+          case Right(StoreEmailAddressSuccess(emailVerified @ false)) =>
             Redirect(routes.VerifyEmailController.show().url)
-          case Right(StoreEmailAddressSuccess(true)) =>
+          case Right(StoreEmailAddressSuccess(emailVerified @ true)) =>
             Redirect(routes.ReceiveEmailNotificationsController.show())
           case Left(errResponse) =>
             throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)

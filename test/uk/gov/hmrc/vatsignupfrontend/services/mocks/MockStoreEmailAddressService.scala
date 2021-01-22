@@ -20,10 +20,11 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.{StoreEmailAddressFailure, StoreEmailAddressResponse, StoreEmailAddressSuccess}
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
 trait MockStoreEmailAddressService extends BeforeAndAfterEach with MockitoSugar {
@@ -40,7 +41,7 @@ trait MockStoreEmailAddressService extends BeforeAndAfterEach with MockitoSugar 
     when(mockStoreEmailAddressService.storeEmailAddress(
       ArgumentMatchers.eq(vatNumber),
       ArgumentMatchers.eq(email)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    )(ArgumentMatchers.any[HeaderCarrier], ArgumentMatchers.any[ExecutionContext]))
       .thenReturn(returnValue)
   }
 

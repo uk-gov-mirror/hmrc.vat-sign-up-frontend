@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.EmailVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
@@ -68,7 +69,19 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
     "email and vat number are in session" when {
       "store call is successful" when {
         "email is not verified" should {
-          "redirect to Verify Email page" in {
+          "redirect to Capture Email Passcode page when the StubEmailVerification fs is enabled" in {
+            enable(EmailVerification)
+            mockAuthAdminRole()
+            mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = false)
+
+            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber))
+
+            status(result) shouldBe Status.SEE_OTHER
+            redirectLocation(result) shouldBe Some(routes.CaptureEmailPasscodeController.show().url)
+          }
+          "redirect to Verify Email page when the StubEmailVerification fs is disabled" in {
+            disable(EmailVerification)
             mockAuthAdminRole()
             mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = false)
 
@@ -77,7 +90,6 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
             status(result) shouldBe Status.SEE_OTHER
             redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
-
           }
         }
         "email is verified" should {
@@ -115,7 +127,6 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
         val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail))
         status(result) shouldBe Status.SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ResolveVatNumberController.resolve().url)
-
       }
     }
     "email is not in session" should {

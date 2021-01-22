@@ -19,12 +19,18 @@ package uk.gov.hmrc.vatsignupfrontend.services
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.vatsignupfrontend.connectors.RequestEmailVerificationPasscodeConnector
 import uk.gov.hmrc.vatsignupfrontend.models.RequestEmailPasscodeResult
+import uk.gov.hmrc.vatsignupfrontend.connectors.VerifyEmailPasscodeConnector
+import uk.gov.hmrc.vatsignupfrontend.models.{VerifyEmailPasscodeResult, _}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class EmailVerificationService @Inject()(requestPasscodeConnector: RequestEmailVerificationPasscodeConnector) {
+class EmailVerificationService @Inject()(requestPasscodeConnector: RequestEmailVerificationPasscodeConnector,
+                                         verifyPasscodeConnector: VerifyEmailPasscodeConnector) {
+
+  def verifyEmailPasscode(email: String, passcode: String)(implicit hc: HeaderCarrier): Future[VerifyEmailPasscodeResult] =
+    verifyPasscodeConnector.verifyEmailVerificationPasscode(email, passcode)
 
   def requestEmailVerificationPasscode(email: String, language: String)(implicit hc: HeaderCarrier): Future[RequestEmailPasscodeResult] =
     requestPasscodeConnector.requestEmailVerificationPasscode(email, language)

@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.config
 
+import java.net.URLEncoder
+
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -96,6 +99,14 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
 
   def storeEmailAddressUrl(vatNumber: String): String = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/email"
 
+  def requestEmailVerificationPasscodeUrl(): String =
+    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/request-passcode"
+    else s"$emailVerificationBaseUrl/email-verification/request-passcode"
+
+  def verifyEmailVerificationPasscodeUrl(): String =
+    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/verify-passcode"
+    else s"$emailVerificationBaseUrl/email-verification/verify-passcode"
+
   def storeTransactionEmailAddressUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/transaction-email"
 
@@ -140,10 +151,6 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
     else config.getString("microservice.services.incorporation-information.url")
 
   def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
-
-  def requestEmailVerificationPasscodeUrl(): String =
-    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/request-passcode"
-    else s"$emailVerificationBaseUrl/email-verification/request-passcode"
 
   lazy val ctReferenceLookupUrl: String = s"$protectedMicroServiceUrl/subscription-request/ct-reference-check"
 

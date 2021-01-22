@@ -18,15 +18,18 @@ package uk.gov.hmrc.vatsignupfrontend.services
 
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.MockRequestEmailVerificationPasscodeConnector
+import uk.gov.hmrc.vatsignupfrontend.connectors.mocks.{MockRequestEmailVerificationPasscodeConnector, MockVerifyEmailPasscodeConnector}
 import uk.gov.hmrc.vatsignupfrontend.models.{AlreadyVerifiedEmailAddress, RequestEmailPasscodeSuccessful}
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 import scala.concurrent.Future
 
-class EmailVerificationServiceSpec extends UnitSpec with MockitoSugar with MockRequestEmailVerificationPasscodeConnector {
+class EmailVerificationServiceSpec extends UnitSpec
+  with MockitoSugar
+  with MockRequestEmailVerificationPasscodeConnector
+  with MockVerifyEmailPasscodeConnector {
 
-  object testEmailVerificationService extends EmailVerificationService(mockRequestEmailVerificationPasscodeConnector)
+  object testEmailVerificationService extends EmailVerificationService(mockRequestEmailVerificationPasscodeConnector, mockVerifyEmailPasscodeConnector)
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
