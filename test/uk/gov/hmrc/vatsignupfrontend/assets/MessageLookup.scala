@@ -1226,4 +1226,11 @@ object MessageLookup {
     val link = "http://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-vat"
     val link_text = "Get more information about software products and companies"
   }
+
+  object PasscodeNotFound {
+    val heading: String = "You need to start again"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "The code we sent you cannot be found or has expired."
+    val line2 = "You will need to get a new code to continue with the registration."
+  }
 }

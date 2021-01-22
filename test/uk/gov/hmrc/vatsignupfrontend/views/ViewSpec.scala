@@ -48,19 +48,19 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     }
 
     def shouldHavePara(paragraph: String): Unit =
-      s"$name should have the paragraph (P) '$paragraph'" in {
+      s"$name have the paragraph (P) '$paragraph'" in {
         element.getElementsByTag("p").text() should include(paragraph)
       }
 
     def shouldHaveSummary(heading: String): Unit =
-      s"$name should have the summary (summary) '$heading'" in {
+      s"$name have the summary (summary) '$heading'" in {
         element.getElementsByTag("summary").text() should include(heading)
       }
 
     def shouldHaveParaSeq(paragraphs: String*): Unit = {
       if (paragraphs.isEmpty) fail("Should provide at least 1 paragraph for this test")
       val ps = paragraphs.mkString(" ")
-      s"$name should have the paragraphs (P) [${paragraphs.mkString("], [")}]" in {
+      s"$name have the paragraphs (P) [${paragraphs.mkString("], [")}]" in {
         element.getElementsByTag("p").text() should include(ps)
       }
     }
@@ -68,7 +68,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     def shouldHaveBulletSeq(bullets: String*): Unit = {
       if (bullets.isEmpty) fail("Should provide at least 1 bullet point for this test")
       val bs = bullets.mkString(" ")
-      s"$name should have the bulletPoints (LI) [${bullets.mkString("], [")}]" in {
+      s"$name have the bulletPoints (LI) [${bullets.mkString("], [")}]" in {
         element.getElementsByTag("li").text() should include(bs)
       }
     }
@@ -84,7 +84,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
       }
 
     def shouldHaveHint(hint: String): Unit =
-      s"$name should have the hint text '$hint'" in {
+      s"$name have the hint text '$hint'" in {
         element.getElementsByTag("span").hasClass("form-hint") shouldBe true
         element.getElementsByTag("span").text() should include(hint)
       }
@@ -117,7 +117,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     }
 
     def shouldHaveAccordion(heading: String, text: String): Unit = {
-      s"$name should have an accordion with heading $heading and $text" in {
+      s"$name have an accordion with heading $heading and $text" in {
         val accordions = element.getElementsByTag("details")
         if (accordions == null) fail(s"Unable to find any details tag")
         if (accordions.size() > 1) fail(s"found multiple accordions, need to specify an id")
@@ -152,7 +152,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
                             inputMode: Option[String] = None
                            ): Unit = {
 
-      s"${this.name} should have an input field '$name'" which {
+      s"${this.name} have an input field '$name'" which {
 
         s"is a text field" in {
           import collection.JavaConversions._
@@ -222,7 +222,7 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
     }
 
     def shouldHaveSubmitButton(text: String): Unit =
-      s"$name should have the a submit button (Button) '$text'" in {
+      s"$name have the a submit button (Button) '$text'" in {
         import collection.JavaConversions._
         val submitButtons = element.getElementsByTag("input").filter((el: Element) => el.attr("type") == "submit")
         submitButtons.size shouldBe 1
@@ -299,17 +299,17 @@ trait ViewSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     val titleText: String = if (hasErrors) MessageLookup.Base.errPrefix + " " + title else title
 
-    s"$name should have the title '$titleText'" in {
+    s"$name have the title '$titleText'" in {
       document.title() shouldBe titleText
     }
 
-    s"$name should have the heading (H1) '$heading'" in {
+    s"$name have the heading (H1) '$heading'" in {
       val h1 = document.getElementsByTag("H1")
       h1.size() shouldBe 1
       h1.text() shouldBe heading
     }
 
-    s"$name should ${if (!haveSignOutInBanner) "not "}have a sign out link in the banner" in {
+    s"$name ${if (!haveSignOutInBanner) "not " else ""}have a sign out link in the banner" in {
       val signOut = document.getElementById("logOutNavHref")
       if (haveSignOutInBanner)
         signOut should not be null

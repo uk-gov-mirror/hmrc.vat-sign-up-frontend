@@ -1021,3 +1021,10 @@ principal.not_got_software.line_1                                     = Before y
 principal.not_got_software.line_2                                     = Set up compatible accounting software which is best suited to your business needs.
 principal.not_got_software.line_3                                     = Check your chosen software works and connects to HMRC.
 principal.not_got_software.line_4                                     = Get more information about software products and companies
+
+# Passcode Not Found
+principal.passcodeNotFound.heading                                    = You need to start again
+principal.passcodeNotFound.par1                                       = The code we sent you cannot be found or has expired.
+principal.passcodeNotFound.par2.p1                                    = You will need to
+principal.passcodeNotFound.par2.linkText                             = get a new code
+principal.passcodeNotFound.par2.p2                                    = to continue with the registration.
