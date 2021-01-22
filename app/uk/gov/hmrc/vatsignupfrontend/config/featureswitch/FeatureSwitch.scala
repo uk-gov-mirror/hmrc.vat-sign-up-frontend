@@ -54,5 +54,10 @@ case object CrnDissolved extends FeatureSwitch {
 
 case object StubEmailVerification extends FeatureSwitch {
   override val name: String = s"$prefix.stub-email-verification"
-  override val displayText: String = "Stub email verification flow"
+  override val displayText: String = "Use stub for new email verification flow"
+}
+
+case object EmailVerification extends FeatureSwitch {
+  override val name: String = s"$prefix.email-verification"
+  override val displayText: String = "Enable new email verification flow"
 }
