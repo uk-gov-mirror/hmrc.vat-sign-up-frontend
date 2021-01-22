@@ -64,6 +64,9 @@ POST        /confirm-registered-society                         uk.gov.hmrc.vats
 GET         /email-address                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.show
 POST        /email-address                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.CaptureEmailController.submit
 
+# process email passcode
+GET         /passcode-not-found                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.PasscodeNotFoundController.show
+
 # Confirm Email
 GET         /confirm-email                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmEmailController.show
 POST        /confirm-email                                      uk.gov.hmrc.vatsignupfrontend.controllers.principal.ConfirmEmailController.submit
