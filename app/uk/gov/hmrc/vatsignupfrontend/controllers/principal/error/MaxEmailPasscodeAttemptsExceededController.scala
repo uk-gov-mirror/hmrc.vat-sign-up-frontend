@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.views.html.principal.passcodeNotFound
+import uk.gov.hmrc.vatsignupfrontend.views.html.principal.max_email_passcode_attempts_exceeded
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PasscodeNotFoundController @Inject()(val passcodeNotFoundTemplate: passcodeNotFound,
-                                           implicit val ec: ExecutionContext,
-                                           implicit val vcc: VatControllerComponents)
-  extends AuthenticatedController(AdministratorRolePredicate) {
+class MaxEmailPasscodeAttemptsExceededController @Inject()(view: max_email_passcode_attempts_exceeded
+                                                          )(implicit ec: ExecutionContext,
+                                                            vcc: VatControllerComponents
+                                                          ) extends AuthenticatedController(AdministratorRolePredicate) {
 
   val show: Action[AnyContent] = Action.async {
-    implicit request =>  authorised() {
-      Future.successful(Ok(passcodeNotFoundTemplate()))
-    }
+    implicit request =>
+      authorised() {
+        Future.successful(Ok(view()))
+      }
   }
+
 }

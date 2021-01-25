@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.vatsignupfrontend.controllers.principal
+package uk.gov.hmrc.vatsignupfrontend.controllers.principal.error
 
 import play.api.http.Status._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
@@ -22,11 +22,11 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class PasscodeNotFoundControllerISpec extends ComponentSpecBase with CustomMatchers {
 
-  "GET /passcode-not-found" should {
+  "GET /error/passcode-not-found" should {
     "return an OK" in {
       stubAuth(OK, successfulAuthResponse())
 
-      val res = get("/passcode-not-found")
+      val res = get("/error/passcode-not-found")
 
       res should have(
         httpStatus(OK)

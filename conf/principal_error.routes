@@ -84,3 +84,9 @@ GET         /sign-up-later                                      uk.gov.hmrc.vats
 
 # Cannot use service yet
 GET         /cannot-use-service-yet                             uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.CannotUseServiceController.show
+
+# Email Passcode Not Found
+GET         /passcode-not-found                                 uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.PasscodeNotFoundController.show
+
+# Too Many Email Passcode Attempts
+GET         /passcode-too-many-attempts                         uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.MaxEmailPasscodeAttemptsExceededController.show

@@ -1228,9 +1228,16 @@ object MessageLookup {
   }
 
   object PasscodeNotFound {
-    val heading: String = "You need to start again"
+    val heading: String = "There is a problem with the passcode"
     val title = heading + ServiceName.principalSuffix
     val line1 = "The code we sent you cannot be found or has expired."
     val line2 = "You will need to get a new code to continue with the registration."
+  }
+
+  object MaxEmailPasscodeAttemptsExceeded {
+    val heading: String = "You need to start again"
+    val title = heading + ServiceName.principalSuffix
+    val line1 = "This is because you have entered the wrong code too many times."
+    val line2 = "To start again, you need to sign out"
   }
 }
