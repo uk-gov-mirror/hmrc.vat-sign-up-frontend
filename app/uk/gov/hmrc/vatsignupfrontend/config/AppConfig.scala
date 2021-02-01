@@ -99,6 +99,9 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   def storeTransactionEmailAddressUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/transaction-email"
 
+  def storeTransactionEmailValidatedUrl(vatNumber: String): String =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/store-transaction-email"
+
   def storePartnershipInformationUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/partnership-information"
 

@@ -38,6 +38,7 @@ object IntegrationTestConstants {
   val testNino: String = new Generator().nextNino.nino
   val testSaUtr: String = f"${Math.abs(Random.nextLong() % 10000000000L)}%010d"
   val testEmail: String = IntegrationTestConstantsGenerator.randomEmail
+  val testPasscode: String = "123456"
   val testArn: String = UUID.randomUUID().toString
   val testUri: String = "/test/url"
   val testStartDate: LocalDate = LocalDate.now()

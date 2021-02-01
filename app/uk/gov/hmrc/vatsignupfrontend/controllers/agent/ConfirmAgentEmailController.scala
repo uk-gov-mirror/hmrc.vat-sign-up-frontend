@@ -69,8 +69,8 @@ class ConfirmAgentEmailController @Inject()(storeEmailAddressService: StoreEmail
               Redirect(routes.VerifyAgentEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
               Redirect(routes.ContactPreferenceController.show().url)
-            case Left(errResponse) =>
-              throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
+            case Left(_) =>
+              throw new InternalServerException("storeEmailAddress failed")
           }
         case (None, _) =>
           Future.successful(

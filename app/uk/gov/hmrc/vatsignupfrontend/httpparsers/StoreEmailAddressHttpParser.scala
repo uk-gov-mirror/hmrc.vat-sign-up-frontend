@@ -23,22 +23,48 @@ object StoreEmailAddressHttpParser {
 
   type StoreEmailAddressResponse = Either[StoreEmailAddressFailure, StoreEmailAddressSuccess]
 
-  val EmailVerifiedKey = "emailVerified"
+  val emailVerifiedKey = "emailVerified"
+  val reasonKey = "reason"
+
+  val storedSuccessfully = "OK"
+  val passcodeNotFound = "PASSCODE_NOT_FOUND"
+  val passcodeMismatch = "PASSCODE_MISMATCH"
+  val maxAttemptsExceeded = "MAX_PASSCODE_ATTEMPTS_EXCEEDED"
 
   implicit object StoreEmailAddressHttpReads extends HttpReads[StoreEmailAddressResponse] {
     override def read(method: String, url: String, response: HttpResponse): StoreEmailAddressResponse = {
-      def parseBody: Option[Boolean] = (response.json \ EmailVerifiedKey).asOpt[Boolean]
+      def emailVerified: Option[Boolean] = (response.json \ emailVerifiedKey).asOpt[Boolean]
 
-      (response.status, parseBody) match {
-        case (OK, Some(verified)) => Right(StoreEmailAddressSuccess(verified))
-        case (status, _) => Left(StoreEmailAddressFailure(status))
+      def passcodeStatus: Option[String] = (response.json \ reasonKey).asOpt[String]
+
+      (response.status, emailVerified, passcodeStatus) match {
+        case (BAD_REQUEST, _, Some(`maxAttemptsExceeded`)) =>
+          Left(MaxAttemptsExceeded)
+        case (BAD_REQUEST, _, Some(`passcodeNotFound`)) =>
+          Left(PasscodeNotFound)
+        case (BAD_REQUEST, _, Some(`passcodeMismatch`)) =>
+          Left(PasscodeMismatch)
+        case (OK, _, Some(`storedSuccessfully`)) =>
+          Right(StoreEmailAddressSuccess(emailVerified = true))
+        case (OK, Some(verified), _) =>
+          Right(StoreEmailAddressSuccess(verified))
+        case (status, _, _) =>
+          Left(StoreEmailAddressFailureStatus(status))
       }
     }
   }
 
   case class StoreEmailAddressSuccess(emailVerified: Boolean)
 
-  case class StoreEmailAddressFailure(status: Int)
+  sealed trait StoreEmailAddressFailure
+
+  case class StoreEmailAddressFailureStatus(status: Int) extends StoreEmailAddressFailure
+
+  case object PasscodeMismatch extends StoreEmailAddressFailure
+
+  case object MaxAttemptsExceeded extends StoreEmailAddressFailure
+
+  case object PasscodeNotFound extends StoreEmailAddressFailure
 
 }
 
