@@ -69,8 +69,8 @@ class ConfirmClientEmailController @Inject()(storeEmailAddressService: StoreEmai
               Redirect(routes.SentClientEmailController.show().url)
             case Right(StoreEmailAddressSuccess(true)) =>
               Redirect(routes.CheckYourAnswersFinalController.show())
-            case Left(errResponse) =>
-              throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
+            case Left(_) =>
+              throw new InternalServerException("storeEmailAddress failed")
           }
         case (None, _) =>
           Future.successful(

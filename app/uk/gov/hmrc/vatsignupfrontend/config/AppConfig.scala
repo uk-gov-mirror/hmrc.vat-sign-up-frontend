@@ -92,12 +92,19 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   def vatNumberEligibilityUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/new-mtdfb-eligibility"
 
+  def verifyEmailVerificationPasscodeUrl(): String =
+    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/verify-passcode"
+    else s"$emailVerificationBaseUrl/email-verification/verify-passcode"
+
   def storeCompanyNumberUrl(vatNumber: String): String = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/company-number"
 
   def storeEmailAddressUrl(vatNumber: String): String = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/email"
 
   def storeTransactionEmailAddressUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/transaction-email"
+
+  def storeTransactionEmailValidatedUrl(vatNumber: String): String =
+    s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/store-transaction-email"
 
   def storePartnershipInformationUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/partnership-information"

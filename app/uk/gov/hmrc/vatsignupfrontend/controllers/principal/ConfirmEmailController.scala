@@ -22,15 +22,18 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.EmailVerification
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
-import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.models.{AlreadyVerifiedEmailAddress, RequestEmailPasscodeSuccessful, StoreEmailVerifiedSuccess}
+import uk.gov.hmrc.vatsignupfrontend.services.{EmailVerificationService, StoreEmailAddressService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_email
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddressService)
+class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddressService,
+                                       emailVerificationService: EmailVerificationService)
                                       (implicit ec: ExecutionContext,
                                        vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
@@ -63,15 +66,30 @@ class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddre
       val optEmail = request.session.get(SessionKeys.emailKey).filter(_.nonEmpty)
 
       (optVatNumber, optEmail) match {
-        case (Some(vatNumber), Some(email)) => {
+        case (Some(vatNumber), Some(email)) if isEnabled(EmailVerification) => {
+          emailVerificationService.requestEmailVerificationPasscode(email, request.lang.code) flatMap {
+            case RequestEmailPasscodeSuccessful =>
+              Future.successful(Redirect(routes.CaptureEmailPasscodeController.show()))
+            case AlreadyVerifiedEmailAddress =>
+              storeEmailAddressService.storeTransactionEmailVerified(vatNumber, email) map {
+                case StoreEmailVerifiedSuccess =>
+                  Redirect(routes.EmailVerifiedController.show())
+                case failureResponse =>
+                  throw new InternalServerException(s"[ConfirmEmailController][submit] storeEmailVerified failed with response: ${failureResponse.toString}")
+              }
+            case passcodeFailureResponse =>
+              throw new InternalServerException(s"[ConfirmEmailController][submit] requestEmailPasscode failed with response: ${passcodeFailureResponse.toString}")
+          }
+        }
+        case (Some(vatNumber), Some(email)) => { // TODO: Remove this block once EmailVerification FS can be deleted
           storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email)
         } map {
           case Right(StoreEmailAddressSuccess(false)) =>
             Redirect(routes.VerifyEmailController.show().url)
           case Right(StoreEmailAddressSuccess(true)) =>
             Redirect(routes.ReceiveEmailNotificationsController.show())
-          case Left(errResponse) =>
-            throw new InternalServerException("storeEmailAddress failed: status=" + errResponse.status)
+          case Left(_) =>
+            throw new InternalServerException("[ConfirmEmailController][submit] storeEmailAddress failed")
         }
         case (None, _) =>
           Future.successful(

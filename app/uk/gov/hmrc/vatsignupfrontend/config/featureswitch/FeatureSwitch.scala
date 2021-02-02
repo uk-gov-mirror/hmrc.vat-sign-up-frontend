@@ -29,7 +29,8 @@ object FeatureSwitch {
   val switches: Set[FeatureSwitch] = Set(
     StubIncorporationInformation,
     CrnDissolved,
-    StubEmailVerification
+    StubEmailVerification,
+    EmailVerification
   )
 
   def apply(str: String): FeatureSwitch =

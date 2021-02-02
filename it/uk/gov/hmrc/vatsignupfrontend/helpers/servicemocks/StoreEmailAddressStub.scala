@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks
 
-import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testVatNumber, testEmail}
-
-import play.api.http.Status.{BAD_REQUEST, OK}
-import play.api.libs.json.Json
+import play.api.http.Status._
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants.{testEmail, testPasscode, testVatNumber}
 
 object StoreEmailAddressStub extends WireMockMethods {
 
@@ -54,5 +53,13 @@ object StoreEmailAddressStub extends WireMockMethods {
       body = Json.obj("transactionEmail" -> testEmail)
     ).thenReturn(status = BAD_REQUEST)
   }
+
+  def stubStoreTransactionEmailVerified(status: Int): Unit =
+    when(
+      method = PUT,
+      uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/store-transaction-email",
+      body = Json.obj("transactionEmail" -> testEmail)
+    ) thenReturn(status = status)
+
 
 }

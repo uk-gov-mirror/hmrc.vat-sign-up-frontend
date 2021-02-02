@@ -23,15 +23,20 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.EmailVerification
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
-import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.models.{AlreadyVerifiedEmailAddress, RequestEmailPasscodeSuccessful, StoreEmailVerifiedSuccess}
+import uk.gov.hmrc.vatsignupfrontend.services.mocks.{MockEmailVerificationService, MockStoreEmailAddressService}
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
-class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
-  with MockStoreEmailAddressService {
+import scala.concurrent.Future
 
-  object TestConfirmEmailController extends ConfirmEmailController(mockStoreEmailAddressService)
+class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with MockVatControllerComponents
+  with MockStoreEmailAddressService
+  with MockEmailVerificationService {
+
+  object TestConfirmEmailController extends ConfirmEmailController(mockStoreEmailAddressService, mockEmailVerificationService)
 
   lazy val testGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/confirm-email")
 
@@ -66,44 +71,98 @@ class ConfirmEmailControllerSpec extends UnitSpec with GuiceOneAppPerSuite with 
 
   "Calling the submit action of the Confirm Email controller" when {
     "email and vat number are in session" when {
-      "store call is successful" when {
-        "email is not verified" should {
-          "redirect to Verify Email page" in {
-            mockAuthAdminRole()
-            mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = false)
+      "the EmailVerified FS is disabled" when {
+        "store call is successful" when {
+          "email is not verified" should {
+            "redirect to Verify Email page" in {
+              mockAuthAdminRole()
+              mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = false)
 
-            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-              SessionKeys.vatNumberKey -> testVatNumber))
+              val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber))
 
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.VerifyEmailController.show().url)
 
+            }
+          }
+          "email is verified" should {
+            "redirect to receive email notifications controller page" in {
+              mockAuthAdminRole()
+              mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = true)
+
+              val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber))
+
+              status(result) shouldBe Status.SEE_OTHER
+              redirectLocation(result) shouldBe Some(routes.ReceiveEmailNotificationsController.show().url)
+
+            }
           }
         }
-        "email is verified" should {
-          "redirect to receive email notifications controller page" in {
+        "store call is unsuccessful" should {
+          "throw Internal Server Error" in {
             mockAuthAdminRole()
-            mockStoreTransactionEmailAddressSuccess(vatNumber = testVatNumber, transactionEmail = testEmail)(emailVerified = true)
+            mockStoreTransactionEmailAddressFailure(vatNumber = testVatNumber, transactionEmail = testEmail)
 
-            val result = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
-              SessionKeys.vatNumberKey -> testVatNumber))
-
-            status(result) shouldBe Status.SEE_OTHER
-            redirectLocation(result) shouldBe Some(routes.ReceiveEmailNotificationsController.show().url)
-
+            intercept[InternalServerException] {
+              TestConfirmEmailController.submit(testPostRequest.withSession(
+                SessionKeys.vatNumberKey -> testVatNumber,
+                SessionKeys.emailKey -> testEmail
+              ))
+            }
           }
         }
       }
-      "store call is unsuccessful" should {
-        "throw Internal Server Error" in {
-          mockAuthAdminRole()
-          mockStoreTransactionEmailAddressFailure(vatNumber = testVatNumber, transactionEmail = testEmail)
+      "the EmailVerified FS is enabled" when {
+        "the request passcode API returns RequestEmailPasscodeSuccessful" should {
+          "redirect to the CaptureEmailPasscode page" in {
+            enable(EmailVerification)
+            mockAuthAdminRole()
+            mockRequestPasscode(testEmail)(Future.successful(RequestEmailPasscodeSuccessful))
 
-          intercept[InternalServerException] {
-            TestConfirmEmailController.submit(testPostRequest.withSession(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))
+            val res = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber))
+
+            status(res) shouldBe Status.SEE_OTHER
+            redirectLocation(res) shouldBe Some(routes.CaptureEmailPasscodeController.show().url)
+          }
+        }
+        "the request passcode API returns AlreadyVerifiedEmail" should {
+          "store the email and redirect to the EmailVerified page" in {
+            enable(EmailVerification)
+            mockAuthAdminRole()
+            mockRequestPasscode(testEmail)(Future.successful(AlreadyVerifiedEmailAddress))
+            mockStoreEmailVerified(testVatNumber, testEmail)(Future.successful(StoreEmailVerifiedSuccess))
+
+            val res = TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+              SessionKeys.vatNumberKey -> testVatNumber))
+
+            status(res) shouldBe Status.SEE_OTHER
+            redirectLocation(res) shouldBe Some(routes.EmailVerifiedController.show().url)
+          }
+          "throw an exception if the store email call fails" in {
+            enable(EmailVerification)
+            mockAuthAdminRole()
+            mockRequestPasscode(testEmail)(Future.successful(AlreadyVerifiedEmailAddress))
+            mockStoreEmailVerified(testVatNumber, testEmail)(Future.failed(new InternalServerException("")))
+
+            intercept[InternalServerException] {
+              await(TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber)))
+            }
+          }
+        }
+        "the request passcode API call fails" should {
+          "throw an exception" in {
+            enable(EmailVerification)
+            mockAuthAdminRole()
+            mockRequestPasscode(testEmail)(Future.failed(new InternalServerException("")))
+
+            intercept[InternalServerException] {
+              await(TestConfirmEmailController.submit(testPostRequest.withSession(SessionKeys.emailKey -> testEmail,
+                SessionKeys.vatNumberKey -> testVatNumber)))
+            }
           }
         }
       }

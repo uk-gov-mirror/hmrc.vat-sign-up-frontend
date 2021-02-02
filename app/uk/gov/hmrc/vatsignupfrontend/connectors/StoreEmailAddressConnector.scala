@@ -16,40 +16,37 @@
 
 package uk.gov.hmrc.vatsignupfrontend.connectors
 
-import javax.inject.{Inject, Singleton}
-
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.vatsignupfrontend.config.AppConfig
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressResponse
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.{StoreEmailAddressResponse, _}
+
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StoreEmailAddressConnector @Inject()(val http: HttpClient,
-                                        val applicationConfig: AppConfig) {
+                                           val applicationConfig: AppConfig) {
 
   val emailAddressKey = "email"
   val transactionEmailKey = "transactionEmail"
+  val passcodeKey = "passcode"
 
-  def storeEmailAddress(
-    vatNumber: String,
-    email: String
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] = {
+  def storeEmailAddress(vatNumber: String,
+                        email: String
+                       )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
     http.PUT[JsObject, StoreEmailAddressResponse](
       applicationConfig.storeEmailAddressUrl(vatNumber),
       Json.obj(emailAddressKey -> email)
     )
-  }
 
-  def storeTransactionEmailAddress(
-    vatNumber: String,
-    transactionEmail: String
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] = {
+  def storeTransactionEmailAddress(vatNumber: String,
+                                   transactionEmail: String
+                                  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
     http.PUT[JsObject, StoreEmailAddressResponse](
       applicationConfig.storeTransactionEmailAddressUrl(vatNumber),
       Json.obj(transactionEmailKey -> transactionEmail)
     )
-  }
+
 }
