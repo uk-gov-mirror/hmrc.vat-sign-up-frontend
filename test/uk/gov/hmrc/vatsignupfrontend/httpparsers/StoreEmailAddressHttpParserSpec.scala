@@ -19,17 +19,17 @@ package uk.gov.hmrc.vatsignupfrontend.httpparsers
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 
 class StoreEmailAddressHttpParserSpec extends UnitSpec {
   val testHttpVerb = "PUT"
   val testUri = "/"
 
   "StoreEmailAddressHttpReads" when {
-    "read" should {
+    "reading from the old API" should {
       "parse a OK response as an StoreEmailAddressSuccess" in {
-        val httpResponse = HttpResponse(OK, Some(Json.obj(EmailVerifiedKey -> true)))
+        val httpResponse = HttpResponse(OK, Some(Json.obj(emailVerifiedKey -> true)))
 
         val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
 
@@ -40,7 +40,37 @@ class StoreEmailAddressHttpParserSpec extends UnitSpec {
 
         val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
 
-        res shouldBe Left(StoreEmailAddressFailure(httpResponse.status))
+        res shouldBe Left(StoreEmailAddressFailureStatus(httpResponse.status))
+      }
+    }
+    "reading from the new API with passcode verification" should {
+      "parse the OK response code as StoreEmailAddressSuccess" in {
+        val httpResponse = HttpResponse(OK, Some(Json.obj(reasonKey -> "OK")))
+
+        val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Right(StoreEmailAddressSuccess(emailVerified = true))
+      }
+      "parse the PASSCODE_NOT_FOUND code as PasscodeNotFound" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj(reasonKey -> "PASSCODE_NOT_FOUND")))
+
+        val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(PasscodeNotFound)
+      }
+      "parse the PASSCODE_MISMATCH code as PasscodeMismatch" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj(reasonKey -> "PASSCODE_MISMATCH")))
+
+        val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(PasscodeMismatch)
+      }
+      "parse the MAX_PASSCODE_ATTEMPTS_EXCEEDED code as MaxAttemptsExceeded" in {
+        val httpResponse = HttpResponse(BAD_REQUEST, Some(Json.obj(reasonKey -> "MAX_PASSCODE_ATTEMPTS_EXCEEDED")))
+
+        val res = StoreEmailAddressHttpReads.read(testHttpVerb, testUri, httpResponse)
+
+        res shouldBe Left(MaxAttemptsExceeded)
       }
     }
   }

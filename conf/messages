@@ -539,6 +539,15 @@ principal.capture_email.line_3                                         = If you 
 principal.capture_email.hint                                           = For example, yourname@example.com
 principal.capture_email.disclaimer                                     = Full details of how we use your information are in the <a id="disclaimer" href="{0}" target="_blank">HMRC Privacy Notice (opens in a new window or tab)<a>.
 
+## Principal Capture Email Verification Code Page
+principal.capture_passcode.heading                                     = Enter the code to confirm your email address
+principal.capture_passcode.paragraph                                   = We have sent a code to:
+principal.capture_passcode.inset-text                                  = If you use a browser to access your email, you may need to open a new window or tab to see the code.
+principal.capture_passcode.label                                       = Confirmation code
+principal.capture_passcode.hint                                        = For example, DNCLRK
+principal.capture_passcode.error.incorrect_passcode                    = Enter the correct confirmation code
+principal.capture_passcode.error.length                                = Enter the 6 digit confirmation code
+
 ## Principal Confirm Email page
 principal.confirm_email.title                                          = Check your email address
 principal.confirm_email.heading                                        = Check your email address
