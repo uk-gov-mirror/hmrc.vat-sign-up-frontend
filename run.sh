@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sbt -Dapplication.router=testOnlyDoNotUseInAppConf.Routes run
+sbt "run 9566 -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"

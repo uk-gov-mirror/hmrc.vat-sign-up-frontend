@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailPasscodeForm
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.connectors.NewStoreEmailAddressConnector._
 import uk.gov.hmrc.vatsignupfrontend.services.mocks.MockStoreEmailAddressService
 import uk.gov.hmrc.vatsignupfrontend.utils.UnitSpec
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email_passcode
@@ -83,7 +83,7 @@ class CaptureEmailPasscodeControllerSpec extends UnitSpec
       "the passcode is valid" should {
         "redirect to the EmailVerified page if the email is stored" in new Setup {
           mockAuthAdminRole()
-          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Right(StoreEmailAddressSuccess(emailVerified = true))))
+          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Right(NewStoreEmailAddressSuccess)))
 
           val res = Controller.submit().apply(FakeRequest("POST", "/")
             .withSession(
@@ -99,7 +99,7 @@ class CaptureEmailPasscodeControllerSpec extends UnitSpec
         }
         "throw an exception if store email fails" in new Setup {
           mockAuthAdminRole()
-          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Left(StoreEmailAddressFailureStatus(INTERNAL_SERVER_ERROR))))
+          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Left(NewStoreEmailAddressFailureStatus(INTERNAL_SERVER_ERROR))))
 
           intercept[InternalServerException] {
             await(Controller.submit().apply(FakeRequest()
@@ -116,7 +116,7 @@ class CaptureEmailPasscodeControllerSpec extends UnitSpec
       "the user has already verified" should {
         "redirect to the EmailVerified page if the email is stored" in new Setup {
           mockAuthAdminRole()
-          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Right(StoreEmailAddressSuccess(emailVerified = true))))
+          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Right(NewStoreEmailAddressSuccess)))
 
           val res = Controller.submit().apply(FakeRequest()
             .withSession(
@@ -132,7 +132,7 @@ class CaptureEmailPasscodeControllerSpec extends UnitSpec
         }
         "throw an exception if store email fails" in new Setup {
           mockAuthAdminRole()
-          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Left(StoreEmailAddressFailureStatus(INTERNAL_SERVER_ERROR))))
+          mockStoreTransactionEmailAddress(testVrn, testEmail, testPassCode)(Future.successful(Left(NewStoreEmailAddressFailureStatus(INTERNAL_SERVER_ERROR))))
 
           intercept[InternalServerException] {
             await(Controller.submit().apply(FakeRequest()

@@ -13,65 +13,28 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class StoreEmailAddressConnectorISpec extends ComponentSpecBase {
 
-  val reasonKey = "reason"
   val transactionEmailKey = "transactionEmail"
-  val passcodeKey = "passcode"
 
   val connector = app.injector.instanceOf[StoreEmailAddressConnector]
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  val requestJson = Json.obj(transactionEmailKey -> testEmail, passcodeKey -> testPasscode)
+  val requestJson = Json.obj(transactionEmailKey -> testEmail)
 
   "storeTransactionEmailAddressVerified" should {
     "return StoreEmailAddressSuccess when the address has been verified and stored successfully" in {
-      val responseJson = Json.obj("reason" -> "OK")
-      stubStoreTransactionEmailVerified(requestJson)(OK, responseJson)
+      stubStoreTransactionEmailAddressSuccess(emailVerified = true)
 
-      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail, testPasscode))
+      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail))
 
       res shouldBe Right(StoreEmailAddressSuccess(emailVerified = true))
     }
-    "return PasscodeMismatch" in {
-      val responseJson = Json.obj("reason" -> "PASSCODE_MISMATCH")
-      stubStoreTransactionEmailVerified(requestJson)(BAD_REQUEST, responseJson)
+    "return StoreEmailAddressFailure when the email is not stored" in {
+      stubStoreTransactionEmailAddressFailure()
 
-      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail, testPasscode))
+      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail))
 
-      res shouldBe Left(PasscodeMismatch)
+      res shouldBe Left(StoreEmailAddressFailureStatus(INTERNAL_SERVER_ERROR))
     }
-    "return PasscodeNotFound" in {
-      val responseJson = Json.obj("reason" -> "PASSCODE_NOT_FOUND")
-      stubStoreTransactionEmailVerified(requestJson)(BAD_REQUEST, responseJson)
-
-      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail, testPasscode))
-
-      res shouldBe Left(PasscodeNotFound)
-    }
-    "return MaxAttemptsExceeded" in {
-      val responseJson = Json.obj("reason" -> "MAX_PASSCODE_ATTEMPTS_EXCEEDED")
-      stubStoreTransactionEmailVerified(requestJson)(BAD_REQUEST, responseJson)
-
-      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail, testPasscode))
-
-      res shouldBe Left(MaxAttemptsExceeded)
-    }
-    "return StoreEmailAddressFailure when we receive an unexpected reason" in {
-      val responseJson = Json.obj("reason" -> "BIBBLE")
-      stubStoreTransactionEmailVerified(requestJson)(BAD_REQUEST, responseJson)
-
-      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail, testPasscode))
-
-      res shouldBe Left(StoreEmailAddressFailureStatus(BAD_REQUEST))
-    }
-    "return StoreEmailAddressFailure when we receive an unexpected status code" in {
-      val responseJson = Json.obj()
-      stubStoreTransactionEmailVerified(requestJson)(IM_A_TEAPOT, responseJson)
-
-      val res = await(connector.storeTransactionEmailAddress(testVatNumber, testEmail, testPasscode))
-
-      res shouldBe Left(StoreEmailAddressFailureStatus(IM_A_TEAPOT))
-    }
-
   }
 
 }

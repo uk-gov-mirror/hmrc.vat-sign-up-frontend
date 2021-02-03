@@ -59,7 +59,7 @@ object StoreEmailAddressStub extends WireMockMethods {
       method = PUT,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/transaction-email",
       body = Json.obj("transactionEmail" -> testEmail)
-    ).thenReturn(status = BAD_REQUEST)
+    ).thenReturn(status = INTERNAL_SERVER_ERROR, body = Json.obj())
   }
 
   def stubStoreTransactionEmailVerified(body: JsValue)(status: Int, responseJson: JsValue): Unit =
@@ -67,7 +67,7 @@ object StoreEmailAddressStub extends WireMockMethods {
       method = PUT,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/store-transaction-email",
       body = body
-    ) thenReturn(status = status, body = responseJson)
+    ).thenReturn(status = status, body = responseJson)
 
 
 }

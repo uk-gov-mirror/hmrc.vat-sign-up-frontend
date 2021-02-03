@@ -16,21 +16,22 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressSuccess
-import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.models.{AlreadyVerifiedEmailAddress, RequestEmailPasscodeSuccessful}
+import uk.gov.hmrc.vatsignupfrontend.services.{EmailVerificationService, StoreEmailAddressService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.confirm_email
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddressService)
+class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddressService,
+                                       emailVerificationService: EmailVerificationService)
                                       (implicit ec: ExecutionContext,
                                        vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate) {
@@ -64,23 +65,22 @@ class ConfirmEmailController @Inject()(storeEmailAddressService: StoreEmailAddre
 
       (optVatNumber, optEmail) match {
         case (Some(vatNumber), Some(email)) => {
-          storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email)
-        } map {
-          case Right(StoreEmailAddressSuccess(false)) =>
-            Redirect(routes.VerifyEmailController.show().url)
-          case Right(StoreEmailAddressSuccess(true)) =>
-            Redirect(routes.ReceiveEmailNotificationsController.show())
-          case Left(_) =>
-            throw new InternalServerException("storeEmailAddress failed")
+          emailVerificationService.requestEmailVerificationPasscode(email, request.lang.code) flatMap {
+            case RequestEmailPasscodeSuccessful =>
+              Future.successful(Redirect(routes.CaptureEmailPasscodeController.show()))
+            case AlreadyVerifiedEmailAddress =>
+              storeEmailAddressService.storeTransactionEmailAddress(vatNumber, email) map {
+                case Right(_) =>
+                  Redirect(routes.ReceiveEmailNotificationsController.show())
+                case Left(_) =>
+                  throw new InternalServerException("storeEmailAddress failed")
+              }
+          }
         }
         case (None, _) =>
-          Future.successful(
-            Redirect(routes.ResolveVatNumberController.resolve())
-          )
+          Future.successful(Redirect(routes.ResolveVatNumberController.resolve()))
         case _ =>
-          Future.successful(
-            Redirect(routes.CaptureEmailController.show())
-          )
+          Future.successful(Redirect(routes.CaptureEmailController.show()))
       }
     }
   }

@@ -17,14 +17,16 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.connectors.StoreEmailAddressConnector
+import uk.gov.hmrc.vatsignupfrontend.connectors.{NewStoreEmailAddressConnector, StoreEmailAddressConnector}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressResponse
+import uk.gov.hmrc.vatsignupfrontend.connectors.NewStoreEmailAddressConnector.NewStoreEmailAddressResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEmailAddressConnector) {
+class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEmailAddressConnector,
+                                         newStoreEmailAddressConnector: NewStoreEmailAddressConnector) {
 
   def storeEmailAddress(vatNumber: String, email: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
     storeEmailAddressConnector.storeEmailAddress(vatNumber, email)
@@ -34,7 +36,7 @@ class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEm
     storeEmailAddressConnector.storeTransactionEmailAddress(vatNumber, transactionEmail)
 
   def storeTransactionEmailAddress(vatNumber: String, transactionEmail: String, passcode: String)
-                                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
-    storeEmailAddressConnector.storeTransactionEmailAddress(vatNumber, transactionEmail, passcode)
+                                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NewStoreEmailAddressResponse] =
+    newStoreEmailAddressConnector.storeTransactionEmailAddress(vatNumber, transactionEmail, passcode)
 
 }

@@ -22,6 +22,7 @@ import uk.gov.hmrc.vatsignupfrontend.SessionKeys.emailKey
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.RequestEmailPasscodeStub.stubRequestEmailPasscode
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreEmailAddressStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -42,13 +43,14 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     "redirect to verify email page" when {
       "the email is successfully stored and returned with email not verified on the contact preference journey" in {
         stubAuth(OK, successfulAuthResponse())
+        stubRequestEmailPasscode(CREATED)
         stubStoreTransactionEmailAddressSuccess(emailVerified = false)
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
 
         res should have(
           httpStatus(SEE_OTHER),
-          redirectUri(routes.VerifyEmailController.show().url)
+          redirectUri(routes.CaptureEmailPasscodeController.show().url)
         )
 
         val session = getSessionMap(res)
@@ -59,6 +61,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     "redirect to receive email notifications controller" when {
       "the email is successfully stored and returned with email verified flag on the contact preference journey" in {
         stubAuth(OK, successfulAuthResponse())
+        stubRequestEmailPasscode(CONFLICT)
         stubStoreTransactionEmailAddressSuccess(emailVerified = true)
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)
@@ -76,6 +79,7 @@ class ConfirmEmailControllerISpec extends ComponentSpecBase with CustomMatchers 
     "throw an internal server error" when {
       "storing the email has been unsuccessful" in {
         stubAuth(OK, successfulAuthResponse())
+        stubRequestEmailPasscode(CONFLICT)
         stubStoreEmailAddressFailure()
 
         val res = post("/confirm-email", Map(SessionKeys.emailKey -> testEmail, SessionKeys.vatNumberKey -> testVatNumber))(EmailForm.email -> testEmail)

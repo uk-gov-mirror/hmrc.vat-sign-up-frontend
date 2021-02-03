@@ -25,7 +25,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailPasscodeForm
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser._
+import uk.gov.hmrc.vatsignupfrontend.connectors.NewStoreEmailAddressConnector._
 import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email_passcode
 
@@ -81,9 +81,9 @@ class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEm
                   Future.successful(Redirect(errorRoutes.PasscodeNotFoundController.show()))
                 case Left(MaxAttemptsExceeded) =>
                   Future.successful(Redirect(errorRoutes.MaxEmailPasscodeAttemptsExceededController.show()))
-                case Right(StoreEmailAddressSuccess(_)) =>
+                case Right(NewStoreEmailAddressSuccess) =>
                   Future.successful(Redirect(principalRoutes.EmailVerifiedController.show()))
-                case Left(StoreEmailAddressFailureStatus(status)) =>
+                case Left(NewStoreEmailAddressFailureStatus(status)) =>
                   throw new InternalServerException(s"[CaptureEmailPasscodeController][submit] Failed to store email address with status: $status")
               }
           )

@@ -19,6 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.StubEmailVerification
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailPasscodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
@@ -27,6 +28,11 @@ import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreEmailAddressStub.
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
 class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomMatchers {
+
+  val transactionEmailKey = "transactionEmail"
+  val passcodeKey = "passCode"
+
+  val requestJson = Json.obj(transactionEmailKey -> testEmail, passcodeKey -> testPasscode)
 
   "GET /email-address-passcode" when {
     "the passcode request is creates" when {
@@ -57,8 +63,9 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
     "the relevant data is in session" when {
       "the passcode is valid" should {
         "redirect to the EmailVerified page if the email is stored" in {
+          disable(StubEmailVerification)
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(OK, Json.obj("reason" -> "OK"))
+          stubStoreTransactionEmailVerified(requestJson)(CREATED, Json.obj())
 
           val res = post(
             uri = "/email-address-passcode",
@@ -74,40 +81,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
         }
         "throw an exception if store email fails" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddressFailure()
-
-          val res = post(
-            uri = "/email-address-passcode",
-            cookies = Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))(EmailPasscodeForm.code -> testPasscode)
-
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR)
-          )
-        }
-      }
-      "the user has already verified" should {
-        "redirect to the EmailVerified page if the email is stored" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(OK, Json.obj("reason" -> "OK"))
-
-          val res = post(
-            uri = "/email-address-passcode",
-            cookies = Map(
-              SessionKeys.vatNumberKey -> testVatNumber,
-              SessionKeys.emailKey -> testEmail
-            ))(EmailPasscodeForm.code -> testPasscode)
-
-          res should have(
-            httpStatus(SEE_OTHER),
-            redirectUri(routes.EmailVerifiedController.show().url)
-          )
-        }
-        "throw an exception if store email fails" in {
-          stubAuth(OK, successfulAuthResponse())
-          stubStoreEmailAddressFailure()
+          stubStoreTransactionEmailVerified(requestJson)(INTERNAL_SERVER_ERROR, Json.obj())
 
           val res = post(
             uri = "/email-address-passcode",
@@ -124,7 +98,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the passcode is invalid" should {
         "return BAD_REQUEST" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(BAD_REQUEST, Json.obj("reason" -> "PASSCODE_MISMATCH"))
+          stubStoreTransactionEmailVerified(requestJson)(BAD_REQUEST, Json.obj("reason" -> "PASSCODE_MISMATCH"))
 
           val res = post(
             uri = "/email-address-passcode",
@@ -141,7 +115,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the user has exceeded the number of allowed attempts" should {
         "redirect to the Max Attempts page" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(BAD_REQUEST, Json.obj("reason" -> "MAX_PASSCODE_ATTEMPTS_EXCEEDED"))
+          stubStoreTransactionEmailVerified(requestJson)(BAD_REQUEST, Json.obj("reason" -> "MAX_PASSCODE_ATTEMPTS_EXCEEDED"))
 
           val res = post(
             uri = "/email-address-passcode",
@@ -159,7 +133,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the passcode is not found" should {
         "Redirect to the PasscodeNotFound page" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(BAD_REQUEST, Json.obj("reason" -> "PASSCODE_NOT_FOUND"))
+          stubStoreTransactionEmailVerified(requestJson)(NOT_FOUND, Json.obj("reason" -> "PASSCODE_NOT_FOUND"))
 
           val res = post(
             uri = "/email-address-passcode",
