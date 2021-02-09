@@ -18,7 +18,7 @@ object AppDependencies {
   private val wiremockVersion = "2.27.1"
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "govuk-template" % "5.55.0-play-26",
+    "uk.gov.hmrc" %% "govuk-template" % "5.60.0-play-26",
     "uk.gov.hmrc" %% "play-ui" % "8.19.0-play-26",
     ws,
     "uk.gov.hmrc" %% "bootstrap-play-26" % "2.2.0",

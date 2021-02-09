@@ -18,22 +18,23 @@ package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
-import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.{routes => principalRoutes}
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailPasscodeForm
-import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser._
-import uk.gov.hmrc.vatsignupfrontend.services.StoreEmailAddressService
+import uk.gov.hmrc.vatsignupfrontend.models._
+import uk.gov.hmrc.vatsignupfrontend.services.{EmailVerificationService, StoreEmailAddressService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email_passcode
+import uk.gov.hmrc.vatsignupfrontend.{SessionKeys, models}
+import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEmailAddressService,
+                                               emailVerificationService: EmailVerificationService,
                                                view: capture_email_passcode)
                                               (implicit ec: ExecutionContext, vcc: VatControllerComponents)
   extends AuthenticatedController(AdministratorRolePredicate)(ec, vcc) {
@@ -66,8 +67,8 @@ class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEm
               )))
             },
             passcode =>
-              storeEmailAddressService.storeTransactionEmailAddress(vatNumber, transactionEmail, passcode) flatMap {
-                case Left(PasscodeMismatch) =>
+              emailVerificationService.verifyEmailPasscode(transactionEmail, passcode) flatMap {
+                case models.PasscodeMismatch =>
                   val incorrectPasscodeForm = EmailPasscodeForm().fill(passcode).withError(
                     key = EmailPasscodeForm.code,
                     message = messagesApi.preferred(request)("capture-email-passcode.error.incorrect_passcode")
@@ -77,15 +78,19 @@ class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEm
                     email = transactionEmail,
                     postAction = principalRoutes.CaptureEmailPasscodeController.submit()
                   )))
-                case Left(PasscodeNotFound) =>
+                case models.PasscodeNotFound =>
                   Future.successful(Redirect(errorRoutes.PasscodeNotFoundController.show()))
-                case Left(MaxAttemptsExceeded) =>
+                case models.MaxAttemptsExceeded =>
                   Future.successful(Redirect(errorRoutes.MaxEmailPasscodeAttemptsExceededController.show()))
-                case Right(StoreEmailAddressSuccess(_)) =>
-                  Future.successful(Redirect(principalRoutes.EmailVerifiedController.show()))
-                case Left(StoreEmailAddressFailureStatus(status)) =>
-                  throw new InternalServerException(s"[CaptureEmailPasscodeController][submit] Failed to store email address with status: $status")
+                case EmailAlreadyVerified | EmailVerifiedSuccessfully =>
+                  storeEmailAddressService.storeTransactionEmailVerified(vatNumber, transactionEmail) map {
+                    case StoreEmailVerifiedSuccess =>
+                      Redirect(routes.EmailVerifiedController.show())
+                    case StoreEmailVerifiedFailed(status) =>
+                      throw new InternalServerException(s"[CaptureEmailPasscodeController][Submit] Failed to store email with status $status")
+                  }
               }
+
           )
         case (optVatNumber, optEmail) =>
           val missing = Seq(optVatNumber, optEmail).flatten.mkString(", ")

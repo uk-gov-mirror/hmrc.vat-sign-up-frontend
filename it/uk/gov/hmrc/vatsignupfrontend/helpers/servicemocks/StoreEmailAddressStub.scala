@@ -38,14 +38,6 @@ object StoreEmailAddressStub extends WireMockMethods {
     ).thenReturn(status = BAD_REQUEST)
   }
 
-  def stubStoreTransactionEmailAddress(status: Int, responseJson: JsValue): Unit = {
-    val request = when(
-      method = PUT,
-      uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/store-transaction-email",
-      body = Json.obj("transactionEmail" -> testEmail, "passcode" -> testPasscode)
-    ).thenReturn(status, responseJson)
-  }
-
   def stubStoreTransactionEmailAddressSuccess(emailVerified: Boolean): Unit = {
     when(
       method = PUT,
@@ -62,12 +54,12 @@ object StoreEmailAddressStub extends WireMockMethods {
     ).thenReturn(status = BAD_REQUEST)
   }
 
-  def stubStoreTransactionEmailVerified(body: JsValue)(status: Int, responseJson: JsValue): Unit =
+  def stubStoreTransactionEmailVerified(status: Int): Unit =
     when(
       method = PUT,
       uri = s"/vat-sign-up/subscription-request/vat-number/$testVatNumber/store-transaction-email",
-      body = body
-    ) thenReturn(status = status, body = responseJson)
+      body = Json.obj("transactionEmail" -> testEmail)
+    ) thenReturn(status = status)
 
 
 }

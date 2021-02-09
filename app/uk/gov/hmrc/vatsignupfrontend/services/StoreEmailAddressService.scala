@@ -17,14 +17,17 @@
 package uk.gov.hmrc.vatsignupfrontend.services
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.vatsignupfrontend.connectors.StoreEmailAddressConnector
+import uk.gov.hmrc.vatsignupfrontend.connectors.{StoreEmailAddressConnector, StoreEmailVerifiedConnector}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.StoreEmailAddressHttpParser.StoreEmailAddressResponse
+import uk.gov.hmrc.vatsignupfrontend.connectors._
+import uk.gov.hmrc.vatsignupfrontend.models.StoreEmailVerifiedResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEmailAddressConnector) {
+class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEmailAddressConnector,
+                                         val storeEmailVerifiedConnector: StoreEmailVerifiedConnector) {
 
   def storeEmailAddress(vatNumber: String, email: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
     storeEmailAddressConnector.storeEmailAddress(vatNumber, email)
@@ -33,8 +36,8 @@ class StoreEmailAddressService @Inject()(val storeEmailAddressConnector: StoreEm
                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
     storeEmailAddressConnector.storeTransactionEmailAddress(vatNumber, transactionEmail)
 
-  def storeTransactionEmailAddress(vatNumber: String, transactionEmail: String, passcode: String)
-                                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
-    storeEmailAddressConnector.storeTransactionEmailAddress(vatNumber, transactionEmail, passcode)
+  def storeTransactionEmailVerified(vatNumber: String, transactionEmail: String)
+                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailVerifiedResponse] =
+    storeEmailVerifiedConnector.storeEmailVerified(vatNumber, transactionEmail)
 
 }

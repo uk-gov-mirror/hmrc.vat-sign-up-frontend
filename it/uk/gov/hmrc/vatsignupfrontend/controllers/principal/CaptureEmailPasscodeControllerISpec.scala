@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
+import play.api.http.Status.NOT_FOUND
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys
@@ -23,6 +24,7 @@ import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => erro
 import uk.gov.hmrc.vatsignupfrontend.forms.EmailPasscodeForm
 import uk.gov.hmrc.vatsignupfrontend.helpers.IntegrationTestConstants._
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.AuthStub._
+import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.EmailVerificationStub.stubVerifyEmailPasscode
 import uk.gov.hmrc.vatsignupfrontend.helpers.servicemocks.StoreEmailAddressStub._
 import uk.gov.hmrc.vatsignupfrontend.helpers.{ComponentSpecBase, CustomMatchers}
 
@@ -58,7 +60,8 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the passcode is valid" should {
         "redirect to the EmailVerified page if the email is stored" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(OK, Json.obj("reason" -> "OK"))
+          stubVerifyEmailPasscode(CREATED, Json.obj())
+          stubStoreTransactionEmailVerified(CREATED)
 
           val res = post(
             uri = "/email-address-passcode",
@@ -74,7 +77,8 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
         }
         "throw an exception if store email fails" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddressFailure()
+          stubVerifyEmailPasscode(CREATED, Json.obj())
+          stubStoreTransactionEmailVerified(INTERNAL_SERVER_ERROR)
 
           val res = post(
             uri = "/email-address-passcode",
@@ -91,7 +95,8 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the user has already verified" should {
         "redirect to the EmailVerified page if the email is stored" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(OK, Json.obj("reason" -> "OK"))
+          stubVerifyEmailPasscode(NO_CONTENT, Json.obj())
+          stubStoreTransactionEmailVerified(CREATED)
 
           val res = post(
             uri = "/email-address-passcode",
@@ -107,7 +112,8 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
         }
         "throw an exception if store email fails" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreEmailAddressFailure()
+          stubVerifyEmailPasscode(NO_CONTENT, Json.obj())
+          stubStoreTransactionEmailVerified(INTERNAL_SERVER_ERROR)
 
           val res = post(
             uri = "/email-address-passcode",
@@ -124,7 +130,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the passcode is invalid" should {
         "return BAD_REQUEST" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(BAD_REQUEST, Json.obj("reason" -> "PASSCODE_MISMATCH"))
+          stubVerifyEmailPasscode(NOT_FOUND, Json.obj("code" -> "PASSCODE_MISMATCH"))
 
           val res = post(
             uri = "/email-address-passcode",
@@ -141,7 +147,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the user has exceeded the number of allowed attempts" should {
         "redirect to the Max Attempts page" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(BAD_REQUEST, Json.obj("reason" -> "MAX_PASSCODE_ATTEMPTS_EXCEEDED"))
+          stubVerifyEmailPasscode(FORBIDDEN, Json.obj("code" -> "MAX_PASSCODE_ATTEMPTS_EXCEEDED"))
 
           val res = post(
             uri = "/email-address-passcode",
@@ -159,7 +165,7 @@ class CaptureEmailPasscodeControllerISpec extends ComponentSpecBase with CustomM
       "the passcode is not found" should {
         "Redirect to the PasscodeNotFound page" in {
           stubAuth(OK, successfulAuthResponse())
-          stubStoreTransactionEmailAddress(BAD_REQUEST, Json.obj("reason" -> "PASSCODE_NOT_FOUND"))
+          stubVerifyEmailPasscode(NOT_FOUND, Json.obj("code" -> "PASSCODE_NOT_FOUND"))
 
           val res = post(
             uri = "/email-address-passcode",

@@ -49,14 +49,4 @@ class StoreEmailAddressConnector @Inject()(val http: HttpClient,
       Json.obj(transactionEmailKey -> transactionEmail)
     )
 
-  def storeTransactionEmailAddress(vatNumber: String,
-                                   transactionEmail: String,
-                                   passcode: String
-                                  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[StoreEmailAddressResponse] =
-    http.PUT[JsObject, StoreEmailAddressResponse](
-      applicationConfig.storeTransactionEmailValidatedUrl(vatNumber),
-      Json.obj(
-        transactionEmailKey -> transactionEmail,
-        passcodeKey -> passcode)
-      )
 }
