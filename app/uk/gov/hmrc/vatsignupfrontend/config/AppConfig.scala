@@ -35,8 +35,8 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
 
   def routeToSwitchLanguage: String => Call = (lang: String) => uk.gov.hmrc.vatsignupfrontend.controllers.routes.LanguageSwitchController.switchToLanguage(lang)
 
-
   lazy val baseUrl: String = config.getString("base.url")
+  lazy val host: String = config.baseUrl("vat-sign-up-frontend")
   val contextRoute = "/vat-through-software/sign-up"
   val contextAgentRoute = "/vat-through-software/sign-up/client"
   lazy val ggUrl: String = config.getString(s"government-gateway.url")
@@ -93,7 +93,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/new-mtdfb-eligibility"
 
   def verifyEmailVerificationPasscodeUrl(): String =
-    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/verify-passcode"
+    if (isEnabled(StubEmailVerification)) s"$host/vat-through-software/sign-up/test-only/email-verification/verify-passcode"
     else s"$emailVerificationBaseUrl/email-verification/verify-passcode"
 
   def storeCompanyNumberUrl(vatNumber: String): String = s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber/company-number"
@@ -149,7 +149,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   def getCompanyName(companyNumber: String): String = s"$incorporationInformationUrl/incorporation-information/$companyNumber/incorporated-company-profile"
 
   def requestEmailVerificationPasscodeUrl(): String =
-    if (isEnabled(StubEmailVerification)) s"$baseUrl/vat-through-software/sign-up/test-only/email-verification/request-passcode"
+    if (isEnabled(StubEmailVerification)) s"$host/vat-through-software/sign-up/test-only/email-verification/request-passcode"
     else s"$emailVerificationBaseUrl/email-verification/request-passcode"
 
   lazy val ctReferenceLookupUrl: String = s"$protectedMicroServiceUrl/subscription-request/ct-reference-check"
