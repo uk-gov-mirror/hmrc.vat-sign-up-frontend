@@ -52,7 +52,9 @@ trait ComponentSpecBase extends IntegrationUnitSpec with GuiceOneServerPerSuite 
     "microservice.services.incorporation-information.url" -> mockUrl,
     "microservice.services.email-verification.url" -> mockUrl,
     "administrative-divisions" -> administrativeDivisionVRN,
-    "base.url" -> mockUrl
+    "base.url" -> mockUrl,
+    "microservice.services.vat-sign-up-frontend.host" -> mockHost,
+    "microservice.services.vat-sign-up-frontend.port" -> mockPort
   )
 
   override def beforeAll(): Unit = {

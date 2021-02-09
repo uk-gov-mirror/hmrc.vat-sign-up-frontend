@@ -26,7 +26,7 @@ import uk.gov.hmrc.vatsignupfrontend.forms.EmailPasscodeForm
 import uk.gov.hmrc.vatsignupfrontend.models._
 import uk.gov.hmrc.vatsignupfrontend.services.{EmailVerificationService, StoreEmailAddressService}
 import uk.gov.hmrc.vatsignupfrontend.views.html.principal.capture_email_passcode
-import uk.gov.hmrc.vatsignupfrontend.{SessionKeys, models}
+import uk.gov.hmrc.vatsignupfrontend.SessionKeys
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 
 import javax.inject.{Inject, Singleton}
@@ -68,7 +68,7 @@ class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEm
             },
             passcode =>
               emailVerificationService.verifyEmailPasscode(transactionEmail, passcode) flatMap {
-                case models.PasscodeMismatch =>
+                case PasscodeMismatch =>
                   val incorrectPasscodeForm = EmailPasscodeForm().fill(passcode).withError(
                     key = EmailPasscodeForm.code,
                     message = messagesApi.preferred(request)("capture-email-passcode.error.incorrect_passcode")
@@ -78,9 +78,9 @@ class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEm
                     email = transactionEmail,
                     postAction = principalRoutes.CaptureEmailPasscodeController.submit()
                   )))
-                case models.PasscodeNotFound =>
+                case PasscodeNotFound =>
                   Future.successful(Redirect(errorRoutes.PasscodeNotFoundController.show()))
-                case models.MaxAttemptsExceeded =>
+                case MaxAttemptsExceeded =>
                   Future.successful(Redirect(errorRoutes.MaxEmailPasscodeAttemptsExceededController.show()))
                 case EmailAlreadyVerified | EmailVerifiedSuccessfully =>
                   storeEmailAddressService.storeTransactionEmailVerified(vatNumber, transactionEmail) map {
