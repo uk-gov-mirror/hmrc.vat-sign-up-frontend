@@ -49,7 +49,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   lazy val agentFeedbackUrl = s"$feedbackUrl/feedback/$exitSurveyAgentOrigin"
   lazy val principalFeedbackUrl = s"$feedbackUrl/feedback/$exitSurveyPrincipalOrigin"
   lazy val createAccountUrl: String = ggUrl + "/login/create-account"
-  lazy val emailVerificationBaseUrl: String = config.getString("microservice.services.email-verification.url")
+  lazy val emailVerificationBaseUrl: String = config.baseUrl("email-verification")
 
   private def encodeUrl(url: String): String = URLEncoder.encode(url, "UTF-8")
 
