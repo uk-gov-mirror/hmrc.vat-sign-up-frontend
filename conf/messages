@@ -545,8 +545,10 @@ principal.capture_passcode.paragraph                                   = We have
 principal.capture_passcode.inset-text                                  = If you use a browser to access your email, you may need to open a new window or tab to see the code.
 principal.capture_passcode.label                                       = Confirmation code
 principal.capture_passcode.hint                                        = For example, DNCLRK
-principal.capture_passcode.error.incorrect_passcode                    = Enter the correct confirmation code
-principal.capture_passcode.error.length                                = Enter the 6 digit confirmation code
+principal.capture_passcode.error.incorrect_passcode.summary            = Enter the correct confirmation code
+principal.capture_passcode.error.incorrect_passcode.field              = Enter the correct confirmation code
+principal.capture_passcode.error.length.summary                        = Enter the 6 digit confirmation code
+principal.capture_passcode.error.length.field                          = Enter the 6 digit confirmation code
 
 ## Principal Confirm Email page
 principal.confirm_email.title                                          = Check your email address

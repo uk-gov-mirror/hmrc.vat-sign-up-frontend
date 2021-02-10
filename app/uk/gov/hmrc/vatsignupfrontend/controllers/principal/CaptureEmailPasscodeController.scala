@@ -71,7 +71,7 @@ class CaptureEmailPasscodeController @Inject()(storeEmailAddressService: StoreEm
                 case PasscodeMismatch =>
                   val incorrectPasscodeForm = EmailPasscodeForm().fill(passcode).withError(
                     key = EmailPasscodeForm.code,
-                    message = messagesApi.preferred(request)("capture-email-passcode.error.incorrect_passcode")
+                    message = messagesApi.preferred(request)("principal.capture_passcode.error.incorrect_passcode")
                   )
                   Future.successful(BadRequest(view(
                     passcodeForm = incorrectPasscodeForm,
