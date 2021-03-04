@@ -1010,3 +1010,28 @@ principal.not_got_software.line_1                                     = Cyn i ch
 principal.not_got_software.line_2                                     = Sefydlu meddalwedd gyfrifyddu sy’n cydweddu ac sydd fwyaf addas i’ch anghenion busnes.
 principal.not_got_software.line_3                                     = Gwirio bod y feddalwedd a ddewiswyd gennych yn gweithio ac yn cysylltu â CThEM.
 principal.not_got_software.line_4                                     = Cael gafael ar ragor o wybodaeth am gynhyrchion a chwmnïau meddalwedd.
+
+# Passcode Not Found
+principal.passcodeNotFound.heading                                    = Mae problem gyda’r cod mynediad
+principal.passcodeNotFound.par1                                       = Nid oes modd dod o hyd i’r cod a anfonom atoch neu mae wedi dod i ben.
+principal.passcodeNotFound.par2.p1                                    = Bydd angen i chi
+principal.passcodeNotFound.par2.linkText                              = gael cod newydd
+principal.passcodeNotFound.par2.p2                                    = i barhau â’r cofrestriad.
+
+# Max email passcode attempts
+principal.max_email_passcode_attempts_exceeded.title                  = Mae’n rhaid i chi ddechrau eto
+principal.max_email_passcode_attempts_exceeded.heading                = Mae’n rhaid i chi ddechrau eto
+principal.max_email_passcode_attempts_exceeded.line_1                 = Y rheswm am hyn yw eich bod wedi nodi’r cod anghywir gormod o weithiau.
+principal.max_email_passcode_attempts_exceeded.line_2                 = I ddechrau eto, mae angen i chi
+principal.max_email_passcode_attempts_exceeded.link_text              = allgofnodi
+
+## Principal Capture Email Verification Code Page
+principal.capture_passcode.heading                                     = Nodwch y cod i gadarnhau eich cyfeiriad e-bost
+principal.capture_passcode.paragraph                                   = Rydym wedi anfon cod i:
+principal.capture_passcode.inset-text                                  = Os ydych yn defnyddio porwr i gael mynediad at eich e-byst, efallai y bydd angen i chi agor ffenestr neu dab newydd i weld y cod.
+principal.capture_passcode.label                                       = Cod cadarnhau
+principal.capture_passcode.hint                                        = Er enghraifft, DNCLRK
+principal.capture_passcode.error.incorrect_passcode.summary            = Nodwch y cod cadarnhau cywir
+principal.capture_passcode.error.incorrect_passcode.field              = Nodwch y cod cadarnhau cywir
+principal.capture_passcode.error.length.summary                        = Nodwch y cod cadarnhau sy’n 6 digid
+principal.capture_passcode.error.length.field                          = Nodwch y cod cadarnhau sy’n 6 digid
