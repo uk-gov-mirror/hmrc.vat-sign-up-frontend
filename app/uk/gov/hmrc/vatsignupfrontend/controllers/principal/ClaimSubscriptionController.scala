@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.vatsignupfrontend.controllers.principal
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, isAlreadySubscribedKey, isFromBtaKey, vatNumberKey}
 import uk.gov.hmrc.vatsignupfrontend.config.VatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.config.auth.AdministratorRolePredicate
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ClaimVatEnrolment
 import uk.gov.hmrc.vatsignupfrontend.controllers.AuthenticatedController
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.httpparsers.ClaimSubscriptionHttpParser.{AlreadyEnrolledOnDifferentCredential, SubscriptionClaimed}
@@ -32,6 +32,7 @@ import uk.gov.hmrc.vatsignupfrontend.utils.EnrolmentUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.SessionUtils._
 import uk.gov.hmrc.vatsignupfrontend.utils.VatNumberChecksumValidation.isValidChecksum
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -60,6 +61,9 @@ class ClaimSubscriptionController @Inject()(claimSubscriptionService: ClaimSubsc
             Future.failed(
               new InternalServerException("Supplied VAT number did not match enrolment")
             )
+          case None if isEnabled(ClaimVatEnrolment) => {
+            Future.successful(SeeOther(appConfig.claimVatEnrolmentRedirectUrl(btaVatNumber)))
+          }
           case None if btaVatNumber.length == 9 && isValidChecksum(btaVatNumber) =>
             checkVatNumberEligibilityService.isOverseas(btaVatNumber).map { isOverseas =>
               Redirect(routes.CaptureVatRegistrationDateController.show())

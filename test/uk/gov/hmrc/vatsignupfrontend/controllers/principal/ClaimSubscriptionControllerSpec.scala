@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.vatsignupfrontend.SessionKeys.{businessEntityKey, isAlreadySubscribedKey, isFromBtaKey, vatNumberKey}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.ClaimVatEnrolment
 import uk.gov.hmrc.vatsignupfrontend.config.mocks.MockVatControllerComponents
 import uk.gov.hmrc.vatsignupfrontend.controllers.principal.error.{routes => errorRoutes}
 import uk.gov.hmrc.vatsignupfrontend.helpers.TestConstants._
@@ -114,7 +115,21 @@ class ClaimSubscriptionControllerSpec extends UnitSpec with GuiceOneAppPerSuite
 
       "the user does not have a VATDEC enrolment" when {
         "the VAT number is valid and non-overseas" should {
-          "redirect to BTA Capture VAT registration date" in {
+          "redirect to ClaimVatEnrolment when the Feature switch is enabled" in {
+
+            enable(ClaimVatEnrolment)
+            mockAuthRetrieveEmptyEnrolment()
+            mockIsOverseas(testVatNumber)(Future(false))
+
+            val result = TestClaimSubscriptionController.show(testVatNumber)(testGetRequest)
+
+            status(result) shouldBe SEE_OTHER
+            redirectLocation(result) should contain(mockAppConfig.claimVatEnrolmentRedirectUrl(testVatNumber))
+          }
+
+          "redirect to BTA Capture VAT registration date when the Feature switch is disabled" in {
+
+            disable(ClaimVatEnrolment)
             mockAuthRetrieveEmptyEnrolment()
             mockIsOverseas(testVatNumber)(Future(false))
 
