@@ -42,8 +42,8 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
   lazy val ggUrl: String = config.getString(s"government-gateway.url")
   lazy val ggSignInContinueUrl = s"$baseUrl$contextRoute"
   lazy val ggAgentSignInContinueUrl = s"$baseUrl$contextAgentRoute"
-  lazy val claimVatEnrolmentBaseUrl = config.baseUrl("claim-vat-enrolment-frontend")
-  lazy val claimVatEnrolmentRedirectUrl = s"$host/vat-through-software/sign-up/sign-up-complete-client"
+  lazy val claimVatEnrolmentUrl = config.getString("microservice.services.claim-vat-enrolment-frontend.url")
+  lazy val claimVatEnrolmentRedirectUrl = s"$baseUrl/vat-through-software/sign-up/sign-up-complete-client"
 
   lazy val feedbackUrl: String = config.getString("feedback.url")
   lazy val exitSurveyAgentOrigin = "MTDfB-VAT-agent-led-sign-up"
@@ -142,7 +142,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
     s"$protectedMicroServiceUrl/claim-subscription/vat-number/$vatNumber"
 
   def claimVatEnrolmentRedirectUrl(vatNumber:String, continueUrl: String = claimVatEnrolmentRedirectUrl): String =
-    s"$claimVatEnrolmentBaseUrl/claim-vat-enrolment/journey/$vatNumber?continueUrl=$continueUrl"
+    s"$claimVatEnrolmentUrl/claim-vat-enrolment/journey/$vatNumber?continueUrl=$continueUrl"
 
   def subscriptionRequestSummaryUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber"
