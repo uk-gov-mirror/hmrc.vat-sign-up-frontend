@@ -142,7 +142,7 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
     s"$protectedMicroServiceUrl/claim-subscription/vat-number/$vatNumber"
 
   def claimVatEnrolmentRedirectUrl(vatNumber:String, continueUrl: String = claimVatEnrolmentRedirectUrl): String =
-    if (isEnabled(StubClaimVatEnrolment)) s"$host/vat-through-software/sign-up/test-only/claim-vat-enrolment?continueUrl=$continueUrl"
+    if (isEnabled(StubClaimVatEnrolment)) s"$baseUrl/vat-through-software/sign-up/test-only/claim-vat-enrolment?continueUrl=$continueUrl"
     else s"$claimVatEnrolmentUrl/claim-vat-enrolment/journey/$vatNumber?continueUrl=$continueUrl"
 
   def subscriptionRequestSummaryUrl(vatNumber: String): String =
