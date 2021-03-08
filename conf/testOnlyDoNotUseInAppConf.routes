@@ -44,5 +44,7 @@ POST        /vat-through-software/sign-up/test-only/email-verification/request-p
 + nocsrf
 POST        /vat-through-software/sign-up/test-only/email-verification/verify-passcode                  uk.gov.hmrc.vatsignupfrontend.testonly.controllers.EmailVerificationStubController.verifyEmailVerificationPasscode
 
+GET         /vat-through-software/sign-up/test-only/claim-vat-enrolment                                 uk.gov.hmrc.vatsignupfrontend.testonly.controllers.ClaimVatEnrolmentStubController.claimVatEnrolmentRedirect(continueUrl: String)
+
 
 ->          /                                                                                           prod.Routes

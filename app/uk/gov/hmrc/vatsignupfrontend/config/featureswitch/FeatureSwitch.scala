@@ -31,7 +31,8 @@ object FeatureSwitch {
     CrnDissolved,
     StubEmailVerification,
     EmailVerification,
-    ClaimVatEnrolment
+    ClaimVatEnrolment,
+    StubClaimVatEnrolment
   )
 
   def apply(str: String): FeatureSwitch =
@@ -67,4 +68,9 @@ case object EmailVerification extends FeatureSwitch {
 case object ClaimVatEnrolment extends FeatureSwitch {
   override val name: String = s"$prefix.claim-vat-enrolment"
   override val displayText: String = "Enable redirect to new Claim-Vat-Enrolment service"
+}
+
+case object StubClaimVatEnrolment extends FeatureSwitch {
+  val name = s"$prefix.stub-claim-vat-enrolment"
+  val displayText = "Use stub for claim vat enrolment flow"
 }

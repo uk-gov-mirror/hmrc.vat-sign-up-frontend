@@ -19,7 +19,7 @@ package uk.gov.hmrc.vatsignupfrontend.config
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubEmailVerification, StubIncorporationInformation}
+import uk.gov.hmrc.vatsignupfrontend.config.featureswitch.{FeatureSwitching, StubClaimVatEnrolment, StubEmailVerification, StubIncorporationInformation}
 
 import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
@@ -142,7 +142,8 @@ class AppConfig @Inject()(config: ServicesConfig) extends FeatureSwitching {
     s"$protectedMicroServiceUrl/claim-subscription/vat-number/$vatNumber"
 
   def claimVatEnrolmentRedirectUrl(vatNumber:String, continueUrl: String = claimVatEnrolmentRedirectUrl): String =
-    s"$claimVatEnrolmentUrl/claim-vat-enrolment/journey/$vatNumber?continueUrl=$continueUrl"
+    if (isEnabled(StubClaimVatEnrolment)) s"$host/vat-through-software/sign-up/test-only/claim-vat-enrolment?continueUrl=$continueUrl"
+    else s"$claimVatEnrolmentUrl/claim-vat-enrolment/journey/$vatNumber?continueUrl=$continueUrl"
 
   def subscriptionRequestSummaryUrl(vatNumber: String): String =
     s"$protectedMicroServiceUrl/subscription-request/vat-number/$vatNumber"
