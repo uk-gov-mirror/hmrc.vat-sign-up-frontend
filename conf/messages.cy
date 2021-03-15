@@ -46,6 +46,7 @@ core.capture_entity_type.registeredSociety                             = Cymdeit
 core.capture_entity_type.charity                                       = Sefydliad Corfforedig Elusennol (elusen)
 core.capture_entity_type.governmentOrganisation                        = Sefydliadau’r llywodraeth a’r sector preifat
 core.capture_entity_type.other                                         = Arall
+core.capture_entity_help                                               = Grŵp o gwmnïau cysylltiedig (gydag un o dan reolaeth y gweddill) yn cofrestru er mwyn cyflwyno Ffurflen TAW gyda’i gilydd. Er enghraifft, rhiant-gwmni sydd ag is-gwmni neu is-gwmnïau.
 
 ## Contact Preferences
 core.contact_preference.paper                                          = Llythyrau
