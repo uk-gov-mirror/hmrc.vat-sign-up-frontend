@@ -16,6 +16,7 @@
 
 @(parentForm: Form[_],
   options: Seq[(String, String)],
+  hints: Map[String,String] = Map(),
   legend: String,
   hintText: Option[String] = None,
   field: Field,
@@ -72,7 +73,9 @@
         @showOrInterrupt(option)
         <div class="multiple-choice">
             <input id="@option._1" type="radio" name="@field.name" value="@option._1" data-journey-val="@option._1" @getCheckedFlag(option)>
-            <label for="@option._1">@visuallyHiddenOr(option) @option._2</label>
+            <label for="@option._1">@visuallyHiddenOr(option) @option._2
+                @hints.get(option._1).map{hint => <span class="form-hint top-margin">@hint</span>}
+            </label>
         </div>
     }
     </fieldset>

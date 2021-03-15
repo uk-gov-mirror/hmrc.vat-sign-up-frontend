@@ -20,7 +20,6 @@
 @import uk.gov.hmrc.vatsignupfrontend.views.html._
 @import uk.gov.hmrc.vatsignupfrontend.views.html.helpers.{summaryErrorHelper, radioHelper, continueButton}
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.play.views.html.helpers._
 
 @(businessEntityForm: Form[BusinessEntity],
   postAction: Call
@@ -37,6 +36,10 @@
   )
 }
 
+@hints = @{
+    Map(vatGroup -> Messages("core.capture_entity_help"))
+}
+
 @principal_main_template(title = Messages("principal.capture_entity_type.title"), bodyClasses = None, scriptElem = None, form = Some(businessEntityForm)) {
 
     @summaryErrorHelper(businessEntityForm)
@@ -46,8 +49,8 @@
     @form(action = postAction) {
         @radioHelper(
             parentForm = businessEntityForm,
-            inline = false,
             options = entities,
+            hints = hints,
             legend = Messages("principal.capture_entity_type.heading"),
             field = businessEntityForm(businessEntity)
         )
