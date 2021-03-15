@@ -135,3 +135,7 @@ interrupt-card .actions {
         float: right;
     }
 }
+
+.top-margin {
+    margin-top: 0.5em;
+}

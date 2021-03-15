@@ -48,6 +48,7 @@ core.capture_entity_type.charity                                       = CIO (ch
 core.capture_entity_type.governmentOrganisation                        = Government organisations and public sector
 core.capture_entity_type.other                                         = Other
 core.capture_entity_type.or                                            = or
+core.capture_entity_help                                               = A group of related companies (where one is under the control of the others) registering to submit a VAT return together. For example, a parent company that has a subsidiary or subsidiaries.
 
 ## Contact Preferences
 core.contact_preference.paper                                          = Letters

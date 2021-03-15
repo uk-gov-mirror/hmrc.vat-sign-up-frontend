@@ -177,7 +177,7 @@ object MessageLookup {
     val radioLimitedCompany: String = "Limited company"
     val radioGeneralPartnership: String = "General partnership"
     val radioLimitedPartnership: String = "Limited partnership (including limited liability partnerships)"
-    val radioVatGroup: String = "VAT group"
+    val radioVatGroup: String = s"VAT group A group of related companies (where one is under the control of the others) registering to submit a VAT return together. For example, a parent company that has a subsidiary or subsidiaries."
     val radioDivision: String = "Administrative Division"
     val radioUnincorporatedAssociation: String = "Unincorporated Association"
     val radioRegisteredSociety: String = "Registered Society (including community benefit societies and co-operative societies)"
