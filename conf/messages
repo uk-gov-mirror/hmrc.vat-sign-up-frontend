@@ -601,7 +601,7 @@ principal.confirmation.subsection.bullet_3                             = Allow a
 principal.confirmation.subsection.bullet_4                             = Only use this software to submit your VAT Returns to HMRC.
 principal.confirmation.subsection.bullet_5                             = Manage and update all your business details by signing in to HMRC services (this is also called a Business tax account).
 
-## Resignup Confirmation page
+## Resignup Confirmation page - Individual flow
 principal.resignup.confirmation.title                                  = You have signed up to submit your VAT Returns using software
 principal.resignup.confirmation.heading                                = You have signed up to submit your VAT Returns using software
 principal.resignup.confirmation.vat_registration_number                = VAT registration number
@@ -611,7 +611,10 @@ principal.resignup.confirmation.subsection.bullet_1                    = Stop us
 principal.resignup.confirmation.subsection.bullet_2                    = Start using your compatible software to keep records of your business sales and purchases, also called income and expenditure.
 principal.resignup.confirmation.subsection.bullet_3                    = Allow and authorise your software to connect to HMRC.
 principal.resignup.confirmation.subsection.bullet_4                    = Use this software to submit your VAT Returns to HMRC.
-principal.resignup.confirmation.subsection.bullet_5                    = Manage and update all your business details by signing in to HMRC services (this is also known as your Business tax account).
+principal.resignup.confirmation.subsection.text                        = You can set up or update your:
+principal.resignup.confirmation.subsection.link_text1                  = Direct Debit for VAT
+principal.resignup.confirmation.subsection.link_text2                  = <a href="https://www.tax.service.gov.uk/business-account/manage-account/account-details">contact preference for VAT</a>
+principal.resignup.confirmation.subsection.link_text3                  = <a href="https://www.tax.service.gov.uk/business-account/manage-account/account-details">business details</a> such as business name, addresses and contact details
 principal.resignup.confirmation.view_account_button                    = View your VAT account
 
 ## Capture Company Number page
