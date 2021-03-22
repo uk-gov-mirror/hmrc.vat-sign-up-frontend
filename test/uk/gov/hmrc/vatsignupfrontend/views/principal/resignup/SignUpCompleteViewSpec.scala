@@ -98,6 +98,10 @@ class SignUpCompleteViewSpec extends ViewSpec {
         document.select("#what-happens-next h3").text() should include(messages.Section.text)
       }
 
+      s"has a bullet point with link text'${messages.Section.linkText1}'" in {
+        document.select("#what-happens-next li").text() should include(messages.Section.linkText1)
+      }
+
       s"has a bullet point with link text'${messages.Section.linkText2}'" in {
         document.select("#what-happens-next li").text() should include(messages.Section.linkText2)
       }
