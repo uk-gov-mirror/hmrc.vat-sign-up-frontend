@@ -716,7 +716,10 @@ object MessageLookup {
       val bullet2 = "Start using your compatible software to keep records of your business sales and purchases, also called income and expenditure."
       val bullet3 = "Allow and authorise your software to connect to HMRC."
       val bullet4 = "Use this software to submit your VAT Returns to HMRC."
-      val bullet5 = "Manage and update all your business details by signing in to HMRC services (this is also known as your Business tax account)."
+      val text = "You can set up or update your:"
+      val linkText2 = "contact preference for VAT"
+      val linkText3 = "business details"
+      val linkText3b = s"$linkText3 such as business name, addresses and contact details"
     }
 
     val buttonText = "View your VAT account"

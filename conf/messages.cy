@@ -545,7 +545,7 @@ principal.confirmation.subsection.bullet_3                             = Ewch at
 principal.confirmation.subsection.bullet_4                             = Defnyddiwch y feddalwedd hon i gyflwyno’ch Ffurflenni TAW i CThEM yn unig.
 principal.confirmation.subsection.bullet_5                             = Rheolwch a diweddarwch eich holl fanylion busnes drwy fewngofnodi i Wasanaethau CThEM (yr enw arall ar hyn yw’r Cyfrif Treth Busnes).
 
-## Resignup Confirmation page
+## Resignup Confirmation page - Individual flow
 principal.resignup.confirmation.title                                  = Rydych wedi cofrestru i gyflwyno’ch Ffurflenni TAW gan ddefnyddio meddalwedd
 principal.resignup.confirmation.heading                                = Rydych wedi cofrestru i gyflwyno’ch Ffurflenni TAW gan ddefnyddio meddalwedd
 principal.resignup.confirmation.vat_registration_number                = Rhif cofrestru TAW
@@ -555,7 +555,10 @@ principal.resignup.confirmation.subsection.bullet_1                    = Rhowch 
 principal.resignup.confirmation.subsection.bullet_2                    = Dechreuwch ddefnyddio’ch meddalwedd sy’n cydweddu er mwyn cadw cofnodion o’ch gwerthiannau a phryniannau busnes, a elwir hefyd yn incwm a gwariant.
 principal.resignup.confirmation.subsection.bullet_3                    = Ewch ati i ganiatáu i’ch meddalwedd gysylltu â CThEM ac i awdurdodi hynny.
 principal.resignup.confirmation.subsection.bullet_4                    = Defnyddiwch y feddalwedd hon i gyflwyno’ch Ffurflenni TAW i CThEM.
-principal.resignup.confirmation.subsection.bullet_5                    = Ewch ati i reoli a diweddaru’ch holl fanylion busnes drwy fewngofnodi i Wasanaethau CThEM (yr enw arall am hyn yw’ch cyfrif treth busnes).
+principal.resignup.confirmation.subsection.text                        = Gallwch sefydlu neu ddiweddaru eich:
+principal.resignup.confirmation.subsection.link_text1                  = Debyd Uniongyrchol ar gyfer TAWT
+principal.resignup.confirmation.subsection.link_text2                  = <a href="https://www.tax.service.gov.uk/business-account/manage-account/account-details">dull cysylltu dewisol ar gyfer TAW</a>
+principal.resignup.confirmation.subsection.link_text3                  = <a href="https://www.tax.service.gov.uk/business-account/manage-account/account-details">manylion busnes</a> megis enw, cyfeiriadau a manylion cyswllt y busnes
 principal.resignup.confirmation.view_account_button                    = Bwrw golwg dros eich cyfrif TAW
 
 ## Capture Company Number page

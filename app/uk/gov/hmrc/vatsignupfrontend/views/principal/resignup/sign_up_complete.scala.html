@@ -34,7 +34,9 @@
         </section>
     </div>
 
-    <p>@Messages("principal.resignup.confirmation.line")</p>
+    <div class="panel panel-border-wide">
+        <p>@Messages("principal.resignup.confirmation.line")</p>
+    </div>
 
     <section id="what-happens-next">
         <h2 class="heading-medium">@Messages("principal.resignup.confirmation.subsection.heading")</h2>
@@ -43,8 +45,13 @@
             <li>@Messages("principal.resignup.confirmation.subsection.bullet_2")</li>
             <li>@Messages("principal.resignup.confirmation.subsection.bullet_3")</li>
             <li>@Messages("principal.resignup.confirmation.subsection.bullet_4")</li>
-            <li>@Messages("principal.resignup.confirmation.subsection.bullet_5")</li>
         </ol>
+
+        <h3 class="heading-small">@Messages("principal.resignup.confirmation.subsection.text")</h3>
+        <ul class="list list-bullet">
+            <li>@Html(Messages("principal.resignup.confirmation.subsection.link_text2"))</li>
+            <li>@Html(Messages("principal.resignup.confirmation.subsection.link_text3"))</li>
+        </ul>
     </section>
 
     @continueButtonLink(href = appConfig.yourVatAccountUrl, alternativeText = Some(Messages("principal.resignup.confirmation.view_account_button")))
