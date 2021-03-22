@@ -717,6 +717,7 @@ object MessageLookup {
       val bullet3 = "Allow and authorise your software to connect to HMRC."
       val bullet4 = "Use this software to submit your VAT Returns to HMRC."
       val text = "You can set up or update your:"
+      val linkText1 = "Direct Debit for VAT"
       val linkText2 = "contact preference for VAT"
       val linkText3 = "business details"
       val linkText3b = s"$linkText3 such as business name, addresses and contact details"
